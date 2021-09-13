@@ -180,6 +180,7 @@ const ObservationInitialNotification = (props) => {
   const user = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails'))
       : null;
+    console.log("user",user)
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -191,11 +192,11 @@ const ObservationInitialNotification = (props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [superVisorName , setSuperVisorName] = useState([]);
   const [superVisorBadgeNo , setSuperVisorBadgeNo] = useState([]); 
-  const [reportedByName , setReportedByName] = useState([]);
+  const [reportedByDetails , setReportedByDetails] = useState([]);
   const [reportedById , setReportedById] = useState([]);
   const [reportedByBadgeId , setReportedByIdBadgeId] = useState([]); 
   const [attachment,setAttachment] = useState()
-  const [departmentName , setDepartmentName] = useState([])
+  const [departmentName , setDepartmentName] = useState([user])
   const [shiftType, setShiftType] = useState([]);
   const [superVisorId , setSuperVisorId] = useState('')
   const [notificationSentValue , setNotificationSentValue] = useState([])
@@ -207,12 +208,12 @@ const ObservationInitialNotification = (props) => {
   const [levelLenght, setLevelLenght] = useState(0)
 
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
-  console.log(reportedByName)
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [breakdownData, setBreakDownData] = useState([])
   const [selectValue, setSelectValue] = useState([])
-  const [value, setValue] = React.useState(null);
-
+  const [value, setValue] = React.useState(user);
+  const [valueReportedBy, setValueReportedBy] = React.useState(null);
+console.log("dddddd",departmentName)
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   let filterSuperVisorId = []
@@ -262,22 +263,25 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].roles[0].users;
+          console.log("8888888",result);
           let user = []
-          user = result
           
             for (var i in result) {
-              filterSuperVisorName.push(result[i]);
+              let temp = {}
+              temp["inputValue"] = result[i].name
+            temp["supervisorId"] = result[i].id
+            temp['badgeNo'] = result[i].badgeNo
+            user.push(temp)
               // filterSuperVisorBadgeNo.push(result[i].badgeNo);
             }
-            let id = result[0].id;
-            setForm({...form,supervisorId:id})
-            setSuperVisorBadgeNo(filterSuperVisorBadgeNo)
-          setSuperVisorName(filterSuperVisorName);
+            setSuperVisorName(user);
+
         }
       })
       .catch((error) => {});
   };
   const fetchReportedBy = () => {
+    
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
@@ -290,16 +294,28 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].users;
-          let user = [];
-          user = result;
+          console.log(result)
+          const userDetails = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails'))
+      : null;
+      let us = {
+        inputValue : userDetails.name, reportedById:userDetails.id, badgeNo:userDetails.badgeNo
+      }
+          let user = [us];
           for (var i in result) {
-            filterReportedByName.push(result[i]);
+
+            let temp = {}
+
+            temp["inputValue"] = result[i].name
+            temp["reportedById"] = result[i].id
+            temp['badgeNo'] = result[i].badgeNo
+
+            user.push(temp);
             // filterReportedById.push(result[i].id);
             // filterReportedByBedgeID.push(result[i].badgeNo);
           }
-          setReportedByName(filterReportedByName);
-          setReportedById(filterReportedById);
-          setReportedByIdBadgeId(filterReportedByBedgeID)
+          setReportedByDetails(user);
+          
         }
         // else{
         //   window.location.href = {LOGIN_URL}
@@ -309,7 +325,7 @@ const ObservationInitialNotification = (props) => {
         // window.location.href = {LOGIN_URL}
       });
   };
-
+console.log("555",reportedByDetails)
   const fetchDepartment = () => {
     const config = {
       method: "get",
@@ -366,11 +382,11 @@ const ObservationInitialNotification = (props) => {
     shift: "",
     departmentName: "",
     departmentId: 0,
-    reportedById: 0,
+    reportedById: user.id,
     reportedByName: user.name,
     reportedByDepartment: "",
     reportedDate: new Date().toISOString(),    
-    reportedByBadgeId: "",
+    reportedByBadgeId: user.badgeNo,
     closedById: 0,
     closedByName: "",
     closedByDepartment: "",
@@ -397,7 +413,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -405,7 +421,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -413,7 +429,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -421,7 +437,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -429,7 +445,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -437,7 +453,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -445,7 +461,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -453,7 +469,7 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
     {
@@ -461,7 +477,15 @@ const ObservationInitialNotification = (props) => {
       fkTagId: "",
       observationTag: "",
       status: "Active",
-      createdBy: 0,
+      createdBy: parseInt(userId),
+      updatedBy: 0,
+    },
+    {
+      fkObservationId: "",
+      fkTagId: "",
+      observationTag: "",
+      status: "Active",
+      createdBy: parseInt(userId),
       updatedBy: 0,
     },
   ]);
@@ -546,9 +570,11 @@ const ObservationInitialNotification = (props) => {
       } 
 
     for (let i = 0; i < catagory.length; i++) {
-      catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
-      catagory[i]["fkTagId"] = tagData[i].id;
-      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory[i]);
+        catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
+        catagory[i]["fkTagId"] = tagData[i].id;
+        const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory[i]);
+      
+      
 
     }
 
@@ -701,8 +727,7 @@ const ObservationInitialNotification = (props) => {
 
   const fetchNotificationSent = async () => {
     try {
-      let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-      let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+      
       var config = {
         method: 'get',
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
@@ -734,15 +759,16 @@ const ObservationInitialNotification = (props) => {
   };
 
   const fetchAttachment = async () => {
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+      let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
     const attachment = await api.get(
-      `/api/v1/corepatterns/?fkCompanyId=1&fkProjectId=0&key=observation_pledge`
+      `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
     let ar = result.attachment;
    
     await setAttachment(ar)
   };
-
   
 
   const fetchBreakDownData = async (projectBreakdown) => {
@@ -824,146 +850,10 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-  const handleBreakdown = async (e, index, label) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    setSelectBreakDown(temp)
-    setBreakdown1ListData(temp)
-    if (selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
-      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      if (breakDownValue.length > 0) {
-        const removeBreakDownList = temp.slice(0, index - 1)
-        temp = removeBreakDownList
-      } else {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
-      }
-    }
-    if (projectData.projectName.breakdown.length !== index) {
-      for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${value}`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(function (response) {
-              if (response.status === 200) {
+ 
 
-                if (
-                  temp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[key].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setBreakdown1ListData([
-                    ...temp,
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value,
-                      index: index
-                    },
-                  ]);
-                }
-              }
-            })
-            .catch(function (error) {
+  
 
-            });
-        }
-      }
-    } else {
-    }
-  };
-
-  const fetchCallBack = async (select, projectData) => {
-    for (var i in select) {
-      let selectId = select[i].id;
-      let selectDepth = select[i].depth
-      setSelectDepthAndId([...selectDepthAndId, `${selectDepth}${selectId}`])
-
-    }
-    if (select !== null ? select.length > 0 : false) {
-      if (projectData.projectName.breakdown.length === select.length) {
-        setBreakdown1ListData([])
-      } else {
-        for (var key in projectData.projectName.breakdown) {
-          if (key == select.length) {
-            try {
-              var config = {
-                method: "get",
-                url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                  }${select[key - 1].id}`,
-                headers: HEADER_AUTH,
-              };
-
-              await Axios(config)
-                .then(async (response) => {
-
-                  await setBreakdown1ListData([
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[key].structure[0].name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: "",
-                      index: key
-                    },
-                  ]);
-                })
-                .catch(function (error) {
-                });
-            } catch (err) {
-              ;
-            }
-          }
-        }
-      }
-    } else {
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == 0) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-              }`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response) => {
-
-              await setBreakdown1ListData([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0].name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index: 0
-                },
-              ]);
-            })
-            .catch(function (error) {
-            });
-        }
-      }
-    }
-  }
-
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...selectDepthAndId, `${depth}${id}`]
-    console.log(newData)
-    setSelectDepthAndId([... new Set(newData)])
-  }
-
-console.log(form.reportedByName)
   const classes = useStyles();
 
   const PickList = async () => {
@@ -1056,7 +946,69 @@ console.log(form.reportedByName)
 
               
               <Grid item md={6} xs={12} className={classes.formBox}>
+
               <Autocomplete
+      value={form.reportedByName ? form.reportedByName : ''}
+      onChange={(event, newValue) => {
+        if (typeof newValue === 'string') {
+          setValueReportedBy({
+            inputValue: newValue,
+          });
+          
+                  setForm({...form,reportedByName:newValue,reportedById: "",reportedByBadgeId: ""})
+                
+        } else if (newValue && newValue.inputValue) {
+          // Create a new value from the user input
+          setValueReportedBy({
+            inputValue: newValue.inputValue,
+          });
+          setForm({...form,reportedByName:newValue.inputValue,reportedById: newValue.reportedById,reportedByBadgeId: newValue.badgeNo})
+
+        } else {
+          setValueReportedBy(newValue);
+        }
+      }}
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+
+        // Suggest the creation of a new value
+        if (params.inputValue !== '') {
+          filtered.push({
+            inputValue: params.inputValue,
+            inputValue: `${params.inputValue}`,
+          });
+        }
+
+        return filtered;
+      }}
+      className={classes.mT30}
+      
+      handleHomeEndKeys
+      id="free-solo-with-text-demo"
+      options={reportedByDetails}
+      getOptionLabel={(option) => {
+        // Value selected with enter, right from the input
+        if (typeof option === 'string') {
+          return option;
+        }
+        // Add "xxx" option created dynamically
+        if (option.inputValue) {
+          return option.inputValue;
+        }
+        // Regular option
+        return option.title;
+      }}
+      renderOption={(option) => option.inputValue}
+      // style={{ width: 300 }}
+      freeSolo
+      renderInput={(params) => (
+        <TextField {...params} label="Observed by*" 
+        error={error.reportedByName}
+                helperText={error.reportedByName ? error.reportedByName : ""} 
+                variant="outlined" />
+      )}
+    />
+              {/* <Autocomplete
                 id="combo-box-demo"
                 options={reportedByName}
                 className={classes.mT30}
@@ -1074,7 +1026,7 @@ console.log(form.reportedByName)
                 helperText={error.reportedByName ? error.reportedByName : ""}
                   />
                 )}
-              />
+              /> */}
             </Grid>
 
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -1083,7 +1035,7 @@ console.log(form.reportedByName)
                 name="badgenumberreportingperson"
                 id="badgenumberreportingperson"
                 value={
-                  form.reportedByBadgeId !== null ? form.reportedByBadgeId : ""
+                  form.reportedByBadgeId !== null && form.reportedByBadgeId !== undefined ? form.reportedByBadgeId : ""
                 }
                 fullWidth
                 variant="outlined"
@@ -1107,7 +1059,7 @@ console.log(form.reportedByName)
             className={classes.formBox}
           >
          <Autocomplete
-      value={value}
+      value={form.reportedByDepartment ? form.reportedByDepartment : ''}
       onChange={(event, newValue) => {
         if (typeof newValue === 'string') {
           setValue({
@@ -1160,7 +1112,7 @@ console.log(form.reportedByName)
       // style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
-        <TextField {...params} label="Observer Department*" 
+        <TextField {...params} label="Observers Department*" 
         error={error.reportedByDepartment}
                 helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
                 variant="outlined" />
@@ -1197,7 +1149,76 @@ console.log(form.reportedByName)
             
             
             <Grid item md={6} xs={12} className={classes.formBox}>
-              <TextField
+            <Autocomplete
+      value={form.supervisorName ? form.supervisorName : ''}
+      onChange={(event, newValue) => {
+        if (typeof newValue === 'string') {
+          // setValueReportedBy({
+          //   inputValue: newValue,
+          // });
+                  setForm({...form,supervisorName:newValue.inputValue,supervisorId: 0,supervisorByBadgeId: ""})
+                
+        } else if (newValue && newValue.inputValue) {
+          // Create a new value from the user input
+          setValueReportedBy({
+            inputValue: newValue.inputValue,
+          });
+          setForm({...form,supervisorName:newValue.inputValue,supervisorByBadgeId: newValue.badgeNo})
+
+          if(newValue.supervisorId){
+            setForm({...form,supervisorName:newValue.inputValue,supervisorByBadgeId: newValue.badgeNo,supervisorId: newValue.supervisorId})
+
+          }else{
+            setForm({...form,supervisorId: 0 ,supervisorByBadgeId : "" })
+
+          }
+
+        } else {
+          setValueReportedBy(newValue);
+        }
+      }}
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+
+        // Suggest the creation of a new value
+        if (params.inputValue !== '') {
+          filtered.push({
+            inputValue: params.inputValue,
+            inputValue: `${params.inputValue}`,
+          });
+        }
+
+        return filtered;
+      }}
+      className={classes.mT30}
+      
+      handleHomeEndKeys
+      id="free-solo-with-text-demo"
+      options={superVisorName}
+      getOptionLabel={(option) => {
+        // Value selected with enter, right from the input
+        if (typeof option === 'string') {
+          return option;
+        }
+        // Add "xxx" option created dynamically
+        if (option.inputValue) {
+          return option.inputValue;
+        }
+        // Regular option
+        return option.title;
+      }}
+      renderOption={(option) => option.inputValue}
+      // style={{ width: 300 }}
+      freeSolo
+      renderInput={(params) => (
+        <TextField {...params} label="Supervisor's Name*" 
+        error={error.supervisorName}
+                helperText={error.supervisorName ? error.supervisorName : ""} 
+                variant="outlined" />
+      )}
+    />
+
+              {/* <TextField
                 label="Supervisor's Name*"
                 name="supervisorname"
                 id="supervisorname"
@@ -1216,7 +1237,7 @@ console.log(form.reportedByName)
                     {option.name}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
@@ -1227,7 +1248,9 @@ console.log(form.reportedByName)
                 helperText={
                   error.supervisorByBadgeId ? error.supervisorByBadgeId : ""
                 }
-                value={form.supervisorByBadgeId}
+                value={
+                  form.supervisorByBadgeId !== null && form.supervisorByBadgeId !== undefined ? form.supervisorByBadgeId : ""
+                }
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
@@ -1540,7 +1563,7 @@ console.log(form.reportedByName)
                 Categories
               </FormLabel>
               <FormGroup className={classes.customCheckBoxList}>
-                {tagData.slice(0, 8).map((value, index) => (
+                {tagData.map((value, index) => (
                   <FormControlLabel
                     className={classes.labelValue}
                     control={
@@ -1555,18 +1578,7 @@ console.log(form.reportedByName)
                   />
                 ))}
               </FormGroup>
-              <Grid item md={3} xs={12} className={classes.formBox}>
-                <TextField
-                  label="Others, if any"
-                  name="others"
-                  id="others"
-                  fullWidth
-                  autoComplete="off"
-                  onChange={(e) => handleOther(e)}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
+              
             </Grid>
 
             
@@ -1640,44 +1652,7 @@ console.log(form.reportedByName)
 
             
 
-            {/* <Grid item md={6} xs={12} className={classes.formBox}>
-              <Autocomplete
-                id="combo-box-demo"
-                options={reportedByName}
-                className={classes.mT30}
-                getOptionLabel={(option) => option.name}
-                onChange={(e, value) => {handleAssignee(e, value)}
-                  }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Assignee"
-                    variant="outlined"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item md={6} xs={12} className={classes.formBox}>
-              <TextField
-                label="Assignee Department"
-                name="assigneedepartment"
-                id="assigneedepartment"
-                select
-                fullWidth
-                defaultValue={form.departmentName}
-                variant="outlined"
-                
-              >
-                {departmentName.map((option) => (
-                  <MenuItem key={option} value={option.inputValue}
-                  onClick={(e) => {
-                  setForm({ ...form, departmentName: option.inputValue ,departmentId : option.departmentId });
-                }}>
-                    {option.inputValue}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid> */}
+            
 
             {notificationSentValue.map((value,index) =>(
             <Grid
@@ -1753,15 +1728,15 @@ console.log(form.reportedByName)
               </FormGroup>
               <p style={{color: "red"}}>{error.acceptAndPledge}</p>
             </Grid>
-
+{attachment !== undefined ?
             <Grid item md={12} xs={12} className={classes.formBBanner}>
               <Avatar
                 className={classes.observationFormBox}
                 variant="rounded"
                 alt="Observation form banner"
-                src={FormObservationbanner}
+                src={attachment}
               />
-            </Grid>
+            </Grid> : null}
             {/* {attachment ===
                               null ? null : typeof attachment ===
                                 "string" ? (
