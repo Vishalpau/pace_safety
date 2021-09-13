@@ -56,7 +56,7 @@ if(data.isSituationAddressed === "Yes") {
 }
 
 if(data.observationTitle.length > 255){
-  error.observationTitle = "Please enter less then 255 characters";
+  error.observationTitle = "Please enter less than 255 characters";
     isValid = false;
 }
 

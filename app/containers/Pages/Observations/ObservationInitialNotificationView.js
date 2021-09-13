@@ -386,7 +386,7 @@ bytes
             {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
           </Typography>
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Observed On
           </Typography>
@@ -509,14 +509,14 @@ bytes
           ))}
         </Grid>
 
-        <Grid item md={12}>
+        {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Assignee
           </Typography>
           <Typography className={classes.labelValue}>
            {initialData.assigneeName ? initialData.assigneeName : "-"}
           </Typography>
-        </Grid>
+        </Grid> */}
         {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Actions
@@ -552,7 +552,7 @@ bytes
           </Avatar> */}
           </Typography>):("-")}
         </Grid>
-        <Grid item md={6}>
+        {/* <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Reviewed By
           </Typography>
@@ -567,12 +567,11 @@ bytes
             Reviewed On
           </Typography>
           <Typography className={classes.labelValue}>
-            {/* {initialData.reportedDate ? initialData.reportedDate : "-"} */}
             {initialData["reviewedOn"] ? moment(initialData["reviewedOn"]).format(
             "Do MMMM YYYY, h:mm:ss a"
           ) :"-"}
           </Typography>
-        </Grid>
+        </Grid> */}
       </Grid>
 
       <Dialog

@@ -567,7 +567,7 @@ const ObservationInitialNotificationUpdate = () => {
                 Categories
               </FormLabel>
               <FormGroup className={classes.customCheckBoxList}>
-                {tagData.slice(0,8).map((value , index) => (
+                {tagData.map((value , index) => (
                   <FormControlLabel
                     className={classes.labelValue}
                     control={
@@ -584,19 +584,7 @@ const ObservationInitialNotificationUpdate = () => {
                   />
                 ))}
               </FormGroup>
-              <Grid item md={3} xs={12} className={classes.formBox}>
-                <TextField
-                  label="Others, if any"
-                  // margin="dense"
-                  name="others"
-                  id="others"
-                  defaultValue={catagory[8].observationTag}
-                  fullWidth
-                  onChange={(e) => handleOther(e)}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
+              
             </Grid> 
             <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
