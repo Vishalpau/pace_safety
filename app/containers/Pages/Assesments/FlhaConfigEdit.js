@@ -8,6 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import DateFnsUtils from '@date-io/date-fns';
 import MomentUtils from '@date-io/moment';
+import Dropzone from 'react-dropzone'
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -67,6 +68,12 @@ import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutline
 import Tooltip from "@material-ui/core/Tooltip";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Switch from '@material-ui/core/Switch';
+import api from '../../../utils/axios';
+import {
+  INITIAL_NOTIFICATION_FORM,
+  SSO_URL,
+  HEADER_AUTH,
+} from '../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -86,10 +93,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: '.2rem 0',
     boxShadow: 'inset 0px 0px 9px #dedede',
-	'& td textHeight': {
-		padding: '2.5px 5px',
-    	borderRadius: '8px',
-	  },
+    '& td textHeight': {
+      padding: '2.5px 5px',
+      borderRadius: '8px',
+    },
   },
   spacer: {
     padding: '5px 0',
@@ -117,8 +124,8 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogTitle-root': {
       marginBottom: '5px !important',
     },
-  },  
-  ptopTwenty : {
+  },
+  ptopTwenty: {
     '& span': {
       paddingTop: '15px',
     }
@@ -159,11 +166,11 @@ const useStyles = makeStyles((theme) => ({
   popUpButton: {
     paddingRight: "5px",
     marginLeft: "16px",
-    '& .MuiDialogActions-root, img':{
+    '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
-    },    
+    },
   },
-  
+
   spacerRight: {
     marginRight: '.75rem',
   },
@@ -226,8 +233,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paddZero: {
     paddingLeft: '0px',
-	paddingRight: '0px',
-  },  
+    paddingRight: '0px',
+  },
   tableHeading: {
     '& tr th': {
       backgroundColor: '#06425c',
@@ -252,65 +259,160 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     padding: '3px',
     color: '#ffffff',
-}, 
+  },
 }));
-const FlhaDetails = () => {
+const FlhaDetails = (props) => {
   const classes = useStyles();
- 
+
+  const [payload, setPayload] = React.useState({
+    fkCompanyId: "",
+    fkDeparmentName: '',
+    jobTitle: '',
+    projectName: '',
+    jobDetail: '',
+    fkDepartmentId: '',
+    jobTitleImage: '',
+    status: ""
+  })
+
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [dropDownAr, setDropDownAr] = React.useState([]);
+
+  React.useEffect(() => {
+    console.log("editPayload ", props.editPayload);
+    setPayload({
+      fkDeparmentName: props.editPayload[1] ? props.editPayload[1] : "",
+      jobTitle: props.editPayload[0] ? props.editPayload[0] : "",
+      jobDetail: props.editPayload[3] ? props.editPayload[3] : "",
+      jobTitleImage: props.editPayload[2] ? props.editPayload[2] : "",
+      fkDepartmentId: props.editPayload[6] ? props.editPayload[6] : "",
+
+    });
+  }, []);
+
+  React.useEffect(() => {
+    console.log("payloadvalue ", payload);
+  }, [payload])
+
+
+  const fieldHandler = (e) => {
+    //  debugger
+    console.log("Value  ", e.target.value, e.target.id)
+    setPayload({
+      ...payload,
+      [e.target.id]: e.target.value
+    })
+  }
+
+  const dropDownHandle = async () => {
+    let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const res = await api.get(`${SSO_URL}/api/v1/companies/${fkCompanyId}/departments/`);
+    setDropDownAr(res.data.data.results);
+  };
+
+  React.useEffect(() => {
+    // jobTitleApiHandler();
+    dropDownHandle();
+  }, []);
+
+  React.useEffect(() => {
+    props.dataHandler(payload)
+  }, [payload])
+
+  const handleDepartment = async (id, name) => {
+    
+    await setPayload({ ...payload, fkDepartmentId: id, fkDeparmentName: name });
+    console.log(id,name,"check")
+  };
+
   return (
     <div>
-        <Paper elevation={3}>
-            <Box padding={3}>
-                  <Grid item xs={12}>
-					<Grid container spacing={3}>  
-						<Grid item md={12} sm={12} xs={12}>
-						  <TextField
-							variant="outlined"
-							id="immediate-actions"
-							multiline
-							rows="1"
-							label="titles"
-							className={classes.fullWidth}
-						  />
-						</Grid>
-						<Grid item md={12} sm={12} xs={12}>
-						  <FormControl
-							  variant="outlined"
-							  requirement
-							  className={classes.fullWidth}
-							>
-							  <InputLabel id="department-label">
-								department
-							  </InputLabel>
-							  <Select
-								labelId="incident-type-label"
-								id="department"
-								label="department"
-							  >
+      <Paper elevation={3}>
+        <Box padding={3}>
+          <Grid item xs={12}>
+            <Grid container spacing={3}>
+              <Grid item md={12} sm={12} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="jobTitle"
+                  multiline
+                  rows="1"
+                  label="titles"
+                  className={classes.fullWidth}
+                  onChange={(e)=>props.onChangeField(e, 'jobTitle')}                    
+                  defaultValue={props.editPayload[0] || ""}
+                />
+              </Grid>
+              {console.log("payload.fkDeparmentName ", props.editPayload[0])}
+
+              {/* {console.log("payload.fkDeparmentName ", props.editPayload[6])} */}
+              <Grid item md={12} sm={12} xs={12}>
+                <FormControl
+                  variant="outlined"
+                  requirement
+                  className={classes.fullWidth}
+                >
+                  <InputLabel id="department-label">
+                    department
+                  </InputLabel>
+                  <Select
+                    labelId="incident-type-label"
+                    id="fkDepartmentId"
+                    label="department"
+                    Select
+                    onChange={(e)=>props.onChangeField(e, 'fkDepartmentId')}                    
+                    defaultValue={props.editPayload[6] || ""}
+                  >
+                    {dropDownAr.map((department) => (
+
+                      <MenuItem
+                      value={department.id}
+
+                        key={department.id} onClick={(e) => {
+                          handleDepartment(department.id, department.departmentName);
+                        }}
+                      >
+                        {department.departmentName}
+                      </MenuItem>
+                    ))}
+                    {/* <MenuItem>BMD</MenuItem>
 								<MenuItem>One</MenuItem>
 								<MenuItem>One</MenuItem>
-								<MenuItem>One</MenuItem>
-								<MenuItem>One</MenuItem>
-							  </Select>
-							</FormControl>
-						</Grid>
-						<Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
-							<input accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" />
-						</Grid>	
-						<Grid item md={12} sm={12} xs={12}>
-						  <TextField
-							variant="outlined"
-							id="immediate-actions"
-							multiline
-							rows="1"
-							label="details"
-							className={classes.fullWidth}
-						  />
-						</Grid>
-				</Grid>
-				</Grid>
-            </Box>
-        </Paper>
+								<MenuItem>One</MenuItem> */}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={4} sm={4} xs={12}>
+                <img src={props.editPayload[2]} height={58} alt="" className={classes.mttopSix} />
+              </Grid>
+              <Grid item md={6} sm={6} xs={12} className={classes.mtTopTenn}>
+              <Dropzone className="dropzone" onDrop={(e) => props.onChangeField(e,'jobTitleImage')}>
+                  {({ getRootProps, getInputProps }) => (
+                    <div className="block-dropzone" {...getRootProps()}>
+                      <input onChange={(e) => props.onChangeField(e, 'jobTitleImage')} {...getInputProps()} />
+                    </div>
+                  )}
+                </Dropzone>
+                {/* <input onChange={(e)=>props.onChangeField(e, 'jobTitleImage')} accept="image/*" className={classes.input} id="icon-button-file" name="avatar" type="file" /> */}
+              </Grid>
+              <Grid item md={12} sm={12} xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="jobDetail"
+                  multiline
+                  rows="1"
+                  label="details"
+                  className={classes.fullWidth}
+                  onChange={(e)=>props.onChangeField(e, 'jobDetail')}                    
+                  defaultValue={props.editPayload[3] || ""}
+
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
     </div>
   );
 };
