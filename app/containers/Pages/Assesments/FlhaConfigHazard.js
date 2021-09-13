@@ -385,7 +385,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const ConfigHazard = () => {
+const ConfigHazard = (props) => {
 
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -394,14 +394,13 @@ const ConfigHazard = () => {
   });
 
   //list view
-  // const [hazardList, hazardList] = React.useState([]);
   const [criticalName, setCriticalName] = React.useState(" ");
 
   // critical task name on header
   const [hazardList, setHazardList] = React.useState([]);
   React.useEffect(() => {
     let jobIdName = document.URL.split('/')
-    localStorage.setItem('critcalTaskId', jobIdName[jobIdName.length-1]);
+    localStorage.setItem('critcalTaskId', jobIdName[jobIdName.length - 1]);
 
     setCriticalName(jobIdName[jobIdName.length - 1])
     hazardApiHandler();
@@ -417,11 +416,14 @@ const ConfigHazard = () => {
   const [fileName, setFilename] = React.useState("")
 
   function handleNewFileUpload(files, payloadType, index) {
-    console.log(files , "uploasdig")
-    let hazrdformPayload = JSON.parse(JSON.stringify(hazardForm));
-    hazrdformPayload[index][payloadType] = files[0];
-    setHazardForm(hazrdformPayload);
-    setFilename(files[0].name)
+    console.log(index,"0000")
+    const temp = [...hazardForm]
+    temp[index]["hazardImage"] = files[0]
+    setHazardForm(temp)
+    // let hazrdformPayload = JSON.parse(JSON.stringify(hazardForm));
+    // hazrdformPayload[index][payloadType] = files[0];
+    // setHazardForm(...hazardForm,hazardForm[index][hazardImage]=files[0]);
+    // setFilename(files[0].name)
   }
 
   //for status
@@ -449,13 +451,11 @@ const ConfigHazard = () => {
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
-  console.log('company', fkCompanyId)
 
   const projectName =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
-  console.log('project', projectName)
 
 
 
@@ -465,7 +465,6 @@ const ConfigHazard = () => {
     let fkTaskId = localStorage.getItem('critcalTaskId')
 
     const res = await api.get(`/api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/`);
-    console.log("res ", res);
     let data = [];
     res.data.data.results.results.map(hazardView => {
       let dataHazard = [];
@@ -478,26 +477,33 @@ const ConfigHazard = () => {
     setHazardList(data);
   }
 
+  console.log(hazardForm, "testimage")
   // New form submit
   const handelSubmit = async () => {
+    const isValid = validate()
+
     const fkTaskId = localStorage.getItem('critcalTaskId')
-    let formData = new FormData();    //formdata object
+
     // hazardForm.map(async (item, index) => {
+    console.log(hazardForm, "ttttt")
+    for (let i = 0; i <= hazardForm.length; i++) {
+      let formData = new FormData();   
 
       formData.append('fkCompanyId', JSON.parse(localStorage.getItem("company")).fkCompanyId);
       formData.append('fkProjectId', JSON.parse(localStorage.getItem("projectName")).projectName.projectId);
       formData.append('createdBy', JSON.parse(localStorage.getItem("userDetails")).id);
-      formData.append('hazard', hazardForm[0].hazard);
-      formData.append('hazardImage', hazardForm[0].hazardImage);
+      formData.append('hazard', hazardForm[i].hazard);
+      formData.append('hazardImage', hazardForm[i].hazardImage);
       formData.append('fkTaskId', fkTaskId)
 
       let res = await api.post(`api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/`, formData);
       setHazardForm([{
-        hazardImage : "",
-        hazard : ""
+        hazardImage: "",
+        hazard: ""
       }]);
-      setFilename('')
       hazardApiHandler()
+    }
+   
     // })
 
   };
@@ -505,9 +511,6 @@ const ConfigHazard = () => {
   //for status
   const statusToggle = async (value, data) => {
     const fkTaskId = localStorage.getItem('critcalTaskId')
-
-    console.log(data, "vis")
-
     let obj = {
       fkCompanyId: fkCompanyId,
       fkTaskId: localStorage.getItem('critcalTaskId'),
@@ -516,13 +519,10 @@ const ConfigHazard = () => {
     }
 
     const res = await api.put(`api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/${data[3]}/`, obj);
-    console.log('status', res)
     setHazardStatusChange(res.data.data.results.results)
   }
   const onInputChange = (e, data) => {
-    console.log('target', data)
     let value = e.target.checked === true ? "Active" : "Inactive";
-    console.log('value', value)
     setHazardStatusChange({
       ...initialState, status: value,
     })
@@ -539,13 +539,74 @@ const ConfigHazard = () => {
 
   //for edit
   const [open, setOpen] = React.useState(false);
+  const [editPayload, setEditPayloadData] = React.useState([]);
 
-  function handleFlhaClickOpen() {
+  function handleFlhaClickOpen(tableMeta) {
+    setEditPayloadData(tableMeta.rowData)
     setOpen(true);
   }
 
   function handleFlhaClose() {
     setOpen(false);
+  }
+
+
+  const [payload, setPayload] = React.useState([])
+  const handleFieldChange = async (e, fieldname) => {
+    const temp = { ...payload }
+    // alert(fieldname)
+    if (fieldname == "hazardImage") {
+      temp['hazardImage'] = e[0];
+    }
+    else {
+      temp[fieldname] = e.target.value
+    }
+    await setPayload(temp);
+  }
+
+  // for edit
+  const [hazardPayload, setHazardPayload] = React.useState({});
+  function dataHandler(data) {
+    setHazardPayload(data);
+  }
+  const hazardEditSubmitHandler = async () => {
+    console.log({ submithazard: payload })
+    let fkTaskId = localStorage.getItem('critcalTaskId')
+    const formData = new FormData();
+    formData.append('fkTaskId', fkTaskId);
+    formData.append('hazard', payload.hazard);
+    if (payload.hazardImage !== undefined) {
+      formData.append('hazardImage', payload.hazardImage);
+    }
+
+    let res = await api.put(`api/v1/configflhas/criticaltasks/${fkTaskId}/hazards/${editPayload[editPayload.length - 1]}/`, formData);
+    handleFlhaClose()
+    hazardApiHandler()
+
+  }
+
+  // validations
+  const [error, setError] = React.useState({
+    hazard: '',
+    hazardImage: ''
+  })
+
+  const validate = () => {
+    // alert()
+    let isValid = true;
+    let err = {};
+    // return valid
+    if (hazardForm.hazard == '') {
+      err.hazard = 'hazard is required';
+      isValid = false;
+    }
+    if (hazardForm.hazardImage == '') {
+      err.hazardImage = 'hazard image is required';
+      isValid = false;
+    }
+    setError(err)
+
+    return isValid
   }
 
   //   Data for the table view
@@ -583,32 +644,35 @@ const ConfigHazard = () => {
       name: '',
       options: {
         filter: false,
-        customBodyRender: (value) => (
+        customBodyRender: (value, tableMeta) => (
           <>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
               <MoreVertIcon />
             </Button>
-            <Menu
+            {/* <Menu
               id="simple-menu"
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>
-                <Link
-                  href="/app/pages/assesments/FlhaConfigCriticalTask"
-                >
-                  Critical task
+              <MenuItem onClick={handleClose}> */}
+            <Link
+              href="/app/pages/assesments/FlhaConfigCriticalTask"
+            >
+              Critical task
 
-                </Link>
-              </MenuItem>
+            </Link>
+            {/* </MenuItem>
               <MenuItem onClick={handleClose}>
-                <span variant="outlined" color="primary" onClick={handleFlhaClickOpen}>
+                <span variant="outlined" color="primary" onClick={() => handleFlhaClickOpen(tableMeta)}>
                   Edit Hazards
                 </span>
               </MenuItem>
-            </Menu>
+            </Menu> */}
+            <span variant="outlined" color="primary" onClick={() => handleFlhaClickOpen(tableMeta)}>
+              Edit Hazards
+            </span>
           </>
         )
       }
@@ -622,7 +686,6 @@ const ConfigHazard = () => {
     setHazardForm(val => {
       return [...val, obj]
     })
-    // console.log(hazardForm, "vissss")
   }
 
 
@@ -657,11 +720,15 @@ const ConfigHazard = () => {
     </li>
   ));
 
+
   function payloadHandler(e, payloadType, index) {
-    let hazrdformPayload = JSON.parse(JSON.stringify(hazardForm));
-    hazrdformPayload[index][payloadType] = e.target.value;
-    console.log("hazardForm", hazrdformPayload);
-    setHazardForm(hazrdformPayload);
+    console.log(hazardForm)
+    const temp = [...hazardForm]
+    temp[index]["hazard"] = e.target.value
+    setHazardForm(temp)
+    // let hazrdformPayload = JSON.parse(JSON.stringify(hazardForm));
+    // hazrdformPayload[index][payloadType] = e.target.value;
+    // setHazardForm(hazrdformPayload);
   }
 
   return (
@@ -681,11 +748,11 @@ const ConfigHazard = () => {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  <FlhaEditHazard />
+                  <FlhaEditHazard onChangeField={(e, fieldname) => handleFieldChange(e, fieldname)} editpayload={payload} dataHandler={(data) => dataHandler(data)} editPayload={editPayload} />
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleFlhaClose} color="primary" size="medium" variant="contained" className={classes.spacerRight}>
+                <Button onClick={hazardEditSubmitHandler} color="primary" size="medium" variant="contained" className={classes.spacerRight}>
                   Save
                 </Button>
                 <Button onClick={handleFlhaClose} color="secondary" autoFocus size="medium" variant="contained" className={classes.spacerRight}>
@@ -730,6 +797,7 @@ const ConfigHazard = () => {
                           onChange={(e) => payloadHandler(e, "hazard", index)}
 
                         />
+                        <div style={{ color: "red" }}>{error.hazard}</div>
                       </Grid>
 
                       <Grid
@@ -738,12 +806,12 @@ const ConfigHazard = () => {
                         xs={12}
                         className={classes.formBox}
                       >
-                        <Dropzone className="dropzone" onDrop={(file) => (handleNewFileUpload(file, "hazardImage", index))}  >
+                        <Dropzone className="dropzone" onDrop={(acceptedFiles) => (handleNewFileUpload(acceptedFiles, "hazardImage", index))}  >
                           {({ getRootProps, getInputProps }) => (
                             <div className="block-dropzone" {...getRootProps()}>
-                              <input id="data" style={{ display: "block!important" }} onChange={(file) => handleNewFileUpload(file, "hazardImage", index)} {...getInputProps()} />
-                              <span to="data">Upload</span>
-                              <p>{fileName ? fileName : ""}</p>
+                              <input id="data" type="file" style={{ display: "block!important" }} onChange={(e) => handleNewFileUpload(e, "hazardImage", index)} {...getInputProps()} />
+                              {/* <span to="data">Upload</span>
+                              <p>{fileName ? fileName : ""}</p> */}
                             </div>
                           )}
                         </Dropzone>

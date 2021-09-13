@@ -170,7 +170,11 @@ import {
   FlhaConfigCriticalTask,
   FlhaConfigAdd,
   SamplePage,
+  PrintFlha,
+  FlhaActivities,
+  FlhaComments,
 } from "../pageListAsync";
+// import PrintFlha from '../Pages/Assesments/PrintFlha';
 
 
 function Application(props) {
@@ -599,7 +603,9 @@ function Application(props) {
         <Route path="/app/pages/assesments/AuditCheck" component={AuditCheck} />
         <Route path="/app/pages/assesments/flha/:id/revise" component={FlhaEdit} />
         <Route path="/app/pages/assesments/flhaadd" component={FlhaAdd} />
-
+        <Route path="/app/pages/assesments/flha/:id/print" component={PrintFlha} />
+        <Route path="/app/pages/assesments/flha/:id/activities" component={FlhaActivities} />
+        <Route path="/app/pages/assesments/flha/:id/comments" component={FlhaComments} />
         {/* Xflha Config  */}
         <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />

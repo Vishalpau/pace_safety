@@ -778,11 +778,11 @@ bytes
     const txt = e.nativeEvent.target.innerText;
     temp[taskIndex].hazards[key][fieldname] = e.target.value;
     // if(fieldname == "riskSeverity"){
-    const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverityValue == undefined || temp[taskIndex].hazards[key].riskSeverityValue == '') ? 1 : temp[taskIndex].hazards[key].riskSeverityValue);
+    const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverityValue == undefined || temp[taskIndex].hazards[key].riskSeverityValue == '' || isNaN(temp[taskIndex].hazards[key].riskSeverityValue)) ? 1 : temp[taskIndex].hazards[key].riskSeverityValue);
 
     // }
     // else if(fieldname == "riskProbability"){
-    const riskProbability = ((temp[taskIndex].hazards[key].riskProbabilityValue == undefined || temp[taskIndex].hazards[key].riskProbabilityValue == '') ? 1 : temp[taskIndex].hazards[key].riskProbabilityValue);
+    const riskProbability = ((temp[taskIndex].hazards[key].riskProbabilityValue == undefined || temp[taskIndex].hazards[key].riskProbabilityValue == '' || isNaN(temp[taskIndex].hazards[key].riskProbabilityValue)) ? 1 : temp[taskIndex].hazards[key].riskProbabilityValue);
     // }
 
 
@@ -976,7 +976,7 @@ Critical tasks
                                 <Typography className={classes.heading}>
                                   <MenuOpenOutlinedIcon className={classes.headingIcon} />
                                   {' '}
-Task#1 - "Task identification"
+                                Task#{(taskIndex+1)} - "Task identification"
                                 </Typography>
                               </AccordionSummary>
                               <AccordionDetails>
@@ -1002,7 +1002,7 @@ Task#1 - "Task identification"
                                       id="panel2bh-header"
                                       className={classes.headingColor}
                                     >
-                                      <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
+                                      <Typography className={classes.heading}>Hazardk#{index+1} - {(item.hazard) ? item.hazard : ""}</Typography>
                                       <Typography className={classes.secondaryHeading}>
                                         <Fab
                                           color="secondary"

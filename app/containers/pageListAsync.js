@@ -762,6 +762,14 @@ export const FlhaEdit = loadable(() => import("./Pages/Assesments/FlhaEdit"), {
   fallback: <Loading />,
 });
 
+export const FlhaActivities = loadable(() => import("./Pages/Assesments/ActivityHistory"), {
+  fallback: <Loading />,
+});
+
+export const FlhaComments = loadable(() => import("./Pages/Assesments/Comments"), {
+  fallback: <Loading />,
+});
+
 export const FlhaRevision = loadable(() => import("./Pages/Assesments/FlhaRevision"), {
   fallback: <Loading />,
 });
@@ -782,3 +790,23 @@ export const AssessmentCloseOut = loadable(() => import("./Pages/Assesments/Clos
   fallback: <Loading />,
 });
 
+export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), {
+  fallback: <Loading />,
+});
+
+// XFLHA Config
+export const FlhaConfig = loadable(() => import("./pages/assesments/FlhaConfig"), {
+  fallback: <Loading />,
+});
+
+export const FlhaConfigAdd = loadable(() => import("./pages/assesments/FlhaConfigAdd"), {
+  fallback: <Loading />,
+});
+
+export const FlhaConfigCriticalTask = loadable(() => import("./pages/assesments/FlhaConfigCriticalTask"), {
+  fallback: <Loading />,
+});
+
+export const FlhaConfigHazard = loadable(() => import("./pages/assesments/FlhaConfigHazard"), {
+  fallback: <Loading />,
+});
