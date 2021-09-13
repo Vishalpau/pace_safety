@@ -32,11 +32,13 @@ import { useHistory, useParams } from 'react-router';
 import moment from 'moment';
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
+import { connect } from "react-redux";
 import axios from "axios";
 
 import api from "../../../utils/axios";
 import { JHA_FORM } from './Utils/constants';
 import { handelIncidentId } from "./Utils/checkValue"
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,34 +141,60 @@ const ILink = withStyles({
   },
 })(Link);
 
-function Jha() {
+function Jha(props) {
   const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([])
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
   const [data, setData] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
 
   const fetchData = async () => {
-    const res = await api.get("/api/v1/jhas/")
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
-    localStorage.removeItem("fkJHAId")
+    await setAllJHAData(result)
+    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    await setPageCount(pageCount)
     handelTableView(result)
-    handelActionCount(result)
+
+    await setIsLoading(true)
+
+    
   }
 
-  const handelActionCount = async (apiData) => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    for (let key in apiData) {
-      const action = await api_action.get(`/api/v1/actions/?actionContext__startswith=jha&enitityReferenceId__startswith=${apiData[key]["id"]}`)
-      let actionNumber = action.data.data.results.count
-      apiData[key]["actionCount"] = actionNumber
-    }
-    await setAllJHAData(apiData)
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  const res = await api.get(`api/v1/jhas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllJHAData(res.data.data.results.results);
+    await handelTableView(res.data.data.results.results)
+
+  };
 
   // Function to toggle the view mode
   const handleView = () => {
@@ -213,7 +241,7 @@ function Jha() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [props.projectName])
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
@@ -471,7 +499,21 @@ function Jha() {
             options={options}
           />
         )}
+
+        <div className={classes.pagination}>
+      <Pagination count={pageCount} onChange={handleChange}/>
+    </div>
     </PapperBlock>
   );
 }
-export default Jha;
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Jha);

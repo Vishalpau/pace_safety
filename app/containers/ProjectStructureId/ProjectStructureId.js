@@ -85,34 +85,59 @@ const ProjectStructure = (props) => {
   const fkProjectStructureIds = struct.slice(0, -1);
 
   const fetchleafNodeData = async (projectData, id, index, selectVal, selectName) => {
+    if (projectData.projectName.breakdown.length == 1) {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+          }`,
+        headers: HEADER_AUTH,
+      };
+      await Axios(config)
+        .then(async (response) => {
+          console.log("here1")
+          await setLeafNode(true)
+          await setBreakdown1ListData([
+            {
+              breakdownLabel:
+                projectData.projectName.breakdown[0].structure[0].name,
+              breakdownValue: response.data.data.results,
+              selectValue: selectVal,
+              index: 0
+            },
+          ]);
 
-    var config = {
-      method: "get",
-      url: `${SSO_URL}/${projectData.projectName.breakdown[index].structure[0].url
-        }${id}`,
-      headers: HEADER_AUTH,
-    };
+        })
+        .catch(function (error) {
+        });
+      props.setWorkArea(selectName)
+    } else {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/${projectData.projectName.breakdown[index].structure[0].url
+          }${id}`,
+        headers: HEADER_AUTH,
+      };
+      await Axios(config)
+        .then(async (response) => {
+          console.log("here1")
+          await setLeafNode(true)
+          await setBreakdown1ListData([
+            {
+              breakdownLabel:
+                projectData.projectName.breakdown[index].structure[0].name,
+              breakdownValue: response.data.data.results,
+              selectValue: selectVal,
+              index: 0
+            },
+          ]);
 
-    await Axios(config)
-      .then(async (response) => {
-
-        await setLeafNode(true)
-        await setBreakdown1ListData([
-          {
-            breakdownLabel:
-              projectData.projectName.breakdown[index].structure[0].name,
-            breakdownValue: response.data.data.results,
-            selectValue: selectVal,
-            index: 0
-          },
-        ]);
-
-      })
-      .catch(function (error) {
-      });
-    props.setWorkArea(selectName)
+        })
+        .catch(function (error) {
+        });
+      props.setWorkArea(selectName)
+    }
   }
-console.log(breakdown1ListData)
+  console.log(breakdown1ListData)
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
     let lenghtbreaddown = projectData.projectName.breakdown.length ? projectData.projectName.breakdown.length : 0
@@ -125,11 +150,16 @@ console.log(breakdown1ListData)
     }
 
     props.setSelectDepthAndId(selectDepthId);
-
+    console.log(select, "------")
     if (select !== null ? select.length > 0 : false) {
 
       if (projectData.projectName.breakdown.length === select.length) {
-        fetchleafNodeData(projectData, select[select.length - 2].id, select.length - 1, select[select.length - 1].id, select[select.length - 1].name);
+        if (select.length == 1) {
+          fetchleafNodeData(projectData, select[select.length - 1].id, select.length, select[select.length - 1].id, select[select.length - 1].name);
+        } else {
+          fetchleafNodeData(projectData, select[select.length - 2].id, select.length - 1, select[select.length - 1].id, select[select.length - 1].name);
+        }
+
       } else {
 
         for (var key in projectData.projectName.breakdown) {
@@ -197,35 +227,35 @@ console.log(breakdown1ListData)
     }
   };
 
-  const handleBreakdown = async (e, index, label,de,depth) => {
-    console.log({index:index,target:e.target.value, label:label,dep:depth})
+  const handleBreakdown = async (e, index, label, de, depth) => {
+    console.log({ index: index, target: e.target.value, label: label, dep: depth })
     await setSelectValue(e.target.value)
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     const value = e.target.value;
     let temp = [...breakdown1ListData]
     console.log(temp)
-    temp.map((item,key)=>{
-      if(item.breakdownLabel === label){
+    temp.map((item, key) => {
+      if (item.breakdownLabel === label) {
         temp[key]["selectValue"] = value
       }
     })
-    temp[temp.length-1]["selectValue"] = value
-    
+    temp[temp.length - 1]["selectValue"] = value
+
     let tempDepthAndId = props.selectDepthAndId;
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
-    let sliceData = dataDepthAndId.slice(0,index-1)
-    let newdataDepthAndId = [...sliceData,`${index}L${value}`]
+    let sliceData = dataDepthAndId.slice(0, index - 1)
+    let newdataDepthAndId = [...sliceData, `${index}L${value}`]
     props.setSelectDepthAndId(newdataDepthAndId)
     if (tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
       let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      console.log({temp:temp.slice(0, index-1)})
+      console.log({ temp: temp.slice(0, index - 1) })
       if (breakDownValue.length > 0) {
-        const removeBreakDownList = temp.slice(0, index)
+        const removeBreakDownList = temp.slice(0, index - 1)
         temp = removeBreakDownList
       } else {
-        const removeBreakDownList = temp.slice(0, index)
+        const removeBreakDownList = temp.slice(0, index - 1)
         temp = removeBreakDownList
-      }  
+      }
     }
     if (projectData.projectName.breakdown.length !== index) {
       for (var key in projectData.projectName.breakdown) {
@@ -237,7 +267,7 @@ console.log(breakdown1ListData)
             headers: HEADER_AUTH,
           };
           await Axios(config)
-            .then(async (response)=> {
+            .then(async (response) => {
               if (response.status === 200) {
 
                 if (
@@ -293,18 +323,18 @@ console.log(breakdown1ListData)
 
   }
 
-  const handleLeafValue = async(depth,id,name)=>{
-    console.log({depth:depth,id:id,name:name})
+  const handleLeafValue = async (depth, id, name) => {
+    console.log({ depth: depth, id: id, name: name })
     setSelectDepth(`${depth}${id}`);
     await props.setWorkArea(name)
     let temp = [...breakdown1ListData]
     console.log(temp)
-    temp[temp.length-1]["selectValue"] = id
+    temp[temp.length - 1]["selectValue"] = id
     await setBreakdown1ListData(temp)
     let tempDepthAndId = props.selectDepthAndId;
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== depth)
-    let sliceData = dataDepthAndId.slice(0,tempDepthAndId.length-1)
-    let newdataDepthAndId = [...sliceData,`${depth}${id}`]
+    let sliceData = dataDepthAndId.slice(0, tempDepthAndId.length - 1)
+    let newdataDepthAndId = [...sliceData, `${depth}${id}`]
     console.log(newdataDepthAndId)
     props.setSelectDepthAndId(newdataDepthAndId)
   }
@@ -324,7 +354,7 @@ console.log(breakdown1ListData)
     }
 
   }, [props.initialValues.breakDown]);
-
+  // console.log(leafNode, breakdown1ListData, '--------------')
   return (<>
 
     {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
@@ -357,7 +387,7 @@ console.log(breakdown1ListData)
             labelId="filter3-label"
             id="filter3"
             value={item.selectValue || ""}
-            
+
             // onChange={(e) => props.setWorkArea(item.selectValue)}
             label="Phases"
             style={{ width: "100%" }}
@@ -368,10 +398,10 @@ console.log(breakdown1ListData)
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
-                   
+
                     onClick={async (e) => {
-                      handleLeafValue(selectValue.depth,selectValue.id,selectValue.name)
-                      
+                      handleLeafValue(selectValue.depth, selectValue.id, selectValue.name)
+
                     }}
                   >
                     {selectValue.name}
@@ -402,7 +432,7 @@ console.log(breakdown1ListData)
             labelId="filter3-label"
             id="filter3"
             onChange={(e) => {
-              handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue,parseInt(item.index))
+              handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue, parseInt(item.index))
             }}
             label="Phases"
             style={{ width: "100%" }}
