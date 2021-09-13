@@ -33,9 +33,11 @@ import { useHistory, useParams } from 'react-router';
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from 'moment';
+import Box from "@material-ui/core/Box";
 
 import api from "../../../utils/axios";
 import { connect } from "react-redux";
+import Pagination from '@material-ui/lab/Pagination';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -147,6 +149,8 @@ function Aha(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
   const [data, setData] = useState([])
+  const [pageCount, setPageCount] = useState(0);
+
 
   // Function to toggle the view mode
   const handleView = () => {
@@ -220,46 +224,49 @@ function Aha(props) {
   //   // await handelTableView(result)
   // }
 
+
   const fetchAllAHAData = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId =
-      props.projectName.projectId ||
-      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    const res = await api.get("/api/v1/ahas/");
-    const selectBreakdown =
-      props.projectName.breakDown ||
-      JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
-    let struct = "";
-    for (const i in selectBreakdown) {
-      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-    }
-    const fkProjectStructureIds = struct.slice(0, -1);
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
 
-    if (fkProjectStructureIds) {
-      const newData = res.data.data.results.results.filter(
-        (item) =>
-          item.fkCompanyId === fkCompanyId &&
-          item.fkProjectId === fkProjectId &&
-          item.fkProjectStructureIds.includes(fkProjectStructureIds)
-      );
-    
-      await setAllAHAData(newData);
-      await setIsLoading(true);
-    } else {
-      const newData = res.data.data.results.results.filter(
-        (item) =>
-          item.fkCompanyId === fkCompanyId && item.fkProjectId === fkProjectId
-      );
-      await setAllAHAData(newData);
+    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    await setPageCount(pageCount)
 
-      // const res = await api.get(`/api/v1/observations/`);
-      // const result = res.data.data.results.results
-      // await setAllInitialData(result)
-      await setIsLoading(true);
-    }
+    await setIsLoading(true)
   };
+
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  const res = await api.get(`api/v1/ahas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllAHAData(res.data.data.results.results);
+  };
+
+  
 
   const handelTableView = (result) => {
     const temp = []
@@ -288,6 +295,7 @@ function Aha(props) {
 },[props.projectName])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
+    <Box>
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
           <Toolbar>
@@ -399,7 +407,7 @@ function Aha(props) {
                   <Grid item xs={6} md={3}>
                     <Chip
                       variant="outlined"
-                      label="Initial Notification"
+                      label="AHA"
                       color="primary"
                       size="small"
                     />
@@ -562,6 +570,10 @@ function Aha(props) {
           options={options}
         />
       )}
+      <div className={classes.pagination}>
+      <Pagination count={pageCount} onChange={handleChange}/>
+    </div>
+    </Box>
     </PapperBlock>
   );
 }

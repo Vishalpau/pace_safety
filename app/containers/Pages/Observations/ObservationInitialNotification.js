@@ -402,7 +402,6 @@ const ObservationInitialNotification = (props) => {
     vendor: "string",
     vendorReferenceId: "string",
   });
-  console.log(form)
 
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([
@@ -743,7 +742,13 @@ const ObservationInitialNotification = (props) => {
   const fetchTags = async () => {
     const res = await api.get(`/api/v1/tags/`);
     const result = res.data.data.results.results;
-    let sorting = result.sort((a, b) => a.id - b.id);
+    let temp = []
+    result.map((value) => {
+      if(value.status === "Active") {
+        temp.push(value)
+      }
+    })
+    let sorting = temp.sort((a, b) => a.id - b.id);
     await setTagData(sorting);
   };
 
@@ -763,11 +768,13 @@ const ObservationInitialNotification = (props) => {
       `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
-    let ar = result.attachment;
+    if(result !== undefined) {
+      let ar = result.attachment;
    
-    await setAttachment(ar)
+      await setAttachment(ar)
+    }
+    
   };
-  
 
   const fetchBreakDownData = async (projectBreakdown) => {
 
@@ -1063,7 +1070,6 @@ const ObservationInitialNotification = (props) => {
           setValue({
             inputValue: newValue,
           });
-          console.log("444",newValue);
                   setForm({...form,reportedByDepartment:newValue})
                 
         } else if (newValue && newValue.inputValue) {
@@ -1071,7 +1077,6 @@ const ObservationInitialNotification = (props) => {
           setValue({
             inputValue: newValue.inputValue,
           });
-          console.log("544",newValue);
 
           setForm({...form,reportedByDepartment:newValue.inputValue})
 
@@ -1166,7 +1171,6 @@ const ObservationInitialNotification = (props) => {
           //   inputValue: newValue.inputValue,
           // });
           if(newValue.supervisorId){
-            console.log(newValue)
             setForm({...form,supervisorName:newValue.inputValue ,supervisorByBadgeId:newValue.badgeNo , supervisorId : newValue.supervisorId});
 
           }else{

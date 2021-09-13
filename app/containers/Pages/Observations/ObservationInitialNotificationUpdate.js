@@ -346,10 +346,20 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const fetchTags = async () => {
-    const res = await api.get(`/api/v1/tags/`)
-    const result = res.data.data.results.results
-    let sorting = result.sort((a, b) => a.id - b.id)
-    await setTagData(sorting)
+    const res = await api.get(`/api/v1/tags/`);
+    const result = res.data.data.results.results;
+    let temp = []
+    result.map((value) => {
+      if(value.status === "Active") {
+        temp.push(value)
+      }
+    })
+    let sorting = temp.sort((a, b) => a.id - b.id);
+    await setTagData(sorting);
+    // const res = await api.get(`/api/v1/tags/`)
+    // const result = res.data.data.results.results
+    // let sorting = result.sort((a, b) => a.id - b.id)
+    // await setTagData(sorting)
   }
 
   const fetchReportedBy = () => {
@@ -531,7 +541,7 @@ const ObservationInitialNotificationUpdate = () => {
                 Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null} - {projectSturcturedData[1] ? projectSturcturedData[1].name : null} - {projectSturcturedData[2] ? projectSturcturedData[2].name : null} 
+            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}-` : null} 
             </Typography>
           </Grid>
           <Grid
