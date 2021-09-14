@@ -55,6 +55,7 @@ import { List } from "immutable";
 
 import { connect } from "react-redux";
 import {tabViewMode} from '../../../redux/actions/initialDetails';
+import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
 import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
@@ -202,29 +203,30 @@ const fkProjectStructureIds = struct.slice(0, -1);
   }
   const fkProjectStructureIds = struct.slice(0, -1);
   if(fkProjectStructureIds){
-    const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     await setIncidents(res.data.data.results.results);
     
     let pageCount  = Math.ceil(res.data.data.results.count/25)
     await setPageCount(pageCount)
   }else{
-    const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}`);
+    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     await setIncidents(res.data.data.results.results);
     
     let pageCount  = Math.ceil(res.data.data.results.count/25)
     await setPageCount(pageCount)
   }
-  
-    
-   
   };
 
   const handlePush = async () => {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
+  const filterSubscription = ()=>{
+    // const userDetails = JSON.parse(localStorage.getItem(''))
+  }
   useEffect(() => {
     fetchData();
+    
   }, [props.projectName]);
 
   const handelSearchIncident = async (e) => {
@@ -325,8 +327,8 @@ const fkProjectStructureIds = struct.slice(0, -1);
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  
-  const res = await api.get(`api/v1/incidents/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+  // https://dev-safety-api.paceos.io/api/v1/incidents/?companyId=1&projectStructureIds=1L1:2L3:3L6&projectId=1
+  const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setIncidents(res.data.data.results.results);
   };
   const classes = useStyles();

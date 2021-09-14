@@ -57,6 +57,7 @@ const ProjectStructure = (props) => {
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
 
   const [selectDepth, setSelectDepth] = useState("")
+  const [labelList, setLabelList] = useState([])
 
   // const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [lenghtBreaddown, setLengthBreakDown] = useState(0)
@@ -84,198 +85,182 @@ const ProjectStructure = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-  const fetchleafNodeData = async (projectData, id, index, selectVal, selectName) => {
-
-    var config = {
-      method: "get",
-      url: `${SSO_URL}/${projectData.projectName.breakdown[index].structure[0].url
-        }${id}`,
-      headers: HEADER_AUTH,
-    };
-
-    await Axios(config)
-      .then(async (response) => {
-
-        await setLeafNode(true)
-        await setBreakdown1ListData([
-          {
-            breakdownLabel:
-              projectData.projectName.breakdown[index].structure[0].name,
-            breakdownValue: response.data.data.results,
-            selectValue: selectVal,
-            index: 0
-          },
-        ]);
-
-      })
-      .catch(function (error) {
-      });
-    props.setWorkArea(selectName)
-  }
-console.log(breakdown1ListData)
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
+    
+    let labellist = projectData.projectName.breakdown.map((item,key)=>{return {breakdownLabel:item.structure[0].name,breakdownValue:[],selectValue:"",index:key}})
+
     let lenghtbreaddown = projectData.projectName.breakdown.length ? projectData.projectName.breakdown.length : 0
     await setLengthBreakDown(lenghtbreaddown)
     let selectDepthId = []
     for (var i in select) {
       let selectId = select[i].id;
       let selectDepth = select[i].depth
+      labellist[i].selectValue=select[i].id
+      labellist[i].disabled=true
       selectDepthId = [...selectDepthId, `${selectDepth}${selectId}`]
     }
-
-    props.setSelectDepthAndId(selectDepthId);
-
-    if (select !== null ? select.length > 0 : false) {
-
-      if (projectData.projectName.breakdown.length === select.length) {
-        fetchleafNodeData(projectData, select[select.length - 2].id, select.length - 1, select[select.length - 1].id, select[select.length - 1].name);
-      } else {
-
-        for (var key in projectData.projectName.breakdown) {
-
-          if (key == select.length) {
-
-            try {
-              var config = {
-                method: "get",
-                url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                  }${select[key - 1].id}`,
-                headers: HEADER_AUTH,
-              };
-
-              await Axios(config)
-                .then(async (response) => {
-
-                  await setBreakdown1ListData([
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[key].structure[0].name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: "",
-                      index: key
-                    },
-                  ]);
-
-                })
-                .catch(function (error) {
-                });
-            } catch (err) {
-              ;
-            }
-          }
-        }
-      }
-    } else {
-      for (var key in projectData.projectName.breakdown) {
-
-        if (key == 0) {
+    props.setSelectDepthAndId(selectDepthId)
+    if(select.length === 0){
+      
           var config = {
             method: "get",
             url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
               }`,
             headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response) => {
-
-              await setBreakdown1ListData([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0].name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index: 0
-                },
-              ]);
-
-            })
-            .catch(function (error) {
-            });
-        }
-      }
+          };       
+          const res = await Axios(config)
+          if(res.status === 200){
+            labellist[0].breakdownValue=res.data.data.results; 
+            
+            setLabelList(labellist)
+            // setIsLoading(true)
+          }
     }
-  };
-
-  const handleBreakdown = async (e, index, label,de,depth) => {
-    console.log({index:index,target:e.target.value, label:label,dep:depth})
-    await setSelectValue(e.target.value)
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    console.log(temp)
-    temp.map((item,key)=>{
-      if(item.breakdownLabel === label){
-        temp[key]["selectValue"] = value
-      }
-    })
-    temp[temp.length-1]["selectValue"] = value
-    
-    let tempDepthAndId = props.selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
-    let sliceData = dataDepthAndId.slice(0,index-1)
-    let newdataDepthAndId = [...sliceData,`${index}L${value}`]
-    props.setSelectDepthAndId(newdataDepthAndId)
-    if (tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
-      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      console.log({temp:temp.slice(0, index-1)})
-      if (breakDownValue.length > 0) {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
-      } else {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
-      }  
-    }
-    if (projectData.projectName.breakdown.length !== index) {
+    else if(select.length === labellist.length){
       for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${value}`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response)=> {
-              if (response.status === 200) {
 
-                if (
-                  temp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[key].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  await setBreakdown1ListData([
-                    ...temp,
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value,
-                      index: index
-                    },
-                  ]);
-                }
-              }
-            })
-            .catch(function (error) {
+        if (key == select.length-1) {
 
-            });
+          try {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${select[key - 1].id}`,
+              headers: HEADER_AUTH,
+            };
+
+            await Axios(config)
+              .then(async (response) => {
+
+              
+                labellist[key].breakdownValue= response.data.data.results;
+                // labellist[key].selectValue= select[key].id;
+          
+               
+              setLabelList(labellist)  
+
+              })
+              .catch(function (error) {
+              });
+          } catch (err) {
+            ;
+          }
         }
       }
-    } else {
     }
+    else{
+      for (var key in projectData.projectName.breakdown) {
+
+        if (key == select.length) {
+
+          try {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${select[key - 1].id}`,
+              headers: HEADER_AUTH,
+            };
+
+            await Axios(config)
+              .then(async (response) => {
+
+              
+                labellist[key].breakdownValue= response.data.data.results;
+                // labellist[key].selectValue= select[key].id;
+            
+               
+              setLabelList(labellist)  
+
+              })
+              .catch(function (error) {
+              });
+          } catch (err) {
+            ;
+          }
+        }
+      }
+    }   
   };
 
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...props.selectDepthAndId, `${depth}${id}`]
-    props.setSelectDepthAndId([... new Set(newData)])
+ 
+  const handleBreakdown = async (e, index, label) => {
+   let projectData = JSON.parse(localStorage.getItem('projectName'))
+    const value = e.target.value;
+    let temp = [...labelList]
+    temp[index][`selectValue`] = value;
+    // handleDepthId(value,`${index+1}L`)
+    let tempdeptid = [...props.selectDepthAndId]
+    let depthId = tempdeptid.filter(item=>item.slice(0,2)!==`${index+1}L`)
+    let slicedepthId = depthId.slice(0,index)
+    let newDepthId = [...slicedepthId,`${index+1}L${value}`]
+    props.setSelectDepthAndId(newDepthId)
+    if(selectBreakDown.filter(filterItem => filterItem.depth === `${index+1}L`).length > 0){
+       for(var i in temp){
+         if(i>index){
+           temp[i].breakdownValue=[]
+         }
+         
+       }
+      let removeSelectBreakDown = selectBreakDown.slice(0,index)
+    
+      let name = temp[index].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            setSelectBreakDown([
+              ...removeSelectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name,label:label },
+            ]);
+            return;
+          }
+
+        }
+      );
+    } else {
+      let name = temp[index ].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            await setSelectBreakDown([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name,label:label },
+            ]);
+                       
+            return;
+          }
+
+        }
+      );
+    }
+    
+    if(projectData.projectName.breakdown.length !== index+1){
+    for (var key in projectData.projectName.breakdown) {
+      if (key == index+1) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${value}`,
+          headers: HEADER_AUTH,
+        };
+        await Axios(config)
+          .then(function (response) {
+            if (response.status === 200) {
+
+              
+                temp[key].breakdownValue= response.data.data.results;
+                // temp[key].selectValue= e.target.value;
+               
+              setLabelList(temp)
+            }
+          })
+          .catch(function (error) {
+
+          });
+      }
+    }
   }
+  };
+
+
 
   const setStateBreakDown = async (select, projectData) => {
 
@@ -292,23 +277,7 @@ console.log(breakdown1ListData)
     await fetchCallBack(select, projectData);
 
   }
-
-  const handleLeafValue = async(depth,id,name)=>{
-    console.log({depth:depth,id:id,name:name})
-    setSelectDepth(`${depth}${id}`);
-    await props.setWorkArea(name)
-    let temp = [...breakdown1ListData]
-    console.log(temp)
-    temp[temp.length-1]["selectValue"] = id
-    await setBreakdown1ListData(temp)
-    let tempDepthAndId = props.selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== depth)
-    let sliceData = dataDepthAndId.slice(0,tempDepthAndId.length-1)
-    let newdataDepthAndId = [...sliceData,`${depth}${id}`]
-    console.log(newdataDepthAndId)
-    props.setSelectDepthAndId(newdataDepthAndId)
-  }
-
+ 
   useEffect(() => {
     // fetchListData();
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -326,8 +295,7 @@ console.log(breakdown1ListData)
   }, [props.initialValues.breakDown]);
 
   return (<>
-
-    {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
+ {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
       <Grid item xs={3} key={key}>
         <Typography
           variant="h6"
@@ -341,98 +309,101 @@ console.log(breakdown1ListData)
           {selectBreakdow.name}
         </Typography>
       </Grid>)}
-    {leafNode ? breakdown1ListData.map((item, index) => (
+   
+    {labelList.length===selectBreakdown.length?
+    labelList.slice(selectBreakdown.length-1).map((item, index) => (
       <Grid item xs={3}>
-        <FormControl
-          key={index}
-          variant="outlined"
-          required
-          className={classes.formControl}
-          error={props.error && props.error[`projectStructure`]}
+      <FormControl
+        key={index}
+        variant="outlined"
+        size="small"
+        fullWidth={true}
+        className={classes.formControl}
+      >
+
+        <InputLabel id="filter3-label">
+          {item.breakdownLabel}
+        </InputLabel>
+        <Select
+          labelId="filter3-label"
+          id="filter3"
+          value={item.selectValue}
+          disabled={item.breakdownValue.length>0?false:true}
+          onChange={(e) => {
+            handleBreakdown(e, (item.index),item.breakdownLabel);
+
+          }}
+          value={item.selectValue !==""?parseInt(item.selectValue):""}
+          label="Phases"
+          style={{ width: "100%" }}
         >
-          <InputLabel id="filter3-label">
-            {item.breakdownLabel}
-          </InputLabel>
-          <Select
-            labelId="filter3-label"
-            id="filter3"
-            value={item.selectValue || ""}
+          {item.breakdownValue.length>0
+            ? item.breakdownValue.map(
+              (selectValue, selectKey) => (
+                <MenuItem
+                  key={selectKey}
+                  value={selectValue.id}
+                >
+                  {selectValue.name}
+                </MenuItem>
+              )
+            )
+            : <MenuItem
             
-            // onChange={(e) => props.setWorkArea(item.selectValue)}
-            label="Phases"
-            style={{ width: "100%" }}
           >
-            {item.breakdownValue.length
-              ? item.breakdownValue.map(
-                (selectValue, selectKey) => (
-                  <MenuItem
-                    key={selectKey}
-                    value={selectValue.id}
-                   
-                    onClick={async (e) => {
-                      handleLeafValue(selectValue.depth,selectValue.id,selectValue.name)
-                      
-                    }}
-                  >
-                    {selectValue.name}
-                  </MenuItem>
-                )
-              )
-              : null}
-          </Select>
-          {error && error.projectStructure && (
-            <FormHelperText>{error.projectStructure}</FormHelperText>
-          )}
-        </FormControl>
-
+            No Data
+          </MenuItem>}
+        </Select>
+      </FormControl>
       </Grid>
-    )) : breakdown1ListData.map((item, index) => (
+    )):
+    labelList.length>0?labelList.slice(selectBreakdown.length).map((item, index) => (
       <Grid item xs={3}>
-        <FormControl
-          key={index}
-          variant="outlined"
-          required
-          className={classes.formControl}
-          error={props.error && props.error[`projectStructure`]}
+      <FormControl
+        key={index}
+        variant="outlined"
+        size="small"
+        fullWidth={true}
+        className={classes.formControl}
+      >
+
+        <InputLabel id="filter3-label">
+          {item.breakdownLabel}
+        </InputLabel>
+        <Select
+          labelId="filter3-label"
+          id="filter3"
+          value={item.selectValue}
+          disabled={item.breakdownValue.length>0?false:true}
+          onChange={(e) => {
+            handleBreakdown(e, (item.index),item.breakdownLabel);
+
+          }}
+          value={item.selectValue !==""?parseInt(item.selectValue):""}
+          label="Phases"
+          style={{ width: "100%" }}
         >
-          <InputLabel id="filter3-label">
-            {item.breakdownLabel}
-          </InputLabel>
-          <Select
-            labelId="filter3-label"
-            id="filter3"
-            onChange={(e) => {
-              handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue,parseInt(item.index))
-            }}
-            label="Phases"
-            style={{ width: "100%" }}
-            value={item.selectValue || ""}
-          >
-            {item.breakdownValue.length
-              ? item.breakdownValue.map(
-                (selectValue, selectKey) => (
-                  <MenuItem
-                    key={selectKey}
-                    value={selectValue.id ? selectValue.id : ""}
-
-                    onClick={async (e) => {
-                      // await handleDepthAndId(selectValue.depth, selectValue.id);
-                      await props.setWorkArea(selectValue.name)
-                    }}
-                  >
-                    {selectValue.name}
-                  </MenuItem>
-                )
+          {item.breakdownValue.length>0
+            ? item.breakdownValue.map(
+              (selectValue, selectKey) => (
+                <MenuItem
+                  key={selectKey}
+                  value={selectValue.id}
+                >
+                  {selectValue.name}
+                </MenuItem>
               )
-              : null}
-          </Select>
-          {props.error && props.error.projectStructure && (
-            <FormHelperText>{props.error.projectStructure}</FormHelperText>
-          )}
-        </FormControl>
-
+            )
+            : <MenuItem
+            
+          >
+            No Data
+          </MenuItem>}
+        </Select>
+      </FormControl>
       </Grid>
-    ))}
+    ))
+   :null }
   </>
   );
 };

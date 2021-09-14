@@ -509,24 +509,31 @@ const IncidentDetails = (props) => {
       }
     }
   };
-console.log(selectDepthAndId)
+
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     
     const value = e.target.value;
     
     const temp = [...fetchSelectBreakDownList]
-    temp[index-1]["selectValue"].id = value
-    let removeTemp = temp.slice(0, index)
+    temp[index]["selectValue"].id = value
+    // let removeTemp = temp.slice(0, index)
+    for(var i in temp){
+      if(i>index){
+        temp[i].breakDownData=[]
+        temp[i].selectValue.id=""
+      }
+      
+    }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index}L`)
-    let sliceData = dataDepthAndId.slice(0,index-1)
-    let newdataDepthAndId = [...sliceData,`${index}L${value}`]
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
+    let sliceData = dataDepthAndId.slice(0,index)
+    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
     setSelectDepthAndId(newdataDepthAndId)
-    await setFetchSelectBreakDownList(removeTemp)
-    if (projectData.projectName.breakdown.length !== index) {
+    // await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index+1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
+        if (key == index+1) {
          
           
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -534,24 +541,10 @@ console.log(selectDepthAndId)
             .then(function (response) {
               if (response.status === 200) {
 
-                if (
-                  removeTemp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[index].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setFetchSelectBreakDownList([
-                    ...removeTemp,
-                    {
-                      breakDownLabel: projectData.projectName.breakdown[index].structure[0].name,
-                      selectValue: {id:value},
-                      breakDownData: response.data.data.results
-                    },
-                  ]);
-                }
+               temp[key].breakDownData =response.data.data.results
+               console.log({temp:temp})
+              //  temp[key].select=e.
+              setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
@@ -561,7 +554,7 @@ console.log(selectDepthAndId)
       }
     } 
   };
-
+console.log(breakdown1ListData)
   const fetchBreakDownData = async (projectBreakdown) => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -641,16 +634,6 @@ console.log(selectDepthAndId)
     }
   };
 
-  // const handleDepthAndId = (depth, id) => {
-  //   if(selectDepthAndId.length>0){
-  //     let data = selectDepthAndId.filter(item=>!item.includes(depth))
-  //     let newData = data.push(`${depth}${id}`) ;
-  //     setSelectDepthAndId(newData);
-  //   }else{
-  //     let newData = [...selectDepthAndId, `${depth}${id}`]
-  //     setSelectDepthAndId(newData);
-  //   } 
-  // }
   useEffect(() => {
     fetchContractorValue();
     fetchIncidentTypeValue();
@@ -662,7 +645,7 @@ console.log(selectDepthAndId)
     fetchIncidentsData();
   }, [])
 
-
+console.log(selectDepthAndId)
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
     if (e !== "Yes") {
@@ -717,8 +700,9 @@ console.log(selectDepthAndId)
                     id="incident-type"
                     label="Incident type"
                     value={data.selectValue.id || ""}
+                    disabled={data.breakDownData.length===0}
                     onChange={(e) => {
-                      handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
                     }}
                   >
                     {data.breakDownData.length !== 0

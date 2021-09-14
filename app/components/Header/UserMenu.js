@@ -50,6 +50,8 @@ import api from "../../utils/axios";
 
 // redux
 import { connect } from 'react-redux'
+import { useDispatch } from "react-redux";
+import { fetchPermission } from "../../redux/actions/authentication";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -143,6 +145,7 @@ function UserMenu(props) {
   const [userImageLink, setUserImageLink] = useState([])
   const [companyLogoLink, setCompanyLogoLink] = useState('')
   const [companyName, setCompanyName] = useState('')
+  const dispatch = useDispatch()
 
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -207,6 +210,8 @@ function UserMenu(props) {
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
+        let roles = res.data.data.results.data.companies[0].subscriptions.filter(item=> item.appCode === "Safety")
+        dispatch(fetchPermission(roles[0]))
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
