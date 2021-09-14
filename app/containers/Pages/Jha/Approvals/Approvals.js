@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#ff8533',
       border: 'none',
     },
+    marginLeft: "20px"
   },
   updateLink: {
     float: 'right',
@@ -187,6 +188,7 @@ const Approvals = () => {
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
+
               <Grid
                 item
                 md={8}
@@ -205,6 +207,7 @@ const Approvals = () => {
                   {check.wrp ? "Approved" : "Approve Now"}
                 </Button>
               </Grid>
+
               <Grid
                 item
                 md={8}
@@ -212,7 +215,7 @@ const Approvals = () => {
                 className={classes.formBox}
               >
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  PIC (if attended the Toolbox meeting)
+                  PIC (Person-in-charge)
                 </Typography>
                 <Button
                   variant="contained"
@@ -273,6 +276,15 @@ const Approvals = () => {
                   onClick={(e) => handelSubmit()}
                 >
                   Submit
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  color="secondary"
+                  className={classes.custmSubmitBtn}
+                  onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                >
+                  Cancel
                 </Button>
               </Grid>
             </Grid>

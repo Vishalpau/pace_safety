@@ -421,7 +421,7 @@ const Assessment = () => {
                       <AccordionDetails>
                         <Grid container spacing={2}>
 
-                          <Grid item md={6} sm={6} xs={6}>
+                          <Grid item md={5} sm={5} xs={5}>
                             <FormControl
                               variant="outlined"
                               requirement
@@ -448,7 +448,7 @@ const Assessment = () => {
                             </FormControl>
                           </Grid>
 
-                          <Grid item md={6} sm={6} xs={6}>
+                          <Grid item md={5} sm={5} xs={5}>
                             <TextField
                               variant="outlined"
                               id="controls"
@@ -460,29 +460,29 @@ const Assessment = () => {
                               onChange={(e) => handelRiskAndControl("control", index, e.target.value)}
                             />
                           </Grid>
-                          <Grid item md={12} xs={12} className={classes.createHazardbox}>
-                            <Divider light />
+
+                          <Grid item md={2} sm={2} xs={2}>
+                            <Grid item xs={12} className={classes.createHazardbox}>
+                              <ActionTracker
+                                actionContext="jha:hazard"
+                                enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                              />
+                            </Grid>
+                            <Grid item xs={12} className={classes.createHazardbox}>
+                              {form[index]["action"].length > 0
+                                &&
+                                form[index]["action"].map((value) => (
+                                  <Link display="block"
+                                    href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.trackerId}`}
+                                  >
+                                    {value.trackerNumber}
+                                  </Link>
+                                ))}
+                            </Grid>
                           </Grid>
 
-                          <Grid item xs={6} className={classes.createHazardbox}>
-                            <ActionTracker
-                              actionContext="jha:hazard"
-                              enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
-                              setUpdatePage={setUpdatePage}
-                              updatePage={updatePage}
-                            />
-                          </Grid>
-                          <Grid item xs={6} className={classes.createHazardbox}>
-                            {form[index]["action"].length > 0
-                              &&
-                              form[index]["action"].map((value) => (
-                                <Link display="block"
-                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.trackerId}`}
-                                >
-                                  {value.trackerNumber}
-                                </Link>
-                              ))}
-                          </Grid>
                         </Grid>
                       </AccordionDetails>
                     </Accordion>

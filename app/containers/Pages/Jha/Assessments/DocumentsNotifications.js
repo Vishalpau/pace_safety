@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#ff8533',
       border: 'none',
     },
+    marginLeft: "10px"
   },
   formBox: {
     '& .dropzone': {
@@ -379,7 +380,6 @@ const DocumentNotification = () => {
                   variant="outlined"
                   onClick={(e) => handelNext()}
                   className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
                 >
 
                   Submit
@@ -389,6 +389,15 @@ const DocumentNotification = () => {
                   <CircularProgress color="secondary" />
                 </IconButton>
               }
+              <Button
+                variant="outlined"
+                size="medium"
+                color="secondary"
+                className={classes.custmSubmitBtn}
+                onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+              >
+                Cancel
+              </Button>
             </Grid>
           </Grid>
         </Col >

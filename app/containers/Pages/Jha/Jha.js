@@ -245,6 +245,7 @@ function Jha(props) {
   };
 
   const handleNewJhaPush = async () => {
+    localStorage.removeItem("fkJHAId")
     history.push("/app/pages/jha/assessments/project-details");
   };
 

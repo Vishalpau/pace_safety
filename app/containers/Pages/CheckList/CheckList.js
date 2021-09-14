@@ -10,6 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
+import SelectAllIcon from '@material-ui/icons/SelectAll'
 import { useHistory, useParams } from "react-router";
 
 import api from "../../../utils/axios"
@@ -27,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
     },
     tabelBorder: {
         width: 110,
+    },
+    columunBorder: {
+        width: 110,
+        fontWeight: 600,
     },
     paper: {
         position: 'absolute',
@@ -96,18 +104,18 @@ function CheckList() {
 
     const classes = useStyles();
     return (
-        <PapperBlock title="Checklist manager" icon="ion-md-list-box" desc="">
+        <PapperBlock title="Check List" icon="ion-md-list-box" desc="">
             <Table className={classes.table}>
                 <TableBody>
                     <TableRow>
-                        <TableCell className={classes.tabelBorder}>Sr.</TableCell>
-                        <TableCell className={classes.tabelBorder}>List name</TableCell>
-                        <TableCell className={classes.tabelBorder}>List type</TableCell>
-                        <TableCell className={classes.tabelBorder}>List label</TableCell>
-                        <TableCell className={classes.tabelBorder}>Select</TableCell>
-                        <TableCell className={classes.tabelBorder}>Has group?</TableCell>
-                        <TableCell className={classes.tabelBorder}>Status</TableCell>
-                        <TableCell className={classes.tabelBorder}>Actions</TableCell>
+                        <TableCell className={classes.columunBorder}>Sr.</TableCell>
+                        <TableCell className={classes.columunBorder}>Group Name</TableCell>
+                        <TableCell className={classes.columunBorder}>Group Type</TableCell>
+                        <TableCell className={classes.columunBorder}>Group Label</TableCell>
+                        <TableCell className={classes.columunBorder}>Select</TableCell>
+                        <TableCell className={classes.columunBorder}>Has group?</TableCell>
+                        <TableCell className={classes.columunBorder}>Status</TableCell>
+                        <TableCell className={classes.columunBorder}>Actions</TableCell>
                     </TableRow>
                     {chekListData.map((value) => (
                         <TableRow>
@@ -118,7 +126,11 @@ function CheckList() {
                             <TableCell className={classes.tabelBorder}>0</TableCell>
                             <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
                             <TableCell className={classes.tabelBorder}>0</TableCell>
-                            <TableCell className={classes.tabelBorder}><i className="ion-ios-more" onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} /></TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                <IconButton size="small" color="primary">
+                                    <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
+                                </IconButton>
+                            </TableCell>
                         </TableRow>
                     ))}
 
@@ -140,13 +152,23 @@ function CheckList() {
                 >
                     <div style={getModalStyle()} className={classes.paper}>
                         {hagGroup == "Yes" ?
-                            <Typography variant="h6" id="modal-title">
-                                <Button onClick={(e) => handelNavigate("groups")}>Group</Button>
+                            <Typography
+                                variant="h8"
+                                id="modal-title"
+                                onClick={(e) => handelNavigate("groups")}
+                            >
+                                <GroupWorkIcon />
+                                <span>Groups</span>
                             </Typography> :
                             null
                         }
-                        <Typography variant="subtitle1" id="simple-modal-description">
-                            <Button onClick={(e) => handelNavigate("options")}>Options</Button>
+                        <Typography
+                            variant="subtitle1"
+                            id="simple-modal-description"
+                            onClick={(e) => handelNavigate("options")}
+                        >
+                            <SelectAllIcon />
+                            <span>Options</span>
                         </Typography>
                     </div>
                 </Modal>
