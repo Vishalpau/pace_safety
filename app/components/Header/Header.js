@@ -377,6 +377,7 @@ function Header(props) {
        for(var i in temp){
          if(i>index){
            temp[i].breakdownValue=[]
+           temp[i].selectValue=""
          }
          
        }

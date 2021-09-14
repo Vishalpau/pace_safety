@@ -89,7 +89,7 @@ const ProjectStructure = (props) => {
   const fetchCallBack = async (select, projectData) => {
     
     let labellist = projectData.projectName.breakdown.map((item,key)=>{return {breakdownLabel:item.structure[0].name,breakdownValue:[],selectValue:"",index:key}})
-
+  
     let lenghtbreaddown = projectData.projectName.breakdown.length ? projectData.projectName.breakdown.length : 0
     await setLengthBreakDown(lenghtbreaddown)
     let selectDepthId = []
@@ -100,6 +100,7 @@ const ProjectStructure = (props) => {
       labellist[i].disabled=true
       selectDepthId = [...selectDepthId, `${selectDepth}${selectId}`]
     }
+    
     props.setSelectDepthAndId(selectDepthId)
     if(select.length === 0){
       
@@ -116,8 +117,23 @@ const ProjectStructure = (props) => {
             setLabelList(labellist)
             // setIsLoading(true)
           }
+    }else if(select.length===1){
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+          }`,
+        headers: HEADER_AUTH,
+      };       
+      const res = await Axios(config)
+      if(res.status === 200){
+        labellist[0].breakdownValue=res.data.data.results; 
+        
+        setLabelList(labellist)
+        // setIsLoading(true)
+      }
     }
     else if(select.length === labellist.length){
+
       for (var key in projectData.projectName.breakdown) {
 
         if (key == select.length-1) {
@@ -136,7 +152,7 @@ const ProjectStructure = (props) => {
               
                 labellist[key].breakdownValue= response.data.data.results;
                 // labellist[key].selectValue= select[key].id;
-          
+        
                
               setLabelList(labellist)  
 
@@ -309,8 +325,54 @@ const ProjectStructure = (props) => {
           {selectBreakdow.name}
         </Typography>
       </Grid>)}
-   
-    {labelList.length===selectBreakdown.length?
+  
+    {labelList.length === 1?labelList.map((item, index) => (
+      <Grid item xs={3}>
+      <FormControl
+        key={index}
+        variant="outlined"
+        size="small"
+        fullWidth={true}
+        className={classes.formControl}
+      >
+
+        <InputLabel id="filter3-label">
+          {item.breakdownLabel}
+        </InputLabel>
+        <Select
+          labelId="filter3-label"
+          id="filter3"
+          value={item.selectValue}
+          disabled={item.breakdownValue.length>0?false:true}
+          onChange={(e) => {
+            handleBreakdown(e, (item.index),item.breakdownLabel);
+
+          }}
+          value={item.selectValue !==""?parseInt(item.selectValue):""}
+          label="Phases"
+          style={{ width: "100%" }}
+        >
+          {item.breakdownValue.length>0
+            ? item.breakdownValue.map(
+              (selectValue, selectKey) => (
+                <MenuItem
+                  key={selectKey}
+                  value={selectValue.id}
+                >
+                  {selectValue.name}
+                </MenuItem>
+              )
+            )
+            : <MenuItem
+            
+          >
+            No Data
+          </MenuItem>}
+        </Select>
+      </FormControl>
+      </Grid>
+    ))
+    :labelList.length===selectBreakdown.length?
     labelList.slice(selectBreakdown.length-1).map((item, index) => (
       <Grid item xs={3}>
       <FormControl
