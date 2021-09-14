@@ -196,7 +196,7 @@ bytes
   const [submitLoader , setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
   const [isLoading , setIsLoading] = useState(false);
-
+  const [workArea, setWorkArea] = useState("")
    const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
@@ -207,7 +207,6 @@ bytes
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes' , 'No' ]
   const [error, setError] = useState({});
-
 
   
   const handleTeamName = (e, key) => {
@@ -243,13 +242,15 @@ bytes
   };
 
   }
+  console.log(workArea,"6666666")
+
 
   const [form , setForm] = useState(
     {
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-      "workArea": "",
+      "workArea": workArea,
       "location": "",
       "assessmentDate": null,
       "permitToPerform": "",
@@ -281,13 +282,13 @@ bytes
   )
 
 
-
   const handleSubmit = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
+    form["workArea"] = workArea
     
     const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
@@ -689,11 +690,13 @@ bytes
                 </FormControl>
               </Grid>
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setSelectDepthAndId={setSelectDepthAndId} />
+              ) : <ProjectStructureInit
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setSelectDepthAndId={setSelectDepthAndId}
+                setWorkArea={setWorkArea}
+              />
               }
         {/* <Grid
         item
@@ -727,7 +730,7 @@ bytes
         >
         <TextField
             label="Work Location*"
-            margin="dense"
+            // margin="dense"
             name="worklocation"
             id="worklocation"
             value={form.location ? form.location : ""}
@@ -748,7 +751,7 @@ bytes
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDateTimePicker
                 className={classes.formControl}
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 label="Date & Time*"
                 value={selectedDate}
@@ -804,7 +807,7 @@ bytes
         >
         <TextField
             label="Permit Reference"
-            margin="dense"
+            // margin="dense"
             name="reference"
             id="reference"
             multiline
@@ -825,7 +828,7 @@ bytes
         >
         <TextField
             label="Description*"
-            margin="dense"
+            // margin="dense"
             name="description"
             id="description"
             multiline
@@ -860,7 +863,7 @@ bytes
        
           <TextField
             label="Team Name"
-            margin="dense"
+            // margin="dense"
             name="arename"
             id="arename"
             multiline

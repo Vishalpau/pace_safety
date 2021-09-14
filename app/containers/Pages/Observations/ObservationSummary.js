@@ -202,7 +202,6 @@ const ObservationSummary = () => {
   setObservationCorrectiveActionView(true)
  localStorage.removeItem("updateAction")
 }
-  
 
   const selectValues = [1, 2, 3, 4];
   const radioDecide = ['Yes', 'No'];
@@ -264,7 +263,7 @@ const ObservationSummary = () => {
                   Action Tracking
               </Button>
               <Typography display="block">
-                  {localStorage.getItem("action") === "Done" ? "Done" : "Pending"}
+                  {localStorage.getItem("action") === "Done" ? "Done" : ""}
               </Typography>
             </div>
           </div>
@@ -278,7 +277,10 @@ const ObservationSummary = () => {
               <>
                 {(() => {
                   if(comment === true) {
-                    return (<Comments/>)
+                    return (<Comments
+                              commentContext="observations"
+                              id={localStorage.getItem("fkobservationId")}
+                            />)
                   }
                   if(activity === true) {
                     return (<AhaSummary/>)
@@ -339,29 +341,29 @@ const ObservationSummary = () => {
                   </ListItem>
                   )}
 
-                  <ListItem button onClick={(e) => handleComments(e)}>
+                  {/* <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
                       <Comment />
                     </ListItemIcon>
                     <ListItemText primary="Comments" />
-                  </ListItem>
+                  </ListItem> */}
 
-                  <ListItem button onClick={(e) => handleActivity(e)}>
+                  {/* <ListItem button onClick={(e) => handleActivity(e)}>
                     <ListItemIcon>
                       <History />
                     </ListItemIcon>
                     <ListItemText primary="Activity History" />
-                  </ListItem>
+                  </ListItem> */}
                 </List>
                 <Divider />
-                <List dense>
+                {/* <List dense>
                   <ListItem button onClick={(e) => handlePrintPush(e)}>
                     <ListItemIcon>
                       <Print />
                     </ListItemIcon>
                     <ListItemText primary="Print" />
                   </ListItem>
-                </List>
+                </List> */}
               </Paper>
             </Grid>
           </Grid>

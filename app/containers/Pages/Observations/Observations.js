@@ -252,24 +252,6 @@ function Observations(props) {
     history.push(`/app/prints/${id}`);
   };
 
-  // const handleProjectList = () => {
-  //   try {
-  //     const company = JSON.parse(localStorage.getItem("company"));
-  //     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  //     const data = userDetails.companies.map((item) => {
-  //       if (item.companyId === parseInt(company.fkCompanyId)) {
-  //         setProjectDisable(item.projects.length > 1);
-  //         return setProjectListData(item.projects);
-  //       }
-  //     });
-  //     const filterData = userDetails.companies.filter(
-  //       (item) => item.companyId === parseInt(company.fkCompanyId)
-  //     );
-  //     let projectLength = filterData[0].projects.length <= 1;
-
-  //     setProjectDisable(projectLength);
-  //   } catch (error) {}
-  // };
 
   const fetchInitialiObservation = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -285,7 +267,7 @@ function Observations(props) {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
     await setAllInitialData(result)
     let pageCount  = Math.ceil(res.data.data.results.count/25)
@@ -555,7 +537,7 @@ function Observations(props) {
                                 <MessageIcon fontSize="small" /> Comments:
                               </Typography>
                               <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
+                                <Link href="#">{item[1].commentsCount}</Link>
                               </Typography>
                             </Grid>
 
@@ -580,13 +562,13 @@ function Observations(props) {
                                 <AttachmentIcon fontSize="small" /> Attachments:
                               </Typography>
                               <Typography variant="body2" display="inline">
-                                <Link href="#">3</Link>
+                                <Link href="#">{item[1].attachmentCount}</Link>
                               </Typography>
                             </Grid>
 
                             <Grid item xs={6} md={3}>
                               <Button
-                                //disabled
+                                disabled
                                 size="small"
                                 color="primary"
                                 startIcon={<Print />}

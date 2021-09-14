@@ -272,30 +272,24 @@ const ProjectAreaHazards = () => {
     let hazardNew = []
       let hazardUpdate = []
       let allHazard = [form, otherHazards]
-      allHazard.map((value) => {
-      if (value["id"] == undefined) {
-        hazardNew.push(value)
-      } else {
-        hazardUpdate.push(value)
-      }
+
+    allHazard.map((values, index) => {
+      allHazard[index].map((value) => {
+        if (value["id"] == undefined) {
+          if (value["hazard"] !== "") {
+            hazardNew.push(value)
+          }
+        } else {
+          hazardUpdate.push(value)
+        }
+      })
     })
 
 
     if (hazardUpdate.length > 0) {
       const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
     }
-    const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
- 
-    for (let i = 0; i < otherHazards.length; i++) {
-      if (otherHazards[i]["hazard"] != "") {
-        if (otherHazards[i]["id"] == undefined) {
-          
-          const resOther = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`, otherHazards[i])
-        } else {
-          const resOther = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${otherHazards[i]["id"]}/`, otherHazards[i])
-        }
-      }
-    }
+    const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
    
     history.push("/app/pages/aha/assessments/assessment")
 

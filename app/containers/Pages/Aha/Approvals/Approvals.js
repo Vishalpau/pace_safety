@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
   approvalButton: {
     borderRadius: "4px",
-    backgroundColor: "#83a6b5",
+    // backgroundColor: "#83a6b5",
     marginTop: "5px",
     fontSize: "13px",
     fontWeight: "400",
@@ -133,12 +133,14 @@ const Approvals = () => {
             </Typography>
             <Button
               variant="contained"
-              color="primary"
+              color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
               className={classes.approvalButton}
               onClick={(e) => handelWorkAndPic("work")}
             >
               {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
-            </Button>
+            </Button> 
+            {/* <Typography variant="h6" gutterBottom className={classes.labelName}>
+            {form.wrpApprovalDateTime}            </Typography> */}
           </Grid>
           <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -146,7 +148,7 @@ const Approvals = () => {
             </Typography>
             <Button
               variant="contained"
-              color="primary"
+              color={form.picApprovalUser == "" ? "primary" : "secondary"}
               className={classes.approvalButton}
               onClick={(e) => handelWorkAndPic("pic")}
             >

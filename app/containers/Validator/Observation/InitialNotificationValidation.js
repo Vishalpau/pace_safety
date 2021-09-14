@@ -5,7 +5,7 @@ function InitialNotificationValidator(data,projectStructure,levelLenght) {
 
   const error = {};
   let isValid = true;
-
+console.log(levelLenght)
 
   if(projectStructure?projectStructure.length<levelLenght:false){
     error.projectStructure = "Please select project level";
@@ -15,6 +15,11 @@ function InitialNotificationValidator(data,projectStructure,levelLenght) {
 
   if (validator.isEmpty(data.observationDetails.toString())) {
     error.observationDetails = "Please enter observation details";
+    isValid = false;
+  }
+  
+  if (validator.isEmpty(data.isSituationAddressed.toString())) {
+    error.isSituationAddressed = "Please select any one";
     isValid = false;
   }
 
@@ -56,7 +61,7 @@ if(data.isSituationAddressed === "Yes") {
 }
 
 if(data.observationTitle.length > 255){
-  error.observationTitle = "Please enter less then 255 characters";
+  error.observationTitle = "Please enter less than 255 characters";
     isValid = false;
 }
 

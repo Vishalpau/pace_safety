@@ -309,7 +309,7 @@ const ProjectStructure = (props) => {
     }
 
   }, [props.initialValues.breakDown]);
-
+  // console.log(leafNode, breakdown1ListData, '--------------')
   return (<>
  {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
       <Grid item xs={3} key={key}>
@@ -331,7 +331,7 @@ const ProjectStructure = (props) => {
       <FormControl
         key={index}
         variant="outlined"
-        size="small"
+        
         fullWidth={true}
         className={classes.formControl}
       >
@@ -378,7 +378,7 @@ const ProjectStructure = (props) => {
       <FormControl
         key={index}
         variant="outlined"
-        size="small"
+        
         fullWidth={true}
         className={classes.formControl}
       >
@@ -424,7 +424,7 @@ const ProjectStructure = (props) => {
       <FormControl
         key={index}
         variant="outlined"
-        size="small"
+        
         fullWidth={true}
         className={classes.formControl}
       >
