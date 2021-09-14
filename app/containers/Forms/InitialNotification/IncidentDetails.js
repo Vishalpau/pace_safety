@@ -687,7 +687,7 @@ console.log(selectDepthAndId)
               fetchSelectBreakDownList.map((data, key) => 
               <Grid item xs={3} md={3} key={key}>
                 <FormControl
-                  error={error.incidentType}
+                  error={error && error[`projectStructure${[key]}`]}
                   variant="outlined"
                   required
                   className={classes.formControl}
@@ -701,6 +701,7 @@ console.log(selectDepthAndId)
                     label="Incident type"
                     value={data.selectValue.id || ""}
                     disabled={data.breakDownData.length===0}
+                    
                     onChange={(e) => {
                       handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
                     }}
@@ -715,9 +716,11 @@ console.log(selectDepthAndId)
                       ))
                       : null}
                   </Select>
-                  {error && error.incidentType && (
-                    <FormHelperText>{error.incidentType}</FormHelperText>
-                  )}
+                  {error && error[`projectStructure${[key]}`] && (
+                              <FormHelperText>
+                                {error[`projectStructure${[key]}`]}
+                              </FormHelperText>
+                            )}
                 </FormControl>
               </Grid>
 
