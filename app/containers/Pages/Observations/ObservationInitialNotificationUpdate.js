@@ -387,7 +387,9 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const fetchTags = async () => {
-    const res = await api.get(`/api/v1/tags/`);
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    const res = await api.get(`/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`);
     const result = res.data.data.results.results;
     let temp = []
     result.map((value) => {
