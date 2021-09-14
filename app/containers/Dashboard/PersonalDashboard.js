@@ -279,8 +279,8 @@ function PersonalDashboard(props) {
     else if(appCode === "incidents"){
       history.push('/incidents/')
 
-    }
-
+    }else if(appCode === "assessments")
+      history.push('/app/pages/assesments/xflha')
   }
 
   const handleDisableModule = (appcode) => {
