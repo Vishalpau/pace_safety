@@ -504,7 +504,7 @@ Task#1 -
                                 </Typography>
                               </Grid>
                               {(task.hazards.length > 0)
-                                ? (task.hazards.map((hazard) => (
+                                ? (task.hazards.map((hazard, key) => (
                                   <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
                                     <AccordionSummary
                                       expandIcon={<ExpandMoreIcon />}
@@ -513,7 +513,7 @@ Task#1 -
                                       className={classes.headingColor}
                                     >
                                       <Typography className={classes.heading}>
-Hazardk#1 -
+                                        Hazard#{(key)+1} -
                                         {hazard.hazards}
                                       </Typography>
 
@@ -533,7 +533,8 @@ Hazardk#1 -
                                           </Typography>
                                         </Grid>
                                         <Grid item sm={1} xs={4}>
-                                          <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
+                                          {(hazard.hazardImage) ? <img src={hazard.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                          
                                         </Grid>
                                         <Grid container spacing={2}>
                                           <Grid item sm={12} xs={12}>

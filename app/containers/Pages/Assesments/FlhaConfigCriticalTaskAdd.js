@@ -308,14 +308,21 @@ const FlhaDetails = (props) => {
     checkedB: true,
   });
   const [payload , setPayload] = React.useState({
-    taskIdentification : ""
+    taskIdentification : "" ,
+    control : "",
   })
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  React.useEffect(() => {
+    console.log("editPayload ",props.editPayload) ;
+    setPayload({
+      taskIdentification : props.editPayload[0] ? props.editPayload[0] : "" ,
+      control : props.editPayload[1] ? props.editPayload[1] : "",
+    }) ;
+  },[]) ;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -323,6 +330,13 @@ const FlhaDetails = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // const handelEditSubmit = async () => {
+
+  //   let res = await api.post(`api/v1/configflhas/jobtitles/${fkJobId}/criticaltasks/${id}/`);
+
+  // }
+
 
   const fieldHandler=(e) => {
     console.log("Value  ", e.target.value , e.target.id)
@@ -333,7 +347,6 @@ const FlhaDetails = (props) => {
   }
 
   React.useEffect(() => {
-    console.log("payload " , payload ) ;
     props.dataHandler(payload)
   },[payload])
   return (
@@ -345,10 +358,10 @@ const FlhaDetails = (props) => {
               <Grid item sm={12} xs={12}>
                 <TextField
                   variant="outlined"
-                  id="immediate-actions"
                   multiline
                   rows="1"
                   id = "taskIdentification"
+                  value = {payload.taskIdentification}
                   label="Task identification"
                   className={classes.fullWidth}
                   onChange = {fieldHandler}
@@ -358,11 +371,14 @@ const FlhaDetails = (props) => {
                 <Grid item sm={12} xs={12}>
                   <TextField
                     variant="outlined"
-                    id="immediate-actions"
+                    id="control"
                     multiline
                     rows="1"
                     label="Control"
+                    label="Control"
+                    value = {payload.control}
                     className={classes.fullWidth}
+                    onChange = {fieldHandler}
                   />
                 </Grid>
               </Grid>

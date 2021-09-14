@@ -504,13 +504,13 @@ bytes
   const handleRiskChange = (e, key, taskIndex, fieldname) => {
     const temp = [...taskForm];
     temp[taskIndex].hazards[key][fieldname] = e.target.value;
-
-    const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverity == undefined || temp[taskIndex].hazards[key].riskSeverity == '') ? 1 : temp[taskIndex].hazards[key].riskSeverity);
-    const riskProbability = ((temp[taskIndex].hazards[key].riskProbability == undefined || temp[taskIndex].hazards[key].riskProbability == '') ? 1 : temp[taskIndex].hazards[key].riskProbability);
-    console.log({ riskSeverity });
-    console.log({ riskSeverity: riskProbability });
+    
+    const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverity == undefined || temp[taskIndex].hazards[key].riskSeverity == '' || isNaN(temp[taskIndex].hazards[key].riskSeverity)) ? 1 : temp[taskIndex].hazards[key].riskSeverity);
+    const riskProbability = ((temp[taskIndex].hazards[key].riskProbability == undefined || temp[taskIndex].hazards[key].riskProbability == '' || isNaN(temp[taskIndex].hazards[key].riskProbability)) ? 1 : temp[taskIndex].hazards[key].riskProbability);
+    console.log({ riskSeverity: riskSeverity });
+    console.log({ riskprobability: riskProbability });
     const riskRating = riskSeverity * riskProbability;
-    // alert(riskRating)
+    alert(riskRating)
 
     if (riskRating >= 1 && riskRating <= 4) {
       // alert("low")
@@ -727,7 +727,7 @@ bytes
                   <Grid item xs={12}>
                     <FormLabel component="legend">Project</FormLabel>
                     <Typography>
-                      XFLHA
+                      {JSON.parse(localStorage.getItem('projectName')).projectName.projectName}
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
@@ -742,16 +742,19 @@ Job information
                     <Typography variant="h6" />
                     <FormLabel component="legend">Job Title</FormLabel>
                     <Typography>
-                    JobTitle data here
+                    {flhaDetails.jobTitle}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}><img src={project} height={58} alt="" className={classes.mttopSix} /></Grid>
+                  <Grid item xs={2}>
+                    
+                    <img src={project} height={58} alt="" className={classes.mttopSix} />
+                  </Grid>
                   <Grid item xs={12}>
                     <FormLabel component="legend">Description</FormLabel>
-                    <Typography>Duumy content here for description so need a text here. Duumy content here for description so need a text here Duumy content here for description so need a text here. Duumy content here for description so need a text here.</Typography>
+                    <Typography>{flhaDetails.jobDetails}</Typography>
                   </Grid>
                   <Divider className={classes.divider} />
-                  <Divider className={classes.divider} />
+                  {/* <Divider className={classes.divider} /> */}
                   <Grid item xs={12}>
                     <Box padding={0}>
                       <Grid item sm={12} xs={12}>
