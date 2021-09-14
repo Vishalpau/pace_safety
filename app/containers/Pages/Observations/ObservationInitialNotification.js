@@ -397,7 +397,7 @@ const ObservationInitialNotification = (props) => {
     attachment: "",
     status: "Active",
     createdBy: parseInt(userId),
-    updatedBy: userId,
+    updatedBy: 0,
     source: "Web",
     vendor: "string",
     vendorReferenceId: "string",
@@ -487,10 +487,12 @@ const ObservationInitialNotification = (props) => {
 
     for (let i = 0; i < catagory.length; i++) {
         catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
-        const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory[i]);
       
       
 
+    }
+    if(catagory.length > 0){
+      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory);
     }
 
     history.push(`/app/observation/details/${localStorage.getItem("fkobservationId")}`);
@@ -1278,7 +1280,10 @@ const ObservationInitialNotification = (props) => {
               />
             </Grid>
             <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
+              <FormControl component="fieldset"
+              error={
+                                  error && error["isSituationAddressed"]
+                                }>
                 <FormLabel className={classes.labelName} component="legend">
                   Did you address the situation?*
                 </FormLabel>
@@ -1301,6 +1306,11 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
+                {error && error["isSituationAddressed"] && (
+                                  <FormHelperText>
+                                    {error["isSituationAddressed"]}
+                                  </FormHelperText>
+                                )}
               </FormControl>
             </Grid>
             {addressSituation === true ? (
@@ -1369,6 +1379,7 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
+                
               </FormControl>
             </Grid>
 
