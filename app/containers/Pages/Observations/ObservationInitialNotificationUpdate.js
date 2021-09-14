@@ -200,6 +200,9 @@ const ObservationInitialNotificationUpdate = () => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
  
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).id
+  : null;
 
   const handelPositivObservation = (e) => {
     setPositiveObservation(false);
@@ -228,21 +231,49 @@ const ObservationInitialNotificationUpdate = () => {
 
 
   const [catagory, setCatagory] = useState();
+  const [ catagoryName, setCatagoryName ] = useState();
+
+  const handelSelectOption = (cate) => {
+    for (let i = 0; i <= catagory.length; i++) {
+      if (catagory[i] != undefined && catagory[i]["observationTag"] == cate) {
+        return true
+      }
+    }
+  }
 
   const handleChange = async (e, index, value) => {
-    if (e.target.checked == true) {
-      let TempPpeData = [...catagory];
-      TempPpeData[index].observationTag = value;
-      await setCatagory(TempPpeData);
 
-    } else {
-      let TempPpeData = [...catagory];
-      TempPpeData[index].observationTag = "";
-      await setCatagory(TempPpeData);
+    let temp = [...catagory]
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['observationTag'] === value.tagName){
+         
+         if(ahaValue['id']){
+          const res = api.delete(`/api/v1/observations/${id}/observationtags/${ahaValue.id}/`)
+
+         }
+         
+          temp.splice(index, 1);
+        }
+      })
     }
+    else if(e.target.checked){
+      temp.push( {
+      "fkObservationId": id,
+      "fkTagId": value.id,
+      "observationTag": value.tagName,
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "updatedBy": 0,
+    })
+
+  //  await catagoryName.push(value.tagName)
+  }
+  await setCatagory(temp)
+    
 
   };
-
   const handleOther = (e) => {
     let tempData = [...catagory]
     tempData[8].observationTag = e.target.value
@@ -305,17 +336,35 @@ const ObservationInitialNotificationUpdate = () => {
       data.append("createdBy", initialData.createdBy),
       data.append("observationStatus", initialData.observationStatus),
       data.append("observationStage", initialData.observationStage),
-      data.append("updatedBy", initialData.updatedBy),
+      data.append("updatedBy", userId),
       data.append("source", initialData.source),
       data.append("vendor", initialData.vendor),
       data.append("vendorReferenceId", initialData.vendorReferenceId);
+      let newCategory = []
+      let updateCategory = []
 
     if (id) {
       data.append("id", id)
       for (let i = 0; i < catagory.length; i++) {
+        if(catagory[i].id){
+          catagory[i].updatedBy = userId
+          updateCategory.push(catagory[i])
 
-        const res = await api.put(`/api/v1/observations/${id}/observationtags/${catagory[i].id}/`, catagory[i])
+        }else{
+          newCategory.push(catagory[i])
+
+
+        }
+
       }
+      if(updateCategory.length > 0){
+        const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory)
+      }
+      if(newCategory.length > 0){
+        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`,newCategory);
+      }
+
+
       const res1 = await api.put(`/api/v1/observations/${id}/`, data);
       if (res1.status === 200) {
         await localStorage.setItem("update", "Done");
@@ -327,7 +376,7 @@ const ObservationInitialNotificationUpdate = () => {
   };
 
   const handleClose = async () => {
-    history.push(`/app/observation-Summary/${id}`)
+    history.push(`/app/observation/details/${id}`)
     await localStorage.setItem("update", "Done");
   }
 
@@ -335,8 +384,8 @@ const ObservationInitialNotificationUpdate = () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
     const tags = response.data.data.results.results
     let sorting = tags.sort((a, b) => a.id - b.id)
-
     await setCatagory(sorting);
+   
     await setIsLoading(true);
 
   }
@@ -350,7 +399,9 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const fetchTags = async () => {
-    const res = await api.get(`/api/v1/tags/`);
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    const res = await api.get(`/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`);
     const result = res.data.data.results.results;
     let temp = []
     result.map((value) => {
@@ -358,6 +409,7 @@ const ObservationInitialNotificationUpdate = () => {
         temp.push(value)
       }
     })
+
     let sorting = temp.sort((a, b) => a.id - b.id);
     await setTagData(sorting);
     // const res = await api.get(`/api/v1/tags/`)
@@ -588,9 +640,9 @@ const ObservationInitialNotificationUpdate = () => {
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                       checkedIcon={<CheckBoxIcon fontSize="small" />}
                       name={value}
-                      defaultChecked={catagory[index].id ? catagory[index].observationTag ? true : false : false}
-
-                      onChange={(e) => handleChange(e, index, value.tagName)}
+                      // checked={catagoryName.includes(value.tagName)}
+                      checked={handelSelectOption(value.tagName)}
+                      onChange={(e) => handleChange(e, index, value)}
                     />
                   }
                   label={value.tagName}
@@ -675,6 +727,14 @@ const ObservationInitialNotificationUpdate = () => {
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             </div>
+            {/* <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmCancelBtn}
+                onClick={() => handleClose()}
+              >
+                CANCEL
+              </Button> */}
           </Grid>
         </Grid> : <h1>Loading...</h1>}
       {/* </PapperBlock> */}

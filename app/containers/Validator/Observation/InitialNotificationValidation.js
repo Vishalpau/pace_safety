@@ -17,6 +17,11 @@ console.log(levelLenght)
     error.observationDetails = "Please enter observation details";
     isValid = false;
   }
+  
+  if (validator.isEmpty(data.isSituationAddressed.toString())) {
+    error.isSituationAddressed = "Please select any one";
+    isValid = false;
+  }
 
   if (validator.isEmpty(data.location.toString())) {
     error.location = "Please enter the location";

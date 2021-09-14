@@ -21,6 +21,8 @@ import MUIDataTable from 'mui-datatables';
 
 import { useDropzone } from 'react-dropzone';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { handelFileName } from "../../../../utils/CheckerValue";
+import Attachment from "../../../../containers/Attachment/Attachment";
 
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams , useHistory } from 'react-router';
@@ -304,9 +306,17 @@ const [notifyToList,setNotifyToList] = useState([]);
           className={classes.fileUploadFileDetails}
         >
           <h4>Files</h4>
-          <ul>{attachmentName.current}</ul>
+          <ul>{attachmentName.current ? attachmentName.current : ''}</ul>
           
           {/* <DeleteIcon /> */}
+          <Typography title={handelFileName(ahaform.jhaAssessmentAttachment)}>
+                  {ahaform.ahaAssessmentAttachment != "" &&
+                    typeof ahaform.ahaAssessmentAttachment == "string" ? (
+                    <Attachment value={ahaform.ahaAssessmentAttachment} />
+                  ) : (
+                    <p />
+                  )}
+                </Typography>
         </Grid>
         <div {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} onChange={(e) => handleFile(e)}/>

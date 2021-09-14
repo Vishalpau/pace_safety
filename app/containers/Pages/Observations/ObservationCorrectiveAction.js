@@ -58,6 +58,17 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: '1px solid #ccc',
     },
   },
+  custmCancelBtn: {
+    color: "#ffffff",
+    backgroundColor: "#ff8533",
+    lineHeight: "30px",
+    marginLeft: "5px",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#ff8533",
+      border: "none",
+    },
+  },
   formControl: {
     '& .MuiInputBase-root': {
       borderRadius: '4px',
@@ -301,6 +312,11 @@ function ObservationCorrectiveAction() {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  const handleClose = async () => {
+    history.push(`/app/observation/details/${id}`)
+    await localStorage.setItem("update", "Done");
+  }
 
   const handleCloseDate = (e) => {
 
@@ -641,6 +657,14 @@ temp.reviewedById = value.id
         </Button>
         {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
       </div>
+      {/* <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmCancelBtn}
+                onClick={() => handleClose()}
+              >
+                CANCEL
+              </Button> */}
           {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
           onClick={() => handleSubmit()}>Submit</Button> */}
         </Grid> 

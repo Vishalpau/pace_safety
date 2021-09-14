@@ -397,95 +397,14 @@ const ObservationInitialNotification = (props) => {
     attachment: "",
     status: "Active",
     createdBy: parseInt(userId),
-    updatedBy: userId,
+    updatedBy: 0,
     source: "Web",
     vendor: "string",
     vendorReferenceId: "string",
   });
 
   // it is used for catagory for tag post api
-  const [catagory, setCatagory] = useState([
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-    {
-      fkObservationId: "",
-      fkTagId: "",
-      observationTag: "",
-      status: "Active",
-      createdBy: parseInt(userId),
-      updatedBy: 0,
-    },
-  ]);
+  const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
   const handleSubmit = async () => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
@@ -568,11 +487,12 @@ const ObservationInitialNotification = (props) => {
 
     for (let i = 0; i < catagory.length; i++) {
         catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
-        catagory[i]["fkTagId"] = tagData[i].id;
-        const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory[i]);
       
       
 
+    }
+    if(catagory.length > 0){
+      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory);
     }
 
     history.push(`/app/observation/details/${localStorage.getItem("fkobservationId")}`);
@@ -580,16 +500,33 @@ const ObservationInitialNotification = (props) => {
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
   const handleChange = async (e, index, value) => {
-    if (e.target.checked == true) {
-      let TempPpeData = [...catagory];
-      TempPpeData[index].observationTag = value;
-      await setCatagory(TempPpeData);
-    } else {
-      let TempPpeData = [...catagory];
-      TempPpeData[index].observationTag = "";
-      await setCatagory(TempPpeData);
+
+    let temp = [...catagory]
+    let tempRemove = []
+    if(e.target.checked == false){
+      temp.map((ahaValue,index) => {
+        if(ahaValue['observationTag'] === value.tagName){
+         
+         temp.splice(index, 1);
+         
+
+        }
+      })
     }
-  };
+    else if(e.target.checked){
+      temp.push( {
+      "fkObservationId": "",
+      "fkTagId": value.id,
+      "observationTag": value.tagName,
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "updatedBy": 0,
+    })
+   
+  }
+  await setCatagory(temp) 
+
+  }
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -740,7 +677,9 @@ const ObservationInitialNotification = (props) => {
   }
 
   const fetchTags = async () => {
-    const res = await api.get(`/api/v1/tags/`);
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    const res = await api.get(`/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`);
     const result = res.data.data.results.results;
     let temp = []
     result.map((value) => {
@@ -1013,25 +952,7 @@ const ObservationInitialNotification = (props) => {
                 variant="outlined" />
       )}
     />
-              {/* <Autocomplete
-                id="combo-box-demo"
-                options={reportedByName}
-                className={classes.mT30}
-                getOptionLabel={(option) => option.name}
-                defaultValue={form.reportedByName ? form.reportedByName : ""}
-                onChange={(e, value) => {
-                  handleReportedBy(e, value);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Observed by*"
-                    variant="outlined"
-                    error={error.reportedByName}
-                helperText={error.reportedByName ? error.reportedByName : ""}
-                  />
-                )}
-              /> */}
+             
             </Grid>
 
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -1359,7 +1280,10 @@ const ObservationInitialNotification = (props) => {
               />
             </Grid>
             <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset">
+              <FormControl component="fieldset"
+              error={
+                                  error && error["isSituationAddressed"]
+                                }>
                 <FormLabel className={classes.labelName} component="legend">
                   Did you address the situation?*
                 </FormLabel>
@@ -1382,6 +1306,11 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
+                {error && error["isSituationAddressed"] && (
+                                  <FormHelperText>
+                                    {error["isSituationAddressed"]}
+                                  </FormHelperText>
+                                )}
               </FormControl>
             </Grid>
             {addressSituation === true ? (
@@ -1450,6 +1379,7 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
+                
               </FormControl>
             </Grid>
 
@@ -1559,7 +1489,7 @@ const ObservationInitialNotification = (props) => {
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         checkedIcon={<CheckBoxIcon fontSize="small" />}
                         name={value}
-                        onChange={(e) => handleChange(e, index, value.tagName)}
+                        onChange={(e) => handleChange(e, index, value)}
                       />
                     }
                     label={value.tagName}
@@ -1711,7 +1641,7 @@ const ObservationInitialNotification = (props) => {
                       }}
                     />
                   }
-                  label="I Accept & Pledge*"
+                  label="I accept & pledge*"
                 />
               </FormGroup>
               <p style={{color: "red"}}>{error.acceptAndPledge}</p>
