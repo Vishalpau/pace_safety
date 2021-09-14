@@ -242,6 +242,8 @@ bytes
   };
 
   }
+  console.log(workArea,"6666666")
+
 
   const [form , setForm] = useState(
     {
@@ -280,13 +282,13 @@ bytes
   )
 
 
-
   const handleSubmit = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
+    form["workArea"] = workArea
     
     const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
@@ -728,7 +730,7 @@ bytes
         >
         <TextField
             label="Work Location*"
-            margin="dense"
+            // margin="dense"
             name="worklocation"
             id="worklocation"
             value={form.location ? form.location : ""}
@@ -749,7 +751,7 @@ bytes
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDateTimePicker
                 className={classes.formControl}
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 label="Date & Time*"
                 value={selectedDate}
@@ -805,7 +807,7 @@ bytes
         >
         <TextField
             label="Permit Reference"
-            margin="dense"
+            // margin="dense"
             name="reference"
             id="reference"
             multiline
@@ -826,7 +828,7 @@ bytes
         >
         <TextField
             label="Description*"
-            margin="dense"
+            // margin="dense"
             name="description"
             id="description"
             multiline
@@ -861,7 +863,7 @@ bytes
        
           <TextField
             label="Team Name"
-            margin="dense"
+            // margin="dense"
             name="arename"
             id="arename"
             multiline
