@@ -336,23 +336,35 @@ const ObservationInitialNotificationUpdate = () => {
       data.append("createdBy", initialData.createdBy),
       data.append("observationStatus", initialData.observationStatus),
       data.append("observationStage", initialData.observationStage),
-      data.append("updatedBy", initialData.updatedBy),
+      data.append("updatedBy", userId),
       data.append("source", initialData.source),
       data.append("vendor", initialData.vendor),
       data.append("vendorReferenceId", initialData.vendorReferenceId);
+      let newCategory = []
+      let updateCategory = []
 
     if (id) {
       data.append("id", id)
       for (let i = 0; i < catagory.length; i++) {
         if(catagory[i].id){
-          const res = await api.put(`/api/v1/observations/${id}/observationtags/${catagory[i].id}/`, catagory[i])
+          catagory[i].updatedBy = userId
+          updateCategory.push(catagory[i])
 
         }else{
-          const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`,catagory[i]);
+          newCategory.push(catagory[i])
+
 
         }
 
       }
+      if(updateCategory.length > 0){
+        const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory)
+      }
+      if(newCategory.length > 0){
+        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`,newCategory);
+      }
+
+
       const res1 = await api.put(`/api/v1/observations/${id}/`, data);
       if (res1.status === 200) {
         await localStorage.setItem("update", "Done");
