@@ -568,7 +568,7 @@ function Observations(props) {
 
                             <Grid item xs={6} md={3}>
                               <Button
-                                //disabled
+                                disabled
                                 size="small"
                                 color="primary"
                                 startIcon={<Print />}
