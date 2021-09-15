@@ -414,7 +414,7 @@ const ObservationInitialNotification = (props) => {
     form["fkProjectStructureIds"] = fkProjectStructureId
    
     // if any error then this part is executed
-    const { error, isValid } = InitialNotificationValidator(form,selectDepthAndId,levelLenght);
+    const { error, isValid } = InitialNotificationValidator(form,selectDepthAndId);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -714,6 +714,49 @@ const ObservationInitialNotification = (props) => {
     }
     
   };
+  const handleBreakdown = async (e, index, label, selectvalue) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    
+    const value = e.target.value;
+    
+    const temp = [...fetchSelectBreakDownList]
+    temp[index]["selectValue"].id = value
+    // let removeTemp = temp.slice(0, index)
+    for(var i in temp){
+      if(i>index){
+        temp[i].breakDownData=[]
+        temp[i].selectValue.id=""
+      }
+      
+    }
+    let tempDepthAndId = selectDepthAndId;
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
+    let sliceData = dataDepthAndId.slice(0,index)
+    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
+    setSelectDepthAndId(newdataDepthAndId)
+    // await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index+1) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index+1) {
+         
+          
+          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+          }${value}`,)
+            .then(function (response) {
+              if (response.status === 200) {
+
+               temp[key].breakDownData =response.data.data.results
+              //  temp[key].select=e.
+              setBreakdown1ListData(temp)
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } 
+  };
 
   const fetchBreakDownData = async (projectBreakdown) => {
 
@@ -793,7 +836,6 @@ const ObservationInitialNotification = (props) => {
       }
     }
   };
-
  
   
 
@@ -851,30 +893,53 @@ const ObservationInitialNotification = (props) => {
               </Typography>
             </Grid>
 
-            {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-                <Grid item xs={3} key={key}>
-
-                  <Typography
-                    variant="h6"
-                    className={Type.labelName}
-                    gutterBottom
-                    id="project-name-label"
+            {id ? 
+              fetchSelectBreakDownList.map((data, key) => 
+              <Grid item xs={3} md={3} key={key}>
+                <FormControl
+                  error={error && error[`projectStructure${[key]}`]}
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="demo-simple-select-label">
+                    {data.breakDownLabel}
+                  </InputLabel>
+                  <Select
+                    labelId="incident-type-label"
+                    id="incident-type"
+                    label="Incident type"
+                    value={data.selectValue.id || ""}
+                    disabled={data.breakDownData.length===0}
+                    
+                    onChange={(e) => {
+                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
+                    }}
                   >
-                    {selectBdown.label}
-                  </Typography>
+                    {data.breakDownData.length !== 0
+                      ? data.breakDownData.map((selectvalues, index) => (
+                        <MenuItem key={index} 
+                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                        value={selectvalues.id}>
+                          {selectvalues.structureName}
+                        </MenuItem>
+                      ))
+                      : null}
+                  </Select>
+                  {error && error[`projectStructure${[key]}`] && (
+                              <FormHelperText>
+                                {error[`projectStructure${[key]}`]}
+                              </FormHelperText>
+                            )}
+                </FormControl>
+              </Grid>
 
-
-                  <Typography className={Type.labelValue}>
-                    {selectBdown.name}
-                  </Typography>
-                </Grid>
-              ) : <ProjectStructureInit
-                selectDepthAndId={selectDepthAndId}
-                setLevelLenght={setLevelLenght}
-                error={error}
-                setSelectDepthAndId={setSelectDepthAndId}
-                setWorkArea={setWorkArea}
-              />
+              ) : <ProjectStructureInit 
+              selectDepthAndId={selectDepthAndId} 
+              setLevelLenght={setLevelLenght}
+              error= {error}
+              setWorkArea={setWorkArea}
+              setSelectDepthAndId={setSelectDepthAndId} />
               }
               <Grid
             item

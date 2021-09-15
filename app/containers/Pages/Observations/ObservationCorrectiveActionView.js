@@ -234,7 +234,7 @@ bytes
             Comments
           </Typography>
           <Typography className={classes.labelValue}>
-           {comment ? comment.comment : ""}
+           {comment ? comment.comment : "-"}
           </Typography>
         </Grid>
 

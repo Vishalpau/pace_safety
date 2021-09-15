@@ -170,7 +170,6 @@ const ProjectStructure = (props) => {
       for (var key in projectData.projectName.breakdown) {
 
         if (key == select.length) {
-alert('hlo')
           try {
             var config = {
               method: "get",
