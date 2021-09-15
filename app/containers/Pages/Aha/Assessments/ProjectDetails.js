@@ -290,7 +290,7 @@ bytes
     form["fkProjectStructureIds"] = fkProjectStructureId
     form["workArea"] = workArea
     
-    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId,levelLenght);
+    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -492,12 +492,24 @@ bytes
     const value = e.target.value;
     
     const temp = [...fetchSelectBreakDownList]
-    temp[index-1]["selectValue"].id = value
-    let removeTemp = temp.slice(0, index)
-    await setFetchSelectBreakDownList(removeTemp)
-    if (projectData.projectName.breakdown.length !== index) {
+    temp[index]["selectValue"].id = value
+    // let removeTemp = temp.slice(0, index)
+    for(var i in temp){
+      if(i>index){
+        temp[i].breakDownData=[]
+        temp[i].selectValue.id=""
+      }
+      
+    }
+    let tempDepthAndId = selectDepthAndId;
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
+    let sliceData = dataDepthAndId.slice(0,index)
+    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
+    setSelectDepthAndId(newdataDepthAndId)
+    // await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index+1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
+        if (key == index+1) {
          
           
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -505,24 +517,9 @@ bytes
             .then(function (response) {
               if (response.status === 200) {
 
-                if (
-                  removeTemp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[index].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setFetchSelectBreakDownList([
-                    ...removeTemp,
-                    {
-                      breakDownLabel: projectData.projectName.breakdown[index].structure[0].name,
-                      selectValue: {id:value},
-                      breakDownData: response.data.data.results
-                    },
-                  ]);
-                }
+               temp[key].breakDownData =response.data.data.results
+              //  temp[key].select=e.
+              setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
@@ -533,7 +530,7 @@ bytes
     } 
   };
 
-   const fetchBreakDownData = async (projectBreakdown) => {
+  const fetchBreakDownData = async (projectBreakdown) => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
@@ -657,7 +654,7 @@ bytes
               fetchSelectBreakDownList.map((data, key) => 
               <Grid item xs={3} md={3} key={key}>
                 <FormControl
-                  error={error.incidentType}
+                  error={error && error[`projectStructure${[key]}`]}
                   variant="outlined"
                   required
                   className={classes.formControl}
@@ -670,33 +667,36 @@ bytes
                     id="incident-type"
                     label="Incident type"
                     value={data.selectValue.id || ""}
+                    disabled={data.breakDownData.length===0}
+                    
                     onChange={(e) => {
-                      handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
                     }}
                   >
                     {data.breakDownData.length !== 0
                       ? data.breakDownData.map((selectvalues, index) => (
                         <MenuItem key={index} 
-                        onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
                         value={selectvalues.id}>
                           {selectvalues.structureName}
                         </MenuItem>
                       ))
                       : null}
                   </Select>
-                  {error && error.incidentType && (
-                    <FormHelperText>{error.incidentType}</FormHelperText>
-                  )}
+                  {error && error[`projectStructure${[key]}`] && (
+                              <FormHelperText>
+                                {error[`projectStructure${[key]}`]}
+                              </FormHelperText>
+                            )}
                 </FormControl>
               </Grid>
 
-              ) : <ProjectStructureInit
-                selectDepthAndId={selectDepthAndId}
-                setLevelLenght={setLevelLenght}
-                error={error}
-                setSelectDepthAndId={setSelectDepthAndId}
-                setWorkArea={setWorkArea}
-              />
+              ) : <ProjectStructureInit 
+              selectDepthAndId={selectDepthAndId} 
+              setLevelLenght={setLevelLenght}
+              error= {error}
+              setWorkArea={setWorkArea}
+              setSelectDepthAndId={setSelectDepthAndId} />
               }
         {/* <Grid
         item

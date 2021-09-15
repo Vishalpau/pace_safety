@@ -23,7 +23,7 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import styles from './demos/fluidChart-jss';
 import { data1 } from './demos/sampleData';
-import PapperBlock from '../../components/PapperBlock/PapperBlock';
+import { PapperBlock } from 'dan-components';
 
 const theme = createMuiTheme(ThemePallete.greyTheme);
 const color = ({

@@ -4,16 +4,107 @@
 
 .headerAppsGrid .MuiMenu-list {
   display: grid;
-  grid-template-columns: repeat(2, 120px);
+  grid-template-columns: repeat(3, 90px);
   gap: 1rem;
+  font-family: 'Montserrat-Medium';
 }
 
-.headerAppsGrid .MuiMenu-list .MuiTypography-root {
-  word-wrap: normal;
-  text-align: center;
-}
+
 
 .headerAppsGrid .MuiMenu-list .MuiListItem-root {
   flex-direction: column !important;
   font-size: 13px;
+  font-family: Montserrat-Medium !important;
+}
+.MuiTab-root {
+	font-family: Montserrat-Medium !important;
+}
+.MuiTypography-h5 {
+	font-family: Xolonium !important;
+	font-weight: 500;
+}
+.MuiButton-label {
+	font-family: Montserrat-Medium !important;
+}
+.MuiTypography-body1 {
+	font-family: Montserrat-Medium !important;
+}
+.MuiTypography-body2 {
+	font-family: Montserrat-Medium !important;
+}
+.MuiButton-root  {
+	font-family: Montserrat-Medium !important;
+}
+.MuiButtonBase-root   {
+	font-family: Montserrat-Medium !important;
+}
+.PersistentDrawer-floatL-3017 {
+    font-size: 17px !important;
+    font-family: Xolonium !important;
+    font-weight: 500 !important;
+}
+.MuiTypography-h6 {
+	font-family: Xolonium !important;
+	font-weight: 500 !important;
+}
+.MuiGrid-root.makeStyles-floatE-426.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-2 img {
+    height: 44px;
+}
+span.makeStyles-mR10-2491 img {
+    height: 44px;
+}
+.MuiFormLabel-root {
+    font-family: Montserrat-Medium !important;
+    color: #7692a4 !important;
+}
+.makeStyles-fullWidth-419 {
+  width: 100%;
+  margin: .2rem 0;
+  box-shadow: inset 0px 0px 9px #dedede;
+}
+html {    
+	font-family: Montserrat-Medium !important;
+}
+.MuiInputBase-root {
+    color: rgba(0, 0, 0, 0.87);
+    cursor: text;
+    display: inline-flex;
+    position: relative;
+    font-size: 1rem;
+    box-sizing: border-box;
+    align-items: center;
+    font-family: Open Sans,sans-serif;
+    font-weight: 400;
+    line-height: 1.1876em;
+}
+.MuiInputBase-root {
+    font-family: Montserrat-Medium !important;
+}
+.MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.23);
+}
+
+.MuiTableCell-root {
+   font-family: Montserrat-Medium !important;
+}
+
+@font-face {
+  font-family: Montserrat-Medium;
+  src: url(../../fonts/Montserrat-Medium.ttf);
+}
+.makeStyles-search-1484 {
+  margin: 14px 2px 9px 0px !important;
+  padding: 0px 0px !important;
+  width: 100%;
+}
+.pr0 {padding-right:0px;}
+@media (min-width: 600px) {
+.search {
+    width: 98% !important;
+    margin-left: 8px;
+}
+}
+
+.backColor {
+  background-Color: 'red';
 }
