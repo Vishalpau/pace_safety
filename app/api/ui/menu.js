@@ -892,7 +892,7 @@ module.exports = [
       {
         key: 'check_lists',
         name: 'Check Lists',
-        linkParent: '/app/checkList/checkList',
+        linkParent: '/app/pages/checklist/',
       },
       {
         key: 'xflha_setting',

@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#ff8533',
       border: 'none',
     },
+    marginLeft: "20px"
   },
   updateLink: {
     float: 'right',
@@ -108,7 +109,7 @@ const Approvals = () => {
   const [check, setCheck] = useState({ wrp: false, pic: false })
   const history = useHistory()
   const [updatePage, setUpdatePage] = useState(false)
-  const [actiionData, setActionData] = useState([])
+  const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
     projectId: "",
     companyId: "",
@@ -144,7 +145,7 @@ const Approvals = () => {
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A00`);
+    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
     let allAction = allActionTrackerData.data.data.results.results
     setActionData(allAction !== null ? allAction : [])
   };
@@ -187,6 +188,7 @@ const Approvals = () => {
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
+
               <Grid
                 item
                 md={8}
@@ -205,6 +207,7 @@ const Approvals = () => {
                   {check.wrp ? "Approved" : "Approve Now"}
                 </Button>
               </Grid>
+
               <Grid
                 item
                 md={8}
@@ -212,7 +215,7 @@ const Approvals = () => {
                 className={classes.formBox}
               >
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  PIC (if attended the Toolbox meeting)
+                  PIC (Person-in-charge)
                 </Typography>
                 <Button
                   variant="contained"
@@ -233,7 +236,7 @@ const Approvals = () => {
                   />
                 </Typography>
                 <Typography className={classes.aLabelValue}>
-                  {actiionData.map((value) => (
+                  {actionData.map((value) => (
                     <>
                       <span className={classes.updateLink}>
                         <Link
@@ -247,7 +250,6 @@ const Approvals = () => {
                       </div>
                     </>
                   ))}
-
                 </Typography>
               </Grid>
               <Grid
@@ -274,6 +276,15 @@ const Approvals = () => {
                   onClick={(e) => handelSubmit()}
                 >
                   Submit
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  color="secondary"
+                  className={classes.custmSubmitBtn}
+                  onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                >
+                  Cancel
                 </Button>
               </Grid>
             </Grid>
