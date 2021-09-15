@@ -22,7 +22,8 @@
  import socmed from '../containers/SampleApps/Timeline/reducers/timelineReducer';
  import taskboard from '../containers/SampleApps/TaskBoard/reducers/taskboardReducer';
  
- import InitialDetailsReducer from './modules/initialDetails'
+ import InitialDetailsReducer from './modules/initialDetails';
+ import AuthReducer from './modules/authentication';
 
 /**
  * Branching reducers to use one reducer for many components
@@ -44,6 +45,7 @@ function branchReducer(reducerFunction, reducerName) {
  */
 export default function createReducer(injectedReducers = {}) {
   const rootReducer = combineReducers({
+    AuthReducer,
     InitialDetailsReducer,
     form,
     ui: uiReducer,

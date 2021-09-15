@@ -59,6 +59,7 @@ import { tabViewMode } from "../../../redux/actions/initialDetails";
 import CloseOut from "../../SummaryDetails/CloseOut";
 import { Comments } from "../../pageListAsync";
 import ActivityHistory from "../../../containers/Activity/Activity";
+import { ACCOUNT_API_URL } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -132,6 +133,11 @@ const Summary = (props) => {
 
   if (id) {
     localStorage.setItem("fkincidentId", id);
+  }
+
+  const fetchPermission = async()=>{
+    const url = JSON.parse(localStorage.getItem('userDetails')).companies
+    // const res = await api.get(`${ACCOUNT_API_URL}`)
   }
 
   const fetchIncidentData = async () => {
