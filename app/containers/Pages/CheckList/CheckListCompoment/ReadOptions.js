@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ReadOnlyOptionRow = ({ value, group }) => {
+const ReadOnlyOptionRow = ({ value, group, handleEditClick }) => {
 
     const handelParentShow = (value) => {
         if (value == 0) {
@@ -59,7 +59,7 @@ const ReadOnlyOptionRow = ({ value, group }) => {
                 : null}
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    defaultChecked={value.status == undefined || value.status == "active" ? true : false}
+                    defaultChecked={value.status == undefined || value.status == "Active" ? true : false}
                     onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}

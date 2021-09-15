@@ -25,38 +25,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const EditOnlyOptionRow = ({ value, group }) => {
+const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewUpdate }) => {
 
     const [editForm, setEditForm] = useState({})
 
-    const handelParentShow = (value) => {
-        if (value == 0) {
-            return "Top"
-        } else {
-            return "Sub"
-        }
-    }
 
-    const handelParentValue = (value) => {
-        if (value == "Top") {
-            setEditForm({
-                ...editForm,
-                parentGroup: "0",
-            })
-        } else {
-            setEditForm({
-                ...editForm,
-                parentGroup: "1",
-            })
-        }
-
-    }
-    console.log(group, '----')
-    const handelUpdate = async (checkListId, checkListGroupId) => {
+    const handelUpdate = async (e, checkListId, checkListOptionId) => {
         editForm["fkCheckListId"] = checkListId
-        editForm["checklistgroupId"] = checkListGroupId
-        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
-        const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
+        editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+        const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editForm)
         if (res.status == 200) {
             setViewUpdate(!viewUpdate)
         }
@@ -76,10 +53,10 @@ const EditOnlyOptionRow = ({ value, group }) => {
                     label="group name"
                     variant="outlined"
                     defaultValue={value.inputLabel}
-                // onChange={async (e) => setEditForm({
-                //     ...editForm,
-                //     checkListGroupName: e.target.value
-                // })}
+                    onChange={async (e) => setEditForm({
+                        ...editForm,
+                        inputLabel: e.target.value
+                    })}
                 />
 
             </TableCell>
@@ -88,17 +65,12 @@ const EditOnlyOptionRow = ({ value, group }) => {
                     id="filled-basic"
                     label="group name"
                     variant="outlined"
-                    defaultValue={value.inputValue.toLowerCase().replace(" ", "-")}
-                // onChange={async (e) => setEditForm({
-                //     ...editForm,
-                //     checkListGroupName: e.target.value
-                // })}
+                    defaultValue={value.inputLabel.toLowerCase().replace(" ", "-")}
+                    disabled
                 />
             </TableCell>
             {Object.keys(group).length > 0 ?
                 <TableCell key={group[value.fkGroupId]}>
-                    {/* <p>{group[value.fkGroupId]}</p> */}
-
                     <FormControl
                         variant="outlined"
                         className={classes.formControl}
@@ -108,13 +80,15 @@ const EditOnlyOptionRow = ({ value, group }) => {
                             id="Group-name"
                             className="inputCell"
                             labelId="Group name"
-                            defaultValue="Top"
+                            defaultValue={value.fkGroupId}
                         >
-
                             {Object.entries(group).map(([key, value]) => (
                                 <MenuItem
                                     value={key}
-                                // onClick={(e) => handelParentValue(value.parentGroup)}
+                                    onClick={async (e) => setEditForm({
+                                        ...editForm,
+                                        fkGroupId: key
+                                    })}
                                 >
                                     {value}
                                 </MenuItem>
@@ -123,6 +97,7 @@ const EditOnlyOptionRow = ({ value, group }) => {
                     </FormControl>
                 </TableCell>
                 : null}
+
 
             <TableCell className={classes.tabelBorder}>
                 <Switch
@@ -134,7 +109,7 @@ const EditOnlyOptionRow = ({ value, group }) => {
             </TableCell>
 
             <TableCell>
-                <DoneIcon onClick={(e) => handleEditClick(e, value)} />
+                <DoneIcon onClick={(e) => handelUpdate(e, value.fkCheckListId, value.id)} />
                 <span style={{ marginLeft: "20px" }}>
                     <DeleteIcon onClick={(e) => handelDelete(value.fkCheckListId, value.checklistgroupId)} />
                 </span>
