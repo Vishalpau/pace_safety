@@ -571,7 +571,7 @@ const ObservationInitialNotificationUpdate = () => {
               Observation Title
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.observationTitle}
+              {initialData.observationTitle ? initialData.observationTitle : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
@@ -579,7 +579,7 @@ const ObservationInitialNotificationUpdate = () => {
               Observation Type
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.observationTitle}
+              {initialData.observationType ? initialData.observationType : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
@@ -587,7 +587,7 @@ const ObservationInitialNotificationUpdate = () => {
               Observation Description
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.observationDetails}
+              {initialData.observationDetails ? initialData.observationDetails : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
@@ -595,7 +595,7 @@ const ObservationInitialNotificationUpdate = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}` : null} 
+            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `- ${projectSturcturedData[1].name}` : null}  {projectSturcturedData[2] ? `- ${projectSturcturedData[2].name}` : null} 
 
             </Typography>
           </Grid>
