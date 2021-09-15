@@ -118,7 +118,7 @@ const ProjectStructure = (props) => {
         setLabelList(labellist)
         // setIsLoading(true)
       }
-    } else if (labelList.length === 1) {
+    } else if (labellist.length === 1) {
       var config = {
         method: "get",
         url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
@@ -196,7 +196,7 @@ alert('hlo')
     }
   };
 
-
+console.log(labelList)
   const handleBreakdown = async (e, index, label) => {
     let projectData = JSON.parse(localStorage.getItem('projectName'))
     const value = e.target.value;
@@ -322,13 +322,14 @@ alert('hlo')
       </Grid>)}
 
     {labelList.length === 1 ? labelList.map((item, index) => (
-      <Grid item xs={3}>
+      <Grid item xs={3}>{console.log({labelList1:labelList})}
         <FormControl
           key={index}
           variant="outlined"
           error={props.error && props.error[`projectStructure${[item.index]}`]}
           fullWidth={true}
           className={classes.formControl}
+          required
         >
 
           <InputLabel id="filter3-label">
@@ -381,6 +382,7 @@ alert('hlo')
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className={classes.formControl}
+              required
             >
 
               <InputLabel id="filter3-label">
@@ -432,6 +434,7 @@ alert('hlo')
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className={classes.formControl}
+              required
             >
 
               <InputLabel id="filter3-label">
