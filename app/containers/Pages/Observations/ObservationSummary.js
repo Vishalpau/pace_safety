@@ -174,8 +174,10 @@ const ObservationSummary = () => {
     setObservationInitialNotificationUpdate(true)
     if(localStorage.getItem("action") === "Done"){
       setObservationCorrectiveActionView(true)
+      history.push(`/app/observation/details/${id}`)
     }else{
       setObservationCorrectiveActionView(false)
+      history.push(`/app/observation/details/${id}#action-taking`)
     }
     
 
@@ -234,6 +236,7 @@ const ObservationSummary = () => {
                   setObservationInitialNotificationUpdate(true)
                   setComment(false)
                   setActivity(false)
+                  history.push(`/app/observation/details/${id}`)
                   // setObservationReview(false);
                   // setObservationCloseOut(false);
                 }}

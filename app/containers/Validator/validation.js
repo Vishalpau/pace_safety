@@ -4,11 +4,17 @@ import validator from "validator";
 function validate(data,projectStructure,levelLenght) {
   let isValid = true;
   const error = {};
-  
-  if(projectStructure?projectStructure.length<levelLenght:false){
-    error.projectStructure = "Please select stage of project";
-    isValid = false;
+  console.log(projectStructure)
+  const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
+  for (let i = 0; i < breakdownValue.length; i++) {
+    var element = projectStructure[i]
+    console.log({element:element})
+    if (projectStructure[i] === undefined) {
+      error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
+      isValid = false;
+    }
   }
+  
 
   if (validator.isEmpty(data.incidentType)) {
     error.incidentType = "Please select incident type";

@@ -201,16 +201,16 @@ function ObservationCorrectiveAction() {
     if (!isValid) {
       return "Data is not valid";
     }
-    if(comment.comment === ""){
-      setError({ comment: "Please enter comment" });
-    }else{
+    
       await setLoading(true)
       if(comment.id){
         comment['updatedBy'] = parseInt(userId)
         const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/` ,comment)
       }else{
+        if(comment.comment !== ""){
+          const res1 = await api.post(`/api/v1/comments/`,comment);
 
-        const res1 = await api.post(`/api/v1/comments/`,comment);
+        }
       }
       let data = new FormData();
     data.append("fkCompanyId", form.fkCompanyId),
@@ -267,7 +267,7 @@ function ObservationCorrectiveAction() {
       );
     }
     
-    }
+    
     
   }
 
@@ -607,14 +607,14 @@ temp.reviewedById = value.id
           className={classes.formBox}
         >
           <TextField
-            label="Provide any additional comments*"
+            label="Provide any additional comments"
             //margin="dense"
             name="provideadditionalcomments"
             id="provideadditionalcomments"
             multiline
             rows={3}
-            error={error.comment}
-                helperText={error.comment ? error.comment : ""}
+            // error={error.comment}
+            //     helperText={error.comment ? error.comment : ""}
             // disabled={comment.id ? true : false}
             fullWidth
             variant="outlined"
