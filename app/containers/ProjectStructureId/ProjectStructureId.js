@@ -87,6 +87,7 @@ const ProjectStructure = (props) => {
 
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
+  
 
     let labellist = projectData.projectName.breakdown.map((item, key) => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "", index: key } })
 
@@ -117,7 +118,7 @@ const ProjectStructure = (props) => {
         setLabelList(labellist)
         // setIsLoading(true)
       }
-    } else if (select.length === 1) {
+    } else if (labellist.length === 1) {
       var config = {
         method: "get",
         url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
@@ -153,7 +154,7 @@ const ProjectStructure = (props) => {
                 labellist[key].breakdownValue = response.data.data.results;
                 // labellist[key].selectValue= select[key].id;
 
-
+               
                 setLabelList(labellist)
 
               })
@@ -169,7 +170,7 @@ const ProjectStructure = (props) => {
       for (var key in projectData.projectName.breakdown) {
 
         if (key == select.length) {
-
+alert('hlo')
           try {
             var config = {
               method: "get",
@@ -177,29 +178,25 @@ const ProjectStructure = (props) => {
                 }${select[key - 1].id}`,
               headers: HEADER_AUTH,
             };
-
+         
             await Axios(config)
               .then(async (response) => {
-
-
                 labellist[key].breakdownValue = response.data.data.results;
                 // labellist[key].selectValue= select[key].id;
-
-
                 setLabelList(labellist)
 
               })
               .catch(function (error) {
               });
           } catch (err) {
-            ;
+            
           }
         }
       }
     }
   };
 
-
+console.log(labelList)
   const handleBreakdown = async (e, index, label) => {
     let projectData = JSON.parse(localStorage.getItem('projectName'))
     const value = e.target.value;
@@ -325,13 +322,14 @@ const ProjectStructure = (props) => {
       </Grid>)}
 
     {labelList.length === 1 ? labelList.map((item, index) => (
-      <Grid item xs={3}>
+      <Grid item xs={3}>{console.log({labelList1:labelList})}
         <FormControl
           key={index}
           variant="outlined"
           error={props.error && props.error[`projectStructure${[item.index]}`]}
           fullWidth={true}
           className={classes.formControl}
+          required
         >
 
           <InputLabel id="filter3-label">
@@ -384,6 +382,7 @@ const ProjectStructure = (props) => {
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className={classes.formControl}
+              required
             >
 
               <InputLabel id="filter3-label">
@@ -435,6 +434,7 @@ const ProjectStructure = (props) => {
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className={classes.formControl}
+              required
             >
 
               <InputLabel id="filter3-label">
