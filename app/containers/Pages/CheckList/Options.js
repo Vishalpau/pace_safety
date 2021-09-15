@@ -12,11 +12,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Editor from '../../../components/Editor';
+import Switch from '@material-ui/core/Switch';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import api from "../../../utils/axios"
 import { handelIncidentId } from "../../../utils/CheckerValue"
 import { async } from "fast-glob";
-
+import ReadOnlyOptionRow from "./CheckListCompoment/ReadOptions";
+import EditOnlyOptionRow from "./CheckListCompoment/EditOptions"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     },
     tabelBorder: {
         width: 110,
+        fontWeight: 600,
     },
     paper: {
         position: 'absolute',
@@ -77,7 +82,7 @@ function Option() {
         const optionApiData = await api.get(`api/v1/core/checklists/${groupID}/options/`)
         const allOptions = optionApiData.data.data.results
         setOption(allOptions)
-
+        console.log(allOptions)
         const groupApiData = await api.get(`api/v1/core/checklists/${groupID}/groups/`)
         const result = groupApiData.data.data.results
         let allGroups = result
@@ -183,45 +188,43 @@ function Option() {
 
     return (
 
-        <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
+        <PapperBlock title="Check List Option" icon="ion-md-list-box" desc="">
             {/* {console.log(form)} */}
             <Grid container spacing={12}>
                 <Table className={classes.table}>
+
                     <TableBody>
                         <TableRow>
-                            <TableCell className={classes.tabelBorder}>Sr.</TableCell>
-                            {Object.keys(group).length > 0 ? <TableCell className={classes.tabelBorder}>Group name</TableCell> : null}
-
-                            <TableCell className={classes.tabelBorder}>Option</TableCell>
-                            <TableCell className={classes.tabelBorder}>Is system ?</TableCell>
-
-                        </TableRow>
-                        {option.map((value, index) => (
-                            <TableRow>
-                                <TableCell className={classes.tabelBorder} key={index}>{index + 1}</TableCell>
-                                {Object.keys(group).length > 0 ?
-                                    <TableCell className={classes.tabelBorder} key={group[value.fkGroupId]}>
-                                        {/* <TextField
-                                            id="filled-basic"
-                                            variant="outlined"
-                                            value={group[value.fkGroupId]}
-                                            disabled
-                                        /> */}
-                                        <p>{group[value.fkGroupId]}</p>
-                                    </TableCell>
-                                    : null}
-                                <TableCell className={classes.tabelBorder} key={value.isSystem}>
-                                    <Editor
-                                        type="text"
-                                        value={value.inputLabel}
-                                        column="name"
-                                        isvalidate={isvalidate}
-                                        save={(e) => handelEdit(value.fkCheckListId, value.fkGroupId, value.id)}
-                                        edit={value.isSystem == "No"}
-                                    />
+                            <TableCell className={classes.tabelBorder}>
+                                Option Name(Input Label)
+                            </TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                Input Value
+                            </TableCell>
+                            {Object.keys(group).length > 0 ?
+                                <TableCell className={classes.tabelBorder}>
+                                    Group name
                                 </TableCell>
-                                <TableCell className={classes.tabelBorder}>{value.isSystem}</TableCell>
-                            </TableRow>
+                                : null}
+                            <TableCell className={classes.tabelBorder}>
+                                Status
+                            </TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                Action
+                            </TableCell>
+                        </TableRow>
+
+                        {option.map((value, index) => (
+                            <>
+                                <ReadOnlyOptionRow
+                                    value={value}
+                                    group={group}
+                                />
+                                <EditOnlyOptionRow
+                                    value={value}
+                                    group={group}
+                                />
+                            </>
                         ))}
 
                         <TableRow>

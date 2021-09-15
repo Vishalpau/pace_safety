@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate }) => {
+const ReadOnlyOptionRow = ({ value, group }) => {
 
     const handelParentShow = (value) => {
         if (value == 0) {
@@ -48,12 +48,15 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate }) => {
     const classes = useStyles();
     return (
         <TableRow>
-            <TableCell className={classes.tabelBorder}>
-                <p>{value.checkListGroupName}</p>
+            <TableCell key={value.isSystem}>
+                {value.inputLabel}
             </TableCell>
-            <TableCell className={classes.tabelBorder}>
-                <p>{handelParentShow(value.parentGroup)}</p>
-            </TableCell>
+            <TableCell key={value.isSystem}>{value.inputLabel.toLowerCase().replace(" ", "-")}</TableCell>
+            {Object.keys(group).length > 0 ?
+                <TableCell key={group[value.fkGroupId]}>
+                    <p>{group[value.fkGroupId]}</p>
+                </TableCell>
+                : null}
             <TableCell className={classes.tabelBorder}>
                 <Switch
                     defaultChecked={value.status == undefined || value.status == "active" ? true : false}
@@ -71,8 +74,8 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate }) => {
 
             </TableCell>
 
-        </TableRow >
+        </TableRow>
     );
 };
 
-export default ReadOnlyRow;
+export default ReadOnlyOptionRow;

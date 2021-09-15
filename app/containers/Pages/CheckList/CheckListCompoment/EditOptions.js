@@ -20,9 +20,12 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
     },
+    formControl: {
+        width: "85%",
+    },
 }));
 
-const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setViewUpdate }) => {
+const EditOnlyOptionRow = ({ value, group }) => {
 
     const [editForm, setEditForm] = useState({})
 
@@ -48,7 +51,7 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
         }
 
     }
-
+    console.log(group, '----')
     const handelUpdate = async (checkListId, checkListGroupId) => {
         editForm["fkCheckListId"] = checkListId
         editForm["checklistgroupId"] = checkListGroupId
@@ -67,62 +70,79 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
     const classes = useStyles();
     return (
         <TableRow>
-            <TableCell className={classes.tabelBorder}>
+            <TableCell key={value.isSystem}>
                 <TextField
                     id="filled-basic"
                     label="group name"
                     variant="outlined"
-                    defaultValue={value.checkListGroupName}
-                    onChange={async (e) => setEditForm({
-                        ...editForm,
-                        checkListGroupName: e.target.value
-                    })}
+                    defaultValue={value.inputLabel}
+                // onChange={async (e) => setEditForm({
+                //     ...editForm,
+                //     checkListGroupName: e.target.value
+                // })}
                 />
-            </TableCell>
-            <TableCell className={classes.tabelBorder}>
-                <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                    label="Group name"
-                >
-                    <Select
-                        id="Group-name"
-                        className="inputCell"
-                        labelId="Group name"
-                        defaultValue="Top"
-                    >
-                        {allGroupName.map((selectValues) => (
-                            <MenuItem
-                                value={selectValues}
-                                onClick={(e) => handelParentValue(value.parentGroup)}
-                            >
-                                {selectValues}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
 
             </TableCell>
+            <TableCell key={value.isSystem}>
+                <TextField
+                    id="filled-basic"
+                    label="group name"
+                    variant="outlined"
+                    defaultValue={value.inputValue.toLowerCase().replace(" ", "-")}
+                // onChange={async (e) => setEditForm({
+                //     ...editForm,
+                //     checkListGroupName: e.target.value
+                // })}
+                />
+            </TableCell>
+            {Object.keys(group).length > 0 ?
+                <TableCell key={group[value.fkGroupId]}>
+                    {/* <p>{group[value.fkGroupId]}</p> */}
+
+                    <FormControl
+                        variant="outlined"
+                        className={classes.formControl}
+                        label="Group name"
+                    >
+                        <Select
+                            id="Group-name"
+                            className="inputCell"
+                            labelId="Group name"
+                            defaultValue="Top"
+                        >
+
+                            {Object.entries(group).map(([key, value]) => (
+                                <MenuItem
+                                    value={key}
+                                // onClick={(e) => handelParentValue(value.parentGroup)}
+                                >
+                                    {value}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </TableCell>
+                : null}
+
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    checked={true}
-                    // onChange={handleChange}
+                    defaultChecked={value.status == undefined || value.status == "active" ? true : false}
+                    onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
             </TableCell>
 
             <TableCell>
-                <DoneIcon onClick={(e) => handelUpdate(value.fkCheckListId, value.checklistgroupId)} />
+                <DoneIcon onClick={(e) => handleEditClick(e, value)} />
                 <span style={{ marginLeft: "20px" }}>
-                    <DeleteIcon />
+                    <DeleteIcon onClick={(e) => handelDelete(value.fkCheckListId, value.checklistgroupId)} />
                 </span>
 
             </TableCell>
 
-
-        </TableRow >
+        </TableRow>
     );
 };
 
-export default EditOnlyRow;
+export default EditOnlyOptionRow;
