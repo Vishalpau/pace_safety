@@ -160,7 +160,6 @@ export default function ActionTracker(props) {
       let res = await api.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber
-        localStorage.setItem("actionId" , actionId)
         await setError({ actionTitle: "",assignTo : "" });
         await setForm({ ...form,actionTitle : "",assignTo : "",severity : "", plannedEndDate: null })
         await setOpen(false);

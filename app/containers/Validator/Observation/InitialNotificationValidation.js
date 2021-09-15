@@ -1,16 +1,20 @@
 import validator from "validator";
 
-function InitialNotificationValidator(data,projectStructure,levelLenght) {
+function InitialNotificationValidator(data,projectStructure) {
   
 
   const error = {};
   let isValid = true;
-console.log(levelLenght)
 
-  if(projectStructure?projectStructure.length<levelLenght:false){
-    error.projectStructure = "Please select project level";
+const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
+for (let i = 0; i < breakdownValue.length; i++) {
+  var element = projectStructure[i]
+  console.log({element:element})
+  if (projectStructure[i] === undefined) {
+    error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
     isValid = false;
   }
+}
 
 
   if (validator.isEmpty(data.observationDetails.toString())) {
