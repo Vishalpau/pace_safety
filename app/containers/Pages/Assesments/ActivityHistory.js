@@ -35,7 +35,7 @@ import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 // import projectpj from 'dan-images/projectpj.png';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import Pagination from '@material-ui/lab/Pagination';
-import api from '../../utils/axios';
+import api from '../../../utils/axios';
 import moment from 'moment';
 
 // Sidebar Links Helper Function
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function ActivityHistory(props) {
+function ActivityHistory() {
     const [assessments, setAssessments] = useState(false);
     const [approvals, setApprovals] = useState(false);
     const [lessonsLearned, setLessonsLearned] = useState(false);
@@ -181,8 +181,8 @@ function ActivityHistory(props) {
         setExpanded(isExpanded ? panel : false);
     };
     const fetchActivityHistoryData = ()=>{
-        // incidents
-          api.get(`api/v1/core/useractivities/${props.module}/123/`)
+          
+          api.get(`api/v1/core/useractivities/incidents/123/`)
           .then(function (response) {
             console.log(JSON.stringify(response.data));
             const data = response.data.data.results

@@ -33,8 +33,12 @@ import { useHistory, useParams } from 'react-router';
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from 'moment';
+import Box from "@material-ui/core/Box";
 
 import api from "../../../utils/axios";
+import { connect } from "react-redux";
+import Pagination from '@material-ui/lab/Pagination';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -137,7 +141,7 @@ const ILink = withStyles({
   },
 })(Link);
 
-function Aha() {
+function Aha(props) {
   const [cardView, setCardView] = useState(true);
   const [tableView, setTableView] = useState(false);
   const [allAHAData , setAllAHAData] = useState([])
@@ -145,6 +149,8 @@ function Aha() {
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
   const [data, setData] = useState([])
+  const [pageCount, setPageCount] = useState(0);
+
 
   // Function to toggle the view mode
   const handleView = () => {
@@ -210,13 +216,57 @@ function Aha() {
     );
   };
 
-  const fetchAllAHAData = async () => {
-    const res = await api.get("/api/v1/ahas/")
-    const result = res.data.data.results.results
+  // const fetchAllAHAData = async () => {
+  //   const res = await api.get("/api/v1/ahas/")
+  //   const result = res.data.data.results.results
     
-    await setAllAHAData(result)
-    await handelTableView(result)
+  //   await setAllAHAData(result)
+  //   // await handelTableView(result)
+  // }
+
+
+  const fetchAllAHAData = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    await setPageCount(pageCount)
+
+    await setIsLoading(true)
+  };
+
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  const res = await api.get(`api/v1/ahas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllAHAData(res.data.data.results.results);
+  };
+
+  
 
   const handelTableView = (result) => {
     const temp = []
@@ -242,9 +292,10 @@ function Aha() {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-},[])
+},[props.projectName])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
+    <Box>
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
           <Toolbar>
@@ -323,8 +374,8 @@ function Aha() {
 
                   <Grid item xs={1} justifyContent="flex-end">
                     <Chip
-                      avatar={<Avatar src="/images/pp_boy.svg" />}
-                      label="Admin"
+                      avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
+                              label={item[1]["username"]?item[1]["username"]:"Admin"}
                     />
                   </Grid>
                 </Grid>
@@ -356,7 +407,7 @@ function Aha() {
                   <Grid item xs={6} md={3}>
                     <Chip
                       variant="outlined"
-                      label="Initial Notification"
+                      label="AHA"
                       color="primary"
                       size="small"
                     />
@@ -414,7 +465,7 @@ function Aha() {
                 </Typography>
 
                 <Typography className={Fonts.listingLabelValue}>
-                {item[1]["createdBy"]}
+                {item[1]["username"]}
                 </Typography>
               </Grid>
             </Grid>
@@ -434,7 +485,7 @@ function Aha() {
                   Comments:
                 </Typography>
                 <Typography variant="body2" display="inline">
-                  <ILink href="#">3</ILink>
+                  <ILink href="#">{item[1].commentsCount}</ILink>
                 </Typography>
               </Grid>
 
@@ -463,7 +514,7 @@ function Aha() {
                   Attachments:
                 </Typography>
                 <Typography variant="body2" display="inline">
-                  <ILink href="#">3</ILink>
+                  <ILink href="#">{item[1].attachmentCount}</ILink>
                 </Typography>
               </Grid>
 
@@ -519,8 +570,24 @@ function Aha() {
           options={options}
         />
       )}
+      <div className={classes.pagination}>
+      <Pagination count={pageCount} onChange={handleChange}/>
+    </div>
+    </Box>
     </PapperBlock>
   );
 }
 
-export default Aha;
+// export default Aha;
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Aha);

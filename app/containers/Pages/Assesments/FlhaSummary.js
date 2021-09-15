@@ -157,20 +157,23 @@ const styles = theme => ({
 
 class SimpleTabs extends React.Component {
   state = {
-    value: 0,
+    value: "1.0",
     flha: {},
     criticalTasks: {},
-    visualConfirmations: {}
+    visualConfirmations: {},
+    versions: ["1.0",]
   };
 
-  handleChange = (event, value) => {
+  handleChangeTab = (event, value) => {
+    alert(value)
     this.setState({ value });
+    this.getPreventiveControls(value)
   };
 
 
   componentDidMount() {
     this.getFlhaDetails();
-    this.getPreventiveControls();
+    this.getPreventiveControls("1.0");
     this.getJobVisualConfirmation();
   }
 
@@ -181,13 +184,22 @@ class SimpleTabs extends React.Component {
     this.setState({ flha: res.data.data.results });
   }
 
-  getPreventiveControls = async () => {
+  getPreventiveControls = async (value=undefined) => {
+    alert(234567)
     const flhaId = this.props.match.params.id;
     // this.props.match.params.id
-    const res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
-    console.log({ controls: res.data.data.results.tasks });
+    if(value != undefined){
+      // var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/?version='+value);
+      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
+    }
+    else{
+      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
+    }
+    
+    
     await this.setState({ criticalTasks: res.data.data.results.tasks });
-    // return res.data.data.results
+    console.log({ controls: this.state.criticalTasks });
+    await this.setState({versions: res.data.data.results.versions})
   }
 
   getJobVisualConfirmation = async () => {
@@ -200,12 +212,12 @@ class SimpleTabs extends React.Component {
   render() {
     const { classes } = this.props;
     const {
-      value, flha, criticalTasks, visualConfirmations
+      value, flha, criticalTasks, visualConfirmations, versions
     } = this.state;
     const handleChange = (event) => {
       setValue(event.target.value);
     };
-
+    console.log({versionscon: versions})
 
     return (
       <PapperBlock title={'FLHA Number: ' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
@@ -267,23 +279,32 @@ class SimpleTabs extends React.Component {
 
             <div className={classes.root}>
               <AppBar position="static" className={classes.headerBackground}>
-                <Tabs value={value} onChange={this.handleChange}>
-                  <Tab label="Initial revision" />
+                <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
+                  {(this.state.versions.length > 0) ?
+                
+                  (versions.map((version) => (
+                    // console.log(this.state.versions)
+                    <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
+                  )))
+                  : "Initial Revision"
+
+                  }
+                  {/* <Tab label="Initial revision" />
                   <Tab label="Revision 1.1" />
-                  <Tab label="Revision 1.2" />
+                  <Tab label="Revision 1.2" /> */}
                 </Tabs>
               </AppBar>
-              {value === 0
-			&& (
+              {/* {value === 0
+			&& ( */}
 			  <TabContainer className={classes.paddZero}>
-  <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} />
+            <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} />
 			  </TabContainer>
-			)}
-              {value === 1 && <TabContainer>Item Two</TabContainer>}
+			{/* )} */}
+              {/* {value === 1 && <TabContainer>Item Two</TabContainer>}
               {value === 2 && <TabContainer>Item Three</TabContainer>}
               {value === 3 && (
                 <TabContainer />
-              )}
+              )} */}
             </div>
             <Grid container spacing={1}>
               <Grid item xs={6}>
@@ -399,7 +420,8 @@ class SimpleTabs extends React.Component {
                         <CommentIcon />
                       </ListItemIcon>
                       <Link
-                        href="/app/pages/actions/comments"
+                        href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/comments"}
+                        // href="/app/pages/actions/comments"
                         variant="subtitle"
                       >
 
@@ -414,7 +436,7 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        href="/app/pages/activity/activity"
+                        href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/activities"}
                         variant="subtitle"
                       >
                         <ListItemText primary="Activity History" />

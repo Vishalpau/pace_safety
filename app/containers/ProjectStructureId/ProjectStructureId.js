@@ -56,9 +56,12 @@ const ProjectStructure = (props) => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
 
+  const [selectDepth, setSelectDepth] = useState("")
+  const [labelList, setLabelList] = useState([])
+
   // const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [lenghtBreaddown, setLengthBreakDown] = useState(0)
-
+  const [label, setLabel] = useState([])
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -82,139 +85,168 @@ const ProjectStructure = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-  const fetchleafNodeData = async (projectData, id, index, selectVal) => {
-
-    var config = {
-      method: "get",
-      url: `${SSO_URL}/${projectData.projectName.breakdown[index].structure[0].url
-        }${id}`,
-      headers: HEADER_AUTH,
-    };
-
-    await Axios(config)
-      .then(async (response) => {
-
-        await setLeafNode(true)
-        await setBreakdown1ListData([
-          {
-            breakdownLabel:
-              projectData.projectName.breakdown[index].structure[0].name,
-            breakdownValue: response.data.data.results,
-            selectValue: selectVal,
-            index: 0
-          },
-        ]);
-
-      })
-      .catch(function (error) {
-      });
-  }
-
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
+  
+
+    let labellist = projectData.projectName.breakdown.map((item, key) => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "", index: key } })
+
     let lenghtbreaddown = projectData.projectName.breakdown.length ? projectData.projectName.breakdown.length : 0
     await setLengthBreakDown(lenghtbreaddown)
     let selectDepthId = []
     for (var i in select) {
       let selectId = select[i].id;
       let selectDepth = select[i].depth
+      labellist[i].selectValue = select[i].id
+      labellist[i].disabled = true
       selectDepthId = [...selectDepthId, `${selectDepth}${selectId}`]
     }
 
-    props.setSelectDepthAndId(selectDepthId);
+    props.setSelectDepthAndId(selectDepthId)
+    if (select.length === 0) {
 
-    if (select !== null ? select.length > 0 : false) {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+          }`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config)
+      if (res.status === 200) {
+        labellist[0].breakdownValue = res.data.data.results;
 
-      if (projectData.projectName.breakdown.length === select.length) {
-        fetchleafNodeData(projectData, select[select.length - 2].id, select.length - 1, select[select.length - 1].id);
-      } else {
+        setLabelList(labellist)
+        // setIsLoading(true)
+      }
+    } else if (labellist.length === 1) {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+          }`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config)
+      if (res.status === 200) {
+        labellist[0].breakdownValue = res.data.data.results;
 
-        for (var key in projectData.projectName.breakdown) {
+        setLabelList(labellist)
+        // setIsLoading(true)
+      }
+    }
+    else if (select.length === labellist.length) {
 
-          if (key == select.length) {
+      for (var key in projectData.projectName.breakdown) {
 
-            try {
-              var config = {
-                method: "get",
-                url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                  }${select[key - 1].id}`,
-                headers: HEADER_AUTH,
-              };
+        if (key == select.length - 1) {
 
-              await Axios(config)
-                .then(async (response) => {
+          try {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${select[key - 1].id}`,
+              headers: HEADER_AUTH,
+            };
 
-                  await setBreakdown1ListData([
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[key].structure[0].name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: "",
-                      index: key
-                    },
-                  ]);
+            await Axios(config)
+              .then(async (response) => {
 
-                })
-                .catch(function (error) {
-                });
-            } catch (err) {
-              ;
-            }
+
+                labellist[key].breakdownValue = response.data.data.results;
+                // labellist[key].selectValue= select[key].id;
+
+               
+                setLabelList(labellist)
+
+              })
+              .catch(function (error) {
+              });
+          } catch (err) {
+            ;
           }
         }
       }
-    } else {
+    }
+    else {
       for (var key in projectData.projectName.breakdown) {
 
-        if (key == 0) {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-              }`,
-            headers: HEADER_AUTH,
-          };
-          await Axios(config)
-            .then(async (response) => {
+        if (key == select.length) {
+          try {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${select[key - 1].id}`,
+              headers: HEADER_AUTH,
+            };
+         
+            await Axios(config)
+              .then(async (response) => {
+                labellist[key].breakdownValue = response.data.data.results;
+                // labellist[key].selectValue= select[key].id;
+                setLabelList(labellist)
 
-              await setBreakdown1ListData([
-                {
-                  breakdownLabel:
-                    projectData.projectName.breakdown[0].structure[0].name,
-                  breakdownValue: response.data.data.results,
-                  selectValue: "",
-                  index: 0
-                },
-              ]);
-
-            })
-            .catch(function (error) {
-            });
+              })
+              .catch(function (error) {
+              });
+          } catch (err) {
+            
+          }
         }
       }
     }
   };
 
+console.log(labelList)
   const handleBreakdown = async (e, index, label) => {
-    await setSelectValue(e.target.value)
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let projectData = JSON.parse(localStorage.getItem('projectName'))
     const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    setBreakdown1ListData(temp)
-    if (props.selectDepthAndId.filter(filterItem => filterItem.slice(0, 2) === `${index}L`).length > 0) {
-      let breakDownValue = JSON.parse(localStorage.getItem('selectBreakDown')) !== null ? JSON.parse(localStorage.getItem('selectBreakDown')) : []
-      if (breakDownValue.length > 0) {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
-      } else {
-        const removeBreakDownList = temp.slice(0, index)
-        temp = removeBreakDownList
+    let temp = [...labelList]
+    temp[index][`selectValue`] = value;
+    // handleDepthId(value,`${index+1}L`)
+    let tempdeptid = [...props.selectDepthAndId]
+    let depthId = tempdeptid.filter(item => item.slice(0, 2) !== `${index + 1}L`)
+    let slicedepthId = depthId.slice(0, index)
+    let newDepthId = [...slicedepthId, `${index + 1}L${value}`]
+    props.setSelectDepthAndId(newDepthId)
+    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index + 1}L`).length > 0) {
+      for (var i in temp) {
+        if (i > index) {
+          temp[i].breakdownValue = []
+        }
+
       }
+      let removeSelectBreakDown = selectBreakDown.slice(0, index)
 
+      let name = temp[index].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            setSelectBreakDown([
+              ...removeSelectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name, label: label },
+            ]);
+            return;
+          }
 
+        }
+      );
+    } else {
+      let name = temp[index].breakdownValue.map(
+        async (item) => {
+          if (item.id === value) {
+            await setSelectBreakDown([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name, label: label },
+            ]);
+
+            return;
+          }
+
+        }
+      );
     }
-    if (projectData.projectName.breakdown.length !== index) {
+
+    if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index) {
+        if (key == index + 1) {
           var config = {
             method: "get",
             url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -225,27 +257,11 @@ const ProjectStructure = (props) => {
             .then(function (response) {
               if (response.status === 200) {
 
-                if (
-                  temp.filter(
-                    (item) =>
-                      item.breakdownLabel ===
-                      projectData.projectName.breakdown[key].structure[0].name
-                  ).length > 0
-                ) {
-                  return;
-                } else {
-                  setBreakdown1ListData([
-                    ...temp,
-                    {
-                      breakdownLabel:
-                        projectData.projectName.breakdown[index].structure[0]
-                          .name,
-                      breakdownValue: response.data.data.results,
-                      selectValue: value,
-                      index: index
-                    },
-                  ]);
-                }
+
+                temp[key].breakdownValue = response.data.data.results;
+                // temp[key].selectValue= e.target.value;
+
+                setLabelList(temp)
               }
             })
             .catch(function (error) {
@@ -253,14 +269,8 @@ const ProjectStructure = (props) => {
             });
         }
       }
-    } else {
     }
   };
-
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...props.selectDepthAndId, `${depth}${id}`]
-    props.setSelectDepthAndId([... new Set(newData)])
-  }
 
   const setStateBreakDown = async (select, projectData) => {
 
@@ -277,6 +287,7 @@ const ProjectStructure = (props) => {
     await fetchCallBack(select, projectData);
 
   }
+
   useEffect(() => {
     // fetchListData();
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -292,12 +303,10 @@ const ProjectStructure = (props) => {
     }
 
   }, [props.initialValues.breakDown]);
-
+  // console.log(leafNode, breakdown1ListData, '--------------')
   return (<>
-
     {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
       <Grid item xs={3} key={key}>
-
         <Typography
           variant="h6"
           className={Type.labelName}
@@ -306,99 +315,169 @@ const ProjectStructure = (props) => {
         >
           {selectBreakdow.label}
         </Typography>
-
-
         <Typography className={Type.labelValue}>
           {selectBreakdow.name}
         </Typography>
       </Grid>)}
-    {leafNode ? breakdown1ListData.map((item, index) => (
-      <Grid item xs={3}>
+
+    {labelList.length === 1 ? labelList.map((item, index) => (
+      <Grid item xs={3}>{console.log({labelList1:labelList})}
         <FormControl
           key={index}
           variant="outlined"
-          required
+          error={props.error && props.error[`projectStructure${[item.index]}`]}
+          fullWidth={true}
           className={classes.formControl}
-          error={props.error && props.error[`projectStructure`]}
+          required
         >
+
           <InputLabel id="filter3-label">
             {item.breakdownLabel}
           </InputLabel>
           <Select
             labelId="filter3-label"
             id="filter3"
-            value={item.selectValue || ""}
+            value={item.selectValue}
+            disabled={item.breakdownValue.length > 0 ? false : true}
             onChange={(e) => {
-              // handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
+              handleBreakdown(e, (item.index), item.breakdownLabel);
+
             }}
+            value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
             label="Phases"
             style={{ width: "100%" }}
           >
-            {item.breakdownValue.length
+            {item.breakdownValue.length > 0
               ? item.breakdownValue.map(
                 (selectValue, selectKey) => (
                   <MenuItem
                     key={selectKey}
                     value={selectValue.id}
-                    onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
                   >
                     {selectValue.name}
                   </MenuItem>
                 )
               )
-              : null}
+              : <MenuItem
+
+              >
+                No Data
+              </MenuItem>}
           </Select>
-          {error && error.projectStructure && (
-            <FormHelperText>{error.projectStructure}</FormHelperText>
-          )}
+          {props.error && props.error[`projectStructure${[item.index]}`] && (
+                              <FormHelperText>
+                                {props.error[`projectStructure${[item.index]}`]}
+                              </FormHelperText>
+                            )}
         </FormControl>
-
       </Grid>
-    )) : breakdown1ListData.map((item, index) => (
-      <Grid item xs={3}>
-        <FormControl
-          key={index}
-          variant="outlined"
-          required
-          className={classes.formControl}
-          error={props.error && props.error[`projectStructure`]}
-        >
-          <InputLabel id="filter3-label">
-            {item.breakdownLabel}
-          </InputLabel>
-          <Select
-            labelId="filter3-label"
-            id="filter3"
+    ))
+      : labelList.length === selectBreakdown.length ?
+        labelList.slice(selectBreakdown.length - 1).map((item, index) => (
+          <Grid item xs={3}>
+            <FormControl
+              key={index}
+              variant="outlined"
+              error={props.error && props.error[`projectStructure${[item.index]}`]}
+              fullWidth={true}
+              className={classes.formControl}
+              required
+            >
 
-            onChange={(e) => {
-              handleBreakdown(e, parseInt(item.index) + 1, item.breakdownLabel, item.selectValue)
+              <InputLabel id="filter3-label">
+                {item.breakdownLabel}
+              </InputLabel>
+              <Select
+                labelId="filter3-label"
+                id="filter3"
+                value={item.selectValue}
+                disabled={item.breakdownValue.length > 0 ? false : true}
+                onChange={(e) => {
+                  handleBreakdown(e, (item.index), item.breakdownLabel);
 
-            }}
-            label="Phases"
-            style={{ width: "100%" }}
-          >
-            {item.breakdownValue.length
-              ? item.breakdownValue.map(
-                (selectValue, selectKey) => (
-                  <MenuItem
-                    key={selectKey}
-                    value={selectValue.id}
+                }}
+                value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
+                label="Phases"
+                style={{ width: "100%" }}
+              >
+                {item.breakdownValue.length > 0
+                  ? item.breakdownValue.map(
+                    (selectValue, selectKey) => (
+                      <MenuItem
+                        key={selectKey}
+                        value={selectValue.id}
+                      >
+                        {selectValue.name}
+                      </MenuItem>
+                    )
+                  )
+                  : <MenuItem
 
-                    onClick={(e) => handleDepthAndId(selectValue.depth, selectValue.id)}
                   >
-                    {selectValue.name}
-                  </MenuItem>
-                )
-              )
-              : null}
-          </Select>
-          {props.error && props.error.projectStructure && (
-            <FormHelperText>{props.error.projectStructure}</FormHelperText>
-          )}
-        </FormControl>
+                    No Data
+                  </MenuItem>}
+              </Select>
+              {props.error && props.error[`projectStructure${[item.index]}`] && (
+                              <FormHelperText>
+                                {props.error[`projectStructure${[item.index]}`]}
+                              </FormHelperText>
+                            )}
+            </FormControl>
+          </Grid>
+        )) :
+        labelList.length > 0 ? labelList.slice(selectBreakdown.length).map((item, index) => (
+          <Grid item xs={3}>
+            <FormControl
+              key={index}
+              variant="outlined"
+              error={props.error && props.error[`projectStructure${[item.index]}`]}
+              fullWidth={true}
+              className={classes.formControl}
+              required
+            >
 
-      </Grid>
-    ))}
+              <InputLabel id="filter3-label">
+                {item.breakdownLabel}
+              </InputLabel>
+              <Select
+                labelId="filter3-label"
+                id="filter3"
+                value={item.selectValue}
+                disabled={item.breakdownValue.length > 0 ? false : true}
+                onChange={(e) => {
+                  handleBreakdown(e, (item.index), item.breakdownLabel);
+
+                }}
+                value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
+                label="Phases"
+                style={{ width: "100%" }}
+              >
+                {item.breakdownValue.length > 0
+                  ? item.breakdownValue.map(
+                    (selectValue, selectKey) => (
+                      <MenuItem
+                        key={selectKey}
+                        value={selectValue.id}
+                      >
+                        {selectValue.name}
+                      </MenuItem>
+                    )
+                  )
+                  : <MenuItem
+
+                  >
+                    No Data
+                  </MenuItem>}
+              </Select>
+              {props.error && props.error[`projectStructure${[item.index]}`] && (
+                              <FormHelperText>
+                                {props.error[`projectStructure${[item.index]}`]}
+                              </FormHelperText>
+                            )}
+            </FormControl>
+          </Grid>
+        ))
+          : null}
   </>
   );
 };

@@ -151,7 +151,7 @@ const ProjectAreaHazards = () => {
     const tempForm = []
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-    const apiData = res.data.data.results.results
+    const apiData = res.data.data.results
     apiData.map((value) => {
       if (value.fkChecklistId !== 0) {
         tempForm.push(value)
@@ -178,7 +178,7 @@ const ProjectAreaHazards = () => {
     const temp = {}
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
-    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/1/`)
+    const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
@@ -211,9 +211,6 @@ const ProjectAreaHazards = () => {
 
   const handelRemove = async (e, index) => {
     if (otherHazards.length > 1) {
-      // if (otherHazards[index].id !== undefined) {
-      //   const res = await api.delete(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[index]["id"]}/`);
-      // }
       let temp = otherHazards;
       let newData = otherHazards.filter((item, key) => key !== index);
       await setOtherHazards(newData);
@@ -281,36 +278,27 @@ const ProjectAreaHazards = () => {
 
   const handleSubmit = async (e) => {
     setSubmitLoader(true)
-    // for (let i = 0; i < form.length; i++) {
-    //   let decidePost = handelCheckPost(form[i]["fkChecklistId"], form[i]["hazard"])
-    //   if (decidePost !== true) {
-    //     const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
-    //   }
-    // }
-
-    // for (let i = 0; i < otherHazards.length; i++) {
-    //   if (otherHazards[i]["hazard"] != "") {
-    //     if (otherHazards[i]["id"] == undefined) {
-    //       const resOther = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, otherHazards[i])
-    //     } else {
-    //       const resOther = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/${otherHazards[i]["id"]}/`, otherHazards[i])
-    //     }
-    //   }
-    // }
 
     let hazardNew = []
     let hazardUpdate = []
+    let allHazard = [form, otherHazards]
 
-    form.map((value) => {
-      if (form["id"] == undefined) {
-        hazardNew.push(value)
-      } else {
-        hazardUpdate.push(value)
-      }
+    allHazard.map((values, index) => {
+      allHazard[index].map((value) => {
+        if (value["id"] == undefined) {
+          if (value["hazard"] !== "") {
+            hazardNew.push(value)
+          }
+        } else {
+          hazardUpdate.push(value)
+        }
+      })
     })
 
+    if (hazardUpdate.length > 0) {
+      const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
+    }
     const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew)
-    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
 
     handelNavigate("next")
     setSubmitLoader(false)

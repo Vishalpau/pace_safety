@@ -64,6 +64,7 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import { useHistory, useParams } from "react-router";
 
 import axios from "axios";
 import api from "../../utils/axios";
@@ -208,6 +209,7 @@ function PersonalDashboard(props) {
   const description = brand.desc;
   const { classes } = props;
   const style = useStyles();
+  const history = useHistory();
   const classesm = useStyles();
   // define props
   const [userData, setUserData] = useState([]);
@@ -270,45 +272,15 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = (appCode) => {
-    let fkAppId = ""
+    if(appCode === "observations"){
+      history.push('/app/observations')
 
-    let fkApp = modules.map(module => {
-      if (module.moduleCode === appCode) {
-        fkAppId = module.fkAppId
-        return module.fkAppId && module.fkAppId;
-      }
-    })
-
-    let targetPage = modules.map(module => {
-      if (module.moduleCode == appCode) {
-        return module.targetPage;
-      }
-    }).join(' ')
-    // console.log({targetPage:apps.appId})
-
-    let clientId = ''
-    let hostings = subscriptions.map(apps => {
-
-      if (fkAppId === apps.appId) {
-        clientId = apps.hostings[0].clientId
-        return apps.hostings;
-      }
-    })[0];
-
-
-    if (clientId) {
-
-      window.open(
-        ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
-        '_blank' // <- This is what makes it open in a new window.
-      ).onClick();
     }
+    else if(appCode === "incidents"){
+      history.push('/incidents/')
 
-    // window.open(
-    //   window.location.href = process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+clientId+'&response_type=code',
-    //   '_blank' // <- This is what makes it open in a new window.
-    // );
-
+    }else if(appCode === "assessments")
+      history.push('/app/pages/assesments/xflha')
   }
 
   const handleDisableModule = (appcode) => {
@@ -340,13 +312,23 @@ function PersonalDashboard(props) {
     setCompanyId(e)
     localStorage.setItem("company", JSON.stringify(companeyDetails));
     let newData = companyListData[key];
-    if (newData) {
+    if (newData.projects.length === 1) {
+      await setProjectListData(newData.projects[0]);
+      await setOpen(false);
+      let data = newData.projects[0];
+      await dispatch(projectName(data));
+      localStorage.setItem("projectName", JSON.stringify(data));
+
+
+    } else if (newData.projects.length > 1) {
       await setProjectListData(newData.projects);
       handleProjectOpen();
       await setOpen(false);
-    } else {
+    }
+    else {
       await setOpen(false);
     }
+   
   };
 
   //Project selections

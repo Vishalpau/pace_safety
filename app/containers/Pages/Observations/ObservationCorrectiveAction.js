@@ -58,6 +58,17 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: '1px solid #ccc',
     },
   },
+  custmCancelBtn: {
+    color: "#ffffff",
+    backgroundColor: "#ff8533",
+    lineHeight: "30px",
+    marginLeft: "5px",
+    border: "none",
+    "&:hover": {
+      backgroundColor: "#ff8533",
+      border: "none",
+    },
+  },
   formControl: {
     '& .MuiInputBase-root': {
       borderRadius: '4px',
@@ -149,10 +160,22 @@ function ObservationCorrectiveAction() {
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
   let filterReportedByName = []
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).id
+  : null;
 
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
   const [comment , setComment] = useState({
-    "fkCompanyId": 0,
-    "fkProjectId": 0,
+    "fkCompanyId": parseInt(fkCompanyId),
+    "fkProjectId": parseInt(projectId),
     "commentContext": "Observation",
     "contextReferenceIds": localStorage.getItem("fkobservationId"),
     "commentTags": "Corrective-Action",
@@ -161,7 +184,8 @@ function ObservationCorrectiveAction() {
     "private": "Yes",
     "thanksFlag": "string",
     "status": "Active",
-    "createdBy": 0
+    "createdBy": parseInt(userId),
+    
   })
   const reviewedBy =[
     "None", 
@@ -177,12 +201,17 @@ function ObservationCorrectiveAction() {
     if (!isValid) {
       return "Data is not valid";
     }
-    if(comment.comment === ""){
-      setError({ comment: "Please enter comment" });
-    }else{
+    
       await setLoading(true)
-      const res1 = await api.post(`/api/v1/comments/`,comment);
-    if (res1.status === 201) {
+      if(comment.id){
+        comment['updatedBy'] = parseInt(userId)
+        const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/` ,comment)
+      }else{
+        if(comment.comment !== ""){
+          const res1 = await api.post(`/api/v1/comments/`,comment);
+
+        }
+      }
       let data = new FormData();
     data.append("fkCompanyId", form.fkCompanyId),
       data.append("fkProjectId", form.fkProjectId),
@@ -217,6 +246,8 @@ function ObservationCorrectiveAction() {
       data.append("supervisorName", form.supervisorName),
       data.append("supervisorDepartment", form.supervisorDepartment)
       data.append("status", form.status),
+      data.append("observationStatus", form.observationStatus),
+      data.append("observationStage", form.observationStage),
       data.append("createdBy", form.createdBy),
       data.append("updatedBy", form.updatedBy),
       data.append("source", form.source),
@@ -235,20 +266,12 @@ function ObservationCorrectiveAction() {
         )}`
       );
     }
-    }
-    }
+    
+    
     
   }
 
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
-
-      const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
+  
     
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
@@ -289,6 +312,11 @@ function ObservationCorrectiveAction() {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  const handleClose = async () => {
+    history.push(`/app/observation/details/${id}`)
+    await localStorage.setItem("update", "Done");
+  }
 
   const handleCloseDate = (e) => {
 
@@ -342,7 +370,7 @@ temp.reviewedById = value.id
   const fetchReportedBy = () => {
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -373,7 +401,7 @@ temp.reviewedById = value.id
     if(id){
       fetchInitialiObservationData()
       fetchactionTrackerData()
-      // fetchComments()
+      fetchComments()
       fetchReportedBy()
     }
     
@@ -474,7 +502,7 @@ temp.reviewedById = value.id
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=0&targetId=${action.id}` }
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
                 // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
@@ -566,6 +594,7 @@ temp.reviewedById = value.id
               helperText={error.reviewedOn ? error.reviewedOn : null}
               disableFuture={true}
               inputVariant="outlined"
+              InputProps={{ readOnly: true }}
               onChange={(e) => handleCloseDate(e)}
             />
           </MuiPickersUtilsProvider>
@@ -578,18 +607,18 @@ temp.reviewedById = value.id
           className={classes.formBox}
         >
           <TextField
-            label="Provide any additional comments*"
+            label="Provide any additional comments"
             //margin="dense"
             name="provideadditionalcomments"
             id="provideadditionalcomments"
             multiline
             rows={3}
-            error={error.comment}
-                helperText={error.comment ? error.comment : ""}
+            // error={error.comment}
+            //     helperText={error.comment ? error.comment : ""}
             // disabled={comment.id ? true : false}
             fullWidth
             variant="outlined"
-            // defaultValue= {comment.comment}
+            value= {comment.comment ? comment.comment : ""}
             className={classes.formControl}
             onChange={(e) => {
                   setComment({ ...comment, comment: e.target.value });
@@ -628,6 +657,14 @@ temp.reviewedById = value.id
         </Button>
         {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
       </div>
+      {/* <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmCancelBtn}
+                onClick={() => handleClose()}
+              >
+                CANCEL
+              </Button> */}
           {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
           onClick={() => handleSubmit()}>Submit</Button> */}
         </Grid> 

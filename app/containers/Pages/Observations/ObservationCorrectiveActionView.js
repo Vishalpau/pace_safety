@@ -36,7 +36,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 import ActionTracker from "./ActionTracker";
-import ActionTrackerUpdate from "./ActionTrackerUpdate";
 
 import {
   access_token,
@@ -182,9 +181,12 @@ bytes
   const classes = useStyles();
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
-    const result = res.data.data.results.results
+    const result = res.data.data.results.results[0]
+    const result1 = res.data.data.results
+   
+
     // await setComments(result[3])
-    await setComment(result[result.length -1] )
+    await setComment(result )
     // await setIsLoading(true)
   }
 
@@ -232,7 +234,7 @@ bytes
             Comments
           </Typography>
           <Typography className={classes.labelValue}>
-           {comment ? comment.comment : ""}
+           {comment ? comment.comment : "-"}
           </Typography>
         </Grid>
 

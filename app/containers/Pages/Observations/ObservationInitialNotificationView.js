@@ -325,7 +325,6 @@ bytes
 
   }
   const classes = useStyles();
-
   useEffect(() => {
       if(id){
         fetchInitialiObservation();
@@ -368,7 +367,7 @@ bytes
           </Typography>
           <Typography className={classes.labelValue}>
             
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null} - {projectSturcturedData[1] ? projectSturcturedData[1].name : null} - {projectSturcturedData[2] ? projectSturcturedData[2].name : null} 
+          {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `- ${projectSturcturedData[1].name}` : null}  {projectSturcturedData[2] ? `- ${projectSturcturedData[2].name}` : null} 
           </Typography>
         </Grid>
         <Grid item md={6}>
@@ -387,7 +386,7 @@ bytes
             {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
           </Typography>
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Observed On
           </Typography>
@@ -397,26 +396,7 @@ bytes
           )}
           </Typography>
         </Grid>
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-              Submited by
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {userName} , {userBadgeNo}
-            {/* {initialData.observedAt} */}
-          </Typography>
-        </Grid>
-
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Submited on
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {moment(initialData["createdAt"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          )}
-          </Typography>
-        </Grid>
+        
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
               Supervisor details
@@ -510,14 +490,14 @@ bytes
           ))}
         </Grid>
 
-        <Grid item md={12}>
+        {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Assignee
           </Typography>
           <Typography className={classes.labelValue}>
            {initialData.assigneeName ? initialData.assigneeName : "-"}
           </Typography>
-        </Grid>
+        </Grid> */}
         {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Actions
@@ -534,9 +514,9 @@ bytes
           </Typography>
           {initialData.attachment ? (
           <Typography className={classes.labelValue} 
-          title={handelFileName(
-            initialData.attachment)
-          }
+          // title={handelFileName(
+          //   initialData.attachment)
+          // }
                                     >
           {/* <Attachment value={initialData.attachment}/> */}
           {initialData.attachment ===
@@ -555,26 +535,27 @@ bytes
         </Grid>
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Reviewed By
+              Submited by
           </Typography>
           <Typography className={classes.labelValue}>
-          {initialData["reviewedByName"] ? initialData["reviewedByName"] : "-"}
-          
+          {userName} , {userBadgeNo}
+            {/* {initialData.observedAt} */}
           </Typography>
         </Grid>
-       
+
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Reviewed On
+                    Submited on
           </Typography>
           <Typography className={classes.labelValue}>
-            {/* {initialData.reportedDate ? initialData.reportedDate : "-"} */}
-            {initialData["reviewedOn"] ? moment(initialData["reviewedOn"]).format(
+          {moment(initialData["createdAt"]).format(
             "Do MMMM YYYY, h:mm:ss a"
-          ) :"-"}
+          )}
           </Typography>
         </Grid>
+        
       </Grid>
+      
 
       <Dialog
         open={open}

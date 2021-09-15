@@ -163,22 +163,6 @@ const ProjectAreaHazards = () => {
       ])
 
 
-  // const [others , setOther] = useState([
-  //   {"hazard": "",
-  //   "risk": "",
-  //   "severity": "",
-  //   "probability": "",
-  //   "riskRating": "",
-  //   "control": "",
-  //   "residualRisk": "",
-  //   "approveToImplement": "",
-  //   "monitor": "",
-  //   "status": "Active",
-  //   "createdBy": parseInt(userId),
-  //   "fkAhaId": localStorage.getItem("fkAHAId"),}
-  
-  // ]);
-
   const [checkGroups , setCheckListGroups] = useState([])
   const checkList = async () => {
     const temp = {}
@@ -196,8 +180,8 @@ const ProjectAreaHazards = () => {
         }
       })
     })
-    setCheckListGroups(temp)
-    setIsLoading(true)
+    await setCheckListGroups(temp)
+    await setIsLoading(true)
   }
 
   const handlePhysicalHazards = (e , index , value , checkListID) => {
@@ -233,7 +217,6 @@ const ProjectAreaHazards = () => {
       "createdBy": parseInt(userId),
       "fkAhaId": localStorage.getItem("fkAHAId"),})
     }
-    console.log("5555",temp)
     setForm(temp)
     
   };
@@ -248,42 +231,7 @@ const ProjectAreaHazards = () => {
 
   }
 
-  // const handelRemove = async (e, index) => {
-  //   if (others.length > 1) {
-  //     if (others[index].id !== undefined) {
-  //       const res = await api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${others[index]["id"]}/`);
-  //     }
-  //     let temp = others;
-  //     let newData = others.filter((item, key) => key !== index);
-  //     await setOthers(newData);
-  //   };
-  // }
 
-
-  // const handelRemove = async (e, index) => {
-  //   for (let i = 0; i < form.length; i++){
-  //     if(form[i].hazard === "Others"){
-  //       const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[index].id}/`)
-
-  //     }
-  //   }
-
-  //   if (others.length > 1) {
-  //     if (others[index].id !== undefined) {
-  //       // const res = await api.delete(
-  //       //   `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
-  //       // );
-
-  //     }
-
-  //     let temp = others;
-  //     let newData = others.filter((item, key) => key !== index);
-      
-  //     await setOther(newData);
-    
-  // };
-
-  // }
 
   const handleAdd = (e) => {
     if (Object.keys(otherHazards).length < 100) {
@@ -314,71 +262,34 @@ const ProjectAreaHazards = () => {
     };
   }
 
-  // const handleAdd = (e) => {
-  //   if (Object.keys(others).length < 100) {
-  //     setOther([...others, {"hazard": "",
-  //     "risk": "",
-  //     "severity": "",
-  //     "probability": "",
-  //     "riskRating": "",
-  //     "control": "",
-  //     "residualRisk": "",
-  //     "approveToImplement": "",
-  //     "monitor": "",
-  //     "status": "Active",
-  //     "createdBy": parseInt(userId),
-  //     "fkAhaId": localStorage.getItem("fkAHAId"),}]);
-  //   }
-  // };
 
   
 
- const [formId , setFormId] = useState([])
 
   const handleSubmit = async (e) => {
     await setSubmitLoader(true)
-    // for(let i = 0; i < form.length; i++){
-    //   if(form[i].id){
-        // const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${form[i].id}/`,form[i])
-      
-      // }else{
-        // const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`,form)
-        // const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/jobhazards/`, form[i])
-    // for (let i = 0; i <form.length; i++){
-    //   if (form[i].id){
-    //     await setFormId(form[i])
-    //   }else{
-    //     await setForm(form[i])
-    //   }
-    // }
+  
     let hazardNew = []
       let hazardUpdate = []
-    form.map((value) => {
-      if (value["id"] == undefined) {
-        hazardNew.push(value)
-      } else {
-        hazardUpdate.push(value)
-      }
+      let allHazard = [form, otherHazards]
+
+    allHazard.map((values, index) => {
+      allHazard[index].map((value) => {
+        if (value["id"] == undefined) {
+          if (value["hazard"] !== "") {
+            hazardNew.push(value)
+          }
+        } else {
+          hazardUpdate.push(value)
+        }
+      })
     })
 
-    console.log(hazardNew, hazardUpdate)
 
     if (hazardUpdate.length > 0) {
       const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
     }
-    const resHazard = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
- 
-    for (let i = 0; i < otherHazards.length; i++) {
-      if (otherHazards[i]["hazard"] != "") {
-        console.log('123')
-        if (otherHazards[i]["id"] == undefined) {
-          
-          const resOther = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`, otherHazards[i])
-        } else {
-          const resOther = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${otherHazards[i]["id"]}/`, otherHazards[i])
-        }
-      }
-    }
+    const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
    
     history.push("/app/pages/aha/assessments/assessment")
 
@@ -450,7 +361,7 @@ bytes
     const otherNoId = []
     const tempForm = []
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
-    const apiData = res.data.data.results.results
+    const apiData = res.data.data.results
     apiData.map((value) => {
           if (value.fkChecklistId !== 0) {
             tempForm.push(value)
@@ -461,7 +372,6 @@ bytes
         setForm(tempForm)
       
     // setForm(apiData)
-    console.log(otherNoId)
     if (otherNoId.length > 0) {
       setOtherHazards(otherNoId)
     }
@@ -474,83 +384,13 @@ bytes
     })
     setSelectedOption(temp)
   }
-console.log(form)
-  // const handelUpdate = async () => {
-  //   const temp = {}
-  //   const otherNoId = []
-  //   const tempForm = []
-  //   const jhaId = handelJhaId()
-  //   const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-  //   const apiData = res.data.data.results.results
-  //   apiData.map((value) => {
-  //     if (value.fkChecklistId !== 0) {
-  //       tempForm.push(value)
-  //     } else {
-  //       otherNoId.push(value)
-  //     }
-  //   })
-  //   setForm(tempForm)
-  //   if (otherNoId.length > 0) {
-  //     setOtherHazards(otherNoId)
-  //   }
-  //   setFetchedOptions(apiData)
-  //   apiData.map((value) => {
-  //     if (value.hazard in temp) {
-  //       temp[value.hazard].push(value.risk)
-  //     } else {
-  //       temp[value.hazard] = [value.risk]
-  //     }
-  //   })
-  //   setSelectedOption(temp)
-  // }
 
-
-  const fetchHzardsData = async () => {
-    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
-    const result = res.data.data.results.results
-    const temp = {physicalHazards : [], chemicalHazards : [],energyHazard : [] , ergonomicHazards: [] , biologicalHazards : [] ,environmentalHazards : [] , otherhazards : []}
-    for (let i = 0; i < result.length; i++){
-      if(result[i].hazard === "Physical Hazards"){
-        temp.physicalHazards.push(result[i].risk)
-      }else if(result[i].hazard === "Chemical Hazards"){
-        temp.chemicalHazards.push(result[i].risk)
-      }else if(result[i].hazard === "Energy Hazards"){
-        temp.energyHazard.push(result[i].risk)
-      }else if(result[i].hazard === "Ergonomic Hazards"){
-        temp.ergonomicHazards.push(result[i].risk)
-      }else if(result[i].hazard === "Biological Hazards"){
-        temp.biologicalHazards.push(result[i].risk)
-      }else if(result[i].hazard === "Environmental Hazards"){
-        temp.environmentalHazards.push(result[i].risk)
-      }else if(result[i].hazard === "Others"){
-        temp.otherhazards.push(result[i].risk)
-      }
-    }
-    await setRiskvalue(temp)
-    await setForm(result)
-  }
-
-
-  const handleCheckbox =  (value) => {
-    const risk = false
-    if(riskVales.physicalHazards.length > 0){
-      if(riskVales.physicalHazards == value)
-      risk = true
-    }
-    return risk
-  }
 
   useEffect(() => {
-    // fetchBreakdown()
-    // fetchCallBack()
-    // Checklist()
-    checkList()
-    // fetchCheckList()
-    
-      // fetchHzardsData()
+ 
+    checkList() 
       handelUpdate()
  
-    
   }, []);
   return (
     <>

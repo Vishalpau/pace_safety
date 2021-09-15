@@ -14,7 +14,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined';
-import api from '../../utils/axios';
+import api from '../../../utils/axios';
 import { useParams } from 'react-router';
 import moment from 'moment';
 import { findIndex } from 'lodash';
@@ -61,29 +61,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Comments = (props) => {
-  console.log("0000",props)
+const Comments = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState('female');
-  
+  const { id } = useParams()
   const [expanded, setExpanded] = React.useState('panel1');
   const [comment, setComments] = React.useState('');
   const [replyComments, setReplyComments] = React.useState('');
   const [commentDataList, setCommentDataList] = useState([]);
   const [replyCommentDataList, setReplyCommentDataList] = useState([])
-  const [isLoading, setIsLoading] = useState(false);
-  const [commentCount, setCommentCount]= useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
-
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
-  const project =
-    JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName
-      : null;
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -91,10 +80,11 @@ const Comments = (props) => {
 
   const handleComments = async () => {
     const data = {
-      fkCompanyId: fkCompanyId,
-      fkProjectId: project.projectId,
-      commentContext: props.commentContext,
-      contextReferenceIds: props.id,
+
+      fkCompanyId: 1,
+      fkProjectId: 1,
+      commentContext: "incident",
+      contextReferenceIds: id,
       commentTags: 'string',
       comment: comment,
       parent: 0,
@@ -109,15 +99,16 @@ const Comments = (props) => {
     if (res.status === 201) {
       fetchComments();
     }
-
+    console.log(res)
 
   }
   const handleReplyComments = async (commentId) => {
     const data = {
-      fkCompanyId: fkCompanyId,
-      fkProjectId: project.projectId,
-      commentContext: props.commentContext,
-      contextReferenceIds: props.id,
+
+      fkCompanyId: 1,
+      fkProjectId: 1,
+      commentContext: "incident",
+      contextReferenceIds: id,
       commentTags: 'string',
       comment: replyComments,
       parent: commentId,
@@ -126,68 +117,69 @@ const Comments = (props) => {
       status: 'Active',
       createdBy: userDetails.id
     }
-
+    console.log(data)
     const res = await api.post(`api/v1/comments/`, data)
     if (res.status === 201) {
       await fetchComments();
       await setReplyComments("");
       handleChange();
-
+      // let newData = await fetchReplyComment(commentId);
+      
+      // await setReplyCommentDataList([replyCommentDataList,{data:newData}])
     }
-
+    console.log(newData)
   }
   const fetchReplyComment = async (parentId) => {
-    // alert("hlo")
-    const res = await api.get(`api/v1/comments/${props.commentContext}/${props.id}/?parent=${parentId}`)
-    console.log(res)
+
+    const res = await api.get(`api/v1/comments/incident/${id}/?parent=${parentId}`)
     if (res.status = 200) {
-
+      // let data = 
       return res.data.data.results.results
-
+      // setReplyCommentDataList()
     }
-
+    // console.log(res.data.data.results.results)
   }
-
+  console.log(replyCommentDataList)
   const fetchComments = async () => {
-    // alert("hlo")
-    const res = await api.get(`api/v1/comments/${props.commentContext}/${props.id}/`)
-    console.log(res)
+    const res = await api.get(`api/v1/comments/incident/${id}/`)
     if (res.status === 200) {
       let result = res.data.data.results.results
-      setComments(result.length)
       let data = res.data.data.results.results.filter(item => item.parent === 0)
       let newData = []
       await setCommentDataList(data)
       let pId = []
       for (let i in result) {
         let parentId = result[i].parent
-
+        
         if (parentId > 0) {
           pId.push(parentId)
-
+          // console.log({parentId:parentId})
+          // let replyData = await fetchReplyComment(parentId)
+          // // [...newData, {data:replyData}]
+          // console.log(replyData)
         }
       }
       let uniquePId = [...new Set(pId)];
-      for (let i in uniquePId) {
+      for(let i in uniquePId){
         let replyData = await fetchReplyComment(uniquePId[i])
-        newData.push({ data: replyData })
-
+        newData.push({data:replyData})
+        console.log(replyData)
       }
-      console.log(newData)
       await setReplyCommentDataList(newData)
-
+      // console.log(newData)
       await setIsLoading(true)
     }
 
   }
   React.useEffect(() => {
     fetchComments();
+    // fetchReplyComment();
   }, [])
   return (
     <>
       {isLoading ? <>
-        
-        <Paper title={`Comments (${commentCount})`} elevation={1} className={classes.mTopfifty}>
+        {/* <PapperBlock title="Comments (4)" icon="ion-ios-create-outline" desc="" color="primary"> */}
+        <Paper title="Comments (4)" elevation={1} className={classes.mTopfifty}>
 
           <Grid container spacing={3}>
             <Grid item md={12} xs={12}>
@@ -325,10 +317,10 @@ const Comments = (props) => {
                     </Grid>
                   </Grid>
                 </Box>
-
-                {replyCommentDataList.length > 0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
+                {/* {console.log(replyCommentDataList.map(fstarr => fstarr.filter(item => item.parent === comment.id)))} */}
+                {replyCommentDataList.length>0 ? replyCommentDataList[key].data.filter(item => item.parent == comment.id).map((replyComment, key) =>
                   <Box padding={3} marginLeft={6} marginRight={6}>
-
+                    {console.log({ reply: replyComment })}
                     <Grid container spacing={1}>
                       <Grid item xs={1}>
                         <Avatar src={replyComment.avatar} alt={'A'}></Avatar>
@@ -343,7 +335,35 @@ const Comments = (props) => {
                     </Grid>
                   </Box>
                 ) : null}
-
+                {/* <Box padding={3} marginLeft={6} marginRight={6}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={1}>
+                    <Avatar>A</Avatar> 
+                    </Grid>
+                    <Grid item xs={10}>
+                          <Typography>User Name<span className={classes.pL20}>August 4, 2021,  06 : 50 PM</span></Typography>
+                          <Typography>This is a new comment from me and I am using the dummy content. Thanks.</Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                          <Typography><ThumbUpAltOutlinedIcon /></Typography>
+                    </Grid>
+                  </Grid>
+                </Box>
+                <Box padding={3} marginLeft={6} marginRight={6}>
+                  <Grid container spacing={1}>
+                    <Grid item xs={1}>
+                    <Avatar>A</Avatar> 
+                    </Grid>
+                    <Grid item xs={10}>
+                          <Typography>User Name<span className={classes.pL20}>August 4, 2021,  06 : 50 PM</span></Typography>
+                          <Typography>This is a new comment from me and I am using the dummy content. Thanks.</Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                          <Typography><ThumbUpAltOutlinedIcon /></Typography>
+                    </Grid>
+                  </Grid>
+                </Box>              
+            */}
               </Grid>
             </Grid>
           )}
@@ -353,7 +373,7 @@ const Comments = (props) => {
           <Pagination count={10} variant="outlined" shape="rounded" className={classes.mTopThirtybtten} />
         </Grid>
       </> : <h1>Loading...</h1>}
-
+      {/* </PapperBlock> */}
     </>
   );
 };

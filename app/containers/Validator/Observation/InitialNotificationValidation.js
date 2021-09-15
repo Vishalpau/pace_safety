@@ -1,20 +1,29 @@
 import validator from "validator";
 
-function InitialNotificationValidator(data,projectStructure,levelLenght) {
+function InitialNotificationValidator(data,projectStructure) {
   
 
   const error = {};
   let isValid = true;
 
-
-  if(projectStructure?projectStructure.length<levelLenght:false){
-    error.projectStructure = "Please select stage of project";
+const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
+for (let i = 0; i < breakdownValue.length; i++) {
+  var element = projectStructure[i]
+  console.log({element:element})
+  if (projectStructure[i] === undefined) {
+    error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
     isValid = false;
   }
+}
 
 
   if (validator.isEmpty(data.observationDetails.toString())) {
     error.observationDetails = "Please enter observation details";
+    isValid = false;
+  }
+  
+  if (validator.isEmpty(data.isSituationAddressed.toString())) {
+    error.isSituationAddressed = "Please select any one";
     isValid = false;
   }
 
@@ -53,6 +62,11 @@ if(data.isSituationAddressed === "Yes") {
     isValid = false;
 
   }
+}
+
+if(data.observationTitle.length > 255){
+  error.observationTitle = "Please enter less than 255 characters";
+    isValid = false;
 }
 
  if (validator.isEmpty(data.supervisorName.toString())) {

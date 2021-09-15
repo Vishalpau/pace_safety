@@ -128,7 +128,6 @@ import {
   ObservationInitialNotification,
   ObservationInitialNotificationView,
   ObservationCorrectiveAction,
-  ObservationCloseOut,
   ObservationInitialNotificationUpdate,
   CheckList,
   Groups,
@@ -171,7 +170,11 @@ import {
   FlhaConfigCriticalTask,
   FlhaConfigAdd,
   SamplePage,
+  PrintFlha,
+  FlhaActivities,
+  FlhaComments,
 } from "../pageListAsync";
+// import PrintFlha from '../Pages/Assesments/PrintFlha';
 
 
 function Application(props) {
@@ -227,8 +230,8 @@ function Application(props) {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
 
-          {/*Incident List  */}
-          <Route path="/incidents/" component={Incident} />
+        {/*Incident List  */}
+        <Route path="/incidents/" component={Incident} />
 
         {/* form initialNotification */}
         <Route
@@ -428,7 +431,7 @@ function Application(props) {
           path="/incident/:id/lesson-learnt/:mode/"
           component={LessionLearned}
         />
-        
+
 
         {/* checklist */}
         <Route
@@ -514,7 +517,6 @@ function Application(props) {
         <Route path="/app/observations#table" component={Observations} />
         <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
         <Route exact path="/app/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/observation-close-out" component={ObservationCloseOut} />
         <Route path="/app/observation/details/:id" component={ObservationSummary} />
         <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
         <Route path="/app/observation/details/:id#comments" component={ObservationSummary} />
@@ -575,7 +577,7 @@ function Application(props) {
         <Route exact path="/app/pages" component={Parent} />
         <Route path="/app/pages/user-profile" component={Profile} />
         <Route path="/app/pages/blank-page" component={BlankPage} />
-        
+
         <Route path="/app/pages/photo-gallery" component={Photos} />
         <Route path="/app/pages/pricing" component={Pricing} />
         <Route path="/app/pages/not-found" component={NotFound} />
@@ -601,7 +603,9 @@ function Application(props) {
         <Route path="/app/pages/assesments/AuditCheck" component={AuditCheck} />
         <Route path="/app/pages/assesments/flha/:id/revise" component={FlhaEdit} />
         <Route path="/app/pages/assesments/flhaadd" component={FlhaAdd} />
-
+        <Route path="/app/pages/assesments/flha/:id/print" component={PrintFlha} />
+        <Route path="/app/pages/assesments/flha/:id/activities" component={FlhaActivities} />
+        <Route path="/app/pages/assesments/flha/:id/comments" component={FlhaComments} />
         {/* Xflha Config  */}
         <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />

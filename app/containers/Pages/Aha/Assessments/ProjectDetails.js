@@ -13,6 +13,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
 import { FormHelperText } from "@material-ui/core";
 import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
@@ -68,9 +70,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   formControl: {
-    '& .MuiInputBase-root': {
-      borderRadius: '4px',
-    },
+    width: "100%",
   },
   labelName: {
     fontSize: '0.88rem',
@@ -174,17 +174,8 @@ const ProjectDetails = () => {
 
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+  const [levelLenght, setLevelLenght] = useState(0)
 
-  
-
-  // const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
-
-  // render() {
-  // const {classes } = this.props;
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const files = acceptedFiles.map(file => (
@@ -203,6 +194,9 @@ bytes
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [isNext, setIsNext] = useState(true);
+  const [isLoading , setIsLoading] = useState(false);
+  const [workArea, setWorkArea] = useState("")
    const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
@@ -214,23 +208,6 @@ bytes
   const radioDecide = ['Yes' , 'No' ]
   const [error, setError] = useState({});
 
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-    setRiskObservation(true);
-  };
-
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-    setRiskObservation(false);
-  };
-
-  const handelAddressSituationYes = (e) => {
-    setAddressSituation(false);
-  };
-
-  const handelAddressSituationNo = (e) => {
-    setAddressSituation(true);
-  };
   
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -238,7 +215,7 @@ bytes
     temp[key]["teamName"] = value;
     setTeamForm(temp);
   };
-  console.log(Teamform)
+
   const handleAdd = (e) => {
     if (Object.keys(Teamform).length < 100) {
       setTeamForm([...Teamform, { "teamName": "" ,
@@ -252,7 +229,6 @@ bytes
 
     if (Teamform.length > 1) {
       if (Teamform[index].id !== undefined) {
-        console.log("here");
         const res = await api.delete(
           `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
         );
@@ -266,13 +242,15 @@ bytes
   };
 
   }
+  console.log(workArea,"6666666")
+
 
   const [form , setForm] = useState(
     {
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-      "workArea": "",
+      "workArea": workArea,
       "location": "",
       "assessmentDate": null,
       "permitToPerform": "",
@@ -304,15 +282,15 @@ bytes
   )
 
 
-
   const handleSubmit = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
+    form["workArea"] = workArea
     
-    const { error, isValid } = ProjectDetailsValidator(form);
+    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId,levelLenght);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -356,7 +334,6 @@ bytes
    
   }
 
-  console.log(selectDepthAndId)
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -509,10 +486,61 @@ bytes
 
    }
 
-   const fetchBreakDownData = async (projectBreakdown) => {
+   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
+    
+    const value = e.target.value;
+    
+    const temp = [...fetchSelectBreakDownList]
+    temp[index-1]["selectValue"].id = value
+    let removeTemp = temp.slice(0, index)
+    await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index) {
+         
+          
+          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+          }${value}`,)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                if (
+                  removeTemp.filter(
+                    (item) =>
+                      item.breakdownLabel ===
+                      projectData.projectName.breakdown[index].structure[0].name
+                  ).length > 0
+                ) {
+                  return;
+                } else {
+                  setFetchSelectBreakDownList([
+                    ...removeTemp,
+                    {
+                      breakDownLabel: projectData.projectName.breakdown[index].structure[0].name,
+                      selectValue: {id:value},
+                      breakDownData: response.data.data.results
+                    },
+                  ]);
+                }
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    } 
+  };
+
+   const fetchBreakDownData = async (projectBreakdown) => {
+
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let breakdownLength = projectData.projectName.breakdown.length
+    setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -521,21 +549,29 @@ bytes
             }`,
           headers: HEADER_AUTH,
         };
+
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
             await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
-                setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            setFetchSelectBreakDownList(selectBreakDown)
           })
           .catch((error) => {
+
             setIsNext(true);
           });
       } else {
@@ -545,18 +581,28 @@ bytes
             }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
+
         await api(config)
           .then(async (response) => {
+
             const result = response.data.data.results;
+
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
+
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
-                setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            setFetchSelectBreakDownList(selectBreakDown)
+
           })
           .catch((error) => {
             console.log(error)
@@ -565,9 +611,14 @@ bytes
       }
     }
   };
+
+  const handleDepthAndId = (depth, id) => {
+    let newData = [...selectDepthAndId, `${depth}${id}`]
+    setSelectDepthAndId([... new Set(newData)])
+  }
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
-    const result =  res.data.data.results.results
+    const result =  res.data.data.results
     await setTeamForm(result)
     console.log(result)
   }
@@ -585,6 +636,7 @@ bytes
   return (
     <>
         <PapperBlock title="Project Details" icon="ion-md-list-box">
+        {isLoading ? 
 
     <Grid container spacing={3} className={classes.observationNewSection}>
     <Grid container spacing={3} item xs={12} md={9}>
@@ -601,23 +653,52 @@ bytes
 
         </Typography>
         </Grid>
-        {id ? fetchSelectBreakDownList.map((selectBdown, key) =>
-              <Grid item xs={3} key={key}>
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
+        {id ? 
+              fetchSelectBreakDownList.map((data, key) => 
+              <Grid item xs={3} md={3} key={key}>
+                <FormControl
+                  error={error.incidentType}
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
                 >
-                  {selectBdown.label}
-                </Typography>
-                <Typography className={Type.labelValue}>
-                  {selectBdown.name}
-                </Typography>
+                  <InputLabel id="demo-simple-select-label">
+                    {data.breakDownLabel}
+                  </InputLabel>
+                  <Select
+                    labelId="incident-type-label"
+                    id="incident-type"
+                    label="Incident type"
+                    value={data.selectValue.id || ""}
+                    onChange={(e) => {
+                      handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                    }}
+                  >
+                    {data.breakDownData.length !== 0
+                      ? data.breakDownData.map((selectvalues, index) => (
+                        <MenuItem key={index} 
+                        onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                        value={selectvalues.id}>
+                          {selectvalues.structureName}
+                        </MenuItem>
+                      ))
+                      : null}
+                  </Select>
+                  {error && error.incidentType && (
+                    <FormHelperText>{error.incidentType}</FormHelperText>
+                  )}
+                </FormControl>
               </Grid>
-            ) : <ProjectStructureInit selectDepthAndId={selectDepthAndId} setSelectDepthAndId={setSelectDepthAndId} />
-            }
-        <Grid
+
+              ) : <ProjectStructureInit
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setSelectDepthAndId={setSelectDepthAndId}
+                setWorkArea={setWorkArea}
+              />
+              }
+        {/* <Grid
         item
         md={6}
         xs={12}
@@ -640,7 +721,7 @@ bytes
             </MenuItem>
             ))}
         </TextField>
-        </Grid>
+        </Grid> */}
         <Grid
         item
         md={6}
@@ -649,7 +730,7 @@ bytes
         >
         <TextField
             label="Work Location*"
-            margin="dense"
+            // margin="dense"
             name="worklocation"
             id="worklocation"
             value={form.location ? form.location : ""}
@@ -670,7 +751,7 @@ bytes
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDateTimePicker
                 className={classes.formControl}
-                margin="dense"
+                // margin="dense"
                 fullWidth
                 label="Date & Time*"
                 value={selectedDate}
@@ -726,7 +807,7 @@ bytes
         >
         <TextField
             label="Permit Reference"
-            margin="dense"
+            // margin="dense"
             name="reference"
             id="reference"
             multiline
@@ -747,7 +828,7 @@ bytes
         >
         <TextField
             label="Description*"
-            margin="dense"
+            // margin="dense"
             name="description"
             id="description"
             multiline
@@ -782,7 +863,7 @@ bytes
        
           <TextField
             label="Team Name"
-            margin="dense"
+            // margin="dense"
             name="arename"
             id="arename"
             multiline
@@ -937,7 +1018,7 @@ bytes
                 selectedItem="Project Details"
               />
 </Grid>
-    </Grid>
+    </Grid> :<> loading...</>}
     </PapperBlock>
     </>
   );
