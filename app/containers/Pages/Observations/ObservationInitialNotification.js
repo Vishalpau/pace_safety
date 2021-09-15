@@ -795,7 +795,6 @@ const ObservationInitialNotification = (props) => {
   };
 
  
-
   
 
   const classes = useStyles();
@@ -945,6 +944,8 @@ const ObservationInitialNotification = (props) => {
       renderOption={(option) => option.inputValue}
       // style={{ width: 300 }}
       freeSolo
+      selectOnFocus
+      clearOnBlur
       renderInput={(params) => (
         <TextField {...params} label="Observed by*" 
         error={error.reportedByName}
@@ -1010,15 +1011,23 @@ const ObservationInitialNotification = (props) => {
 
         // Suggest the creation of a new value
         if (params.inputValue !== '') {
+
           filtered.push({
             inputValue: params.inputValue,
             inputValue: `${params.inputValue}`,
           });
+          // setForm({...form,reportedByDepartment:params.inputValue})
+
         }
 
         return filtered;
-      }}
+
+      }
+
+      }
       className={classes.mT30}
+      selectOnFocus
+      clearOnBlur
       
       handleHomeEndKeys
       id="free-solo-with-text-demo"
@@ -1042,6 +1051,7 @@ const ObservationInitialNotification = (props) => {
         <TextField {...params} label="Observer's Department*" 
         error={error.reportedByDepartment}
                 helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
+                // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
                 variant="outlined" />
       )}
     />
@@ -1119,7 +1129,8 @@ const ObservationInitialNotification = (props) => {
         return filtered;
       }}
       className={classes.mT30}
-      
+      selectOnFocus
+      clearOnBlur
       handleHomeEndKeys
       id="free-solo-with-text-demo"
       options={superVisorName}
