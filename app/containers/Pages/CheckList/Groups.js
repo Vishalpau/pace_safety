@@ -12,35 +12,20 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Editor from '../../../components/Editor';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+
+
 
 import api from "../../../utils/axios"
 import { handelIncidentId } from "../../../utils/CheckerValue"
 import { async } from "fast-glob";
-
+import ReadOnlyRow from "./CheckListCompoment/ReadGroups"
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: "100%",
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightMedium,
-    },
-    table: {
-        minWidth: 650,
-    },
     tabelBorder: {
         width: 110,
-    },
-    paper: {
-        position: 'absolute',
-        width: theme.spacing(50),
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(4),
-    },
-    formControl: {
-        minWidth: 300,
+        fontWeight: 600,
     },
 }));
 
@@ -76,6 +61,7 @@ function Group() {
         })
         tempGroupName.push("Top")
         // fkProjectId
+        console.log(result)
         setAllGroupName(tempGroupName)
     }
 
@@ -121,6 +107,11 @@ function Group() {
         }
     }
 
+    const handleEdit = () => {
+        // const { editStart } = this.props; // eslint-disable-line no-shadow
+        // return () => editStart(String(widget.id));
+    };
+
     const handelProjectName = () => {
         const tempProject = {}
         const company = JSON.parse(localStorage.getItem("company"));
@@ -142,6 +133,28 @@ function Group() {
         setProjectName(tempProject)
     }
 
+    const editFormData = () => {
+
+    }
+
+    const handleEditFormChange = () => {
+
+    }
+
+    const handleCancelClick = () => {
+
+    }
+
+    const handleEditClick = () => {
+
+    }
+
+    const handleDeleteClick = () => {
+
+    }
+
+
+
     const classes = useStyles();
 
     useEffect(() => {
@@ -152,78 +165,31 @@ function Group() {
     return (
 
         <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
+            <Button variant="contained" color="secondary" style={{ marginLeft: "1050px" }}>
+                <AddIcon />
+                New
+            </Button>
             <Grid container spacing={12}>
                 <Table className={classes.table}>
                     <TableBody>
                         <TableRow>
-                            <TableCell className={classes.tabelBorder}>Sr.</TableCell>
-                            <TableCell className={classes.tabelBorder}>Project</TableCell>
-                            <TableCell className={classes.tabelBorder}>Checklist group name</TableCell>
-                            <TableCell className={classes.tabelBorder}>Parent group</TableCell>
+                            <TableCell className={classes.tabelBorder}>Group Name</TableCell>
+                            <TableCell className={classes.tabelBorder}>Parent Group</TableCell>
+                            <TableCell className={classes.tabelBorder}>Status</TableCell>
+                            <TableCell className={classes.tabelBorder}>Action</TableCell>
                         </TableRow>
                         {group.map((value, index) => (
-                            <TableRow>
-                                <TableCell className={classes.tabelBorder}>{index + 1}</TableCell>
-                                <TableCell className={classes.tabelBorder}>{projectName[value.fkProjectId] || "-"}</TableCell>
-                                <TableCell className={classes.tabelBorder}>
-                                    <Editor
-                                        type="text"
-                                        value={value.checkListGroupName}
-                                        column="name"
-                                    // isvalidate={isvalidate}
-                                    // save={(e) => handelEdit(value.fkCheckListId, value.fkGroupId, value.id)}
-                                    // edit={value.isSystem == "No"}
-                                    />
-                                </TableCell>
-                                <TableCell className={classes.tabelBorder}>
-                                    <p>{handelParentShow(value.parentGroup)}</p>
-                                </TableCell>
-                            </TableRow>
+                            <>
+                                <ReadOnlyRow
+                                    value={value}
+                                // handleEditClick={handleEditClick}
+                                // handleDeleteClick={handleDeleteClick}
+                                />
+                            </>
                         ))}
 
                         <TableRow>
 
-                            <TableCell className={classes.tabelBorder} >
-                                <TextField
-                                    id="filled-basic"
-                                    label="sr no"
-                                    variant="outlined"
-                                    value={group.length + 1}
-                                    disabled
-                                />
-                            </TableCell>
-                            <TableCell className={classes.tabelBorder}>
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                    label="Group name"
-                                >
-                                    <Select
-                                        id="Group-name"
-                                        className="inputCell"
-                                        labelId="Group name"
-                                        defaultValue="Top"
-                                    >
-
-                                        {Object.entries(projectName).map(([key, objValue]) => {
-                                            return (
-                                                <MenuItem
-                                                    key={key}
-                                                    value={objValue}
-                                                    onClick={(e) => {
-                                                        setForm({
-                                                            ...form,
-                                                            fkProjectId: key
-                                                        })
-                                                    }}
-                                                >
-                                                    {objValue}
-                                                </MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </TableCell>
                             <TableCell className={classes.tabelBorder} >
                                 <TextField
                                     id="filled-basic"
@@ -257,6 +223,7 @@ function Group() {
                                 </FormControl>
                                 <button onClick={(e) => handelNext(e)}>Save</button>
                             </TableCell>
+
                         </TableRow>
 
 
