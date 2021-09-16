@@ -1,16 +1,24 @@
+@font-face {
+  font-family: Montserrat-Medium;
+  src: url(../../fonts/Montserrat-Medium.ttf);
+}
+@font-face {
+  font-family: Xolonium-Regular;
+  src: url(../../fonts/Xolonium-Regular.ttf);
+}
+@font-face {
+  font-family: Xolonium-Bold;
+  src: url(../../fonts/Xolonium-Bold.ttf);
+}
 .headerAppsGrid {
   opacity: 1;
 }
-
 .headerAppsGrid .MuiMenu-list {
   display: grid;
   grid-template-columns: repeat(3, 90px);
   gap: 1rem;
-  font-family: 'Montserrat-Medium';
+  font-family: Montserrat-Medium;
 }
-
-
-
 .headerAppsGrid .MuiMenu-list .MuiListItem-root {
   flex-direction: column !important;
   font-size: 13px;
@@ -18,10 +26,6 @@
 }
 .MuiTab-root {
 	font-family: Montserrat-Medium !important;
-}
-.MuiTypography-h5 {
-	font-family: Xolonium-Regular !important;
-	font-weight: 500;
 }
 .MuiButton-label {
 	font-family: Montserrat-Medium !important;
@@ -40,11 +44,11 @@
 }
 .PersistentDrawer-floatL-3017 {
     font-size: 17px !important;
-    font-family: Xolonium-Regular !important;
+    font-family: Xolonium-Regular;
     font-weight: 500 !important;
 }
 .MuiTypography-h5 {
-	font-family: Xolonium-Regular !important;
+	font-family: Xolonium-Regular!important;
 	font-weight: 500 !important;
 }
 .MuiGrid-root.makeStyles-floatE-426.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-2 img {
@@ -88,10 +92,7 @@ html {
    font-family: Montserrat-Medium !important;
 }
 
-@font-face {
-  font-family: Montserrat-Medium;
-  src: url(../../fonts/Montserrat-Medium.ttf);
-}
+
 .makeStyles-search-1484 {
   margin: 14px 2px 9px 0px !important;
   padding: 0px 0px !important;
@@ -104,18 +105,11 @@ html {
     margin-left: 8px;
 }
 }
-@font-face {
-  font-family: Xolonium-Regular !important;
-  src: url(../../fonts/Xolonium-Regular.ttf);
-}
-.backColor {
-  background-Color: 'red';
-}
 
 .h5 {
-  font-family: 'Xolonium-Regular !important';
+  font-family: Xolonium-Regular;
 }
 
 .PapperBlock-title {
-  font-family: 'Xolonium-Regular !important';
+  font-family: Xolonium-Regular;
 }

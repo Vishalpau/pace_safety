@@ -167,7 +167,6 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: '600',
     },
   },
-
 }));
 
 function Alert(props) {
