@@ -33,6 +33,7 @@ import completed from 'dan-images/completed.png';
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 import GamesOutlinedIcon from '@material-ui/icons/GamesOutlined';
 import StarsIcon from '@material-ui/icons/Stars';
+import "../../../styles/custom/customheader.css";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

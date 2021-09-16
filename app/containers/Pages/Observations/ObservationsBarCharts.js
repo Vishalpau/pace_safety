@@ -32,6 +32,7 @@ const color = ({
   secondary: theme.palette.secondary.main,
   secondaryDark: theme.palette.secondary.dark,
 });
+import "../../../styles/custom/customheader.css";
 
 function BarSimple(props) {
   const { classes } = props;

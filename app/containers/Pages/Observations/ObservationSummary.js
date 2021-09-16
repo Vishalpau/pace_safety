@@ -61,6 +61,7 @@ import ObservationCorrectiveActionView from './ObservationCorrectiveActionView';
 // import ObservationReview from './ObservationReview';
 
 import { Comments } from "../../pageListAsync";
+import "../../../styles/custom/customheader.css";
 
 
 import AhaSummary from "../../../containers/Activity/Activity";
@@ -220,6 +221,7 @@ const ObservationSummary = () => {
       <PapperBlock
         title={`Observation Number: ${initialData.observationNumber}`}
         icon="ion-md-list-box"
+        variant="h5"
       >
         <Box paddingBottom={1}>
           <div className={classes.observationSummaryBox}>

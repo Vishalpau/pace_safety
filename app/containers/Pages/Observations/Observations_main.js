@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import AddIcon from '@material-ui/icons/Add';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import obsIcon from 'dan-images/obsIcon.png';
 import classNames from "classnames";
 import Button from '@material-ui/core/Button';
 import ReorderIcon from '@material-ui/icons/Reorder';
@@ -28,6 +28,7 @@ import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
 import { useHistory, useParams } from "react-router";
+import "../../../styles/custom/customheader.css";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -229,7 +230,7 @@ export default function Observations() {
       <Grid item sm={12} xs={12} className={classes.borderTop}>
         <Grid container spacing={3}>
           <Grid item sm={10} xs={12} className={classes.pLFiveHt40}>
-            <img src={paceLogoSymbol} className={classes.attachImg} alt="decoration" />
+            <img src={obsIcon} className={classes.attachImg} alt="decoration" />
             <Typography variant="h5"> Observations</Typography>
           </Grid>
           <Grid item sm={2} xs={12}>

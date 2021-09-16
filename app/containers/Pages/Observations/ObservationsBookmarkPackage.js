@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MyObservationsBookmarkPackage from './MyObservationsBookmarkPackage';
 
+import "../../../styles/custom/customheader.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {

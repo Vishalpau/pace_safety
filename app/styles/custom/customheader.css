@@ -20,7 +20,7 @@
 	font-family: Montserrat-Medium !important;
 }
 .MuiTypography-h5 {
-	font-family: Xolonium !important;
+	font-family: Xolonium-Regular !important;
 	font-weight: 500;
 }
 .MuiButton-label {
@@ -40,11 +40,11 @@
 }
 .PersistentDrawer-floatL-3017 {
     font-size: 17px !important;
-    font-family: Xolonium !important;
+    font-family: Xolonium-Regular !important;
     font-weight: 500 !important;
 }
-.MuiTypography-h6 {
-	font-family: Xolonium !important;
+.MuiTypography-h5 {
+	font-family: Xolonium-Regular !important;
 	font-weight: 500 !important;
 }
 .MuiGrid-root.makeStyles-floatE-426.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-2 img {
@@ -104,7 +104,18 @@ html {
     margin-left: 8px;
 }
 }
-
+@font-face {
+  font-family: Xolonium-Regular !important;
+  src: url(../../fonts/Xolonium-Regular.ttf);
+}
 .backColor {
   background-Color: 'red';
+}
+
+.h5 {
+  font-family: 'Xolonium-Regular !important';
+}
+
+.PapperBlock-title {
+  font-family: 'Xolonium-Regular !important';
 }

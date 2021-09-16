@@ -15,6 +15,7 @@ import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
 import classNames from "classnames";
+import "../../../styles/custom/customheader.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {

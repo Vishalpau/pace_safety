@@ -45,12 +45,17 @@ import SimpleTabs from "./ObservationSearchSection"
 
 
 const useStyles = makeStyles((theme) => ({
+  pagination:{
+    padding:"1rem 0",
+    display:"flex",
+    justifyContent:"flex-end"
+  },
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
     // border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: '4px',
-    fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat-Medium',
   },
   leftSide: {
     flexGrow: 1,
@@ -152,12 +157,12 @@ const useStyles = makeStyles((theme) => ({
   listingLabelName: {
     color: '#7692a4',
     fontSize: '0.88rem',
-	fontFamily: 'Montserrat',
+	fontFamily: 'Montserrat-Medium',
   },
   listingLabelValue: {
     color: '#333333',
     fontSize: '0.88rem',
-	fontFamily: 'Montserrat',
+	fontFamily: 'Montserrat-Medium',
     '& a': {
       paddingLeft: '5px',
       cursor: 'pointer',
@@ -247,7 +252,7 @@ iconteal: {
 listHeadColor: {backgroundColor: '#fafafa',},
 marginTopBottom: {
 	'& .MuiTypography-h6 .MuiTypography-h5': {
-		fontFamily: 'Montserrat',
+		fontFamily: 'Montserrat-Medium',
 	},
 },
 textRight:{
@@ -472,9 +477,9 @@ console.log(allInitialData)
                               >
                                 Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                 <span item xs={1} className={classes.sepHeightOne}></span>
-                                Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-" }<img src={in_progress_small} className={classes.smallImage} /></span>
+                                Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-" }  <img src={in_progress_small} className={classes.smallImage} /></span>
 								<span item xs={1} className={classes.sepHeightOne}></span>
-								Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-" }<img src={completed_small} className={classes.smallImage} /></span>
+								Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-" }  <img src={completed_small} className={classes.smallImage} /></span>
                               </Typography>
                               
                             </Grid>
@@ -570,7 +575,7 @@ console.log(allInitialData)
                         
                         className={classes.listingLabelValue}
                       >
-                                {item[1]["username"]?item[1]["username"]:"Admin"}
+                                {item[1]["reportedByName"]?item[1]["reportedByName"]:"Admin"}
                       </Typography>
                     </Grid>
                     </Grid>

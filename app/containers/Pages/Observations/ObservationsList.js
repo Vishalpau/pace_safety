@@ -39,7 +39,14 @@ import axios from "axios";
 import { connect } from "react-redux";
 import moment from "moment";
 import Pagination from '@material-ui/lab/Pagination';
+import "../../../styles/custom/customheader.css";
+
 const useStyles = makeStyles((theme) => ({
+  pagination:{
+    padding:"1rem 0",
+    display:"flex",
+    justifyContent:"flex-end"
+  },
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
@@ -158,7 +165,7 @@ function ObservationsList(props) {
     responsive: 'vertical',
     print: false,
     filter: false,
-    search: false,
+    search: true,
     download: true,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
@@ -254,7 +261,7 @@ console.log(allInitialData)
                   moment(item[1]["createdAt"]).format(
                     "Do MMMM YYYY, h:mm:ss a"
                   ),
-                  item[1]["username"],
+                  item[1]["reportedByName"],
                 ])}
                 title="Observations List"
 

@@ -396,7 +396,7 @@ temp.reviewedById = value.id
       });
   };
 
-
+console.log(form.fkProjectStructureIds)
   useEffect(() => {
     if(id){
       fetchInitialiObservationData()
@@ -535,6 +535,7 @@ temp.reviewedById = value.id
           <ActionTracker
                                 actionContext="Obsevations"
                                 enitityReferenceId={id}
+                                fkProjectStructureIds={form.fkProjectStructureIds}
                                 setUpdatePage={setUpdatePage}
                                 updatePage={updatePage}
                               >add</ActionTracker>
