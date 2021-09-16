@@ -60,7 +60,7 @@ import { useParams } from "react-router";
 // redux
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-import { projectName, breakDownDetails, levelBDownDetails  } from "../../redux/actions/initialDetails";
+import { projectName, breakDownDetails, levelBDownDetails } from "../../redux/actions/initialDetails";
 import Topbar from "./Topbar";
 
 import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px",
     paddingLeft: "0px",
     paddingRight: "0px",
-    color: "#ffffff !important" ,
+    color: "#ffffff !important",
     opacity: 1,
     "& .MuiSvgIcon-root": {
       marginLeft: "4px",
@@ -153,10 +153,10 @@ function Header(props) {
   const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
-  
+
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const {fkid}  = useParams();
+  const { fkid } = useParams();
   const dispatch = useDispatch();
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
@@ -282,20 +282,20 @@ function Header(props) {
 
   // handle project Name
   const handleProjectName = async (key) => {
-    let selectBreakDown=[]
+    let selectBreakDown = []
     let data = projectListData[key];
-    
+
     // await setIsPopUpOpen(true)
     setProjectOpen(false);
     setCompanyOpen(false);
-   
+
     localStorage.setItem("projectName", JSON.stringify(data));
     localStorage.setItem(
       "selectBreakDown",
       JSON.stringify(selectBreakDown)
     );
     await dispatch(projectName(data));
-    
+
     await dispatch(breakDownDetails(selectBreakDown))
     document.getElementById("open").click()
     // documentElementById("open").click()
@@ -317,9 +317,9 @@ function Header(props) {
         (item) => item.companyId === parseInt(company.fkCompanyId)
       );
       let projectLength = filterData[0].projects.length <= 1;
-     
+
       setProjectDisable(projectLength);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //company selections
@@ -370,34 +370,34 @@ function Header(props) {
   const id = filterOpen ? "simple-popover" : undefined;
 
   const handleBreakdown = async (e, index, label) => {
-   const value = e.target.value;
+    const value = e.target.value;
     let temp = [...labelList]
     temp[index][`selectValue`] = value;
-   if(selectBreakDown.filter(filterItem => filterItem.depth === `${index+1}L`).length > 0){
-       for(var i in temp){
-         if(i>index){
-           temp[i].breakdownValue=[]
-           temp[i].selectValue=""
-         }
-         
-       }
-      let removeSelectBreakDown = selectBreakDown.slice(0,index)
-     let name = temp[index].breakdownValue.map(
+    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index + 1}L`).length > 0) {
+      for (var i in temp) {
+        if (i > index) {
+          temp[i].breakdownValue = []
+          temp[i].selectValue = ""
+        }
+
+      }
+      let removeSelectBreakDown = selectBreakDown.slice(0, index)
+      let name = temp[index].breakdownValue.map(
         async (item) => {
           if (item.id === value) {
             setSelectBreakDown([
               ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
+              { depth: item.depth, id: item.id, name: item.name, label: label },
             ]);
             dispatch(breakDownDetails([
               ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
+              { depth: item.depth, id: item.id, name: item.name, label: label },
             ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
                 ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name,label:label },
+                { depth: item.depth, id: item.id, name: item.name, label: label },
               ])
             );
             return;
@@ -406,22 +406,22 @@ function Header(props) {
         }
       );
     } else {
-      let name = temp[index ].breakdownValue.map(
+      let name = temp[index].breakdownValue.map(
         async (item) => {
           if (item.id === value) {
             await setSelectBreakDown([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
+              { depth: item.depth, id: item.id, name: item.name, label: label },
             ]);
             dispatch(breakDownDetails([
               ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name,label:label },
+              { depth: item.depth, id: item.id, name: item.name, label: label },
             ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
                 ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name,label:label },
+                { depth: item.depth, id: item.id, name: item.name, label: label },
               ])
             );
             return;
@@ -430,72 +430,72 @@ function Header(props) {
         }
       );
     }
-    
-    if(projectData.projectName.breakdown.length !== index+1){
-    for (var key in projectData.projectName.breakdown) {
-      if (key == index+1) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`,
-          headers: HEADER_AUTH,
-        };
-        await Axios(config)
-          .then(function (response) {
-            if (response.status === 200) {
 
-              
-                temp[key].breakdownValue= response.data.data.results;
+    if (projectData.projectName.breakdown.length !== index + 1) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index + 1) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+              }${value}`,
+            headers: HEADER_AUTH,
+          };
+          await Axios(config)
+            .then(function (response) {
+              if (response.status === 200) {
+
+
+                temp[key].breakdownValue = response.data.data.results;
                 // temp[key+1].breakdownValue= response.data.data.results;
-               
-              setLabelList(temp)
-            }
-          })
-          .catch(function (error) {
 
-          });
+                setLabelList(temp)
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
       }
+    } else {
+      dispatch(levelBDownDetails([
+      ]))
     }
-  }else{
-    dispatch(levelBDownDetails([
-    ]))
-  }
   };
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
-    let labellist = projectData.projectName.breakdown.map(item=>{return {breakdownLabel:item.structure[0].name,breakdownValue:[],selectValue:""}})
-      for(var key in projectData.projectName.breakdown){
-        if(key == 0){
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-              }`,
-            headers: HEADER_AUTH,
-          };       
-          const res = await Axios(config)
-          if(res.status === 200){
-            labellist[0].breakdownValue=res.data.data.results
-            setLabelList(labellist)
-            setIsLoading(true)
-          }
+    let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
+    for (var key in projectData.projectName.breakdown) {
+      if (key == 0) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+        const res = await Axios(config)
+        if (res.status === 200) {
+          labellist[0].breakdownValue = res.data.data.results
+          setLabelList(labellist)
+          setIsLoading(true)
         }
       }
-    
-    
+    }
+
+
   };
-  const fetchIncidentData = async()=>{
-   
+  const fetchIncidentData = async () => {
+
     const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
-        const result = res.data.data.results;
-      
+    const result = res.data.data.results;
+
   }
   useEffect(() => {
-      fetchCallBack();
-      if(fkid){
-        fetchIncidentData();
-      }
-      
+    fetchCallBack();
+    if (fkid) {
+      fetchIncidentData();
+    }
+
   }, [props.initialValues.projectName]);
 
   useEffect(() => {
@@ -535,14 +535,14 @@ function Header(props) {
               clickable
               size="small"
               className={classesm.projectName}
-              
-              disabled={projectDisable} 
-              
+
+              disabled={projectDisable}
+
             >
               {projectData !== null
                 ? projectData.projectName.projectName
                 : null}
-             {projectDisable?null:<EditIcon onClick={handleCompanyOpen} />} 
+              {projectDisable ? null : <EditIcon onClick={handleCompanyOpen} />}
             </IconButton>
 
             {/* company selections */}
@@ -611,63 +611,64 @@ function Header(props) {
                   <Grid container spacing={4}>
                     {projectListData.length > 0
                       ? projectListData.map((value, index) => (
-                          <Grid
-                            item
-                            md={4}
-                            sm={6}
-                            xs={12}
-                            className={classesm.cardContentBox}
-                            key={index}
-                          >
-                            <Card onClick={() => {
-                            
-                              handleProjectName(index)}}>
-                              <CardActionArea
-                                className={classesm.cardActionAreaBox}
-                              >
-                                <div className={classesm.cardMediaBox}>
-                                  <CardMedia
-                                    className={classesm.media}
-                                    image={ProjectImg}
+                        <Grid
+                          item
+                          md={4}
+                          sm={6}
+                          xs={12}
+                          className={classesm.cardContentBox}
+                          key={index}
+                        >
+                          <Card onClick={() => {
 
-                                    //title=""
-                                  />
-                                </div>
-                                <CardContent>
-                                  <Typography
-                                    gutterBottom
-                                    variant="h5"
-                                    component="h2"
-                                    className={classesm.projectSelectionTitle}
-                                  >
-                                    {value.projectName}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="textSecondary"
-                                    component="p"
-                                    className={classesm.projectSelectionCode}
-                                  >
-                                    Code: {value.projectCode}
-                                  </Typography>
-                                </CardContent>
-                              </CardActionArea>
-                              <Divider />
-                              <CardActions className={classesm.actionBttmArea}>
-                                <Tooltip title="Control Tower">
-                                  <IconButton aria-label="control tower">
-                                    <SettingsRemoteIcon />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip title="GIS Location">
-                                  <IconButton aria-label="GIS location">
-                                    <LocationOnIcon />
-                                  </IconButton>
-                                </Tooltip>
-                              </CardActions>
-                            </Card>
-                          </Grid>
-                        ))
+                            handleProjectName(index)
+                          }}>
+                            <CardActionArea
+                              className={classesm.cardActionAreaBox}
+                            >
+                              <div className={classesm.cardMediaBox}>
+                                <CardMedia
+                                  className={classesm.media}
+                                  image={ProjectImg}
+
+                                //title=""
+                                />
+                              </div>
+                              <CardContent>
+                                <Typography
+                                  gutterBottom
+                                  variant="h5"
+                                  component="h2"
+                                  className={classesm.projectSelectionTitle}
+                                >
+                                  {value.projectName}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="textSecondary"
+                                  component="p"
+                                  className={classesm.projectSelectionCode}
+                                >
+                                  Code: {value.projectCode}
+                                </Typography>
+                              </CardContent>
+                            </CardActionArea>
+                            <Divider />
+                            <CardActions className={classesm.actionBttmArea}>
+                              <Tooltip title="Control Tower">
+                                <IconButton aria-label="control tower">
+                                  <SettingsRemoteIcon />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="GIS Location">
+                                <IconButton aria-label="GIS location">
+                                  <LocationOnIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </CardActions>
+                          </Card>
+                        </Grid>
+                      ))
                       : null}
                   </Grid>
                 </DialogContentText>
@@ -676,114 +677,114 @@ function Header(props) {
           </div>
           <Hidden smDown>
             {/* <Headerbox filterOpen={isPopUpOpen} handleClick={handleClick} setIsPopUpOpen={setIsPopUpOpen}/> */}
-         
-      <div>
-        <IconButton
-          aria-describedby={id}
-          className={classes.filterIcon}
-          onClick={handleClick}
-          id='open'
-        >
-          <FilterListIcon fontSize="small" />
-        </IconButton>
-        <Popover
-          id={id}
-          open={filterOpen}
-          anchorEl={anchorEl}
-          getContentAnchorEl={null}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          PaperProps={{
-            style: {
-              width: 200,
-            },
-          }}
-        >
-          {isLoading ? (
-            <Box p={3}>
-              <Grid container spacing={2}>
-                
-                  {labelList.length>0?labelList.map((item, index) => (
-                      <Grid item xs={12}>
-                      <FormControl
-                        key={index}
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        className={classes.filterSelect}
-                      >
 
-                        <InputLabel id="filter3-label">
-                          {item.breakdownLabel}
-                        </InputLabel>
-                        <Select
-                          labelId="filter3-label"
-                          id="filter3"
-                          value={item.selectValue}
-                          disabled={item.breakdownValue.length===0}
-                          onChange={(e) => {
-                            handleBreakdown(e, index,item.breakdownLabel);
+            <div>
+              <IconButton
+                aria-describedby={id}
+                className={classes.filterIcon}
+                onClick={handleClick}
+                id='open'
+              >
+                <FilterListIcon fontSize="small" />
+              </IconButton>
+              <Popover
+                id={id}
+                open={filterOpen}
+                anchorEl={anchorEl}
+                getContentAnchorEl={null}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                PaperProps={{
+                  style: {
+                    width: 200,
+                  },
+                }}
+              >
+                {isLoading ? (
+                  <Box p={3}>
+                    <Grid container spacing={2}>
 
-                          }}
-                          label="Phases"
-                          style={{ width: "100%" }}
-                        >
-                          {item.breakdownValue.length>0
-                            ? item.breakdownValue.map(
-                              (selectValue, selectKey) => (
-                                <MenuItem
-                                  key={selectKey}
-                                  value={selectValue.id}
-                                >
-                                  {selectValue.name}
-                                </MenuItem>
-                              )
-                            )
-                            : <MenuItem
-                            
+                      {labelList.length > 0 ? labelList.map((item, index) => (
+                        <Grid item xs={12}>
+                          <FormControl
+                            key={index}
+                            variant="outlined"
+                            size="small"
+                            fullWidth={true}
+                            className={classes.filterSelect}
                           >
-                            No Data
-                          </MenuItem>}
-                        </Select>
-                      </FormControl>
+
+                            <InputLabel id="filter3-label">
+                              {item.breakdownLabel}
+                            </InputLabel>
+                            <Select
+                              labelId="filter3-label"
+                              id="filter3"
+                              value={item.selectValue}
+                              disabled={item.breakdownValue.length === 0}
+                              onChange={(e) => {
+                                handleBreakdown(e, index, item.breakdownLabel);
+
+                              }}
+                              label="Phases"
+                              style={{ width: "100%" }}
+                            >
+                              {item.breakdownValue.length > 0
+                                ? item.breakdownValue.map(
+                                  (selectValue, selectKey) => (
+                                    <MenuItem
+                                      key={selectKey}
+                                      value={selectValue.id}
+                                    >
+                                      {selectValue.name}
+                                    </MenuItem>
+                                  )
+                                )
+                                : <MenuItem
+
+                                >
+                                  No Data
+                                </MenuItem>}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      ))
+                        : null}
+                      <Grid item md={12}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          disableElevation
+                          onClick={handleClose}
+                        >
+                          Apply
+                        </Button>
                       </Grid>
-                    ))
-                   :null }
-                <Grid item md={12}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        disableElevation
-                        onClick={handleClose}
-                      >
-                        Apply
-                      </Button>
                     </Grid>
-              </Grid>
-            </Box>
-          ) : null}
-        </Popover>
-      </div>
-      <Breadcrumbs
-        className={classes.projectBreadcrumbs}
-        separator={<NavigateNextIcon fontSize="small" />}
-      >
-  {isLoading?labelList.map((item,index)=><Chip size="small" label={breakDownData&&breakDownData[index]?breakDownData[index].name:`All-${item.breakdownLabel}`} key={index} />):null}
-        
-      </Breadcrumbs>
-    
+                  </Box>
+                ) : null}
+              </Popover>
+            </div>
+            <Breadcrumbs
+              className={classes.projectBreadcrumbs}
+              separator={<NavigateNextIcon fontSize="small" />}
+            >
+              {isLoading ? labelList.map((item, index) => <Chip size="small" label={breakDownData && breakDownData[index] ? breakDownData[index].name : `All-${item.breakdownLabel}`} key={index} />) : null}
+
+            </Breadcrumbs>
+
           </Hidden>
         </div>
 
-      
+
         <UserMenu />
       </Toolbar>
     </AppBar>
