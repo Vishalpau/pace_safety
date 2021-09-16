@@ -12,35 +12,23 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Editor from '../../../components/Editor';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Switch from '@material-ui/core/Switch';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DoneIcon from '@material-ui/icons/Done';
 
 import api from "../../../utils/axios"
 import { handelIncidentId } from "../../../utils/CheckerValue"
 import { async } from "fast-glob";
-
+import ReadOnlyRow from "./CheckListCompoment/ReadGroups"
+import EditOnlyRow from "./CheckListCompoment/EditGroups";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        width: "100%",
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightMedium,
-    },
-    table: {
-        minWidth: 650,
-    },
     tabelBorder: {
         width: 110,
-    },
-    paper: {
-        position: 'absolute',
-        width: theme.spacing(50),
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(4),
-    },
-    formControl: {
-        minWidth: 300,
+        fontWeight: 600,
     },
 }));
 
@@ -53,7 +41,8 @@ function Group() {
             "fkCheckListId": "",
             "checkListGroupName": "",
             "parentGroup": "",
-            "createdBy": 0,
+            "status": "active",
+            "createdBy": JSON.parse(localStorage.getItem("userDetails"))["id"],
             "updatedBy": 0
         }
     )
@@ -63,6 +52,9 @@ function Group() {
     const [checkListId, setCheckListId] = useState("")
     const [allGroupName, setAllGroupName] = useState([])
     const [projectName, setProjectName] = useState({})
+    const [editGroupId, setEditGroupId] = useState(null)
+    const [showNew, setShowNew] = useState(false)
+    const [viewUpdate, setViewUpdate] = useState(false)
     const handelGroup = async () => {
         const tempGroupName = []
         let groupID = handelIncidentId()
@@ -76,6 +68,7 @@ function Group() {
         })
         tempGroupName.push("Top")
         // fkProjectId
+        console.log(result)
         setAllGroupName(tempGroupName)
     }
 
@@ -88,6 +81,9 @@ function Group() {
     }
 
     const handelNext = async () => {
+        const projectId = JSON.parse(localStorage.getItem("projectName"))["projectId"]
+        form["parentGroup"] = form["parentGroup"] == "" ? 0 : form["parentGroup"]
+        form["fkProjectId"] = projectId
         const res = await api.post(`api/v1/core/checklists/${checkListId}/groups/`, form)
         if (res.status == 201) {
             setForm({
@@ -97,6 +93,9 @@ function Group() {
             })
             handelGroup()
         }
+
+        setShowNew(false)
+        setViewUpdate(!viewUpdate)
     }
 
     const handelParentValue = (value) => {
@@ -121,6 +120,11 @@ function Group() {
         }
     }
 
+    const handleEdit = () => {
+        // const { editStart } = this.props; // eslint-disable-line no-shadow
+        // return () => editStart(String(widget.id));
+    };
+
     const handelProjectName = () => {
         const tempProject = {}
         const company = JSON.parse(localStorage.getItem("company"));
@@ -142,122 +146,133 @@ function Group() {
         setProjectName(tempProject)
     }
 
+    const editFormData = () => {
+
+    }
+
+    const handleEditFormChange = () => {
+
+    }
+
+    const handleCancelClick = () => {
+
+    }
+
+    const handleEditClick = (e, group) => {
+        e.preventDefault()
+        setEditGroupId(group.checklistgroupId)
+    }
+
+    const handleDeleteClick = () => {
+
+    }
+
+    const handelEditClose = () => {
+        setEditGroupId(null)
+    }
+
+
     const classes = useStyles();
 
     useEffect(() => {
         handelGroup()
         handelProjectName()
-    }, [])
+    }, [viewUpdate])
 
     return (
 
         <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
+            <Button variant="contained" color="secondary" style={{ float: "right" }}>
+                <AddIcon onClick={(e) => setShowNew(true)} />
+                New
+            </Button>
+
             <Grid container spacing={12}>
                 <Table className={classes.table}>
                     <TableBody>
                         <TableRow>
-                            <TableCell className={classes.tabelBorder}>Sr.</TableCell>
-                            <TableCell className={classes.tabelBorder}>Project</TableCell>
-                            <TableCell className={classes.tabelBorder}>Checklist group name</TableCell>
-                            <TableCell className={classes.tabelBorder}>Parent group</TableCell>
+                            <TableCell className={classes.tabelBorder}>Group Name</TableCell>
+                            <TableCell className={classes.tabelBorder}>Parent Group</TableCell>
+                            <TableCell className={classes.tabelBorder}>Status</TableCell>
+                            <TableCell className={classes.tabelBorder}>Action</TableCell>
                         </TableRow>
                         {group.map((value, index) => (
+                            <>
+                                {editGroupId == value.checklistgroupId ?
+                                    <EditOnlyRow
+                                        value={value}
+                                        allGroupName={allGroupName}
+                                        handelEditClose={handelEditClose}
+                                        viewUpdate={viewUpdate}
+                                        setViewUpdate={setViewUpdate}
+                                    /> :
+                                    <ReadOnlyRow
+                                        value={value}
+                                        handleEditClick={handleEditClick}
+                                        viewUpdate={viewUpdate}
+                                        setViewUpdate={setViewUpdate}
+                                    />
+                                }
+
+
+                            </>
+                        ))}
+                        {showNew ?
                             <TableRow>
-                                <TableCell className={classes.tabelBorder}>{index + 1}</TableCell>
-                                <TableCell className={classes.tabelBorder}>{projectName[value.fkProjectId] || "-"}</TableCell>
-                                <TableCell className={classes.tabelBorder}>
-                                    <Editor
-                                        type="text"
-                                        value={value.checkListGroupName}
-                                        column="name"
-                                    // isvalidate={isvalidate}
-                                    // save={(e) => handelEdit(value.fkCheckListId, value.fkGroupId, value.id)}
-                                    // edit={value.isSystem == "No"}
+                                <TableCell className={classes.tabelBorder} >
+                                    <TextField
+                                        id="filled-basic"
+                                        label="group name"
+                                        variant="outlined"
+                                        onChange={async (e) => handelCheckList(e)}
                                     />
                                 </TableCell>
-                                <TableCell className={classes.tabelBorder}>
-                                    <p>{handelParentShow(value.parentGroup)}</p>
-                                </TableCell>
-                            </TableRow>
-                        ))}
 
-                        <TableRow>
-
-                            <TableCell className={classes.tabelBorder} >
-                                <TextField
-                                    id="filled-basic"
-                                    label="sr no"
-                                    variant="outlined"
-                                    value={group.length + 1}
-                                    disabled
-                                />
-                            </TableCell>
-                            <TableCell className={classes.tabelBorder}>
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                    label="Group name"
-                                >
-                                    <Select
-                                        id="Group-name"
-                                        className="inputCell"
-                                        labelId="Group name"
-                                        defaultValue="Top"
+                                <TableCell className={classes.tabelBorder} >
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
+                                        label="Group name"
                                     >
-
-                                        {Object.entries(projectName).map(([key, objValue]) => {
-                                            return (
+                                        <Select
+                                            id="Group-name"
+                                            className="inputCell"
+                                            labelId="Group name"
+                                            defaultValue="Top"
+                                        >
+                                            {allGroupName.map((selectValues) => (
                                                 <MenuItem
-                                                    key={key}
-                                                    value={objValue}
-                                                    onClick={(e) => {
-                                                        setForm({
-                                                            ...form,
-                                                            fkProjectId: key
-                                                        })
-                                                    }}
+                                                    value={selectValues}
+                                                    onClick={(e) => handelParentValue(selectValues)}
                                                 >
-                                                    {objValue}
+                                                    {selectValues}
                                                 </MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </TableCell>
-                            <TableCell className={classes.tabelBorder} >
-                                <TextField
-                                    id="filled-basic"
-                                    label="group name"
-                                    variant="outlined"
-                                    onChange={async (e) => handelCheckList(e)}
-                                />
-                            </TableCell>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
 
-                            <TableCell className={classes.tabelBorder} >
-                                <FormControl
-                                    variant="outlined"
-                                    className={classes.formControl}
-                                    label="Group name"
-                                >
-                                    <Select
-                                        id="Group-name"
-                                        className="inputCell"
-                                        labelId="Group name"
-                                        defaultValue="Top"
-                                    >
-                                        {allGroupName.map((selectValues) => (
-                                            <MenuItem
-                                                value={selectValues}
-                                                onClick={(e) => handelParentValue(selectValues)}
-                                            >
-                                                {selectValues}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <button onClick={(e) => handelNext(e)}>Save</button>
-                            </TableCell>
-                        </TableRow>
+                                </TableCell>
+                                <TableCell className={classes.tabelBorder}>
+                                    <Switch
+                                        checked={true}
+                                        // onChange={handleChange}
+                                        name="checkedA"
+                                        inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                    />
+                                </TableCell>
+
+                                <TableCell>
+                                    <DoneIcon
+                                        onClick={(e) => handelNext(e)}
+                                    />
+                                    <span style={{ marginLeft: "20px" }}>
+                                        <DeleteIcon />
+                                    </span>
+
+                                </TableCell>
+
+                            </TableRow>
+                            : null}
 
 
                     </TableBody>
