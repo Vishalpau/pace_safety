@@ -80,6 +80,7 @@ export default function ActionTracker(props) {
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
+  console.log(userId);
   const project =
   JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -98,7 +99,7 @@ export default function ActionTracker(props) {
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
-    fkProjectStructureIds: parseInt(props.fkProjectStructureIds),
+    fkProjectStructureIds: props.fkProjectStructureIds,
     parentId: 0,
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
@@ -127,7 +128,7 @@ export default function ActionTracker(props) {
     actionStatus: "string",
     actionStage: "string",
     status: "Active",
-    createdBy: 0,
+    createdBy: parseInt(userId),
     reviewedBy: 0,
     reviewDate: "2021-07-21T17:05:39.605Z",
     closedBy: 0,

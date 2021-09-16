@@ -288,6 +288,11 @@ function Actions(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const type = localStorage.getItem("type")
+
+  const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).name
+  : null;
 
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
@@ -356,7 +361,7 @@ const handleSummaryPush = async (index) => {
 
 const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchIncident, setSeacrhIncident] = useState("");
+  const searchIncident = props.searchIncident
 
 const fetchInitialiObservation = async () => {
   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -374,8 +379,53 @@ const fkProjectStructureIds = struct.slice(0, -1);
 
   const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
   const result = res.data.data.results.results
-  await setAllInitialData(result)
-  let pageCount  = Math.ceil(res.data.data.results.count/25)
+  let tempData = []
+  let tempUser = []
+    let temp = []
+  if(props.type == "All" || props.type == "Type"   ){
+    await setAllInitialData(result)
+    if(props.observation == "My Observations"){
+      result.map((value,i) => {
+        if(value.username == userName ){
+          tempData.push(result[i])
+        }
+      })
+      await setAllInitialData(tempData)
+    }else{
+      await setAllInitialData(result)
+    }
+
+
+  }else{
+    
+    result.map((value,i) => {
+      if(value.observationType == props.type ){
+        tempData.push(result[i])
+      }
+    })
+    await setAllInitialData(tempData)
+    if(props.observation == "My Observations"){
+      tempData.map((value,i) => {
+        if(value.username == userName ){
+          tempUser.push(tempData[i])
+        }
+      })
+      await setAllInitialData(tempUser)
+    }
+
+  }
+  // if(props.observation == "My Observations"){
+
+  //   result.map((value,i) => {
+  //     if(value.username == userName ){
+  //       tempData.push(result[i])
+  //     }
+  //   })
+  //   await setAllInitialData(tempData)
+  // }else{
+  //   await setAllInitialData(result)
+  // }
+  let pageCount  = Math.ceil(allInitialData.length/25)
   await setPageCount(pageCount)
 
   await setIsLoading(true)
@@ -408,7 +458,7 @@ console.log(allInitialData)
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName]);
+  }, [props.projectName,props.type,searchIncident]);
   return (
     <>
       <Box>
@@ -636,18 +686,18 @@ console.log(allInitialData)
 
                     <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
                       <div className={classes.floatR}>
-                      <Typography variant="body1" display="inline">
+                      {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
+                      <span item xs={1} className={classes.sepHeightTen}></span> */}
                       <Typography variant="body1" display="inline">
                         <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
+                      {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
+                      <span item xs={1} className={classes.sepHeightTen}></span> */}
                       <Typography variant="body1" display="inline">
                       <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                       </Typography>
@@ -943,9 +993,9 @@ console.log(allInitialData)
             </TableContainer>
           )}
         </Grid>  
-        <div className={classes.pagination}>
+        {/* <div className={classes.pagination}>
       <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
+    </div> */}
       </Box>
     </>
   );

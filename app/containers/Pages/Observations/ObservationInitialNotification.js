@@ -323,7 +323,6 @@ const ObservationInitialNotification = (props) => {
         // window.location.href = {LOGIN_URL}
       });
   };
-
   const fetchDepartment = () => {
     const config = {
       method: "get",

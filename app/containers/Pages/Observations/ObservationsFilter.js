@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -19,11 +19,23 @@ import ObservationsPackage from './ObservationsPackage';
 import Button from '@material-ui/core/Button';
 import "../../../styles/custom/customheader.css";
 import Grid from '@material-ui/core/Grid';
-
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const drawerWidth = 240;
 
 const styles = theme => ({
+  root_type: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: '#06425c',
+  },
+  nested: {
+    paddingLeft: theme.spacing(4),
+    backgroundColor: '#7692a4'
+  },
+  selected: {backgroundColor: '#f47607'},
   root: {
     flexGrow: 1,
     fontFamily: 'Montserrat-Medium',
@@ -202,8 +214,14 @@ class ObservationsFilter extends React.Component {
   state = {
     open: false,
     anchor: 'right',
-    button:true
+    button:true,
+    type: "Type"
   };
+  componentDidMount(){
+  }
+  // props = {
+  //   observations: props.observations,
+  // }
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -221,10 +239,22 @@ class ObservationsFilter extends React.Component {
   handleClickButton=()=>{
     this.setState({button:!this.state.button})
   }
+   handleType = (value) => {
+    if(value === "Risk"){
+      this.setState({type:"Risk"})
+    }else if(value === "Comments"){
+      this.setState({type:"Comments"})
+    }else if(value === "Positive behavior"){
+      this.setState({type:"Positive behavior"})
+    }else if(value === "All"){
+      this.setState({type:"All"})
+
+    }
+  }
 
   render() {
-    const { classes, theme } = this.props;
-    const { anchor, open } = this.state;
+    const { classes, theme , observations} = this.props;
+    const { anchor, open , type} = this.state;
 
     const drawer = (
       <Drawer
@@ -243,14 +273,59 @@ class ObservationsFilter extends React.Component {
           variant="h6"
           classNames={classes.floatL}
           >
-          Categories
+          {this.state.type ? this.state.type : "All" }
           </Typography>
 		
           
         </div>
         <Divider />
         {/* <List className={classes.drawerList}>{MenuData}</List> */}
-        <MenuData />
+        <List
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+      className={classes.root_type}
+    >
+      <ListItem button className={this.state.type === "All" ? classes.selected : classes.nested} onClick={(e) => this.handleType('All')}>
+        <ListItemText primary="All" />
+      </ListItem>
+      <ListItem button className={this.state.type === "Risk" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Risk')}>
+        <ListItemText primary="Risk" />
+      </ListItem>
+      <ListItem button className={this.state.type === "Comments" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Comments')}>
+        <ListItemText primary="Comments" />
+      </ListItem>
+      <ListItem button className={this.state.type === "Positive behavior" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Positive behavior')}>
+        <ListItemText primary="Positive behavior" />
+      </ListItem>
+      {/* <ListItem button className={classes.nested}>
+        <ListItemText primary="Staff Commission" />
+      </ListItem>
+      <ListItem button className={classes.nested}>
+        <ListItemText primary="Staff Commission" />
+      </ListItem> */}
+      {/* <ListItem button onClick={handleClick}  className={classes.selected}>
+        <ListItemText primary="Staff Commission" />
+        {open ? <RemoveIcon /> : <AddIcon />}
+      </ListItem>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          <ListItem button className={classes.nested}>            
+            <ListItemText primary="Starred" />
+          </ListItem>
+        </List>
+        <List component="div" disablePadding>
+          <ListItem button className={classes.nested}>
+            <ListItemText primary="Starred" />
+          </ListItem>
+        </List>
+        <List component="div" disablePadding>
+          <ListItem button className={classes.nested}>
+            <ListItemText primary="Starred" />
+          </ListItem>
+        </List>
+      </Collapse> */}
+    </List>
+        {/* <MenuData /> */}
       </Drawer>
     );
 
@@ -309,7 +384,7 @@ class ObservationsFilter extends React.Component {
                 className={classes.catButton}
                 onClick={()=>{this.handleClickButton()}}
               >
-                {!this.state.open&&<Typography variant="h6">Categories</Typography>}{afterBtn}
+                {!this.state.open&&<Typography variant="h6">{this.state.type ? this.state.type : "Type"}</Typography>}{afterBtn}
               
               </Button>
               
@@ -325,7 +400,7 @@ class ObservationsFilter extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <ObservationsPackage />
+            <ObservationsPackage type={this.state.type} observation={this.props.observation} searchIncident={this.props.search}/>
           </main>
           {after}
         </div>

@@ -36,6 +36,16 @@ export default function MenuData() {
   const handleClick = () => {
     setOpen(!open);
   };
+  const handleType = (value) => {
+    if(value === "Risk"){
+      localStorage.setItem("type", "Risk");
+    }else if(value === "Comments"){
+      localStorage.setItem("type", "Comments");
+    }else if(value === "Positive behavior"){
+      localStorage.setItem("type", "Positive behavior");
+
+    }
+  }
 
   return (
     <List
@@ -46,21 +56,21 @@ export default function MenuData() {
       <ListItem button className={classes.selected}>
         <ListItemText primary="All" />
       </ListItem>
-      <ListItem button className={classes.nested}>
+      <ListItem button className={classes.nested} onClick={(e) => handleType('Risk')}>
+        <ListItemText primary="Risk" />
+      </ListItem>
+      <ListItem button className={classes.nested} onClick={(e) => handleType('Comments')}>
+        <ListItemText primary="Comments" />
+      </ListItem>
+      <ListItem button className={classes.nested} onClick={(e) => handleType('Positive behavior')}>
+        <ListItemText primary="Positive behavior" />
+      </ListItem>
+      {/* <ListItem button className={classes.nested}>
         <ListItemText primary="Staff Commission" />
       </ListItem>
       <ListItem button className={classes.nested}>
         <ListItemText primary="Staff Commission" />
-      </ListItem>
-      <ListItem button className={classes.nested}>
-        <ListItemText primary="Staff Commission" />
-      </ListItem>
-      <ListItem button className={classes.nested}>
-        <ListItemText primary="Staff Commission" />
-      </ListItem>
-      <ListItem button className={classes.nested}>
-        <ListItemText primary="Staff Commission" />
-      </ListItem>
+      </ListItem> */}
       {/* <ListItem button onClick={handleClick}  className={classes.selected}>
         <ListItemText primary="Staff Commission" />
         {open ? <RemoveIcon /> : <AddIcon />}

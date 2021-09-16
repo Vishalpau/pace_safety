@@ -340,11 +340,16 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [searchIncident, setSeacrhIncident] = useState("");
-
+  const [observation, setObservation] = useState("My Observations");
+  const [searchIncident, setSeacrhIncident] = useState("")
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(newValue === 0){
+      setObservation("My Observations")
+    }else if(newValue === 1){
+      setObservation("Big Picture")
+    }
   };
   const handleSearch = (e) => {
     setSeacrhIncident(e.target.value);
@@ -360,7 +365,7 @@ export default function SimpleTabs(props) {
 				  <div className={classes.floatL}>
 					<Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
 					  <Tab label="My Observations" {...a11yProps(0)} />
-					  <Tab label="Team's Observations" {...a11yProps(1)} />
+					  {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
 					  <Tab label="Big Picture" {...a11yProps(2)} />
 					<Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} />
 					</Tabs>
@@ -399,13 +404,13 @@ export default function SimpleTabs(props) {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			<ObservationsFilter />
+			<ObservationsFilter observation={observation} search={searchIncident}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			<ObservationsFilter />
+			<ObservationsFilter observation={observation} search={searchIncident}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			<ObservationsFilter />
+			<ObservationsFilter observation={observation} search={searchIncident}/>
 		  </TabPanel>
 		<TabPanel value={value} index={3}>
 			<ObservationBookmarkFilter />
