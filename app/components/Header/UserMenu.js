@@ -145,6 +145,7 @@ function UserMenu(props) {
   const [userImageLink, setUserImageLink] = useState([])
   const [companyLogoLink, setCompanyLogoLink] = useState('')
   const [companyName, setCompanyName] = useState('')
+  const [project, setProject]=([])
   const dispatch = useDispatch()
 
   const handleAppsClick = (event) => {
@@ -210,8 +211,7 @@ function UserMenu(props) {
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
-        let roles = res.data.data.results.data.companies[0].subscriptions.filter(item=> item.appCode === "Safety")
-        dispatch(fetchPermission(roles[0]))
+       
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
@@ -231,6 +231,25 @@ function UserMenu(props) {
 
 
   }
+  const getProjectStr = async(id = '1L2:2L5:3L9') => {
+    if(id != '') {
+      let c_id   = JSON.parse(localStorage.getItem("company")).fkCompanyId 
+      let p_id   = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      let data = []
+      let breakDown = await id.split(':')
+      for(var i=0;i<breakDown.length;i++){
+        let level_id = breakDown[i].split('L')
+        let level    = level_id[0] + 'L'
+        let _id      = level_id[1]
+        let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
+        let res = await api.get(apiurl);
+       data= [...data,res.data.data.results[0].name]
+  
+      }
+      console.log(data)
+      // setProjectBreakout(data)
+    }
+  }
   const handleClosea = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -244,6 +263,7 @@ function UserMenu(props) {
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
+    getProjectStr();
   }, [props.initialValues.companyDataList])
 
   const classnames = useStyles();
@@ -396,7 +416,7 @@ function UserMenu(props) {
             <List component="nav">
 
               {subscriptions.map(subscription => (
-                (subscription.appName !== 'Safety') && subscription.modules.length > 0 ?
+                (subscription.appId !== 1) && subscription.modules.length > 0 && apps.includes(subscription.appId)?
                   <div>
                     <ListItemText
                       className={classnames.appDrawerLable}
@@ -410,7 +430,7 @@ function UserMenu(props) {
                           <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />
-                            <ListItemText primary={module.name} />
+                            <ListItemText primary={module.moduleWebName} />
                           </ListItemLink>
                         </div>
                       ))}

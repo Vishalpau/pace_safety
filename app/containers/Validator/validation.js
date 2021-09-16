@@ -1,14 +1,11 @@
 import { ErrorOutline } from "@material-ui/icons";
 import validator from "validator";
 
-function validate(data,projectStructure,levelLenght) {
+function validate(data,projectStructure) {
   let isValid = true;
   const error = {};
-  console.log(projectStructure)
   const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
   for (let i = 0; i < breakdownValue.length; i++) {
-    var element = projectStructure[i]
-    console.log({element:element})
     if (projectStructure[i] === undefined) {
       error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
       isValid = false;
