@@ -195,7 +195,7 @@ const ProjectStructure = (props) => {
     }
   };
 
-console.log(labelList)
+
   const handleBreakdown = async (e, index, label) => {
     let projectData = JSON.parse(localStorage.getItem('projectName'))
     const value = e.target.value;
@@ -303,7 +303,7 @@ console.log(labelList)
     }
 
   }, [props.initialValues.breakDown]);
-  // console.log(leafNode, breakdown1ListData, '--------------')
+
   return (<>
     {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
       <Grid item xs={3} key={key}>
@@ -321,7 +321,7 @@ console.log(labelList)
       </Grid>)}
 
     {labelList.length === 1 ? labelList.map((item, index) => (
-      <Grid item xs={3}>{console.log({labelList1:labelList})}
+      <Grid item xs={3}>
         <FormControl
           key={index}
           variant="outlined"

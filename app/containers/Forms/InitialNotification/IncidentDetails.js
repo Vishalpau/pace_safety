@@ -542,7 +542,7 @@ const IncidentDetails = (props) => {
               if (response.status === 200) {
 
                temp[key].breakDownData =response.data.data.results
-               console.log({temp:temp})
+               
               //  temp[key].select=e.
               setBreakdown1ListData(temp)
               }
@@ -554,7 +554,7 @@ const IncidentDetails = (props) => {
       }
     } 
   };
-console.log(breakdown1ListData)
+
   const fetchBreakDownData = async (projectBreakdown) => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -645,7 +645,7 @@ console.log(breakdown1ListData)
     fetchIncidentsData();
   }, [])
 
-console.log(selectDepthAndId)
+
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
     if (e !== "Yes") {
