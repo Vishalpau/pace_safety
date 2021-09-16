@@ -109,7 +109,10 @@ html {
 .h5 {
   font-family: Xolonium-Regular;
 }
-
+.MuiTypography-h6 {
+  font-family: Montserrat-Medium !important;
+  font-weight: 400 !important;
+}
 .PapperBlock-title {
   font-family: Xolonium-Regular;
 }
