@@ -184,6 +184,9 @@ const ObservationInitialNotificationUpdate = () => {
   const [reportedByName, setReportedByName] = useState([]);
   const [departmentName, setDepartmentName] = useState([])
   const [submitLoader, setSubmitLoader] = useState(false);
+  const [levelLenght, setLevelLenght] = useState(0)
+
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [projectSturcturedData, setProjectSturcturedData] = useState([])
   let filterReportedByName = []
   let filterDepartmentName = []
@@ -280,7 +283,7 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const handleSubmit = async () => {
-    const { error, isValid } = InitialNotificationValidator(initialData);
+    const { error, isValid } = InitialNotificationValidator(initialData,selectDepthAndId);
 
     await setError(error);
 
@@ -479,10 +482,13 @@ const ObservationInitialNotificationUpdate = () => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
 
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let breakdownLength = projectData.projectName.breakdown.length
+    setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -495,15 +501,22 @@ const ObservationInitialNotificationUpdate = () => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
+
               }
             });
+            setProjectSturcturedData(selectBreakDown)
           })
           .catch((error) => {
 
@@ -513,7 +526,7 @@ const ObservationInitialNotificationUpdate = () => {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -527,22 +540,24 @@ const ObservationInitialNotificationUpdate = () => {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
+
               }
             });
-
+            setProjectSturcturedData(selectBreakDown)
 
           })
           .catch((error) => {
             console.log(error)
-            // setIsNext(true);
+            setIsNext(true);
           });
       }
     }
-    // dispatch(breakDownDetails(selectBreakDown));
-    await setProjectSturcturedData(selectBreakDown)
-    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
   useEffect(() => {
@@ -571,7 +586,7 @@ const ObservationInitialNotificationUpdate = () => {
               Observation Title
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.observationTitle}
+              {initialData.observationTitle ? initialData.observationTitle : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
@@ -579,7 +594,7 @@ const ObservationInitialNotificationUpdate = () => {
               Observation Type
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.observationTitle}
+              {initialData.observationType ? initialData.observationType : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
@@ -587,7 +602,7 @@ const ObservationInitialNotificationUpdate = () => {
               Observation Description
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.observationDetails}
+              {initialData.observationDetails ? initialData.observationDetails : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
@@ -595,7 +610,7 @@ const ObservationInitialNotificationUpdate = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `${projectSturcturedData[1].name}-` : null}  {projectSturcturedData[2] ? `${projectSturcturedData[2].name}` : null} 
+            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].selectValue.name : null}  {projectSturcturedData[1] ? `- ${projectSturcturedData[1].selectValue.name}` : null}  {projectSturcturedData[2] ? `- ${projectSturcturedData[2].selectValue.name}` : null} 
 
             </Typography>
           </Grid>

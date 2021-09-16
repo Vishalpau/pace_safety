@@ -242,7 +242,8 @@ function Observations(props) {
     search: false,
     filter: false,
     viewColumns: false,
-    download :false
+    download :false,
+    pagination: false,
   };
 
   const handlePrintPush = async (index) => {
@@ -597,6 +598,7 @@ function Observations(props) {
 
                 ))} */}
               </div>
+             
 
               {/* ))} */}
             </>
@@ -634,7 +636,9 @@ function Observations(props) {
           <div className={classes.pagination}>
       <Pagination count={pageCount} onChange={handleChange}/>
     </div>
+         
         </Box>
+        
         
       ) : (
         <h1>Loading...</h1>
