@@ -29,6 +29,16 @@ const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewU
 
     const [editForm, setEditForm] = useState({})
 
+    const handleStatusChange = async (e, checkListId, checkListOptionId) => {
+        let editStatusForm = {}
+        editStatusForm["status"] = e.target.checked == true ? "Active" : "Inactive"
+        editStatusForm["fkCheckListId"] = checkListId
+        editStatusForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+        const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editStatusForm)
+        if (res.status == 200) {
+            setViewUpdate(!viewUpdate)
+        }
+    }
 
     const handelUpdate = async (e, checkListId, checkListOptionId) => {
         editForm["fkCheckListId"] = checkListId
@@ -101,8 +111,8 @@ const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewU
 
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    defaultChecked={value.status == undefined || value.status == "active" ? true : false}
-                    onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
+                    defaultChecked={value.status == "Active" ? true : false}
+                    onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.id)}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />

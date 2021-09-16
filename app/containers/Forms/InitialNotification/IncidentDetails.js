@@ -144,9 +144,9 @@ const IncidentDetails = (props) => {
   // Function called on next button click.
   const handelNext = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
-            let fkProjectStructureId = uniqueProjectStructure.map(depth => {
-              return depth;
-            }).join(':')
+    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+      return depth;
+    }).join(':')
     // Create case if id is not null and means it is an update case.
     if (isNext) {
       setIsNext(false);
@@ -170,7 +170,7 @@ const IncidentDetails = (props) => {
           id: parseInt(id),
           fkCompanyId: incidentsListData.fkCompanyId,
           fkProjectId: incidentsListData.fkProjectId,
-          fkProjectStructureIds: fkProjectStructureId.toString()||incidentsListData.fkProjectStructureIds,
+          fkProjectStructureIds: fkProjectStructureId.toString() || incidentsListData.fkProjectStructureIds,
           incidentNumber: incidentsListData.incidentNumber,
           incidentType: form.incidentType,
           incidentTitle: form.incidentTitle,
@@ -216,10 +216,10 @@ const IncidentDetails = (props) => {
           vendorReferenceId: "string",
           contractor: form.contractor,
           subContractor: form.subContractor,
-          incidentStage	:"",
-          incidentStatus:""
+          incidentStage: "",
+          incidentStatus: ""
         };
-        const { error, isValid } = validate(form,selectDepthAndId,levelLenght);
+        const { error, isValid } = validate(form, selectDepthAndId, levelLenght);
         await setError(error);
         // check condition for error
         if (isValid === true) {
@@ -234,7 +234,7 @@ const IncidentDetails = (props) => {
               localStorage.setItem("fkincidentId", fkincidentId);
               localStorage.setItem("deleteForm", JSON.stringify(hideAffect));
 
-             localStorage.setItem("nextPath", JSON.stringify(nextPath));
+              localStorage.setItem("nextPath", JSON.stringify(nextPath));
 
               // Decide on which path to go next.
               if (nextPath.personAffect === "Yes") {
@@ -270,14 +270,14 @@ const IncidentDetails = (props) => {
         }
       } else {
         // Create case if id is not null and means it is an add new registration case.
-        const { error, isValid } = validate(form, selectDepthAndId,levelLenght);
+        const { error, isValid } = validate(form, selectDepthAndId, levelLenght);
         await setError(error);
         if (selectDepthAndId.length < levelLenght) {
           // alert("Please select all Level of project.")
           setIsNext(true);
         } else {
           if (isValid === true) {
-            
+
             const formData = {
               fkCompanyId: parseInt(fkCompanyId),
               fkProjectId: parseInt(project.projectId),
@@ -322,8 +322,8 @@ const IncidentDetails = (props) => {
               vendorReferenceId: "string",
               contractor: form.contractor,
               subContractor: form.subContractor,
-              incidentStage	:"",
-              incidentStatus:""
+              incidentStage: "",
+              incidentStatus: ""
             };
             // sent post api
             try {
@@ -398,7 +398,7 @@ const IncidentDetails = (props) => {
       setOpen(true);
     }
   };
-  
+
   // get data sub-contractor value for dropdown
   const fetchSubContractorValue = async () => {
     try {
@@ -512,39 +512,39 @@ const IncidentDetails = (props) => {
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-    
+
     const value = e.target.value;
-    
+
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
     // let removeTemp = temp.slice(0, index)
-    for(var i in temp){
-      if(i>index){
-        temp[i].breakDownData=[]
-        temp[i].selectValue.id=""
+    for (var i in temp) {
+      if (i > index) {
+        temp[i].breakDownData = []
+        temp[i].selectValue.id = ""
       }
-      
+
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
-    let sliceData = dataDepthAndId.slice(0,index)
-    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
+    let sliceData = dataDepthAndId.slice(0, index)
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
     setSelectDepthAndId(newdataDepthAndId)
     // await setFetchSelectBreakDownList(removeTemp)
-    if (projectData.projectName.breakdown.length !== index+1) {
+    if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index+1) {
-         
-          
+        if (key == index + 1) {
+
+
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-          }${value}`,)
+            }${value}`)
             .then(function (response) {
               if (response.status === 200) {
 
-               temp[key].breakDownData =response.data.data.results
-               console.log({temp:temp})
-              //  temp[key].select=e.
-              setBreakdown1ListData(temp)
+                temp[key].breakDownData = response.data.data.results
+                console.log({ temp: temp })
+                //  temp[key].select=e.
+                setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
@@ -552,9 +552,9 @@ const IncidentDetails = (props) => {
             });
         }
       }
-    } 
+    }
   };
-console.log(breakdown1ListData)
+  console.log(breakdown1ListData)
   const fetchBreakDownData = async (projectBreakdown) => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -645,7 +645,7 @@ console.log(breakdown1ListData)
     fetchIncidentsData();
   }, [])
 
-console.log(selectDepthAndId)
+  console.log(selectDepthAndId)
   //  set state for hide sidebar
   const handleHideAffect = (e, name, key) => {
     if (e !== "Yes") {
@@ -683,53 +683,53 @@ console.log(selectDepthAndId)
                   {project ? project.projectName : null}
                 </Typography>
               </Grid>
-              {id ? 
-              fetchSelectBreakDownList.map((data, key) => 
-              <Grid item xs={3} md={3} key={key}>
-                <FormControl
-                  error={error && error[`projectStructure${[key]}`]}
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    {data.breakDownLabel}
-                  </InputLabel>
-                  <Select
-                    labelId="incident-type-label"
-                    id="incident-type"
-                    label="Incident type"
-                    value={data.selectValue.id || ""}
-                    disabled={data.breakDownData.length===0}
-                    
-                    onChange={(e) => {
-                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
-                    }}
-                  >
-                    {data.breakDownData.length !== 0
-                      ? data.breakDownData.map((selectvalues, index) => (
-                        <MenuItem key={index} 
-                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                        value={selectvalues.id}>
-                          {selectvalues.structureName}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error[`projectStructure${[key]}`] && (
-                              <FormHelperText>
-                                {error[`projectStructure${[key]}`]}
-                              </FormHelperText>
-                            )}
-                </FormControl>
-              </Grid>
+              {id ?
+                fetchSelectBreakDownList.map((data, key) =>
+                  <Grid item xs={3} md={3} key={key}>
+                    <FormControl
+                      error={error && error[`projectStructure${[key]}`]}
+                      variant="outlined"
+                      required
+                      className={classes.formControl}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        {data.breakDownLabel}
+                      </InputLabel>
+                      <Select
+                        labelId="incident-type-label"
+                        id="incident-type"
+                        label="Incident type"
+                        value={data.selectValue.id || ""}
+                        disabled={data.breakDownData.length === 0}
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setWorkArea={setWorkArea}
-              setSelectDepthAndId={setSelectDepthAndId} />
+                        onChange={(e) => {
+                          handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                        }}
+                      >
+                        {data.breakDownData.length !== 0
+                          ? data.breakDownData.map((selectvalues, index) => (
+                            <MenuItem key={index}
+                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                              value={selectvalues.id}>
+                              {selectvalues.structureName}
+                            </MenuItem>
+                          ))
+                          : null}
+                      </Select>
+                      {error && error[`projectStructure${[key]}`] && (
+                        <FormHelperText>
+                          {error[`projectStructure${[key]}`]}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                ) : <ProjectStructureInit
+                  selectDepthAndId={selectDepthAndId}
+                  setLevelLenght={setLevelLenght}
+                  error={error}
+                  setWorkArea={setWorkArea}
+                  setSelectDepthAndId={setSelectDepthAndId} />
               }
               {/* Unit Name */}
 

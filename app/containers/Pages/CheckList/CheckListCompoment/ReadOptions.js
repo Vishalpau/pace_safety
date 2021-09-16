@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ReadOnlyOptionRow = ({ value, group, handleEditClick }) => {
+const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewUpdate }) => {
 
     const handelParentShow = (value) => {
         if (value == 0) {
@@ -29,12 +29,12 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick }) => {
         }
     }
 
-    const handleStatusChange = async (e, checkListId, checkListGroupId) => {
-        console.log(e.target.checked)
+    const handleStatusChange = async (e, checkListId, checkListOptionId) => {
         let editForm = {}
-        editForm["status"] = e.target.checked == true ? "active" : "inactive"
-        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
-        const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
+        editForm["status"] = e.target.checked == true ? "Active" : "Inactive"
+        editForm["fkCheckListId"] = checkListId
+        editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+        const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editForm)
         if (res.status == 200) {
             setViewUpdate(!viewUpdate)
         }
@@ -59,8 +59,8 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick }) => {
                 : null}
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    defaultChecked={value.status == undefined || value.status == "Active" ? true : false}
-                    onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
+                    defaultChecked={value.status == "Active" ? true : false}
+                    onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.id)}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
