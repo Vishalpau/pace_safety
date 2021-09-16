@@ -210,7 +210,7 @@ function UserMenu(props) {
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
-        let roles = res.data.data.results.data.companies[0].subscriptions.filter(item=> item.appCode === "Safety")
+        let roles = res.data.data.results.data.companies[0].subscriptions.filter(item => item.appCode === "Safety")
         dispatch(fetchPermission(roles[0]))
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         setUserImageLink(res.data.data.results.data.avatar)
@@ -410,7 +410,7 @@ function UserMenu(props) {
                           <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />
-                            <ListItemText primary={module.name} />
+                            <ListItemText primary={module.moduleWebName} />
                           </ListItemLink>
                         </div>
                       ))}
