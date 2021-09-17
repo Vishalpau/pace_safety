@@ -12,23 +12,26 @@ export const addAction = (anchor, branch) => ({
   type: `${branch}/${types.ADD_EMPTY_ROW}`,
   anchor
 });
-export const removeAction = (item, branch) => ({
+export const removeAction = (item, branch) => (
+  {
   branch,
   type: `${branch}/${types.REMOVE_ROW}`,
   item
 });
-export const updateAction = (event, item, branch) => ({
+export const updateAction = (event, item, branch) => (
+  console.log({event:event,item:item,branch:branch})
+  ,{
   branch,
   type: `${branch}/${types.UPDATE_ROW}`,
   event,
   item
 });
-export const editAction = (item, branch) => ({
+export const editAction = (item, branch) => (console.log({item:item,branch:branch}),{
   branch,
   type: `${branch}/${types.EDIT_ROW}`,
   item
 });
-export const saveAction = (item, branch) => ({
+export const saveAction = (item, branch) => (console.log({item:item}),{
   branch,
   type: `${branch}/${types.SAVE_ROW}`,
   item

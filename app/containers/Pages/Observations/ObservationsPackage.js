@@ -298,7 +298,6 @@ function Actions(props) {
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const history = useHistory();
-console.log(pageCount,"pageCount")
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -415,7 +414,6 @@ const fkProjectStructureIds = struct.slice(0, -1);
 
   }
 
-  console.log(props.type,"lllllllllll")
   // if(props.observation == "My Observations"){
 
   //   result.map((value,i) => {
@@ -429,63 +427,67 @@ const fkProjectStructureIds = struct.slice(0, -1);
   // }
   let pageCount  = Math.ceil(res.data.data.results.count/25)
   await setPageCount(pageCount)
-  let value = localStorage.getItem("value")
-  if (value){
+//   let value = localStorage.getItem("value")
+//   console.log(value)
+//   if (value){
 
   
-  const resPage = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
-  console.log(resPage,"KKKKKKKK")
-const resultPage = resPage.data.data.results.results
-  let tempData1 = []
-  let tempUser1 = []
-    // let temp = []
-  if(props.type == "All" || props.type == "Type"   ){
-    await setAllInitialData(resultPage)
-    console.log(props.observation)
-    if(props.observation == "My Observations"){
-      console.log("My Observations")
-      resultPage.map((value,i) => {
-        if(value.username == userName ){
-          tempData1.push(resultPage[i])
-        }
-      })
-      await setAllInitialData(tempData1)
-    }else{
-      console.log("alllllllllll")
-      await setAllInitialData(resultPage)
-    }
+//   const resPage = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+//   console.log(resPage,"KKKKKKKK")
+// const resultPage = resPage.data.data.results.results
+//   let tempData1 = []
+//   let tempUser1 = []
+//     // let temp = []
+//   if(props.type == "All" || props.type == "Type"   ){
+//     await setAllInitialData(resultPage)
+//     console.log(props.observation)
+//     if(props.observation == "My Observations"){
+//       console.log("My Observations")
+//       resultPage.map((value,i) => {
+//         if(value.username == userName ){
+//           tempData1.push(resultPage[i])
+//         }
+//       })
+//       await setAllInitialData(tempData1)
+//     }else{
+//       console.log("alllllllllll")
+//       await setAllInitialData(resultPage)
+//     }
 
 
-  }else{
-    console.log(props.type)
-    resultPage.map((value,i) => {
-      // console.log(value.observationType,"formtype")
-      if(value.observationType === props.type ){
-        tempData1.push(resultPage[i])
-        console.log(props.type,"filter type")
+//   }else{
+//     console.log(props.type)
+//     resultPage.map((value,i) => {
+//       // console.log(value.observationType,"formtype")
+//       if(value.observationType === props.type ){
+//         tempData1.push(resultPage[i])
+//         console.log(props.type,"filter type")
 
-      }
-    })
-    await setAllInitialData(tempData1)
-    if(props.observation == "My Observations"){
-      console.log(":::::::OOOOOO")
-      tempData1.map((value,i) => {
-        if(value.username == userName ){
-          tempUser1.push(tempData1[i])
-        }
-      })
-      await setAllInitialData(tempUser1)
-    }
+//       }
+//     })
+//     await setAllInitialData(tempData1)
+//     if(props.observation == "My Observations"){
+//       console.log(":::::::OOOOOO")
+//       tempData1.map((value,i) => {
+//         if(value.username == userName ){
+//           tempUser1.push(tempData1[i])
+//         }
+//       })
+//       await setAllInitialData(tempUser1)
+//     }
 
-  }
-  let pageCount1  = Math.ceil(resPage.data.data.results.count/25)
-  await setPageCount(pageCount1)
-  // await handleChange(0,value)
-  // localStorage.removeItem("value")
-  }
+//   }
+//   let pageCount1  = Math.ceil(resPage.data.data.results.count/25)
+//   await setPageCount(pageCount1)
+//   // await handleChange(0,value)
+//   // localStorage.removeItem("value")
+
+//   }
   await setIsLoading(true)
+
+}
   // localStorage.removeItem("value")
-};
+
 const handleSearch = (e) => {
   // console.log(e.target.value)
   setSeacrhIncident(e.target.value);
@@ -493,7 +495,6 @@ const handleSearch = (e) => {
 };
 
 const handleChange = async(event , value) => {
-  console.log(value,"RRRRRRRRr")
 
     let paginationValue = localStorage.setItem("value", value);
   
@@ -512,16 +513,15 @@ for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
-const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
 const result = res.data.data.results.results
+await setAllInitialData(result)
   let tempData = []
   let tempUser = []
     let temp = []
   if(props.type == "All" || props.type == "Type"   ){
     await setAllInitialData(result)
-    console.log(props.observation)
     if(props.observation == "My Observations"){
-      console.log("My Observations")
       result.map((value,i) => {
         if(value.username == userName ){
           tempData.push(result[i])
@@ -529,23 +529,19 @@ const result = res.data.data.results.results
       })
       await setAllInitialData(tempData)
     }else{
-      console.log("alllllllllll")
       await setAllInitialData(result)
     }
 
 
   }else{
-    console.log(props.type)
     result.map((value,i) => {
       // console.log(value.observationType,"formtype")
       if(value.observationType == props.type ){
         tempData.push(result[i])
       }
     })
-    console.log(props.type,"filter type")
     await setAllInitialData(tempData)
     if(props.observation == "My Observations"){
-      console.log(":::::::OOOOOO")
       tempData.map((value,i) => {
         if(value.username == userName ){
           tempUser.push(tempData[i])
@@ -559,7 +555,7 @@ const result = res.data.data.results.results
   await setPageCount(pageCount)
   // await setAllInitialData(res.data.data.results.results);
 };
-console.log(allInitialData)
+console.log(allInitialData,"Alllllllll")
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();

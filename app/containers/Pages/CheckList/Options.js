@@ -28,27 +28,12 @@ const useStyles = makeStyles((theme) => ({
     root: {
         width: "100%",
     },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightMedium,
-    },
-    table: {
-        minWidth: 650,
-    },
+
     tabelBorder: {
         width: 110,
         fontWeight: 600,
     },
-    paper: {
-        position: 'absolute',
-        width: theme.spacing(50),
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(4),
-    },
-    formControl: {
-        width: "85%",
-    },
+
 }));
 
 function Option() {
@@ -187,6 +172,8 @@ function Option() {
                                         value={value}
                                         group={group}
                                         handleEditClick={handleEditClick}
+                                        viewUpdate={viewUpdate}
+                                        setViewUpdate={setViewUpdate}
                                     />
                                 }
                             </>

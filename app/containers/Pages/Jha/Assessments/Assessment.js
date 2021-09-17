@@ -44,6 +44,7 @@ import ActionTracker from "../../../Forms/ActionTracker";
 import { PickListData } from "../Utils/checkValue"
 import { result } from 'lodash';
 import { SUMMARY_FORM } from "../Utils/constants"
+import AssessmentActions from "./AssessmentActons"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -266,7 +267,6 @@ const Assessment = () => {
         apiData[key]["action"] = [];
       }
     }
-    console.log(apiData)
     setForm(apiData)
   };
 
@@ -471,15 +471,11 @@ const Assessment = () => {
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
-                              {form[index]["action"].length > 0
-                                &&
-                                form[index]["action"].map((value) => (
-                                  <Link display="block"
-                                    href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.trackerId}`}
-                                  >
-                                    {value.trackerNumber}
-                                  </Link>
-                                ))}
+                              <AssessmentActions
+                                form={form}
+                                companyId={projectData.companyId}
+                                projectId={projectData.projectId}
+                              />
                             </Grid>
                           </Grid>
 

@@ -87,7 +87,7 @@ const ProjectStructure = (props) => {
 
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
-  
+
 
     let labellist = projectData.projectName.breakdown.map((item, key) => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "", index: key } })
 
@@ -154,7 +154,7 @@ const ProjectStructure = (props) => {
                 labellist[key].breakdownValue = response.data.data.results;
                 // labellist[key].selectValue= select[key].id;
 
-               
+
                 setLabelList(labellist)
 
               })
@@ -177,7 +177,7 @@ const ProjectStructure = (props) => {
                 }${select[key - 1].id}`,
               headers: HEADER_AUTH,
             };
-         
+
             await Axios(config)
               .then(async (response) => {
                 labellist[key].breakdownValue = response.data.data.results;
@@ -188,14 +188,12 @@ const ProjectStructure = (props) => {
               .catch(function (error) {
               });
           } catch (err) {
-            
+
           }
         }
       }
     }
   };
-
-console.log(labelList)
   const handleBreakdown = async (e, index, label) => {
     let projectData = JSON.parse(localStorage.getItem('projectName'))
     const value = e.target.value;
@@ -303,7 +301,6 @@ console.log(labelList)
     }
 
   }, [props.initialValues.breakDown]);
-  // console.log(leafNode, breakdown1ListData, '--------------')
   return (<>
     {selectBreakdown && selectBreakdown.slice(0, lenghtBreaddown - 1).map((selectBreakdow, key) =>
       <Grid item xs={3} key={key}>
@@ -321,7 +318,7 @@ console.log(labelList)
       </Grid>)}
 
     {labelList.length === 1 ? labelList.map((item, index) => (
-      <Grid item xs={3}>{console.log({labelList1:labelList})}
+      <Grid item xs={3}>
         <FormControl
           key={index}
           variant="outlined"
@@ -365,10 +362,10 @@ console.log(labelList)
               </MenuItem>}
           </Select>
           {props.error && props.error[`projectStructure${[item.index]}`] && (
-                              <FormHelperText>
-                                {props.error[`projectStructure${[item.index]}`]}
-                              </FormHelperText>
-                            )}
+            <FormHelperText>
+              {props.error[`projectStructure${[item.index]}`]}
+            </FormHelperText>
+          )}
         </FormControl>
       </Grid>
     ))
@@ -418,10 +415,10 @@ console.log(labelList)
                   </MenuItem>}
               </Select>
               {props.error && props.error[`projectStructure${[item.index]}`] && (
-                              <FormHelperText>
-                                {props.error[`projectStructure${[item.index]}`]}
-                              </FormHelperText>
-                            )}
+                <FormHelperText>
+                  {props.error[`projectStructure${[item.index]}`]}
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
         )) :
@@ -470,10 +467,10 @@ console.log(labelList)
                   </MenuItem>}
               </Select>
               {props.error && props.error[`projectStructure${[item.index]}`] && (
-                              <FormHelperText>
-                                {props.error[`projectStructure${[item.index]}`]}
-                              </FormHelperText>
-                            )}
+                <FormHelperText>
+                  {props.error[`projectStructure${[item.index]}`]}
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
         ))
