@@ -170,7 +170,7 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonsNewChild: {
     borderRadius: '5px 5px 5px 5px',
-    backgroundColor: '#7692a4',
+    backgroundColor: '#517b8d',
     color: '#ffffff',
     minWidth: '100px',
     marginRight: '6px',
@@ -191,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonsNTwo: {
     borderRadius: '5px 5px 5px 5px',
-    backgroundColor: '#7692a4',
+    backgroundColor: '#517b8d',
     color: '#ffffff',
     marginRight: '6px',
     maxHeight: '40px',
