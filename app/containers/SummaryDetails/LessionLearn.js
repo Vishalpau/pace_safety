@@ -122,9 +122,9 @@ const LessionLearnSummary = () => {
 
   const handelLessionLearnt = (e, value) => {
     if (value == "modify") {
-      history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+      history.push(`/incident/${id}/lesson-learnt/modify/`)
     } else if (value == "add") {
-      history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+      history.push(`/incident/${id}/lesson-learnt/new/`)
     }
   }
 
