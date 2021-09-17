@@ -59,7 +59,7 @@ import { tabViewMode } from "../../../redux/actions/initialDetails";
 import CloseOut from "../../SummaryDetails/CloseOut";
 import { Comments } from "../../pageListAsync";
 import ActivityHistory from "../../../containers/Activity/Activity";
-import { ACCOUNT_API_URL } from "../../../utils/constants";
+import { ACCOUNT_API_URL,SELF_API } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -118,6 +118,7 @@ const Summary = (props) => {
 
   const [isComments, setIsComments] = useState(false);
   const [isActivityHistory, setActivityHistory] = useState(false)
+  const [permissionListData, setPermissionListData] = useState([])
 
   const [formStatus, setFormStatus] = useState({
     initialNotificationCheck: "",
@@ -607,7 +608,17 @@ const Summary = (props) => {
     setLessionlearn(false);
 
   }
+  const fetchPermissionData = async()=>{
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const res = await api.get(`${SELF_API}${fkCompanyId}/`)
+     
+    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item=>item.appId ===1)
 
+    const fetchPermissiondata = await api.get(`${ACCOUNT_API_URL}${roles[0].roles[0].aclUrl.substring(1)}`)
+    console.log({permission:fetchPermissiondata.data.data.results.permissions[0].incident})
+    setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident)
+
+  }
   useEffect(() => {
     fetchIncidentData();
     fetchInvestigationData();
@@ -617,6 +628,7 @@ const Summary = (props) => {
     fetchReportData();
     CheckFormStatus();
     handelRcaValue();
+    fetchPermissionData();
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -649,6 +661,7 @@ const Summary = (props) => {
                     )
                   }
                   className={classes.statusButton}
+                  disabled={!permissionListData.view_incidents}
                   onClick={(e) => {
                     handleInitialNotificationView()
                   }}
@@ -672,6 +685,7 @@ const Summary = (props) => {
                     investigationOverview ? <CheckCircle /> : <AccessTime />
                   }
                   className={classes.statusButton}
+                  disabled={!permissionListData.view_investigation}
                   onClick={(e) => handelInvestigationView()}
                 >
                   Investigation
@@ -689,6 +703,7 @@ const Summary = (props) => {
                   variant={evidencesData ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
+                  // disabled={!permissionListData.view_incidents}
                   endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => handelEvidenceView(e)}
                 >
@@ -717,6 +732,7 @@ const Summary = (props) => {
                     )
                   }
                   onClick={(e) => handelRootCauseAnalysisView()}
+                  // disabled={!permissionListData.view_incidents}
                 >
                   Root Cause & Analysis
                 </Button>
@@ -733,6 +749,7 @@ const Summary = (props) => {
                   variant={closeout ? "contained" : "outlined"}
                   size="large"
                   className={classes.statusButton}
+                  // disabled={!permissionListData.view_incidents}
                   endIcon={closeout ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => handleCloseOutOverView()
                   }
@@ -752,6 +769,7 @@ const Summary = (props) => {
                   className={classes.statusButton}
                   endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
                   onClick={(e) => handelLessionLearnedView()}
+                  // disabled={!permissionListData.view_incidents}
                 >
                   Lessons Learnt
                 </Button>
@@ -819,6 +837,7 @@ const Summary = (props) => {
               </Alert>
             </Snackbar>
             <ListItemLink button
+            disabled={!permissionListData.add_incidents}
             >
               <ListItemIcon>
                 <Edit />
@@ -841,6 +860,8 @@ const Summary = (props) => {
               </ListItemLink>
             ) : (
               <ListItemLink
+              button
+              disabled={!permissionListData.add_investigation}
                 onClick={(e) => handelInvestigationView()}>
                 <ListItemIcon>
                   <Add />
