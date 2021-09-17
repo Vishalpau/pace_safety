@@ -225,165 +225,165 @@ const ReportingAndNotification = () => {
 
   // handleSubmit incident details
   const handelNext = async (e) => {
-    
-      if (isNext) {
-        setIsnext(false);
 
-        // await handleInitialEvidance();
-        const { error, isValid } = InitialEvidenceValidate(evidanceForm);
-        setEvidenceError(error);
-        let evidanceChecked = isValid;
+    if (isNext) {
+      setIsnext(false);
 
-        if (evidanceChecked === true) {
-          for (var key in evidanceForm) {
-            if (evidanceForm[key].evidenceDocument !== null) {
-              if (typeof evidanceForm[key].evidenceDocument === "string") {
-                if (evidanceId.length > 0) {
-                  for (let i = 0; i < evidanceId.length; i++) {
-                    await api.delete(
-                      `api/v1/incidents/${localStorage.getItem(
-                        "fkincidentId"
-                      )}/evidences/${evidanceId[i]}/`
-                    );
-                  }
-                }
-                try {
-                  await api.put(
+      // await handleInitialEvidance();
+      const { error, isValid } = InitialEvidenceValidate(evidanceForm);
+      setEvidenceError(error);
+      let evidanceChecked = isValid;
+
+      if (evidanceChecked === true) {
+        for (var key in evidanceForm) {
+          if (evidanceForm[key].evidenceDocument !== null) {
+            if (typeof evidanceForm[key].evidenceDocument === "string") {
+              if (evidanceId.length > 0) {
+                for (let i = 0; i < evidanceId.length; i++) {
+                  await api.delete(
                     `api/v1/incidents/${localStorage.getItem(
                       "fkincidentId"
-                    )}/evidences/${evidanceForm[key].id}/`,
-                    {
-                      evidenceCategory: "Initial Evidence",
-                      evidenceCheck: "Yes",
-                      evidenceNumber: "string",
-                      evidenceRemark: evidanceForm[key].evidenceRemark,
-                      status: "Active",
-                      createdBy: parseInt(userId),
-                      fkIncidentId: localStorage.getItem("fkincidentId"),
-                      id: evidanceForm[key].id,
-                    }
+                    )}/evidences/${evidanceId[i]}/`
                   );
-                } catch (error) {
-                  setIsnext(true);
-                }
-              } else {
-                if (evidanceId.length > 0) {
-                  for (let i = 0; i < evidanceId.length; i++) {
-                    await api.delete(
-                      `api/v1/incidents/${localStorage.getItem(
-                        "fkincidentId"
-                      )}/evidences/${evidanceId[i]}/`
-                    );
-                  }
-                }
-                try {
-                  const formData = new FormData();
-                  formData.append(
-                    "evidenceDocument",
-                    evidanceForm[key].evidenceDocument
-                  );
-                  formData.append(
-                    "evidenceRemark",
-                    evidanceForm[key].evidenceRemark
-                  );
-                  formData.append("evidenceCheck", "Yes");
-                  formData.append("evidenceCategory", "Initial Evidence");
-                  formData.append("createdBy", parseInt(userId));
-                  formData.append("status", "Active");
-                  formData.append(
-                    "fkIncidentId",
-                    localStorage.getItem("fkincidentId")
-                  );
-                  const evidanceResponse = await api.post(
-                    `api/v1/incidents/${localStorage.getItem(
-                      "fkincidentId"
-                    )}/evidences/`,
-                    formData
-                  );
-                } catch (error) {
-                  setIsnext(true);
                 }
               }
+              try {
+                await api.put(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/evidences/${evidanceForm[key].id}/`,
+                  {
+                    evidenceCategory: "Initial Evidence",
+                    evidenceCheck: "Yes",
+                    evidenceNumber: "string",
+                    evidenceRemark: evidanceForm[key].evidenceRemark,
+                    status: "Active",
+                    createdBy: parseInt(userId),
+                    fkIncidentId: localStorage.getItem("fkincidentId"),
+                    id: evidanceForm[key].id,
+                  }
+                );
+              } catch (error) {
+                setIsnext(true);
+              }
+            } else {
+              if (evidanceId.length > 0) {
+                for (let i = 0; i < evidanceId.length; i++) {
+                  await api.delete(
+                    `api/v1/incidents/${localStorage.getItem(
+                      "fkincidentId"
+                    )}/evidences/${evidanceId[i]}/`
+                  );
+                }
+              }
+              try {
+                const formData = new FormData();
+                formData.append(
+                  "evidenceDocument",
+                  evidanceForm[key].evidenceDocument
+                );
+                formData.append(
+                  "evidenceRemark",
+                  evidanceForm[key].evidenceRemark
+                );
+                formData.append("evidenceCheck", "Yes");
+                formData.append("evidenceCategory", "Initial Evidence");
+                formData.append("createdBy", parseInt(userId));
+                formData.append("status", "Active");
+                formData.append(
+                  "fkIncidentId",
+                  localStorage.getItem("fkincidentId")
+                );
+                const evidanceResponse = await api.post(
+                  `api/v1/incidents/${localStorage.getItem(
+                    "fkincidentId"
+                  )}/evidences/`,
+                  formData
+                );
+              } catch (error) {
+                setIsnext(true);
+              }
             }
+          }
+        }
+      } else {
+        setIsnext(true);
+      }
+      // check initial evidance
+      if (evidanceChecked === true) {
+        let status = 0;
+
+        // Create new entries.
+        let stringNotifyList = notifyToList.toString();
+        const { error, isValid } = ReportingValidation(
+          form,
+          reportOtherData,
+          stringNotifyList
+        );
+        setError(error);
+
+        if (isValid === true && evidanceChecked === true) {
+          // handle remove existing report
+          await handleRemoveExitingReport();
+
+          // update incident details
+          await handleUpdateIncidentDetails();
+
+          var newData = [];
+          reportedToFilterData = [];
+          for (var key in reportedTo) {
+            reportedToFilterData.push(reportedTo[key].inputValue);
+          }
+          for (var i = 0; i < 8; i++) {
+            if (reportedToFilterData.includes(form.reportedto[i])) {
+              if (form.reportedto[i] !== undefined) {
+                newData.push(form.reportedto[i]);
+              }
+            }
+          }
+          let unique = [...new Set(newData)];
+          for (const key in unique) {
+            const name = unique[key];
+
+            try {
+              const res = await api.post(
+                `/api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/reports/`,
+                {
+                  reportTo: name,
+                  createdBy: parseInt(userId),
+                  notifyTo: stringNotifyList,
+                  fkIncidentId: localStorage.getItem("fkincidentId") || id,
+                }
+              );
+              status = res.status;
+            } catch (err) {
+              setIsnext(true);
+            }
+          }
+
+          // set in reportTo otherData
+          await setOtherDataReportTo(stringNotifyList);
+
+          if (status === 201) {
+            let viewMode = {
+              initialNotification: true,
+              investigation: false,
+              evidence: false,
+              rootcauseanalysis: false,
+              lessionlearn: false,
+            };
+            dispatch(tabViewMode(viewMode));
+
+            history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
           }
         } else {
           setIsnext(true);
         }
-        // check initial evidance
-        if (evidanceChecked === true) {
-          let status = 0;
-
-          // Create new entries.
-          let stringNotifyList = notifyToList.toString();
-          const { error, isValid } = ReportingValidation(
-            form,
-            reportOtherData,
-            stringNotifyList
-          );
-          setError(error);
-
-          if (isValid === true && evidanceChecked === true) {
-            // handle remove existing report
-            await handleRemoveExitingReport();
-
-            // update incident details
-            await handleUpdateIncidentDetails();
-
-            var newData = [];
-            reportedToFilterData = [];
-            for (var key in reportedTo) {
-              reportedToFilterData.push(reportedTo[key].inputValue);
-            }
-            for (var i = 0; i < 8; i++) {
-              if (reportedToFilterData.includes(form.reportedto[i])) {
-                if (form.reportedto[i] !== undefined) {
-                  newData.push(form.reportedto[i]);
-                }
-              }
-            }
-            let unique = [...new Set(newData)];
-            for (const key in unique) {
-              const name = unique[key];
-
-              try {
-                const res = await api.post(
-                  `/api/v1/incidents/${localStorage.getItem(
-                    "fkincidentId"
-                  )}/reports/`,
-                  {
-                    reportTo: name,
-                    createdBy: parseInt(userId),
-                    notifyTo: stringNotifyList,
-                    fkIncidentId: localStorage.getItem("fkincidentId") || id,
-                  }
-                );
-                status = res.status;
-              } catch (err) {
-                setIsnext(true);
-              }
-            }
-
-            // set in reportTo otherData
-            await setOtherDataReportTo(stringNotifyList);
-
-            if (status === 201) {
-              let viewMode = {
-                initialNotification: true,
-                investigation: false,
-                evidence: false,
-                rootcauseanalysis: false,
-                lessionlearn: false,
-              };
-              dispatch(tabViewMode(viewMode));
-
-              history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
-            }
-          } else {
-            setIsnext(true);
-          }
-        }
       }
-    
+    }
+
   };
 
   // handle notify to
@@ -576,6 +576,7 @@ const ReportingAndNotification = () => {
 
     if (res.status === 200) {
       const result = res.data.data.results;
+      localStorage.setItem("commonObject", JSON.stringify({ incident: { projectStruct: result.fkProjectStructureIds } }))
       const incidentOccuredOn = result.incidentOccuredOn;
       const start_time = new Date(incidentOccuredOn);
       const incidentReportedOn = result.incidentReportedOn;
@@ -617,7 +618,7 @@ const ReportingAndNotification = () => {
           setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const fetchReportedBy = () => {
@@ -682,7 +683,7 @@ const ReportingAndNotification = () => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // handle go back
@@ -861,7 +862,7 @@ const ReportingAndNotification = () => {
                           }
                           helperText={
                             evidenceError &&
-                            evidenceError[`evidenceRemark${[index]}`]
+                              evidenceError[`evidenceRemark${[index]}`]
                               ? evidenceError[`evidenceRemark${[index]}`]
                               : null
                           }
@@ -924,11 +925,11 @@ const ReportingAndNotification = () => {
                       incidentsListData.supervisorByName === ""
                         ? ""
                         : superVisorNameList.filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
-                        ? incidentsListData.supervisorByName
-                        : "other"
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
+                          ? incidentsListData.supervisorByName
+                          : "other"
                     }
                     onChange={async (e) => {
                       await setSupervisorName(e.target.value);
@@ -950,11 +951,11 @@ const ReportingAndNotification = () => {
                   defaultValue={
                     superVisorNameList.length > 0
                       ? superVisorNameList
-                          .slice(0, -1)
-                          .filter(
-                            (item) =>
-                              item.name === incidentsListData.supervisorByName
-                          ).length > 0
+                        .slice(0, -1)
+                        .filter(
+                          (item) =>
+                            item.name === incidentsListData.supervisorByName
+                        ).length > 0
                         ? ""
                         : incidentsListData.supervisorByName
                       : ""
@@ -963,11 +964,11 @@ const ReportingAndNotification = () => {
                     supervisorName === ""
                       ? true
                       : superVisorNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === supervisorName)
-                          .length > 0
-                      ? true
-                      : false
+                        .slice(0, -1)
+                        .filter((item) => item.name === supervisorName)
+                        .length > 0
+                        ? true
+                        : false
                   }
                   className={classes.formControl}
                   onChange={(e) => {
@@ -1025,9 +1026,9 @@ const ReportingAndNotification = () => {
                   disabled={
                     reportedByNameList.length > 0
                       ? reportedByNameList
-                          .slice(0, -1)
-                          .filter((item) => item.name === reportedByName)
-                          .length > 0
+                        .slice(0, -1)
+                        .filter((item) => item.name === reportedByName)
+                        .length > 0
                       : true
                   }
                   onChange={(e) => {

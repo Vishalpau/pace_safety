@@ -111,7 +111,7 @@ const BasicCauseAndAction = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {

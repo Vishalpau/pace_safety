@@ -1099,14 +1099,12 @@ const InvestigationSummary = () => {
                     </Grid>
 
                     <Grid item xs={12} md={6}>
-                      <Typography title={handelFileName(value.attachments)}>
-                        {value.attachments != "" &&
-                          typeof value.attachments == "string" ? (
-                          <Attachment value={value.attachments} />
-                        ) :
-                          "-"
-                        }
-                      </Typography>
+                      {value.attachments != "" &&
+                        typeof value.attachments == "string" ? (
+                        <Attachment value={value.attachments} />
+                      ) :
+                        "-"
+                      }
                     </Grid>
                     <Grid item md={12}>
                       <Divider />

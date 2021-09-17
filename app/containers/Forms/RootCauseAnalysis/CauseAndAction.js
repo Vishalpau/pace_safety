@@ -108,8 +108,7 @@ const BasicCauseAndAction = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${
-          apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
@@ -248,13 +247,10 @@ const BasicCauseAndAction = () => {
                               <Link
                                 className={classes.actionLink}
                                 display="block"
-                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${
-                                  projectData.companyId
-                                }&projectId=${
-                                  projectData.projectId
-                                }&targetPage=/app/pages/Action-Summary/&targetId=${
-                                  actionId.id
-                                }`}
+                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId
+                                  }&projectId=${projectData.projectId
+                                  }&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id
+                                  }`}
                               >
                                 {actionId.number}
                               </Link>

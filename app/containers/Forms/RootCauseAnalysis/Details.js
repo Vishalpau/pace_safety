@@ -27,7 +27,7 @@ import { RCAOPTION } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import { FormHelperText } from "@material-ui/core";
 import { PassThrough } from "stream";
-import { checkValue } from "../../../utils/CheckerValue";
+import { checkValue, handelCommonObject } from "../../../utils/CheckerValue";
 import { from } from "form-data";
 
 const useStyles = makeStyles((theme) => ({
@@ -135,7 +135,9 @@ const Details = () => {
     const allIncidents = await api.get(
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
-    await setIncidents(allIncidents.data.data.results);
+    let result = allIncidents.data.data.results
+    // handelCommonObject("commonObject", "incident", "projectStruct", result.fkProjectStructureIds)
+    await setIncidents(result);
   };
 
   const handleDateChange = (date) => {
@@ -244,7 +246,7 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {console.log(form.rcaRecommended)}
+      {/* {console.log(form.rcaRecommended)} */}
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>
