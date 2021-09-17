@@ -207,7 +207,7 @@ const IncidentDetailsSummary = () => {
   };
   const handelModifyInitialNotification = (e) => {
     history.push(
-      `/app/incident-management/registration/initial-notification/incident-details/${id}`
+      `/incident/${id}/modify/`
     );
   };
 
