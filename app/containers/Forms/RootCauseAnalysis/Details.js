@@ -136,7 +136,7 @@ const Details = () => {
       `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     let result = allIncidents.data.data.results
-    // handelCommonObject("commonObject", "incident", "projectStruct", result.fkProjectStructureIds)
+    handelCommonObject("commonObject", "incident", "projectStruct", result.fkProjectStructureIds)
     await setIncidents(result);
   };
 
