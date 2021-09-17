@@ -73,9 +73,9 @@ const CloseOutSummary = () => {
 
     const handelCloseOut = (e, value) => {
         if (value == "modify") {
-            history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+            history.push(`/incident/${id}/close-out/:modify/`)
         } else if (value == "add") {
-            history.push(`/app/incident-management/registration/lession-learned/lession-learned/${id}`)
+            history.push(`/incident/${id}/close-out/:new/`)
         }
     }
     const fetchUserList = async () => {

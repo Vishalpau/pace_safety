@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuData from './MenuData';
+// import MenuData from './MenuData';
 import ObservationsBookmarkPackage from './ObservationsBookmarkPackage';
 import Button from '@material-ui/core/Button';
 import "../../../styles/custom/customheader.css";
@@ -249,7 +249,7 @@ class PersistentDrawer extends React.Component {
         </div>
         <Divider />
         {/* <List className={classes.drawerList}>{MenuData}</List> */}
-        <MenuData />
+        {/* <MenuData /> */}
       </Drawer>
     );
 
