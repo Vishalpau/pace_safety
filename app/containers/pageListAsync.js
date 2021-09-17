@@ -598,7 +598,7 @@ export const CloseOut = loadable(() =>
 
 // Observations 
 
-export const Observations = loadable(() => import("./Pages/Observations/Observations"), {
+export const Observations = loadable(() => import("./Pages/Observations/Observations_main"), {
   fallback: <Loading />,
 });
 

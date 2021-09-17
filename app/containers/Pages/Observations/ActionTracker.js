@@ -41,6 +41,8 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import "../../../styles/custom/customheader.css";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -78,6 +80,7 @@ export default function ActionTracker(props) {
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
+  console.log(userId);
   const project =
   JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -91,11 +94,12 @@ export default function ActionTracker(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
+  console.log(props.fkProjectStructureIds,"ooooooo")
 
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
-    fkProjectStructureIds: fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+    fkProjectStructureIds: props.fkProjectStructureIds,
     parentId: 0,
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
@@ -124,7 +128,7 @@ export default function ActionTracker(props) {
     actionStatus: "string",
     actionStage: "string",
     status: "Active",
-    createdBy: 0,
+    createdBy: parseInt(userId),
     reviewedBy: 0,
     reviewDate: "2021-07-21T17:05:39.605Z",
     closedBy: 0,
@@ -156,7 +160,7 @@ export default function ActionTracker(props) {
     if (!isValid) {
       return "Data is not valid";
     }
-    
+    console.log(form,"66666")
       let res = await api.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber

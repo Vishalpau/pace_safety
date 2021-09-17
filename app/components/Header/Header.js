@@ -52,6 +52,7 @@ import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 import CardActions from "@material-ui/core/CardActions";
 import Divider from "@material-ui/core/Divider";
 import EditIcon from "@material-ui/icons/Edit";
+import PACE_white from 'dan-images/PACE_white.png';
 
 import Headerbox from "./headerbox";
 
@@ -134,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiListItemText-secondary": {
       fontSize: "12px",
-      fontFamily: "Montserrat-Regular",
+      fontFamily: "Montserrat-Medium",
       color: "#054D69",
     },
   },
@@ -524,6 +525,7 @@ function Header(props) {
         >
           <MenuIcon />
         </Fab>
+        <img src={PACE_white} className={classes.mLeft30} />
 
         <div className={classes.headerProperties}>
           <div className={classes.projectSwitcher}>

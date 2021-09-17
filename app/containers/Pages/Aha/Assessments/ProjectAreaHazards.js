@@ -128,6 +128,7 @@ const ProjectAreaHazards = () => {
   
   const [isLoading , setIsLoading] = useState(false);
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [fetchOption, setFetchedOptions] = useState([])
  
 
   const [state, setState] = React.useState({
@@ -190,12 +191,14 @@ const ProjectAreaHazards = () => {
     if(e.target.checked == false){
       temp.map((ahaValue,index) => {
         if(ahaValue['hazard'] === value){
-          // if(temp[index].id){
-          //   const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
+          temp.splice(index, 1);
+          fetchOption.splice(index, 1);
+          if(temp[index].id){
+            const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
 
-          // }
+          }
 
-         temp.splice(index, 1);
+         
          
 
         }
@@ -221,7 +224,7 @@ const ProjectAreaHazards = () => {
     
   };
 
-  
+console.log(form)
  
   const handleOtherHazards = async (e , key) => {
     const temp = [...otherHazards];
@@ -372,6 +375,7 @@ bytes
         setForm(tempForm)
       
     // setForm(apiData)
+    setFetchedOptions(apiData)	
     if (otherNoId.length > 0) {
       setOtherHazards(otherNoId)
     }
