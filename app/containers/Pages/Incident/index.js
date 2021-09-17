@@ -57,7 +57,7 @@ import { connect } from "react-redux";
 import {tabViewMode} from '../../../redux/actions/initialDetails';
 import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
-import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
 
 // Styles
@@ -166,6 +166,7 @@ function BlankPage(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [showIncident, setShowIncident] = useState([]);
   const [pageCount, setPageCount] = useState(0);
+  const [permissionListData, setPermissionListData] = useState([])
   
 
   const history = useHistory();
@@ -226,9 +227,12 @@ const fkProjectStructureIds = struct.slice(0, -1);
   }
   useEffect(() => {
     fetchData();
-    
+    fetchPermissionData();
   }, [props.projectName]);
 
+  useEffect(()=>{
+    // fetchPermission();
+  },[])
   const handelSearchIncident = async (e) => {
     let allSeacrh = [];
     if (e.target.value.length === 0) {
@@ -313,6 +317,17 @@ const fkProjectStructureIds = struct.slice(0, -1);
     paging: false
   
   };
+  const fetchPermissionData = async()=>{
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const res = await api.get(`${SELF_API}${fkCompanyId}/`)
+     
+    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item=>item.appId ===1)
+
+    const fetchPermissiondata = await api.get(`${SSO_URL}${roles[0].roles[0].aclUrl.substring(0)}`)
+    
+    setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident)
+
+  }
   const handleChange = async(event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -397,6 +412,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         size="small"
                         startIcon={<AddCircleIcon />}
                         className={classes.newIncidentButton}
+                        disabled={!permissionListData.add_incidents}
                         disableElevation
                       >
                         New Incident

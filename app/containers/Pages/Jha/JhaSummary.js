@@ -256,7 +256,7 @@ function JhaSummary() {
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A00`);
+    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
     let allAction = allActionTrackerData.data.data.results.results
     setApprovalactionData(allAction !== null ? allAction : [])
   };
@@ -369,7 +369,7 @@ function JhaSummary() {
                   Assessments
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.assessmentStatus ? "Done" : "Pending"}
+                  {formStatus.assessmentStatus ? "Done" : ""}
                 </Typography>
               </div>
 
@@ -388,7 +388,7 @@ function JhaSummary() {
                   Approvals
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.approvalStatus ? "Done" : "Pending"}
+                  {formStatus.approvalStatus ? "Done" : ""}
                 </Typography>
               </div>
 
@@ -407,7 +407,7 @@ function JhaSummary() {
                   Close out
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.closeOutStatus ? "Done" : "Pending"}
+                  {formStatus.closeOutStatus ? "Done" : ""}
                 </Typography>
               </div>
 
@@ -426,7 +426,7 @@ function JhaSummary() {
                   Lessons Learned
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.lessionLeranedStatus ? "Done" : "Pending"}
+                  {formStatus.lessionLeranedStatus ? "Done" : ""}
                 </Typography>
               </div>
 

@@ -242,7 +242,8 @@ function Observations(props) {
     search: false,
     filter: false,
     viewColumns: false,
-    download :false
+    download :false,
+    pagination: false,
   };
 
   const handlePrintPush = async (index) => {
@@ -305,7 +306,7 @@ function Observations(props) {
   }, [props.projectName]);
 
   return (
-    <PapperBlock title="Observations" icon="ion-md-list-box" desc="">
+    <PapperBlock title="Observations" icon="ion-md-list-box" desc="" variant="h5">
       {isLoading ? (
         <Box>
           <div className={classes.root}>
@@ -597,9 +598,7 @@ function Observations(props) {
 
                 ))} */}
               </div>
-              <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
+             
 
               {/* ))} */}
             </>
@@ -634,8 +633,12 @@ function Observations(props) {
               />
             </div>
           )}
+          <div className={classes.pagination}>
+      <Pagination count={pageCount} onChange={handleChange}/>
+    </div>
          
         </Box>
+        
         
       ) : (
         <h1>Loading...</h1>

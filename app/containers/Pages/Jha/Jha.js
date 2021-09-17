@@ -148,49 +148,50 @@ function Jha(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   const [pageCount, setPageCount] = useState(0);
 
   const fetchData = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
     await setAllJHAData(result)
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
     await setPageCount(pageCount)
     handelTableView(result)
 
     await setIsLoading(true)
 
-    
+
   }
 
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(`api/v1/jhas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/jhas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await handelTableView(res.data.data.results.results)
 
@@ -201,12 +202,16 @@ function Jha(props) {
     setCardView(true)
     history.push(`/app/pages/jha/all_jha/`)
   };
+
   const handleTabelView = () => {
     setCardView(false)
     history.push(`/app/pages/jha/all_jha/_table`)
   };
+
   //   Data for the table view
+
   const columns = ['Jha number', 'Location', 'Work area', 'Created by', 'Created on'];
+
   const handelTableView = (result) => {
     const temp = []
     result.map((value) => {
@@ -224,9 +229,13 @@ function Jha(props) {
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
-    print: true,
+    print: false,
     rowsPerPage: 100,
     page: 100,
+    search: true,
+    filter: false,
+    viewColumns: false,
+    download: false
   };
 
   const handleSummaryPush = async (e, index) => {
@@ -236,6 +245,7 @@ function Jha(props) {
   };
 
   const handleNewJhaPush = async () => {
+    localStorage.removeItem("fkJHAId")
     history.push("/app/pages/jha/assessments/project-details");
   };
 
@@ -500,9 +510,9 @@ function Jha(props) {
           />
         )}
 
-        <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
+      <div className={classes.pagination}>
+        <Pagination count={pageCount} onChange={handleChange} />
+      </div>
     </PapperBlock>
   );
 }

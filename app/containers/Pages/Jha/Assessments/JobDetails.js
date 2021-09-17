@@ -167,7 +167,6 @@ const JobDetails = (props) => {
       "jhaAssessmentDate": null,
       "permitToPerform": "",
       "permitNumber": "",
-      "jhaNumber": "",
       "jobTitle": "",
       "description": "",
       "department": "",
@@ -192,6 +191,7 @@ const JobDetails = (props) => {
   const history = useHistory();
   const [error, setError] = useState({})
   const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [submitLoader, setSubmitLoader] = useState(false)
 
   // getting breakdown values form header
@@ -201,10 +201,11 @@ const JobDetails = (props) => {
 
   const [isNext, setIsNext] = useState([])
 
-  const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const radioDecide = ["Yes", "No"]
+  const [checkUpdate, setUpdate] = useState(false)
   const [workArea, setWorkArea] = useState("")
   const [departmentName, setDepartmentName] = useState([])
   // fecth jha data
@@ -213,6 +214,7 @@ const JobDetails = (props) => {
     if (jhaId !== null) {
       const res = await api.get(`/api/v1/jhas/${jhaId}/`)
       const result = res.data.data.results;
+      result.id !== undefined ? setUpdate(true) : checkUpdate(false)
       await setForm(result)
       await fetchBreakDownData(result.fkProjectStructureIds)
     }
@@ -228,10 +230,55 @@ const JobDetails = (props) => {
     }
   }
 
+  const handleBreakdown = async (e, index, label, selectvalue) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+
+    const value = e.target.value;
+
+    const temp = [...fetchSelectBreakDownList]
+    temp[index]["selectValue"].id = value
+    // let removeTemp = temp.slice(0, index)
+    for (var i in temp) {
+      if (i > index) {
+        temp[i].breakDownData = []
+        temp[i].selectValue.id = ""
+      }
+
+    }
+    let tempDepthAndId = selectDepthAndId;
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
+    let sliceData = dataDepthAndId.slice(0, index)
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
+    setSelectDepthAndId(newdataDepthAndId)
+    // await setFetchSelectBreakDownList(removeTemp)
+    if (projectData.projectName.breakdown.length !== index + 1) {
+      for (var key in projectData.projectName.breakdown) {
+        if (key == index + 1) {
+
+
+          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${value}`)
+            .then(function (response) {
+              if (response.status === 200) {
+
+                temp[key].breakDownData = response.data.data.results
+                setBreakdown1ListData(temp)
+              }
+            })
+            .catch(function (error) {
+
+            });
+        }
+      }
+    }
+  };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let breakdownLength = projectData.projectName.breakdown.length
+    setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -240,19 +287,25 @@ const JobDetails = (props) => {
             }`,
           headers: HEADER_AUTH,
         };
+
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
             await setIsLoading(true);
+            console.log(result)
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+                console.log("here")
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
-                setFetchSelectBreakDownList(selectBreakDown)
               }
             });
+            setFetchSelectBreakDownList(selectBreakDown)
           })
           .catch((error) => {
             setIsNext(true);
@@ -264,6 +317,7 @@ const JobDetails = (props) => {
             }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
+
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
@@ -271,20 +325,23 @@ const JobDetails = (props) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
-                setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            setFetchSelectBreakDownList(selectBreakDown)
           })
           .catch((error) => {
-            console.log(error)
             setIsNext(true);
           });
       }
     }
   };
-
   const areaName = [
     'P1 - WA1',
     'P1 - WA2',
@@ -328,13 +385,12 @@ const JobDetails = (props) => {
   }
 
   const handleSubmit = async (e) => {
-    setSubmitLoader(true)
     const { error, isValid } = JobDetailsValidate(form);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
     }
-
+    setSubmitLoader(true)
     handelProjectData()
     delete form["jhaAssessmentAttachment"]
     if (form.id != null && form.id != undefined) {
@@ -354,6 +410,7 @@ const JobDetails = (props) => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
       }
     } else {
+      console.log(form)
       const res = await api.post("/api/v1/jhas/", form)
       if (res.status === 201) {
         let fkJHAId = res.data.data.results.id
@@ -450,22 +507,23 @@ const JobDetails = (props) => {
         <Col md={9}>
           <Grid container spacing={3}>
             {/* {console.log(form)} */}
-            <Grid item md={12}>
+            <Grid item xs={3} md={3}>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Project
               </Typography>
-              <Typography className={classes.labelValue}>
+              <Typography style={{ fontSize: "15px" }}>
                 {project.projectName}
               </Typography>
             </Grid>
 
-            {id ?
+            {checkUpdate ?
               fetchSelectBreakDownList.map((data, key) =>
                 <Grid item xs={3} md={3} key={key}>
                   <FormControl
-                    error={error.incidentType}
+                    error={error && error[`projectStructure${[key]}`]}
                     variant="outlined"
                     required
+                    fullWidth
                     className={classes.formControl}
                   >
                     <InputLabel id="demo-simple-select-label">
@@ -474,34 +532,37 @@ const JobDetails = (props) => {
                     <Select
                       labelId="incident-type-label"
                       id="incident-type"
-                      label="Incident type"
+                      label={data.breakDownLabel}
                       value={data.selectValue.id || ""}
+                      disabled={data.breakDownData.length === 0}
+                      fullWidth
                       onChange={(e) => {
-                        handleBreakdown(e, key + 1, data.breakDownLabel, data.selectValue);
+                        handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
                       }}
                     >
                       {data.breakDownData.length !== 0
                         ? data.breakDownData.map((selectvalues, index) => (
                           <MenuItem key={index}
-                            onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
                             value={selectvalues.id}>
                             {selectvalues.structureName}
                           </MenuItem>
                         ))
                         : null}
                     </Select>
-                    {error && error.incidentType && (
-                      <FormHelperText>{error.incidentType}</FormHelperText>
+                    {error && error[`projectStructure${[key]}`] && (
+                      <FormHelperText>
+                        {error[`projectStructure${[key]}`]}
+                      </FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
+
               ) : <ProjectStructureInit
                 selectDepthAndId={selectDepthAndId}
                 setLevelLenght={setLevelLenght}
                 error={error}
-                setSelectDepthAndId={setSelectDepthAndId}
                 setWorkArea={setWorkArea}
-              />
+                setSelectDepthAndId={setSelectDepthAndId} />
             }
 
             {/* job title */}

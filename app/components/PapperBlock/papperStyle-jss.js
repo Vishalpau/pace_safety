@@ -26,6 +26,7 @@ const styles = (theme) => ({
     // textTransform: "capitalize",
     fontSize: 24,
     fontWeight: 400,
+    fontFamily: 'Xolonium-Regular !important',
     // color: '#06425c',
     color:
       theme.palette.type === "dark"

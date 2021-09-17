@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiListItemText-secondary": {
       fontSize: "12px",
-      fontFamily: "Montserrat-Regular",
+      fontFamily: "Montserrat-Medium",
       color: "#054D69",
     },
   },
@@ -243,16 +243,25 @@ function PersonalDashboard(props) {
 
       await setSubscriptions(data)
 
-
+      
       const apps = data.map(app => app.appId)
+      console.log(data)
+      let app = data.filter(app=> app.appId === 1)
+      console.log(app)
+      let module = app[0].modules.map(item=>{
+        if(item.subscriptionStatus =="inactive"){
+          console.log(item.moduleCode)
+          return item.moduleCode
+        }
+      }
+        )
+    
+      setCode(module)
       getModules(apps)
     } catch (error) { }
-
-
   }
 
   const getModules = async (apps) => {
-
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
       .then(function (res) {
@@ -262,10 +271,11 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-      console.log(data)
-    const codes = data.map(module => module.moduleCode)
-    console.log(codes)
-    setCode(codes)
+    let data1 = apps.filter(item=>item.appId===1)
+    console.log(data1)
+    const codes = data.map(module => module.subscriptionStatus)
+    console.log(apps)
+    // setCode(codes)
 
 
 
@@ -458,13 +468,9 @@ function PersonalDashboard(props) {
             </div>
           </div> 
 
+          {/* Action Tracker
 
-{/* Action Tracker
-
-Permit Management */}
-
-
-
+          Permit Management */}
 
           <div className="ibws-fix hexagon_row2">
             <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
