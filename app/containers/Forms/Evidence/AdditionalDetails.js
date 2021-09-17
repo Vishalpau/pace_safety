@@ -340,4 +340,5 @@ const AdditionalDetails = () => {
   );
 };
 
+
 export default AdditionalDetails;
