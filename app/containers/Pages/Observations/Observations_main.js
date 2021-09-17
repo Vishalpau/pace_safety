@@ -222,6 +222,8 @@ export default function Observations() {
 
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
+      localStorage.removeItem("value")
+
     history.push("/app/observation-initial-notification");
   };
 
