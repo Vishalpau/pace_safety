@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiListItemText-secondary": {
       fontSize: "12px",
-      fontFamily: "Montserrat-Regular",
+      fontFamily: "Montserrat-Medium",
       color: "#054D69",
     },
   },
