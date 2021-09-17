@@ -70,33 +70,33 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     width: drawerWidth,
-	marginLeft: '5px',
-	backgroundColor: '#06425c',
-	color: '#ffffff',
-	borderRadius: '10px',
-  height:' auto',
-  minHeight: '392px',
-	
-	'& .MuiIconButton-root': {
+    marginLeft: '5px',
+    backgroundColor: '#06425c',
     color: '#ffffff',
-	},
-	
-	'& .MuiListItem-gutters': {
-    borderBottom: '1px solid #688ca0',
-	},
-  '& .MuiListItem-button:hover': {
-    borderBottom: '1px solid #688ca0',
-    backgroundColor: '#f47607',
-	},
+    borderRadius: '10px',
+    height: ' auto',
+    minHeight: '392px',
+
+    '& .MuiIconButton-root': {
+      color: '#ffffff',
+    },
+
+    '& .MuiListItem-gutters': {
+      borderBottom: '1px solid #688ca0',
+    },
+    '& .MuiListItem-button:hover': {
+      borderBottom: '1px solid #688ca0',
+      backgroundColor: '#f47607',
+    },
   },
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
     padding: '0 8px',
-	  borderBottom: '1px solid #608296',
+    borderBottom: '1px solid #608296',
     ...theme.mixins.toolbar,
-    '& .MuiList-padding': {paddingTop: '0px!important'},
-    '& .floatR': {float: 'right'},
+    '& .MuiList-padding': { paddingTop: '0px!important' },
+    '& .floatR': { float: 'right' },
   },
   content: {
     flexGrow: 1,
@@ -139,7 +139,7 @@ const styles = theme => ({
   },
   floatL: {
     textAlign: 'left !important',
-	paddingLeft: '10px',
+    paddingLeft: '10px',
     width: '100%',
   },
   catButton: {
@@ -150,58 +150,58 @@ const styles = theme => ({
     fontSize: '17px',
     fontFamily: 'Xolonium !important',
   },
-  
-pLtenPRten: {padding: '0px 10px 0px 10px',},
-buttonsNewDays: {
-  padding: '6px 5px 5px 6px',
-  minWidth: '38px',
-  backgroundColor: '#ffffff',
-  color: '#23343e',
-  borderRadius: '5px',
-  margin: '0px 10px', 
-},
-activeFont: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-  minWidth: '38px',
-  padding: '4px 5px 5px 4px',
-  margin: '0px 10px',
-},
-textLeftone: {
-  textAlign: 'left',
-  verticalAlign: 'middle',
-  padding: '16px!important',
-  minWidth: '19% !important',
-},
-listingLabelName: {
-  color: '#7692a4',
-  fontSize: '0.88rem',
-  fontFamily: 'Montserrat-Medium',
-  fontFamily: 'Montserrat-Medium',
-  '& .MuiButton-containedPrimary:hover': {
+
+  pLtenPRten: { padding: '0px 10px 0px 10px', },
+  buttonsNewDays: {
+    padding: '6px 5px 5px 6px',
+    minWidth: '38px',
+    backgroundColor: '#ffffff',
+    color: '#23343e',
+    borderRadius: '5px',
+    margin: '0px 10px',
+  },
+  activeFont: {
     backgroundColor: '#f47607',
     borderRadius: '5px',
-    color: '#fff',
-},
-},
-textRight: {
-  textAlign: 'right',
-  marginRight: '20px',
-},
-drawerList : {
-  borderBottom: '1px solid #608296',
-	backgroundColor: '#608296',
-  padding: '0px',
-},
-floatR: {float: 'right',}
+    color: '#ffffff',
+    minWidth: '38px',
+    padding: '4px 5px 5px 4px',
+    margin: '0px 10px',
+  },
+  textLeftone: {
+    textAlign: 'left',
+    verticalAlign: 'middle',
+    padding: '16px!important',
+    minWidth: '19% !important',
+  },
+  listingLabelName: {
+    color: '#7692a4',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Medium',
+    '& .MuiButton-containedPrimary:hover': {
+      backgroundColor: '#f47607',
+      borderRadius: '5px',
+      color: '#fff',
+    },
+  },
+  textRight: {
+    textAlign: 'right',
+    marginRight: '20px',
+  },
+  drawerList: {
+    borderBottom: '1px solid #608296',
+    backgroundColor: '#608296',
+    padding: '0px',
+  },
+  floatR: { float: 'right', }
 });
 
 class PersistentDrawer extends React.Component {
   state = {
     open: false,
     anchor: 'right',
-    button:true
+    button: true
   };
 
   handleDrawerOpen = () => {
@@ -217,8 +217,8 @@ class PersistentDrawer extends React.Component {
       anchor: event.target.value,
     });
   };
-  handleClickButton=()=>{
-    this.setState({button:!this.state.button})
+  handleClickButton = () => {
+    this.setState({ button: !this.state.button })
   }
 
   render() {
@@ -239,13 +239,13 @@ class PersistentDrawer extends React.Component {
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronRightIcon />}
           </IconButton>
           <Typography
-          variant="h6"
-          classNames={classes.floatL}
+            variant="h6"
+            classNames={classes.floatL}
           >
-          Categories
+            Categories
           </Typography>
-		
-          
+
+
         </div>
         <Divider />
         {/* <List className={classes.drawerList}>{MenuData}</List> */}
@@ -269,7 +269,7 @@ class PersistentDrawer extends React.Component {
     let beforeBtn = null;
     let afterBtn = null;
 
-   
+
 
     if (anchor === 'left') {
       before = drawer;
@@ -281,7 +281,7 @@ class PersistentDrawer extends React.Component {
 
     return (
       <div className={classes.root}>
-        
+
         <div className={classes.appFrame}>
           <AppBar
             className={classNames(classes.appBar, classes.MuiAppBarColor, {
@@ -297,24 +297,24 @@ class PersistentDrawer extends React.Component {
 
               <Typography className={classes.textRight} variant="h6" color="inherit" noWrap>
 
-              
+
 
 
               </Typography>
-              
-              
+
+
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.catButton}
-                onClick={()=>{this.handleClickButton()}}
+                onClick={() => { this.handleClickButton() }}
               >
-                {!this.state.open&&<Typography variant="h6">Categories</Typography>}{afterBtn}
-              
+                {!this.state.open && <Typography variant="h6">Categories</Typography>}{afterBtn}
+
               </Button>
-              
-              
-             
+
+
+
             </Toolbar>
           </AppBar>
           {before}

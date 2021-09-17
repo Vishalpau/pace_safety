@@ -1484,14 +1484,12 @@ const WorkerDetails = () => {
                 </Grid>
 
                 <Grid item md={12}>
-                  <Typography title={handelFileName(form.attachments)}>
-                    {form.attachments != "" &&
-                      typeof form.attachments == "string" ? (
-                      <Attachment value={form.attachments} />
-                    ) : (
-                      <p />
-                    )}
-                  </Typography>
+                  {form.attachments != "" &&
+                    typeof form.attachments == "string" ? (
+                    <Attachment value={form.attachments} />
+                  ) : (
+                    <p />
+                  )}
                 </Grid>
 
                 {localWorkerData.length > 1 ? (

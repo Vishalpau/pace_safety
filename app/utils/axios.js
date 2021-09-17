@@ -5,5 +5,5 @@ const api = axios.create({
   baseURL: apiUrl,
   headers: HEADER_AUTH
 });
-api.defaults.timeout = 4000;
+api.defaults.timeout = 3000;
 export default api
