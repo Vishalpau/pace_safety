@@ -163,7 +163,24 @@ function ObservationCorrectiveAction() {
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).id
   : null;
-
+  const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).companies
+  : null;
+  let client = []
+  let client_id = []
+  companies.map((value, i)=>{
+    
+    if(value.companyId === form.fkCompanyId)
+    {
+      client.push(companies[i])
+      client[0].subscriptions.map((value,i) => {
+        if(value.appCode == "actions"){
+          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
+        }
+      })
+    }
+  })
+  
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -194,6 +211,8 @@ function ObservationCorrectiveAction() {
     "Reviewedby 3",
     "Reviewedby 4",
   ]
+
+  const [fkProjectStructureIds , setFkProjectStructureId]  = useState()
 
   const handleSubmit = async () => {
     const { error, isValid } = CorrectiveActionValidator(form);
@@ -277,6 +296,7 @@ function ObservationCorrectiveAction() {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
     
     const result = res.data.data.results;
+    await setFkProjectStructureId(result.fkProjectStructureIds)
     if(result.isCorrectiveActionTaken == null){
       result.isCorrectiveActionTaken = "Yes"
     }
@@ -396,7 +416,6 @@ temp.reviewedById = value.id
       });
   };
 
-
   useEffect(() => {
     if(id){
       fetchInitialiObservationData()
@@ -502,7 +521,7 @@ temp.reviewedById = value.id
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=${client_id[0]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
                 // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
@@ -535,6 +554,7 @@ temp.reviewedById = value.id
           <ActionTracker
                                 actionContext="Obsevations"
                                 enitityReferenceId={id}
+                                fkProjectStructureIds={fkProjectStructureIds}
                                 setUpdatePage={setUpdatePage}
                                 updatePage={updatePage}
                               >add</ActionTracker>

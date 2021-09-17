@@ -130,7 +130,7 @@ const useStyles = makeStyles(theme => ({
             fontSize: '30px',
             paddingLeft: '22px',
             color: '#16384F',
-            fontFamily: 'Montserrat-SemiBold',
+            fontFamily: 'Montserrat-Medium',
             [theme.breakpoints.down("sm")]: {
                 fontSize: '22px',
                 paddingLeft: '12px',
@@ -175,7 +175,7 @@ const useStyles = makeStyles(theme => ({
         '& span': {
             fontSize: '14px',
             color: '#333333',
-            fontFamily: 'Montserrat-Regular',
+            fontFamily: 'Montserrat-Medium',
         }
     },
     appDrawerLink: {
@@ -202,7 +202,7 @@ const useStyles = makeStyles(theme => ({
             margin: '0px 0px 12px 0px',
         },
         '& h6': {
-            fontFamily: 'Montserrat-Regular',
+            fontFamily: 'Montserrat-Medium',
             lineHeight: '22px',
         }
     },
@@ -219,7 +219,7 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: '#f2f2f2',
             borderBottom: '1px solid #fdfdfd',
             fontSize: '14px',
-            fontFamily: 'Montserrat-Regular',
+            fontFamily: 'Montserrat-Medium',
             paddingLeft: '25px',
             paddingRight: '25px',
         },
@@ -267,7 +267,7 @@ const useStyles = makeStyles(theme => ({
                 '& .MuiListItemText-root .MuiTypography-root': {
                     color: '#06425c',
                     fontSize: '16px',
-                    fontFamily: 'Montserrat-Regular',
+                    fontFamily: 'Montserrat-Medium',
                     lineHeight: '32px',
                 },
             },
