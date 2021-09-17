@@ -259,7 +259,7 @@ textRight:{
   textAlign: 'right',
 },
 userImage: {
-  height: '50px',
+  height: '56px',
   width: '58px',
 },
 mrFifteen: {

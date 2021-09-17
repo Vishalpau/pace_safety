@@ -133,6 +133,7 @@ const styles = theme => ({
   MuiAppBarColor: {
     color: '#06425c',
     backgroundColor: '#fafafa',
+    fontFamily: 'Xolonium-Regular!important',
   },
   padd0: {
     padding: '0px !important',

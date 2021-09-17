@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiButton-sizeSmall': {
       padding: '7px 12px',
       borderRadius: '5px',
-      backgroundColor: '#7692a4',
+      backgroundColor: '#517b8d',
       marginLeft: '1px',
     },
   },
@@ -171,7 +171,7 @@ listTabColor: {
 },
 buttonsNewChild: {
   borderRadius: '5px 5px 5px 5px !important',
-  backgroundColor: '#7692a4',
+  backgroundColor: '#517b8d',
   color: '#ffffff',
   maxHeight: '40px',
   minHeight: '40px',
@@ -179,7 +179,7 @@ buttonsNewChild: {
 },
 buttonsNTwo: {
   borderRadius: '5px 5px 5px 5px !important',
-  backgroundColor: '#7692a4',
+  backgroundColor: '#517b8d',
   color: '#ffffff',
   maxHeight: '40px',
   minHeight: '40px',

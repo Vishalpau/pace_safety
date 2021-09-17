@@ -115,3 +115,6 @@ html {
 .PapperBlock-title {
   font-family: Xolonium-Regular;
 }
+.MuiTypography-h6 {
+  font-family: Xolonium-Regular!important;
+}
