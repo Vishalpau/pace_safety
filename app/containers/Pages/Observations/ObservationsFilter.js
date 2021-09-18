@@ -239,7 +239,6 @@ class ObservationsFilter extends React.Component {
   handleClickButton = () => {
     this.setState({ button: !this.state.button })
   }
-<<<<<<< HEAD
    handleType = (value) => {
     if(value === "Risk"){
       this.setState({type:"Risk"})
@@ -249,17 +248,6 @@ class ObservationsFilter extends React.Component {
       this.setState({type:"Positive behavior"})
     }else if(value === "All"){
       this.setState({type:"All"})
-=======
-  handleType = (value) => {
-    if (value === "Risk") {
-      this.setState({ type: "Risk" })
-    } else if (value === "Comments") {
-      this.setState({ type: "Comments" })
-    } else if (value === "Positive behaviour") {
-      this.setState({ type: "Positive Behaviour" })
-    } else if (value === "All") {
-      this.setState({ type: "All" })
->>>>>>> 3f49e540b7285082fd6d75516e6c4316f10fbcd8
 
     }
   }
