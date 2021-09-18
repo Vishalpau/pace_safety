@@ -108,8 +108,7 @@ const BasicCauseAndAction = () => {
     });
     for (let key in apiData) {
       const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${putId.current}%3A${
-          apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
@@ -172,6 +171,22 @@ const BasicCauseAndAction = () => {
     const result = res.data.data.results;
     await setIncidentDetail(result);
   };
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+
+  const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]
 
   const handelCallback = async () => {
     await handelShowData();
@@ -239,6 +254,10 @@ const BasicCauseAndAction = () => {
                           enitityReferenceId={`${putId.current}:${value.id}`}
                           setUpdatePage={setUpdatePage}
                           updatePage={updatePage}
+                          fkCompanyId={fkCompanyId}
+                          fkProjectId={project}
+                          fkProjectStructureIds={projectStuctId}
+                          createdBy={userId}
                         />
                       </TableCell>
                       <TableCell align="right" style={{ minWidth: 200 }}>
@@ -248,13 +267,10 @@ const BasicCauseAndAction = () => {
                               <Link
                                 className={classes.actionLink}
                                 display="block"
-                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${
-                                  projectData.companyId
-                                }&projectId=${
-                                  projectData.projectId
-                                }&targetPage=/app/pages/Action-Summary/&targetId=${
-                                  actionId.id
-                                }`}
+                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId
+                                  }&projectId=${projectData.projectId
+                                  }&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id
+                                  }`}
                               >
                                 {actionId.number}
                               </Link>

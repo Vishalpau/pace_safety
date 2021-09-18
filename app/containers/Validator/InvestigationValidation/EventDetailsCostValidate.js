@@ -16,7 +16,7 @@ function EventDetailsCostValidate(data) {
                         errorCost[`costAmount${[i]}`] = `enter upto 2 decimal digits in cost amount`;
                     }
                 }
-                if (!data[i].costAmount.toString().includes(".") &&
+                else if (!data[i].costAmount.toString().includes(".") &&
                     data[i].costAmount.toString().length > 13) {
                     console.log("here")
                     errorCost[`costAmount${[i]}`] = `Please enter upto 12 digits in cost amount`;

@@ -47,3 +47,25 @@ export const handelFileName = (value) => {
         return lastNameArray;
     }
 };
+
+export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
+
+    let checkCommonObject = JSON.parse(localStorage.getItem(objName))
+
+    let obj = {}
+    if (checkCommonObject == null) {
+        obj[mainKey] = {}
+        obj[mainKey][subKey] = subValue
+        localStorage.setItem(objName, JSON.stringify(obj))
+    }
+    else if (checkCommonObject[mainKey] == null) {
+        obj[mainKey] = {}
+        obj[mainKey][subKey] = subValue
+        checkCommonObject = { ...checkCommonObject, ...obj }
+        localStorage.setItem(objName, JSON.stringify(checkCommonObject))
+    }
+    else if (checkCommonObject[mainKey] == null || checkCommonObject[mainKey][subKey] == null) {
+        checkCommonObject[mainKey][subKey] = subValue
+        localStorage.setItem(objName, JSON.stringify(checkCommonObject))
+    }
+}
