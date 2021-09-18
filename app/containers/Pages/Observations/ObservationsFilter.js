@@ -246,7 +246,7 @@ class ObservationsFilter extends React.Component {
     }else if(value === "Comments"){
       this.setState({type:"Comments"})
     }else if(value === "Positive behaviour"){
-      this.setState({type:"Positive Behaviour"})
+      this.setState({type:"Positive behavior"})
     }else if(value === "All"){
       this.setState({type:"All"})
 
@@ -295,7 +295,7 @@ class ObservationsFilter extends React.Component {
       <ListItem button className={this.state.type === "Comments" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Comments')}>
         <ListItemText primary="Comments" />
       </ListItem>
-      <ListItem button className={this.state.type === "Positive Behaviour" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Positive behaviour')}>
+      <ListItem button className={this.state.type === "Positive behavior" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Positive behaviour')}>
         <ListItemText primary="Positive behaviour" />
       </ListItem>
       {/* <ListItem button className={classes.nested}>

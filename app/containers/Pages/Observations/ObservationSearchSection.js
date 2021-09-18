@@ -347,8 +347,10 @@ export default function SimpleTabs(props) {
     setValue(newValue);
     if(newValue === 0){
       setObservation("My Observations")
+      localStorage.removeItem("value")
     }else if(newValue === 1){
       setObservation("Big Picture")
+      localStorage.removeItem("value")
     }
   };
   const handleSearch = (e) => {

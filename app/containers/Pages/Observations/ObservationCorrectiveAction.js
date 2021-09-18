@@ -213,6 +213,7 @@ function ObservationCorrectiveAction() {
   ]
 
   const [fkProjectStructureIds , setFkProjectStructureId]  = useState()
+  const [observationNumber , setObservationNumber] = useState() 
 
   const handleSubmit = async () => {
     const { error, isValid } = CorrectiveActionValidator(form);
@@ -297,6 +298,7 @@ function ObservationCorrectiveAction() {
     
     const result = res.data.data.results;
     await setFkProjectStructureId(result.fkProjectStructureIds)
+    await setObservationNumber(result.observationNumber)
     if(result.isCorrectiveActionTaken == null){
       result.isCorrectiveActionTaken = "Yes"
     }
@@ -375,11 +377,16 @@ temp.reviewedById = value.id
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    console.log(id,"00000000")
+    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId__startswith=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
-      
+    const newData = []
+    allActionTracker.map((item,i) => {
+
+      if(item.enitityReferenceId == localStorage.getItem("fkobservationId")){
+newData.push(allActionTracker[i])
+      } 
+    }
       )
       let sorting = newData.sort((a, b) => a.id - b.id)
     await setActionTakenData(sorting)
