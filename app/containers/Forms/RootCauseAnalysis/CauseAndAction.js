@@ -172,6 +172,22 @@ const BasicCauseAndAction = () => {
     await setIncidentDetail(result);
   };
 
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+
+  const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]
+
   const handelCallback = async () => {
     await handelShowData();
     await fetchIncidentDetails();
@@ -238,6 +254,10 @@ const BasicCauseAndAction = () => {
                           enitityReferenceId={`${putId.current}:${value.id}`}
                           setUpdatePage={setUpdatePage}
                           updatePage={updatePage}
+                          fkCompanyId={fkCompanyId}
+                          fkProjectId={project}
+                          fkProjectStructureIds={projectStuctId}
+                          createdBy={userId}
                         />
                       </TableCell>
                       <TableCell align="right" style={{ minWidth: 200 }}>
