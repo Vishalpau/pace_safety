@@ -69,3 +69,12 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
         localStorage.setItem(objName, JSON.stringify(checkCommonObject))
     }
 }
+
+export const handleTimeOutError = (res) => {
+    res.then(function (response) {
+        console.log(response);
+    })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
