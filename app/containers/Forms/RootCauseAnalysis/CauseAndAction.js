@@ -91,7 +91,7 @@ const BasicCauseAndAction = () => {
     putId.current = incidentId;
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
-    );
+    )
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
