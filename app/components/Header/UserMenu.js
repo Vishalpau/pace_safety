@@ -208,6 +208,7 @@ function UserMenu(props) {
 
   const getSubscribedApps = async () => {
     const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
+    console.log(companyId)
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
@@ -263,7 +264,8 @@ function UserMenu(props) {
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
-    getProjectStr();
+    console.log(props.initialValues.companyDataList)
+    // getProjectStr();
   }, [props.initialValues.companyDataList])
 
   const classnames = useStyles();

@@ -14,7 +14,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuData from './MenuData';
 import ObservationsPackage from './ObservationsPackage';
 import Button from '@material-ui/core/Button';
 import "../../../styles/custom/customheader.css";
@@ -35,7 +34,7 @@ const styles = theme => ({
     paddingLeft: theme.spacing(4),
     backgroundColor: '#7692a4'
   },
-  selected: {backgroundColor: '#f47607'},
+  selected: { backgroundColor: '#f47607' },
   root: {
     flexGrow: 1,
     fontFamily: 'Montserrat-Medium',
@@ -82,33 +81,33 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     width: drawerWidth,
-	marginLeft: '10px',
-	backgroundColor: '#06425c',
-	color: '#ffffff',
-	borderRadius: '10px',
-  height:' auto',
-  minHeight: '392px',
-	
-	'& .MuiIconButton-root': {
+    marginLeft: '10px',
+    backgroundColor: '#06425c',
     color: '#ffffff',
-	},
-	
-	'& .MuiListItem-gutters': {
-    borderBottom: '1px solid #688ca0',
-	},
-  '& .MuiListItem-button:hover': {
-    borderBottom: '1px solid #688ca0',
-    backgroundColor: '#f47607',
-	},
+    borderRadius: '10px',
+    height: ' auto',
+    minHeight: '392px',
+
+    '& .MuiIconButton-root': {
+      color: '#ffffff',
+    },
+
+    '& .MuiListItem-gutters': {
+      borderBottom: '1px solid #688ca0',
+    },
+    '& .MuiListItem-button:hover': {
+      borderBottom: '1px solid #688ca0',
+      backgroundColor: '#f47607',
+    },
   },
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
     padding: '0 8px',
-	  borderBottom: '1px solid #608296',
+    borderBottom: '1px solid #608296',
     ...theme.mixins.toolbar,
-    '& .MuiList-padding': {paddingTop: '0px!important'},
-    '& .floatR': {float: 'right'},
+    '& .MuiList-padding': { paddingTop: '0px!important' },
+    '& .floatR': { float: 'right' },
   },
   content: {
     flexGrow: 1,
@@ -152,7 +151,7 @@ const styles = theme => ({
   },
   floatL: {
     textAlign: 'left !important',
-	paddingLeft: '10px',
+    paddingLeft: '10px',
     width: '100%',
   },
   catButton: {
@@ -163,62 +162,62 @@ const styles = theme => ({
     fontSize: '17px',
     fontFamily: 'Xolonium !important',
   },
-  
-pLtenPRten: {padding: '0px 10px 0px 10px',},
-buttonsNewDays: {
-  padding: '6px 5px 5px 6px', 
-  margin: '0px 10px',
-  minWidth: '38px',
-  backgroundColor: '#ffffff',
-  color: '#23343e',
-  borderRadius: '0px',
-  fontFamily: 'Montserrat-Medium',
-},
-activeFont: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-  margin: '0px 10px',
-  minWidth: '38px',
-  padding: '4px 5px 5px 4px',
-},
-textLeftone: {
-  textAlign: 'left',
-  verticalAlign: 'middle',
-  padding: '16px!important',
-  minWidth: '19% !important',
-},
-listingLabelName: {
-  color: '#7692a4',
-  fontSize: '0.88rem',
-  fontFamily: 'Montserrat-Medium',
-  fontFamily: 'Montserrat-Medium',
-  '& .MuiButton-containedPrimary:hover': {
+
+  pLtenPRten: { padding: '0px 10px 0px 10px', },
+  buttonsNewDays: {
+    padding: '6px 5px 5px 6px',
+    margin: '0px 10px',
+    minWidth: '38px',
+    backgroundColor: '#ffffff',
+    color: '#23343e',
+    borderRadius: '0px',
+    fontFamily: 'Montserrat-Medium',
+  },
+  activeFont: {
     backgroundColor: '#f47607',
     borderRadius: '5px',
-    color: '#fff',
-},
-},
-textRight: {
-  textAlign: 'right',
-  marginRight: '20px',
-},
-drawerList : {
-  borderBottom: '1px solid #608296',
-	backgroundColor: '#608296',
-  padding: '0px',
-},
-floatR: {float: 'right',}
+    color: '#ffffff',
+    margin: '0px 10px',
+    minWidth: '38px',
+    padding: '4px 5px 5px 4px',
+  },
+  textLeftone: {
+    textAlign: 'left',
+    verticalAlign: 'middle',
+    padding: '16px!important',
+    minWidth: '19% !important',
+  },
+  listingLabelName: {
+    color: '#7692a4',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Medium',
+    '& .MuiButton-containedPrimary:hover': {
+      backgroundColor: '#f47607',
+      borderRadius: '5px',
+      color: '#fff',
+    },
+  },
+  textRight: {
+    textAlign: 'right',
+    marginRight: '20px',
+  },
+  drawerList: {
+    borderBottom: '1px solid #608296',
+    backgroundColor: '#608296',
+    padding: '0px',
+  },
+  floatR: { float: 'right', }
 });
 
 class ObservationsFilter extends React.Component {
   state = {
     open: false,
     anchor: 'right',
-    button:true,
+    button: true,
     type: "Type"
   };
-  componentDidMount(){
+  componentDidMount() {
   }
   // props = {
   //   observations: props.observations,
@@ -237,9 +236,10 @@ class ObservationsFilter extends React.Component {
       anchor: event.target.value,
     });
   };
-  handleClickButton=()=>{
-    this.setState({button:!this.state.button})
+  handleClickButton = () => {
+    this.setState({ button: !this.state.button })
   }
+<<<<<<< HEAD
    handleType = (value) => {
     if(value === "Risk"){
       this.setState({type:"Risk"})
@@ -249,13 +249,24 @@ class ObservationsFilter extends React.Component {
       this.setState({type:"Positive behavior"})
     }else if(value === "All"){
       this.setState({type:"All"})
+=======
+  handleType = (value) => {
+    if (value === "Risk") {
+      this.setState({ type: "Risk" })
+    } else if (value === "Comments") {
+      this.setState({ type: "Comments" })
+    } else if (value === "Positive behaviour") {
+      this.setState({ type: "Positive Behaviour" })
+    } else if (value === "All") {
+      this.setState({ type: "All" })
+>>>>>>> 3f49e540b7285082fd6d75516e6c4316f10fbcd8
 
     }
   }
 
   render() {
-    const { classes, theme , observations} = this.props;
-    const { anchor, open , type} = this.state;
+    const { classes, theme, observations } = this.props;
+    const { anchor, open, type } = this.state;
 
     const drawer = (
       <Drawer
@@ -271,13 +282,13 @@ class ObservationsFilter extends React.Component {
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronRightIcon />}
           </IconButton>
           <Typography
-          variant="h6"
-          classNames={classes.floatL}
+            variant="h6"
+            classNames={classes.floatL}
           >
-          {this.state.type ? this.state.type : "All" }
+            {this.state.type ? this.state.type : "All"}
           </Typography>
-		
-          
+
+
         </div>
         <Divider />
         {/* <List className={classes.drawerList}>{MenuData}</List> */}
@@ -304,7 +315,7 @@ class ObservationsFilter extends React.Component {
       <ListItem button className={classes.nested}>
         <ListItemText primary="Staff Commission" />
       </ListItem> */}
-      {/* <ListItem button onClick={handleClick}  className={classes.selected}>
+          {/* <ListItem button onClick={handleClick}  className={classes.selected}>
         <ListItemText primary="Staff Commission" />
         {open ? <RemoveIcon /> : <AddIcon />}
       </ListItem>
@@ -325,7 +336,7 @@ class ObservationsFilter extends React.Component {
           </ListItem>
         </List>
       </Collapse> */}
-    </List>
+        </List>
         {/* <MenuData /> */}
       </Drawer>
     );
@@ -346,7 +357,7 @@ class ObservationsFilter extends React.Component {
     let beforeBtn = null;
     let afterBtn = null;
 
-   
+
 
     if (anchor === 'left') {
       before = drawer;
@@ -357,14 +368,14 @@ class ObservationsFilter extends React.Component {
     }
 
     return (
-      <div className={classes.root}>        
+      <div className={classes.root}>
         <div className={classes.appFrame}>
           <AppBar
             className={classNames(classes.appBar, classes.MuiAppBarColor, {
               [classes.appBarShift]: open,
               [classes[`appBarShift-${anchor}`]]: open,
             })}
-			>
+          >
             <Toolbar disableGutters className={classes.MuiAppBarColor}>
               {beforeBtn}
               <Typography className={classes.title} variant="h6" color="inherit" noWrap>
@@ -373,24 +384,24 @@ class ObservationsFilter extends React.Component {
 
               <Typography className={classes.textRight} variant="h6" color="inherit" noWrap>
 
-              
+
 
 
               </Typography>
-              
-              
+
+
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.catButton}
-                onClick={()=>{this.handleClickButton()}}
+                onClick={() => { this.handleClickButton() }}
               >
-                {!this.state.open&&<Typography variant="h6">{this.state.type ? this.state.type : "Type"}</Typography>}{afterBtn}
-              
+                {!this.state.open && <Typography variant="h6">{this.state.type ? this.state.type : "Type"}</Typography>}{afterBtn}
+
               </Button>
-              
-              
-             
+
+
+
             </Toolbar>
           </AppBar>
           {before}
@@ -401,7 +412,7 @@ class ObservationsFilter extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <ObservationsPackage type={this.state.type} observation={this.props.observation} searchIncident={this.props.search}/>
+            <ObservationsPackage type={this.state.type} observation={this.props.observation} searchIncident={this.props.search} />
           </main>
           {after}
         </div>
