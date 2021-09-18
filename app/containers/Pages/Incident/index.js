@@ -54,18 +54,19 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
 import { connect } from "react-redux";
-import {tabViewMode} from '../../../redux/actions/initialDetails';
+import { tabViewMode } from '../../../redux/actions/initialDetails';
 import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
 import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
+import { handleTimeOutError } from "../../../utils/CheckerValue"
 
 // Styles
 const useStyles = makeStyles((theme) => ({
-  pagination:{
-    padding:"1rem 0",
-    display:"flex",
-    justifyContent:"flex-end"
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   root: {
     flexGrow: 1,
@@ -167,7 +168,7 @@ function BlankPage(props) {
   const [showIncident, setShowIncident] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [permissionListData, setPermissionListData] = useState([])
-  
+
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -179,50 +180,51 @@ function BlankPage(props) {
     setListToggle(true);
   };
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-  
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
 
   const fetchData = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
 
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  if(fkProjectStructureIds){
-    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    await setIncidents(res.data.data.results.results);
-    
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
-    await setPageCount(pageCount)
-  }else{
-    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    await setIncidents(res.data.data.results.results);
-    
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
-    await setPageCount(pageCount)
-  }
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    if (fkProjectStructureIds) {
+      const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+      await setIncidents(res.data.data.results.results);
+
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
+    } else {
+      const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+      handleTimeOutError(res)
+      await setIncidents(res.data.data.results.results);
+
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
+    }
   };
 
   const handlePush = async () => {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
-  const filterSubscription = ()=>{
+  const filterSubscription = () => {
     // const userDetails = JSON.parse(localStorage.getItem(''))
   }
   useEffect(() => {
@@ -230,9 +232,9 @@ const fkProjectStructureIds = struct.slice(0, -1);
     fetchPermissionData();
   }, [props.projectName]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // fetchPermission();
-  },[])
+  }, [])
   const handelSearchIncident = async (e) => {
     let allSeacrh = [];
     if (e.target.value.length === 0) {
@@ -290,13 +292,13 @@ const fkProjectStructureIds = struct.slice(0, -1);
         },
       },
     },
-    
+
   ];
- 
+
   const options = {
     data: incidents,
     onRowsDelete: (rowsDeleted) => {
-      
+
       const idsToDelete = rowsDeleted.data.map(
         (d) => incidents[d.dataIndex].id
       );
@@ -309,41 +311,41 @@ const fkProjectStructureIds = struct.slice(0, -1);
     filterType: "dropdown",
     responsive: "stacked",
     rowsPerPage: 100,
-    print : false,
+    print: false,
     search: false,
     filter: false,
     viewColumns: false,
-    download :false,
+    download: false,
     paging: false
-  
+
   };
-  const fetchPermissionData = async()=>{
+  const fetchPermissionData = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const res = await api.get(`${SELF_API}${fkCompanyId}/`)
-     
-    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item=>item.appId ===1)
+
+    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item => item.appId === 1)
 
     const fetchPermissiondata = await api.get(`${SSO_URL}${roles[0].roles[0].aclUrl.substring(0)}`)
-    
+
     setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident)
 
   }
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  // https://dev-safety-api.paceos.io/api/v1/incidents/?companyId=1&projectStructureIds=1L1:2L3:3L6&projectId=1
-  const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    // https://dev-safety-api.paceos.io/api/v1/incidents/?companyId=1&projectStructureIds=1L1:2L3:3L6&projectId=1
+    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setIncidents(res.data.data.results.results);
   };
   const classes = useStyles();
@@ -380,7 +382,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                 <div className="toggleViewButtons">
                   <Tooltip title="List View">
                     <IconButton
-                    href="#table"
+                      href="#table"
                       className={classes.filterIcon}
                       onClick={(e) => handelViewTabel(e)}
                     >
@@ -390,7 +392,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
 
                   <Tooltip title="Grid View">
                     <IconButton
-                     href="#grid"
+                      href="#grid"
                       aria-label="grid"
                       className={classes.filterIcon}
                       onClick={(e) => handelView(e)}
@@ -437,10 +439,10 @@ const fkProjectStructureIds = struct.slice(0, -1);
 
       {listToggle == false ? (
         <div className="gridView">
-           {Object.entries(incidents)
+          {Object.entries(incidents)
             .filter((searchText) => {
               return (
-              
+
                 searchText[1]["incidentTitle"]
                   .toLowerCase()
                   .includes(searchIncident.toLowerCase()) ||
@@ -472,14 +474,14 @@ const fkProjectStructureIds = struct.slice(0, -1);
                             justifyContent={isDesktop ? "flex-end" : null}
                           >
                             <Chip
-                              avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
-                              label={item[1]["username"]?item[1]["username"]:"Admin"}
+                              avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
+                              label={item[1]["username"] ? item[1]["username"] : "Admin"}
                             />
                           </Box>
                         </Grid>
                       </Grid>
                     </Grid>
-                  
+
                     <Grid item xs={12}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={3}>
@@ -594,14 +596,14 @@ const fkProjectStructureIds = struct.slice(0, -1);
                         variant="body2"
                         display="inline"
                         className={Fonts.listingLabelName}
-                        onClick={()=>history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                        onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                       >
                         <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
                       </Typography>
-                      
+
                     </Grid>
 
-                   
+
                     <Grid item xs={6} md={3}>
                       <Typography
                         variant="body2"
@@ -630,7 +632,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
                 </CardActions>
               </Card>
             ))}
-           
+
         </div>
       ) : (
         // listview end
@@ -639,7 +641,7 @@ const fkProjectStructureIds = struct.slice(0, -1);
           <MUIDataTable
             data={Object.entries(incidents).filter((searchText) => {
               return (
-              
+
                 searchText[1]["incidentTitle"]
                   .toLowerCase()
                   .includes(searchIncident.toLowerCase()) ||
@@ -659,13 +661,13 @@ const fkProjectStructureIds = struct.slice(0, -1);
             ])}
             columns={columns}
             options={options}
-            
+
           />
         </div>
       )}
-       <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
+      <div className={classes.pagination}>
+        <Pagination count={pageCount} onChange={handleChange} />
+      </div>
     </PapperBlock>
   );
 }
@@ -677,4 +679,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(BlankPage);
+export default connect(mapStateToProps, null)(BlankPage);
