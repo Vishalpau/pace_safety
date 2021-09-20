@@ -239,15 +239,15 @@ class ObservationsFilter extends React.Component {
   handleClickButton = () => {
     this.setState({ button: !this.state.button })
   }
-  handleType = (value) => {
-    if (value === "Risk") {
-      this.setState({ type: "Risk" })
-    } else if (value === "Comments") {
-      this.setState({ type: "Comments" })
-    } else if (value === "Positive behaviour") {
-      this.setState({ type: "Positive Behaviour" })
-    } else if (value === "All") {
-      this.setState({ type: "All" })
+   handleType = (value) => {
+    if(value === "Risk"){
+      this.setState({type:"Risk"})
+    }else if(value === "Comments"){
+      this.setState({type:"Comments"})
+    }else if(value === "Positive behaviour"){
+      this.setState({type:"Positive behavior"})
+    }else if(value === "All"){
+      this.setState({type:"All"})
 
     }
   }
@@ -281,23 +281,23 @@ class ObservationsFilter extends React.Component {
         <Divider />
         {/* <List className={classes.drawerList}>{MenuData}</List> */}
         <List
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          className={classes.root_type}
-        >
-          <ListItem button className={this.state.type === "All" ? classes.selected : classes.nested} onClick={(e) => this.handleType('All')}>
-            <ListItemText primary="All" />
-          </ListItem>
-          <ListItem button className={this.state.type === "Risk" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Risk')}>
-            <ListItemText primary="Risk" />
-          </ListItem>
-          <ListItem button className={this.state.type === "Comments" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Comments')}>
-            <ListItemText primary="Comments" />
-          </ListItem>
-          <ListItem button className={this.state.type === "Positive Behaviour" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Positive behaviour')}>
-            <ListItemText primary="Positive behaviour" />
-          </ListItem>
-          {/* <ListItem button className={classes.nested}>
+      component="nav"
+      aria-labelledby="nested-list-subheader"
+      className={classes.root_type}
+    >
+      <ListItem button className={this.state.type === "All" ? classes.selected : classes.nested} onClick={(e) => this.handleType('All')}>
+        <ListItemText primary="All" />
+      </ListItem>
+      <ListItem button className={this.state.type === "Risk" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Risk')}>
+        <ListItemText primary="Risk" />
+      </ListItem>
+      <ListItem button className={this.state.type === "Comments" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Comments')}>
+        <ListItemText primary="Comments" />
+      </ListItem>
+      <ListItem button className={this.state.type === "Positive behavior" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Positive behaviour')}>
+        <ListItemText primary="Positive behaviour" />
+      </ListItem>
+      {/* <ListItem button className={classes.nested}>
         <ListItemText primary="Staff Commission" />
       </ListItem>
       <ListItem button className={classes.nested}>
