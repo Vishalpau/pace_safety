@@ -127,7 +127,8 @@ const ObservationCorrectiveActionView = () => {
   const [comment , setComment] = useState({}) 
   const [comments , setComments] = useState([]);
   const [isLoading , setIsLoading] = useState(false);
-  
+  const [observationNumber , setObservationNumber] = useState() 
+
   
   const [actionTakenData , setActionTakenData] = useState([]);
 
@@ -167,6 +168,7 @@ const ObservationCorrectiveActionView = () => {
     // const response = await api.get('/api/v1/observations/${id}/')
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
+    await setObservationNumber(result.observationNumber)
     await setInitialData(result)
 
   }
@@ -218,14 +220,18 @@ bytes
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId__startswith=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
-      
+    const newData = []
+    allActionTracker.map((item,i) => {
+
+      if(item.enitityReferenceId == localStorage.getItem("fkobservationId")){
+        console.log("4545")
+newData.push(allActionTracker[i])
+      } 
+    }
       )
       let sorting = newData.sort((a, b) => a.id - b.id)
-    
     await setActionTakenData(sorting)
     await setIsLoading(true);
 
