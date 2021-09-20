@@ -163,7 +163,24 @@ function ObservationCorrectiveAction() {
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).id
   : null;
-
+  const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).companies
+  : null;
+  let client = []
+  let client_id = []
+  companies.map((value, i)=>{
+    
+    if(value.companyId === form.fkCompanyId)
+    {
+      client.push(companies[i])
+      client[0].subscriptions.map((value,i) => {
+        if(value.appCode == "actions"){
+          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
+        }
+      })
+    }
+  })
+  
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -194,6 +211,9 @@ function ObservationCorrectiveAction() {
     "Reviewedby 3",
     "Reviewedby 4",
   ]
+
+  const [fkProjectStructureIds , setFkProjectStructureId]  = useState()
+  const [observationNumber , setObservationNumber] = useState() 
 
   const handleSubmit = async () => {
     const { error, isValid } = CorrectiveActionValidator(form);
@@ -277,6 +297,8 @@ function ObservationCorrectiveAction() {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
     
     const result = res.data.data.results;
+    await setFkProjectStructureId(result.fkProjectStructureIds)
+    await setObservationNumber(result.observationNumber)
     if(result.isCorrectiveActionTaken == null){
       result.isCorrectiveActionTaken = "Yes"
     }
@@ -355,11 +377,16 @@ temp.reviewedById = value.id
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    console.log(id,"00000000")
+    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId__startswith=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
-      
+    const newData = []
+    allActionTracker.map((item,i) => {
+
+      if(item.enitityReferenceId == localStorage.getItem("fkobservationId")){
+newData.push(allActionTracker[i])
+      } 
+    }
       )
       let sorting = newData.sort((a, b) => a.id - b.id)
     await setActionTakenData(sorting)
@@ -395,7 +422,6 @@ temp.reviewedById = value.id
         // window.location.href = {LOGIN_URL}
       });
   };
-
 
   useEffect(() => {
     if(id){
@@ -502,7 +528,7 @@ temp.reviewedById = value.id
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
+                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=${client_id[0]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
                 //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
                 // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
                                 // actionContext="Obsevations"
@@ -535,6 +561,7 @@ temp.reviewedById = value.id
           <ActionTracker
                                 actionContext="Obsevations"
                                 enitityReferenceId={id}
+                                fkProjectStructureIds={fkProjectStructureIds}
                                 setUpdatePage={setUpdatePage}
                                 updatePage={updatePage}
                               >add</ActionTracker>

@@ -231,9 +231,7 @@ const ProjectAreaHazards = () => {
         if (jhaValue['fkChecklistId'] === checkListId) {
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
-          if (jhaValue["id"] !== undefined) {
-            const res = api.delete(`/api/v1/jhas/${jhaValue["fkJhaId"]}/jobhazards/${jhaValue["id"]}/`)
-          }
+
         }
       })
     }
@@ -295,9 +293,9 @@ const ProjectAreaHazards = () => {
       })
     })
 
-    if (hazardUpdate.length > 0) {
-      const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
-    }
+
+    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
+
     const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew)
 
     handelNavigate("next")

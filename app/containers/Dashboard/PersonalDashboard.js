@@ -74,6 +74,7 @@ import {
   LOCAL_LOGIN_URL,
   API_VERSION,
   SELF_API,
+  LOGOUT_URL,
 } from "../../utils/constants";
 
 // Styles
@@ -162,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& .MuiListItemText-secondary": {
       fontSize: "12px",
-      fontFamily: "Montserrat-Regular",
+      fontFamily: "Montserrat-Medium",
       color: "#054D69",
     },
   },
@@ -214,7 +215,7 @@ function PersonalDashboard(props) {
   // define props
   const [userData, setUserData] = useState([]);
   const [companyListData, setCompanyListData] = useState([]);
-  const [companyId, setCompanyId] = useState(null)
+  const [companyId, setCompanyId] = useState(0)
   const [projectListData, setProjectListData] = useState([]);
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
@@ -225,12 +226,10 @@ function PersonalDashboard(props) {
   const [modules, setModules] = useState([]);
   const [codes, setCode] = useState([])
 
-  const getSubscriptions = async () => {
+  const getSubscriptions = async (compId) => {
 
-    const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
     try {
-
-
       let data = await api.get(`${SELF_API}${companyId}/`)
         .then(function (res) {
 
@@ -243,16 +242,24 @@ function PersonalDashboard(props) {
 
       await setSubscriptions(data)
 
-
+      
       const apps = data.map(app => app.appId)
+      console.log(data)
+      let app = data.filter(app=> app.appId === 1)
+      console.log(app)
+      let module = app[0].modules.map(item=>{
+        if(item.subscriptionStatus =="active"){
+          console.log(item.moduleCode)
+          return item.moduleCode
+        }
+      })
+    
+      setCode(module)
       getModules(apps)
     } catch (error) { }
-
-
   }
 
   const getModules = async (apps) => {
-
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
       .then(function (res) {
@@ -262,10 +269,11 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-      console.log(data)
-    const codes = data.map(module => module.moduleCode)
-    console.log(codes)
-    setCode(codes)
+    let data1 = apps.filter(item=>item.appId===1)
+    console.log(data1)
+    const codes = data.map(module => module.subscriptionStatus)
+    console.log(apps)
+    // setCode(codes)
 
 
 
@@ -307,6 +315,7 @@ function PersonalDashboard(props) {
 
     let companeyDetails = {};
     companeyDetails.fkCompanyId = e;
+    await getSubscriptions(e)
     companeyDetails.fkCompanyName = name;
     dispatch(company(companeyDetails))
     setCompanyId(e)
@@ -369,10 +378,12 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
+            getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
             companeyDetails.fkCompanyName =
               response.data.data.results.data.companies[0].companyName;
             localStorage.setItem("company", JSON.stringify(companeyDetails));
+            dispatch(company(companeyDetails))
             let newData = response.data.data.results.data.companies[0];
             if (newData) {
               if (newData.projects.length === 1) {
@@ -393,15 +404,15 @@ function PersonalDashboard(props) {
         }
       })
       .catch(function (error) {
-        localStorage.removeItem("access_token");
-        localStorage.clear();
-        window.location.href = `${LOGOUT_URL}`;
+        // localStorage.removeItem("access_token");
+        // localStorage.clear();
+        // window.location.href = `${LOGOUT_URL}`;
       });
   };
 
   useEffect(() => {
     userDetails();
-    getSubscriptions()
+   
 
   }, [props.initialValues.companyDataList]);
 
@@ -458,13 +469,9 @@ function PersonalDashboard(props) {
             </div>
           </div> 
 
+          {/* Action Tracker
 
-{/* Action Tracker
-
-Permit Management */}
-
-
-
+          Permit Management */}
 
           <div className="ibws-fix hexagon_row2">
             <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>

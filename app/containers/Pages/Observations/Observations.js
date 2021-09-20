@@ -306,7 +306,7 @@ function Observations(props) {
   }, [props.projectName]);
 
   return (
-    <PapperBlock title="Observations" icon="ion-md-list-box" desc="">
+    <PapperBlock title="Observations" icon="ion-md-list-box" desc="" variant="h5">
       {isLoading ? (
         <Box>
           <div className={classes.root}>

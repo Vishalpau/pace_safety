@@ -8,6 +8,7 @@
 
  
  import InitialDetailsReducer from './modules/initialDetails'
+ import AuthReducer from './modules/authentication'
  
  /**
   * Branching reducers to use one reducer for many components
@@ -20,6 +21,7 @@
  
    const rootReducer = combineReducers({
      InitialDetailsReducer,
+     AuthReducer
    });
    
    export default rootReducer;

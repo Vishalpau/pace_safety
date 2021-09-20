@@ -29,6 +29,7 @@ import api from "../../../utils/axios";
 import axios from "axios";
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import "../../../styles/custom/customheader.css";
 
 import {
   access_token,
@@ -485,7 +486,7 @@ const ObservationInitialNotificationUpdate = () => {
 
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
-    setLevelLenght(breakdownLength)
+    // setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
     setSelectDepthAndId(breakDown)
@@ -560,6 +561,7 @@ const ObservationInitialNotificationUpdate = () => {
     }
   };
 
+
   useEffect(() => {
 
     fetchInitialiObservation();
@@ -610,8 +612,7 @@ const ObservationInitialNotificationUpdate = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].selectValue.name : null}  {projectSturcturedData[1] ? `- ${projectSturcturedData[1].selectValue.name}` : null}  {projectSturcturedData[2] ? `- ${projectSturcturedData[2].selectValue.name}` : null} 
-
+            {project.projectName}  {projectSturcturedData.map((value) => ` - ${value.selectValue.name}`)} 
             </Typography>
           </Grid>
           <Grid

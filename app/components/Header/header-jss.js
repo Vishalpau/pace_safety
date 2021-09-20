@@ -3,8 +3,8 @@ import {
   gradientBgLight,
   gradientBgDark,
 } from "containers/Templates/appStyles-jss";
-const drawerWidth = 240;
-const drawerBigWidth = 280;
+const drawerWidth = 0;
+const drawerBigWidth = 290
 
 const styles = (theme) => ({
   appBar: {
@@ -19,13 +19,15 @@ const styles = (theme) => ({
         theme.palette.type === "dark"
           ? theme.palette.primary.contrastText
           : theme.palette.primary.contrastText,
-      backgroundColor: "#ff8533",
-      boxShadow: "none",
+          backgroundColor: "transparent",
+            boxShadow: "none",
       zIndex: 10,
+      left: 10,
     },
     "&$left": {
       "& $menuButton": {
-        marginLeft: 13,
+        marginLeft: 0,
+        marginRight: 18,
       },
       "& $headerTitle": {
         left: theme.spacing(2),
@@ -105,7 +107,7 @@ const styles = (theme) => ({
     "&$left": {
       "& $menuButton": {
         [theme.breakpoints.up("lg")]: {
-          marginLeft: -20,
+          marginLeft: 0,
         },
       },
       [theme.breakpoints.up("lg")]: {
@@ -116,7 +118,7 @@ const styles = (theme) => ({
     "&$leftBig": {
       "& $menuButton": {
         [theme.breakpoints.up("lg")]: {
-          marginLeft: -20,
+          marginLeft: 0,
         },
       },
       [theme.breakpoints.up("lg")]: {
@@ -127,7 +129,7 @@ const styles = (theme) => ({
     "&$right": {
       "& $menuButton": {
         [theme.breakpoints.up("lg")]: {
-          marginRight: -20,
+          marginRight: 0,
         },
       },
       [theme.breakpoints.up("lg")]: {
@@ -498,6 +500,7 @@ const styles = (theme) => ({
     flex: 1,
     alignItems: "center",
     zIndex: 1,
+    minWidth: 650,
   },
   fadeOut: {},
   invert: {},
@@ -552,6 +555,10 @@ const styles = (theme) => ({
     minWidth: 150,
     marginLeft: theme.spacing(2),
   },
+  projectSwitcher: {
+    display: "flex",
+    alignItems: "center",
+  },
 
   searchHeaderMenu: {
     flex: 1,
@@ -563,7 +570,7 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(4),
   },
   projectSelect: {
     minWidth: 150,
@@ -576,6 +583,7 @@ const styles = (theme) => ({
   userControls: {
     display: "inline-flex",
     alignItems: "center",
+    minWidth: 100,
   },
   filterSelect: {
     minWidth: 100,
@@ -589,6 +597,19 @@ const styles = (theme) => ({
     fontSize: 12,
     color: theme.palette.secondary.contrastText,
   },
+  projectName: {
+    color: theme.palette.secondary.contrastText,
+    fontWeight: 600,
+  },
+  projectCloseButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  projectDialog: {
+    minWidth: 600,
+  }
 });
 
 export default styles;

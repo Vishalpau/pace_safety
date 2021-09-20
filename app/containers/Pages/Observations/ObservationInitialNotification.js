@@ -55,6 +55,7 @@ import {
   SSO_URL,
 } from "../../../utils/constants";
 import { mdiConsole } from "@mdi/js";
+import "../../../styles/custom/customheader.css";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -166,7 +167,6 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: '600',
     },
   },
-
 }));
 
 function Alert(props) {
@@ -322,7 +322,6 @@ const ObservationInitialNotification = (props) => {
         // window.location.href = {LOGIN_URL}
       });
   };
-
   const fetchDepartment = () => {
     const config = {
       method: "get",
@@ -865,6 +864,7 @@ const ObservationInitialNotification = (props) => {
         className={classes.customPapperBlockSection}
         title="Initial Notification"
         icon="ion-md-list-box"
+        variant="h5"
       >
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>

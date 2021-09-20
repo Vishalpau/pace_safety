@@ -41,6 +41,8 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import "../../../styles/custom/customheader.css";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -91,44 +93,45 @@ export default function ActionTracker(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
+  console.log(props.fkProjectStructureIds,"ooooooo")
 
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
-    fkProjectStructureIds: fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+    fkProjectStructureIds: props.fkProjectStructureIds,
     parentId: 0,
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
-    actionTitle: props.actionTitle,
-    actionDetail: "string",
-    actionCategory: "string",
+    actionTitle: "",
+    actionDetail: "",
+    actionCategory: "",
     actionShedule: "string",
-    priority: "string",
+    priority: "",
     severity: "",
     approver: 0,
     assignTo: 0,
     deligateTo: 0,
-    plannedStartDate: "2021-07-21T17:05:39.604Z",
-    actualStartDate: "2021-07-21T17:05:39.604Z",
+    plannedStartDate: null,
+    actualStartDate: null,
     plannedEndDate: null,
-    actualEndDate: "2021-07-21T17:05:39.604Z",
-    forecaststartDate: "2021-07-21T17:05:39.604Z",
-    forecastEndDate: "2021-07-21T17:05:39.604Z",
-    location: "string",
+    actualEndDate: null,
+    forecaststartDate: null,
+    forecastEndDate: null,
+    location: "",
     latitude: 0,
     longitude: 0,
     supervisorId: 0,
     contractor: 0,
-    contractorName: "string",
-    contractorCompany: "string",
-    actionStatus: "string",
-    actionStage: "string",
+    contractorName: "",
+    contractorCompany: "",
+    actionStatus: "",
+    actionStage: "",
     status: "Active",
-    createdBy: 0,
+    createdBy: parseInt(userId),
     reviewedBy: 0,
-    reviewDate: "2021-07-21T17:05:39.605Z",
+    reviewDate: null,
     closedBy: 0,
-    closeDate: "2021-07-21T17:05:39.605Z",
+    closeDate: null,
     source: "Web",
     vendor: "string",
     vendorReferenceId: "string",
@@ -156,7 +159,7 @@ export default function ActionTracker(props) {
     if (!isValid) {
       return "Data is not valid";
     }
-    
+    console.log(form,"66666")
       let res = await api.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber

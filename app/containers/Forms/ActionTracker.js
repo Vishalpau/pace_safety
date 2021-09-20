@@ -46,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ActionTracker(props) {
   const [form, setForm] = useState({
-    fkCompanyId: 0,
-    fkProjectId: 0,
-    fkProjectStructureIds: "string",
+    fkCompanyId: props.fkCompanyId,
+    fkProjectId: props.fkProjectId,
+    fkProjectStructureIds: props.fkProjectStructureIds,
     parentId: 0,
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
@@ -77,7 +77,7 @@ export default function ActionTracker(props) {
     actionStatus: "string",
     actionStage: "string",
     status: "Active",
-    createdBy: 0,
+    createdBy: props.createdBy,
     reviewedBy: 0,
     reviewDate: "2021-07-21T17:05:39.605Z",
     closedBy: 0,
@@ -170,13 +170,15 @@ export default function ActionTracker(props) {
 
   return (
     <>
-      <IconButton
+
+
+      <Button
         variant="contained"
         color="primary"
         onClick={handleClickOpen}
       >
-        <FlashOnIcon />
-      </IconButton>
+        Actions<FlashOnIcon />
+      </Button>
       {/* {console.log(reportedByName)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>

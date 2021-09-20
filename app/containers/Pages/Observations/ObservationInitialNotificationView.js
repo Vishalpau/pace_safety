@@ -40,7 +40,7 @@ import { initial } from 'lodash';
 import axios from "axios";
 import Attachment from "../../Attachment/Attachment";
 import { useDispatch } from "react-redux";
-
+import "../../../styles/custom/customheader.css";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -54,7 +54,7 @@ import { breakDownDetails } from "../../../redux/actions/initialDetails";
 
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '600',
     color: '#063d55',
     listStyleType: "disc",
-    listStylePosition:"inside",
+    listStylePosition: "inside",
   },
   custmSubmitBtn: {
     color: '#ffffff',
@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
   },
-// });
+  // });
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -136,24 +136,26 @@ const ObservationInitialNotificationView = () => {
     checkedF: true,
     checkedG: true,
   });
-  
-  const {id} = useParams();
-  const [initialData , setInitialData] = useState({}); 
-  const [tagsData , setTagsData] = useState([])
-  const [actionTakenData ,setActionTakenData] = useState([])
-  const [projectSturcturedData , setProjectSturcturedData] = useState([])
-  const [isLoading , setIsLoading] = useState(false);
+
+  const { id } = useParams();
+  const [initialData, setInitialData] = useState({});
+  const [tagsData, setTagsData] = useState([])
+  const [actionTakenData, setActionTakenData] = useState([])
+  const [projectSturcturedData, setProjectSturcturedData] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
+
 
   const dispatch = useDispatch();
 
   const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).name
     : null;
@@ -180,71 +182,80 @@ const ObservationInitialNotificationView = () => {
 
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-   
+    let breakdownLength = projectData.projectName.breakdown.length
+    // setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
-       
+
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
+
               }
             });
+            setProjectSturcturedData(selectBreakDown)
           })
           .catch((error) => {
-            
+
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key-1].slice(-1)}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
-       
+
         await api(config)
           .then(async (response) => {
-          
+
             const result = response.data.data.results;
-           
-            const res=result.map((item, index) => {
+
+            const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-               
+
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
+
               }
             });
+            setProjectSturcturedData(selectBreakDown)
 
-          
           })
           .catch((error) => {
             console.log(error)
-            // setIsNext(true);
+            setIsNext(true);
           });
       }
     }
-    // dispatch(breakDownDetails(selectBreakDown));
-    await setProjectSturcturedData(selectBreakDown)    
-    // localStorage.setItem('selectBreakDown', JSON.stringify(selectBreakDown));
   };
 
   const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
@@ -259,10 +270,10 @@ const ObservationInitialNotificationView = () => {
     <li key={file.path}>
       {file.path}
       {' '}
--
+      -
       {file.size}
       {' '}
-bytes
+      bytes
     </li>
   ));
 
@@ -305,9 +316,9 @@ bytes
     setPositiveObservation(true);
   };
 
-  
 
-  const fetchactionTrackerData = async () =>{
+
+  const fetchactionTrackerData = async () => {
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
@@ -316,112 +327,113 @@ bytes
     const allActionTrackerData = await api_action.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
-      
-      )
-      
+      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId")
+
+    )
+
     await setActionTakenData(newData)
     // await setIsLoading(true);
 
   }
+
   const classes = useStyles();
   useEffect(() => {
-      if(id){
-        fetchInitialiObservation();
-        fetchTags();
-        fetchactionTrackerData()
-        
-      }
-  },[])
+    if (id) {
+      fetchInitialiObservation();
+      fetchTags();
+      fetchactionTrackerData()
+
+    }
+  }, [])
   return (
     <>
-    {isLoading ? (<>
-      <Grid container spacing={3} className={classes.observationNewSection}>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+      {isLoading ? (<>
+        <Grid container spacing={3} className={classes.observationNewSection}>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Observation Type
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.observationType ? initialData.observationType : "-"}
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Observation Title
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.observationTitle ? initialData.observationTitle : "-"}
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Observation Type
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.observationType ? initialData.observationType : "-"}
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.observationTitle ? initialData.observationTitle : "-"}
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Observation Description
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.observationDetails ? initialData.observationDetails : "-"}
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.observationDetails ? initialData.observationDetails : "-"}
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Project Information
-          </Typography>
-          <Typography className={classes.labelValue}>
-            
-          {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].name : null}  {projectSturcturedData[1] ? `- ${projectSturcturedData[1].name}` : null}  {projectSturcturedData[2] ? `- ${projectSturcturedData[2].name}` : null} 
-          </Typography>
-        </Grid>
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            </Typography>
+            <Typography className={classes.labelValue}>
+
+            {project.projectName}  {projectSturcturedData.map((value) => ` - ${value.selectValue.name}`)} 
+            </Typography>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Observed By
-          </Typography>
-          <Typography className={classes.labelValue}>
-            {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
-          </Typography>
-        </Grid>
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
+            </Typography>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Observer Department
-          </Typography>
-          <Typography className={classes.labelValue}>
-            {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Observed On
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {moment(initialData["observedAt"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          )}
-          </Typography>
-        </Grid>
-        
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Observed On
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {moment(initialData["observedAt"]).format(
+                "Do MMMM YYYY, h:mm:ss a"
+              )}
+            </Typography>
+          </Grid>
+
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Supervisor details
-          </Typography>
-          <Typography className={classes.labelValue}>
-                   {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Location
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.location ? initialData.location : "-"}
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-          Classification
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.observationClassification ? initialData.observationClassification : "-"}
-          </Typography>
-        </Grid>
-        {/* <Grid item md={12}>
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Location
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.location ? initialData.location : "-"}
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Classification
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.observationClassification ? initialData.observationClassification : "-"}
+            </Typography>
+          </Grid>
+          {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Actions Taken
           </Typography>
@@ -429,68 +441,70 @@ bytes
                     {initialData.actionTaken}
           </Typography>
         </Grid> */}
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Stop Work
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.stopWork ? initialData.stopWork : "-" }
-          </Typography>
-        </Grid>
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Near Miss
-          </Typography>
-          <Typography className={classes.labelValue}>
-            {initialData.nearMiss ? initialData.nearMiss : "-"}
-          </Typography>
-        </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Stop Work
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.stopWork ? initialData.stopWork : "-"}
+            </Typography>
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Near Miss
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.nearMiss ? initialData.nearMiss : "-"}
+            </Typography>
+          </Grid>
           {initialData.personRecognition !== "" ?
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Recognition
-          </Typography>
-          <Typography className={classes.labelValue}>
-                    {initialData.personRecognition ? initialData.personRecognition : "-"}
-          </Typography>
-        </Grid> : null}
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Details of immediate actions taken
-          </Typography>
-          <Typography className={classes.labelValue}>
-            {initialData.actionTaken ? initialData.actionTaken : "-"}
-          </Typography>
-            
-          
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Notification sent to Safety Management
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {initialData.isNotifiedToSupervisor ? initialData.isNotifiedToSupervisor : "-"}
-          
-          </Typography>
-        </Grid>
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-          Categories
-          </Typography>
-          {/* {tagsData.} */}
-          {tagsData.map((tag , index) => (
-            
-            
-            <ul className={classes.labelValue} key={index}>
-           {tag.observationTag !== "" ? <li>{tag.observationTag}</li> : null} 
-             
-          
-          
-            </ul>
-          ))}
-        </Grid>
+            <Grid item md={6}>
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Recognition
+              </Typography>
+              <Typography className={classes.labelValue}>
+                {initialData.personRecognition ? initialData.personRecognition : "-"}
+              </Typography>
+            </Grid> : null}
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Details of immediate actions taken
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.actionTaken ? initialData.actionTaken : "-"}
+            </Typography>
 
-        {/* <Grid item md={12}>
+
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Notification sent to Safety Management
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData.isNotifiedToSupervisor ? initialData.isNotifiedToSupervisor : "-"}
+
+            </Typography>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Categories
+            </Typography>
+            {/* {tagsData.} */}
+
+            {tagsData.length > 0 && tagsData.map((tag, index) => (
+
+
+              <ul className={classes.labelValue} key={index}>
+                {tag.observationTag !== "" ? <li>{tag.observationTag}</li> : "-"}
+
+
+
+              </ul>
+            ))}
+            {tagsData.length == 0 && "-"}
+          </Grid>
+
+          {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Assignee
           </Typography>
@@ -498,7 +512,7 @@ bytes
            {initialData.assigneeName ? initialData.assigneeName : "-"}
           </Typography>
         </Grid> */}
-        {/* <Grid item md={12}>
+          {/* <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Actions
           </Typography>
@@ -508,90 +522,90 @@ bytes
           </Typography>
           ))}
         </Grid> */}
-        <Grid item md={12}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Attachments
-          </Typography>
-          {initialData.attachment ? (
-          <Typography className={classes.labelValue} 
-          // title={handelFileName(
-          //   initialData.attachment)
-          // }
-                                    >
-          {/* <Attachment value={initialData.attachment}/> */}
-          {initialData.attachment ===
-                              null ? null : typeof initialData.attachment ===
-                                "string" ? (
-                                <Attachment value={initialData.attachment} />
-                              ) : null}
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Attachments
+            </Typography>
+            {initialData.attachment ? (
+              <Typography className={classes.labelValue}
+              // title={handelFileName(
+              //   initialData.attachment)
+              // }
+              >
+                {/* <Attachment value={initialData.attachment}/> */}
+                {initialData.attachment ===
+                  null ? null : typeof initialData.attachment ===
+                    "string" ? (
+                  <Attachment value={initialData.attachment} />
+                ) : null}
 
-          {/* <Avatar variant="rounded" className={classes.rounded} value={initialData.attachment} title={initialData.attachment}
+                {/* <Avatar variant="rounded" className={classes.rounded} value={initialData.attachment} title={initialData.attachment}
             onClick={() =>
                                       handleOpen(initialData.attachment)
                                     }>
             <ImageIcon />
           </Avatar> */}
-          </Typography>):("-")}
-        </Grid>
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
+              </Typography>) : ("-")}
+          </Grid>
+          <Grid item md={6}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
               Submited by
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {userName} , {userBadgeNo}
-            {/* {initialData.observedAt} */}
-          </Typography>
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {userName} , {userBadgeNo}
+              {/* {initialData.observedAt} */}
+            </Typography>
+          </Grid>
+
+          <Grid item md={6}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Submited on
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {moment(initialData["createdAt"]).format(
+                "Do MMMM YYYY, h:mm:ss a"
+              )}
+            </Typography>
+          </Grid>
+
         </Grid>
 
-        <Grid item md={6}>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Submited on
-          </Typography>
-          <Typography className={classes.labelValue}>
-          {moment(initialData["createdAt"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          )}
-          </Typography>
-        </Grid>
-        
-      </Grid>
-      
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        keepMounted
-        PaperProps={{
-          style: {
-            width: 700,
-          },
-        }}
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {" Please choose what do you want to?"}
-        </DialogTitle>
-        <IconButton onClick={handleClose} className={classes.closeButton}>
-          <Close />
-        </IconButton>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Button
-                  startIcon={<VisibilityIcon />}
-                  variant="contained"
-                  color="primary"
-                  className={classes.modalButton}
-                  disableElevation
-                  href={`${documentUrl}`}
-                  target="_blank"
-                >
-                  View Attachment
-                </Button>
-              </Grid>
-              <Grid item xs={12} md={6}>
-              <Button
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          keepMounted
+          PaperProps={{
+            style: {
+              width: 700,
+            },
+          }}
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {" Please choose what do you want to?"}
+          </DialogTitle>
+          <IconButton onClick={handleClose} className={classes.closeButton}>
+            <Close />
+          </IconButton>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Button
+                    startIcon={<VisibilityIcon />}
+                    variant="contained"
+                    color="primary"
+                    className={classes.modalButton}
+                    disableElevation
+                    href={`${documentUrl}`}
+                    target="_blank"
+                  >
+                    View Attachment
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Button
                     startIcon={<GetAppIcon />}
                     variant="contained"
                     disableElevation
@@ -600,12 +614,12 @@ bytes
                   >
                     Download Attachment
                   </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
-     </>) : (<h1>Loading...</h1>)}
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+      </>) : (<h1>Loading...</h1>)}
     </>
   );
 };

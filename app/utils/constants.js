@@ -4,7 +4,7 @@ export const ONCE_TILL_UNMOUNT = "@@saga-injector/once-till-unmount";
 
 const URL = "https://dev-safety.pace-os.com/";
 
-export const SSO_URL = "https://dev-accounts-api.paceos.io";
+export const SSO_URL = "https://accounts.pace-os.com";
 // local
 export const LOCAL_SSO_CLIENT_SECRET =
   "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
@@ -13,17 +13,19 @@ export const LOCAL_LOGIN_URL =
   "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code";
 
 export const SSO_CLIENT_SECRET =
-  "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
-export const SSO_CLIENT_ID = "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
+  "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
+export const SSO_CLIENT_ID = "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
+export const PRODUCTION_SSO_CLIENT_ID="";
+export const PRODUCTION_SSO_CLIENT_SECRET = ""
 // Redirect login api if login is not.
-export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
+export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q&client_secret=wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE&response_type=code`;
 export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
 export const API_URL = "https://dev-safety-api.paceos.io/";
-export const ACCOUNT_API_URL = "https://dev-accounts-api.paceos.io/";
+export const ACCOUNT_API_URL = "https://accounts.pace-os.com/";
 export const access_token = localStorage.getItem("access_token");
 export const API_VERSION = "api/v1/"
-export const SELF_API = "https://dev-accounts-api.paceos.io/api/v1/user/self/";
+export const SELF_API = "https://accounts.pace-os.com/api/v1/user/self/";
 
 // Header authenticatuon
 export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
