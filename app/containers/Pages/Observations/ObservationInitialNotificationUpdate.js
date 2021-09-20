@@ -612,7 +612,7 @@ const ObservationInitialNotificationUpdate = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName} - {projectSturcturedData[0] ? projectSturcturedData[0].selectValue.name : null}  {projectSturcturedData[1] ? `- ${projectSturcturedData[1].selectValue.name}` : null}  {projectSturcturedData[2] ? `- ${projectSturcturedData[2].selectValue.name}` : null}  {projectSturcturedData[3] ? `- ${projectSturcturedData[3].selectValue.name}` : null}  {projectSturcturedData[4] ? `- ${projectSturcturedData[4].selectValue.name}` : null}
+            {project.projectName}  {projectSturcturedData.map((value) => ` - ${value.selectValue.name}`)} 
             </Typography>
           </Grid>
           <Grid
