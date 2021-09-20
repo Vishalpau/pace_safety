@@ -59,7 +59,7 @@ import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
 import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
-import { handleTimeOutError } from "../../../utils/CheckerValue"
+// import { handleTimeOutError } from "../../../utils/CheckerValue"
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -207,13 +207,14 @@ function BlankPage(props) {
     if (fkProjectStructureIds) {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
       await setIncidents(res.data.data.results.results);
-
+      console.log(res.data.data.results.results)
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     } else {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
-      handleTimeOutError(res)
+      // handleTimeOutError(res)
       await setIncidents(res.data.data.results.results);
+      console.log(res.data.data.results.results)
 
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
