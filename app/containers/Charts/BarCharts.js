@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
 import {
   BarChart,
@@ -25,7 +25,7 @@ import styles from './demos/fluidChart-jss';
 import { data1 } from './demos/sampleData';
 import PapperBlock from '../../components/PapperBlock/PapperBlock';
 
-const theme = createMuiTheme(ThemePallete.greyTheme);
+const theme = createTheme(ThemePallete.greyTheme);
 const color = ({
   primary: theme.palette.primary.main,
   primaryDark: theme.palette.primary.dark,

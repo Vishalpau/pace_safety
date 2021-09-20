@@ -8,7 +8,7 @@ import { StylesProvider, jssPreset } from "@material-ui/styles";
 import { bindActionCreators } from "redux";
 import {
   withStyles,
-  createMuiTheme,
+  createTheme,
   MuiThemeProvider,
 } from "@material-ui/core/styles";
 import {
@@ -59,7 +59,7 @@ function ThemeWrapper(props) {
   const [progress, setProgress] = useState(0);
   const [theme, setTheme] = useState(
     // eslint-disable-next-line
-    createMuiTheme(applicationTheme(props.color, props.mode, props.direction))
+    createTheme(applicationTheme(props.color, props.mode, props.direction))
   );
   const [paletteState, setPalette] = useState(undefined);
 
@@ -96,7 +96,7 @@ function ThemeWrapper(props) {
   const handleChangeTheme = (event) => {
     const { changeTheme } = props;
     setTheme(
-      createMuiTheme(applicationTheme(event.target.value, mode, direction))
+      createTheme(applicationTheme(event.target.value, mode, direction))
     );
     changeTheme(event.target.value);
   };
@@ -109,7 +109,7 @@ function ThemeWrapper(props) {
 
     setTimeout(() => {
       setTheme(
-        createMuiTheme(
+        createTheme(
           applicationTheme(randomTheme.value, mode, direction) // eslint-disable-line
         )
       );
@@ -119,7 +119,7 @@ function ThemeWrapper(props) {
 
   const handleChangeMode = (modeParam) => {
     const { changeMode } = props;
-    setTheme(createMuiTheme(applicationTheme(color, modeParam, direction)));
+    setTheme(createTheme(applicationTheme(color, modeParam, direction)));
     changeMode(modeParam);
   };
 
@@ -146,7 +146,7 @@ function ThemeWrapper(props) {
   const handleChangeDirection = (dirVal) => {
     // Set reducer state direction
     const { changeDirection } = props;
-    setTheme(createMuiTheme(applicationTheme(color, mode, dirVal)));
+    setTheme(createTheme(applicationTheme(color, mode, dirVal)));
     changeDirection(dirVal);
 
     // Set HTML root direction attribute

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
 import pink from '@material-ui/core/colors/pink';
 import {
@@ -19,7 +19,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.orangeTheme);
+const theme = createTheme(ThemePallete.orangeTheme);
 const color = ({
   main: theme.palette.primary.main,
   maindark: theme.palette.primary.dark,

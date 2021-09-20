@@ -189,24 +189,26 @@ const ObservationInitialNotificationUpdate = () => {
 
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [projectSturcturedData, setProjectSturcturedData] = useState([])
+  const [isNext, setIsNext] = useState(true);
+
   let filterReportedByName = []
   let filterDepartmentName = []
 
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName
-      : null;
-  
+    ? JSON.parse(localStorage.getItem("projectName")).projectName
+    : null;
+
   const selectBreakdown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
     ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
 
   const fkCompanyId = JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
- 
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
+
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).id
-  : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 
   const handelPositivObservation = (e) => {
     setPositiveObservation(false);
@@ -235,12 +237,14 @@ const ObservationInitialNotificationUpdate = () => {
 
 
   const [catagory, setCatagory] = useState();
-  const [ catagoryName, setCatagoryName ] = useState();
+  const [catagoryName, setCatagoryName] = useState();
 
   const handelSelectOption = (cate) => {
-    for (let i = 0; i <= catagory.length; i++) {
-      if (catagory[i] != undefined && catagory[i]["observationTag"] == cate) {
-        return true
+    if (catagory !== undefined) {
+      for (let i = 0; i <= catagory.length; i++) {
+        if (catagory[i] != undefined && catagory[i]["observationTag"] == cate) {
+          return true
+        }
       }
     }
   }
@@ -249,33 +253,33 @@ const ObservationInitialNotificationUpdate = () => {
 
     let temp = [...catagory]
     let tempRemove = []
-    if(e.target.checked == false){
-      temp.map((ahaValue,index) => {
-        if(ahaValue['observationTag'] === value.tagName){
-         
-         if(ahaValue['id']){
-          const res = api.delete(`/api/v1/observations/${id}/observationtags/${ahaValue.id}/`)
+    if (e.target.checked == false) {
+      temp.map((ahaValue, index) => {
+        if (ahaValue['observationTag'] === value.tagName) {
 
-         }
-         
+          if (ahaValue['id']) {
+            const res = api.delete(`/api/v1/observations/${id}/observationtags/${ahaValue.id}/`)
+
+          }
+
           temp.splice(index, 1);
         }
       })
     }
-    else if(e.target.checked){
-      temp.push( {
-      "fkObservationId": id,
-      "fkTagId": value.id,
-      "observationTag": value.tagName,
-      "status": "Active",
-      "createdBy": parseInt(userId),
-      "updatedBy": 0,
-    })
+    else if (e.target.checked) {
+      temp.push({
+        "fkObservationId": id,
+        "fkTagId": value.id,
+        "observationTag": value.tagName,
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "updatedBy": 0,
+      })
 
-  //  await catagoryName.push(value.tagName)
-  }
-  await setCatagory(temp)
-    
+      //  await catagoryName.push(value.tagName)
+    }
+    await setCatagory(temp)
+
 
   };
   const handleOther = (e) => {
@@ -284,7 +288,7 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const handleSubmit = async () => {
-    const { error, isValid } = InitialNotificationValidator(initialData,selectDepthAndId);
+    const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
 
     await setError(error);
 
@@ -344,28 +348,28 @@ const ObservationInitialNotificationUpdate = () => {
       data.append("source", initialData.source),
       data.append("vendor", initialData.vendor),
       data.append("vendorReferenceId", initialData.vendorReferenceId);
-      let newCategory = []
-      let updateCategory = []
+    let newCategory = []
+    let updateCategory = []
 
     if (id) {
       data.append("id", id)
       for (let i = 0; i < catagory.length; i++) {
-        if(catagory[i].id){
+        if (catagory[i].id) {
           catagory[i].updatedBy = userId
           updateCategory.push(catagory[i])
 
-        }else{
+        } else {
           newCategory.push(catagory[i])
 
 
         }
 
       }
-      if(updateCategory.length > 0){
+      if (updateCategory.length > 0) {
         const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory)
       }
-      if(newCategory.length > 0){
-        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`,newCategory);
+      if (newCategory.length > 0) {
+        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory);
       }
 
 
@@ -389,7 +393,7 @@ const ObservationInitialNotificationUpdate = () => {
     const tags = response.data.data.results.results
     let sorting = tags.sort((a, b) => a.id - b.id)
     await setCatagory(sorting);
-   
+
     await setIsLoading(true);
 
   }
@@ -612,7 +616,7 @@ const ObservationInitialNotificationUpdate = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName}  {projectSturcturedData.map((value) => ` - ${value.selectValue.name}`)} 
+              {project.projectName}  {projectSturcturedData.map((value) => ` - ${value.selectValue.name}`)}
             </Typography>
           </Grid>
           <Grid

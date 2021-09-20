@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
 import {
   LineChart,
@@ -16,7 +16,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.magentaTheme);
+const theme = createTheme(ThemePallete.magentaTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,
@@ -31,7 +31,7 @@ const CustomizedLabel = props => {
   } = props;
   return (
     <text x={x} y={y} dy={-4} fill={stroke} fillOpacity="0.8" fontSize={10} textAnchor="middle">
-      { value }
+      {value}
     </text>
   );
 };
