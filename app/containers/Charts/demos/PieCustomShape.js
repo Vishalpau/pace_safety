@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
 import {
   PieChart,
@@ -9,7 +9,7 @@ import {
 } from 'recharts';
 import { data6 } from './sampleData';
 
-const theme = createMuiTheme(ThemePallete.greenTheme);
+const theme = createTheme(ThemePallete.greenTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,

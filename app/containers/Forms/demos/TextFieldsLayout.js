@@ -3,7 +3,7 @@ import {
   fade,
   withStyles,
   makeStyles,
-  createMuiTheme
+  createTheme
 } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import FormControl from '@material-ui/core/FormControl';
@@ -107,7 +107,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: green,
   },
