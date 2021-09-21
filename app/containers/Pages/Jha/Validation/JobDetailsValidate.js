@@ -5,7 +5,6 @@ function JobDetailsValidate(data) {
 
     const error = {};
     let isValid = true;
-
     if (validator.isEmpty(data.jobTitle.toString())) {
         error.jobTitle = "Please enter the job title";
         isValid = false;
@@ -13,6 +12,11 @@ function JobDetailsValidate(data) {
 
     if (validator.isEmpty(data.location.toString())) {
         error.location = "Please enter the work location";
+        isValid = false;
+    }
+
+    if (data.jhaAssessmentDate == null) {
+        error.jhaAssessmentDate = "Please enter the jha assessment date";
         isValid = false;
     }
 
