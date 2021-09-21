@@ -50,6 +50,7 @@ import {
 import Type from "../../../../styles/components/Fonts.scss";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 import { ACCOUNT_API_URL, access_token } from '../../../../utils/constants';
+import { handelCommonObject } from '../../../../utils/CheckerValue';
 
 
 
@@ -422,7 +423,8 @@ const JobDetails = (props) => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
       }
     }
-    setSubmitLoader(false)
+    handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
+    await setSubmitLoader(false)
   }
 
   const [Teamform, setTeamForm] = useState([{
@@ -629,6 +631,8 @@ const JobDetails = (props) => {
                       jhaAssessmentDate: moment(e).format("YYYY-MM-DD"),
                     });
                   }}
+                  error={error.jhaAssessmentDate}
+                  helperText={error.jhaAssessmentDate ? error.jhaAssessmentDate : ""}
                   inputVariant="outlined"
                   disableFuture="true"
                 />
