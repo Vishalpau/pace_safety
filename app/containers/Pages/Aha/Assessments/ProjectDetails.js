@@ -197,6 +197,8 @@ bytes
   const [isNext, setIsNext] = useState(true);
   const [isLoading , setIsLoading] = useState(false);
   const [workArea, setWorkArea] = useState("")
+  const [projectBreakout, setProjectBreakout] = useState('')
+
    const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
@@ -224,7 +226,6 @@ bytes
       "fkAhaId": 0 }]);
     }
   };
-
   const handelRemove = async (e, index) => {
 
     if (Teamform.length > 1) {
@@ -242,7 +243,6 @@ bytes
   };
 
   }
-  console.log(workArea,"6666666")
 
 
   const [form , setForm] = useState(
@@ -250,7 +250,7 @@ bytes
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-      "workArea": workArea,
+      "workArea": "",
       "location": "",
       "assessmentDate": null,
       "permitToPerform": "",
@@ -281,15 +281,16 @@ bytes
     }
   )
 
-
   const handleSubmit = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
+    // await getProjectStr(fkProjectStructureId)
+    console.log(fkProjectStructureId,"KKKKK")
     form["fkProjectStructureIds"] = fkProjectStructureId
-    form["workArea"] = workArea
-    
+    // form["workArea"] = projectBreakout.toString()
+    console.log(form,"KKKKKKKK")
     const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId);
     await setError(error);
     if (!isValid) {
@@ -298,13 +299,17 @@ bytes
     await setSubmitLoader(true);
     if(form.id){
       delete form["ahaAssessmentAttachment"]
+      // form['updatedBy'] = form['createdBy']
+      console.log(form,"GGGGGGGg")
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,form)
       for (let i = 0; i < Teamform.length; i++) {
         if(Teamform[i].id){
           const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`,Teamform[i]);
         }else{
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          if(Teamform[i].teamName !== ""){
+            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          }
           if(res.status === 200){
             history.push("/app/pages/aha/assessments/project-area-hazards")
           }
@@ -476,7 +481,6 @@ bytes
       }
     }
   };
-  console.log(form)
 
   const fetchAhaData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
@@ -609,6 +613,45 @@ bytes
     }
   };
 
+
+
+  const getProjectStr = async(id) => {
+    console.log(id)
+    if(id != '') {
+      let c_id   = JSON.parse(localStorage.getItem("company")).fkCompanyId
+      let p_id   = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      let data = []
+      let breakDown = await id.split(':')
+      console.log(breakDown,"FFFFFF")
+      if (breakDown.length > 1){
+        for(var i=0;i<breakDown.length;i++){
+          let level_id = breakDown[i].split('L')
+          let level    = level_id[0] + 'L'
+          let _id      = level_id[1]
+          let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
+          let res = await api.get(apiurl);
+         data= [...data,res.data.data.results[0].name]
+        }
+        console.log(data,"22222")
+        setProjectBreakout(data)
+      }else{
+        // for(var i=0;i<breakDown.length;i++){
+          let level_id = breakDown[0].split('L')
+          let level    = level_id[0] + 'L'
+          let _id      = level_id[1]
+          let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
+          let res = await api.get(apiurl);
+         data= [...data,res.data.data.results[0].name]
+         let name = data.toString()
+         console.log(name,"52525252")
+
+        await setForm({...form,workArea:name})
+        // setProjectBreakout(data.toString())
+      }
+      
+    }
+  }
+
   const handleDepthAndId = (depth, id) => {
     let newData = [...selectDepthAndId, `${depth}${id}`]
     setSelectDepthAndId([... new Set(newData)])
@@ -617,17 +660,21 @@ bytes
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
     const result =  res.data.data.results
     await setTeamForm(result)
-    console.log(result)
   }
   const classes = useStyles();
 
   useEffect(() => {
     // fetchBreakdown()
+    // getProjectStr()
+    
+
     fetchCallBack()
     
       fetchAhaData()
       fetchTeamData()
-    
+    // if(selectDepthAndId){
+    //   getProjectStr()
+    // }
     
   }, []);
   return (

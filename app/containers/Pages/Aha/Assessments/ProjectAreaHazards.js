@@ -186,20 +186,27 @@ const ProjectAreaHazards = () => {
   }
 
   const handlePhysicalHazards = (e , index , value , checkListID) => {
+    console.log(form,"''''''''")
     let temp = [...form]
+    console.log(temp,"<<<<<<")
     let tempRemove = []
     if(e.target.checked == false){
       temp.map((ahaValue,index) => {
-        if(ahaValue['hazard'] === value){
+        console.log(ahaValue.fkChecklistId)
+        console.log(temp[index]['fkChecklistId'])
+        console.log(checkListID)
+        if(ahaValue['fkChecklistId'] === checkListID){
+          console.log(temp,"LLLLLLLLLL")
+          
+          // if(temp[index].id){
+          //   console.log(temp[index].id)
+          //   const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
+
+          // }
+
+         
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
-          if(temp[index].id){
-            const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
-
-          }
-
-         
-         
 
         }
       })
@@ -224,7 +231,7 @@ const ProjectAreaHazards = () => {
     
   };
 
-console.log(form)
+console.log(form,"??????")
  
   const handleOtherHazards = async (e , key) => {
     const temp = [...otherHazards];
@@ -289,9 +296,9 @@ console.log(form)
     })
 
 
-    if (hazardUpdate.length > 0) {
+    
       const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
-    }
+    
     const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
    
     history.push("/app/pages/aha/assessments/assessment")
