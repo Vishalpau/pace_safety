@@ -480,7 +480,7 @@ function UserMenu(props) {
       >
         <MenuItem
           onClick={() =>
-            window.location.href = "https://dev-accounts-api.paceos.io/UserProfile"}
+            window.location.href = `${SSO_URL}/UserProfile`}
         >
           My Profile
         </MenuItem>
