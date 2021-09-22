@@ -411,9 +411,8 @@ function PersonalDashboard(props) {
 
   useEffect(() => {
     userDetails();
-   
 
-  }, [props.initialValues.companyDataList]);
+  }, []);
 
   return (
     <PapperBlock title="Home" icon="ion-md-list-box">
