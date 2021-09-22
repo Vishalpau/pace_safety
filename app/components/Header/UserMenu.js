@@ -43,6 +43,7 @@ import {
   SELF_API,
   SSO_CLIENT_ID,
   SSO_URL,
+  getApiUrl
 } from "../../utils/constants";
 import axios from "axios";
 import Topbar from "./Topbar";
@@ -214,6 +215,8 @@ function UserMenu(props) {
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
 
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
+        let hostings = subscriptionData.filter(item => item.appId === 1)[0].hostings[0].apiDomain
+        getApiUrl(hostings)
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
         setCompanyName(res.data.data.results.data.companies[0].companyName)
@@ -264,7 +267,6 @@ function UserMenu(props) {
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
-    console.log(props.initialValues.companyDataList)
     // getProjectStr();
   }, [props.initialValues.companyDataList])
 
@@ -484,6 +486,7 @@ function UserMenu(props) {
         >
           My Profile
         </MenuItem>
+
         <Divider />
         <MenuItem
           onClick={(e) => {
