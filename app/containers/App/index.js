@@ -25,6 +25,7 @@ import {
   access_token,
   SELF_API,
   LOCAL_LOGIN_URL,
+  getSSOUrl
 } from "../../utils/constants";
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
@@ -85,9 +86,10 @@ function App() {
           code: code,
         });
       }
+      console.log(data)
       let config = {
         method: "post",
-        url: `${SSO_URL}/api/v1/user/auth/token/`,
+        url: `${getSSOUrl()}/api/v1/user/auth/token/`,
         headers: {
           "Content-Type": "application/json",
         },

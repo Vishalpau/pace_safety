@@ -216,6 +216,9 @@ function UserMenu(props) {
 
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         let hostings = subscriptionData.filter(item => item.appId === 1)[0].hostings[0].apiDomain
+        // axios.defaults.baseURL = hostings;
+
+        localStorage.setItem("apiBaseUrl", hostings)
         getApiUrl(hostings)
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)

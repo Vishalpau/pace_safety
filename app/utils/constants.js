@@ -4,17 +4,21 @@ export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
 export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
-const getSSOUrl = () => {
+export const getSSOUrl = () => {
   if (window.location.hostname === 'localhost') {
     return "https://dev-accounts-api.paceos.io";
   }
-  if (window.location.hostname === 'dev-safety.pace-os.com') {
+  else if (window.location.hostname === 'dev-safety.pace-os.com') {
     return "https://dev-accounts-api.paceos.io";
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
+  else if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "https://stage-accounts.pace-os.com";
   }
-  if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
+  // else if (window.location.hostname.includes("safety.pace-os.com")) {
+  //   console.log("here")
+  //   return "https://accounts.pace-os.com";
+  // }
+  else if (window.location.hostname == "safety.pace-os.com") {
     return "https://accounts.pace-os.com";
   }
 }
@@ -41,7 +45,7 @@ const getSSOClientSecret = () => {
   if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "";
   }
-  if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
+  if (window.location.hostname == "safety.pace-os.com") {
     return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
   }
 }
@@ -61,7 +65,7 @@ const getSSOClientId = () => {
   if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "";
   }
-  if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
+  if (window.location.hostname == "safety.pace-os.com") {
     return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
   }
 }
@@ -77,8 +81,7 @@ export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
 
 export const getUrl = () => {
-  if (JSON.parse(localStorage.getItem('userDetails'))) {
-
+  if (JSON.parse(localStorage.getItem('userDetails')) && localStorage.getItem('userDetails') !== null && localStorage.getItem('company') !== null) {
     let user = JSON.parse(localStorage.getItem('userDetails'))
     let comp = JSON.parse(localStorage.getItem('company')).fkCompanyId
     return (user.companies.filter(company => company.companyId == comp)[0]
@@ -86,9 +89,9 @@ export const getUrl = () => {
       .filter(subscription => subscription.appId == 1)[0]
       .hostings[0].apiDomain)
   }
-
   return ""
 }
+
 export const getApiUrl = (data) => {
   return data
 }
