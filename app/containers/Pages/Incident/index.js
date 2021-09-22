@@ -207,17 +207,24 @@ function BlankPage(props) {
     if (fkProjectStructureIds) {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
       await setIncidents(res.data.data.results.results);
-      console.log(res.data.data.results.results)
+      
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     } else {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
-      // handleTimeOutError(res)
-      await setIncidents(res.data.data.results.results);
-      console.log(res.data.data.results.results)
+      .then((res)=>{
+         setIncidents(res.data.data.results.results);
+    
 
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+         setPageCount(pageCount)
+      })
+      .catch(err=>console.log(err.message))
+      // handleTimeOutError(res)
+    
+       
+      
+
     }
   };
 
@@ -346,8 +353,14 @@ function BlankPage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     // https://dev-safety-api.paceos.io/api/v1/incidents/?companyId=1&projectStructureIds=1L1:2L3:3L6&projectId=1
-    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    await setIncidents(res.data.data.results.results);
+    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
+    .then((res)=>{
+      setIncidents(res.data.data.results.results);
+    })
+    .catch(error=>{
+      
+    })
+    
   };
   const classes = useStyles();
 

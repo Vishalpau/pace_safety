@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 }
 
 const AuthReducer = (state = INITIAL_STATE,action)=>{
-  console.log(action,state)
+  
     switch(action.type){
         case actionType.PERMISSION_DETAILS:
             return{...state, permissionList:action.payload} 
