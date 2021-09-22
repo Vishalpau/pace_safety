@@ -145,7 +145,7 @@ function UserMenu(props) {
   const [userImageLink, setUserImageLink] = useState([])
   const [companyLogoLink, setCompanyLogoLink] = useState('')
   const [companyName, setCompanyName] = useState('')
-  const [project, setProject]=([])
+  const [project, setProject] = ([])
   const dispatch = useDispatch()
 
   const handleAppsClick = (event) => {
@@ -212,7 +212,7 @@ function UserMenu(props) {
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
-       
+
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
@@ -232,20 +232,20 @@ function UserMenu(props) {
 
 
   }
-  const getProjectStr = async(id = '1L2:2L5:3L9') => {
-    if(id != '') {
-      let c_id   = JSON.parse(localStorage.getItem("company")).fkCompanyId 
-      let p_id   = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+  const getProjectStr = async (id = '1L2:2L5:3L9') => {
+    if (id != '') {
+      let c_id = JSON.parse(localStorage.getItem("company")).fkCompanyId
+      let p_id = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       let data = []
       let breakDown = await id.split(':')
-      for(var i=0;i<breakDown.length;i++){
+      for (var i = 0; i < breakDown.length; i++) {
         let level_id = breakDown[i].split('L')
-        let level    = level_id[0] + 'L'
-        let _id      = level_id[1]
+        let level = level_id[0] + 'L'
+        let _id = level_id[1]
         let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
         let res = await api.get(apiurl);
-       data= [...data,res.data.data.results[0].name]
-  
+        data = [...data, res.data.data.results[0].name]
+
       }
       console.log(data)
       // setProjectBreakout(data)
@@ -418,7 +418,7 @@ function UserMenu(props) {
             <List component="nav">
 
               {subscriptions.map(subscription => (
-                (subscription.appId !== 1) && subscription.modules.length > 0 && apps.includes(subscription.appId)?
+                (subscription.appId !== 1) && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div>
                     <ListItemText
                       className={classnames.appDrawerLable}
@@ -483,19 +483,6 @@ function UserMenu(props) {
             window.location.href = `${SSO_URL}/UserProfile`}
         >
           My Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose} component={Link} to={link.calendar}>
-          My Calendar
-        </MenuItem>
-        <MenuItem onClick={handleClose} component={Link} to={link.email}>
-          My Inbox
-          <ListItemIcon>
-            <Badge
-              className={classNames(classes.badge, classes.badgeMenu)}
-              badgeContent={2}
-              color="secondary"
-            />
-          </ListItemIcon>
         </MenuItem>
         <Divider />
         <MenuItem

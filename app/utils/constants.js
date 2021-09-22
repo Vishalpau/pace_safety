@@ -9,9 +9,6 @@ const getSSOUrl = () => {
   if (window.location.hostname === 'dev-safety.pace-os.com') {
     return "https://dev-accounts-api.paceos.io";
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "https://stage-accounts.pace-os.com";
-  }
   if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "https://accounts.pace-os.com";
   }
@@ -32,9 +29,6 @@ const getSSOClientSecret = () => {
   if (window.location.hostname === 'dev-safety.pace-os.com') {
     return "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "";
-  }
   if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
   }
@@ -48,18 +42,11 @@ const getSSOClientId = () => {
   if (window.location.hostname === 'dev-safety.pace-os.com') {
     return "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "";
-  }
   if (window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
   }
 }
 export const SSO_CLIENT_ID = getSSOClientId()
-// Dev
-// "OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq";
-// Production
-// "jk4vO5RRIi4SqNaLRPpBrAGNbv1KxaO6wetU70qm"
 
 // Redirect login api if login is not.
 export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=${SSO_CLIENT_ID}&client_secret=${SSO_CLIENT_SECRET}&response_type=code`;
@@ -84,11 +71,6 @@ export const API_URL = getUrl()
 
 
 export const ACCOUNT_API_URL = getSSOUrl() + '/'
-// Dev
-// "https://dev-accounts-api.paceos.io/"
-// Production
-// "https://accounts.pace-os.com/"
-
 
 export const access_token = localStorage.getItem("access_token");
 export const access_token_action = localStorage.getItem("access_token_action");

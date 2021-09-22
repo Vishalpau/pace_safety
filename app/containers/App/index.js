@@ -66,6 +66,7 @@ function App() {
     let data = {}
     if (code) {
       if (window.location.hostname === 'localhost') {
+        console.log("here")
         data = JSON.stringify({
           grant_type: "authorization_code",
           client_id: `${LOCAL_SSO_CLIENT_ID}`,
@@ -74,6 +75,7 @@ function App() {
         });
 
       } else {
+        console.log("here1")
         data = JSON.stringify({
           grant_type: "authorization_code",
           client_id:
@@ -83,8 +85,6 @@ function App() {
           code: code,
         });
       }
-      SSO_URL === undefined ? "https://accounts.pace-os.com" : SSO_URL
-      console.log(SSO_URL)
       let config = {
         method: "post",
         url: `${SSO_URL}/api/v1/user/auth/token/`,
