@@ -1,5 +1,6 @@
 /* eslint consistent-return:0 import/order:0 */
 
+const fs = require('fs');
 const express = require('express');
 const logger = require('./logger');
 const favicon = require('serve-favicon');
@@ -14,6 +15,15 @@ const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel
   ? require('ngrok')
   : false;
 const { resolve } = require('path');
+const https = require('https');
+
+var key = fs.readFileSync('selfsigned.key');
+var cert = fs.readFileSync('selfsigned.crt');
+var options = {
+  key: key,
+  cert: cert
+};
+
 const app = express();
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
@@ -75,4 +85,9 @@ app.listen(port, host, async err => {
   } else {
     logger.appStarted(port, prettyHost);
   }
+});
+
+var server = https.createServer(options, app);
+server.listen(3333, () => {
+  console.log("server starting on port : " + port)
 });

@@ -82,9 +82,9 @@ function App() {
             `${SSO_CLIENT_SECRET}`,
           code: code,
         });
-
       }
-
+      SSO_URL === undefined ? "https://accounts.pace-os.com" : SSO_URL
+      console.log(SSO_URL)
       let config = {
         method: "post",
         url: `${SSO_URL}/api/v1/user/auth/token/`,

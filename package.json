@@ -38,7 +38,8 @@
     "lint:js": "npm run lint:eslint -- . ",
     "lint:staged": "lint-staged",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prettify": "prettier --write"
+    "prettify": "prettier --write",
+    "start-ssl": "cross-env HTTPS=true NODE_ENV=development node server"
   },
   "browserslist": [
     "last 1 version",
