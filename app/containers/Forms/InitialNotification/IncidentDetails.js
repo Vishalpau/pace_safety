@@ -388,12 +388,14 @@ const IncidentDetails = (props) => {
   // get data contractor value for dropdown
   const fetchContractorValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/2/value");
+      const res = await api.get("api/v1/lists/2/value")
+      .catch(error=>setMessage(error.message))
       const result = res.data.data.results;
       await setContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
+      console.log(error.message)
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -402,12 +404,14 @@ const IncidentDetails = (props) => {
   // get data sub-contractor value for dropdown
   const fetchSubContractorValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/3/value");
+      const res = await api.get("api/v1/lists/3/value")
+      .catch(error=>setMessage(error.message))
       const result = res.data.data.results;
       await setSubContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
+      console.log(error.message)
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -421,7 +425,8 @@ const IncidentDetails = (props) => {
       await setPersonAffectedValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
+      console.log(error.message)
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -434,7 +439,9 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       await setPropertiesAffectValue(result);
     } catch (error) {
-      setMessage("Something went worng!");
+      setIsNext(true);
+      console.log(error.message)
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -448,7 +455,8 @@ const IncidentDetails = (props) => {
       await setEquipmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
+      console.log(error.message)
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -462,7 +470,8 @@ const IncidentDetails = (props) => {
       await setEnvironmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
+      console.log(error.message)
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -503,7 +512,8 @@ const IncidentDetails = (props) => {
 
       } catch (error) {
         setIsNext(true);
-        setMessage("Something went worng!");
+        console.log(error.message)
+        setMessage(error.message);
         setMessageType("error");
         setOpen(true);
       }
@@ -1151,6 +1161,8 @@ const IncidentDetails = (props) => {
                     </FormHelperText>
                   )}
                 </FormControl>
+                {/* Alert Message */}
+               {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
               </Grid>
 
               {/* Go to next button */}

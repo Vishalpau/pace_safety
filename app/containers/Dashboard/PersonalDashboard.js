@@ -244,12 +244,11 @@ function PersonalDashboard(props) {
 
       
       const apps = data.map(app => app.appId)
-      console.log(data)
+      
       let app = data.filter(app=> app.appId === 1)
-      console.log(app)
       let module = app[0].modules.map(item=>{
         if(item.subscriptionStatus =="active"){
-          console.log(item.moduleCode)
+          
           return item.moduleCode
         }
       })
@@ -270,9 +269,9 @@ function PersonalDashboard(props) {
       });
     await setModules(data)
     let data1 = apps.filter(item=>item.appId===1)
-    console.log(data1)
+    
     const codes = data.map(module => module.subscriptionStatus)
-    console.log(apps)
+    
     // setCode(codes)
 
 
@@ -412,9 +411,8 @@ function PersonalDashboard(props) {
 
   useEffect(() => {
     userDetails();
-   
 
-  }, [props.initialValues.companyDataList]);
+  }, []);
 
   return (
     <PapperBlock title="Home" icon="ion-md-list-box">

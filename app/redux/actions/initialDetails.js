@@ -112,6 +112,9 @@ export const company = data=>{
   }
 }
 
-export const handleBreakdown = data=>{
- 
+export const getApiDomain = data=>{
+ return{
+   type:actionsType.API_DOMAIN,
+   payload:data
+ }
 }
