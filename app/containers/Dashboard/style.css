@@ -221,15 +221,53 @@ a:hover {
 	background-position-y: 1%;
   }  
 
-@media(min-width:1440px) {
+  @media(max-width:1440px) {
 	/************************ hexagon section APE landing page  ************************/
 	.hexagonal_section {
 		margin: 0px auto;
 		display: table;
 	}
+  .seven_hexagon_row .hexagon_row2 .hexagon:nth-child(odd) {
+    top: 11px;
+  }
+  .seven_hexagon_row .hexagon_row1 .hexagon:nth-child(odd) {
+    top: 11px;
+  }
+  .seven_hexagon_row .hexagon {
+    margin: 0px 24px;
+  }
+  .seven_hexagon_row .hexagon, .seven_hexagon_row .hexagon::before, .seven_hexagon_row .hexagon::after {
+    width: 86px;
+    height: 150px;
+	}
+  .seven_hexagon_row .hexagontent.hexagon_content_box a p {
+    font-size: 12px;
+  }
 }
 @media(max-width:1280px) {
 	/************************ hexagon section APE landing page  ************************/
+  .seven_hexagon_row .hexagon_row2 .hexagon:nth-child(odd) {
+    top: 0px;
+  }
+  .seven_hexagon_row .hexagon_row2 .hexagon:nth-child(even) {
+		top: 72px;
+	}
+	.seven_hexagon_row .hexagon_row1 .hexagon:nth-child(even) {
+		top: 73px;
+	}
+  .seven_hexagon_row .hexagon_row1 .hexagon:nth-child(odd) {
+    top: 0px;
+  }
+	.seven_hexagon_row .hexagon, .seven_hexagon_row .hexagon::before, .seven_hexagon_row .hexagon::after {
+		width: 80px;
+		height: 140px;
+	}
+	.seven_hexagon_row .hexagon {
+		margin: 0px 22px !important;
+	}
+  .seven_hexagon_row .hexagontent.hexagon_content_box a p {
+    font-size: 11px;
+  }
 	.hexagonrow1 {
 		margin: 0em 5em 0;
 	}
@@ -238,6 +276,44 @@ a:hover {
 	}
 	.hexagonrow3 {
 		margin: -93px 177px 0;
+	}
+	.hexagontent.hexagon_content_box a p {
+		font-size: 12px;
+		line-height: 17px;
+	}
+	.hexagon_fullcontnt .project_information_hub {
+		background-size: 80px;
+	}
+	.hexagon_fullcontnt .hse_environment_development {
+		background-size: 92px;
+	}
+	.hexagon_fullcontnt .hse_smart_permit_management {
+		background-size: 85px;
+		background-position-y: 190%;
+	}
+	.hexagon_fullcontnt .hse_rapid_knowledge_collaboration {
+		background-size: 98px;
+		background-position-y: 187%;
+	}
+	.hexagon_fullcontnt .hse_action_tracker {
+		background-size: 85px;
+		background-position-y: 183%;
+	}
+	.hexagon_fullcontnt .hse_observations {
+		background-size: 85px;
+		background-position-y: 183%;
+	}
+	.hexagon_fullcontnt .hse_intelligent_permit_management_new {
+		background-size: 85px;
+		background-position-y: 186%;
+	}
+	.hexagon_fullcontnt .hse_compliance_protocols {
+		background-size: 85px;
+		background-position-y: 142%;
+	}
+	.hexagon_fullcontnt .hse_incident_reporting_management {
+		background-size: 85px;
+		background-position-y: 142%;
 	}
 }
 @media(max-width:1112px){
@@ -409,6 +485,9 @@ a:hover {
 		width: 60px;
 		height: 105px;
 	}
+  .seven_hexagon_row .hexagontent {
+    width: 148% !important;
+  }
 	.seven_hexagon_row .hexagon_row1 .hexagon:nth-child(even) {
 		top: 54px;
 	}
@@ -423,61 +502,78 @@ a:hover {
 	.seven_hexagon_row .hexagontent.hexagon_content_box a.supply_chain_management_icon_box {
 		background-position-y: 135%;
 	}
-	.seven_hexagon_row .hexagontent.hexagon_content_box a p {
-		font-size: 9px !important;
-		line-height: 11px !important;
-		padding-top: 40px !important;
+	html .seven_hexagon_row .hexagontent.hexagon_content_box a p {
+		font-size: 8px !important;
+		line-height: 13px !important;
+		padding-top: 51px !important;
 		padding-left: 0px !important;
 		padding-right: 0px !important;
 	}
 	.seven_hexagon_row .hexagontent .project_information_hub {
-		background-position-y: 200%;
-		background-size: 44px;
+		background-position-y: 174%;
+		background-size: 38px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .project_information_hub {
 		background-position-y: 0%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_health_safety_environment_mgmt_new {
-		background-size: 55px;
+    background-position-y: 126%;
 		background-size: 52px;
 	}
 	.hexagon_fullcontnt:hover .hse_health_safety_environment_mgmt_new {
 		background-position-y: -1% !important;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_smart_permit_management {
-		background-position-y: 116%;
+		background-position-y: 124% !important;
 		background-size: 57px;
 	}
+  .seven_hexagon_row .hexagon_fullcontnt .hse_observation_development {
+    background-position-y: 126%;
+		background-size: 52px;
+  }
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_smart_permit_management {
 		background-position-y: -1% !important;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_compliance_protocols {
-		background-position-y: 130%;
-		background-size: 55px;
+		background-position-y: 137%;
+		background-size: 50px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_compliance_protocols {
 		background-position-y: 1% !important;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_environment_development {
 		background-size: 55px;
+    background-position-y: 152%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_environment_development {
-		background-position-y: 0%;
+		background-size: 55px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_intelligent_permit_management_new {
-		background-position-y: 160%;
-		background-size: 55px;
+    background-position-y: 154%;
+    background-size: 55px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_intelligent_permit_management_new {
 		background-position-y: -1% !important;
 	}
+  .seven_hexagon_row .hexagon_fullcontnt .hse_rapid_development {
+    background-size: 55px;
+    background-position-y: 152%;
+  }
 	.seven_hexagon_row .hexagon_fullcontnt .hse_incident_reporting_management {
-		background-position-y: 170%;
-		background-size: 52px;
+    background-position-y: 130% !important;
+    background-size: 52px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_rapid_knowledge_collaboration {
-		background-position-y: 152%;
+		background-position-y: 132%;
+		background-size: 52px;
+	}
+	.seven_hexagon_row .hexagon_fullcontnt .hse_action_tracker {
+		background-size: 52px;
+		background-position-y: 392%;
+	}
+	.seven_hexagon_row .hexagon_fullcontnt .hse_observations {
 		background-size: 55px;
+		background-position-y: 295%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_rapid_knowledge_collaboration {
 		background-position-y: -1% !important;
@@ -538,8 +634,6 @@ a:hover {
 	.premium_hexagon_section .seven_hexagon_row .hexagon_fullcontnt_hse:hover .hse_competency_management {
 		background-position-y: -8% !important;
 	}
-
-
 }
 @media(max-width:991px){
 	.hexagon_row1 .hexagon {
@@ -632,6 +726,9 @@ a:hover {
 	.hexagon_row3 .hexagon:nth-child(even) {
 		top: 65px;
 	}
+  .seven_hexagon_row .hexagon_row2 .hexagon:nth-child(odd) {
+    top: -12px;
+  }
 	.hexagon_row1 .hexagon, .hexagon_row2 .hexagon, .hexagon_row3 .hexagon {
 		margin: 0px 21px;
 	}
@@ -688,8 +785,8 @@ a:hover {
 
 	/************************************ Safety Management - Design to be mobile responsiveness of hexagon ******************************/
 	.seven_hexagon_row .hexagon, .seven_hexagon_row .hexagon::before, .seven_hexagon_row .hexagon::after {
-		width: 60px;
-		height: 105px;
+    width: 58px !important;
+    height: 102px !important;
 	}
 	.seven_hexagon_row .hexagon_row1 .hexagon:nth-child(even) {
 		top: 52px;
@@ -713,8 +810,8 @@ a:hover {
 		padding-right: 0px !important;
 	}
 	.seven_hexagon_row .hexagontent .project_information_hub {
-		background-position-y: 200%;
-		background-size: 44px;
+		background-position-y: 180%;
+		background-size: 37px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .project_information_hub {
 		background-position-y: 0%;
@@ -734,8 +831,8 @@ a:hover {
 		background-position-y: -1% !important;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_compliance_protocols {
-		background-position-y: 130%;
-		background-size: 55px;
+		background-position-y: 137%;
+		background-size: 50px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_compliance_protocols {
 		background-position-y: 1% !important;
@@ -747,19 +844,19 @@ a:hover {
 		background-position-y: 0%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_intelligent_permit_management_new {
-		background-position-y: 160%;
-		background-size: 55px;
+		background-position-y: 140%;
+		background-size: 50px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_intelligent_permit_management_new {
 		background-position-y: -1% !important;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_incident_reporting_management {
-		background-position-y: 170%;
-		background-size: 52px;
+		background-position-y: 142%;
+    	background-size: 50px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_rapid_knowledge_collaboration {
-		background-position-y: 152%;
-		background-size: 55px;
+		background-position-y: 134%;
+		background-size: 52px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt:hover .hse_rapid_knowledge_collaboration {
 		background-position-y: -1% !important;
@@ -821,6 +918,18 @@ a:hover {
 		background-position-y: -8% !important;
 	}
 }
+@media(max-width:768px){
+  .seven_hexagon_row .hexagon, .seven_hexagon_row .hexagon::before, .seven_hexagon_row .hexagon::after {
+    width: 54px !important;
+    height: 95px !important;
+  }
+  .seven_hexagon_row .hexagon_row2 .hexagon:nth-child(even) {
+    top: 43px;
+  }
+  .seven_hexagon_row .hexagon_row2 .hexagon:nth-child(odd) {
+    top: -7px;
+  }
+}
 @media(max-width:767px){
 	.hide_responsiv {
 		display:none;
@@ -864,6 +973,9 @@ a:hover {
 }
 
 @media(max-width:425px){
+  .seven_hexagon_row  {
+    display: inline-block;
+  }
 	.hexagon, .hexagon::before, .hexagon::after {
 		width: 116px;
 		height: 200px;
@@ -935,19 +1047,19 @@ a:hover {
 		padding-left: 20px;
 		padding-right: 20px;
 	}
-	.seven_hexagon_row .hexagontent.hexagon_content_box a p {
+	html .seven_hexagon_row .hexagontent.hexagon_content_box a p {
 		padding-top: 74px !important;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_health_safety_environment_mgmt_new {
 		background-size: 78px;
-		background-position-y: 135%;
+		background-position-y: 122%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_compliance_protocols {
 		background-size: 78px;
 		background-position-y: 120%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_incident_reporting_management {
-		background-position-y: 132%;
+		background-position-y: 116%;
 		background-size: 80px;
 	}
 	.seven_hexagon_row .hexagontent .project_information_hub {
@@ -960,9 +1072,10 @@ a:hover {
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_environment_development {
 		background-size: 80px;
+		background-position-y: 118%;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_intelligent_permit_management_new {
-		background-position-y: 130%;
+		background-position-y: 116%;
 		background-size: 82px;
 	}
 	.seven_hexagon_row .hexagon_fullcontnt .hse_rapid_knowledge_collaboration {
@@ -1023,6 +1136,14 @@ a:hover {
 	}
 	.premium_hexagon_section .seven_hexagon_row .hexagon_fullcontnt_hse:hover .hse_broadcast_and_media_channel_1 {
 		background-position-y: -30% !important;
+	}
+	.seven_hexagon_row .hexagon_fullcontnt .hse_action_tracker {
+		background-size: 70px;
+		background-position-y: 292%;
+	}
+	.seven_hexagon_row .hexagon_fullcontnt .hse_observations {
+		background-size: 70px;
+		background-position-y: 295%;
 	}
 }
 @media(max-width:411px){
