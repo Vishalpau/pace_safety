@@ -1,33 +1,118 @@
+import React,{useEffect,useState} from 'react'
+
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
 export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
-const URL = 'https://dev-safety.pace-os.com/';
+const getSSOUrl = () => {
+  if(window.location.hostname === 'localhost'){
+    return "https://dev-accounts-api.paceos.io";
+  }
+  if(window.location.hostname === 'dev-safety.pace-os.com'){
+    return "https://dev-accounts-api.paceos.io";
+  }
+  if(window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+    return "https://stage-accounts.pace-os.com";
+  }
+  if(window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+    return "https://accounts.pace-os.com";
+  }
+}
 
-export const SSO_URL = 'https://dev-accounts-api.paceos.io';
+export const SSO_URL = getSSOUrl()
+// Dev
+// "https://dev-accounts-api.paceos.io";
+// Production
+// "https://accounts.pace-os.com/"
+
 // local
 export const LOCAL_SSO_CLIENT_SECRET = 'pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW';
 export const LOCAL_SSO_CLIENT_ID = 'ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1';
-export const LOCAL_LOGIN_URL = 'https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1&client_secret=pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW&response_type=code';
+export const LOCAL_LOGIN_URL =
+  "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id="+ LOCAL_SSO_CLIENT_ID +"&client_secret="+ LOCAL_SSO_CLIENT_SECRET +"&response_type=code";
 
-export const SSO_CLIENT_SECRET = 'pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz';
-export const SSO_CLIENT_ID = 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo';
-export const PRODUCTION_SSO_CLIENT_ID = '';
-export const PRODUCTION_SSO_CLIENT_SECRET = '';
+  const getSSOClientSecret = () => {
+    if(window.location.hostname === 'localhost'){
+      return "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
+    }
+    if(window.location.hostname === 'dev-safety.pace-os.com'){
+      return "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
+    }
+    if(window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+      return "";
+    }
+    if(window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+      return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
+    }
+  }
+export const SSO_CLIENT_SECRET = getSSOClientSecret()
+// Dev
+// "4OyOnL5wVipenQ6QpG8fOasjjRSJ2cJwuOUF1sH4yaeGI70flEiwttckHlep0QklG0tS7GyX568wjIpEvR5oYPnseJvjEV3zzlcneOdtGJLs5g24KrwZDzfYu8TohUhw";
+// Production
+// "qSoMeRfipBJKxO5scwhBD4BtQBG7OQt2QJnLWXYTzWiEjgsWQhBpEBB562RjbSQvjBSkYtA2GSRvrzpAAD4bhi8jqXvsmJSEUyrsewZM3Nb7eAsMI3tZfnfqLValgoHH"
+
+const getSSOClientId = () => {
+  if(window.location.hostname === 'localhost'){
+    return "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1";
+  }
+  if(window.location.hostname === 'dev-safety.pace-os.com'){
+    return "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
+  }
+  if(window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+    return "";
+  }
+  if(window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+    return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
+  }
+}
+export const SSO_CLIENT_ID = getSSOClientId()
+// Dev
+// "OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq";
+// Production
+// "jk4vO5RRIi4SqNaLRPpBrAGNbv1KxaO6wetU70qm"
+
 // Redirect login api if login is not.
-export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo&client_secret=pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz&response_type=code`;
+export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=${SSO_CLIENT_ID}&client_secret=${SSO_CLIENT_SECRET}&response_type=code`;
 export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
-export const API_URL = 'https://dev-safety-api.paceos.io/';
-export const ACCOUNT_API_URL = 'https://dev-accounts-api.paceos.io/';
-export const access_token = localStorage.getItem('access_token');
-export const API_VERSION = 'api/v1/';
-export const SELF_API = 'https://dev-accounts-api.paceos.io/api/v1/user/self/';
+
+export const getUrl = () => {
+  if(JSON.parse(localStorage.getItem('userDetails'))) { 
+    
+    let user = JSON.parse(localStorage.getItem('userDetails'))
+    let comp = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    return (user.companies.filter(company => company.companyId == comp)[0]
+                .subscriptions
+                .filter(subscription => subscription.appId == 1)[0]
+                .hostings[0].apiDomain)
+  }
+  
+  return ""
+}
+export const getApiUrl = (data)=>{
+  return data
+}
+let apiDomain = getApiUrl()
+export const API_URL = getUrl() ||apiDomain
+
+
+export const ACCOUNT_API_URL = getSSOUrl() + '/'
+// Dev
+// "https://dev-accounts-api.paceos.io/"
+// Production
+// "https://accounts.pace-os.com/"
+
+
+export const access_token = localStorage.getItem("access_token");
+export const access_token_action = localStorage.getItem("access_token_action");
+export const API_VERSION = "api/v1/"
+export const SELF_API = ACCOUNT_API_URL + "api/v1/user/self/";
 
 // Header authenticatuon
 export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 
-const fkincidentId = localStorage.getItem('fkincidentId');
+// Header authenticatuon
+export const HEADER_AUTH_ACTION = { Authorization: `Bearer ${access_token_action}` };
 
 export const INITIAL_NOTIFICATION_FORM = {
   'Incident details': `/incident/${localStorage.getItem('fkincidentId')}/modify/`,

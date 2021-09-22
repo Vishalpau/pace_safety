@@ -14,7 +14,8 @@ const INITIAL_STATE = {
       closeout:false,
     },
     companyDataList:{},
-    levelBreakDown:[]
+    levelBreakDown:[],
+    apiDomain :null
 }
 
 const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
@@ -32,6 +33,8 @@ const InitialDetailsReducer = (state = INITIAL_STATE,action)=>{
           return{...state, viewMode:action.payload}
         case actionType.COMPANY_DATA:
           return{...state, companyDataList:action.payload}
+        case actionType.API_DOMAIN:
+          return{...state,apiDomain:action.payload}
         default:
             return state
     }

@@ -57,7 +57,7 @@ import { connect } from "react-redux";
 import { tabViewMode } from '../../../redux/actions/initialDetails';
 import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
-import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL,API_URL } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
 // import { handleTimeOutError } from "../../../utils/CheckerValue"
 
@@ -188,7 +188,7 @@ function BlankPage(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-
+console.log({api_url:API_URL})
 
   const fetchData = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -211,7 +211,9 @@ function BlankPage(props) {
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     } else {
+     
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+      // alert('hey')
       .then((res)=>{
          setIncidents(res.data.data.results.results);
     
