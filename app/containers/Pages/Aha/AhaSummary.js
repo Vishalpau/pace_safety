@@ -152,14 +152,11 @@ function AhaSummary() {
   const [activity, setActivity] = useState(false);
   //const [summary, setSummary] = useState(false);
   const history = useHistory();
-  const [expanded, setExpanded] = React.useState("panel1");
+  const [expanded, setExpanded] = useState(false);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel5"
   );
-console.log(assessments)
-console.log(approvals)
-console.log(lessonsLearned)
-console.log(closeOut)
+
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
@@ -170,6 +167,9 @@ console.log(closeOut)
   const [Teamform, setTeamForm] = useState([]);
   const [projectSturcturedData, setProjectSturcturedData] = useState([]);
   const [actionTakenData, setActionTakenData] = useState([]);
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
+  const [isNext, setIsNext] = useState(false)
+
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
@@ -275,13 +275,41 @@ console.log(closeOut)
     // const lastName = fileName.split("-");
     return lastNameArray;
   };
-
+  const [projectStructName, setProjectStructName] = useState([])
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
-    await fetchBreakDownData(result.fkProjectStructureIds);
+    console.log(result.fkProjectStructureIds,"MMMMMMM")
     await setAHAData(result);
+    await handelWorkArea(result)
+    await fetchBreakDownData(result.fkProjectStructureIds);
+
   };
+  const handelWorkArea = async (assessment) => {
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    let structName = []
+    let projectStructId = assessment.fkProjectStructureIds.split(":")
+
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    console.log(structName,"AAAAAAAAAAAA")
+    setProjectStructName(structName)
+  }
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -291,10 +319,13 @@ console.log(closeOut)
     await setTeamForm(result);
   };
   const fetchBreakDownData = async (projectBreakdown) => {
+    console.log(projectBreakdown,"<><><><><><>")
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-
+    let breakdownLength = projectData.projectName.breakdown.length
+    // setLevelLenght(breakdownLength)
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -307,17 +338,23 @@ console.log(closeOut)
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            console.log(result)
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
-                // setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            console.log(selectBreakDown,"PPPPPPPPP")
+            setProjectSturcturedData(selectBreakDown)
           })
           .catch((error) => {
 
@@ -327,7 +364,7 @@ console.log(closeOut)
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -335,19 +372,26 @@ console.log(closeOut)
           .then(async (response) => {
 
             const result = response.data.data.results;
-            // console.log({ fetchSelectBreakDownList: result })
+
             const res = result.map((item, index) => {
+              console.log(parseInt(breakDown[key].slice(2)))
+              console.log(item.id)
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
-                console.log(selectBreakDown)
-                // setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            console.log('selectBreakDown',selectBreakDown)
 
+            setProjectSturcturedData(selectBreakDown)
 
           })
           .catch((error) => {
@@ -355,13 +399,12 @@ console.log(closeOut)
             setIsNext(true);
           });
       }
-      await setProjectSturcturedData(selectBreakDown);
     }
   };
   
 
   
-  console.log(projectSturcturedData)
+  // console.log(projectSturcturedData,"lkklklklkl")
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     const res = await api.get(
@@ -394,7 +437,7 @@ console.log(closeOut)
     await setActionTakenData(sorting);
     // await setIsLoading(true);
   };
-  console.log(actionTakenData);
+  console.log(projectSturcturedData,"FFFFFFFFff");
   useEffect(() => {
     if (id) {
       fetchAHASummary();
@@ -529,18 +572,8 @@ console.log(closeOut)
                                       Project structure
                                     </Typography>
                                     <Typography className={Fonts.labelValue}>
-                                      {project.projectName} -{" "}
-                                      {projectSturcturedData[0]
-                                        ? projectSturcturedData[0].name
-                                        : null}{" "}
-                                      -{" "}
-                                      {projectSturcturedData[1]
-                                        ? projectSturcturedData[1].name
-                                        : null}{" "}
-                                      -{" "}
-                                      {projectSturcturedData[2]
-                                        ? projectSturcturedData[2].name
-                                        : null}
+                                    {project.projectName}  {projectStructName.map((value) => ` - ${value}`)} 
+
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -555,7 +588,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.workArea}
+                                      {ahaData.workArea ? ahaData.workArea : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -570,7 +603,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.location}
+                                      {ahaData.location ? ahaData.location : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -585,7 +618,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.username}
+                                      {ahaData.username ? ahaData.username : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -617,7 +650,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.permitToPerform}
+                                      {ahaData.permitToPerform ? ahaData.permitToPerform : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -632,7 +665,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.permitNumber}
+                                      {ahaData.permitNumber ? ahaData.permitNumber : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -647,7 +680,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.description}
+                                      {ahaData.description ? ahaData.description : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -688,16 +721,16 @@ console.log(closeOut)
                               <Grid container item xs={12} spacing={3}>
                                 <>
                                   <Grid item xs={12} md={6}>
-                                    {form.map((item, index) => (
+                                    {form.length > 0 ? form.map((item, index) => (
                                       <>
                                         <ul
                                           className={Fonts.labelValue}
                                           key={index}
                                         >
-                                          {<li>{item.hazard}</li>}
+                                          {<li>{item.hazard ? item.hazard : "-"}</li>}
                                         </ul>
                                       </>
-                                    ))}
+                                    )) : "-"}
                                     {/* <Typography variant="body" className={Fonts.labelValue}>
                                         {item.risk}
                                       </Typography> */}
@@ -751,7 +784,7 @@ console.log(closeOut)
                                                       Fonts.headingIcon
                                                     }
                                                   />
-                                                  {item.hazard}
+                                                  {item.hazard ? item.hazard : "-"}
                                                 </Typography>
                                               </AccordionSummary>
                                               <AccordionDetails>
@@ -997,7 +1030,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.workStopCondition}
+                                      {ahaData.workStopCondition ? ahaData.workStopCondition : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1012,7 +1045,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.additionalRemarks}
+                                      {ahaData.additionalRemarks ? ahaData.additionalRemarks : "-"}
                                     </Typography>
                                   </Grid>
                                 </>
@@ -1075,7 +1108,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.link}
+                                      {ahaData.link ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1091,7 +1124,7 @@ console.log(closeOut)
                                       display="block"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.notifyTo}
+                                      {ahaData.notifyTo ? ahaData.notifyTo : "-"}
                                     </Typography>
                                     {/* <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography> */}
                                   </Grid>
@@ -1125,7 +1158,7 @@ console.log(closeOut)
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.username}
+                                {ahaData.username ? ahaData.username : "-"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1166,7 +1199,7 @@ console.log(closeOut)
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.username}
+                                {ahaData.username ? ahaData.username : "-"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1283,7 +1316,7 @@ console.log(closeOut)
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.closedByName}
+                                {ahaData.closedByName ? ahaData.closedByName : "-"}
                               </Typography>
                             </Grid><Grid item xs={12} md={6}>
                               <Typography

@@ -285,7 +285,7 @@ class ObservationsFilter extends React.Component {
       aria-labelledby="nested-list-subheader"
       className={classes.root_type}
     >
-      <ListItem button className={this.state.type === "All" ? classes.selected : classes.nested} onClick={(e) => this.handleType('All')}>
+      <ListItem button className={this.state.type === "All" || this.state.type === "Type"? classes.selected : classes.nested} onClick={(e) => this.handleType('All')}>
         <ListItemText primary="All" />
       </ListItem>
       <ListItem button className={this.state.type === "Risk" ? classes.selected : classes.nested} onClick={(e) => this.handleType('Risk')}>
