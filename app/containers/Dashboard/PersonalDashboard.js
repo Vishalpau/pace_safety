@@ -412,8 +412,6 @@ function PersonalDashboard(props) {
 
   useEffect(() => {
     userDetails();
-
-
   }, []);
 
   return (

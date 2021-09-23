@@ -35,6 +35,7 @@ import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
+import apiAction from '../../../../utils/axiosActionTracker';
 
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
@@ -242,12 +243,9 @@ const Assessment = () => {
 
   const handelActionTracker = async (apiData) => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
+      const allActionTrackerData = await apiAction.get(
         `api/v1/actions/?enitityReferenceId=${jhaId}%3A${apiData[key]["id"]
         }`
       );
