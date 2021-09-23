@@ -242,17 +242,17 @@ function PersonalDashboard(props) {
 
       await setSubscriptions(data)
 
-      
+
       const apps = data.map(app => app.appId)
-      
-      let app = data.filter(app=> app.appId === 1)
-      let module = app[0].modules.map(item=>{
-        if(item.subscriptionStatus =="active"){
-          
+
+      let app = data.filter(app => app.appId === 1)
+      let module = app[0].modules.map(item => {
+        if (item.subscriptionStatus == "active") {
+
           return item.moduleCode
         }
       })
-    
+
       setCode(module)
       getModules(apps)
     } catch (error) { }
@@ -268,10 +268,10 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-    let data1 = apps.filter(item=>item.appId===1)
-    
+    let data1 = apps.filter(item => item.appId === 1)
+
     const codes = data.map(module => module.subscriptionStatus)
-    
+
     // setCode(codes)
 
 
@@ -279,14 +279,14 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = (appCode) => {
-    if(appCode === "observations"){
+    if (appCode === "observations") {
       history.push('/app/observations')
 
     }
-    else if(appCode === "incidents"){
+    else if (appCode === "incidents") {
       history.push('/incidents/')
 
-    }else if(appCode === "assessments")
+    } else if (appCode === "assessments")
       history.push('/app/pages/assesments/xflha')
   }
 
@@ -336,7 +336,7 @@ function PersonalDashboard(props) {
     else {
       await setOpen(false);
     }
-   
+
   };
 
   //Project selections
@@ -465,7 +465,7 @@ function PersonalDashboard(props) {
             <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
             </div>
-          </div> 
+          </div>
 
           {/* Action Tracker
 
