@@ -36,6 +36,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 import ActionTracker from "./ActionTracker";
+import apiAction from "../../../utils/axiosActionTracker"
 
 import {
   access_token,
@@ -220,7 +221,7 @@ bytes
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId=${id}`)
+    const allActionTrackerData = await apiAction.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
     allActionTracker.map((item,i) => {
@@ -235,6 +236,8 @@ newData.push(allActionTracker[i])
     await setIsLoading(true);
 
   }
+
+  console.log(actionTakenData,"::::::")
   useEffect(() => {
       if(id){
         fetchInitialiObservation();
@@ -323,7 +326,7 @@ newData.push(allActionTracker[i])
                 {action.actionTitle}
                 </TableCell>
                 <TableCell style={{ width:50}}>
-                {action.actionStatus}
+                {action.actionStatus ? actionStatus : "-"}
                 </TableCell>
               </TableRow></> ))
           }

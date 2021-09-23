@@ -5,7 +5,7 @@ import { apiUrl } from "./helper";
 
 
 const api = axios.create({
-  baseURL: JSON.parse(localStorage.getItem("BaseUrl"))["safety"],
+  baseURL: localStorage.getItem("apiBaseUrl"),
   headers: HEADER_AUTH
 });
 api.defaults.timeout = 10000;
