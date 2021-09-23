@@ -501,9 +501,7 @@ function Actions(props) {
       console.log(fkProjectId,"project")
       console.log(fkProjectStructureIds,"structure")
       console.log(props.projectName.projectId,"||||||||||||||||||||||")
-      const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-      console.log(res,"VVVVVVVVv")
-      const result = res.data.data.results.results
+      
       let tempData = []
       let tempUser = []
       let tempRisk = []
@@ -515,11 +513,14 @@ function Actions(props) {
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`)
           const result = allLogInUserData.data.data.results.results
-          console.log(allLogInUserData,"((((((0000000))))))))")
+          console.log(allLogInUserData,"My observation")
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
         } else {
+          const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+        console.log(res,"VVVVVVVVv")
+        const result = res.data.data.results.results
           console.log(result,"IIIIIIII")
           await setAllInitialData(result)
           let pageCount = Math.ceil(res.data.data.results.count / 25)
@@ -702,8 +703,7 @@ function Actions(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     
-    const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    const result = res.data.data.results.results
+    
     // await setAllInitialData(result)
     let tempData = []
     let tempUser = []
@@ -711,13 +711,18 @@ function Actions(props) {
     if (props.type == "All" || props.type == "Type") {
       // await setAllInitialData(result)
       if (props.observation == "My Observations") {
-        const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&createdBy=${createdBy}`)
+        const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
+        console.log(allLogInUserData,"MUUUUUUU")
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
       } else {
+        const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const result = res.data.data.results.results
         await setAllInitialData(result)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
       }
 
 
