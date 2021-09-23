@@ -287,7 +287,10 @@ const ObservationInitialNotificationUpdate = () => {
     tempData[8].observationTag = e.target.value
   }
 
+  
+
   const handleSubmit = async () => {
+    console.log("lllll")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
 
     await setError(error);
@@ -401,6 +404,7 @@ const ObservationInitialNotificationUpdate = () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
     await setInitialData(result)
+    await fetchBreakDownData(result.fkProjectStructureIds)
     await handelWorkArea(result)
     // await setIsLoading(true);
 
@@ -513,6 +517,89 @@ const ObservationInitialNotificationUpdate = () => {
       });
   };
 
+  const fetchBreakDownData = async (projectBreakdown) => {
+    console.log(projectBreakdown,"<><><><><><>")
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let breakdownLength = projectData.projectName.breakdown.length
+    // setLevelLenght(breakdownLength)
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            await setIsLoading(true);
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+
+                selectBreakDown = [
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
+                ];
+
+              }
+            });
+            console.log(selectBreakDown,"PPPPPPPPP")
+            setProjectSturcturedData(selectBreakDown)
+          })
+          .catch((error) => {
+
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].substring(2)}`,
+          headers: HEADER_AUTH,
+        };
+
+        await api(config)
+          .then(async (response) => {
+
+            const result = response.data.data.results;
+
+            const res = result.map((item, index) => {
+              console.log(parseInt(breakDown[key].slice(2)))
+              console.log(item.id)
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+                ];
+
+              }
+            });
+            console.log('selectBreakDown',selectBreakDown)
+
+            setProjectSturcturedData(selectBreakDown)
+
+          })
+          .catch((error) => {
+            console.log(error)
+            setIsNext(true);
+          });
+      }
+    }
+  };
   
 
   useEffect(() => {

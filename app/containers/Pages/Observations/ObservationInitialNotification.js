@@ -196,7 +196,7 @@ const ObservationInitialNotification = (props) => {
   const [reportedById , setReportedById] = useState([]);
   const [reportedByBadgeId , setReportedByIdBadgeId] = useState([]); 
   const [attachment,setAttachment] = useState()
-  const [departmentName , setDepartmentName] = useState([user])
+  const [departmentName , setDepartmentName] = useState([])
   const [shiftType, setShiftType] = useState([]);
   const [superVisorId , setSuperVisorId] = useState('')
   const [notificationSentValue , setNotificationSentValue] = useState([])
@@ -332,7 +332,9 @@ const ObservationInitialNotification = (props) => {
       },
     };
     axios(config)
+    
       .then((response) => {
+
         if (response.status === 200) {
           const result = response.data.data.results;
           let user = [];
@@ -659,6 +661,10 @@ const ObservationInitialNotification = (props) => {
   };
 
   const fetchNotificationSent = async () => {
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+
+
     try {
       
       var config = {
@@ -674,7 +680,7 @@ const ObservationInitialNotification = (props) => {
     } catch (error) {
     }
   }
-
+console.log(form)
   const fetchTags = async () => {
     let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
