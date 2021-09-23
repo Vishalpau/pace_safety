@@ -401,9 +401,36 @@ const ObservationInitialNotificationUpdate = () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
     await setInitialData(result)
-    await fetchBreakDownData(result.fkProjectStructureIds)
+    await handelWorkArea(result)
     // await setIsLoading(true);
 
+  }
+  const [projectStructName, setProjectStructName] = useState([])
+
+  const handelWorkArea = async (assessment) => {
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+      const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    let structName = []
+    let projectStructId = assessment.fkProjectStructureIds.split(":")
+
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    console.log(structName,"AAAAAAAAAAAA")
+    setProjectStructName(structName)
   }
 
   const fetchTags = async () => {
@@ -486,85 +513,7 @@ const ObservationInitialNotificationUpdate = () => {
       });
   };
 
-  const fetchBreakDownData = async (projectBreakdown) => {
-
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    let breakdownLength = projectData.projectName.breakdown.length
-    // setLevelLenght(breakdownLength)
-    let selectBreakDown = [];
-    const breakDown = projectBreakdown.split(':');
-    setSelectDepthAndId(breakDown)
-    for (var key in breakDown) {
-      if (breakDown[key].slice(0, 2) === '1L') {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
-
-        await api(config)
-          .then(async (response) => {
-            const result = response.data.data.results;
-            await setIsLoading(true);
-            result.map((item) => {
-              if (breakDown[key].slice(2) == item.id) {
-
-                selectBreakDown = [
-                  ...selectBreakDown, {
-                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
-                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-                    breakDownData: result
-                  }
-
-                ];
-
-              }
-            });
-            setProjectSturcturedData(selectBreakDown)
-          })
-          .catch((error) => {
-
-            setIsNext(true);
-          });
-      } else {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].substring(2)}`,
-          headers: HEADER_AUTH,
-        };
-
-        await api(config)
-          .then(async (response) => {
-
-            const result = response.data.data.results;
-
-            const res = result.map((item, index) => {
-              if (parseInt(breakDown[key].slice(2)) == item.id) {
-
-                selectBreakDown = [
-                  ...selectBreakDown,
-                  {
-                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
-                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-                    breakDownData: result
-                  }
-                ];
-
-              }
-            });
-            setProjectSturcturedData(selectBreakDown)
-
-          })
-          .catch((error) => {
-            console.log(error)
-            setIsNext(true);
-          });
-      }
-    }
-  };
-
+  
 
   useEffect(() => {
 
@@ -616,7 +565,7 @@ const ObservationInitialNotificationUpdate = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-              {project.projectName}  {projectSturcturedData.map((value) => ` - ${value.selectValue.name}`)}
+            {project.projectName}  {projectStructName.map((value) => ` - ${value}`)} 
             </Typography>
           </Grid>
           <Grid

@@ -46,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
     border: '1px solid rgba(0, 0, 0, .13)',
     borderRadius: '4px',
+  },pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   leftSide: {
     flexGrow: 1,
@@ -195,7 +199,8 @@ function Aha(props) {
     search: false,
     filter: false,
     viewColumns: false,
-    download :false
+    download :false,
+    pagination: false
   };
 
   const handleSummaryPush = async (index) => {
@@ -240,12 +245,14 @@ function Aha(props) {
   const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    console.log("++++++++++++++++++",res)
+
     const result = res.data.data.results.results
     await setAllAHAData(result)
     let pageCount  = Math.ceil(res.data.data.results.count/25)
     await setPageCount(pageCount)
 
-    await setIsLoading(true)
+    // await setIsLoading(true)
   };
 
   const handleChange = async(event, value) => {
@@ -262,7 +269,8 @@ function Aha(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(`api/v1/ahas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+  const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+  console.log("----------",res)
     await setAllAHAData(res.data.data.results.results);
   };
 
@@ -435,7 +443,7 @@ function Aha(props) {
                 </Typography>
 
                 <Typography className={Fonts.listingLabelValue}>
-                {item[1]["workArea"]}
+                {item[1]["workArea"] ? item[1]["workArea"] :"-"}
                 </Typography>
               </Grid>
               <Grid item xs={6} lg={3}>
@@ -443,7 +451,7 @@ function Aha(props) {
                   Location
                 </Typography>
                 <Typography className={Fonts.listingLabelValue}>
-                {item[1]["location"]}
+                {item[1]["location"] ? item[1]["location"] :"-"}
                 </Typography>
               </Grid>
 
