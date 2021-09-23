@@ -226,7 +226,7 @@ for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
-const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
   await setAllInitialData(res.data.data.results.results);
 };
 console.log(allInitialData)
