@@ -1,26 +1,23 @@
-import React, { useEffect, useState } from 'react'
+
 
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
 export const DAEMON = '@@saga-injector/daemon';
 export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
-export const getSSOUrl = () => {
-  if (window.location.hostname === 'localhost') {
+const getSSOUrl = () => {
+  if(window.location.hostname === 'localhost'){
     return "https://dev-accounts-api.paceos.io";
   }
-  else if (window.location.hostname === 'dev-safety.pace-os.com') {
+  if(window.location.hostname === 'dev-safety.pace-os.com'){
     return "https://dev-accounts-api.paceos.io";
   }
-  else if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
+  if(window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
     return "https://stage-accounts.pace-os.com";
   }
-  // else if (window.location.hostname.includes("safety.pace-os.com")) {
-  //   console.log("here")
-  //   return "https://accounts.pace-os.com";
-  // }
-  else if (window.location.hostname == "safety.pace-os.com") {
+  if(window.location.hostname === 'safety.pace-os.com'){
     return "https://accounts.pace-os.com";
   }
+  
 }
 
 export const SSO_URL = getSSOUrl()
@@ -33,22 +30,25 @@ export const SSO_URL = getSSOUrl()
 export const LOCAL_SSO_CLIENT_SECRET = 'pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW';
 export const LOCAL_SSO_CLIENT_ID = 'ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1';
 export const LOCAL_LOGIN_URL =
-  "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=" + LOCAL_SSO_CLIENT_ID + "&client_secret=" + LOCAL_SSO_CLIENT_SECRET + "&response_type=code";
+  "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id="+ LOCAL_SSO_CLIENT_ID +"&client_secret="+ LOCAL_SSO_CLIENT_SECRET +"&response_type=code";
 
-const getSSOClientSecret = () => {
-  if (window.location.hostname === 'localhost') {
-    return "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
+  const getSSOClientSecret = () => {
+    if(window.location.hostname === 'localhost'){
+      return "pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW";
+    }
+    if(window.location.hostname === 'dev-safety.pace-os.com'){
+      return "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
+    }
+    if(window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+      return "";
+    }
+    if(window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+      return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
+    }
+    if(window.location.hostname === 'safety.pace-os.com'){
+      return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
+    }
   }
-  if (window.location.hostname === 'dev-safety.pace-os.com') {
-    return "pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz";
-  }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
-    return "";
-  }
-  if (window.location.hostname == "safety.pace-os.com") {
-    return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
-  }
-}
 export const SSO_CLIENT_SECRET = getSSOClientSecret()
 // Dev
 // "4OyOnL5wVipenQ6QpG8fOasjjRSJ2cJwuOUF1sH4yaeGI70flEiwttckHlep0QklG0tS7GyX568wjIpEvR5oYPnseJvjEV3zzlcneOdtGJLs5g24KrwZDzfYu8TohUhw";
@@ -56,16 +56,19 @@ export const SSO_CLIENT_SECRET = getSSOClientSecret()
 // "qSoMeRfipBJKxO5scwhBD4BtQBG7OQt2QJnLWXYTzWiEjgsWQhBpEBB562RjbSQvjBSkYtA2GSRvrzpAAD4bhi8jqXvsmJSEUyrsewZM3Nb7eAsMI3tZfnfqLValgoHH"
 
 const getSSOClientId = () => {
-  if (window.location.hostname === 'localhost') {
+  if(window.location.hostname === 'localhost'){
     return "ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1";
   }
-  if (window.location.hostname === 'dev-safety.pace-os.com') {
+  if(window.location.hostname === 'dev-safety.pace-os.com'){
     return "yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo";
   }
-  if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
+  if(window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
     return "";
   }
-  if (window.location.hostname == "safety.pace-os.com") {
+  if(window.location.hostname === 'safety.pace-os.com.s3-website-eu-west-1.amazonaws.com'){
+    return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
+  }
+  if(window.location.hostname === 'safety.pace-os.com'){
     return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
   }
 }
@@ -80,23 +83,26 @@ export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=${SSO
 export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
 
-export const getUrl = () => {
-  if (JSON.parse(localStorage.getItem('userDetails')) && localStorage.getItem('userDetails') !== null && localStorage.getItem('company') !== null) {
+const getUrl = () => {
+  if(localStorage.getItem('userDetails') != null && localStorage.getItem('projectName') != null) { 
     let user = JSON.parse(localStorage.getItem('userDetails'))
     let comp = JSON.parse(localStorage.getItem('company')).fkCompanyId
-    return (user.companies.filter(company => company.companyId == comp)[0]
-      .subscriptions
-      .filter(subscription => subscription.appId == 1)[0]
-      .hostings[0].apiDomain)
+     let apiDomain = user
+                .companies
+                .filter(company => company.companyId == comp)[0]
+                .subscriptions
+                .filter(subscription => subscription.appCode == "safety")[0]
+                .hostings[0].apiDomain
+                
+
+      // api.defaults.baseURL = apiDomain
+                
   }
+  
   return ""
 }
 
-export const getApiUrl = (data) => {
-  return data
-}
-let apiDomain = getApiUrl()
-export const API_URL = getUrl() || apiDomain
+export const API_URL = getUrl() 
 
 
 export const ACCOUNT_API_URL = getSSOUrl() + '/'
