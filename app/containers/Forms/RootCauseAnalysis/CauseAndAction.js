@@ -19,6 +19,7 @@ import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 
 import api from "../../../utils/axios";
+import apiAction from "../../../utils/axiosActionTracker"
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import {
@@ -104,12 +105,9 @@ const BasicCauseAndAction = () => {
   };
 
   const handelActionTracker = async (apiData) => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
+      const allActionTrackerData = await apiAction.get(
         `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
         }`
       );

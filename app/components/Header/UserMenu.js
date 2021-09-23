@@ -215,11 +215,19 @@ function UserMenu(props) {
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
 
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
-        let hostings = subscriptionData.filter(item => item.appId === 1)[0].hostings[0].apiDomain
-        // axios.defaults.baseURL = hostings;
+        let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
+        let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
+
+        let apiUrlDomain = {}
+        if (subscriptionAction.length > 0) {
+          let actionHosting = subscriptionAction[0].hostings[0].apiDomain
+          apiUrlDomain = { "safety": hostings, "actions": actionHosting }
+        } else {
+          apiUrlDomain = { "safety": hostings }
+        }
 
         localStorage.setItem("apiBaseUrl", hostings)
-        getApiUrl(hostings)
+        localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
         setCompanyName(res.data.data.results.data.companies[0].companyName)
@@ -423,7 +431,7 @@ function UserMenu(props) {
             <List component="nav">
 
               {subscriptions.map(subscription => (
-                (subscription.appId !== 1) && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
+                (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div>
                     <ListItemText
                       className={classnames.appDrawerLable}

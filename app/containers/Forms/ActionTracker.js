@@ -21,6 +21,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from "@material-ui/icons/FlashOn";
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import apiAction from "../../utils/axiosActionTracker"
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -88,15 +89,9 @@ export default function ActionTracker(props) {
   });
   const [reportedByName, setReportedByName] = useState([]);
 
-
-  let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  const api = axios.create({
-    baseURL: API_URL_ACTION_TRACKER,
-  });
-
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
-      const res = await api.get(`/api/v1/actions/${props.actionID}/`)
+      const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`)
       console.log(res.data.data.results)
     }
   }
@@ -149,7 +144,7 @@ export default function ActionTracker(props) {
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
-      let res = await api.post("api/v1/actions/", form);
+      let res = await apiAction.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setError({ actionTitle: "" });
         await setForm({ ...form, plannedEndDate: null, actionTitle: "" });

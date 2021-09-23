@@ -35,6 +35,7 @@ function App() {
   const [status, setStatus] = useState(0)
   const userLogin = () => {
     try {
+      if(access_token){
       let config = {
         method: "get",
         url: `${SELF_API}`,
@@ -55,8 +56,10 @@ function App() {
         })
         .catch(function (error) {
         });
+      }
     } catch (error) {
     }
+  
   }
   useEffect(() => {
     userLogin();
@@ -89,20 +92,23 @@ function App() {
       console.log(data)
       let config = {
         method: "post",
-        url: `${getSSOUrl()}/api/v1/user/auth/token/`,
+        url: `${SSO_URL}/api/v1/user/auth/token/`,
         headers: {
           "Content-Type": "application/json",
         },
         data: data,
       };
+      console.log(config)
       await axios(config)
         .then(function (response) {
+          console.log(response)
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
             window.location.href = "/";
           }
         })
         .catch(function (error) {
+          console.log(error)
         });
     }
     else {
