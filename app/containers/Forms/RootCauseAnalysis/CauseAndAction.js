@@ -104,12 +104,9 @@ const BasicCauseAndAction = () => {
   };
 
   const handelActionTracker = async (apiData) => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
+      const allActionTrackerData = await api.get(
         `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
         }`
       );
