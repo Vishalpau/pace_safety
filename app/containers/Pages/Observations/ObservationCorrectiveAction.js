@@ -40,6 +40,7 @@ import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveAct
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import apiAction from "../../../utils/axiosActionTracker"
 
 import {
   access_token,
@@ -180,7 +181,6 @@ function ObservationCorrectiveAction() {
       })
     }
   })
-  
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -355,12 +355,12 @@ function ObservationCorrectiveAction() {
     }
 }
   const handelActionTracker = async () => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    // const api_action = axios.create({
+    //   baseURL: API_URL_ACTION_TRACKER,
+    // });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
 
   }
@@ -372,13 +372,12 @@ temp.reviewedById = value.id
   }
 
   const fetchactionTrackerData = async () =>{
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    let ActionToCause = {}
-    console.log(id,"00000000")
-    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId__startswith=${id}`)
+    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    // const api_action = axios.create({
+    //   baseURL: API_URL_ACTION_TRACKER,
+    // });
+    // let ActionToCause = {}
+    const allActionTrackerData = await apiAction.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
     allActionTracker.map((item,i) => {

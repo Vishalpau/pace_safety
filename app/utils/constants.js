@@ -83,26 +83,26 @@ export const LOGIN_URL = `${SSO_URL}/api/v1/user/auth/authorize/?client_id=${SSO
 export const LOGOUT_URL = `${SSO_URL}/user/logout/?client_id=${SSO_CLIENT_ID}`;
 
 
-const getUrl = () => {
-  if(localStorage.getItem('userDetails') != null && localStorage.getItem('projectName') != null) { 
-    let user = JSON.parse(localStorage.getItem('userDetails'))
-    let comp = JSON.parse(localStorage.getItem('company')).fkCompanyId
-     let apiDomain = user
-                .companies
-                .filter(company => company.companyId == comp)[0]
-                .subscriptions
-                .filter(subscription => subscription.appCode == "safety")[0]
-                .hostings[0].apiDomain
+// const getUrl = () => {
+//   if(localStorage.getItem('userDetails') != null && localStorage.getItem('projectName') != null) { 
+//     let user = JSON.parse(localStorage.getItem('userDetails'))
+//     let comp = JSON.parse(localStorage.getItem('company')).fkCompanyId
+//      let apiDomain = user
+//                 .companies
+//                 .filter(company => company.companyId == comp)[0]
+//                 .subscriptions
+//                 .filter(subscription => subscription.appCode == "safety")[0]
+//                 .hostings[0].apiDomain
                 
 
-      // api.defaults.baseURL = apiDomain
+//       // api.defaults.baseURL = apiDomain
                 
-  }
+//   }
   
-  return ""
-}
+//   return ""
+// }
 
-export const API_URL = getUrl() 
+// export const API_URL = getUrl() 
 
 
 export const ACCOUNT_API_URL = getSSOUrl() + '/'
