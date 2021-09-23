@@ -242,17 +242,18 @@ function PersonalDashboard(props) {
 
       await setSubscriptions(data)
 
-      
+
       const apps = data.map(app => app.appId)
-      
-      let app = data.filter(app=> app.appId === 1)
-      let module = app[0].modules.map(item=>{
-        if(item.subscriptionStatus =="active"){
-          
+      console.log(data)
+      let app = data.filter(app => app.appId === 1)
+      console.log(app)
+      let module = app[0].modules.map(item => {
+        if (item.subscriptionStatus == "active") {
+          console.log(item.moduleCode)
           return item.moduleCode
         }
       })
-    
+
       setCode(module)
       getModules(apps)
     } catch (error) { }
@@ -268,10 +269,10 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-    let data1 = apps.filter(item=>item.appId===1)
-    
+    let data1 = apps.filter(item => item.appId === 1)
+    console.log(data1)
     const codes = data.map(module => module.subscriptionStatus)
-    
+    console.log(apps)
     // setCode(codes)
 
 
@@ -279,14 +280,14 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = (appCode) => {
-    if(appCode === "observations"){
+    if (appCode === "observations") {
       history.push('/app/observations')
 
     }
-    else if(appCode === "incidents"){
+    else if (appCode === "incidents") {
       history.push('/incidents/')
 
-    }else if(appCode === "assessments")
+    } else if (appCode === "assessments")
       history.push('/app/pages/assesments/xflha')
   }
 
@@ -336,7 +337,7 @@ function PersonalDashboard(props) {
     else {
       await setOpen(false);
     }
-   
+
   };
 
   //Project selections
@@ -412,7 +413,8 @@ function PersonalDashboard(props) {
   useEffect(() => {
     userDetails();
 
-  }, []);
+
+  }, [props.initialValues.companyDataList]);
 
   return (
     <PapperBlock title="Home" icon="ion-md-list-box">
@@ -465,7 +467,7 @@ function PersonalDashboard(props) {
             <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
             </div>
-          </div> 
+          </div>
 
           {/* Action Tracker
 
@@ -494,7 +496,7 @@ function PersonalDashboard(props) {
 
             <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box">
-                <a className="hse_environment_development" onClick={() => handleClick('observations')}>
+                <a className="hse_observations" onClick={() => handleClick('observations')}>
                   <p>Observations</p>
                 </a>
               </div>
@@ -518,6 +520,7 @@ function PersonalDashboard(props) {
             <div className={!(codes.includes('env_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box">
                 <a
+                  className="hse_environment_development"
                   onClick={() => handleClick('env_management')}
                 >
                   <p>Environment Management</p>
@@ -527,6 +530,7 @@ function PersonalDashboard(props) {
             <div className={!(codes.includes('collaboration')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box">
                 <a
+                  className="hse_rapid_knowledge_collaboration"
                   onClick={() => handleClick('collaboration')}
                 >
                   <p>Rapid Knowledge & Collaboration</p>
