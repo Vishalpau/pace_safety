@@ -220,13 +220,12 @@ bytes
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId__startswith=${id}`)
+    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
     allActionTracker.map((item,i) => {
 
       if(item.enitityReferenceId == localStorage.getItem("fkobservationId")){
-        console.log("4545")
 newData.push(allActionTracker[i])
       } 
     }

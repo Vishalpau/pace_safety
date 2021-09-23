@@ -377,8 +377,7 @@ temp.reviewedById = value.id
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    console.log(id,"00000000")
-    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId__startswith=${id}`)
+    const allActionTrackerData = await api_action.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
     allActionTracker.map((item,i) => {
