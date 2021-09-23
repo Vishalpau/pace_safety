@@ -204,6 +204,8 @@ const Assessment = () => {
   const [projectData, setProjectData] = useState({
     projectId: "",
     companyId: "",
+    createdBy: "",
+    projectStructId: ""
   })
 
   const handelCheckList = async () => {
@@ -357,6 +359,11 @@ const Assessment = () => {
   }
 
   const handelActionLink = () => {
+
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
@@ -367,7 +374,12 @@ const Assessment = () => {
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
 
-    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+    setProjectData({
+      projectId: projectId,
+      companyId: fkCompanyId,
+      createdBy: userId,
+      projectStructId: JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]
+    })
   }
 
   const classes = useStyles();
@@ -385,7 +397,7 @@ const Assessment = () => {
 
   useEffect(() => {
     handelCallBack()
-  }, [updatePage])
+  }, [])
 
   return (
     <PapperBlock title="Assessments" icon="ion-md-list-box">
@@ -467,14 +479,20 @@ const Assessment = () => {
                                 actionContext="jha:hazard"
                                 enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
                                 setUpdatePage={setUpdatePage}
+                                fkCompanyId={projectData.companyId}
+                                fkProjectId={projectData.projectId}
+                                fkProjectStructureIds={projectData.projectStructId}
+                                createdBy={projectData.createdBy}
                                 updatePage={updatePage}
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
                               <AssessmentActions
-                                form={form}
+                                value={value}
                                 companyId={projectData.companyId}
                                 projectId={projectData.projectId}
+                                handelCheckList={handelCheckList}
+                                updatePage={updatePage}
                               />
                             </Grid>
                           </Grid>

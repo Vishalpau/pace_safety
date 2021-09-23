@@ -57,7 +57,7 @@ import { connect } from "react-redux";
 import { tabViewMode } from '../../../redux/actions/initialDetails';
 import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
-import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, API_URL } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
 // import { handleTimeOutError } from "../../../utils/CheckerValue"
 
@@ -188,9 +188,10 @@ function BlankPage(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-
+  console.log({ api_url: API_URL })
 
   const fetchData = async () => {
+    api.get(`api/v1/incidents`)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -206,18 +207,26 @@ function BlankPage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     if (fkProjectStructureIds) {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+      // debugger;
       await setIncidents(res.data.data.results.results);
-      console.log(res.data.data.results.results)
+
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     } else {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+        // alert('hey')
+        .then((res) => {
+          // debugger;
+          setIncidents(res.data.data.results.results);
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          setPageCount(pageCount)
+        })
+        .catch(err => console.log(err.message))
       // handleTimeOutError(res)
-      await setIncidents(res.data.data.results.results);
-      console.log(res.data.data.results.results)
 
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+
+
+
     }
   };
 
@@ -346,8 +355,14 @@ function BlankPage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     // https://dev-safety-api.paceos.io/api/v1/incidents/?companyId=1&projectStructureIds=1L1:2L3:3L6&projectId=1
-    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    await setIncidents(res.data.data.results.results);
+    const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
+      .then((res) => {
+        setIncidents(res.data.data.results.results);
+      })
+      .catch(error => {
+
+      })
+
   };
   const classes = useStyles();
 

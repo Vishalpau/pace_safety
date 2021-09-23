@@ -30,6 +30,7 @@ import "../../../styles/custom.css";
 import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
 import ActionTrack from "../ActionTrack";
+import ActionShow from "../ActionShow"
 
 import { checkValue } from "../../../utils/CheckerValue";
 
@@ -74,6 +75,7 @@ const BasicCauseAndAction = () => {
   const putId = useRef("");
   let id = useRef();
   const [actionData, setActionData] = useState({});
+  const [isLoading, setIsLoading] = useState(false)
   const [updatePage, setUpdatePage] = useState(false);
 
   const handelShowData = async () => {
@@ -196,11 +198,12 @@ const BasicCauseAndAction = () => {
 
   useEffect(() => {
     handelCallback();
-  }, [updatePage]);
+  }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
+
     <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
@@ -241,7 +244,7 @@ const BasicCauseAndAction = () => {
               <Table className={classes.table}>
                 <TableBody>
                   {data.map((value) => (
-                    <TableRow>
+                    < TableRow >
                       <TableCell align="left">
                         {handelConvert(value.rcaSubType)}
                       </TableCell>
@@ -261,21 +264,13 @@ const BasicCauseAndAction = () => {
                         />
                       </TableCell>
                       <TableCell align="right" style={{ minWidth: 200 }}>
-                        <Typography>
-                          {value.action != undefined &&
-                            value.action.map((actionId) => (
-                              <Link
-                                className={classes.actionLink}
-                                display="block"
-                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId
-                                  }&projectId=${projectData.projectId
-                                  }&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id
-                                  }`}
-                              >
-                                {actionId.number}
-                              </Link>
-                            ))}
-                        </Typography>
+                        <ActionShow
+                          value={value}
+                          companyId={projectData.companyId}
+                          projectId={projectData.projectId}
+                          handelShowData={handelShowData}
+                          updatePage={updatePage}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -318,7 +313,7 @@ const BasicCauseAndAction = () => {
           </Grid>
         )}
       </Grid>
-    </PapperBlock>
+    </PapperBlock >
   );
 };
 

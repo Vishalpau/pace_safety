@@ -50,6 +50,9 @@ import { handelFileName } from "../Jha/Utils/checkValue"
 import Attachment from "../../../containers/Attachment/Attachment";
 import { Comments } from "../../pageListAsync";
 import { SUMMARY_FORM } from "./Utils/constants"
+import { SSO_URL, HEADER_AUTH } from "../../../utils/constants";
+import { handelCommonObject } from "../../../utils/CheckerValue"
+
 
 
 // Sidebar Links Helper Function
@@ -170,24 +173,25 @@ function JhaSummary() {
     projectId: "",
     companyId: "",
   })
+  const [projectStructName, setProjectStructName] = useState([])
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const result = res.data.data.results;
-    setAssessment(result)
-
+    await setAssessment(result)
+    await handelWorkArea(result)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results.results
-    setTeam(resultTeam)
+    await setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
-    setHazard(resultHazard)
+    await setHazard(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
-    setFormStatus({
+    await setFormStatus({
       ...formStatus,
       assessmentStatus: assessmentDecider,
       approvalStatus: approvalDecider,
@@ -232,7 +236,6 @@ function JhaSummary() {
     );
   };
   const handleClosePush = async () => {
-    console.log("here")
     history.push("/app/pages/jha/close-out");
   };
 
@@ -254,14 +257,14 @@ function JhaSummary() {
     let jhaId = localStorage.getItem("fkJHAId")
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
+      baseURL: API_URL_ACTION_TRACKER, headers: HEADER_AUTH
     });
     const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
     let allAction = allActionTrackerData.data.data.results.results
     setApprovalactionData(allAction !== null ? allAction : [])
   };
 
-  const handelActionLink = () => {
+  const handelActionLink = async () => {
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
@@ -272,7 +275,27 @@ function JhaSummary() {
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
 
-    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+    await setProjectData({ ...projectData, projectId: projectId, companyId: fkCompanyId })
+  }
+
+  const handelWorkArea = async (assessment) => {
+    let structName = {}
+    let projectStructId = assessment.fkProjectStructureIds.split(":")
+
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await
+        api_work_area.get(`/api/v1/companies/${assessment.fkCompanyId}/projects/${assessment.fkProjectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      let result = workArea.data.data.results[0]
+      // console.log(result)
+      structName[result["structure_name"]] = result["structureName"]
+    }
+    console.log(structName)
+    setProjectStructName(structName)
   }
 
   let errorMessage = "Please fill"
@@ -469,7 +492,13 @@ function JhaSummary() {
                                           Project structure
                                         </Typography>
                                         <Typography className={Fonts.labelValue}>
-                                          {projectStructure.projectName} - {projectStructure.phaseName} - {projectStructure.unitName}
+
+                                          {projectStructure.projectName} -
+                                          {Object.entries(projectStructName).map(([key, value], index) => (
+                                            <>
+                                              {!key.includes("Work") ? Object.keys(projectStructName)[index + 2] !== undefined ? `${value} - ` : `${value}` : ""}
+                                            </>
+                                          ))}
                                         </Typography>
                                       </Grid>
                                       {/* work area */}
@@ -482,7 +511,7 @@ function JhaSummary() {
                                           Work Area
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructure.workArea)}
+                                          {checkValue(projectStructName["Work Area"])}
                                         </Typography>
                                       </Grid>
 
