@@ -181,7 +181,6 @@ function ObservationCorrectiveAction() {
       })
     }
   })
-  
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
