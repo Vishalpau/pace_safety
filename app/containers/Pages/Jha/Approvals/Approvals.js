@@ -16,7 +16,9 @@ import { APPROVAL_FORM } from "../Utils/constants"
 import ActionTracker from "../../../Forms/ActionTracker";
 import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
 import { handelJhaId } from "../Utils/checkValue"
-
+import apiAction from '../../../../utils/axiosActionTracker';
+import ProjectStructureInit from '../../../ProjectStructureId/ProjectStructureId';
+import { handelCommonObject } from "../../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -111,8 +113,10 @@ const Approvals = () => {
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
-    projectId: "",
     companyId: "",
+    projectId: "",
+    createdBy: "",
+    ProjectStructId: "",
   })
 
   const handelJobDetails = async () => {
@@ -141,11 +145,8 @@ const Approvals = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
+
+    const allActionTrackerData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
     let allAction = allActionTrackerData.data.data.results.results
     setActionData(allAction !== null ? allAction : [])
   };
@@ -161,7 +162,17 @@ const Approvals = () => {
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
 
-    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+
+    const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]
+    setProjectData({
+      companyId: fkCompanyId,
+      projectId: projectId,
+      createdBy: userId,
+      ProjectStructId: projectStuctId,
+    })
   }
 
   const handelSubmit = async () => {
@@ -174,17 +185,17 @@ const Approvals = () => {
   }
 
   useEffect(() => {
+    handelActionLink()
     handelJobDetails()
     handelWorkAndPic()
     handelActionTracker()
-    handelActionLink()
   }, [updatePage])
 
   const classes = useStyles();
   return (
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
-        {/* {console.log(form)} */}
+        {console.log(projectData)}
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
@@ -233,6 +244,10 @@ const Approvals = () => {
                     enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                     setUpdatePage={setUpdatePage}
                     updatePage={updatePage}
+                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                    fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                   />
                 </Typography>
                 <Typography className={classes.aLabelValue}>

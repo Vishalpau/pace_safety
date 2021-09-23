@@ -44,6 +44,7 @@ import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import axios from "axios";
 
 import api from "../../../utils/axios";
+import apiAction from '../../../utils/axiosActionTracker';
 import { handelJhaId, checkValue } from "../Jha/Utils/checkValue"
 import Assessment from './Assessments/Assessment';
 import { handelFileName } from "../Jha/Utils/checkValue"
@@ -52,6 +53,7 @@ import { Comments } from "../../pageListAsync";
 import { SUMMARY_FORM } from "./Utils/constants"
 import { SSO_URL, HEADER_AUTH } from "../../../utils/constants";
 import { handelCommonObject } from "../../../utils/CheckerValue"
+
 
 
 
@@ -186,7 +188,8 @@ function JhaSummary() {
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
-    await setHazard(resultHazard)
+
+    handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null
     let lessionDecider = result.anyLessonsLearnt !== null
@@ -253,14 +256,21 @@ function JhaSummary() {
     setExpandedHazard(isExpanded ? panel : false);
   };
 
-  const handelActionTracker = async () => {
+  const handelActionTracker = async (resultHazard) => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER, headers: HEADER_AUTH
-    });
-    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
+    const allActionTrackerData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${jhaId}`);
     let allAction = allActionTrackerData.data.data.results.results
+
+    allAction.map((value) => {
+      resultHazard.map((hazardValue) => {
+        if (value["enitityReferenceId"].split(":")[1] == hazardValue["id"]) {
+          hazardValue["actionNumber"] = value["actionNumber"]
+          hazardValue["actionId"] = value["id"]
+          hazardValue["enitityReferenceId"] = value["enitityReferenceId"]
+        }
+      })
+    })
+    await setHazard(resultHazard)
     setApprovalactionData(allAction !== null ? allAction : [])
   };
 
@@ -294,7 +304,7 @@ function JhaSummary() {
       // console.log(result)
       structName[result["structure_name"]] = result["structureName"]
     }
-    console.log(structName)
+    // console.log(structName)
     setProjectStructName(structName)
   }
 
@@ -356,7 +366,6 @@ function JhaSummary() {
     await setLoader(true)
     await handelAsessment()
     await handelProjectStructre()
-    await handelActionTracker()
     await handelActionLink()
     await setLoader(false)
   }
@@ -836,6 +845,13 @@ function JhaSummary() {
                                                   </Grid>
 
                                                 </Grid>
+                                                <Grid>
+                                                  <Link display="block"
+                                                    href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actions"]}api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
+                                                  >
+                                                    {value.actionNumber}
+                                                  </Link>
+                                                </Grid>
                                               </AccordionDetails>
                                             </Accordion>
                                           ))}
@@ -1020,16 +1036,23 @@ function JhaSummary() {
                                   <Typography className={classes.aLabelValue}>
                                     {approvalActionData.map((value) => (
                                       <>
-                                        <span className={classes.updateLink}>
-                                          <Link
-                                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
-                                          >
-                                            {value.actionNumber}
-                                          </Link>
-                                        </span>
-                                        <div className={classes.actionTitleLable}>
-                                          {value.actionTitle}
-                                        </div>
+                                        {value.enitityReferenceId.split(":")[1] == "00" ?
+                                          <>
+                                            <span className={classes.updateLink}>
+                                              <Link
+                                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actions"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
+                                              >
+                                                {value.actionNumber}
+                                              </Link>
+                                            </span>
+                                            <div className={classes.actionTitleLable}>
+                                              {value.actionTitle}
+                                            </div>
+
+                                          </>
+                                          : null}
+
+
                                       </>
                                     ))}
                                   </Typography>
