@@ -414,7 +414,7 @@ function PersonalDashboard(props) {
     userDetails();
    
 
-  }, [props.initialValues.companyDataList]);
+  }, []);
 
   return (
     <PapperBlock title="Home" icon="ion-md-list-box">
