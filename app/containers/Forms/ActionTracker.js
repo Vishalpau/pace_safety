@@ -141,6 +141,7 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
+    console.log(form)
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
