@@ -333,7 +333,7 @@ function BlankPage(props) {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const res = await api.get(`${SELF_API}${fkCompanyId}/`)
 
-    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item => item.appId === 1)
+    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item => item.appCode === "safety")
 
     const fetchPermissiondata = await api.get(`${SSO_URL}${roles[0].roles[0].aclUrl.substring(0)}`)
 
