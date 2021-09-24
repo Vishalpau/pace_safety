@@ -403,7 +403,7 @@ const RootCauseAnalysisSummary = () => {
                           <TableCell className={classes.tabelBorder}>
                             {pc.action != undefined && pc.action.map((actionId) => (
                               <Link display="block"
-                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actions"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
                               >
                                 {actionId.number}
                               </Link>

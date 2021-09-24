@@ -847,7 +847,7 @@ function JhaSummary() {
                                                 </Grid>
                                                 <Grid>
                                                   <Link display="block"
-                                                    href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actions"]}api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
+                                                    href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
                                                   >
                                                     {value.actionNumber}
                                                   </Link>
@@ -1040,7 +1040,7 @@ function JhaSummary() {
                                           <>
                                             <span className={classes.updateLink}>
                                               <Link
-                                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actions"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
+                                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
                                               >
                                                 {value.actionNumber}
                                               </Link>

@@ -202,7 +202,7 @@ const BasicCauseAndAction = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
+    <PapperBlock title="Preventive actions" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item xs={12} md={6}>
