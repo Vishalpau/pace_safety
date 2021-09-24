@@ -266,6 +266,7 @@ const BasicCauseAndAction = () => {
                         {value.action != undefined && value.action.map((actionId) => (
                           <Link display="block"
                             href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                            target="_blank"
                           >
                             {actionId.number}
                           </Link>
