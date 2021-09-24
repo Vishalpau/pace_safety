@@ -234,7 +234,7 @@ console.log(allInitialData)
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName]);
+  }, [props.projectName.breakDown]);
 
   return (
     <>

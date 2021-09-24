@@ -29,21 +29,22 @@ import InitialNotificationValidator from "../../Validator/Observation/InitialNot
 import FormObservationbanner from "dan-images/addFormObservationbanner.jpg";
 import Avatar from "@material-ui/core/Avatar";
 
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete";
 import axios from "axios";
 import Attachment from "../../Attachment/Attachment";
 // import PickListData from "../../../utils/Picklist/InitialPicklist";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import { CircularProgress } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import { CircularProgress } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
 import { Comments } from "../../pageListAsync";
 
-
 import Type from "../../../styles/components/Fonts.scss";
-import { connect } from 'react-redux'
-import Axios from 'axios'
+import { connect } from "react-redux";
+import Axios from "axios";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 
 import {
@@ -144,27 +145,27 @@ const useStyles = makeStyles((theme) => ({
   },
   loadingWrapper: {
     margin: theme.spacing(1),
-    position: 'relative',
-    display: 'inline-flex',
+    position: "relative",
+    display: "inline-flex",
   },
   buttonProgress: {
     // color: "green",
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
     marginTop: -12,
     marginLeft: -12,
   },
   addLabelTitleBox: {
-    padding: '0px 12px !important',
-    marginTop: '22px',
-    '& .MuiTypography-root': {
+    padding: "0px 12px !important",
+    marginTop: "22px",
+    "& .MuiTypography-root": {
       //marginBottom: '0px',
-      fontSize: '18px',
-      fontWeight: '400',
-      lineHeight: '1.2',
-      color: '#737373',
-      fontWeight: '600',
+      fontSize: "18px",
+      fontWeight: "400",
+      lineHeight: "1.2",
+      color: "#737373",
+      fontWeight: "600",
     },
   },
 }));
@@ -176,11 +177,12 @@ function Alert(props) {
 const filter = createFilterOptions();
 const ObservationInitialNotification = (props) => {
   // class ObservationInitialNotification extends Component {
-  // All states are define here. 
+  // All states are define here.
 
-  const user = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails'))
-    : null;
+  const user =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -195,28 +197,28 @@ const ObservationInitialNotification = (props) => {
   const [reportedByDetails, setReportedByDetails] = useState([]);
   const [reportedById, setReportedById] = useState([]);
   const [reportedByBadgeId, setReportedByIdBadgeId] = useState([]);
-  const [attachment, setAttachment] = useState()
-  const [departmentName, setDepartmentName] = useState([])
+  const [attachment, setAttachment] = useState();
+  const [departmentName, setDepartmentName] = useState([]);
   const [shiftType, setShiftType] = useState([]);
-  const [superVisorId, setSuperVisorId] = useState('')
-  const [notificationSentValue, setNotificationSentValue] = useState([])
+  const [superVisorId, setSuperVisorId] = useState("");
+  const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [notifyToList, setNotifyToList] = useState([]);
   const [submitLoader, setSubmitLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
-  const [levelLenght, setLevelLenght] = useState(0)
+  const [levelLenght, setLevelLenght] = useState(0);
 
-  const [selectDepthAndId, setSelectDepthAndId] = useState([])
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
-  const [breakdownData, setBreakDownData] = useState([])
-  const [selectValue, setSelectValue] = useState([])
+  const [breakdownData, setBreakDownData] = useState([]);
+  const [selectValue, setSelectValue] = useState([]);
   const [value, setValue] = React.useState(user);
   const [valueReportedBy, setValueReportedBy] = React.useState(null);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
-  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
-  let filterSuperVisorId = []
-  let filterSuperVisorBadgeNo = []
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
+  let filterSuperVisorId = [];
+  let filterSuperVisorBadgeNo = [];
   const radioType = ["Risk", "Comments", "Positive behavior"];
   const radioSituation = ["Yes", "No"];
   const radioClassification = ["People", "Property"];
@@ -226,9 +228,10 @@ const ObservationInitialNotification = (props) => {
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
@@ -243,14 +246,14 @@ const ObservationInitialNotification = (props) => {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  const [workArea, setWorkArea] = useState("")
-  let filterReportedByName = [user]
-  let filterReportedById = []
-  let filterReportedByBedgeID = []
-  let filterSuperVisorName = []
-  let filterDepartmentName = []
+  const [workArea, setWorkArea] = useState("");
+  let filterReportedByName = [user];
+  let filterReportedById = [];
+  let filterReportedByBedgeID = [];
+  let filterSuperVisorName = [];
+  let filterDepartmentName = [];
   const fetchSuperVisorName = () => {
-    let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    let fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/roles/4/users/`,
@@ -262,24 +265,22 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].roles[0].users;
-          let user = []
+          let user = [];
 
           for (var i in result) {
-            let temp = {}
-            temp["inputValue"] = result[i].name
-            temp["supervisorId"] = result[i].id
-            temp['badgeNo'] = result[i].badgeNo
-            user.push(temp)
+            let temp = {};
+            temp["inputValue"] = result[i].name;
+            temp["supervisorId"] = result[i].id;
+            temp["badgeNo"] = result[i].badgeNo;
+            user.push(temp);
             // filterSuperVisorBadgeNo.push(result[i].badgeNo);
           }
           setSuperVisorName(user);
-
         }
       })
       .catch((error) => { });
   };
   const fetchReportedBy = () => {
-
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
@@ -292,27 +293,28 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].users;
-          const userDetails = JSON.parse(localStorage.getItem('userDetails')) !== null
-            ? JSON.parse(localStorage.getItem('userDetails'))
-            : null;
+          const userDetails =
+            JSON.parse(localStorage.getItem("userDetails")) !== null
+              ? JSON.parse(localStorage.getItem("userDetails"))
+              : null;
           let us = {
-            inputValue: userDetails.name, reportedById: userDetails.id, badgeNo: userDetails.badgeNo
-          }
+            inputValue: userDetails.name,
+            reportedById: userDetails.id,
+            badgeNo: userDetails.badgeNo,
+          };
           let user = [];
           for (var i in result) {
+            let temp = {};
 
-            let temp = {}
-
-            temp["inputValue"] = result[i].name
-            temp["reportedById"] = result[i].id
-            temp['badgeNo'] = result[i].badgeNo
+            temp["inputValue"] = result[i].name;
+            temp["reportedById"] = result[i].id;
+            temp["badgeNo"] = result[i].badgeNo;
 
             user.push(temp);
             // filterReportedById.push(result[i].id);
             // filterReportedByBedgeID.push(result[i].badgeNo);
           }
           setReportedByDetails(user);
-
         }
         // else{
         //   window.location.href = {LOGIN_URL}
@@ -332,26 +334,22 @@ const ObservationInitialNotification = (props) => {
       },
     };
     axios(config)
-
       .then((response) => {
-
         if (response.status === 200) {
           const result = response.data.data.results;
           let user = [];
 
           for (var i in result) {
-            let temp = {}
+            let temp = {};
 
-            temp["inputValue"] = result[i].departmentName
-            temp["departmentId"] = result[i].id
+            temp["inputValue"] = result[i].departmentName;
+            temp["departmentId"] = result[i].id;
 
             user.push(temp);
           }
 
-
-          setDepartmentName(user)
+          setDepartmentName(user);
         }
-
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -361,7 +359,8 @@ const ObservationInitialNotification = (props) => {
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
-    fkProjectStructureIds: fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+    fkProjectStructureIds:
+      fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
     observationType: "",
     observationClassification: "",
     stopWork: "",
@@ -408,19 +407,25 @@ const ObservationInitialNotification = (props) => {
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
   const handleSubmit = async () => {
-    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
-    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
-      return depth;
-    }).join(':')
-    form["fkProjectStructureIds"] = fkProjectStructureId
+    const uniqueProjectStructure = [...new Set(selectDepthAndId)];
+    let fkProjectStructureId = uniqueProjectStructure
+      .map((depth) => {
+        return depth;
+      })
+      .join(":");
+    form["fkProjectStructureIds"] = fkProjectStructureId;
 
     // if any error then this part is executed
-    const { error, isValid } = InitialNotificationValidator(form, selectDepthAndId);
+    const { error, isValid } = InitialNotificationValidator(
+      form,
+      selectDepthAndId
+    );
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
     }
-    await handleButtonClick()
+    await setLoading(true);
+
     // we are convert form into FormData
     let data = new FormData();
     data.append("fkCompanyId", form.fkCompanyId),
@@ -484,47 +489,61 @@ const ObservationInitialNotification = (props) => {
       const id = res.data.data.results;
       const fkObservatioId = id.id;
       await localStorage.setItem("fkobservationId", fkObservatioId);
+
+      if (catagory.length > 0) {
+        console.log("::::::::");
+        for (let i = 0; i < catagory.length; i++) {
+          catagory[i]["fkObservationId"] = localStorage.getItem(
+            "fkobservationId"
+          );
+        }
+        const resCategory = await api.post(
+          `/api/v1/observations/${localStorage.getItem(
+            "fkobservationId"
+          )}/observationtags/`,
+          catagory
+        );
+        if (resCategory.status === 200 || resCategory.status === 201) {
+          history.push(
+            `/app/observation/details/${localStorage.getItem(
+              "fkobservationId"
+            )}`
+          );
+          await setLoading(false);
+        }
+      } else {
+        history.push(
+          `/app/observation/details/${localStorage.getItem("fkobservationId")}`
+        );
+        await setLoading(false);
+      }
     }
 
-    for (let i = 0; i < catagory.length; i++) {
-      catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
-    }
-    if (catagory.length > 0) {
-      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`, catagory);
-    }
-
-    history.push(`/app/observation/details/${localStorage.getItem("fkobservationId")}`);
+    await setLoading(false);
   };
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
   const handleChange = async (e, index, value) => {
-
-    let temp = [...catagory]
-    let tempRemove = []
+    let temp = [...catagory];
+    let tempRemove = [];
     if (e.target.checked == false) {
       temp.map((ahaValue, index) => {
-        if (ahaValue['observationTag'] === value.tagName) {
-
+        if (ahaValue["observationTag"] === value.tagName) {
           temp.splice(index, 1);
-
-
         }
-      })
-    }
-    else if (e.target.checked) {
+      });
+    } else if (e.target.checked) {
       temp.push({
-        "fkObservationId": "",
-        "fkTagId": value.id,
-        "observationTag": value.tagName,
-        "status": "Active",
-        "createdBy": parseInt(userId),
-        "updatedBy": 0,
-      })
-
+        fkObservationId: "",
+        fkTagId: value.id,
+        observationTag: value.tagName,
+        status: "Active",
+        createdBy: parseInt(userId),
+        updatedBy: 0,
+      });
     }
-    await setCatagory(temp)
-
-  }
+    await setCatagory(temp);
+  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -536,7 +555,6 @@ const ObservationInitialNotification = (props) => {
   const handleButtonClick = () => {
     if (!loading) {
       setLoading(true);
-
     }
   };
 
@@ -548,7 +566,7 @@ const ObservationInitialNotification = (props) => {
       TempPpeData.attachment = e.target.files[0];
       await setForm(TempPpeData);
     } else {
-      document.getElementById("attachment").value = ""
+      document.getElementById("attachment").value = "";
       await setOpen(true);
     }
   };
@@ -560,22 +578,20 @@ const ObservationInitialNotification = (props) => {
     tempData.assigneeId = value.id;
 
     setForm(tempData);
-  }
+  };
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path}
-    </li>
+    <li key={file.path}>{file.path}</li>
   ));
 
   const handelAddressSituationYes = async (e) => {
-    let tempData = { ...form }
-    tempData.isSituationAddressed = e.target.value
+    let tempData = { ...form };
+    tempData.isSituationAddressed = e.target.value;
     if (tempData.isSituationAddressed === "Yes") {
       await setAddressSituation(true);
     } else if (e.target.value === "No") {
-      tempData.actionTaken = ""
+      tempData.actionTaken = "";
 
       await setAddressSituation(false);
       await setForm(tempData);
@@ -614,20 +630,19 @@ const ObservationInitialNotification = (props) => {
 
   const handleSuperVisior = (e, value) => {
     let tempData = { ...form };
-    tempData.supervisorName = value.name
-    tempData.supervisorByBadgeId = value.badgeNo
+    tempData.supervisorName = value.name;
+    tempData.supervisorByBadgeId = value.badgeNo;
 
-    setForm(tempData)
-
-  }
+    setForm(tempData);
+  };
 
   const handleNotify = async (value, index, e) => {
     if (e.target.checked === true) {
       let temp = [...notifyToList];
 
-      temp.push(value)
+      temp.push(value);
       let uniq = [...new Set(temp)];
-      setNotifyToList(uniq)
+      setNotifyToList(uniq);
 
       setForm({ ...form, notifyTo: temp.toString() });
     } else {
@@ -637,9 +652,7 @@ const ObservationInitialNotification = (props) => {
 
       setNotifyToList(newData);
       setForm({ ...form, notifyTo: newData.toString() });
-
     }
-
   };
 
   const fetchInitialiObservationData = async () => {
@@ -658,37 +671,37 @@ const ObservationInitialNotification = (props) => {
   };
 
   const fetchNotificationSent = async () => {
-    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
-
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
 
     try {
-
       var config = {
-        method: 'get',
+        method: "get",
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
-        headers: HEADER_AUTH
+        headers: HEADER_AUTH,
       };
-      const res = await api(config)
+      const res = await api(config);
       if (res.status === 200) {
-        const result = res.data.data.results
-        setNotificationSentValue(result)
+        const result = res.data.data.results;
+        setNotificationSentValue(result);
       }
-    } catch (error) {
-    }
-  }
-  console.log(form)
+    } catch (error) {}
+  };
   const fetchTags = async () => {
-    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
-    const res = await api.get(`/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`);
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    const res = await api.get(
+      `/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`
+    );
     const result = res.data.data.results.results;
-    let temp = []
+    let temp = [];
     result.map((value) => {
       if (value.status === "Active") {
-        temp.push(value)
+        temp.push(value);
       }
-    })
+    });
     let sorting = temp.sort((a, b) => a.id - b.id);
     await setTagData(sorting);
   };
@@ -703,8 +716,9 @@ const ObservationInitialNotification = (props) => {
   };
 
   const fetchAttachment = async () => {
-    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
     const attachment = await api.get(
       `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
     );
@@ -712,68 +726,67 @@ const ObservationInitialNotification = (props) => {
     if (result !== undefined) {
       let ar = result.attachment;
 
-      await setAttachment(ar)
+      await setAttachment(ar);
     }
-
   };
   const handleBreakdown = async (e, index, label, selectvalue) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    const projectData = JSON.parse(localStorage.getItem("projectName"));
 
     const value = e.target.value;
 
-    const temp = [...fetchSelectBreakDownList]
-    temp[index]["selectValue"].id = value
+    const temp = [...fetchSelectBreakDownList];
+    temp[index]["selectValue"].id = value;
     // let removeTemp = temp.slice(0, index)
     for (var i in temp) {
       if (i > index) {
-        temp[i].breakDownData = []
-        temp[i].selectValue.id = ""
+        temp[i].breakDownData = [];
+        temp[i].selectValue.id = "";
       }
-
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
-    let sliceData = dataDepthAndId.slice(0, index)
-    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
-    setSelectDepthAndId(newdataDepthAndId)
+    let dataDepthAndId = tempDepthAndId.filter(
+      (filterItem) => filterItem.slice(0, 2) !== `${index + 1}L`
+    );
+    let sliceData = dataDepthAndId.slice(0, index);
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
+    setSelectDepthAndId(newdataDepthAndId);
     // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
-
-
-          await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`)
-            .then(function (response) {
+          await api
+            .get(
+              `${SSO_URL}/${
+                projectData.projectName.breakdown[key].structure[0].url
+              }${value}`
+            )
+            .then(function(response) {
               if (response.status === 200) {
-
-                temp[key].breakDownData = response.data.data.results
+                temp[key].breakDownData = response.data.data.results;
                 //  temp[key].select=e.
-                setBreakdown1ListData(temp)
+                setBreakdown1ListData(temp);
               }
             })
-            .catch(function (error) {
-
-            });
+            .catch(function(error) {});
         }
       }
     }
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
-    let breakdownLength = projectData.projectName.breakdown.length
-    setLevelLenght(breakdownLength)
+    const projectData = JSON.parse(localStorage.getItem("projectName"));
+    let breakdownLength = projectData.projectName.breakdown.length;
+    setLevelLenght(breakdownLength);
     let selectBreakDown = [];
-    const breakDown = projectBreakdown.split(':');
-    setSelectDepthAndId(breakDown)
+    const breakDown = projectBreakdown.split(":");
+    setSelectDepthAndId(breakDown);
     for (var key in breakDown) {
-      if (breakDown[key].slice(0, 2) === '1L') {
+      if (breakDown[key].slice(0, 2) === "1L") {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[0].structure[0].url
+          }`,
           headers: HEADER_AUTH,
         };
 
@@ -783,63 +796,70 @@ const ObservationInitialNotification = (props) => {
             await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
-
                 selectBreakDown = [
-                  ...selectBreakDown, {
-                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
-                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-                    breakDownData: result
-                  }
-
+                  ...selectBreakDown,
+                  {
+                    breakDownLabel:
+                      projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: {
+                      depth: item.depth,
+                      id: item.id,
+                      name: item.name,
+                      label:
+                        projectData.projectName.breakdown[key].structure[0]
+                          .name,
+                    },
+                    breakDownData: result,
+                  },
                 ];
-
               }
             });
-            setFetchSelectBreakDownList(selectBreakDown)
+            setFetchSelectBreakDownList(selectBreakDown);
           })
           .catch((error) => {
-
             setIsNext(true);
           });
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].substring(2)}`,
+          url: `${SSO_URL}/${
+            projectData.projectName.breakdown[key].structure[0].url
+          }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
         await api(config)
           .then(async (response) => {
-
             const result = response.data.data.results;
 
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown,
                   {
-                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
-                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
-                    breakDownData: result
-                  }
+                    breakDownLabel:
+                      projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: {
+                      depth: item.depth,
+                      id: item.id,
+                      name: item.name,
+                      label:
+                        projectData.projectName.breakdown[key].structure[0]
+                          .name,
+                    },
+                    breakDownData: result,
+                  },
                 ];
-
               }
             });
-            setFetchSelectBreakDownList(selectBreakDown)
-
+            setFetchSelectBreakDownList(selectBreakDown);
           })
           .catch((error) => {
-            console.log(error)
             setIsNext(true);
           });
       }
     }
   };
-
-
 
   const classes = useStyles();
 
@@ -848,17 +868,13 @@ const ObservationInitialNotification = (props) => {
     await setIsLoading(true);
   };
   useEffect(() => {
-
-    fetchTags()
-    fetchDepartment()
-    fetchAttachment()
-    fetchNotificationSent()
-    fetchSuperVisorName()
-    fetchReportedBy()
-    PickList()
-
-
-
+    fetchTags();
+    fetchDepartment();
+    fetchAttachment();
+    fetchNotificationSent();
+    fetchSuperVisorName();
+    fetchReportedBy();
+    PickList();
   }, [props.initialValues.breakDown]);
 
   return (
@@ -871,14 +887,12 @@ const ObservationInitialNotification = (props) => {
       >
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
-
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.addLabelTitleBox}
-            >
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
+            <Grid item md={12} xs={12} className={classes.addLabelTitleBox}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                className={classes.labelName}
+              >
                 Project Information
               </Typography>
             </Grid>
@@ -896,8 +910,8 @@ const ObservationInitialNotification = (props) => {
               </Typography>
             </Grid>
 
-            {id ?
-              fetchSelectBreakDownList.map((data, key) =>
+            {id ? (
+              fetchSelectBreakDownList.map((data, key) => (
                 <Grid item xs={3} md={3} key={key}>
                   <FormControl
                     error={error && error[`projectStructure${[key]}`]}
@@ -914,19 +928,25 @@ const ObservationInitialNotification = (props) => {
                       label="Incident type"
                       value={data.selectValue.id || ""}
                       disabled={data.breakDownData.length === 0}
-
                       onChange={(e) => {
-                        handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                        handleBreakdown(
+                          e,
+                          key,
+                          data.breakDownLabel,
+                          data.selectValue
+                        );
                       }}
                     >
                       {data.breakDownData.length !== 0
                         ? data.breakDownData.map((selectvalues, index) => (
-                          <MenuItem key={index}
-                            // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                            value={selectvalues.id}>
-                            {selectvalues.structureName}
-                          </MenuItem>
-                        ))
+                            <MenuItem
+                              key={index}
+                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                              value={selectvalues.id}
+                            >
+                              {selectvalues.structureName}
+                            </MenuItem>
+                          ))
                         : null}
                     </Select>
                     {error && error[`projectStructure${[key]}`] && (
@@ -936,45 +956,52 @@ const ObservationInitialNotification = (props) => {
                     )}
                   </FormControl>
                 </Grid>
-
-              ) : <ProjectStructureInit
+              ))
+            ) : (
+              <ProjectStructureInit
                 selectDepthAndId={selectDepthAndId}
                 setLevelLenght={setLevelLenght}
                 error={error}
                 setWorkArea={setWorkArea}
-                setSelectDepthAndId={setSelectDepthAndId} />
-            }
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.addLabelTitleBox}
-            >
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                setSelectDepthAndId={setSelectDepthAndId}
+              />
+            )}
+            <Grid item md={12} xs={12} className={classes.addLabelTitleBox}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                className={classes.labelName}
+              >
                 Observer and Reporter details
               </Typography>
             </Grid>
 
-
             <Grid item md={6} xs={12} className={classes.formBox}>
-
               <Autocomplete
-                value={form.reportedByName ? form.reportedByName : ''}
+                value={form.reportedByName ? form.reportedByName : ""}
                 onChange={(event, newValue) => {
-                  if (typeof newValue === 'string') {
+                  if (typeof newValue === "string") {
                     setValueReportedBy({
                       inputValue: newValue,
                     });
 
-                    setForm({ ...form, reportedByName: newValue, reportedById: "", reportedByBadgeId: "" })
-
+                    setForm({
+                      ...form,
+                      reportedByName: newValue,
+                      reportedById: "",
+                      reportedByBadgeId: "",
+                    });
                   } else if (newValue && newValue.inputValue) {
                     // Create a new value from the user input
                     setValueReportedBy({
                       inputValue: newValue.inputValue,
                     });
-                    setForm({ ...form, reportedByName: newValue.inputValue, reportedById: newValue.reportedById, reportedByBadgeId: newValue.badgeNo })
-
+                    setForm({
+                      ...form,
+                      reportedByName: newValue.inputValue,
+                      reportedById: newValue.reportedById,
+                      reportedByBadgeId: newValue.badgeNo,
+                    });
                   } else {
                     setValueReportedBy(newValue);
                   }
@@ -983,7 +1010,7 @@ const ObservationInitialNotification = (props) => {
                   const filtered = filter(options, params);
 
                   // Suggest the creation of a new value
-                  if (params.inputValue !== '') {
+                  if (params.inputValue !== "") {
                     filtered.push({
                       inputValue: params.inputValue,
                       inputValue: `${params.inputValue}`,
@@ -993,13 +1020,12 @@ const ObservationInitialNotification = (props) => {
                   return filtered;
                 }}
                 className={classes.mT30}
-
                 handleHomeEndKeys
                 id="free-solo-with-text-demo"
                 options={reportedByDetails}
                 getOptionLabel={(option) => {
                   // Value selected with enter, right from the input
-                  if (typeof option === 'string') {
+                  if (typeof option === "string") {
                     return option;
                   }
                   // Add "xxx" option created dynamically
@@ -1015,13 +1041,17 @@ const ObservationInitialNotification = (props) => {
                 selectOnFocus
                 clearOnBlur
                 renderInput={(params) => (
-                  <TextField {...params} label="Observed by*"
+                  <TextField
+                    {...params}
+                    label="Observed by*"
                     error={error.reportedByName}
-                    helperText={error.reportedByName ? error.reportedByName : ""}
-                    variant="outlined" />
+                    helperText={
+                      error.reportedByName ? error.reportedByName : ""
+                    }
+                    variant="outlined"
+                  />
                 )}
               />
-
             </Grid>
 
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -1030,7 +1060,10 @@ const ObservationInitialNotification = (props) => {
                 name="badgenumberreportingperson"
                 id="badgenumberreportingperson"
                 value={
-                  form.reportedByBadgeId !== null && form.reportedByBadgeId !== undefined ? form.reportedByBadgeId : ""
+                  form.reportedByBadgeId !== null &&
+                  form.reportedByBadgeId !== undefined
+                    ? form.reportedByBadgeId
+                    : ""
                 }
                 fullWidth
                 variant="outlined"
@@ -1045,31 +1078,27 @@ const ObservationInitialNotification = (props) => {
               />
             </Grid>
 
-
-
-            <Grid
-              item
-              md={6}
-              xs={12}
-              className={classes.formBox}
-            >
+            <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
-                value={form.reportedByDepartment ? form.reportedByDepartment : ''}
+                value={
+                  form.reportedByDepartment ? form.reportedByDepartment : ""
+                }
                 onChange={(event, newValue) => {
-                  if (typeof newValue === 'string') {
+                  if (typeof newValue === "string") {
                     setValue({
                       inputValue: newValue,
                     });
-                    setForm({ ...form, reportedByDepartment: newValue })
-
+                    setForm({ ...form, reportedByDepartment: newValue });
                   } else if (newValue && newValue.inputValue) {
                     // Create a new value from the user input
                     setValue({
                       inputValue: newValue.inputValue,
                     });
 
-                    setForm({ ...form, reportedByDepartment: newValue.inputValue })
-
+                    setForm({
+                      ...form,
+                      reportedByDepartment: newValue.inputValue,
+                    });
                   } else {
                     setValue(newValue);
                   }
@@ -1078,31 +1107,25 @@ const ObservationInitialNotification = (props) => {
                   const filtered = filter(options, params);
 
                   // Suggest the creation of a new value
-                  if (params.inputValue !== '') {
-
+                  if (params.inputValue !== "") {
                     filtered.push({
                       inputValue: params.inputValue,
                       inputValue: `${params.inputValue}`,
                     });
                     // setForm({...form,reportedByDepartment:params.inputValue})
-
                   }
 
                   return filtered;
-
-                }
-
-                }
+                }}
                 className={classes.mT30}
                 selectOnFocus
                 clearOnBlur
-
                 handleHomeEndKeys
                 id="free-solo-with-text-demo"
                 options={departmentName}
                 getOptionLabel={(option) => {
                   // Value selected with enter, right from the input
-                  if (typeof option === 'string') {
+                  if (typeof option === "string") {
                     return option;
                   }
                   // Add "xxx" option created dynamically
@@ -1116,15 +1139,20 @@ const ObservationInitialNotification = (props) => {
                 // style={{ width: 300 }}
                 freeSolo
                 renderInput={(params) => (
-                  <TextField {...params} label="Observer's Department*"
+                  <TextField
+                    {...params}
+                    label="Observer's Department*"
                     error={error.reportedByDepartment}
-                    helperText={error.reportedByDepartment ? error.reportedByDepartment : ""}
+                    helperText={
+                      error.reportedByDepartment
+                        ? error.reportedByDepartment
+                        : ""
+                    }
                     // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
-                    variant="outlined" />
+                    variant="outlined"
+                  />
                 )}
               />
-
-
             </Grid>
 
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -1148,37 +1176,35 @@ const ObservationInitialNotification = (props) => {
               />
             </Grid>
 
-
-
-
-
-
             <Grid item md={6} xs={12} className={classes.formBox}>
               <Autocomplete
-                value={form.supervisorName ? form.supervisorName : ''}
+                value={form.supervisorName ? form.supervisorName : ""}
                 onChange={(event, newValue) => {
-                  if (typeof newValue === 'string') {
+                  if (typeof newValue === "string") {
                     // setValueReportedBy({
                     //   inputValue: newValue,
                     // });
-                    setForm({ ...form, supervisorName: newValue })
-
-
+                    setForm({ ...form, supervisorName: newValue });
                   } else if (newValue && newValue.inputValue) {
                     // Create a new value from the user input
                     // setValueReportedBy({
                     //   inputValue: newValue.inputValue,
                     // });
                     if (newValue.supervisorId) {
-                      setForm({ ...form, supervisorName: newValue.inputValue, supervisorByBadgeId: newValue.badgeNo, supervisorId: newValue.supervisorId });
-
+                      setForm({
+                        ...form,
+                        supervisorName: newValue.inputValue,
+                        supervisorByBadgeId: newValue.badgeNo,
+                        supervisorId: newValue.supervisorId,
+                      });
                     } else {
-                      setForm({ ...form, supervisorName: newValue.inputValue, supervisorByBadgeId: "", supervisorId: 0 });
-
+                      setForm({
+                        ...form,
+                        supervisorName: newValue.inputValue,
+                        supervisorByBadgeId: "",
+                        supervisorId: 0,
+                      });
                     }
-
-
-
                   } else {
                     setValueReportedBy(newValue);
                   }
@@ -1187,7 +1213,7 @@ const ObservationInitialNotification = (props) => {
                   const filtered = filter(options, params);
 
                   // Suggest the creation of a new value
-                  if (params.inputValue !== '') {
+                  if (params.inputValue !== "") {
                     filtered.push({
                       inputValue: params.inputValue,
                       inputValue: `${params.inputValue}`,
@@ -1204,7 +1230,7 @@ const ObservationInitialNotification = (props) => {
                 options={superVisorName}
                 getOptionLabel={(option) => {
                   // Value selected with enter, right from the input
-                  if (typeof option === 'string') {
+                  if (typeof option === "string") {
                     return option;
                   }
                   // Add "xxx" option created dynamically
@@ -1218,14 +1244,17 @@ const ObservationInitialNotification = (props) => {
                 // style={{ width: 300 }}
                 freeSolo
                 renderInput={(params) => (
-                  <TextField {...params} label="Supervisor's Name*"
+                  <TextField
+                    {...params}
+                    label="Supervisor's Name*"
                     error={error.supervisorName}
-                    helperText={error.supervisorName ? error.supervisorName : ""}
-                    variant="outlined" />
+                    helperText={
+                      error.supervisorName ? error.supervisorName : ""
+                    }
+                    variant="outlined"
+                  />
                 )}
               />
-
-
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
@@ -1237,7 +1266,10 @@ const ObservationInitialNotification = (props) => {
                   error.supervisorByBadgeId ? error.supervisorByBadgeId : ""
                 }
                 value={
-                  form.supervisorByBadgeId !== null && form.supervisorByBadgeId !== undefined ? form.supervisorByBadgeId : ""
+                  form.supervisorByBadgeId !== null &&
+                  form.supervisorByBadgeId !== undefined
+                    ? form.supervisorByBadgeId
+                    : ""
                 }
                 fullWidth
                 variant="outlined"
@@ -1276,7 +1308,6 @@ const ObservationInitialNotification = (props) => {
                       observedAt: moment(e).toISOString(),
                     });
                   }}
-
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -1305,17 +1336,15 @@ const ObservationInitialNotification = (props) => {
               </TextField>
             </Grid>
 
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.addLabelTitleBox}
-            >
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
+            <Grid item md={12} xs={12} className={classes.addLabelTitleBox}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                className={classes.labelName}
+              >
                 Observation Details
               </Typography>
             </Grid>
-
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <TextField
@@ -1359,10 +1388,10 @@ const ObservationInitialNotification = (props) => {
               />
             </Grid>
             <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset"
-                error={
-                  error && error["isSituationAddressed"]
-                }>
+              <FormControl
+                component="fieldset"
+                error={error && error["isSituationAddressed"]}
+              >
                 <FormLabel className={classes.labelName} component="legend">
                   Did you address the situation?*
                 </FormLabel>
@@ -1403,9 +1432,7 @@ const ObservationInitialNotification = (props) => {
                     multiline
                     rows={4}
                     error={error.actionTaken}
-                    helperText={
-                      error.actionTaken ? error.actionTaken : ""
-                    }
+                    helperText={error.actionTaken ? error.actionTaken : ""}
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
@@ -1420,15 +1447,12 @@ const ObservationInitialNotification = (props) => {
               ""
             )}
 
-
-
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.addLabelTitleBox}
-            >
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
+            <Grid item md={12} xs={12} className={classes.addLabelTitleBox}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                className={classes.labelName}
+              >
                 Observation Classification
               </Typography>
             </Grid>
@@ -1458,23 +1482,21 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
-
               </FormControl>
             </Grid>
 
-
             <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormControl component="fieldset" error={
-                error && error["observationType"]
-              } >
-                <FormLabel component="legend" className={classes.labelName} >
+              <FormControl
+                component="fieldset"
+                error={error && error["observationType"]}
+              >
+                <FormLabel component="legend" className={classes.labelName}>
                   Type of observation*
                 </FormLabel>
                 <RadioGroup
                   aria-label="gender"
                   name="gender1"
                   defaultValue={form.observationType}
-
                 >
                   {radioType.map((value) => (
                     <FormControlLabel
@@ -1492,9 +1514,7 @@ const ObservationInitialNotification = (props) => {
                   ))}
                 </RadioGroup>
                 {error && error["observationType"] && (
-                  <FormHelperText>
-                    {error["observationType"]}
-                  </FormHelperText>
+                  <FormHelperText>{error["observationType"]}</FormHelperText>
                 )}
               </FormControl>
             </Grid>
@@ -1550,11 +1570,6 @@ const ObservationInitialNotification = (props) => {
               </FormControl>
             </Grid>
 
-
-
-
-
-
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
                 Categories
@@ -1575,18 +1590,14 @@ const ObservationInitialNotification = (props) => {
                   />
                 ))}
               </FormGroup>
-
             </Grid>
 
-
-
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={classes.addLabelTitleBox}
-            >
-              <Typography variant="h6" gutterBottom className={classes.labelName}>
+            <Grid item md={12} xs={12} className={classes.addLabelTitleBox}>
+              <Typography
+                variant="h6"
+                gutterBottom
+                className={classes.labelName}
+              >
                 Confirmation and Notification
               </Typography>
             </Grid>
@@ -1616,9 +1627,6 @@ const ObservationInitialNotification = (props) => {
               </FormControl>
             </Grid>
 
-
-
-
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" className={classes.labelName}>
@@ -1647,32 +1655,26 @@ const ObservationInitialNotification = (props) => {
               </FormControl>
             </Grid>
 
-
-
-
-
             {notificationSentValue.map((value, index) => (
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
-              >
+              <Grid item md={12} xs={12} className={classes.formBox}>
                 <FormGroup>
                   <FormControlLabel
                     className={classes.labelValue}
-                    control={(
+                    control={
                       <Checkbox
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         checkedIcon={<CheckBoxIcon fontSize="small" />}
                         name="notify"
-                        onChange={(e) => { handleNotify(value.id, index, e) }}
+                        onChange={(e) => {
+                          handleNotify(value.id, index, e);
+                        }}
                       />
-                    )}
+                    }
                     label={`Do you want to Notify the ${value.roleName}`}
                   />
                 </FormGroup>
-              </Grid>))}
+              </Grid>
+            ))}
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <Typography
@@ -1690,13 +1692,8 @@ const ObservationInitialNotification = (props) => {
                   handleFile(e);
                 }}
               />
-
             </Grid>
-            <Snackbar
-              open={open}
-              autoHideDuration={6000}
-              onClose={handleClose}
-            >
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="error">
                 The file you are attaching is bigger than the 25mb.
               </Alert>
@@ -1725,7 +1722,7 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {attachment !== undefined ?
+            {attachment !== undefined ? (
               <Grid item md={12} xs={12} className={classes.formBBanner}>
                 <Avatar
                   className={classes.observationFormBox}
@@ -1733,7 +1730,8 @@ const ObservationInitialNotification = (props) => {
                   alt="Observation form banner"
                   src={attachment}
                 />
-              </Grid> : null}
+              </Grid>
+            ) : null}
             {/* {attachment ===
                               null ? null : typeof attachment ===
                                 "string" ? (
@@ -1751,7 +1749,12 @@ const ObservationInitialNotification = (props) => {
                 >
                   Submit
                 </Button>
-                {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
               </div>
 
               <Button
@@ -1777,6 +1780,5 @@ const ObservationInitialNotification = (props) => {
 const observationDetailsInit = connect((state) => ({
   initialValues: state.getIn(["InitialDetailsReducer"]),
 }))(ObservationInitialNotification);
-
 
 export default observationDetailsInit;
