@@ -1041,7 +1041,6 @@ function JhaSummary() {
                                   <Typography className={classes.aLabelValue}>
                                     {approvalActionData.map((value) => (
                                       <>
-                                        {console.log(value)}
                                         {value.enitityReferenceId.split(":")[1] == "00" ?
                                           <ActionShow
                                             action={{ id: value.actionId, number: value.actionNumber }}
