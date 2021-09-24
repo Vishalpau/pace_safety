@@ -221,7 +221,9 @@ function UserMenu(props) {
         let apiUrlDomain = {}
         if (subscriptionAction.length > 0) {
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
-          apiUrlDomain = { "safety": hostings, "actions": actionHosting }
+          let actionUI = subscriptionAction[0].hostings[0].appDomain
+          let actionClientId = subscriptionAction[0].hostings[0].clientId
+          apiUrlDomain = { "safety": hostings, "actions": actionHosting, "actionsUI": actionUI, "actionClientID": actionClientId }
         } else {
           apiUrlDomain = { "safety": hostings }
         }

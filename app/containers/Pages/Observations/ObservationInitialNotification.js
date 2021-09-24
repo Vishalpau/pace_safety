@@ -179,8 +179,8 @@ const ObservationInitialNotification = (props) => {
   // All states are define here. 
 
   const user = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails'))
-      : null;
+    ? JSON.parse(localStorage.getItem('userDetails'))
+    : null;
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
@@ -190,18 +190,18 @@ const ObservationInitialNotification = (props) => {
   const [tagData, setTagData] = useState([]);
   const [fileShow, setFileShow] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [superVisorName , setSuperVisorName] = useState([]);
-  const [superVisorBadgeNo , setSuperVisorBadgeNo] = useState([]); 
-  const [reportedByDetails , setReportedByDetails] = useState([]);
-  const [reportedById , setReportedById] = useState([]);
-  const [reportedByBadgeId , setReportedByIdBadgeId] = useState([]); 
-  const [attachment,setAttachment] = useState()
-  const [departmentName , setDepartmentName] = useState([])
+  const [superVisorName, setSuperVisorName] = useState([]);
+  const [superVisorBadgeNo, setSuperVisorBadgeNo] = useState([]);
+  const [reportedByDetails, setReportedByDetails] = useState([]);
+  const [reportedById, setReportedById] = useState([]);
+  const [reportedByBadgeId, setReportedByIdBadgeId] = useState([]);
+  const [attachment, setAttachment] = useState()
+  const [departmentName, setDepartmentName] = useState([])
   const [shiftType, setShiftType] = useState([]);
-  const [superVisorId , setSuperVisorId] = useState('')
-  const [notificationSentValue , setNotificationSentValue] = useState([])
+  const [superVisorId, setSuperVisorId] = useState('')
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const [notifyToList, setNotifyToList] = useState([]);
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
@@ -227,18 +227,18 @@ const ObservationInitialNotification = (props) => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
-    
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+
   const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-    var struct = "";
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  var struct = "";
   for (var i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
@@ -263,23 +263,23 @@ const ObservationInitialNotification = (props) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].roles[0].users;
           let user = []
-          
-            for (var i in result) {
-              let temp = {}
-              temp["inputValue"] = result[i].name
+
+          for (var i in result) {
+            let temp = {}
+            temp["inputValue"] = result[i].name
             temp["supervisorId"] = result[i].id
             temp['badgeNo'] = result[i].badgeNo
             user.push(temp)
-              // filterSuperVisorBadgeNo.push(result[i].badgeNo);
-            }
-            setSuperVisorName(user);
+            // filterSuperVisorBadgeNo.push(result[i].badgeNo);
+          }
+          setSuperVisorName(user);
 
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const fetchReportedBy = () => {
-    
+
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
@@ -293,11 +293,11 @@ const ObservationInitialNotification = (props) => {
         if (response.status === 200) {
           const result = response.data.data.results[0].users;
           const userDetails = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails'))
-      : null;
-      let us = {
-        inputValue : userDetails.name, reportedById:userDetails.id, badgeNo:userDetails.badgeNo
-      }
+            ? JSON.parse(localStorage.getItem('userDetails'))
+            : null;
+          let us = {
+            inputValue: userDetails.name, reportedById: userDetails.id, badgeNo: userDetails.badgeNo
+          }
           let user = [];
           for (var i in result) {
 
@@ -312,7 +312,7 @@ const ObservationInitialNotification = (props) => {
             // filterReportedByBedgeID.push(result[i].badgeNo);
           }
           setReportedByDetails(user);
-          
+
         }
         // else{
         //   window.location.href = {LOGIN_URL}
@@ -332,13 +332,13 @@ const ObservationInitialNotification = (props) => {
       },
     };
     axios(config)
-    
+
       .then((response) => {
 
         if (response.status === 200) {
           const result = response.data.data.results;
           let user = [];
-          
+
           for (var i in result) {
             let temp = {}
 
@@ -348,10 +348,10 @@ const ObservationInitialNotification = (props) => {
             user.push(temp);
           }
 
-      
+
           setDepartmentName(user)
         }
-       
+
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -383,7 +383,7 @@ const ObservationInitialNotification = (props) => {
     reportedById: user.id,
     reportedByName: user.name,
     reportedByDepartment: "",
-    reportedDate: new Date().toISOString(),    
+    reportedDate: new Date().toISOString(),
     reportedByBadgeId: user.badgeNo,
     closedById: 0,
     closedByName: "",
@@ -393,8 +393,8 @@ const ObservationInitialNotification = (props) => {
     supervisorByBadgeId: "",
     supervisorName: "",
     supervisorDepartment: "",
-    supervisorId : "",
-    notifyTo : "",
+    supervisorId: "",
+    notifyTo: "",
     attachment: "",
     status: "Active",
     createdBy: parseInt(userId),
@@ -413,17 +413,17 @@ const ObservationInitialNotification = (props) => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
-   
+
     // if any error then this part is executed
-    const { error, isValid } = InitialNotificationValidator(form,selectDepthAndId);
+    const { error, isValid } = InitialNotificationValidator(form, selectDepthAndId);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
     }
     await handleButtonClick()
-     // we are convert form into FormData
+    // we are convert form into FormData
     let data = new FormData();
-      data.append("fkCompanyId", form.fkCompanyId),
+    data.append("fkCompanyId", form.fkCompanyId),
       data.append("fkProjectId", form.fkProjectId),
       data.append("fkProjectStructureIds", form.fkProjectStructureIds),
       data.append("observationType", form.observationType),
@@ -479,21 +479,18 @@ const ObservationInitialNotification = (props) => {
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
 
-      const res = await api.post("/api/v1/observations/", data);
-      if (res.status === 201) {
-        const id = res.data.data.results;
-        const fkObservatioId = id.id;
-        await localStorage.setItem("fkobservationId", fkObservatioId);
-      } 
+    const res = await api.post("/api/v1/observations/", data);
+    if (res.status === 201) {
+      const id = res.data.data.results;
+      const fkObservatioId = id.id;
+      await localStorage.setItem("fkobservationId", fkObservatioId);
+    }
 
     for (let i = 0; i < catagory.length; i++) {
-        catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
-      
-      
-
+      catagory[i]["fkObservationId"] = localStorage.getItem("fkobservationId");
     }
-    if(catagory.length > 0){
-      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,catagory);
+    if (catagory.length > 0) {
+      const resCategory = await api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`, catagory);
     }
 
     history.push(`/app/observation/details/${localStorage.getItem("fkobservationId")}`);
@@ -504,28 +501,28 @@ const ObservationInitialNotification = (props) => {
 
     let temp = [...catagory]
     let tempRemove = []
-    if(e.target.checked == false){
-      temp.map((ahaValue,index) => {
-        if(ahaValue['observationTag'] === value.tagName){
-         
-         temp.splice(index, 1);
-         
+    if (e.target.checked == false) {
+      temp.map((ahaValue, index) => {
+        if (ahaValue['observationTag'] === value.tagName) {
+
+          temp.splice(index, 1);
+
 
         }
       })
     }
-    else if(e.target.checked){
-      temp.push( {
-      "fkObservationId": "",
-      "fkTagId": value.id,
-      "observationTag": value.tagName,
-      "status": "Active",
-      "createdBy": parseInt(userId),
-      "updatedBy": 0,
-    })
-   
-  }
-  await setCatagory(temp) 
+    else if (e.target.checked) {
+      temp.push({
+        "fkObservationId": "",
+        "fkTagId": value.id,
+        "observationTag": value.tagName,
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "updatedBy": 0,
+      })
+
+    }
+    await setCatagory(temp)
 
   }
 
@@ -539,10 +536,10 @@ const ObservationInitialNotification = (props) => {
   const handleButtonClick = () => {
     if (!loading) {
       setLoading(true);
-      
+
     }
   };
-  
+
   // this function when user upload the file
   const handleFile = async (e) => {
     let TempPpeData = { ...form };
@@ -555,31 +552,31 @@ const ObservationInitialNotification = (props) => {
       await setOpen(true);
     }
   };
-  
-  const handleAssignee = async (e,value) => {
+
+  const handleAssignee = async (e, value) => {
     let tempData = { ...form };
     tempData.assigneeName = value.name;
-    
-      tempData.assigneeId = value.id;
+
+    tempData.assigneeId = value.id;
 
     setForm(tempData);
   }
-  
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
-      {file.path} 
+      {file.path}
     </li>
   ));
-  
+
   const handelAddressSituationYes = async (e) => {
-    let tempData = { ...form}
+    let tempData = { ...form }
     tempData.isSituationAddressed = e.target.value
     if (tempData.isSituationAddressed === "Yes") {
       await setAddressSituation(true);
-    } else if(e.target.value === "No") {
+    } else if (e.target.value === "No") {
       tempData.actionTaken = ""
-      
+
       await setAddressSituation(false);
       await setForm(tempData);
     }
@@ -604,9 +601,9 @@ const ObservationInitialNotification = (props) => {
   const handleReportedBy = (e, value) => {
     let tempData = { ...form };
     tempData.reportedByName = value.name;
-   tempData.reportedById = value.id;
-        tempData.reportedByBadgeId = value.badgeNo;
-      
+    tempData.reportedById = value.id;
+    tempData.reportedByBadgeId = value.badgeNo;
+
     setForm(tempData);
   };
   const handleFileName = (value) => {
@@ -615,34 +612,34 @@ const ObservationInitialNotification = (props) => {
     return fileName;
   };
 
-  const handleSuperVisior = (e,value) => {
+  const handleSuperVisior = (e, value) => {
     let tempData = { ...form };
-      tempData.supervisorName = value.name
-        tempData.supervisorByBadgeId = value.badgeNo
-     
-       setForm(tempData)
-  
+    tempData.supervisorName = value.name
+    tempData.supervisorByBadgeId = value.badgeNo
+
+    setForm(tempData)
+
   }
 
-  const handleNotify = async (value, index ,e) => {
+  const handleNotify = async (value, index, e) => {
     if (e.target.checked === true) {
       let temp = [...notifyToList];
-     
+
       temp.push(value)
       let uniq = [...new Set(temp)];
       setNotifyToList(uniq)
-     
-      setForm({...form , notifyTo : temp.toString()});
+
+      setForm({ ...form, notifyTo: temp.toString() });
     } else {
       let temp = [...notifyToList];
-      
-        let newData = temp.filter((item) => item !== value);
-      
+
+      let newData = temp.filter((item) => item !== value);
+
       setNotifyToList(newData);
-      setForm({...form , notifyTo : newData.toString()});
+      setForm({ ...form, notifyTo: newData.toString() });
 
     }
-    
+
   };
 
   const fetchInitialiObservationData = async () => {
@@ -666,7 +663,7 @@ const ObservationInitialNotification = (props) => {
 
 
     try {
-      
+
       var config = {
         method: 'get',
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
@@ -680,7 +677,7 @@ const ObservationInitialNotification = (props) => {
     } catch (error) {
     }
   }
-console.log(form)
+  console.log(form)
   const fetchTags = async () => {
     let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
@@ -688,7 +685,7 @@ console.log(form)
     const result = res.data.data.results.results;
     let temp = []
     result.map((value) => {
-      if(value.status === "Active") {
+      if (value.status === "Active") {
         temp.push(value)
       }
     })
@@ -707,52 +704,52 @@ console.log(form)
 
   const fetchAttachment = async () => {
     let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-      let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
     const attachment = await api.get(
       `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
-    if(result !== undefined) {
+    if (result !== undefined) {
       let ar = result.attachment;
-   
+
       await setAttachment(ar)
     }
-    
+
   };
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-    
+
     const value = e.target.value;
-    
+
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
     // let removeTemp = temp.slice(0, index)
-    for(var i in temp){
-      if(i>index){
-        temp[i].breakDownData=[]
-        temp[i].selectValue.id=""
+    for (var i in temp) {
+      if (i > index) {
+        temp[i].breakDownData = []
+        temp[i].selectValue.id = ""
       }
-      
+
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
-    let sliceData = dataDepthAndId.slice(0,index)
-    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
+    let sliceData = dataDepthAndId.slice(0, index)
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
     setSelectDepthAndId(newdataDepthAndId)
     // await setFetchSelectBreakDownList(removeTemp)
-    if (projectData.projectName.breakdown.length !== index+1) {
+    if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index+1) {
-         
-          
+        if (key == index + 1) {
+
+
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-          }${value}`,)
+            }${value}`)
             .then(function (response) {
               if (response.status === 200) {
 
-               temp[key].breakDownData =response.data.data.results
-              //  temp[key].select=e.
-              setBreakdown1ListData(temp)
+                temp[key].breakDownData = response.data.data.results
+                //  temp[key].select=e.
+                setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
@@ -760,7 +757,7 @@ console.log(form)
             });
         }
       }
-    } 
+    }
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
@@ -841,8 +838,8 @@ console.log(form)
       }
     }
   };
- 
-  
+
+
 
   const classes = useStyles();
 
@@ -851,19 +848,19 @@ console.log(form)
     await setIsLoading(true);
   };
   useEffect(() => {
-    
-      fetchTags()
-      fetchDepartment()
-      fetchAttachment()
-      fetchNotificationSent()
-      fetchSuperVisorName()
-      fetchReportedBy()
-      PickList()
 
-     
-    
+    fetchTags()
+    fetchDepartment()
+    fetchAttachment()
+    fetchNotificationSent()
+    fetchSuperVisorName()
+    fetchReportedBy()
+    PickList()
+
+
+
   }, [props.initialValues.breakDown]);
-  
+
   return (
     <>
       <PapperBlock
@@ -875,16 +872,16 @@ console.log(form)
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
 
-          <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.addLabelTitleBox}
-          >
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
-              Project Information
-            </Typography>
-          </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.addLabelTitleBox}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Project Information
+              </Typography>
+            </Grid>
 
             <Grid item md={12}>
               <Typography
@@ -899,132 +896,132 @@ console.log(form)
               </Typography>
             </Grid>
 
-            {id ? 
-              fetchSelectBreakDownList.map((data, key) => 
-              <Grid item xs={3} md={3} key={key}>
-                <FormControl
-                  error={error && error[`projectStructure${[key]}`]}
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    {data.breakDownLabel}
-                  </InputLabel>
-                  <Select
-                    labelId="incident-type-label"
-                    id="incident-type"
-                    label="Incident type"
-                    value={data.selectValue.id || ""}
-                    disabled={data.breakDownData.length===0}
-                    
-                    onChange={(e) => {
-                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
-                    }}
+            {id ?
+              fetchSelectBreakDownList.map((data, key) =>
+                <Grid item xs={3} md={3} key={key}>
+                  <FormControl
+                    error={error && error[`projectStructure${[key]}`]}
+                    variant="outlined"
+                    required
+                    className={classes.formControl}
                   >
-                    {data.breakDownData.length !== 0
-                      ? data.breakDownData.map((selectvalues, index) => (
-                        <MenuItem key={index} 
-                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                        value={selectvalues.id}>
-                          {selectvalues.structureName}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error[`projectStructure${[key]}`] && (
-                              <FormHelperText>
-                                {error[`projectStructure${[key]}`]}
-                              </FormHelperText>
-                            )}
-                </FormControl>
-              </Grid>
+                    <InputLabel id="demo-simple-select-label">
+                      {data.breakDownLabel}
+                    </InputLabel>
+                    <Select
+                      labelId="incident-type-label"
+                      id="incident-type"
+                      label="Incident type"
+                      value={data.selectValue.id || ""}
+                      disabled={data.breakDownData.length === 0}
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setWorkArea={setWorkArea}
-              setSelectDepthAndId={setSelectDepthAndId} />
-              }
-              <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.addLabelTitleBox}
-          >
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
-              Observer and Reporter details
-            </Typography>
-          </Grid>
+                      onChange={(e) => {
+                        handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                      }}
+                    >
+                      {data.breakDownData.length !== 0
+                        ? data.breakDownData.map((selectvalues, index) => (
+                          <MenuItem key={index}
+                            // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                            value={selectvalues.id}>
+                            {selectvalues.structureName}
+                          </MenuItem>
+                        ))
+                        : null}
+                    </Select>
+                    {error && error[`projectStructure${[key]}`] && (
+                      <FormHelperText>
+                        {error[`projectStructure${[key]}`]}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
 
-              
-              <Grid item md={6} xs={12} className={classes.formBox}>
+              ) : <ProjectStructureInit
+                selectDepthAndId={selectDepthAndId}
+                setLevelLenght={setLevelLenght}
+                error={error}
+                setWorkArea={setWorkArea}
+                setSelectDepthAndId={setSelectDepthAndId} />
+            }
+            <Grid
+              item
+              md={12}
+              xs={12}
+              className={classes.addLabelTitleBox}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Observer and Reporter details
+              </Typography>
+            </Grid>
+
+
+            <Grid item md={6} xs={12} className={classes.formBox}>
 
               <Autocomplete
-      value={form.reportedByName ? form.reportedByName : ''}
-      onChange={(event, newValue) => {
-        if (typeof newValue === 'string') {
-          setValueReportedBy({
-            inputValue: newValue,
-          });
-          
-                  setForm({...form,reportedByName:newValue,reportedById: "",reportedByBadgeId: ""})
-                
-        } else if (newValue && newValue.inputValue) {
-          // Create a new value from the user input
-          setValueReportedBy({
-            inputValue: newValue.inputValue,
-          });
-          setForm({...form,reportedByName:newValue.inputValue,reportedById: newValue.reportedById,reportedByBadgeId: newValue.badgeNo})
+                value={form.reportedByName ? form.reportedByName : ''}
+                onChange={(event, newValue) => {
+                  if (typeof newValue === 'string') {
+                    setValueReportedBy({
+                      inputValue: newValue,
+                    });
 
-        } else {
-          setValueReportedBy(newValue);
-        }
-      }}
-      filterOptions={(options, params) => {
-        const filtered = filter(options, params);
+                    setForm({ ...form, reportedByName: newValue, reportedById: "", reportedByBadgeId: "" })
 
-        // Suggest the creation of a new value
-        if (params.inputValue !== '') {
-          filtered.push({
-            inputValue: params.inputValue,
-            inputValue: `${params.inputValue}`,
-          });
-        }
+                  } else if (newValue && newValue.inputValue) {
+                    // Create a new value from the user input
+                    setValueReportedBy({
+                      inputValue: newValue.inputValue,
+                    });
+                    setForm({ ...form, reportedByName: newValue.inputValue, reportedById: newValue.reportedById, reportedByBadgeId: newValue.badgeNo })
 
-        return filtered;
-      }}
-      className={classes.mT30}
-      
-      handleHomeEndKeys
-      id="free-solo-with-text-demo"
-      options={reportedByDetails}
-      getOptionLabel={(option) => {
-        // Value selected with enter, right from the input
-        if (typeof option === 'string') {
-          return option;
-        }
-        // Add "xxx" option created dynamically
-        if (option.inputValue) {
-          return option.inputValue;
-        }
-        // Regular option
-        return option.title;
-      }}
-      renderOption={(option) => option.inputValue}
-      // style={{ width: 300 }}
-      freeSolo
-      selectOnFocus
-      clearOnBlur
-      renderInput={(params) => (
-        <TextField {...params} label="Observed by*" 
-        error={error.reportedByName}
-                helperText={error.reportedByName ? error.reportedByName : ""} 
-                variant="outlined" />
-      )}
-    />
-             
+                  } else {
+                    setValueReportedBy(newValue);
+                  }
+                }}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
+
+                  // Suggest the creation of a new value
+                  if (params.inputValue !== '') {
+                    filtered.push({
+                      inputValue: params.inputValue,
+                      inputValue: `${params.inputValue}`,
+                    });
+                  }
+
+                  return filtered;
+                }}
+                className={classes.mT30}
+
+                handleHomeEndKeys
+                id="free-solo-with-text-demo"
+                options={reportedByDetails}
+                getOptionLabel={(option) => {
+                  // Value selected with enter, right from the input
+                  if (typeof option === 'string') {
+                    return option;
+                  }
+                  // Add "xxx" option created dynamically
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  // Regular option
+                  return option.title;
+                }}
+                renderOption={(option) => option.inputValue}
+                // style={{ width: 300 }}
+                freeSolo
+                selectOnFocus
+                clearOnBlur
+                renderInput={(params) => (
+                  <TextField {...params} label="Observed by*"
+                    error={error.reportedByName}
+                    helperText={error.reportedByName ? error.reportedByName : ""}
+                    variant="outlined" />
+                )}
+              />
+
             </Grid>
 
             <Grid item md={6} xs={12} className={classes.formBox}>
@@ -1048,89 +1045,89 @@ console.log(form)
               />
             </Grid>
 
-            
+
 
             <Grid
-            item
-            md={6}
-            xs={12}
-            className={classes.formBox}
-          >
-         <Autocomplete
-      value={form.reportedByDepartment ? form.reportedByDepartment : ''}
-      onChange={(event, newValue) => {
-        if (typeof newValue === 'string') {
-          setValue({
-            inputValue: newValue,
-          });
-                  setForm({...form,reportedByDepartment:newValue})
-                
-        } else if (newValue && newValue.inputValue) {
-          // Create a new value from the user input
-          setValue({
-            inputValue: newValue.inputValue,
-          });
+              item
+              md={6}
+              xs={12}
+              className={classes.formBox}
+            >
+              <Autocomplete
+                value={form.reportedByDepartment ? form.reportedByDepartment : ''}
+                onChange={(event, newValue) => {
+                  if (typeof newValue === 'string') {
+                    setValue({
+                      inputValue: newValue,
+                    });
+                    setForm({ ...form, reportedByDepartment: newValue })
 
-          setForm({...form,reportedByDepartment:newValue.inputValue})
+                  } else if (newValue && newValue.inputValue) {
+                    // Create a new value from the user input
+                    setValue({
+                      inputValue: newValue.inputValue,
+                    });
 
-        } else {
-          setValue(newValue);
-        }
-      }}
-      filterOptions={(options, params) => {
-        const filtered = filter(options, params);
+                    setForm({ ...form, reportedByDepartment: newValue.inputValue })
 
-        // Suggest the creation of a new value
-        if (params.inputValue !== '') {
+                  } else {
+                    setValue(newValue);
+                  }
+                }}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
 
-          filtered.push({
-            inputValue: params.inputValue,
-            inputValue: `${params.inputValue}`,
-          });
-          // setForm({...form,reportedByDepartment:params.inputValue})
+                  // Suggest the creation of a new value
+                  if (params.inputValue !== '') {
 
-        }
+                    filtered.push({
+                      inputValue: params.inputValue,
+                      inputValue: `${params.inputValue}`,
+                    });
+                    // setForm({...form,reportedByDepartment:params.inputValue})
 
-        return filtered;
+                  }
 
-      }
+                  return filtered;
 
-      }
-      className={classes.mT30}
-      selectOnFocus
-      clearOnBlur
-      
-      handleHomeEndKeys
-      id="free-solo-with-text-demo"
-      options={departmentName}
-      getOptionLabel={(option) => {
-        // Value selected with enter, right from the input
-        if (typeof option === 'string') {
-          return option;
-        }
-        // Add "xxx" option created dynamically
-        if (option.inputValue) {
-          return option.inputValue;
-        }
-        // Regular option
-        return option.title;
-      }}
-      renderOption={(option) => option.inputValue}
-      // style={{ width: 300 }}
-      freeSolo
-      renderInput={(params) => (
-        <TextField {...params} label="Observer's Department*" 
-        error={error.reportedByDepartment}
-                helperText={error.reportedByDepartment ? error.reportedByDepartment : ""} 
-                // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
-                variant="outlined" />
-      )}
-    />
-         
-        
-          </Grid>
+                }
 
-          <Grid item md={6} xs={12} className={classes.formBox}>
+                }
+                className={classes.mT30}
+                selectOnFocus
+                clearOnBlur
+
+                handleHomeEndKeys
+                id="free-solo-with-text-demo"
+                options={departmentName}
+                getOptionLabel={(option) => {
+                  // Value selected with enter, right from the input
+                  if (typeof option === 'string') {
+                    return option;
+                  }
+                  // Add "xxx" option created dynamically
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  // Regular option
+                  return option.title;
+                }}
+                renderOption={(option) => option.inputValue}
+                // style={{ width: 300 }}
+                freeSolo
+                renderInput={(params) => (
+                  <TextField {...params} label="Observer's Department*"
+                    error={error.reportedByDepartment}
+                    helperText={error.reportedByDepartment ? error.reportedByDepartment : ""}
+                    // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
+                    variant="outlined" />
+                )}
+              />
+
+
+            </Grid>
+
+            <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Location*"
                 name="location"
@@ -1150,85 +1147,85 @@ console.log(form)
                 }}
               />
             </Grid>
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
             <Grid item md={6} xs={12} className={classes.formBox}>
-            <Autocomplete
-      value={form.supervisorName ? form.supervisorName : ''}
-      onChange={(event, newValue) => {
-        if (typeof newValue === 'string' ) {
-          // setValueReportedBy({
-          //   inputValue: newValue,
-          // });
-                  setForm({...form,supervisorName:newValue})
-                  
-                
-        } else if (newValue && newValue.inputValue) {
-          // Create a new value from the user input
-          // setValueReportedBy({
-          //   inputValue: newValue.inputValue,
-          // });
-          if(newValue.supervisorId){
-            setForm({...form,supervisorName:newValue.inputValue ,supervisorByBadgeId:newValue.badgeNo , supervisorId : newValue.supervisorId});
+              <Autocomplete
+                value={form.supervisorName ? form.supervisorName : ''}
+                onChange={(event, newValue) => {
+                  if (typeof newValue === 'string') {
+                    // setValueReportedBy({
+                    //   inputValue: newValue,
+                    // });
+                    setForm({ ...form, supervisorName: newValue })
 
-          }else{
-            setForm({...form,supervisorName:newValue.inputValue,supervisorByBadgeId:"" , supervisorId : 0});
 
-          }
+                  } else if (newValue && newValue.inputValue) {
+                    // Create a new value from the user input
+                    // setValueReportedBy({
+                    //   inputValue: newValue.inputValue,
+                    // });
+                    if (newValue.supervisorId) {
+                      setForm({ ...form, supervisorName: newValue.inputValue, supervisorByBadgeId: newValue.badgeNo, supervisorId: newValue.supervisorId });
 
-          
+                    } else {
+                      setForm({ ...form, supervisorName: newValue.inputValue, supervisorByBadgeId: "", supervisorId: 0 });
 
-        } else {
-          setValueReportedBy(newValue);
-        }
-      }}
-      filterOptions={(options, params) => {
-        const filtered = filter(options, params);
+                    }
 
-        // Suggest the creation of a new value
-        if (params.inputValue !== '') {
-          filtered.push({
-            inputValue: params.inputValue,
-            inputValue: `${params.inputValue}`,
-          });
-        }
 
-        return filtered;
-      }}
-      className={classes.mT30}
-      selectOnFocus
-      clearOnBlur
-      handleHomeEndKeys
-      id="free-solo-with-text-demo"
-      options={superVisorName}
-      getOptionLabel={(option) => {
-        // Value selected with enter, right from the input
-        if (typeof option === 'string') {
-          return option;
-        }
-        // Add "xxx" option created dynamically
-        if (option.inputValue) {
-          return option.inputValue;
-        }
-        // Regular option
-        return option.title;
-      }}
-      renderOption={(option) => option.inputValue}
-      // style={{ width: 300 }}
-      freeSolo
-      renderInput={(params) => (
-        <TextField {...params} label="Supervisor's Name*" 
-        error={error.supervisorName}
-                helperText={error.supervisorName ? error.supervisorName : ""} 
-                variant="outlined" />
-      )}
-    />
 
-              
+                  } else {
+                    setValueReportedBy(newValue);
+                  }
+                }}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
+
+                  // Suggest the creation of a new value
+                  if (params.inputValue !== '') {
+                    filtered.push({
+                      inputValue: params.inputValue,
+                      inputValue: `${params.inputValue}`,
+                    });
+                  }
+
+                  return filtered;
+                }}
+                className={classes.mT30}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                id="free-solo-with-text-demo"
+                options={superVisorName}
+                getOptionLabel={(option) => {
+                  // Value selected with enter, right from the input
+                  if (typeof option === 'string') {
+                    return option;
+                  }
+                  // Add "xxx" option created dynamically
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  // Regular option
+                  return option.title;
+                }}
+                renderOption={(option) => option.inputValue}
+                // style={{ width: 300 }}
+                freeSolo
+                renderInput={(params) => (
+                  <TextField {...params} label="Supervisor's Name*"
+                    error={error.supervisorName}
+                    helperText={error.supervisorName ? error.supervisorName : ""}
+                    variant="outlined" />
+                )}
+              />
+
+
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
@@ -1255,7 +1252,7 @@ console.log(form)
               />
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
                   label="Date & Time*"
                   defaultValue={form.observedAt}
@@ -1271,15 +1268,15 @@ console.log(form)
                   inputVariant="outlined"
                   InputProps={{ readOnly: true }}
                   KeyboardButtonProps={{
-                                        "aria-label": "change date",
-                                    }}
+                    "aria-label": "change date",
+                  }}
                   onChange={(e) => {
                     setForm({
                       ...form,
                       observedAt: moment(e).toISOString(),
                     });
                   }}
-                 
+
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -1309,17 +1306,17 @@ console.log(form)
             </Grid>
 
             <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.addLabelTitleBox}
-          >
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
-             Observation Details 
-            </Typography>
-          </Grid>
+              item
+              md={12}
+              xs={12}
+              className={classes.addLabelTitleBox}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Observation Details
+              </Typography>
+            </Grid>
 
-            
+
             <Grid item md={12} xs={12} className={classes.formBox}>
               <TextField
                 label="Short title"
@@ -1363,9 +1360,9 @@ console.log(form)
             </Grid>
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset"
-              error={
-                                  error && error["isSituationAddressed"]
-                                }>
+                error={
+                  error && error["isSituationAddressed"]
+                }>
                 <FormLabel className={classes.labelName} component="legend">
                   Did you address the situation?*
                 </FormLabel>
@@ -1389,10 +1386,10 @@ console.log(form)
                   ))}
                 </RadioGroup>
                 {error && error["isSituationAddressed"] && (
-                                  <FormHelperText>
-                                    {error["isSituationAddressed"]}
-                                  </FormHelperText>
-                                )}
+                  <FormHelperText>
+                    {error["isSituationAddressed"]}
+                  </FormHelperText>
+                )}
               </FormControl>
             </Grid>
             {addressSituation === true ? (
@@ -1406,15 +1403,15 @@ console.log(form)
                     multiline
                     rows={4}
                     error={error.actionTaken}
-                helperText={
-                  error.actionTaken ? error.actionTaken : ""
-                }
+                    helperText={
+                      error.actionTaken ? error.actionTaken : ""
+                    }
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
                     className={classes.formControl}
                     onChange={(e) => {
-                      setForm({ ...form, actionTaken: e.target.value });
+                      setForm({ ...form, actionTaken: e.target.value });
                     }}
                   />
                 </Grid>
@@ -1423,20 +1420,20 @@ console.log(form)
               ""
             )}
 
-            
+
 
             <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.addLabelTitleBox}
-          >
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
-             Observation Classification 
-            </Typography>
-          </Grid>
+              item
+              md={12}
+              xs={12}
+              className={classes.addLabelTitleBox}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Observation Classification
+              </Typography>
+            </Grid>
 
-          <Grid item md={12} xs={12} className={classes.formBox}>
+            <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" className={classes.labelName}>
                   Classification
@@ -1461,15 +1458,15 @@ console.log(form)
                     />
                   ))}
                 </RadioGroup>
-                
+
               </FormControl>
             </Grid>
 
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset" error={
-                                  error && error["observationType"]
-                                } >
+                error && error["observationType"]
+              } >
                 <FormLabel component="legend" className={classes.labelName} >
                   Type of observation*
                 </FormLabel>
@@ -1477,7 +1474,7 @@ console.log(form)
                   aria-label="gender"
                   name="gender1"
                   defaultValue={form.observationType}
-                  
+
                 >
                   {radioType.map((value) => (
                     <FormControlLabel
@@ -1486,22 +1483,22 @@ console.log(form)
                       control={<Radio />}
                       label={value}
                       onClick={(e) => {
-                    setForm({
-                      ...form,
-                      observationType: e.target.value,
-                    });
-                  }}
+                        setForm({
+                          ...form,
+                          observationType: e.target.value,
+                        });
+                      }}
                     />
                   ))}
                 </RadioGroup>
                 {error && error["observationType"] && (
-                                  <FormHelperText>
-                                    {error["observationType"]}
-                                  </FormHelperText>
-                                )}
+                  <FormHelperText>
+                    {error["observationType"]}
+                  </FormHelperText>
+                )}
               </FormControl>
             </Grid>
-                 
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" className={classes.labelName}>
@@ -1551,12 +1548,12 @@ console.log(form)
                   ))}
                 </RadioGroup>
               </FormControl>
-            </Grid> 
-            
-            
+            </Grid>
 
-            
-            
+
+
+
+
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
@@ -1578,21 +1575,21 @@ console.log(form)
                   />
                 ))}
               </FormGroup>
-              
+
             </Grid>
 
-            
+
 
             <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.addLabelTitleBox}
-          >
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
-             Confirmation and Notification
-            </Typography>
-          </Grid>
+              item
+              md={12}
+              xs={12}
+              className={classes.addLabelTitleBox}
+            >
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Confirmation and Notification
+              </Typography>
+            </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" className={classes.labelName}>
@@ -1619,8 +1616,8 @@ console.log(form)
               </FormControl>
             </Grid>
 
-            
-            
+
+
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
@@ -1650,32 +1647,32 @@ console.log(form)
               </FormControl>
             </Grid>
 
-            
 
-            
 
-            {notificationSentValue.map((value,index) =>(
-            <Grid
-            item
-            md={12}
-            xs={12}
-            className={classes.formBox}
-          >
-            <FormGroup>
-              <FormControlLabel
-                className={classes.labelValue}
-                control={(
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    name="notify"
-                    onChange={(e) => {handleNotify(value.id,index , e)}}
+
+
+            {notificationSentValue.map((value, index) => (
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+              >
+                <FormGroup>
+                  <FormControlLabel
+                    className={classes.labelValue}
+                    control={(
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        name="notify"
+                        onChange={(e) => { handleNotify(value.id, index, e) }}
+                      />
+                    )}
+                    label={`Do you want to Notify the ${value.roleName}`}
                   />
-                )}
-                label={`Do you want to Notify the ${value.roleName}`}
-              />
-            </FormGroup>
-          </Grid>))}
+                </FormGroup>
+              </Grid>))}
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <Typography
@@ -1686,32 +1683,32 @@ console.log(form)
                 Attachment
               </Typography>
               <input
-                    type="file"
-                    id="attachment"
-                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                      onChange={(e) => {
-                        handleFile(e);
-                      }}
-                    />
-              
+                type="file"
+                id="attachment"
+                accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                onChange={(e) => {
+                  handleFile(e);
+                }}
+              />
+
             </Grid>
-              <Snackbar
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Alert onClose={handleClose} severity="error">
-                  The file you are attaching is bigger than the 25mb.
-                </Alert>
-              </Snackbar>
-            
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+            >
+              <Alert onClose={handleClose} severity="error">
+                The file you are attaching is bigger than the 25mb.
+              </Alert>
+            </Snackbar>
+
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormGroup className={classes.customCheckBoxList}>
                 <FormControlLabel
                   className={classes.labelValue}
-                // helperText={
-                //   error.acceptAndPledge ? error.acceptAndPledge : ""
-                // }
+                  // helperText={
+                  //   error.acceptAndPledge ? error.acceptAndPledge : ""
+                  // }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -1726,37 +1723,37 @@ console.log(form)
                   label="I accept & pledge*"
                 />
               </FormGroup>
-              <p style={{color: "red"}}>{error.acceptAndPledge}</p>
+              <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-{attachment !== undefined ?
-            <Grid item md={12} xs={12} className={classes.formBBanner}>
-              <Avatar
-                className={classes.observationFormBox}
-                variant="rounded"
-                alt="Observation form banner"
-                src={attachment}
-              />
-            </Grid> : null}
+            {attachment !== undefined ?
+              <Grid item md={12} xs={12} className={classes.formBBanner}>
+                <Avatar
+                  className={classes.observationFormBox}
+                  variant="rounded"
+                  alt="Observation form banner"
+                  src={attachment}
+                />
+              </Grid> : null}
             {/* {attachment ===
                               null ? null : typeof attachment ===
                                 "string" ? (
                                 <Attachment value={attachment} />
                               ) : null} */}
             <Grid item xs={12}>
-            {/* {submitLoader == false ? */}
-            <div className={classes.loadingWrapper}>
-        <Button
-          variant="outlined"
+              {/* {submitLoader == false ? */}
+              <div className={classes.loadingWrapper}>
+                <Button
+                  variant="outlined"
                   onClick={(e) => handleSubmit()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
                   disabled={loading}
-        >
-          Submit
-        </Button>
-        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-      </div>
-                
+                >
+                  Submit
+                </Button>
+                {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              </div>
+
               <Button
                 variant="outlined"
                 size="medium"
@@ -1777,7 +1774,7 @@ console.log(form)
   );
 };
 
-const observationDetailsInit  = connect((state) => ({
+const observationDetailsInit = connect((state) => ({
   initialValues: state.getIn(["InitialDetailsReducer"]),
 }))(ObservationInitialNotification);
 
