@@ -53,6 +53,7 @@ import { Comments } from "../../pageListAsync";
 import { SUMMARY_FORM } from "./Utils/constants"
 import { SSO_URL, HEADER_AUTH } from "../../../utils/constants";
 import { handelCommonObject } from "../../../utils/CheckerValue"
+import ActionShow from '../../Forms/ActionShow';
 
 
 
@@ -287,7 +288,9 @@ function JhaSummary() {
 
     await setProjectData({ ...projectData, projectId: projectId, companyId: fkCompanyId })
   }
+  const handelShowData = () => {
 
+  }
   const handelWorkArea = async (assessment) => {
     let structName = {}
     let projectStructId = assessment.fkProjectStructureIds.split(":")
@@ -846,11 +849,13 @@ function JhaSummary() {
 
                                                 </Grid>
                                                 <Grid>
-                                                  <Link display="block"
-                                                    href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
-                                                  >
-                                                    {value.actionNumber}
-                                                  </Link>
+
+                                                  <ActionShow
+                                                    action={{ id: value.actionId, number: value.actionNumber }}
+                                                    companyId={projectData.companyId}
+                                                    projectId={projectData.projectId}
+                                                    handelShowData={handelShowData}
+                                                  />
                                                 </Grid>
                                               </AccordionDetails>
                                             </Accordion>
@@ -1037,22 +1042,14 @@ function JhaSummary() {
                                     {approvalActionData.map((value) => (
                                       <>
                                         {value.enitityReferenceId.split(":")[1] == "00" ?
-                                          <>
-                                            <span className={classes.updateLink}>
-                                              <Link
-                                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
-                                              >
-                                                {value.actionNumber}
-                                              </Link>
-                                            </span>
-                                            <div className={classes.actionTitleLable}>
-                                              {value.actionTitle}
-                                            </div>
-
-                                          </>
+                                          <ActionShow
+                                            action={{ id: value.actionId, number: value.actionNumber }}
+                                            title={value.actionTitle}
+                                            companyId={projectData.companyId}
+                                            projectId={projectData.projectId}
+                                            handelShowData={handelShowData}
+                                          />
                                           : null}
-
-
                                       </>
                                     ))}
                                   </Typography>

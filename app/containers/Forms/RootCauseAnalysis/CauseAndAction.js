@@ -262,13 +262,15 @@ const BasicCauseAndAction = () => {
                         />
                       </TableCell>
                       <TableCell align="right" style={{ minWidth: 200 }}>
-                        <ActionShow
-                          value={value}
-                          companyId={projectData.companyId}
-                          projectId={projectData.projectId}
-                          handelShowData={handelShowData}
-                          updatePage={updatePage}
-                        />
+                        {value.action.length > 0 && value.action.map((actionValue) => (
+                          <ActionShow
+                            action={actionValue}
+                            companyId={projectData.companyId}
+                            projectId={projectData.projectId}
+                            handelShowData={handelShowData}
+                            updatePage={updatePage}
+                          />
+                        ))}
                       </TableCell>
                     </TableRow>
                   ))}

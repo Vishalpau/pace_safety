@@ -32,6 +32,7 @@ import api from "../../utils/axios";
 import apiAction from "../../utils/axiosActionTracker";
 import "../../styles/custom/summary.css";
 import Fonts from "dan-styles/Fonts.scss";
+import ActionShow from "../Forms/ActionShow";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,6 +140,9 @@ const RootCauseAnalysisSummary = () => {
     await setPaceCauses(apiData);
   };
 
+  const handelShowData = () => {
+
+  }
   const handelActionLink = () => {
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
@@ -402,11 +406,12 @@ const RootCauseAnalysisSummary = () => {
                           </TableCell>
                           <TableCell className={classes.tabelBorder}>
                             {pc.action != undefined && pc.action.map((actionId) => (
-                              <Link display="block"
-                                href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
-                              >
-                                {actionId.number}
-                              </Link>
+                              <ActionShow
+                                action={actionId}
+                                companyId={projectData.companyId}
+                                projectId={projectData.projectId}
+                                handelShowData={handelShowData}
+                              />
                             ))}
                           </TableCell>
                         </TableRow>

@@ -19,6 +19,7 @@ import { handelJhaId } from "../Utils/checkValue"
 import apiAction from '../../../../utils/axiosActionTracker';
 import ProjectStructureInit from '../../../ProjectStructureId/ProjectStructureId';
 import { handelCommonObject } from "../../../../utils/CheckerValue"
+import ActionShow from '../../../Forms/ActionShow';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -147,7 +148,18 @@ const Approvals = () => {
     let jhaId = localStorage.getItem("fkJHAId")
 
     const allActionTrackerData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
-    let allAction = allActionTrackerData.data.data.results.results
+    let allActionData = allActionTrackerData.data.data.results.results
+    let allAction = []
+    allActionData.map((value) => {
+      const tempAction = {}
+      let actionTrackerNumber = value.actionNumber;
+      let actionTrackerTitle = value.actionTitle
+      let actionTrackerId = value.id
+      tempAction["number"] = actionTrackerNumber
+      tempAction["title"] = actionTrackerTitle
+      tempAction["id"] = actionTrackerId
+      allAction.push(tempAction)
+    })
     setActionData(allAction !== null ? allAction : [])
   };
 
@@ -252,18 +264,14 @@ const Approvals = () => {
                 </Typography>
                 <Typography className={classes.aLabelValue}>
                   {actionData.map((value) => (
-                    <>
-                      <span className={classes.updateLink}>
-                        <Link
-                          href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
-                        >
-                          {value.actionNumber}
-                        </Link>
-                      </span>
-                      <div className={classes.actionTitleLable}>
-                        {value.actionTitle}
-                      </div>
-                    </>
+                    <ActionShow
+                      action={value}
+                      title={value.title}
+                      companyId={projectData.companyId}
+                      projectId={projectData.projectId}
+                      handelShowData={handelActionTracker}
+                      updatePage={updatePage}
+                    />
                   ))}
                 </Typography>
               </Grid>
