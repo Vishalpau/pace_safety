@@ -241,7 +241,6 @@ const BasicCauseAndAction = () => {
             <TableContainer component={Paper}>
               <Table className={classes.table}>
                 <TableBody>
-                  {console.log(data)}
                   {data.map((value) => (
                     < TableRow >
                       <TableCell align="left">

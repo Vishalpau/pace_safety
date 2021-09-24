@@ -26,18 +26,15 @@ const AssessmentActions = (props) => {
     return (
 
         <Grid item xs={12} className={classes.createHazardbox}>
+            {console.log(props)}
             <Typography>
-                {
-                    props.value["action"] != undefined
-                    &&
-                    props.value["action"].map((value) => (
-                        <Link display="block"
-                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${props.companyId}&projectId=${props.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.trackerId}`}
-                        >
-                            {value.trackerNumber}
-                        </Link>
-                    ))
-                }
+
+                <Link display="block"
+                    href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${props.companyId}&projectId=${props.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${props.value.id}`}
+                >
+                    {props.value.number}
+                </Link>
+
             </Typography>
         </Grid>
 

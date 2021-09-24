@@ -16,6 +16,7 @@ import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Link from '@material-ui/core/Link';
+import Paper from "@material-ui/core/Paper";
 
 import api from "../../../utils/axios";
 import apiAction from "../../../utils/axiosActionTracker"
@@ -27,6 +28,7 @@ import "../../../styles/custom.css";
 import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
 import ActionTrack from "../ActionTrack";
+import ActionShow from "../ActionShow"
 
 import { checkValue } from "../../../utils/CheckerValue";
 
@@ -49,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   table: {
-    width: "100%",
-    minWidth: 650,
+    minWidth: 950,
+    margin: "0 0",
   },
   rootTable: {
     width: "100%",
@@ -238,46 +240,49 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <Table className={classes.table}>
-              <TableBody>
-                {data.map((value) => (
-                  <TableRow>
-                    <TableCell align="left" style={{ width: 160 }}>
-                      {handelConvert(value.rcaSubType)}
-                    </TableCell>
-                    <TableCell align="left">
-                      <span>{value.rcaRemark}</span>
-                    </TableCell>
-                    <TableCell align="right">
+            <TableContainer component={Paper}>
+              <Table className={classes.table}>
+                <TableBody>
+                  {data.map((value) => (
+                    <TableRow>
+                      <TableCell align="left" style={{ width: 160 }}>
+                        {handelConvert(value.rcaSubType)}
+                      </TableCell>
+                      <TableCell align="left">
+                        <span>{value.rcaRemark}</span>
+                      </TableCell>
+                      <TableCell align="right">
 
-                      <ActionTracker
-                        actionContext="incidents:Pacacuase"
-                        enitityReferenceId={`${putId.current}:${value.id}`}
-                        setUpdatePage={setUpdatePage}
-                        updatePage={updatePage}
-                        fkCompanyId={fkCompanyId}
-                        fkProjectId={project}
-                        fkProjectStructureIds={projectStuctId}
-                        createdBy={userId}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography>
-                        {value.action != undefined && value.action.map((actionId) => (
-                          <Link display="block"
-                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
-                            target="_blank"
-                          >
-                            {actionId.number}
-                          </Link>
-                        ))}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <ActionTracker
+                          actionContext="incidents:Pacacuase"
+                          enitityReferenceId={`${putId.current}:${value.id}`}
+                          setUpdatePage={setUpdatePage}
+                          updatePage={updatePage}
+                          fkCompanyId={fkCompanyId}
+                          fkProjectId={project}
+                          fkProjectStructureIds={projectStuctId}
+                          createdBy={userId}
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography>
+                          {value.action.length > 0 && value.action.map((actionValue) => (
+                            <ActionShow
+                              action={actionValue}
+                              companyId={projectData.companyId}
+                              projectId={projectData.projectId}
+                              handelShowData={handelShowData}
+                              updatePage={updatePage}
+                            />
+                          ))}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
 
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            </TableContainer>
             {data.length == 0 ? (
               <Grid container item md={9}>
                 <Typography variant="h8">No option(s) selected</Typography>
