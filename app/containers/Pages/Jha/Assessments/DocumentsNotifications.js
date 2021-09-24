@@ -162,6 +162,7 @@ const DocumentNotification = () => {
     const apiData = res.data.data.results
     apiData["notifyTo"] == null ? apiData["notifyTo"] = "" : apiData["notifyTo"] = apiData["notifyTo"].split(',')
     setForm(apiData)
+    handelCommonObject("commonObject", "jha", "projectStruct", apiData.fkProjectStructureIds)
 
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
