@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ActionShow = (props) => {
     const classes = useStyles();
-    console.log(props)
+
     useEffect(() => {
         props.handelShowData()
     }, [props.updatePage]);

@@ -278,7 +278,7 @@ const ObservationInitialNotification = (props) => {
           setSuperVisorName(user);
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   const fetchReportedBy = () => {
     const config = {
