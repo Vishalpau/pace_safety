@@ -136,42 +136,74 @@ const Summary = (props) => {
     localStorage.setItem("fkincidentId", id);
   }
 
-  const fetchPermission = async () => {
-    const url = JSON.parse(localStorage.getItem('userDetails')).companies
-    // const res = await api.get(`${ACCOUNT_API_URL}`)
-  }
-
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${id}/`);
-    await setIncidents(allIncidents.data.data.results);
-    if (allIncidents.data.data.results.closeDate) {
-      setCloseout(true)
-    }
+    await api.get(`api/v1/incidents/${id}/`)
+    .then((allIncidents)=>{
+       setIncidents(allIncidents.data.data.results);
+      if (allIncidents.data.data.results.closeDate) {
+        setCloseout(true)
+      }
+    })
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
 
+      setMessageType("error")
+    })
   };
-  const fetchReportData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
-    if (allIncidents.data.data.results.length > 0) {
-      await setInitialNotificationStatus(true);
-    }
+
+  const fetchReportData =  async() => {
+  await api.get(`api/v1/incidents/${id}/reports/`)
+    
+    .then((res)=>{
+    
+      if (res.data.data.results.length > 0) {
+         setInitialNotificationStatus(true);
+      }
+    })
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.res)
+      setMessageType("error")
+    })
   };
 
   const fetchInvestigationData = async () => {
-    let res = await api.get(`/api/v1/incidents/${id}/investigations/`);
-    let result = res.data.data.results[0];
-    await setInvestigationOverview(result);
+   await api.get(`/api/v1/incidents/${id}/investigations/`)
+    .then((res)=>{
+
+      let result = res.data.data.results[0];
+       setInvestigationOverview(result);
+    })
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    })
   };
 
   const fetchEvidenceData = async () => {
-    const allEvidence = await api.get(`/api/v1/incidents/${id}/activities/`);
-    const result = allEvidence.data.data.results[24];
-    await setEvidencesData(result);
+    const allEvidence = await api.get(`/api/v1/incidents/${id}/activities/`)
+    .then((allEvidence)=>{
+      const result = allEvidence.data.data.results[24];
+      setEvidencesData(result);
+    })
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    })
+    
   };
 
   const fetchLessonLerned = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/learnings/`);
-    const result = res.data.data.results[0];
-    await setLessionLearnData(result);
+    await api.get(`api/v1/incidents/${id}/learnings/`)
+    .then((res)=>{
+      const result = res.data.data.results[0];
+      setLessionLearnData(result);
+    })
+
+    
   };
 
   const handelRcaValue = async () => {
@@ -219,16 +251,6 @@ const Summary = (props) => {
 
 
   const classes = useStyles();
-
-  const CheckFormStatus = async () => {
-    setFormStatus({
-      initialNotificationCheck: await InititlaNotificationStatus(),
-      investigationCheck: await InvestigationStatus(),
-      evidenceCheck: await EvidenceStatus(),
-      rootCauseCheck: await RootCauseAnalysisStatus(),
-      lessionLearntCheck: await LessionLearnedStatus()
-    })
-  }
 
   const handelNaviagte = (value) => {
     history.push(value)
@@ -617,17 +639,16 @@ const Summary = (props) => {
     const fetchPermissiondata = await api.get(`${ACCOUNT_API_URL}${roles[0].roles[0].aclUrl.substring(1)}`)
     console.log({ permission: fetchPermissiondata.data.data.results.permissions[0].incident })
     setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident)
-
+    
   }
   useEffect(() => {
-    fetchIncidentData();
+    fetchReportData();
     fetchInvestigationData();
     fetchEvidenceData();
     fetchLessonLerned();
-    rootCauseAnalysisCheck();
-    fetchReportData();
-    CheckFormStatus();
     handelRcaValue();
+    rootCauseAnalysisCheck();
+    fetchIncidentData();
     fetchPermissionData();
   }, []);
 

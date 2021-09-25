@@ -5,7 +5,7 @@ import { apiUrl } from "./helper";
 
 
 const api = axios.create({
-  baseURL: JSON.parse(localStorage.getItem("BaseUrl"))["safety"],
+  baseURL: localStorage.getItem("apiBaseUrl"),
   headers: HEADER_AUTH
 });
 api.defaults.timeout = 10000;
@@ -14,7 +14,7 @@ api.defaults.timeoutErrorMessage = "Timeout"
 api.interceptors.request.use(
   function (config) {
     if (localStorage.getItem("apiBaseUrl") !== null) {
-      config.baseURL = JSON.parse(localStorage.getItem("BaseUrl"))["safety"];
+      config.baseURL = localStorage.getItem("apiBaseUrl");
     }
     return config;
   }
