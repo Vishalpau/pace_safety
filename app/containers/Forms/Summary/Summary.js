@@ -182,7 +182,7 @@ const Summary = (props) => {
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
 
 
-    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+    let rcaRecommended = previousData.data.data.results[0] !== undefined ? previousData.data.data.results[0].rcaRecommended : []
     rcaRecommendedValue.current = rcaRecommended
 
 
@@ -794,7 +794,7 @@ const Summary = (props) => {
                           if (
                             props.viewMode.viewMode.initialNotification == true
                           ) {
-                            return <IncidentDetailsSummary/>;
+                            return <IncidentDetailsSummary />;
                           }
                           if (props.viewMode.viewMode.investigation == true) {
                             return <InvestigationSummary />;

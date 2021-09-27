@@ -281,7 +281,7 @@ function UserMenu(props) {
     getSubscribedApps();
     getSubscriptions();
     // getProjectStr();
-  }, [props.initialValues.companyDataList])
+  }, [])
 
   const classnames = useStyles();
 

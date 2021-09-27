@@ -104,7 +104,23 @@ const BasicCauseAndAction = () => {
     await handelActionTracker(tempApiData);
   };
 
+
   const handelActionTracker = async (apiData) => {
+
+    const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${putId.current}`);
+    const allAction = allActionData.data.data.results.results
+    const tempId = []
+    const apiId = []
+    allAction.map((value, index) => {
+      tempId.push(parseInt(value.enitityReferenceId.split(":")[1]))
+      apiId.push(index)
+    })
+
+    apiData.map((value) => {
+      if (tempId)
+    })
+
+    console.log(tempId, apiId)
 
     for (let key in apiData) {
       const allActionTrackerData = await apiAction.get(
