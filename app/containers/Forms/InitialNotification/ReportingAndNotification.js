@@ -1053,6 +1053,7 @@ const ReportingAndNotification = () => {
                     }}
                     disableFuture
                     disabled
+                    InputProps={{ readOnly: true }}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>

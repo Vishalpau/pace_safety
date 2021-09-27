@@ -32,7 +32,6 @@ import styles from "./header-jss";
 import { useHistory } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import "../../styles/custom/customheader.css";
 import {
@@ -48,12 +47,10 @@ import {
 import axios from "axios";
 import Topbar from "./Topbar";
 import api from "../../utils/axios";
-
 // redux
 import { connect } from 'react-redux'
 import { useDispatch } from "react-redux";
 import { fetchPermission } from "../../redux/actions/authentication";
-
 const useStyles = makeStyles((theme) => ({
   list: {
     width: 350,
@@ -106,16 +103,13 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-
 }));
-
 function UserMenu(props) {
   const history = useHistory();
   const [menuState, setMenuState] = useState({
     anchorEl: null,
     openMenu: null,
   });
-
   const handleMenu = (menu) => (event) => {
     const { openMenu } = menuState;
     setMenuState({
@@ -123,16 +117,12 @@ function UserMenu(props) {
       anchorEl: event.currentTarget,
     });
   };
-
   const handleClose = () => {
     setMenuState({ anchorEl: null, openMenu: null });
   };
-
   const { classes, dark } = props;
   const { anchorEl, openMenu } = menuState;
-
   // Apps Menu
-
   const [menuAnchorEl, setMenuAnchorEl] = React.useState(null);
   const appsOpen = Boolean(menuAnchorEl);
   const [avatar, setAvatar] = useState([]);
@@ -148,15 +138,12 @@ function UserMenu(props) {
   const [companyName, setCompanyName] = useState('')
   const [project, setProject] = ([])
   const dispatch = useDispatch()
-
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
   };
-
   const handleAppsClose = () => {
     setMenuAnchorEl(null);
   };
-
   const handleLogout = (e) => {
     e.preventDefault();
     const config = {
@@ -168,7 +155,6 @@ function UserMenu(props) {
           "csrftoken=Z4uAv7EMxWG5KCWNNzqdravi8eoUZcIB8OoGeJ4W1abx4i3zqhLwIzloVMcsFrr5",
       },
     };
-
     axios(config)
       .then((response) => {
         if (response.status === 201) {
@@ -184,7 +170,6 @@ function UserMenu(props) {
       });
   };
   const getSubscriptions = async () => {
-
     let subscriptionData = {}
     let data = await api
       .get(`${ACCOUNT_API_URL}api/v1/applications/`)
@@ -192,33 +177,26 @@ function UserMenu(props) {
         subscriptionData = res.data.data.results;
         // setSubscriptions(res.data.data.results);
         return res.data.data.results
-
       })
       .catch(function (error) {
-
         localStorage.removeItem("access_token");
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
     setSubscriptions(data);
     setIsLoading(true)
-
   }
-
-
-
   const getSubscribedApps = async () => {
     const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
     console.log(companyId)
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
-
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
         let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
-
         let apiUrlDomain = {}
+        console.log({hostings:hostings})
         if (subscriptionAction.length > 0) {
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
           let actionUI = subscriptionAction[0].hostings[0].appDomain
@@ -227,7 +205,7 @@ function UserMenu(props) {
         } else {
           apiUrlDomain = { "safety": hostings }
         }
-
+        console.log({hostings:hostings})
         localStorage.setItem("apiBaseUrl", hostings)
         localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
         setUserImageLink(res.data.data.results.data.avatar)
@@ -235,18 +213,14 @@ function UserMenu(props) {
         setCompanyName(res.data.data.results.data.companies[0].companyName)
         // setSubscriptions(subscriptionData);
         return subscriptionData
-
       })
         .catch(function (error) {
           localStorage.removeItem("access_token");
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
-
         });
       await setApps(data.map(app => app.appId))
     }
-
-
   }
   const getProjectStr = async (id = '1L2:2L5:3L9') => {
     if (id != '') {
@@ -261,7 +235,6 @@ function UserMenu(props) {
         let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
         let res = await api.get(apiurl);
         data = [...data, res.data.data.results[0].name]
-
       }
       console.log(data)
       // setProjectBreakout(data)
@@ -276,7 +249,6 @@ function UserMenu(props) {
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
-
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
@@ -284,9 +256,7 @@ function UserMenu(props) {
   }, [])
 
   const classnames = useStyles();
-
   const isDesktop = useMediaQuery("(min-width:992px)");
-
   return (
     <div>
       {isDesktop && (
@@ -301,7 +271,6 @@ function UserMenu(props) {
           </IconButton>
         </Tooltip>
       )}
-
       {isDesktop && (
         <>
           <IconButton
@@ -411,7 +380,6 @@ function UserMenu(props) {
           </Menu>{" "}
         </>
       )}
-
       <Tooltip title="Apps" placement="bottom">
         <IconButton
           aria-controls="apps-menu"
@@ -427,11 +395,9 @@ function UserMenu(props) {
       </Tooltip>
       {/* <Topbar/> */}
       <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
-
         {isLoading ?
           <div elevation={3} className={classnames.list}>
             <List component="nav">
-
               {subscriptions.map(subscription => (
                 (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div>
@@ -443,7 +409,6 @@ function UserMenu(props) {
                     <List>
                       {subscription.modules.map((module) => (
                         <div>
-
                           <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />
@@ -452,22 +417,14 @@ function UserMenu(props) {
                         </div>
                       ))}
                     </List>
-
-
                   </div>
                   : ""
               )
-
               )}
-
               {/* <Divider /> */}
             </List>
-
-
           </div> : null}
-
       </Drawer>
-
       <Button
         className={classes.userControls}
         onClick={handleMenu("user-setting")}
@@ -499,7 +456,6 @@ function UserMenu(props) {
         >
           My Profile
         </MenuItem>
-
         <Divider />
         <MenuItem
           onClick={(e) => {
@@ -516,17 +472,14 @@ function UserMenu(props) {
     </div>
   );
 }
-
 UserMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   dark: PropTypes.bool,
 };
-
 UserMenu.defaultProps = {
   dark: false,
 };
 const UserInit = connect((state) => ({
   initialValues: state.getIn(["InitialDetailsReducer"]),
 }))(UserMenu);
-
 export default withStyles(styles)(UserInit);

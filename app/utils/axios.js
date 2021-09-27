@@ -14,7 +14,7 @@ api.defaults.timeoutErrorMessage = "Timeout"
 api.interceptors.request.use(
   function (config) {
     if (localStorage.getItem("apiBaseUrl") !== null) {
-      config.baseURL = JSON.parse(localStorage.getItem("BaseUrl"))["safety"];
+      config.baseURL = localStorage.getItem("apiBaseUrl");
     }
     return config;
   }
