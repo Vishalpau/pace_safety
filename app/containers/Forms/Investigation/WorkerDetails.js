@@ -114,6 +114,9 @@ const WorkerDetails = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const fileRef = useRef("");
+  const TextFieldComponent = (props) => {
+    return <TextField {...props} inputProps={{readOnly:true}} />
+  }
 
   let [workerData, setworkerData] = useState({
     name: "",
@@ -634,6 +637,8 @@ const WorkerDetails = () => {
                       format="HH:mm"
                       inputVariant="outlined"
                       disableFuture="true"
+                      TextFieldComponent={TextFieldComponent}
+                      // InputProps={{ readOnly: true }}
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -1013,6 +1018,7 @@ const WorkerDetails = () => {
                       format="yyyy/MM/dd"
                       inputVariant="outlined"
                       disableFuture="true"
+                      InputProps={{readOnly:true}}
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>

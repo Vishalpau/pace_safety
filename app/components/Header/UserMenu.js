@@ -216,20 +216,10 @@ function UserMenu(props) {
 
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
-        let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
-
-        let apiUrlDomain = {}
-        if (subscriptionAction.length > 0) {
-          let actionHosting = subscriptionAction[0].hostings[0].apiDomain
-          let actionUI = subscriptionAction[0].hostings[0].appDomain
-          let actionClientId = subscriptionAction[0].hostings[0].clientId
-          apiUrlDomain = { "safety": hostings, "actions": actionHosting, "actionsUI": actionUI, "actionClientID": actionClientId }
-        } else {
-          apiUrlDomain = { "safety": hostings }
-        }
-
+        // let actionHosting = subscriptionData.filter(item => item.appCode === "actions")[0].hostings[0].apiDomain
+        // let apiUrlDomain = { "safety": hostings, "actions": actionHosting }
         localStorage.setItem("apiBaseUrl", hostings)
-        localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
+        // localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
         setUserImageLink(res.data.data.results.data.avatar)
         setCompanyLogoLink(res.data.data.results.data.companies[0].logo)
         setCompanyName(res.data.data.results.data.companies[0].companyName)

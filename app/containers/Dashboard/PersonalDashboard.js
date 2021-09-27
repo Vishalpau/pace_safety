@@ -394,8 +394,11 @@ function PersonalDashboard(props) {
                 );
               }
               if (newData.projects.length > 1) {
-                setProjectListData(newData.projects);
-                setProjectOpen(true);
+                if(JSON.parse(localStorage.getItem('projectName')===null)){
+                  setProjectListData(newData.projects);
+                  setProjectOpen(true);
+                }
+               
                 // setOpen(true);
               }
             }
