@@ -183,7 +183,7 @@ const Summary = (props) => {
   };
 
   const fetchEvidenceData = async () => {
-    const allEvidence = await api.get(`/api/v1/incidents/${id}/activities/`)
+    await api.get(`/api/v1/incidents/${id}/activities/`)
     .then((allEvidence)=>{
       const result = allEvidence.data.data.results[24];
       setEvidencesData(result);
@@ -202,8 +202,11 @@ const Summary = (props) => {
       const result = res.data.data.results[0];
       setLessionLearnData(result);
     })
-
-    
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    }) 
   };
 
   const handelRcaValue = async () => {
@@ -211,13 +214,16 @@ const Summary = (props) => {
     const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
-
-
-    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
-    rcaRecommendedValue.current = rcaRecommended
-
-
+    await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`)
+    .then((previousData)=>{
+      let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+      rcaRecommendedValue.current = rcaRecommended
+    })
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    }) 
   }
 
   const rootCauseAnalysisCheck = async () => {
@@ -226,21 +232,40 @@ const Summary = (props) => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
 
-    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
-    let paceCauseData = paceCause.data.data.results[0];
-    await setPaceCauseData(paceCauseData);
+    await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`)
+    .then((paceCause)=>{
+      let paceCauseData = paceCause.data.data.results[0];
+      setPaceCauseData(paceCauseData);
+    }).catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    }) 
+    
 
-    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
-    let rootCauseData = rootCause.data.data.results[0];
-    await setRootCausesData(rootCauseData);
+    await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`)
+    .then((rootCause)=>{
+      let rootCauseData = rootCause.data.data.results[0];
+      setRootCausesData(rootCauseData);
+    }).catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    }) 
 
-    let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
-    if (whyAnalysis.status === 200) {
-      await setIsLoading(true)
-    }
-    let whyAnalysisData = whyAnalysis.data.data.results[0];
-    await setWhyData(whyAnalysisData);
-
+     await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`)
+    .then((whyAnalysis)=>{
+      if (whyAnalysis.status === 200) {
+        setIsLoading(true)
+      }
+      let whyAnalysisData = whyAnalysis.data.data.results[0];
+      setWhyData(whyAnalysisData);
+    })
+    .catch(err=>{
+      setOpen(true);
+      setMessage(err.message)
+      setMessageType("error")
+    }) 
   };
 
 
