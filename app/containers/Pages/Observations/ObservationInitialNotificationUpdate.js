@@ -290,7 +290,6 @@ const ObservationInitialNotificationUpdate = () => {
   
 
   const handleSubmit = async () => {
-    console.log("lllll")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
 
     await setError(error);
@@ -433,7 +432,6 @@ const ObservationInitialNotificationUpdate = () => {
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName,"AAAAAAAAAAAA")
     setProjectStructName(structName)
   }
 
@@ -518,7 +516,6 @@ const ObservationInitialNotificationUpdate = () => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    console.log(projectBreakdown,"<><><><><><>")
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
     // setLevelLenght(breakdownLength)
@@ -552,7 +549,6 @@ const ObservationInitialNotificationUpdate = () => {
 
               }
             });
-            console.log(selectBreakDown,"PPPPPPPPP")
             setProjectSturcturedData(selectBreakDown)
           })
           .catch((error) => {
@@ -573,8 +569,7 @@ const ObservationInitialNotificationUpdate = () => {
             const result = response.data.data.results;
 
             const res = result.map((item, index) => {
-              console.log(parseInt(breakDown[key].slice(2)))
-              console.log(item.id)
+              
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
@@ -588,7 +583,6 @@ const ObservationInitialNotificationUpdate = () => {
 
               }
             });
-            console.log('selectBreakDown',selectBreakDown)
 
             setProjectSturcturedData(selectBreakDown)
 
@@ -663,15 +657,13 @@ const ObservationInitialNotificationUpdate = () => {
           >
 
             <TextField
-              label="Location*"
+              label="Location"
               //margin="dense"
               name="location"
               id="location"
               shrink={initialData.location !== null ? true : false}
               value={initialData.location ? initialData.location : ""}
               fullWidth
-              error={error ? error.location : null}
-              helperText={error ? error.location ? error.location : "" : ""}
               variant="outlined"
               className={classes.formControl}
               onChange={(e) => {

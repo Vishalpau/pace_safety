@@ -141,6 +141,8 @@ function ObservationsList(props) {
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
+  const [page , setPage] = useState(1)
+
 
   const [value, setValue] = React.useState(2);
 
@@ -183,8 +185,13 @@ function ObservationsList(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+
+
 
 const fetchInitialiObservation = async () => {
+  await setPage(1)
   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
   const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
     .projectName.projectId;
@@ -202,15 +209,13 @@ const fkProjectStructureIds = struct.slice(0, -1);
   const result = res.data.data.results.results
   await setAllInitialData(result)
   let pageCount  = Math.ceil(res.data.data.results.count/25)
+  await setPageData(res.data.data.results.count/25)
+  await setTotalData(res.data.data.results.count)
   await setPageCount(pageCount)
 
   await setIsLoading(true)
 };
-// const handleSearch = (e) => {
-//   // console.log(e.target.value)
-//   setSeacrhIncident(e.target.value);
-//   // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
-// };
+
 
 const handleChange = async(event, value) => {
   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -228,8 +233,8 @@ for (const i in selectBreakdown) {
 const fkProjectStructureIds = struct.slice(0, -1);
 const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
   await setAllInitialData(res.data.data.results.results);
+  await setPage(value)
 };
-console.log(allInitialData)
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
@@ -271,7 +276,8 @@ console.log(allInitialData)
               </Grid>
             </TableContainer>
             <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
+            {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
+      <Pagination count={pageCount} page={page} onChange={handleChange}/>
     </div>
       </Box>
     </>

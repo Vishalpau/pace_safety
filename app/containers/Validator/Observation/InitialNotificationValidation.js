@@ -27,11 +27,6 @@ for (let i = 0; i < breakdownValue.length; i++) {
     isValid = false;
   }
 
-  if (validator.isEmpty(data.location.toString())) {
-    error.location = "Please enter the location";
-    isValid = false;
-  }
-
   if (validator.isEmpty(data.observationType.toString())) {
     error.observationType = "Please choose any one observation type";
     isValid = false;
