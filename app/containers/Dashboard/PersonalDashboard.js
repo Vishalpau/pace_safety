@@ -245,7 +245,7 @@ function PersonalDashboard(props) {
 
       const apps = data.map(app => app.appId)
       console.log(data)
-      let app = data.filter(app => app.appId === 1)
+      let app = data.filter(app => app.appCode === "safety")
       console.log(app)
       let module = app[0].modules.map(item => {
         if (item.subscriptionStatus == "active") {
