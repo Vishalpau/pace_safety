@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component ,useRef} from "react";
+import React, { useEffect, useState, Component, useRef } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
 import FormLabel from "@material-ui/core/FormLabel";
@@ -32,8 +32,10 @@ import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
 import ActionTracker from "../ActionTracker";
 import { CircularProgress } from '@material-ui/core';
+import apiAction from '../../../../utils/axiosActionTracker';
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+import ActionShow from '../../../Forms/ActionShow'
 
 
 import axios from "axios";
@@ -203,10 +205,10 @@ const Assessment = () => {
   };
   const [severityValue, setSeverityValue] = useState("");
   const [probabilityValue, setProbabilityValue] = useState("");
-  const [colorId,setColorId] = useState({})
-  const [isLoading , setIsLoading] = useState(false);
-  const [idPerColor , setIdPerColor] = useState({243 : "yellow"});
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const [colorId, setColorId] = useState({})
+  const [isLoading, setIsLoading] = useState(false);
+  const [idPerColor, setIdPerColor] = useState({ 243: "yellow" });
+  const [submitLoader, setSubmitLoader] = useState(false);
   const risk = useRef([])
   const [ahaform, setAHAForm] = useState({});
   const riskResidual = useRef([])
@@ -231,9 +233,9 @@ const Assessment = () => {
     4: "Probable",
     5: "Frequent",
   };
-  const approver = ['Yes' , 'No' ]
+  const approver = ['Yes', 'No']
   const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
-  const [actionTakenData , setActionTakenData ]= useState([])
+  const [actionTakenData, setActionTakenData] = useState([])
 
   // console.log(Object.keys(obj[2])[0])
   const [expanded, setExpanded] = useState(false);
@@ -250,10 +252,10 @@ const Assessment = () => {
     await setForm(result);
     await handelActionTracker(result)
 
-    result.map((value) => {
-      temp[value.id] = {"severity":"","probability": ""}
-    })
-    await setColorId(temp)
+    // result.map((value) => {
+    //   temp[value.id] = { "severity": "", "probability": "" }
+    // })
+    // await setColorId(temp)
   };
 
   const fkCompanyId =
@@ -261,10 +263,10 @@ const Assessment = () => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
-      const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
 
 
 
@@ -274,6 +276,7 @@ const Assessment = () => {
     // temp[index]["severity"] = value
 
     if (changeType == "risk") {
+      console.log("KKKK")
       temp[index]["risk"] = value
     } else if (changeType == "control") {
       temp[index]["control"] = value.target.value
@@ -283,26 +286,29 @@ const Assessment = () => {
       temp[index]["approveToImplement"] = value
     } else if (changeType == "monitor") {
       temp[index]["monitor"] = value
-    } 
+    }
+    console.log(temp)
     setForm(temp)
   }
 
-  const handleSeverity = (e , index ) => {
+  console.log(form)
+
+  const handleSeverity = (e, index) => {
     const temp = [...form]
 
-      temp[index]["severity"] = e.target.value
-      setForm(temp)
+    temp[index]["severity"] = e.target.value
+    setForm(temp)
 
   }
-  const handleProbability = (e , index ) => {
+  const handleProbability = (e, index) => {
     const temp = [...form]
 
-      temp[index]["probability"] = e.target.value
-      setForm(temp)
+    temp[index]["probability"] = e.target.value
+    setForm(temp)
 
   }
 
-  
+
   const handleControlChange = async (e, index) => {
     let temp = [...form];
     // await setColorId(...colorId,{...temp[index].id , {severity}})
@@ -322,9 +328,9 @@ const Assessment = () => {
 
   const colorid = (id) => {
     let idcolor = idPerColor[id]
-    if(idcolor !== undefined){
+    if (idcolor !== undefined) {
       return red
-    }else{
+    } else {
       return "white"
     }
   }
@@ -339,9 +345,9 @@ const Assessment = () => {
 
   const handleSubmit = async (e) => {
     await setSubmitLoader(true);
-    
-      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`,form)
-    
+
+    const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, form)
+
     ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     delete ahaform['ahaAssessmentAttachment']
     const res1 = await api.put(
@@ -356,7 +362,7 @@ const Assessment = () => {
   const [notifyToList, setNotifyToList] = useState([]);
 
 
-  const handleWorkStopCondition = (value,e) => {
+  const handleWorkStopCondition = (value, e) => {
     if (e.target.checked == false) {
       let newData = additinalJobDetails.workStopCondition.filter((item) => item !== value);
       setAdditionalJobDetails({
@@ -373,14 +379,11 @@ const Assessment = () => {
 
 
   const handelActionTracker = async (apiData) => {
-    let jhaId = localStorage.getItem("fkAHAId")
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+    let ahaId = localStorage.getItem("fkAHAId")
+
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${jhaId}%3A${apiData[key]["id"]
+      const allActionTrackerData = await apiAction.get(
+        `api/v1/actions/?enitityReferenceId=${ahaId}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
@@ -391,9 +394,9 @@ const Assessment = () => {
           let actionTrackerId = value.actionNumber;
           let actionTrackerTitle = value.actionTitle
           let actionId = value.id
-          tempAction["trackerID"] = actionTrackerId
-          tempAction["tarckerTitle"] = actionTrackerTitle
-          tempAction["actionId"] = actionId
+          tempAction["number"] = actionTrackerId
+          tempAction["title"] = actionTrackerTitle
+          tempAction["id"] = actionId
           temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
@@ -407,13 +410,13 @@ const Assessment = () => {
   };
 
 
-  const handleRiskValue = async (e , index) => {
+  const handleRiskValue = async (e, index) => {
     let tempData = [...form]
     tempData[index]['risk'] = e.target.value;
     await setForm(tempData);
   }
   // console.log(form)
-  
+
 
   const checkList = async () => {
     const temp = {};
@@ -422,7 +425,7 @@ const Assessment = () => {
     );
     // const checklistGroups = res.data.data.results[0];
     const checklistGroups = res.data.data.results[0].checklistValues;
- 
+
     setCheckListGroups(checklistGroups);
   };
   const fetchAhaData = async () => {
@@ -433,10 +436,10 @@ const Assessment = () => {
     await setAHAForm(result);
     setAdditionalJobDetails({
       ...additinalJobDetails,
-      workStopCondition: result.workStopCondition != null ? result.workStopCondition.split(",") :[],
+      workStopCondition: result.workStopCondition != null ? result.workStopCondition.split(",") : [],
     });
   };
-
+console.log(form,"SSSSS")
   const pickListValue = async () => {
     risk.current = await PickListData(78)
     riskResidual.current = await PickListData(76)
@@ -448,338 +451,361 @@ const Assessment = () => {
     fetchAhaData();
     pickListValue()
     // fetchactionTrackerData()
-  }, [updatePage]);
+  }, []);
 
   const classes = useStyles();
   return (
     <>
       {" "}
       <PapperBlock title="Assessments" icon="ion-md-list-box">
-      {isLoading ? (
-        <Grid container spacing={3} className={classes.observationNewSection}>
-          <Grid container spacing={3} item xs={12} md={9}>
-            <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
-              <div>
-                {form.map((value, index) => (
-                  <Accordion
-                    expanded={expanded === `panel${index}`}
-                    onChange={handleTwoChange(`panel${index}`)}
-                    defaultExpanded
-                    className={classes.backPaper}
-                    key={index}
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1bh-content"
-                      id="panel1bh-header"
-                      className={classes.headingColor}
+        {isLoading ? (
+          <Grid container spacing={3} className={classes.observationNewSection}>
+            <Grid container spacing={3} item xs={12} md={9}>
+              <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
+                <div>
+                  {form.map((value, index) => (
+                    <Accordion
+                      expanded={expanded === `panel${index}`}
+                      onChange={handleTwoChange(`panel${index}`)}
+                      defaultExpanded
+                      className={classes.backPaper}
+                      key={index}
                     >
-                      <Typography className={classes.heading}>
-                        <MenuOpenOutlinedIcon className={classes.headingIcon} />{" "}
-                        {value.hazard}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid container spacing={2}>
-                        <Grid item md={12} sm={12} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            requirement
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="demo-simple-select-label">
-                            Identify risk
-                            </InputLabel>
-                            <Select
-                              labelId="incident-type-label"
-                              id="incident-type"
-                              label="Identify risk"
-                              value={form[index].risk ? form[index].risk : ""}
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1bh-content"
+                        id="panel1bh-header"
+                        className={classes.headingColor}
+                      >
+                        <Typography className={classes.heading}>
+                          <MenuOpenOutlinedIcon className={classes.headingIcon} />{" "}
+                          {value.hazard}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Grid container spacing={2}>
+                          <Grid item md={12} sm={12} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Identify risk
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Identify risk"
+                                value={form[index].risk ? form[index].risk : ""}
                               // onChange={(e) => {handleRiskValue(e, index)}}
+                              >
+                                {risk.current.map(
+                                  (value) => (
+                                    <MenuItem
+                                      value={value.label}
+                                      onClick={(e) => handelRiskAndControl("risk", index, value.label)}
+                                    >
+                                      {value.label}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item md={4} sm={4} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
                             >
-                              {risk.current.map(
-                                (value) => (
-                                  <MenuItem
-                                    value={value.label}
-                                  onClick={(e) => handelRiskAndControl("risk", index, value.label)}
-                                  >
-                                    {value.label}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        </Grid>
+                              <InputLabel id="demo-simple-select-label">
+                                Risk Severity
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Incident Type"
+                                value={form[index].severity ? form[index].severity : ''}
 
-                        <Grid item md={4} sm={4} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            requirement
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="demo-simple-select-label">
-                              Risk Severity
-                            </InputLabel>
-                            <Select
-                              labelId="incident-type-label"
-                              id="incident-type"
-                              label="Incident Type"
-                              value={form[index].severity ? form[index].severity : ''}
+                                onChange={(e) => { handleSeverity(e, index) }}
 
-                              onChange={(e) => {handleSeverity(e, index)}}
+                              >
+                                {Object.entries(severity).map(
+                                  ([key, value], index) => (
+                                    <MenuItem
+                                      // onClick={(e) => handleSeverity( index, value)}
+                                      value={value}
 
+                                    >
+                                      {value}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item md={4} sm={4} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
                             >
-                              {Object.entries(severity).map(
-                                ([key, value], index) => (
-                                  <MenuItem
-                                    // onClick={(e) => handleSeverity( index, value)}
-                                    value={value}
+                              <InputLabel id="demo-simple-select-label">
+                                Risk Probability
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Incident Type"
+                                value={form[index].probability ? form[index].probability : ''}
 
-                                  >
-                                    {value}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            requirement
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="demo-simple-select-label">
-                              Risk Probability
-                            </InputLabel>
-                            <Select
-                              labelId="incident-type-label"
-                              id="incident-type"
-                              label="Incident Type"
-                              value={form[index].probability ? form[index].probability : ''}
-
-                              onChange={(e) => {
-                                handleProbability(e, index);
-                              }}
-                            >
-                              {Object.entries(probability).map(
-                                ([key, value], index) => (
-                                  <MenuItem
-                                    value={value}
+                                onChange={(e) => {
+                                  handleProbability(e, index);
+                                }}
+                              >
+                                {Object.entries(probability).map(
+                                  ([key, value], index) => (
+                                    <MenuItem
+                                      value={value}
                                     //  onChange={async(e) => {await setProbabilityValue(key) ;await handleRisk()} }>
 
                                     // onClick={(e) => handelRiskAndControl("probability", index, value)}
-                                  >
-                                    {value}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={12}>
-                          <div style={{backgroundColor:colorid(index) }}>
-                            50% Risk
-                          </div>
-                        </Grid>
-                        <Grid item md={12} sm={12} xs={12}>
-                          <TextField
-                            variant="outlined"
-                            id="immediate-actions"
-                            multiline
-                            rows="1"
-                            label="Identify controls"
-                            className={classes.fullWidth}
-                            value={form[index].control ? form[index].control : ''}
-                            onChange={(e) => handelRiskAndControl("control", index, e)}
-                          />
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            requirement
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="demo-simple-select-label">
-                              Evaluate Residual risk
-                            </InputLabel>
-                            <Select
-                              labelId="incident-type-label"
-                              id="incident-type"
-                              label="Eveluate residual risk"
-                              value={form[index].residualRisk ? form[index].residualRisk : ''}
-                            >
-                              {riskResidual.current.map(
-                                (value) => (
-                                  <MenuItem
-                                    value={value.label}
-                                    onClick={(e) => handelRiskAndControl("residual", index, value.label)}
-                                  >
-                                    {value.label}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                        <Grid item md={4} sm={4} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            requirement
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="demo-simple-select-label">
-                              Approve to implement
-                            </InputLabel>
-                            <Select
-                              labelId="incident-type-label"
-                              id="incident-type"
-                              label="Eveluate residual risk"
-                              value={form[index].approveToImplement ? form[index].approveToImplement : ''}
-                            >
-                             {approver.map((value) => (<MenuItem value={value}
-                              onClick={(e) => handelRiskAndControl("approver", index, value)}
-
-                              >{value}</MenuItem>))}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item md={4} sm={4} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            requirement
-                            className={classes.formControl}
-                          >
-                            <InputLabel id="demo-simple-select-label">
-                              Monitor
-                            </InputLabel>
-                            <Select
-                              labelId="incident-type-label"
-                              id="incident-type"
-                              label="Eveluate residual risk"
-                              value={form[index].monitor ? form[index].monitor : ""}
-                            >
-                              {monitor.current.map(
-                                (value) => (
-                                  <MenuItem
-                                    value={value.label}
-                                    // onClick={async (e) => await handleSeverity(key)}
-                                    onClick={(e) => handelRiskAndControl("monitor", index, value.label)}
-
-                                  >
-                                    {value.label}
-                                  </MenuItem>
-                                )
-                              )}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                        <Grid
-                          item
-                          md={12}
-                          xs={12}
-                          className={classes.createHazardbox}
-                        >
-                          <Divider light />
-                        </Grid>
-
-                        <Grid item xs={6} className={classes.createHazardbox}>
-                        <Typography className={classes.increaseRowBox}>
-                        <ActionTracker
-                            actionContext="aha:hazard"
-                            enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
-                            setUpdatePage={setUpdatePage}
-                                updatePage={updatePage}
-                          />
-          </Typography>
-                          {/* <Typography className={classes.increaseRowBox}>
-                            <ControlPointIcon />
-                            <span className={classes.addLink}>
-                              <Link to="">New action</Link>
-                            </span>
-                          </Typography> */}
-                        </Grid>
-                        <Grid item xs={6} className={classes.createHazardbox}>
-                            {actionTakenData[index]["action"].length > 0
-                              &&
-                              actionTakenData[index]["action"].map((value) => (
-                                <Link display="block"
-                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
-                                >
-                                  {value.trackerID}
-                                </Link>
-                              ))}
+                                    >
+                                      {value}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-              </div>
-            </Grid>
+                          <Grid item md={4} sm={4} xs={12}>
+                            <div style={{ backgroundColor: colorid(index) }}>
+                              50% Risk
+                            </div>
+                          </Grid>
+                          <Grid item md={12} sm={12} xs={12}>
+                            <TextField
+                              variant="outlined"
+                              id="immediate-actions"
+                              multiline
+                              rows="1"
+                              label="Identify controls"
+                              className={classes.fullWidth}
+                              value={form[index].control ? form[index].control : ''}
+                              onChange={(e) => handelRiskAndControl("control", index, e)}
+                            />
+                          </Grid>
+                          <Grid item md={4} sm={4} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Evaluate Residual risk
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Eveluate residual risk"
+                                value={form[index].residualRisk ? form[index].residualRisk : ''}
+                              >
+                                {riskResidual.current.map(
+                                  (value) => (
+                                    <MenuItem
+                                      value={value.label}
+                                      onClick={(e) => handelRiskAndControl("residual", index, value.label)}
+                                    >
+                                      {value.label}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item md={4} sm={4} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Approve to implement
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Eveluate residual risk"
+                                value={form[index].approveToImplement ? form[index].approveToImplement : ''}
+                              >
+                                {approver.map((value) => (<MenuItem value={value}
+                                  onClick={(e) => handelRiskAndControl("approver", index, value)}
 
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Discuss and document conditions when the work must be stopped</FormLabel>
-                <FormGroup>
-                  {checkGroups.map((option) => (
-                    <FormControlLabel
-                      control={<Checkbox name={option.inputLabel} />}
-                      label={option.inputLabel}
-                      checked={additinalJobDetails.workStopCondition.includes(option.inputValue)}
-                        onChange={async (e) => {handleWorkStopCondition( option.inputValue,e)}}
-                    />
+                                >{value}</MenuItem>))}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item md={4} sm={4} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Monitor
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Eveluate residual risk"
+                                value={form[index].monitor ? form[index].monitor : ""}
+                              >
+                                {monitor.current.map(
+                                  (value) => (
+                                    <MenuItem
+                                      value={value.label}
+                                      // onClick={async (e) => await handleSeverity(key)}
+                                      onClick={(e) => handelRiskAndControl("monitor", index, value.label)}
+
+                                    >
+                                      {value.label}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid
+                            item
+                            md={12}
+                            xs={12}
+                            className={classes.createHazardbox}
+                          >
+                            <Divider light />
+                          </Grid>
+
+                          {/* <Grid item md={2} sm={2} xs={2}>
+                            <Grid item xs={12} className={classes.createHazardbox}>
+                              <ActionTracker
+                                actionContext="aha:hazard"
+                                enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
+                                setUpdatePage={setUpdatePage}
+                                fkCompanyId={projectData.companyId}
+                                fkProjectId={projectData.projectId}
+                                fkProjectStructureIds={projectData.projectStructId}
+                                createdBy={projectData.createdBy}
+                                updatePage={updatePage}
+                              />
+                            </Grid>
+                            <Grid item xs={12} className={classes.createHazardbox}>
+                              {value.action.length > 0 && value.action.map((valueAction) => (
+                                <ActionShow
+                                  action={valueAction}
+                                  companyId={projectData.companyId}
+                                  projectId={projectData.projectId}
+                                  handelShowData={handelCheckList}
+                                  updatePage={updatePage}
+                                />
+                              ))}
+
+                            </Grid>
+                          </Grid> */}
+
+                          <Grid item xs={6} className={classes.createHazardbox}>
+                              <ActionTracker
+                                actionContext="aha:hazard"
+                                enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                              />
+                          
+                          </Grid>
+                          <Grid item xs={12} className={classes.createHazardbox}>
+{console.log(value,"LLLLLLLL")}
+                              {value.action && value.action.map((valueAction) => (
+                                <ActionShow
+                                  action={valueAction}
+                                  companyId={fkCompanyId}
+                                  projectId={projectId}
+                                  handelShowData={fetchHzardsData}
+                                  updatePage={updatePage}
+                                />
+                              ))}
+
+                            </Grid>
+                          
+
+                        </Grid>
+                      </AccordionDetails>
+                    </Accordion>
                   ))}
-                </FormGroup>
-              </FormControl>
-              {/* <Box borderTop={1} marginTop={2} borderColor="grey.300" /> */}
-            </Grid>
+                </div>
+              </Grid>
 
-            <Grid item md={12} xs={12} className={classes.formBox}>
-              <TextField
-                label="Additional Remarks"
-                margin="dense"
-                name="additionalremarks"
-                id="additionalremarks"
-                multiline
-                rows={4}
-                value={
-                  ahaform.additionalRemarks ? ahaform.additionalRemarks : ""
-                }
-                fullWidth
-                variant="outlined"
-                className={classes.formControl}
-                onChange={(e) => {
-                  setAHAForm({ ...ahaform, additionalRemarks: e.target.value });
-                }}
-              />
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => history.goBack()}
-              >
-                Previous
-              </Button>
-              {submitLoader == false ?
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Discuss and document conditions when the work must be stopped</FormLabel>
+                  <FormGroup>
+                    {checkGroups.map((option) => (
+                      <FormControlLabel
+                        control={<Checkbox name={option.inputLabel} />}
+                        label={option.inputLabel}
+                        checked={additinalJobDetails.workStopCondition.includes(option.inputValue)}
+                        onChange={async (e) => { handleWorkStopCondition(option.inputValue, e) }}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                {/* <Box borderTop={1} marginTop={2} borderColor="grey.300" /> */}
+              </Grid>
+
+              <Grid item md={12} xs={12} className={classes.formBox}>
+                <TextField
+                  label="Additional Remarks"
+                  margin="dense"
+                  name="additionalremarks"
+                  id="additionalremarks"
+                  multiline
+                  rows={4}
+                  value={
+                    ahaform.additionalRemarks ? ahaform.additionalRemarks : ""
+                  }
+                  fullWidth
+                  variant="outlined"
+                  className={classes.formControl}
+                  onChange={(e) => {
+                    setAHAForm({ ...ahaform, additionalRemarks: e.target.value });
+                  }}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
                 <Button
                   variant="contained"
-                  onClick={(e) => handleSubmit()}
+                  color="primary"
                   className={classes.button}
-                  style={{ marginLeft: "10px" }}
+                  onClick={() => history.goBack()}
                 >
-
-                  Next
+                  Previous
                 </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
-              {/* <Button
+                {submitLoader == false ?
+                  <Button
+                    variant="contained"
+                    onClick={(e) => handleSubmit()}
+                    className={classes.button}
+                    style={{ marginLeft: "10px" }}
+                  >
+
+                    Next
+                  </Button>
+                  :
+                  <IconButton className={classes.loader} disabled>
+                    <CircularProgress color="secondary" />
+                  </IconButton>
+                }
+                {/* <Button
                 variant="contained"
                 size="medium"
                 className={classes.button}
@@ -787,16 +813,16 @@ const Assessment = () => {
               >
                 Next
               </Button> */}
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={AHA}
-              selectedItem="Assessment"
-            />
-          </Grid>
-        </Grid>):(<h1>Loading...</h1>)}
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={AHA}
+                selectedItem="Assessment"
+              />
+            </Grid>
+          </Grid>) : (<h1>Loading...</h1>)}
       </PapperBlock>
     </>
   );

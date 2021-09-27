@@ -527,7 +527,7 @@ newData.push(allActionTracker[i])
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                  href={`${JSON.parse(localStorage.getItem("BaseUrl"))["actionsUI"]}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
+                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
                                 target="_blank"
                               >{action.actionNumber}</a>
                 
