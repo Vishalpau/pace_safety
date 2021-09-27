@@ -227,6 +227,7 @@ function PersonalDashboard(props) {
   const [codes, setCode] = useState([])
 
   const getSubscriptions = async (compId) => {
+
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
     if(companyId){
       try {
@@ -239,7 +240,10 @@ function PersonalDashboard(props) {
           .catch(function (error) {
             console.log(error);
           });
+  
         await setSubscriptions(data)
+  
+  
         const apps = data.map(app => app.appId)
         console.log(data)
         let app = data.filter(app => app.appCode === "safety")
@@ -250,6 +254,7 @@ function PersonalDashboard(props) {
             return item.moduleCode
           }
         })
+  
         setCode(module)
         getModules(apps)
       } catch (error) { }

@@ -217,6 +217,7 @@ function UserMenu(props) {
         let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
         let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
         let apiUrlDomain = {}
+        console.log({hostings:hostings})
         if (subscriptionAction.length > 0) {
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
           let actionUI = subscriptionAction[0].hostings[0].appDomain
@@ -225,6 +226,7 @@ function UserMenu(props) {
         } else {
           apiUrlDomain = { "safety": hostings }
         }
+        console.log({hostings:hostings})
         localStorage.setItem("apiBaseUrl", hostings)
         localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
         setUserImageLink(res.data.data.results.data.avatar)
@@ -274,7 +276,7 @@ function UserMenu(props) {
     getSubscribedApps();
     getSubscriptions();
     // getProjectStr();
-  }, [])
+  }, [props.initialValues.companyDataList])
 
   const classnames = useStyles();
 
