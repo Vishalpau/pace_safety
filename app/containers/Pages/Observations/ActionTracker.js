@@ -42,6 +42,7 @@ import {
   SSO_URL,
 } from "../../../utils/constants";
 import "../../../styles/custom/customheader.css";
+import apiAction from "../../../utils/axiosActionTracker"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -160,7 +161,7 @@ export default function ActionTracker(props) {
       return "Data is not valid";
     }
     console.log(form,"66666")
-      let res = await api.post(`api/v1/actions/`, form);
+      let res = await apiAction.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber
         await setError({ actionTitle: "",assignTo : "" });
@@ -204,12 +205,12 @@ export default function ActionTracker(props) {
   };
 
   const fetchactionTrackerData = async () =>{
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    // const api_action = axios.create({
+    //   baseURL: API_URL_ACTION_TRACKER,
+    // });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = allActionTracker.filter(
       (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 

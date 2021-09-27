@@ -16,8 +16,10 @@ import Divider from "@material-ui/core/Divider";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Link from '@material-ui/core/Link';
+import Paper from "@material-ui/core/Paper";
 
 import api from "../../../utils/axios";
+import apiAction from "../../../utils/axiosActionTracker"
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
 import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
@@ -26,6 +28,7 @@ import "../../../styles/custom.css";
 import { handelConvert } from "../../../utils/CheckerValue";
 import ActionTracker from "../ActionTracker";
 import ActionTrack from "../ActionTrack";
+import ActionShow from "../ActionShow"
 
 import { checkValue } from "../../../utils/CheckerValue";
 
@@ -48,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   table: {
-    width: "100%",
-    minWidth: 650,
+    minWidth: 950,
+    margin: "0 0",
   },
   rootTable: {
     width: "100%",
@@ -105,12 +108,9 @@ const BasicCauseAndAction = () => {
   };
 
   const handelActionTracker = async (apiData) => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
+      const allActionTrackerData = await apiAction.get(
         `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
         }`
       );
@@ -204,7 +204,7 @@ const BasicCauseAndAction = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    <PapperBlock title="Corrective Actions" icon="ion-md-list-box">
+    <PapperBlock title="Preventive actions" icon="ion-md-list-box">
       <Grid container spacing={3}>
         <Grid container item md={9} spacing={3}>
           <Grid item xs={12} md={6}>
@@ -240,45 +240,49 @@ const BasicCauseAndAction = () => {
               </Typography>
             </Box>
 
-            <Table className={classes.table}>
-              <TableBody>
-                {data.map((value) => (
-                  <TableRow>
-                    <TableCell align="left" style={{ width: 160 }}>
-                      {handelConvert(value.rcaSubType)}
-                    </TableCell>
-                    <TableCell align="left">
-                      <span>{value.rcaRemark}</span>
-                    </TableCell>
-                    <TableCell align="right">
+            <TableContainer component={Paper}>
+              <Table className={classes.table}>
+                <TableBody>
+                  {data.map((value) => (
+                    <TableRow>
+                      <TableCell align="left" style={{ width: 160 }}>
+                        {handelConvert(value.rcaSubType)}
+                      </TableCell>
+                      <TableCell align="left">
+                        <span>{value.rcaRemark}</span>
+                      </TableCell>
+                      <TableCell align="right">
 
-                      <ActionTracker
-                        actionContext="incidents:Pacacuase"
-                        enitityReferenceId={`${putId.current}:${value.id}`}
-                        setUpdatePage={setUpdatePage}
-                        updatePage={updatePage}
-                        fkCompanyId={fkCompanyId}
-                        fkProjectId={project}
-                        fkProjectStructureIds={projectStuctId}
-                        createdBy={userId}
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography>
-                        {value.action != undefined && value.action.map((actionId) => (
-                          <Link display="block"
-                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
-                          >
-                            {actionId.number}
-                          </Link>
-                        ))}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <ActionTracker
+                          actionContext="incidents:Pacacuase"
+                          enitityReferenceId={`${putId.current}:${value.id}`}
+                          setUpdatePage={setUpdatePage}
+                          updatePage={updatePage}
+                          fkCompanyId={fkCompanyId}
+                          fkProjectId={project}
+                          fkProjectStructureIds={projectStuctId}
+                          createdBy={userId}
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <Typography>
+                          {value.action.length > 0 && value.action.map((actionValue) => (
+                            <ActionShow
+                              action={actionValue}
+                              companyId={projectData.companyId}
+                              projectId={projectData.projectId}
+                              handelShowData={handelShowData}
+                              updatePage={updatePage}
+                            />
+                          ))}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
 
-              </TableBody>
-            </Table>
+                </TableBody>
+              </Table>
+            </TableContainer>
             {data.length == 0 ? (
               <Grid container item md={9}>
                 <Typography variant="h8">No option(s) selected</Typography>

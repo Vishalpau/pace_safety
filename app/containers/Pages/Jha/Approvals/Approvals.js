@@ -16,7 +16,10 @@ import { APPROVAL_FORM } from "../Utils/constants"
 import ActionTracker from "../../../Forms/ActionTracker";
 import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
 import { handelJhaId } from "../Utils/checkValue"
-
+import apiAction from '../../../../utils/axiosActionTracker';
+import ProjectStructureInit from '../../../ProjectStructureId/ProjectStructureId';
+import { handelCommonObject } from "../../../../utils/CheckerValue"
+import ActionShow from '../../../Forms/ActionShow';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -111,8 +114,10 @@ const Approvals = () => {
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
-    projectId: "",
     companyId: "",
+    projectId: "",
+    createdBy: "",
+    ProjectStructId: "",
   })
 
   const handelJobDetails = async () => {
@@ -141,12 +146,20 @@ const Approvals = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    const allActionTrackerData = await api_action.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
-    let allAction = allActionTrackerData.data.data.results.results
+
+    const allActionTrackerData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
+    let allActionData = allActionTrackerData.data.data.results.results
+    let allAction = []
+    allActionData.map((value) => {
+      const tempAction = {}
+      let actionTrackerNumber = value.actionNumber;
+      let actionTrackerTitle = value.actionTitle
+      let actionTrackerId = value.id
+      tempAction["number"] = actionTrackerNumber
+      tempAction["title"] = actionTrackerTitle
+      tempAction["id"] = actionTrackerId
+      allAction.push(tempAction)
+    })
     setActionData(allAction !== null ? allAction : [])
   };
 
@@ -161,7 +174,17 @@ const Approvals = () => {
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
 
-    setProjectData({ projectId: projectId, companyId: fkCompanyId })
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+
+    const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]
+    setProjectData({
+      companyId: fkCompanyId,
+      projectId: projectId,
+      createdBy: userId,
+      ProjectStructId: projectStuctId,
+    })
   }
 
   const handelSubmit = async () => {
@@ -174,17 +197,17 @@ const Approvals = () => {
   }
 
   useEffect(() => {
+    handelActionLink()
     handelJobDetails()
     handelWorkAndPic()
     handelActionTracker()
-    handelActionLink()
   }, [updatePage])
 
   const classes = useStyles();
   return (
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
-        {/* {console.log(form)} */}
+        {console.log(projectData)}
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
@@ -233,22 +256,22 @@ const Approvals = () => {
                     enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                     setUpdatePage={setUpdatePage}
                     updatePage={updatePage}
+                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                    fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                   />
                 </Typography>
                 <Typography className={classes.aLabelValue}>
                   {actionData.map((value) => (
-                    <>
-                      <span className={classes.updateLink}>
-                        <Link
-                          href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.id}`}
-                        >
-                          {value.actionNumber}
-                        </Link>
-                      </span>
-                      <div className={classes.actionTitleLable}>
-                        {value.actionTitle}
-                      </div>
-                    </>
+                    <ActionShow
+                      action={value}
+                      title={value.title}
+                      companyId={projectData.companyId}
+                      projectId={projectData.projectId}
+                      handelShowData={handelActionTracker}
+                      updatePage={updatePage}
+                    />
                   ))}
                 </Typography>
               </Grid>

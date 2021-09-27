@@ -19,35 +19,57 @@ const useStyles = makeStyles((theme) => ({
         top: theme.spacing(1),
         right: theme.spacing(1),
     },
+    actionLink: {
+        fontSize: "14px",
+        lineHeight: "1.7",
+        marginTop: "10px"
+    },
 }));
 
 
 const ActionShow = (props) => {
     const classes = useStyles();
-    console.log(props)
+    let updatPage = props.updatePage !== undefined ? props.updatePage : ""
+
+    const link = () => {
+        return (
+            <Link
+                className={classes.actionLink}
+                display="block"
+                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${props.companyId
+                    }&projectId=${props.projectId
+                    }&targetPage=/app/pages/Action-Summary/&targetId=${props.action.id
+                    }`}
+                target="_blank"
+            >
+                {props.action.number}
+            </Link>
+        )
+    }
+
     useEffect(() => {
         props.handelShowData()
-    }, [props.updatePage]);
+    }, [updatPage]);
 
     return (
         <Grid container spacing={3}>
-            <Typography>
-                {
-                    props.value.action != undefined
-                    &&
-                    props.value.action.map((actionId) => (
-                        <Link
-                            className={classes.actionLink}
-                            display="block"
-                            href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${props.companyId
-                                }&projectId=${props.projectId
-                                }&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id
-                                }`}
-                        >
-                            {actionId.number}
-                        </Link>
-                    ))}
-            </Typography>
+            {props.title !== undefined ?
+                <>
+                    <Grid item md={6}>
+                        <Typography>
+                            {props.title}
+                        </Typography>
+                    </Grid>
+                    <Grid item md={6}>
+                        {link()}
+                    </Grid>
+                </>
+                :
+                <>
+                    {link()}
+                </>
+            }
+
         </Grid>
     )
 }

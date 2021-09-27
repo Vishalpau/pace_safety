@@ -29,8 +29,10 @@ import axios from "axios";
 
 // Styles
 import api from "../../utils/axios";
+import apiAction from "../../utils/axiosActionTracker";
 import "../../styles/custom/summary.css";
 import Fonts from "dan-styles/Fonts.scss";
+import ActionShow from "../Forms/ActionShow";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -112,14 +114,11 @@ const RootCauseAnalysisSummary = () => {
   };
 
   const handelActionTracker = async (apiData) => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     let incidentID = localStorage.getItem("fkincidentId")
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${incidentID}%3A${apiData[key]["id"]
+      const allActionTrackerData = await apiAction.get(
+        `api/v1/actions/?enitityReferenceId=${incidentID}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
@@ -141,6 +140,9 @@ const RootCauseAnalysisSummary = () => {
     await setPaceCauses(apiData);
   };
 
+  const handelShowData = () => {
+
+  }
   const handelActionLink = () => {
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
@@ -404,11 +406,12 @@ const RootCauseAnalysisSummary = () => {
                           </TableCell>
                           <TableCell className={classes.tabelBorder}>
                             {pc.action != undefined && pc.action.map((actionId) => (
-                              <Link display="block"
-                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
-                              >
-                                {actionId.number}
-                              </Link>
+                              <ActionShow
+                                action={actionId}
+                                companyId={projectData.companyId}
+                                projectId={projectData.projectId}
+                                handelShowData={handelShowData}
+                              />
                             ))}
                           </TableCell>
                         </TableRow>

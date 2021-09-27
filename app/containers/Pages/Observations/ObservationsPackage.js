@@ -380,148 +380,21 @@ function Actions(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    let value = localStorage.getItem("value")
-
-    // if (value) {
-    //   console.log(fkCompanyId,"company")
-    //   console.log(fkProjectId,"project")
-    //   console.log(fkProjectStructureIds,"structure")
-    //   const resPage = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    //   console.log(resPage,"sagar")
-    //   const resultPage = resPage.data.data.results.results
-    //   let tempData1 = []
-    //   let tempUser1 = []
-    //   // let temp = []
-    //   if (props.type == "All" || props.type == "Type") {
-    //     await setAllInitialData(resultPage)
-    //     if (props.observation == "My Observations") {
-    //       resultPage.map((value, i) => {
-    //         if (value.username == userName) {
-    //           tempData1.push(resultPage[i])
-    //         }
-    //       })
-    //       await setAllInitialData(tempData1)
-          
-    //     } else {
-    //       await setAllInitialData(resultPage)
-    //     }
-
-    //     let pageCount1 = Math.ceil(resPage.data.data.results.count / 25)
-    //     await setPageCount(pageCount1)
-    //   } else {
-    //     let tempData = []
-    //     let tempUser = []
-    //     let tempRisk = []
-    //     let tempComment = []
-    //     let tempPB = []
-    //     resultPage.map((value, i) => {
-    //       // console.log(value.observationType,"formtype")
-    //       if (value.observationType == "Risk") {
-    //         tempRisk.push(resultPage[i])
-    //         // await setAllInitialData(tempRisk)
-    //       }
-    //       if (value.observationType == "Comments") {
-    //         tempComment.push(resultPage[i])
-    //       }
-    //       // }else{
-    //       //   tempRisk.push(resultPage[i])
-    //       // }
-    //       if (value.observationType == "Positive behavior" || value.observationType == "Positive Behaviour") {
-    //         tempPB.push(resultPage[i])
-
-    //       }
-
-    //     }
-
-    //     )
-    //     // if(props.type == "Risk"){
-
-    //     // }
-    //     // if(props.type == "Comments"){
-
-    //     // }
-    //     // if(props.type == "Positive behavior"){
-
-    //     // }
-
-    //     if (props.type == "Risk") {
-    //       if (tempRisk.length > 0) {
-    //         await setAllInitialData(tempRisk)
-    //       }
-
-    //       if (props.observation == "My Observations") {
-
-    //         tempRisk.map((value, i) => {
-    //           if (value.username == userName) {
-    //             tempUser.push(tempRisk[i])
-    //           }
-    //         })
-    //         await setAllInitialData(tempUser)
-    //       }
-    //     }
-    //     if (props.type == "Comments") {
-    //       if (tempComment.length > 0 || props.type == "Comments") {
-    //         await setAllInitialData(tempComment)
-
-    //       }
-    //       if (props.observation == "My Observations") {
-
-    //         tempComment.map((value, i) => {
-    //           if (value.username == userName) {
-    //             tempUser.push(tempComment[i])
-    //           }
-    //         })
-    //         await setAllInitialData(tempUser)
-    //       }
-    //     }
-    //     if (props.type == "Positive behavior") {
-    //       if (tempPB.length > 0 || props.type == "Positive behavior") {
-    //         await setAllInitialData(tempPB)
-
-    //       }
-    //       if (props.observation == "My Observations") {
-
-    //         tempPB.map((value, i) => {
-    //           if (value.username == userName) {
-    //             tempUser.push(tempPB[i])
-    //           }
-    //         })
-    //         await setAllInitialData(tempUser)
-    //       }
-    //     }
-    //     let pageCount1 = Math.ceil(resPage.data.data.results.count / 25)
-    //   await setPageCount(pageCount1)
-    //   }
-      
-    // } else {
+ 
       
       
-    
-      console.log(fkCompanyId,"company")
-      console.log(fkProjectId,"project")
-      console.log(fkProjectStructureIds,"structure")
-      console.log(props.projectName.projectId,"||||||||||||||||||||||")
-      
-      let tempData = []
-      let tempUser = []
-      let tempRisk = []
-      let tempComment = []
-      let tempPB = []
-      let temp = []
       if (props.type == "All" || props.type == "Type") {
         // await setAllInitialData(result)
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`)
           const result = allLogInUserData.data.data.results.results
-          console.log(allLogInUserData,"My observation")
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
         } else {
           const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-        console.log(res,"VVVVVVVVv")
+
         const result = res.data.data.results.results
-          console.log(result,"IIIIIIII")
           await setAllInitialData(result)
           let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
@@ -529,36 +402,14 @@ function Actions(props) {
 
         
       } else {
-        console.log(result,"IIIIIIII++++++++")
 
-        // result.map((value, i) => {
-        //   // console.log(value.observationType,"formtype")
-        //   if (value.observationType == "Risk") {
-        //     tempRisk.push(result[i])
-        //     // await setAllInitialData(tempRisk)
-        //   }
-        //   if (value.observationType == "Comments") {
-        //     tempComment.push(result[i])
-        //   }
-        //   // }else{
-        //   //   tempRisk.push(resultPage[i])
-        //   // }
-        //   if (value.observationType == "Positive behavior" || value.observationType == "Positive Behaviour") {
-        //     tempPB.push(result[i])
-
-        //   }
-
-        // }
-
-        // )
+        
         if (props.type == "Risk") {
-          // if (tempRisk.length > 0) {
-          //   await setAllInitialData(tempRisk)
-          // }
+          
 
           if (props.observation == "My Observations") {
 
-            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=${'Risk'}`)
+            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -572,10 +423,7 @@ function Actions(props) {
           }
         }
         if (props.type == "Comments") {
-          // if (tempComment.length > 0 || props.type == "Comments") {
-          //   await setAllInitialData(tempComment)
-
-          // }
+          
           if (props.observation == "My Observations") {
 
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments`)
@@ -584,7 +432,7 @@ function Actions(props) {
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk`)
+            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -592,19 +440,16 @@ function Actions(props) {
           }
         }
         if (props.type == "Positive behavior") {
-          // if (tempPB.length > 0 || props.type == "Positive behavior") {
-          //   await setAllInitialData(tempPB)
-
-          // }
+          
           if (props.observation == "My Observations") {
 
-            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments`)
+            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
         await setPageCount(pageCount)
             }else{
-              const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk`)
+              const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior`)
               const result = allLogInUserData.data.data.results.results
               await setAllInitialData(result)
               let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -614,81 +459,13 @@ function Actions(props) {
         
         
       }
-      
-    
 
-
-    
-
-    // if(props.observation == "My Observations"){
-
-    //   result.map((value,i) => {
-    //     if(value.username == userName ){
-    //       tempData.push(result[i])
-    //     }
-    //   })
-    //   await setAllInitialData(tempData)
-    // }else{
-    //   await setAllInitialData(result)
-    // }
-
-    //   console.log(value)
-    //   if (value){
-
-
-    //   
-    //   // await handleChange(0,value)
-    //   // localStorage.removeItem("value")
-
-    //   }
     await setIsLoading(true)
 
   }
-  // localStorage.removeItem("value")
-  const handleSearch = (e) => {
-    // console.log(e.target.value)
-    setSeacrhIncident(e.target.value);
-    // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
-  };
-
-// const fetchInitialiObservation = async () => {
-//   const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-//   const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-//     .projectName.projectId;
-//   const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-//     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-//       ? JSON.parse(localStorage.getItem("selectBreakDown"))
-//       : null;
-//   let struct = "";
-
-//   for (const i in selectBreakdown) {
-//     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-//   }
-//   const fkProjectStructureIds = struct.slice(0, -1);
-//   if (fkProjectStructureIds !== null) {
-//     const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
-//     await setAllInitialData(res.data.data.results.results);
-//     console.log(res.data.data.results.results)
-//     let pageCount = Math.ceil(res.data.data.results.count / 25)
-//     await setPageCount(pageCount)
-//   } else {
-//     const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
-//     // handleTimeOutError(res)
-//     await setAllInitialData(res.data.data.results.results);
-//     console.log(res.data.data.results.results)
-
-//     let pageCount = Math.ceil(res.data.data.results.count / 25)
-//     await setPageCount(pageCount)
-//   }
-//       await setIsLoading(true)
-
-// };
 
   const handleChange = async (event, value) => {
 
-
-
-    // let valueNumber =  value !== undefined ? value : paginationValue;
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -712,7 +489,6 @@ function Actions(props) {
       // await setAllInitialData(result)
       if (props.observation == "My Observations") {
         const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
-        console.log(allLogInUserData,"MUUUUUUU")
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -727,33 +503,62 @@ function Actions(props) {
 
 
     } else {
-      result.map((value, i) => {
-        // console.log(value.observationType,"formtype")
-        if (value.observationType == props.type) {
-          tempData.push(result[i])
+      if (props.type == "Risk") {
+        
+        if (props.observation == "My Observations") {
+
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        
+        }else{
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+        
         }
-      })
-      await setAllInitialData(tempData)
-      if (props.observation == "My Observations") {
-        tempData.map((value, i) => {
-          if (value.username == userName) {
-            tempUser.push(tempData[i])
-          }
-        })
-        await setAllInitialData(tempUser)
       }
+      if (props.type == "Comments") {
+      
+        if (props.observation == "My Observations") {
+
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+    await setPageCount(pageCount)
+        }else{
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          
+        }
+      }
+      if (props.type == "Positive behavior") {
+       
+        if (props.observation == "My Observations") {
+
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          
+          }else{
+            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+            const result = allLogInUserData.data.data.results.results
+            await setAllInitialData(result)
+        //     let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+        // await setPageCount(pageCount)
+          }
+        }
 
     }
-    // let pageCount = Math.ceil(res.data.data.results.count / 25)
-    // await setPageCount(pageCount)
-    // await setAllInitialData(res.data.data.results.results);
+    
   };
-  console.log(allInitialData, "Alllllllll")
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName, props.type, searchIncident]);
+  }, [props.projectName.breakDown, props.type, searchIncident]);
   // useEffect(() => {
 
   // })

@@ -35,6 +35,7 @@ import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
+import apiAction from '../../../../utils/axiosActionTracker';
 
 import api from "../../../../utils/axios";
 import { handelJhaId } from "../Utils/checkValue"
@@ -45,6 +46,7 @@ import { PickListData } from "../Utils/checkValue"
 import { result } from 'lodash';
 import { SUMMARY_FORM } from "../Utils/constants"
 import AssessmentActions from "./AssessmentActons"
+import ActionShow from '../../../Forms/ActionShow'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -242,12 +244,9 @@ const Assessment = () => {
 
   const handelActionTracker = async (apiData) => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
+      const allActionTrackerData = await apiAction.get(
         `api/v1/actions/?enitityReferenceId=${jhaId}%3A${apiData[key]["id"]
         }`
       );
@@ -259,9 +258,9 @@ const Assessment = () => {
           let actionTrackerNumber = value.actionNumber;
           let actionTrackerTitle = value.actionTitle
           let actionTrackerId = value.id
-          tempAction["trackerNumber"] = actionTrackerNumber
-          tempAction["tarckerTitle"] = actionTrackerTitle
-          tempAction["trackerId"] = actionTrackerId
+          tempAction["number"] = actionTrackerNumber
+          tempAction["title"] = actionTrackerTitle
+          tempAction["id"] = actionTrackerId
           temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
@@ -487,13 +486,16 @@ const Assessment = () => {
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
-                              <AssessmentActions
-                                value={value}
-                                companyId={projectData.companyId}
-                                projectId={projectData.projectId}
-                                handelCheckList={handelCheckList}
-                                updatePage={updatePage}
-                              />
+                              {value.action.length > 0 && value.action.map((valueAction) => (
+                                <ActionShow
+                                  action={valueAction}
+                                  companyId={projectData.companyId}
+                                  projectId={projectData.projectId}
+                                  handelShowData={handelCheckList}
+                                  updatePage={updatePage}
+                                />
+                              ))}
+
                             </Grid>
                           </Grid>
 
