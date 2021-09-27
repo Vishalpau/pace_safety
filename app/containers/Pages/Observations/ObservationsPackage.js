@@ -410,12 +410,15 @@ function Actions(props) {
           if (props.observation == "My Observations") {
 
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk`)
+            console.log(allLogInUserData,"Risk")
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
           }else{
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk`)
+            console.log(allLogInUserData,"Risk")
+
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -427,12 +430,16 @@ function Actions(props) {
           if (props.observation == "My Observations") {
 
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments`)
+            console.log(allLogInUserData,"Comment")
+
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
           }else{
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments`)
+            console.log(allLogInUserData,"Comment")
+
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -444,12 +451,16 @@ function Actions(props) {
           if (props.observation == "My Observations") {
 
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior`)
+            console.log(allLogInUserData,"Positive behavior")
+
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
         await setPageCount(pageCount)
             }else{
               const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior`)
+              console.log(allLogInUserData,"Positive behavior")
+
               const result = allLogInUserData.data.data.results.results
               await setAllInitialData(result)
               let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
@@ -508,11 +519,14 @@ function Actions(props) {
         if (props.observation == "My Observations") {
 
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
+          console.log(allLogInUserData,"risk")
+
         const result = allLogInUserData.data.data.results.results
         await setAllInitialData(result)
         
         }else{
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
+          console.log(allLogInUserData,"risk")
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
         
@@ -523,12 +537,16 @@ function Actions(props) {
         if (props.observation == "My Observations") {
 
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
+          console.log(allLogInUserData,"comment")
+
         const result = allLogInUserData.data.data.results.results
         await setAllInitialData(result)
         let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
     await setPageCount(pageCount)
         }else{
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
+          console.log(allLogInUserData,"comment")
+
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           
@@ -539,11 +557,15 @@ function Actions(props) {
         if (props.observation == "My Observations") {
 
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
+          console.log(allLogInUserData,"positive behaviour")
+
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           
           }else{
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+            console.log(allLogInUserData,"positive behaviour")
+
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
         //     let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)

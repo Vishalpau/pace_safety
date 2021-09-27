@@ -232,7 +232,12 @@ const ObservationInitialNotification = (props) => {
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
-
+  const userDetails =
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails"))
+        : null;
+  const userCompany = userDetails.companies.filter((company) => company.companyId === fkCompanyId)
+  const userDepartment = userCompany[0].departments.filter((userDepartment) => userDepartment.fkUserId === userId)
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -337,6 +342,7 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
+          
           let user = [];
 
           for (var i in result) {
@@ -381,7 +387,7 @@ const ObservationInitialNotification = (props) => {
     departmentId: 0,
     reportedById: user.id,
     reportedByName: user.name,
-    reportedByDepartment: "",
+    reportedByDepartment: userDepartment[0].departmentName,
     reportedDate: new Date().toISOString(),
     reportedByBadgeId: user.badgeNo,
     closedById: 0,
@@ -1157,11 +1163,9 @@ const ObservationInitialNotification = (props) => {
 
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
-                label="Location*"
+                label="Location"
                 name="location"
                 id="location"
-                error={error.location}
-                helperText={error.location ? error.location : ""}
                 defaultValue={form.location}
                 fullWidth
                 variant="outlined"

@@ -663,15 +663,13 @@ const ObservationInitialNotificationUpdate = () => {
           >
 
             <TextField
-              label="Location*"
+              label="Location"
               //margin="dense"
               name="location"
               id="location"
               shrink={initialData.location !== null ? true : false}
               value={initialData.location ? initialData.location : ""}
               fullWidth
-              error={error ? error.location : null}
-              helperText={error ? error.location ? error.location : "" : ""}
               variant="outlined"
               className={classes.formControl}
               onChange={(e) => {
