@@ -227,36 +227,34 @@ function PersonalDashboard(props) {
   const [codes, setCode] = useState([])
 
   const getSubscriptions = async (compId) => {
-
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
-    try {
-      let data = await api.get(`${SELF_API}${companyId}/`)
-        .then(function (res) {
-
-
-          return res.data.data.results.data.companies[0].subscriptions;
+    if(companyId){
+      try {
+        let data = await api.get(`${SELF_API}${companyId}/`)
+          .then(function (res) {
+  
+  
+            return res.data.data.results.data.companies[0].subscriptions;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        await setSubscriptions(data)
+        const apps = data.map(app => app.appId)
+        console.log(data)
+        let app = data.filter(app => app.appCode === "safety")
+        console.log(app)
+        let module = app[0].modules.map(item => {
+          if (item.subscriptionStatus == "active") {
+            console.log(item.moduleCode)
+            return item.moduleCode
+          }
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+        setCode(module)
+        getModules(apps)
+      } catch (error) { }
+    }
 
-      await setSubscriptions(data)
-
-
-      const apps = data.map(app => app.appId)
-      console.log(data)
-      let app = data.filter(app => app.appCode === "safety")
-      console.log(app)
-      let module = app[0].modules.map(item => {
-        if (item.subscriptionStatus == "active") {
-          console.log(item.moduleCode)
-          return item.moduleCode
-        }
-      })
-
-      setCode(module)
-      getModules(apps)
-    } catch (error) { }
   }
 
   const getModules = async (apps) => {
@@ -409,12 +407,15 @@ function PersonalDashboard(props) {
       .catch(function (error) {
         // localStorage.removeItem("access_token");
         // localStorage.clear();
-        // window.location.href = `${LOGOUT_URL}`;
+        // window.location.href = `${LOGOUT_URL}`; 
+      
       });
   };
 
   useEffect(() => {
     userDetails();
+    getSubscriptions();
+    
   }, []);
 
   return (
