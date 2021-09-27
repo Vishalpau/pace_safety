@@ -497,7 +497,6 @@ const ObservationInitialNotification = (props) => {
       await localStorage.setItem("fkobservationId", fkObservatioId);
 
       if (catagory.length > 0) {
-        console.log("::::::::");
         for (let i = 0; i < catagory.length; i++) {
           catagory[i]["fkObservationId"] = localStorage.getItem(
             "fkobservationId"
