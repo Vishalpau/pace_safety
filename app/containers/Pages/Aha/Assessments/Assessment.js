@@ -35,6 +35,7 @@ import { CircularProgress } from '@material-ui/core';
 import apiAction from '../../../../utils/axiosActionTracker';
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+import ActionShow from '../../../Forms/ActionShow'
 
 
 import axios from "axios";
@@ -251,10 +252,10 @@ const Assessment = () => {
     await setForm(result);
     await handelActionTracker(result)
 
-    result.map((value) => {
-      temp[value.id] = { "severity": "", "probability": "" }
-    })
-    await setColorId(temp)
+    // result.map((value) => {
+    //   temp[value.id] = { "severity": "", "probability": "" }
+    // })
+    // await setColorId(temp)
   };
 
   const fkCompanyId =
@@ -275,6 +276,7 @@ const Assessment = () => {
     // temp[index]["severity"] = value
 
     if (changeType == "risk") {
+      console.log("KKKK")
       temp[index]["risk"] = value
     } else if (changeType == "control") {
       temp[index]["control"] = value.target.value
@@ -285,8 +287,11 @@ const Assessment = () => {
     } else if (changeType == "monitor") {
       temp[index]["monitor"] = value
     }
+    console.log(temp)
     setForm(temp)
   }
+
+  console.log(form)
 
   const handleSeverity = (e, index) => {
     const temp = [...form]
@@ -374,11 +379,11 @@ const Assessment = () => {
 
 
   const handelActionTracker = async (apiData) => {
-    let jhaId = localStorage.getItem("fkAHAId")
+    let ahaId = localStorage.getItem("fkAHAId")
 
     for (let key in apiData) {
       const allActionTrackerData = await apiAction.get(
-        `api/v1/actions/?enitityReferenceId=${jhaId}%3A${apiData[key]["id"]
+        `api/v1/actions/?enitityReferenceId=${ahaId}%3A${apiData[key]["id"]
         }`
       );
       if (allActionTrackerData.data.data.results.results.length > 0) {
@@ -389,9 +394,9 @@ const Assessment = () => {
           let actionTrackerId = value.actionNumber;
           let actionTrackerTitle = value.actionTitle
           let actionId = value.id
-          tempAction["trackerID"] = actionTrackerId
-          tempAction["tarckerTitle"] = actionTrackerTitle
-          tempAction["actionId"] = actionId
+          tempAction["number"] = actionTrackerId
+          tempAction["title"] = actionTrackerTitle
+          tempAction["id"] = actionId
           temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
@@ -434,7 +439,7 @@ const Assessment = () => {
       workStopCondition: result.workStopCondition != null ? result.workStopCondition.split(",") : [],
     });
   };
-
+console.log(form,"SSSSS")
   const pickListValue = async () => {
     risk.current = await PickListData(78)
     riskResidual.current = await PickListData(76)
@@ -446,7 +451,7 @@ const Assessment = () => {
     fetchAhaData();
     pickListValue()
     // fetchactionTrackerData()
-  }, [updatePage]);
+  }, []);
 
   const classes = useStyles();
   return (
@@ -682,33 +687,56 @@ const Assessment = () => {
                             <Divider light />
                           </Grid>
 
+                          {/* <Grid item md={2} sm={2} xs={2}>
+                            <Grid item xs={12} className={classes.createHazardbox}>
+                              <ActionTracker
+                                actionContext="aha:hazard"
+                                enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
+                                setUpdatePage={setUpdatePage}
+                                fkCompanyId={projectData.companyId}
+                                fkProjectId={projectData.projectId}
+                                fkProjectStructureIds={projectData.projectStructId}
+                                createdBy={projectData.createdBy}
+                                updatePage={updatePage}
+                              />
+                            </Grid>
+                            <Grid item xs={12} className={classes.createHazardbox}>
+                              {value.action.length > 0 && value.action.map((valueAction) => (
+                                <ActionShow
+                                  action={valueAction}
+                                  companyId={projectData.companyId}
+                                  projectId={projectData.projectId}
+                                  handelShowData={handelCheckList}
+                                  updatePage={updatePage}
+                                />
+                              ))}
+
+                            </Grid>
+                          </Grid> */}
+
                           <Grid item xs={6} className={classes.createHazardbox}>
-                            <Typography className={classes.increaseRowBox}>
                               <ActionTracker
                                 actionContext="aha:hazard"
                                 enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
                                 setUpdatePage={setUpdatePage}
                                 updatePage={updatePage}
                               />
-                            </Typography>
-                            {/* <Typography className={classes.increaseRowBox}>
-                            <ControlPointIcon />
-                            <span className={classes.addLink}>
-                              <Link to="">New action</Link>
-                            </span>
-                          </Typography> */}
+                          
                           </Grid>
-                          <Grid item xs={6} className={classes.createHazardbox}>
-                            {actionTakenData[index]["action"].length > 0
-                              &&
-                              actionTakenData[index]["action"].map((value) => (
-                                <Link display="block"
-                                  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${value.actionId}`}
-                                >
-                                  {value.trackerID}
-                                </Link>
+                          <Grid item xs={12} className={classes.createHazardbox}>
+{console.log(value,"LLLLLLLL")}
+                              {value.action && value.action.map((valueAction) => (
+                                <ActionShow
+                                  action={valueAction}
+                                  companyId={fkCompanyId}
+                                  projectId={projectId}
+                                  handelShowData={fetchHzardsData}
+                                  updatePage={updatePage}
+                                />
                               ))}
-                          </Grid>
+
+                            </Grid>
+                          
 
                         </Grid>
                       </AccordionDetails>
