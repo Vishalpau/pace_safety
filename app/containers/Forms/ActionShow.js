@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 const ActionShow = (props) => {
     const classes = useStyles();
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
-
     const link = () => {
         return (
             <Link
