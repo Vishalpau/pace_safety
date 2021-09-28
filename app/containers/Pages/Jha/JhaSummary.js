@@ -52,9 +52,8 @@ import Attachment from "../../../containers/Attachment/Attachment";
 import { Comments } from "../../pageListAsync";
 import { SUMMARY_FORM } from "./Utils/constants"
 import { SSO_URL, HEADER_AUTH } from "../../../utils/constants";
-import { handelCommonObject } from "../../../utils/CheckerValue"
+import { handelCommonObject, handelActionData } from "../../../utils/CheckerValue"
 import ActionShow from '../../Forms/ActionShow';
-
 
 
 
@@ -190,7 +189,7 @@ function JhaSummary() {
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
 
-    handelActionTracker(resultHazard)
+    await handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null
     let lessionDecider = result.anyLessonsLearnt !== null
@@ -259,20 +258,19 @@ function JhaSummary() {
 
   const handelActionTracker = async (resultHazard) => {
     let jhaId = localStorage.getItem("fkJHAId")
-    const allActionTrackerData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${jhaId}`);
-    let allAction = allActionTrackerData.data.data.results.results
 
+    let actionData = await handelActionData(jhaId, resultHazard)
+    console.log(actionData)
+    await setHazard(actionData)
+
+    let allAction = await handelActionData(jhaId, [], "title")
+    let temp = []
     allAction.map((value) => {
-      resultHazard.map((hazardValue) => {
-        if (value["enitityReferenceId"].split(":")[1] == hazardValue["id"]) {
-          hazardValue["actionNumber"] = value["actionNumber"]
-          hazardValue["actionId"] = value["id"]
-          hazardValue["enitityReferenceId"] = value["enitityReferenceId"]
-        }
-      })
+      if (value.enitityReferenceId.split(":")[1] == "00") {
+        temp.push(value)
+      }
     })
-    await setHazard(resultHazard)
-    setApprovalactionData(allAction !== null ? allAction : [])
+    setApprovalactionData(temp !== null ? temp : [])
   };
 
   const handelActionLink = async () => {
@@ -304,10 +302,8 @@ function JhaSummary() {
       const workArea = await
         api_work_area.get(`/api/v1/companies/${assessment.fkCompanyId}/projects/${assessment.fkProjectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
       let result = workArea.data.data.results[0]
-      // console.log(result)
       structName[result["structure_name"]] = result["structureName"]
     }
-    // console.log(structName)
     setProjectStructName(structName)
   }
 
@@ -849,13 +845,15 @@ function JhaSummary() {
 
                                                 </Grid>
                                                 <Grid>
+                                                  {value.action.map((valueAction) => (
+                                                    <ActionShow
+                                                      action={valueAction}
+                                                      companyId={projectData.companyId}
+                                                      projectId={projectData.projectId}
+                                                      handelShowData={handelShowData}
+                                                    />
+                                                  ))}
 
-                                                  <ActionShow
-                                                    action={{ id: value.actionId, number: value.actionNumber }}
-                                                    companyId={projectData.companyId}
-                                                    projectId={projectData.projectId}
-                                                    handelShowData={handelShowData}
-                                                  />
                                                 </Grid>
                                               </AccordionDetails>
                                             </Accordion>
@@ -1041,15 +1039,15 @@ function JhaSummary() {
                                   <Typography className={classes.aLabelValue}>
                                     {approvalActionData.map((value) => (
                                       <>
-                                        {value.enitityReferenceId.split(":")[1] == "00" ?
-                                          <ActionShow
-                                            action={{ id: value.actionId, number: value.actionNumber }}
-                                            title={value.actionTitle}
-                                            companyId={projectData.companyId}
-                                            projectId={projectData.projectId}
-                                            handelShowData={handelShowData}
-                                          />
-                                          : null}
+
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={projectData.companyId}
+                                          projectId={projectData.projectId}
+                                          handelShowData={handelShowData}
+                                        />
+
                                       </>
                                     ))}
                                   </Typography>

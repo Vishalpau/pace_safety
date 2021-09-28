@@ -150,6 +150,7 @@ export default function ActionTracker(props) {
         await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
+        await props.handelShowData()
       }
     }
   };
