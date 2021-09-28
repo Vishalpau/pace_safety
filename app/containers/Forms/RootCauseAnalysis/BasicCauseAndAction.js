@@ -248,6 +248,7 @@ const BasicCauseAndAction = () => {
                             fkProjectId={project}
                             fkProjectStructureIds={projectStuctId}
                             createdBy={userId}
+                            handelShowData={handelShowData}
                           />
                         </TableCell>
                         <TableCell align="right">
@@ -257,8 +258,6 @@ const BasicCauseAndAction = () => {
                                 action={actionValue}
                                 companyId={projectData.companyId}
                                 projectId={projectData.projectId}
-                                handelShowData={handelShowData}
-                                index={index}
                                 updatePage={updatePage}
                               />
                             ))}
