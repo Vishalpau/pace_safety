@@ -489,7 +489,7 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-
+    console.log(form)
     const res = await api.post("/api/v1/observations/", data);
     if (res.status === 201) {
       const id = res.data.data.results;

@@ -253,7 +253,7 @@ function UserMenu(props) {
     getSubscribedApps();
     getSubscriptions();
     // getProjectStr();
-  }, [])
+  }, [props.initialValues.companyDataList])
 
   const classnames = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
