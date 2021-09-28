@@ -244,8 +244,11 @@ const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&project
   return (
     <>
       <Box>
+      {isLoading ? 
         <TableContainer component={Paper}>
+       
           <Grid component={Paper}>
+          
           <MUIDataTable
                 data={Object.entries(allInitialData).filter(
                       (item) => {return (
@@ -274,7 +277,9 @@ const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&project
                 options={options}
               />
               </Grid>
+
             </TableContainer>
+            :<h1>Loading...</h1>}
             <div className={classes.pagination}>
             {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
       <Pagination count={pageCount} page={page} onChange={handleChange}/>

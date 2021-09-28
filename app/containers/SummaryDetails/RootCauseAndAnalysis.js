@@ -33,6 +33,8 @@ import apiAction from "../../utils/axiosActionTracker";
 import "../../styles/custom/summary.css";
 import Fonts from "dan-styles/Fonts.scss";
 import ActionShow from "../Forms/ActionShow";
+import { checkValue, handelActionData } from "../../utils/CheckerValue";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,10 +77,6 @@ const RootCauseAnalysisSummary = () => {
 
   const setRemark = (value) => {
     let remark = value.includes(",") ? value.split(",") : [value];
-    if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected");
-      remark.splice(removeItemIndex, 1);
-    }
     return remark;
   };
   const fetchRootCauseData = async () => {
@@ -116,28 +114,8 @@ const RootCauseAnalysisSummary = () => {
   const handelActionTracker = async (apiData) => {
 
     let incidentID = localStorage.getItem("fkincidentId")
-    for (let key in apiData) {
-      const allActionTrackerData = await apiAction.get(
-        `api/v1/actions/?enitityReferenceId=${incidentID}%3A${apiData[key]["id"]
-        }`
-      );
-      if (allActionTrackerData.data.data.results.results.length > 0) {
-        let actionTracker = allActionTrackerData.data.data.results.results;
-        const temp = [];
-        actionTracker.map((value) => {
-          const tempAction = {}
-          let actionTrackerId = value.id;
-          let actionTrackerNumber = value.actionNumber
-          tempAction["number"] = actionTrackerNumber
-          tempAction["id"] = actionTrackerId
-          temp.push(tempAction);
-        });
-        apiData[key]["action"] = temp;
-      } else {
-        apiData[key]["action"] = [];
-      }
-    }
-    await setPaceCauses(apiData);
+    let allAction = await handelActionData(incidentID, apiData)
+    await setPaceCauses(allAction);
   };
 
   const handelShowData = () => {
@@ -411,6 +389,7 @@ const RootCauseAnalysisSummary = () => {
                                 companyId={projectData.companyId}
                                 projectId={projectData.projectId}
                                 handelShowData={handelShowData}
+                                index={key}
                               />
                             ))}
                           </TableCell>
