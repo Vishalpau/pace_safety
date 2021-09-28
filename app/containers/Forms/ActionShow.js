@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ActionShow = (props) => {
-    console.log(props)
     const classes = useStyles();
+    console.log("here")
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
     const link = () => {
         return (
@@ -49,7 +49,9 @@ const ActionShow = (props) => {
     }
 
     useEffect(() => {
-        props.handelShowData()
+        if (props.index == 0) {
+            props.handelShowData()
+        }
     }, [updatPage]);
 
     return (

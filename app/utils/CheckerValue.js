@@ -73,9 +73,11 @@ export const handleTimeOutError = (res) => {
 }
 
 export const handelActionData = async (incidentId, apiData) => {
+
     const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`);
     const allAction = allActionData.data.data.results.results
-    apiData.map((value) => {
+    let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
+    apiAllData.map((value) => {
         allAction.map((valueAction) => {
             if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
                 const tempAction = {
@@ -94,7 +96,6 @@ export const handelActionData = async (incidentId, apiData) => {
             value["action"] = []
         }
     })
-    console.log(apiData)
-    return apiData
+    return apiAllData
 }
 
