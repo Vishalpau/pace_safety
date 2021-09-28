@@ -725,7 +725,7 @@ const ObservationInitialNotification = (props) => {
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
     const attachment = await api.get(
-      `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
+      `/api/v1/corepatterns/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
     if (result !== undefined) {

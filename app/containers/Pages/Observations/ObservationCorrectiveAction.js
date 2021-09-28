@@ -299,9 +299,9 @@ function ObservationCorrectiveAction() {
     const result = res.data.data.results;
     await setFkProjectStructureId(result.fkProjectStructureIds)
     await setObservationNumber(result.observationNumber)
-    if(result.isCorrectiveActionTaken == null){
-      result.isCorrectiveActionTaken = "Yes"
-    }
+    // if(result.isCorrectiveActionTaken == null){
+    //   result.isCorrectiveActionTaken = "Yes"
+    // }
     if(result.isCorrectiveActionTaken === "Yes"){
       await setActionOpen(true);
     }
@@ -430,7 +430,7 @@ newData.push(allActionTracker[i])
       fetchReportedBy()
     }
     
-  },[updatePage])
+  },[])
   const classes = useStyles();
   return (
     <>{isLoading ? 

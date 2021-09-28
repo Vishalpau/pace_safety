@@ -456,6 +456,7 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const fetchReportedBy = () => {
+    console.log(fkCompanyId,"DDDDD")
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
@@ -467,10 +468,13 @@ const ObservationInitialNotificationUpdate = () => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
+          console.log(response,"LLLLLLLL")
           const result = response.data.data.results[0].users;
+          console.log(result,"KKKKKKK");
           let user = [];
           user = result;
           for (var i in result) {
+            // if(result[i].)
             filterReportedByName.push(result[i].name);
           }
           setReportedByName(filterReportedByName);
@@ -497,6 +501,7 @@ const ObservationInitialNotificationUpdate = () => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
+          console.log(result,"4444444");
           let user = [];
           user = result;
           for (var i in result) {
@@ -594,6 +599,10 @@ const ObservationInitialNotificationUpdate = () => {
       }
     }
   };
+  if(initialData.departmentName !== ""){
+    console.log(initialData.departmentName)
+
+  }
   
 
   useEffect(() => {
@@ -699,28 +708,7 @@ const ObservationInitialNotificationUpdate = () => {
             </FormGroup>
 
           </Grid>
-          <Grid item md={6} xs={12} className={classes.formBox}>
-            <Autocomplete
-              id="combo-box-demo"
-              options={reportedByName}
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-              className={classes.mT30}
-              getOptionLabel={(option) => option}
-              onChange={(e, value) => {
-                setInitialData({
-                  ...initialData,
-                  assigneeName: value,
-                });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Assignee"
-                  variant="outlined"
-                />
-              )}
-            />
-          </Grid>
+
           <Grid item md={6} xs={12} className={classes.formBox}>
 
             <TextField
@@ -743,6 +731,29 @@ const ObservationInitialNotificationUpdate = () => {
               ))}
             </TextField>
           </Grid>
+          <Grid item md={6} xs={12} className={classes.formBox}>
+            <Autocomplete
+              id="combo-box-demo"
+              options={reportedByName}
+              value={initialData.assigneeName ? initialData.assigneeName : ""}
+              className={classes.mT30}
+              getOptionLabel={(option) => option}
+              onChange={(e, value) => {
+                setInitialData({
+                  ...initialData,
+                  assigneeName: value,
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Assignee"
+                  variant="outlined"
+                />
+              )}
+            />
+          </Grid>
+         
           <Grid
             item
             md={12}
