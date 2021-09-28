@@ -221,10 +221,11 @@ const Assessment = () => {
 
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
-    const specificPerformance = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
 
-    const documentCondition = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
 
     apiDataPerformance.map((value) => {
@@ -248,7 +249,7 @@ const Assessment = () => {
     let jhaId = localStorage.getItem("fkJHAId")
 
     let allAction = await handelActionData(jhaId, apiData)
-    setForm(apiData)
+    setForm(allAction)
   };
 
   const handelJobDetails = async () => {
