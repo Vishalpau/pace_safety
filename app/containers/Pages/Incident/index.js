@@ -168,6 +168,9 @@ function BlankPage(props) {
   const [showIncident, setShowIncident] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [permissionListData, setPermissionListData] = useState([])
+  const [page, setPage] = useState(1)
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
 
 
   const history = useHistory();
@@ -191,7 +194,7 @@ function BlankPage(props) {
   console.log({ api_url: API_URL })
 
   const fetchData = async () => {
-    api.get(`api/v1/incidents`)
+    await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -210,16 +213,20 @@ function BlankPage(props) {
       // debugger;
       await setIncidents(res.data.data.results.results);
 
+      await setTotalData(res.data.data.results.count)
+      await setPageData(res.data.data.results.count / 25)
       let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+  await setPageCount(pageCount)
     } else {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
         // alert('hey')
-        .then((res) => {
+        .then(async(res) => {
           // debugger;
           setIncidents(res.data.data.results.results);
+          await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
           let pageCount = Math.ceil(res.data.data.results.count / 25)
-          setPageCount(pageCount)
+      await setPageCount(pageCount)
         })
         .catch(err => console.log(err.message))
       // handleTimeOutError(res)
@@ -359,6 +366,7 @@ function BlankPage(props) {
     const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
       .then((res) => {
         setIncidents(res.data.data.results.results);
+        setPage(value)
       })
       .catch(error => {
 
@@ -683,9 +691,10 @@ function BlankPage(props) {
           />
         </div>
       )}
-      <div className={classes.pagination}>
-        <Pagination count={pageCount} onChange={handleChange} />
-      </div>
+     <div className={classes.pagination}>
+          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
     </PapperBlock>
   );
 }
