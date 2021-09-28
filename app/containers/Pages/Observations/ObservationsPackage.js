@@ -620,8 +620,8 @@ function Actions(props) {
                                           Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"}  <img src={in_progress_small} className={classes.smallImage} /></span>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}  <img src={completed_small} className={classes.smallImage} /></span>
+                                          {/* <span item xs={1} className={classes.sepHeightOne}></span>
+                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}  <img src={completed_small} className={classes.smallImage} /></span> */}
                                         </Typography>
 
                                       </Grid>
@@ -680,7 +680,7 @@ function Actions(props) {
 
                                       className={classes.listingLabelValue}
                                     >
-                                      {item[1]["location"]}
+                                      {item[1]["location"] ? item[1]["location"] : "-"}
                                     </Typography>
                                   </Grid>
 
@@ -761,7 +761,7 @@ function Actions(props) {
                                 <Typography variant="body2" display="inline">
                                   <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1]['attachmentCount']}</Link>
                                 </Typography>
-                                <span item xs={1} className={classes.sepHeightTen}></span>
+                                {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
                                   variant="body1"
                                   display="inline"
@@ -773,7 +773,7 @@ function Actions(props) {
                                 </Typography>
                                 <Typography variant="body2" display="inline" className={classes.mLeft}>
                                   <Link href="#" color="secondary" className={classes.mLeft}>{item[1]['commentsCount']}</Link>
-                                </Typography>
+                                </Typography> */}
                               </Grid>
 
                               <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
@@ -785,18 +785,18 @@ function Actions(props) {
                                   <Typography variant="body1" display="inline">
                                     <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
                                   </Typography>
-                                  <span item xs={1} className={classes.sepHeightTen}></span>
+                                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  <Typography variant="body1" display="inline">
+                                  {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                   </Typography>
                                   <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
-                                  </Typography>
+                                  </Typography> */}
                                 </div>
                               </Grid>
                             </Grid>
@@ -1086,7 +1086,7 @@ function Actions(props) {
           {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-         </>) : "Loading..."}
+         </>) : <h1>Loading...</h1>}
       </Box>
     </>
   );
