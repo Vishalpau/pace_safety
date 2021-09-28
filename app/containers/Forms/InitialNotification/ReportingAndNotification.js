@@ -49,6 +49,7 @@ import ReportingValidation from "../../Validator/ReportingValidation";
 import InitialEvidenceValidate from "../../Validator/InitialEvidance";
 import api from "../../../utils/axios";
 import Attachment from "../../Attachment/Attachment";
+import { handelCommonObject } from "../../../utils/CheckerValue";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -596,6 +597,7 @@ const ReportingAndNotification = () => {
       if (!id) {
         await setIsLoading(true);
       }
+      handelCommonObject("commonObject", "incident", "incidentNumber", result.incidentNumber)
     }
   };
 

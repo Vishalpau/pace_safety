@@ -101,12 +101,14 @@ const BasicCauseAndAction = () => {
         tempApiData.push(allApiData[index]);
       }
     });
+    tempApiData.map((value) => {
+      value["action"] = [{}]
+    })
     await handelActionTracker(tempApiData);
   };
 
 
   const handelActionTracker = async (apiData) => {
-
     let allAction = await handelActionData(putId.current, apiData)
     await setData(allAction);
 
@@ -227,7 +229,7 @@ const BasicCauseAndAction = () => {
                 <Table className={classes.table}>
                   <TableBody>
 
-                    {data.map((value) => (
+                    {data.map((value, index) => (
                       < TableRow >
                         <TableCell align="left">
                           {handelConvert(value.rcaSubType)}
@@ -254,6 +256,7 @@ const BasicCauseAndAction = () => {
                               companyId={projectData.companyId}
                               projectId={projectData.projectId}
                               handelShowData={handelShowData}
+                              index={index}
                               updatePage={updatePage}
                             />
                           ))}
