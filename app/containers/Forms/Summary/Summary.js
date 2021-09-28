@@ -136,42 +136,77 @@ const Summary = (props) => {
     localStorage.setItem("fkincidentId", id);
   }
 
-  const fetchPermission = async () => {
-    const url = JSON.parse(localStorage.getItem('userDetails')).companies
-    // const res = await api.get(`${ACCOUNT_API_URL}`)
-  }
-
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${id}/`);
-    await setIncidents(allIncidents.data.data.results);
-    if (allIncidents.data.data.results.closeDate) {
-      setCloseout(true)
-    }
+    await api.get(`api/v1/incidents/${id}/`)
+      .then((allIncidents) => {
+        setIncidents(allIncidents.data.data.results);
+        if (allIncidents.data.data.results.closeDate) {
+          setCloseout(true)
+        }
+      })
+      .catch(err => {
+        setOpen(true);
+        setMessage(err.message)
 
+        setMessageType("error")
+      })
   };
+
   const fetchReportData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${id}/reports/`);
-    if (allIncidents.data.data.results.length > 0) {
-      await setInitialNotificationStatus(true);
-    }
+    await api.get(`api/v1/incidents/${id}/reports/`)
+
+      .then((res) => {
+
+        if (res.data.data.results.length > 0) {
+          setInitialNotificationStatus(true);
+        }
+      })
+      .catch(err => {
+        setOpen(true);
+        setMessage(err.res)
+        setMessageType("error")
+      })
   };
 
   const fetchInvestigationData = async () => {
-    let res = await api.get(`/api/v1/incidents/${id}/investigations/`);
-    let result = res.data.data.results[0];
-    await setInvestigationOverview(result);
+    await api.get(`/api/v1/incidents/${id}/investigations/`)
+      .then((res) => {
+
+        let result = res.data.data.results[0];
+        setInvestigationOverview(result);
+      })
+      .catch(err => {
+        setOpen(true);
+        setMessage(err.message)
+        setMessageType("error")
+      })
   };
 
   const fetchEvidenceData = async () => {
-    const allEvidence = await api.get(`/api/v1/incidents/${id}/activities/`);
-    const result = allEvidence.data.data.results[24];
-    await setEvidencesData(result);
+    await api.get(`/api/v1/incidents/${id}/activities/`)
+      .then((allEvidence) => {
+        const result = allEvidence.data.data.results[24];
+        setEvidencesData(result);
+      })
+      .catch(err => {
+        setOpen(true);
+        setMessage(err.message)
+        setMessageType("error")
+      })
+
   };
 
   const fetchLessonLerned = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/learnings/`);
-    const result = res.data.data.results[0];
-    await setLessionLearnData(result);
+    await api.get(`api/v1/incidents/${id}/learnings/`)
+      .then((res) => {
+        const result = res.data.data.results[0];
+        setLessionLearnData(result);
+      })
+      .catch(err => {
+        setOpen(true);
+        setMessage(err.message)
+        setMessageType("error")
+      })
   };
 
   const handelRcaValue = async () => {
@@ -182,7 +217,7 @@ const Summary = (props) => {
     let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
 
 
-    let rcaRecommended = previousData.data.data.results[0].rcaRecommended
+    let rcaRecommended = previousData.data.data.results[0] !== undefined ? previousData.data.data.results[0].rcaRecommended : []
     rcaRecommendedValue.current = rcaRecommended
 
 
@@ -194,21 +229,40 @@ const Summary = (props) => {
 
     let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
 
-    let paceCause = await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`);
-    let paceCauseData = paceCause.data.data.results[0];
-    await setPaceCauseData(paceCauseData);
+    await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`)
+      .then((paceCause) => {
+        let paceCauseData = paceCause.data.data.results[0];
+        setPaceCauseData(paceCauseData);
+      }).catch(err => {
+        setOpen(true);
+        setMessage(err.message)
+        setMessageType("error")
+      })
 
-    let rootCause = await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`);
-    let rootCauseData = rootCause.data.data.results[0];
-    await setRootCausesData(rootCauseData);
 
-    let whyAnalysis = await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`);
-    if (whyAnalysis.status === 200) {
-      await setIsLoading(true)
-    }
-    let whyAnalysisData = whyAnalysis.data.data.results[0];
-    await setWhyData(whyAnalysisData);
+    await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`)
+      .then((rootCause) => {
+        let rootCauseData = rootCause.data.data.results[0];
+        setRootCausesData(rootCauseData);
+      }).catch(err => {
+        setOpen(true);
+        setMessage(err.message)
+        setMessageType("error")
+      })
 
+    await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`)
+      .then((whyAnalysis) => {
+        if (whyAnalysis.status === 200) {
+          setIsLoading(true)
+        }
+        let whyAnalysisData = whyAnalysis.data.data.results[0];
+        setWhyData(whyAnalysisData);
+      })
+      .catch(err => {
+        setOpen(true);
+        setMessage(err.message)
+        setMessageType("error")
+      })
   };
 
 
@@ -219,16 +273,6 @@ const Summary = (props) => {
 
 
   const classes = useStyles();
-
-  const CheckFormStatus = async () => {
-    setFormStatus({
-      initialNotificationCheck: await InititlaNotificationStatus(),
-      investigationCheck: await InvestigationStatus(),
-      evidenceCheck: await EvidenceStatus(),
-      rootCauseCheck: await RootCauseAnalysisStatus(),
-      lessionLearntCheck: await LessionLearnedStatus()
-    })
-  }
 
   const handelNaviagte = (value) => {
     history.push(value)
@@ -620,14 +664,13 @@ const Summary = (props) => {
 
   }
   useEffect(() => {
-    fetchIncidentData();
+    fetchReportData();
     fetchInvestigationData();
     fetchEvidenceData();
     fetchLessonLerned();
-    rootCauseAnalysisCheck();
-    fetchReportData();
-    CheckFormStatus();
     handelRcaValue();
+    rootCauseAnalysisCheck();
+    fetchIncidentData();
     fetchPermissionData();
   }, []);
 
@@ -794,7 +837,7 @@ const Summary = (props) => {
                           if (
                             props.viewMode.viewMode.initialNotification == true
                           ) {
-                            return <IncidentDetailsSummary/>;
+                            return <IncidentDetailsSummary />;
                           }
                           if (props.viewMode.viewMode.investigation == true) {
                             return <InvestigationSummary />;

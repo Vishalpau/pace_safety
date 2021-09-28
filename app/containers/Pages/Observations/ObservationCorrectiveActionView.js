@@ -50,7 +50,7 @@ import {
 
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
-// });
+  // });
 }));
 
 const ObservationCorrectiveActionView = () => {
@@ -122,43 +122,42 @@ const ObservationCorrectiveActionView = () => {
     checkedF: true,
     checkedG: true,
   });
-  
-  const {id} = useParams();
-  const [initialData , setInitialData] = useState({});
-  const [comment , setComment] = useState({}) 
-  const [comments , setComments] = useState([]);
-  const [isLoading , setIsLoading] = useState(false);
-  const [observationNumber , setObservationNumber] = useState() 
 
-  
-  const [actionTakenData , setActionTakenData] = useState([]);
+  const { id } = useParams();
+  const [initialData, setInitialData] = useState({});
+  const [comment, setComment] = useState({})
+  const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [observationNumber, setObservationNumber] = useState()
+
+
+  const [actionTakenData, setActionTakenData] = useState([]);
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
-      const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
 
   //       const client_id = JSON.parse(localStorage.getItem('userDetails')) !== null
   // ? JSON.parse(localStorage.getItem('userDetails')).companies[0].subscriptions[1].hostings[0].clientId
   // : null;
 
   const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).companies
-  : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
   let client = []
   let client_id = []
-  companies.map((value, i)=>{
-  
-    if(value.companyId === initialData.fkCompanyId)
-    {
+  companies.map((value, i) => {
+
+    if (value.companyId === initialData.fkCompanyId) {
       client.push(companies[i])
-      client[0].subscriptions.map((value,i) => {
-        if(value.appCode == "actions"){
+      client[0].subscriptions.map((value, i) => {
+        if (value.appCode == "actions") {
           client_id.push(client[0].subscriptions[i].hostings[0].clientId)
         }
       })
@@ -185,10 +184,10 @@ const ObservationCorrectiveActionView = () => {
     <li key={file.path}>
       {file.path}
       {' '}
--
+      -
       {file.size}
       {' '}
-bytes
+      bytes
     </li>
   ));
 
@@ -208,14 +207,14 @@ bytes
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results[0]
     const result1 = res.data.data.results
-   
+
 
     // await setComments(result[3])
-    await setComment(result )
+    await setComment(result)
     // await setIsLoading(true)
   }
 
-  const fetchactionTrackerData = async () =>{
+  const fetchactionTrackerData = async () => {
     let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
@@ -224,27 +223,27 @@ bytes
     const allActionTrackerData = await apiAction.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
-    allActionTracker.map((item,i) => {
+    allActionTracker.map((item, i) => {
 
-      if(item.enitityReferenceId == localStorage.getItem("fkobservationId")){
-newData.push(allActionTracker[i])
-      } 
+      if (item.enitityReferenceId == localStorage.getItem("fkobservationId")) {
+        newData.push(allActionTracker[i])
+      }
     }
-      )
-      let sorting = newData.sort((a, b) => a.id - b.id)
+    )
+    let sorting = newData.sort((a, b) => a.id - b.id)
     await setActionTakenData(sorting)
     await setIsLoading(true);
 
   }
 
-  console.log(actionTakenData,"::::::")
+  console.log(actionTakenData, "::::::")
   useEffect(() => {
-      if(id){
-        fetchInitialiObservation();
-        fetchComments()
-        fetchactionTrackerData()
-      }
-  },[])
+    if (id) {
+      fetchInitialiObservation();
+      fetchComments()
+      fetchactionTrackerData()
+    }
+  }, [])
   return (
     <>{isLoading ? (
       <Grid container spacing={3} className={classes.observationNewSection}>
@@ -252,10 +251,10 @@ newData.push(allActionTracker[i])
 
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-          Are there any corrective actions to be taken?
+            Are there any corrective actions to be taken?
           </Typography>
           <Typography className={classes.labelValue}>
-                    {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : ""}
+            {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : ""}
           </Typography>
         </Grid>
 
@@ -264,7 +263,7 @@ newData.push(allActionTracker[i])
             Comments
           </Typography>
           <Typography className={classes.labelValue}>
-           {comment ? comment.comment : "-"}
+            {comment ? comment.comment : "-"}
           </Typography>
         </Grid>
 
@@ -273,11 +272,11 @@ newData.push(allActionTracker[i])
             Reviewed By
           </Typography>
           <Typography className={classes.labelValue}>
-          {initialData["reviewedByName"]}
-          
+            {initialData["reviewedByName"]}
+
           </Typography>
         </Grid>
-       
+
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Reviewed On
@@ -285,58 +284,51 @@ newData.push(allActionTracker[i])
           <Typography className={classes.labelValue}>
             {/* {initialData.reportedDate ? initialData.reportedDate : "-"} */}
             {initialData["reviewedOn"] ? moment(initialData["reviewedOn"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          ) :"-"}
+              "Do MMMM YYYY, h:mm:ss a"
+            ) : "-"}
           </Typography>
         </Grid>
 
         <Grid item md={12}>
-        <TableContainer component={Paper}>
+          <TableContainer component={Paper}>
             <Table style={{ minWidth: 100 }} size="small">
-            <TableHead><TableRow>
-            <TableCell style={{ width: 50 }}>
-                          Action number
-                        </TableCell>
-                        <TableCell style={{ width: 50 }}>
-                          Action title
-                        </TableCell>
-                        <TableCell style={{ width: 50 }}>
-                          Action Status
-                        </TableCell>
-            </TableRow></TableHead>
-            <TableBody>
-            {actionTakenData.map((action , index) => (<>
-              <TableRow>
-                <TableCell style={{ width:50}}>
-                
-                <a
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=${client_id[0]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
-                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
-                // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
-                                // actionContext="Obsevations"
-                                // enitityReferenceId={action.enitityReferenceId}
-                                // actionId={action.id}
-                                // actionData = {action}
-                                // onClick = {() => {handleActionTracker(action)}}
-                                target="_blank"
-                              >{action.actionNumber}</a>
-                
+              <TableHead><TableRow>
+                <TableCell style={{ width: 50 }}>
+                  Action number
                 </TableCell>
-                <TableCell style={{ width:50}}>
-                {action.actionTitle}
+                <TableCell style={{ width: 50 }}>
+                  Action title
                 </TableCell>
-                <TableCell style={{ width:50}}>
-                {action.actionStatus ? actionStatus : "-"}
+                <TableCell style={{ width: 50 }}>
+                  Action Status
                 </TableCell>
-              </TableRow></> ))
-          }
-            </TableBody>
-</Table>
-</TableContainer>
+              </TableRow></TableHead>
+              <TableBody>
+                {actionTakenData.map((action, index) => (<>
+                  <TableRow>
+                    <TableCell style={{ width: 50 }}>
+
+                      <a
+                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
+                        target="_blank"
+                      >{action.actionNumber}</a>
+
+                    </TableCell>
+                    <TableCell style={{ width: 50 }}>
+                      {action.actionTitle}
+                    </TableCell>
+                    <TableCell style={{ width: 50 }}>
+                      {action.actionStatus ? actionStatus : "-"}
+                    </TableCell>
+                  </TableRow></>))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
 
-        
-      </Grid>):(<h1>Loading...</h1>)}
+
+      </Grid>) : (<h1>Loading...</h1>)}
     </>
   );
 };

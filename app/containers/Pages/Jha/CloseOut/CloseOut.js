@@ -241,6 +241,7 @@ const CloseOut = () => {
                                         });
                                     }}
                                     disableFuture
+                                    InputProps={{ readOnly: true }}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>

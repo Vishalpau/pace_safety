@@ -267,32 +267,11 @@ const ObservationInitialNotificationView = () => {
     setPositiveObservation(true);
   };
 
-
-
-  const fetchactionTrackerData = async () => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId")
-
-    )
-
-    await setActionTakenData(newData)
-    // await setIsLoading(true);
-
-  }
-
   const classes = useStyles();
   useEffect(() => {
     if (id) {
       fetchInitialiObservation();
       fetchTags();
-      fetchactionTrackerData()
 
     }
   }, [])

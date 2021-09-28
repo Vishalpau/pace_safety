@@ -326,7 +326,8 @@ function BlankPage(props) {
     filter: false,
     viewColumns: false,
     download: false,
-    paging: false
+    paging: false,
+    pagination:false
 
   };
   const fetchPermissionData = async () => {
@@ -677,6 +678,7 @@ function BlankPage(props) {
             ])}
             columns={columns}
             options={options}
+           
 
           />
         </div>

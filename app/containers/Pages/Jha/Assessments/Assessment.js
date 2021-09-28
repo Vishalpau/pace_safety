@@ -46,6 +46,7 @@ import { PickListData } from "../Utils/checkValue"
 import { result } from 'lodash';
 import { SUMMARY_FORM } from "../Utils/constants"
 import AssessmentActions from "./AssessmentActons"
+import ActionShow from '../../../Forms/ActionShow'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -257,9 +258,9 @@ const Assessment = () => {
           let actionTrackerNumber = value.actionNumber;
           let actionTrackerTitle = value.actionTitle
           let actionTrackerId = value.id
-          tempAction["trackerNumber"] = actionTrackerNumber
-          tempAction["tarckerTitle"] = actionTrackerTitle
-          tempAction["trackerId"] = actionTrackerId
+          tempAction["number"] = actionTrackerNumber
+          tempAction["title"] = actionTrackerTitle
+          tempAction["id"] = actionTrackerId
           temp.push(tempAction);
         });
         apiData[key]["action"] = temp;
@@ -485,13 +486,16 @@ const Assessment = () => {
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
-                              <AssessmentActions
-                                value={value}
-                                companyId={projectData.companyId}
-                                projectId={projectData.projectId}
-                                handelCheckList={handelCheckList}
-                                updatePage={updatePage}
-                              />
+                              {value.action.length > 0 && value.action.map((valueAction) => (
+                                <ActionShow
+                                  action={valueAction}
+                                  companyId={projectData.companyId}
+                                  projectId={projectData.projectId}
+                                  handelShowData={handelCheckList}
+                                  updatePage={updatePage}
+                                />
+                              ))}
+
                             </Grid>
                           </Grid>
 

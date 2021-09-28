@@ -1,4 +1,4 @@
-
+import apiAction from "./axiosActionTracker"
 
 export const checkValue = (value) => {
     let noValue = "-"
@@ -70,5 +70,31 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
 }
 
 export const handleTimeOutError = (res) => {
-console.log(res)   
 }
+
+export const handelActionData = async (incidentId, apiData) => {
+    const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`);
+    const allAction = allActionData.data.data.results.results
+    apiData.map((value) => {
+        allAction.map((valueAction) => {
+            if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
+                const tempAction = {
+                    "number": valueAction.actionNumber,
+                    "id": valueAction.id,
+                    "title": valueAction.actionTitle
+                };
+                if (value["action"] == undefined) {
+                    value["action"] = [tempAction]
+                } else if (value["action"] !== undefined) {
+                    value["action"].push(tempAction)
+                }
+            }
+        })
+        if (value["action"] == undefined) {
+            value["action"] = []
+        }
+    })
+    console.log(apiData)
+    return apiData
+}
+

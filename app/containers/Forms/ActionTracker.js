@@ -92,7 +92,6 @@ export default function ActionTracker(props) {
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
       const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`)
-      console.log(res.data.data.results)
     }
   }
 

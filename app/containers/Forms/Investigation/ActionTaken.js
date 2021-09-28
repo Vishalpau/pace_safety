@@ -132,6 +132,7 @@ const ActionTaken = () => {
                   format="yyyy/MM/dd"
                   inputVariant="outlined"
                   label="Correction action date completed"
+                  InputProps={{readOnly:true}}
                 />
               </MuiPickersUtilsProvider>
             </Grid>

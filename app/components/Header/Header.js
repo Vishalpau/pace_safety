@@ -723,11 +723,11 @@ function Header(props) {
                             className={classes.filterSelect}
                           >
 
-                            <InputLabel id="filter3-label">
+                            <InputLabel id={item.breakdownLabel}>
                               {item.breakdownLabel}
                             </InputLabel>
                             <Select
-                              labelId="filter3-label"
+                              labelId={item.breakdownLabel}
                               id="filter3"
                               value={item.selectValue}
                               disabled={item.breakdownValue.length === 0}
@@ -735,7 +735,7 @@ function Header(props) {
                                 handleBreakdown(e, index, item.breakdownLabel);
 
                               }}
-                              label="Phases"
+                              label={item.breakdownLabel}
                               style={{ width: "100%" }}
                             >
                               {item.breakdownValue.length > 0

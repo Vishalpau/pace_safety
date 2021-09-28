@@ -229,34 +229,37 @@ function PersonalDashboard(props) {
   const getSubscriptions = async (compId) => {
 
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
-    try {
-      let data = await api.get(`${SELF_API}${companyId}/`)
-        .then(function (res) {
-
-
-          return res.data.data.results.data.companies[0].subscriptions;
+    if(companyId){
+      try {
+        let data = await api.get(`${SELF_API}${companyId}/`)
+          .then(function (res) {
+  
+  
+            return res.data.data.results.data.companies[0].subscriptions;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+  
+        await setSubscriptions(data)
+  
+  
+        const apps = data.map(app => app.appId)
+        console.log(data)
+        let app = data.filter(app => app.appCode === "safety")
+        console.log(app)
+        let module = app[0].modules.map(item => {
+          if (item.subscriptionStatus == "active") {
+            console.log(item.moduleCode)
+            return item.moduleCode
+          }
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+  
+        setCode(module)
+        getModules(apps)
+      } catch (error) { }
+    }
 
-      await setSubscriptions(data)
-
-
-      const apps = data.map(app => app.appId)
-      console.log(data)
-      let app = data.filter(app => app.appId === 1)
-      console.log(app)
-      let module = app[0].modules.map(item => {
-        if (item.subscriptionStatus == "active") {
-          console.log(item.moduleCode)
-          return item.moduleCode
-        }
-      })
-
-      setCode(module)
-      getModules(apps)
-    } catch (error) { }
   }
 
   const getModules = async (apps) => {
@@ -394,8 +397,11 @@ function PersonalDashboard(props) {
                 );
               }
               if (newData.projects.length > 1) {
-                setProjectListData(newData.projects);
-                setProjectOpen(true);
+                if(JSON.parse(localStorage.getItem('projectName')===null)){
+                  setProjectListData(newData.projects);
+                  setProjectOpen(true);
+                }
+               
                 // setOpen(true);
               }
             }
@@ -406,12 +412,15 @@ function PersonalDashboard(props) {
       .catch(function (error) {
         // localStorage.removeItem("access_token");
         // localStorage.clear();
-        // window.location.href = `${LOGOUT_URL}`;
+        // window.location.href = `${LOGOUT_URL}`; 
+      
       });
   };
 
   useEffect(() => {
     userDetails();
+    getSubscriptions();
+    
   }, []);
 
   return (

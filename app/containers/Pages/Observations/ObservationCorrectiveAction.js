@@ -527,14 +527,7 @@ newData.push(allActionTracker[i])
               <TableRow>
                 <TableCell style={{ width:50}}>
                 <a
-                 href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=${client_id[0]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}` }
-                //  href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&targetPage=0&targetId=${action.id}` }
-                // href = {`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id}`}
-                                // actionContext="Obsevations"
-                                // enitityReferenceId={action.enitityReferenceId}
-                                // actionId={action.id}
-                                // actionData = {action}
-                                // onClick = {() => {handleActionTracker(action)}}
+                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
                                 target="_blank"
                               >{action.actionNumber}</a>
                 
