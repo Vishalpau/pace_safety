@@ -278,7 +278,6 @@ const ObservationInitialNotification = (props) => {
             temp["supervisorId"] = result[i].id;
             temp["badgeNo"] = result[i].badgeNo;
             user.push(temp);
-            // filterSuperVisorBadgeNo.push(result[i].badgeNo);
           }
           setSuperVisorName(user);
         }
@@ -297,7 +296,7 @@ const ObservationInitialNotification = (props) => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
           const userDetails =
             JSON.parse(localStorage.getItem("userDetails")) !== null
               ? JSON.parse(localStorage.getItem("userDetails"))
@@ -308,22 +307,22 @@ const ObservationInitialNotification = (props) => {
             badgeNo: userDetails.badgeNo,
           };
           let user = [];
-          for (var i in result) {
+
+          // let user = [];
+          let data = result.filter((item) =>          
+          item['companyId'] == fkCompanyId
+          )
+          for (var i in data[0].users) {
             let temp = {};
 
-            temp["inputValue"] = result[i].name;
-            temp["reportedById"] = result[i].id;
-            temp["badgeNo"] = result[i].badgeNo;
-
+            temp["inputValue"] = data[0].users[i].name;
+            temp["reportedById"] = data[0].users[i].id;
+            temp["badgeNo"] = data[0].users[i].badgeNo;
             user.push(temp);
-            // filterReportedById.push(result[i].id);
-            // filterReportedByBedgeID.push(result[i].badgeNo);
+
           }
           setReportedByDetails(user);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -489,7 +488,6 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-    console.log(form)
     const res = await api.post("/api/v1/observations/", data);
     if (res.status === 201) {
       const id = res.data.data.results;

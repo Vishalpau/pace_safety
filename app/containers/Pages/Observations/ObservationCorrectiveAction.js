@@ -235,8 +235,6 @@ function ObservationCorrectiveAction() {
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
     let allAction = await handelActionData(observationId, [], "title")
-    console.log(allAction)
-
     setActionData(allAction)
   };
 
@@ -247,7 +245,6 @@ function ObservationCorrectiveAction() {
           {
             actionData.map((valueAction) => (
               <>
-                {console.log(valueAction.id, valueAction.actionNumber, valueAction.actionTitle)}
                 <ActionShow
                   action={{ id: valueAction.id, number: valueAction.actionNumber }}
                   title={valueAction.actionTitle}

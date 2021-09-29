@@ -132,7 +132,7 @@ const ObservationCorrectiveActionView = () => {
 
 
   const [actionTakenData, setActionTakenData] = useState([]);
-
+console.log(actionTakenData,"HHHHHHH")
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -318,7 +318,7 @@ const ObservationCorrectiveActionView = () => {
                       {action.actionTitle}
                     </TableCell>
                     <TableCell style={{ width: 50 }}>
-                      {action.actionStatus ? actionStatus : "-"}
+                      {action.actionStatus ? action.actionStatus : "-"}
                     </TableCell>
                   </TableRow></>))
                 }
