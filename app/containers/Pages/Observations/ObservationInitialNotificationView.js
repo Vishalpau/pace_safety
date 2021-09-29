@@ -341,7 +341,7 @@ const ObservationInitialNotificationView = () => {
 
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
-              Supervisor details
+            Foreman details
             </Typography>
             <Typography className={classes.labelValue}>
               {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}

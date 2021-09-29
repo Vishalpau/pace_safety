@@ -544,6 +544,13 @@ function Actions(props) {
     }
     
   };
+
+  const handlePrintPush = async (index) => {
+    const id = allInitialData[index].id;
+    localStorage.setItem("fkobservationId", id);
+    //console.log("Ashutosh")
+    history.push(`/app/prints/${id}`);
+  };
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
@@ -783,7 +790,7 @@ function Actions(props) {
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   <Typography variant="body1" display="inline">
-                                    <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
+                                   <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
                                   </Typography>
                                   {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   {/* <Typography variant="body1" display="inline">
