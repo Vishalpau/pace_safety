@@ -47,6 +47,8 @@ import { result } from 'lodash';
 import { SUMMARY_FORM } from "../Utils/constants"
 import AssessmentActions from "./AssessmentActons"
 import ActionShow from '../../../Forms/ActionShow'
+import { handelIncidentId, checkValue, handelActionData } from "../../../../utils/CheckerValue";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -219,10 +221,11 @@ const Assessment = () => {
 
     const project = JSON.parse(localStorage.getItem("projectName"))
     const projectId = project.projectName.projectId
-    const specificPerformance = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
 
-    const documentCondition = await api.get(`https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
 
     apiDataPerformance.map((value) => {
@@ -245,30 +248,8 @@ const Assessment = () => {
   const handelActionTracker = async (apiData) => {
     let jhaId = localStorage.getItem("fkJHAId")
 
-    for (let key in apiData) {
-      const allActionTrackerData = await apiAction.get(
-        `api/v1/actions/?enitityReferenceId=${jhaId}%3A${apiData[key]["id"]
-        }`
-      );
-      if (allActionTrackerData.data.data.results.results.length > 0) {
-        let actionTracker = allActionTrackerData.data.data.results.results;
-        const temp = [];
-        actionTracker.map((value) => {
-          const tempAction = {}
-          let actionTrackerNumber = value.actionNumber;
-          let actionTrackerTitle = value.actionTitle
-          let actionTrackerId = value.id
-          tempAction["number"] = actionTrackerNumber
-          tempAction["title"] = actionTrackerTitle
-          tempAction["id"] = actionTrackerId
-          temp.push(tempAction);
-        });
-        apiData[key]["action"] = temp;
-      } else {
-        apiData[key]["action"] = [];
-      }
-    }
-    setForm(apiData)
+    let allAction = await handelActionData(jhaId, apiData)
+    setForm(allAction)
   };
 
   const handelJobDetails = async () => {
@@ -483,6 +464,7 @@ const Assessment = () => {
                                 fkProjectStructureIds={projectData.projectStructId}
                                 createdBy={projectData.createdBy}
                                 updatePage={updatePage}
+                                handelShowData={handelCheckList}
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
@@ -491,7 +473,6 @@ const Assessment = () => {
                                   action={valueAction}
                                   companyId={projectData.companyId}
                                   projectId={projectData.projectId}
-                                  handelShowData={handelCheckList}
                                   updatePage={updatePage}
                                 />
                               ))}

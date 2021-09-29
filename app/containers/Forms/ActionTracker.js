@@ -30,6 +30,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../utils/constants";
+import ActionShow from "./ActionShow"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -149,6 +150,7 @@ export default function ActionTracker(props) {
         await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
+        await props.handelShowData()
       }
     }
   };

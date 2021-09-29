@@ -33,7 +33,7 @@ import ActionTracker from "../ActionTracker";
 import ActionTrack from "../ActionTrack";
 import ActionShow from "../ActionShow"
 
-import { checkValue, handelActionData } from "../../../utils/CheckerValue";
+import { handelIncidentId, checkValue, handelActionData } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -84,14 +84,7 @@ const BasicCauseAndAction = () => {
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
     );
-    let page_url = window.location.href;
-    const lastItem = parseInt(
-      page_url.substring(page_url.lastIndexOf("/") + 1)
-    );
-    let incidentId = !isNaN(lastItem)
-      ? lastItem
-      : localStorage.getItem("fkincidentId");
-    putId.current = incidentId;
+    putId.current = handelIncidentId();
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     )
@@ -101,12 +94,16 @@ const BasicCauseAndAction = () => {
         tempApiData.push(allApiData[index]);
       }
     });
+    tempApiData.map((value) => {
+      if (value["action"] == undefined) {
+        value["action"] = [{}]
+      }
+    })
     await handelActionTracker(tempApiData);
   };
 
 
   const handelActionTracker = async (apiData) => {
-
     let allAction = await handelActionData(putId.current, apiData)
     await setData(allAction);
 
@@ -227,7 +224,7 @@ const BasicCauseAndAction = () => {
                 <Table className={classes.table}>
                   <TableBody>
 
-                    {data.map((value) => (
+                    {data.map((value, index) => (
                       < TableRow >
                         <TableCell align="left">
                           {handelConvert(value.rcaSubType)}
@@ -245,15 +242,15 @@ const BasicCauseAndAction = () => {
                             fkProjectId={project}
                             fkProjectStructureIds={projectStuctId}
                             createdBy={userId}
+                            handelShowData={handelShowData}
                           />
                         </TableCell>
                         <TableCell align="right" style={{ minWidth: 200 }}>
-                          {value.action.length > 0 && value.action.map((actionValue) => (
+                          {value.action.map((actionValue) => (
                             <ActionShow
                               action={actionValue}
                               companyId={projectData.companyId}
                               projectId={projectData.projectId}
-                              handelShowData={handelShowData}
                               updatePage={updatePage}
                             />
                           ))}
