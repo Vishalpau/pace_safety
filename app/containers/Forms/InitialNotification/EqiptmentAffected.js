@@ -228,46 +228,58 @@ const EqiptmentAffected = () => {
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    const envComments = result.equipmentDamagedComments;
-    setEequipmentDamagedComments(envComments);
-    await setIncidentsListdata(result);
-    const isavailable = result.isEquipmentDamagedAvailable;
-    await setDetailsOfEquipmentAffect(isavailable);
-    if (!id) {
-      await setIsLoading(true);
-    }
+    )
+    .then((res)=>{
+      const result = res.data.data.results;
+      const envComments = result.equipmentDamagedComments;
+      setEequipmentDamagedComments(envComments);
+       setIncidentsListdata(result);
+      const isavailable = result.isEquipmentDamagedAvailable;
+       setDetailsOfEquipmentAffect(isavailable);
+      if (!id) {
+         setIsLoading(true);
+      }
+    })
+    
   };
 
   // fetch equipment List data
   const fetchEquipmentListData = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/equipments/`);
-    const result = res.data.data.results;
+     await api.get(`api/v1/incidents/${id}/equipments/`)
+    .then((res)=>{
+      const result = res.data.data.results;
 
-    if (result.length > 0) {
-      let temp = [...form];
-      temp = result;
-      await setForm(temp);
-    }
-    setEquipmentListData(result);
-    if (res.status === 200) {
-      await setIsLoading(true);
-    }
+      if (result.length > 0) {
+        let temp = [...form];
+        temp = result;
+         setForm(temp);
+      }
+      setEquipmentListData(result);
+      if (res.status === 200) {
+         setIsLoading(true);
+      }
+    })
+    
   };
 
   // fetch equipment type value for dropdown
   const fetchEquipmentTypeValue = async () => {
-    const res = await api.get("api/v1/lists/15/value");
-    const result = res.data.data.results;
-    setEquipmentTypeValue(result);
+    const res = await api.get("api/v1/lists/15/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+      setEquipmentTypeValue(result);
+    })
+    
   };
 
   // fetch equipment afftected radio button value
   const fetchEquipmentAffectedValue = async () => {
-    const res = await api.get("api/v1/lists/14/value");
-    const result = res.data.data.results;
-    await setequipmentAffected(result);
+    const res = await api.get("api/v1/lists/14/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+       setequipmentAffected(result);
+    })
+    
   };
 
   // handle go back
@@ -475,6 +487,7 @@ const EqiptmentAffected = () => {
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem="Equipment affected"
+                id={id}
               />
             </Col>
           )}

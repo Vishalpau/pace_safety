@@ -39,6 +39,7 @@ const ActionTaken = () => {
   const putId = useRef("");
   const investigationId = useRef("");
   const dispatch = useDispatch();
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -50,42 +51,70 @@ const ActionTaken = () => {
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-    let previousData = await api.get(
+     await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
-    );
-    let allApiData = previousData.data.data.results[0];
-    if (!isNaN(allApiData.id)) {
-      await setForm(allApiData);
-      investigationId.current = allApiData.id;
-    }
+    ).then((previousData)=>{
+      let allApiData = previousData.data.data.results[0];
+      if (!isNaN(allApiData.id)) {
+         setForm(allApiData);
+        investigationId.current = allApiData.id;
+      }
+    }).catch(error=> console.log(error)) 
   };
 
   const [error, setError] = useState({});
 
   const handleNext = async (e) => {
+    const temp = [...incidentsListData]
+    temp.updatedAt = new Date().toISOString();
+    if(incidentsListData.incidentStage === "Investigation"){
+      temp.incidentStatus= "Done"
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        
+      }
+    }
+    
     form.preEventMitigations === null
       ? (form["preEventMitigations"] = "")
       : null;
-    console.log(form.preEventMitigations);
+    
     form["endDate"] = new Date()
     const res = await api.put(
       `api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`,
       form
-    );
-    if (res.status === 200) {
-      let viewMode = {
-        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
-
+    ).then((res)=>{
+      if (res.status === 200) {
+        let viewMode = {
+          initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
+        history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
+        
       }
-      localStorage.setItem("viewMode", JSON.stringify(viewMode))
-      dispatch(tabViewMode(viewMode));
-      history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
-      
-    }
+    })
+    
   };
+     // fetch incident data
+     const fetchIncidentsData = async () => {
+      const res = await api.get(
+        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+      ).then((res)=>{
+        const result = res.data.data.results;
+         setIncidentsListdata(result);
+      })
+      .catch((err)=>console.log(err))
+      
+    };
 
   useEffect(() => {
     handelUpdateCheck();
+    fetchIncidentsData();
   }, []);
 
   const radioDecide = ["Yes", "No"];

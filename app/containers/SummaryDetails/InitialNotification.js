@@ -123,23 +123,35 @@ const IncidentDetailsSummary = () => {
   const fkid = localStorage.getItem("fkincidentId");
 
   const fetchIncidentData = async () => {
-    const allIncidents = await api.get(`api/v1/incidents/${fkid}/`);
-    await setIncidents(allIncidents.data.data.results);
+    const allIncidents = await api.get(`api/v1/incidents/${fkid}/`).
+    then((allIncidents)=>{
+      setIncidents(allIncidents.data.data.results);
+    })
+    
   };
 
   const fetchPeopleAffectData = async () => {
-    const response = await api.get(`api/v1/incidents/${fkid}/people/`);
-    await setPeopleData(response.data.data.results);
+    const response = await api.get(`api/v1/incidents/${fkid}/people/`)
+    .then((response)=>{
+      setPeopleData(response.data.data.results);
+    })
+    
   };
 
   const fetchPropertyAffectData = async () => {
-    const response = await api.get(`api/v1/incidents/${fkid}/properties/`);
-    await setPropertyData(response.data.data.results);
+    const response = await api.get(`api/v1/incidents/${fkid}/properties/`)
+    .then((response)=>{
+      setPropertyData(response.data.data.results);
+    })
+  
   };
 
   const fetchEquipmentAffectData = async () => {
-    const response = await api.get(`api/v1/incidents/${fkid}/equipments/`);
-    await setEquipmentData(response.data.data.results);
+    const response = await api.get(`api/v1/incidents/${fkid}/equipments/`)
+    .then(()=>{
+      setEquipmentData(response.data.data.results);
+    })
+     
   };
 
   const fetchEnviornmentAffectData = async () => {
@@ -173,22 +185,25 @@ const IncidentDetailsSummary = () => {
       let projectId = JSON.parse(localStorage.getItem("projectName"))
         .projectName.projectId;
      
-      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,);
-      
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        data =[]
-        const newData = result.map(item=> {
-          console.log(notifyList.includes(item.id.toString()))
-          if(notifyList.includes(item.id.toString())){
-            return item.roleName
-          }
+      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,)
+      .then((res)=>{
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          data =[]
+          const newData = result.map(item=> {
+            
+            if(notifyList.includes(item.id.toString())){
+              return item.roleName
+            }
+            
+          })
           
-        })
-        console.log({notifyList: newData})
-        setNotifyToList(newData)
-        // setNotificationSentValue(result);
-      }
+          setNotifyToList(newData)
+          // setNotificationSentValue(result);
+        }
+      })
+      
+
     } catch (error) {}
   };
 

@@ -247,47 +247,59 @@ const PropertyAffected = () => {
 
   // get peoperty affetct value radio type
   const fetchPropertyAffectedValue = async () => {
-    const res = await api.get("api/v1/lists/12/value");
-    const result = res.data.data.results;
-    setPropertyAffectedValue(result);
+    await api.get("api/v1/lists/12/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+      setPropertyAffectedValue(result);
+    })
+
   };
 
   // get property type value for dropdown
   const fetchPropertyTypeValue = async () => {
-    const res = await api.get("api/v1/lists/13/value");
-    const result = res.data.data.results;
-    result.push({ inputValue: "Other", inputLabel: "Other" });
-    setPropertyTypeValue(result);
+    await api.get("api/v1/lists/13/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+      result.push({ inputValue: "Other", inputLabel: "Other" });
+      setPropertyTypeValue(result);
+    })
+
+    
   };
 
   // get incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentsListdata(result);
-    await setPropertyDamagedComments(result.propertyDamagedComments);
-    const isAvailable = result.isPropertyDamagedAvailable;
-    await setDetailsOfPropertyAffect(isAvailable);
+    ).then((res)=>{
+      const result = res.data.data.results;
+       setIncidentsListdata(result);
+       setPropertyDamagedComments(result.propertyDamagedComments);
+      const isAvailable = result.isPropertyDamagedAvailable;
+       setDetailsOfPropertyAffect(isAvailable);
+    })
+    
   };
 
   // get property list data
   const fetchPropertyListData = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/properties/`);
-    const result = res.data.data.results;
-    if (result.length > 0) {
-      let temp = [...form];
-      temp = result;
-      await setForm(temp);
-    }
-    await setPropertyListData(result);
-    await setIsLoading(true);
+    await api.get(`api/v1/incidents/${id}/properties/`)
+    .then((res)=>{
+      const result = res.data.data.results;
+      if (result.length > 0) {
+        let temp = [...form];
+        temp = result;
+         setForm(temp);
+      }
+       setPropertyListData(result);
+       setIsLoading(true);
+    })
+     
   };
 
   // handle go back
   const handleBack = () => {
-    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"))
     if (nextPath.personAffect === "Yes") {
       history.push(
         `/incident/${id}/modify/peoples-afftected/`
@@ -510,6 +522,7 @@ const PropertyAffected = () => {
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem={"Property affected"}
+                id={id}
               />
             </Col>
           )}

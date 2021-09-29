@@ -1244,11 +1244,11 @@ const ObservationInitialNotification = (props) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Foreman's Name*"
-                    error={error.supervisorName}
-                    helperText={
-                      error.supervisorName ? error.supervisorName : ""
-                    }
+                    label="Foreman's Name"
+                    // error={error.supervisorName}
+                    // helperText={
+                    //   error.supervisorName ? error.supervisorName : ""
+                    // }
                     variant="outlined"
                   />
                 )}

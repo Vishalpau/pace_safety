@@ -215,7 +215,7 @@ const WorkerDetails = () => {
     "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
   let fielSizeError = "Size less than 25Mb allowed";
   const handleFile = async (e) => {
-    console.log("here")
+    
     let acceptFileTypes = [
       "pdf",
       "png",
@@ -233,7 +233,7 @@ const WorkerDetails = () => {
       acceptFileTypes.includes(file[file.length - 1]) &&
       e.target.files[0].size < 25670647
     ) {
-      console.log("here");
+      
       const temp = { ...form };
       temp.attachments = e.target.files[0];
       await setForm(temp);
