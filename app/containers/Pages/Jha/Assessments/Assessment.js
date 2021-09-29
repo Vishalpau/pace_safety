@@ -47,7 +47,7 @@ import { result } from 'lodash';
 import { SUMMARY_FORM } from "../Utils/constants"
 import AssessmentActions from "./AssessmentActons"
 import ActionShow from '../../../Forms/ActionShow'
-import { handelIncidentId, checkValue, handelActionData } from "../../../../utils/CheckerValue";
+import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../../utils/CheckerValue";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -211,6 +211,7 @@ const Assessment = () => {
     createdBy: "",
     projectStructId: ""
   })
+  const [actionData, setActionData] = useState([])
 
   const handelCheckList = async () => {
     const tempPerformance = {}
@@ -242,15 +243,48 @@ const Assessment = () => {
 
     setPerformance(tempPerformance)
     setDocument(apiCondition)
-    handelActionTracker(apiData);
+    const temp = []
+    apiData.map((value) => {
+      temp.push({ "id": value.id })
+    })
+    handelCommonObject("commonObject", "jha", "assessmentIds", temp)
+    setForm(apiData)
   }
 
-  const handelActionTracker = async (apiData) => {
+  const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["jha"]["assessmentIds"]
     let allAction = await handelActionData(jhaId, apiData)
-    setForm(allAction)
+    setActionData(allAction)
   };
+
+  const handelActionShow = (id) => {
+    return (
+      <Grid>
+        {actionData.map((val) => (
+          <>
+            {val.id == id ?
+              <>
+                {
+                  val.action.length > 0 && val.action.map((valueAction) => (
+                    <>
+                      <ActionShow
+                        action={valueAction}
+                        companyId={projectData.companyId}
+                        projectId={projectData.projectId}
+                        updatePage={updatePage}
+                      />
+                    </>
+                  ))
+                }
+              </>
+              : null}
+          </>
+        ))}
+      </Grid>
+    )
+  }
+
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -372,6 +406,7 @@ const Assessment = () => {
     PickListData(78).then(function (results) {
       setRisk(results)
     });
+    await handelActionTracker()
     await setLoading(false)
   }
 
@@ -464,18 +499,22 @@ const Assessment = () => {
                                 fkProjectStructureIds={projectData.projectStructId}
                                 createdBy={projectData.createdBy}
                                 updatePage={updatePage}
-                                handelShowData={handelCheckList}
+                                handelShowData={handelActionTracker}
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
-                              {value.action.length > 0 && value.action.map((valueAction) => (
+                              {/* {handelActionShow(value.id).map((valueAction) => (
                                 <ActionShow
                                   action={valueAction}
                                   companyId={projectData.companyId}
                                   projectId={projectData.projectId}
                                   updatePage={updatePage}
                                 />
-                              ))}
+                              ))} */}
+                              {handelActionShow(value.id)}
+
+
+
 
                             </Grid>
                           </Grid>
