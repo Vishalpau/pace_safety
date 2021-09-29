@@ -24,7 +24,7 @@
  
  import InitialDetailsReducer from './modules/initialDetails';
  import AuthReducer from './modules/authentication';
-
+import IncidentReducer from './modules/incident';
 /**
  * Branching reducers to use one reducer for many components
  */
@@ -66,6 +66,7 @@ export default function createReducer(injectedReducers = {}) {
     language: languageProviderReducer,
     router: connectRouter(history),
     ...injectedReducers,
+    IncidentReducer,
   });
 
   // Wrap the root reducer and return a new root reducer with router state

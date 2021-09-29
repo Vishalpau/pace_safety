@@ -39,6 +39,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import ComingSoon from '../ComingSoon';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -193,7 +194,6 @@ const ObservationInitialNotificationUpdate = () => {
 
   let filterReportedByName = []
   let filterDepartmentName = []
-
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
     : null;
@@ -456,7 +456,6 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const fetchReportedBy = () => {
-    console.log(fkCompanyId,"DDDDD")
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
@@ -468,23 +467,15 @@ const ObservationInitialNotificationUpdate = () => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          console.log(response,"LLLLLLLL")
-          const result = response.data.data.results[0].users;
-          console.log(result,"KKKKKKK");
-          let user = [];
-          user = result;
-          for (var i in result) {
-            // if(result[i].)
-            filterReportedByName.push(result[i].name);
-          }
-          setReportedByName(filterReportedByName);
+          const result = response.data.data.results;
+          let data = result.filter((item) =>          
+            item['companyId'] == fkCompanyId
+        )
+        console.log(data[0].users,"LLLLL")
+          setReportedByName(data[0].users);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
       });
   };
 
@@ -737,7 +728,7 @@ const ObservationInitialNotificationUpdate = () => {
               options={reportedByName}
               value={initialData.assigneeName ? initialData.assigneeName : ""}
               className={classes.mT30}
-              getOptionLabel={(option) => option}
+              getOptionLabel={(option) => option.name}
               onChange={(e, value) => {
                 setInitialData({
                   ...initialData,
