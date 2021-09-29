@@ -236,25 +236,31 @@ const LessionLearned = () => {
 
   //  Fetch Lession learn data
   const fetchLessonLerned = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/learnings/`);
-    const result = res.data.data.results;
+    const res = await api.get(`api/v1/incidents/${id}/learnings/`)
+    .then((res)=>{
+      const result = res.data.data.results;
 
-    if (result.length > 0) {
-      let temp = [...form];
-      temp = result;
-      await setForm(temp);
-    }
-    await setLearningList(result);
-    setIsLoading(true);
+      if (result.length > 0) {
+        let temp = [...form];
+        temp = result;
+         setForm(temp);
+      }
+       setLearningList(result);
+      setIsLoading(true);
+    })
+   
   };
 
   // fetch incident data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentsListdata(result);
+    ).then((res)=>{
+      const result = res.data.data.results;
+       setIncidentsListdata(result);
+    })
+    .catch((err)=>console.log(err))
+    
   };
 
   // fetch team or deparment
@@ -276,23 +282,27 @@ const LessionLearned = () => {
         }
       })
       .catch((error) => {
+        console.log(err)
         // window.location.href = {LOGIN_URL}
       });
   };
 
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
-    const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-
-    if (allEvidence.status === 200) {
-      const newData = allEvidence.data.data.results.filter(
-        (item) => item.evidenceCategory === "Lessons Learned"
-      );
-      await setEvidence(newData);
-      if (newData.length > 0) {
-        setAttachment(newData);
+    const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`)
+    .then((allEvidence)=>{
+      if (allEvidence.status === 200) {
+        const newData = allEvidence.data.data.results.filter(
+          (item) => item.evidenceCategory === "Lessons Learned"
+        );
+         setEvidence(newData);
+        if (newData.length > 0) {
+          setAttachment(newData);
+        }
       }
-    }
+    })
+
+    
   };
 
  

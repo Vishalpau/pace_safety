@@ -246,7 +246,7 @@ const Details = () => {
 
   return (
     <PapperBlock title="RCA Details" icon="ion-md-list-box">
-      {/* {console.log(form.rcaRecommended)} */}
+      
       <Row>
         <Col md={9}>
           <Grid container spacing={3}>

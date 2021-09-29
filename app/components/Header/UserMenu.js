@@ -188,7 +188,7 @@ function UserMenu(props) {
   }
   const getSubscribedApps = async () => {
     const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
-    console.log(companyId)
+    
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
@@ -196,7 +196,7 @@ function UserMenu(props) {
         let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
         let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
         let apiUrlDomain = {}
-        console.log({hostings:hostings})
+        
         if (subscriptionAction.length > 0) {
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
           let actionUI = subscriptionAction[0].hostings[0].appDomain
@@ -205,7 +205,7 @@ function UserMenu(props) {
         } else {
           apiUrlDomain = { "safety": hostings }
         }
-        console.log({hostings:hostings})
+        
         localStorage.setItem("apiBaseUrl", hostings)
         localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
         setUserImageLink(res.data.data.results.data.avatar)
@@ -222,24 +222,7 @@ function UserMenu(props) {
       await setApps(data.map(app => app.appId))
     }
   }
-  const getProjectStr = async (id = '1L2:2L5:3L9') => {
-    if (id != '') {
-      let c_id = JSON.parse(localStorage.getItem("company")).fkCompanyId
-      let p_id = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-      let data = []
-      let breakDown = await id.split(':')
-      for (var i = 0; i < breakDown.length; i++) {
-        let level_id = breakDown[i].split('L')
-        let level = level_id[0] + 'L'
-        let _id = level_id[1]
-        let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
-        let res = await api.get(apiurl);
-        data = [...data, res.data.data.results[0].name]
-      }
-      console.log(data)
-      // setProjectBreakout(data)
-    }
-  }
+ 
   const handleClosea = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -252,7 +235,6 @@ function UserMenu(props) {
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
-    // getProjectStr();
   }, [props.initialValues.companyDataList])
 
   const classnames = useStyles();
@@ -398,17 +380,19 @@ function UserMenu(props) {
         {isLoading ?
           <div elevation={3} className={classnames.list}>
             <List component="nav">
-              {subscriptions.map(subscription => (
+
+              {subscriptions.map((subscription,key) => (
                 (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
-                  <div>
+                  <div key={key}>
                     <ListItemText
                       className={classnames.appDrawerLable}
                       primary={subscription.appName}
                     />
                     <Divider />
                     <List>
-                      {subscription.modules.map((module) => (
-                        <div>
+                      {subscription.modules.map((module,mIndex) => (
+                        <div key={mIndex}>
+
                           <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />

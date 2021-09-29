@@ -35,6 +35,7 @@ const InvestigationOverview = () => {
   const history = useHistory();
   const investigationId = useRef("");
   const severityValues = useRef([]);
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -48,7 +49,7 @@ const InvestigationOverview = () => {
       `api/v1/incidents/${incidentId}/investigations/`
     );
     let allApiData = previousData.data.data.results[0];
-    console.log(incidentId);
+    
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
       investigationId.current = allApiData.id;
@@ -68,16 +69,30 @@ const InvestigationOverview = () => {
     fkIncidentId: putId.current || localStorage.getItem("fkincidentId"),
   });
 
-  const handleNext = async () => {
-    console.log(putId.current);
+  const handleNext = async () => {   
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
 
     if (Object.keys(error).length == 0) {
       if (putId.current == "") {
         const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
+        const temp = [...incidentsListData]
+        temp.updatedAt = new Date().toISOString();
+        
+        temp.incidentStage= "Investigation",
+        temp.incidentStatus= "pending"
+        try {
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
+          
+        }
         await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`);
+        
       } else if (putId.current !== "") {
+        
         form["updatedBy"] = "0";
         const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
         await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`
@@ -85,6 +100,18 @@ const InvestigationOverview = () => {
       }
       localStorage.setItem("WorkerDataFetched", "");
     }
+  };
+
+   // fetch incident data
+   const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res)=>{
+      const result = res.data.data.results;
+       setIncidentsListdata(result);
+    })
+    .catch((err)=>console.log(err))
+    
   };
 
   const classes = useStyles();
@@ -98,6 +125,7 @@ const InvestigationOverview = () => {
   useEffect(() => {
     handelUpdateCheck();
     callback();
+    fetchIncidentsData()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");

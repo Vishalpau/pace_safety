@@ -44,9 +44,26 @@ export const FormSideBar = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const handelNavigate = (value, key) => {
+    if(key === "Incident details"){
+      history.push(`/incident/${props.id}/modify/`)
+    }
+    else if(key === "People affected"){
+      history.push(`/incident/${props.id}/modify/peoples-afftected/`)
+    }
+    else if(key === "Property affected"){
+      history.push(`/incident/${props.id}/modify/property-affected/`)
+    }
+    else if(key === "Equipment affected"){
+      history.push(`/incident/${props.id}/modify/equipment-affected/`)
+    }
+    else if(key === "Environment impact"){
+      history.push(`/incident/${props.id}/modify/environment-affected/`)
+    }
+    else{
+      history.push(value)
+    }
     
-    console.log(value,key)
-    history.push(value)
+    
   }
 
   const data = props.deleteForm || localStorage.getItem("deleteForm");

@@ -89,20 +89,22 @@ const CloseOut = () => {
 
     // fetch incident data
     const fetchIncidentsData = async () => {
-        const res = await api.get(
+        await api.get(
             `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-        );
-        if (res.status === 200) {
-            const result = res.data.data.results;
-
-            if (Object.entries(result).length > 0) {
-                let temp = { ...form }
-                temp = result
-                await setForm(result)
-                await setIncidentsListdata(result);
-                await setIsLoading(true)
+        ).then(()=>{
+            if (res.status === 200) {
+                const result = res.data.data.results;
+    
+                if (Object.entries(result).length > 0) {
+                    let temp = { ...form }
+                    temp = result
+                     setForm(result)
+                     setIncidentsListdata(result);
+                     setIsLoading(true)
+                }
             }
-        }
+        }).catch(err=>console.log(err))
+        
 
     };
     // handle close snackbar
@@ -169,18 +171,20 @@ const CloseOut = () => {
 
         try {
             if (new Date(form.closeDate) > new Date(form.reviewDate)) {
-                const res = await api.put(
+                 await api.put(
                     `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
                     temp
-                );
-                if (res.status === 200) {
-                    let viewMode = {
-                        initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
-                        , closeout: true
+                ).then((res)=>{
+                    if (res.status === 200) {
+                        let viewMode = {
+                            initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+                            , closeout: true
+                        }
+                        dispatch(tabViewMode(viewMode));
+                        history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
                     }
-                    dispatch(tabViewMode(viewMode));
-                    history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
-                }
+                }).catch(err=>console.log(err))
+                
             }
             else {
                 setForm({ ...form, closeDate: null })

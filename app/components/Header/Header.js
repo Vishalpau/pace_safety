@@ -453,7 +453,7 @@ function Header(props) {
               }
             })
             .catch(function (error) {
-
+                console.log(error)
             });
         }
       }
@@ -475,28 +475,22 @@ function Header(props) {
           headers: HEADER_AUTH,
         };
         const res = await Axios(config)
-        if (res.status === 200) {
-          labellist[0].breakdownValue = res.data.data.results
-          setLabelList(labellist)
-          setIsLoading(true)
-        }
+        .then((res)=>{
+          if (res.status === 200) {
+            labellist[0].breakdownValue = res.data.data.results
+            setLabelList(labellist)
+            setIsLoading(true)
+          }
+        })
+        .catch(err=>console.log(err.message))       
       }
     }
 
 
   };
-  const fetchIncidentData = async () => {
 
-    const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
-    const result = res.data.data.results;
-
-  }
   useEffect(() => {
     fetchCallBack();
-    if (fkid) {
-      fetchIncidentData();
-    }
-
   }, [props.initialValues.projectName]);
 
   useEffect(() => {

@@ -175,7 +175,11 @@ const ReportingAndNotification = () => {
       form.additionaldetails || incidentsListData.notificationComments;
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
-
+    
+    if(incidentsListData.incidentStage ==="Initial Notification"){
+      temp.incidentStatus= "Done"
+    }
+    
     // put call for update incident Details
     try {
       const res = await api.put(
@@ -527,78 +531,99 @@ const ReportingAndNotification = () => {
 
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
-    const res = await api.get("/api/v1/lists/20/value");
-    const result = res.data.data.results;
+    const res = await api.get("/api/v1/lists/20/value")
+    .then((res)=>{
+      const result = res.data.data.results;
 
-    for (var key in result) {
-      reportedToFilterData.push(result[key].inputValue);
-    }
+      for (var key in result) {
+        reportedToFilterData.push(result[key].inputValue);
+      }
+  
+       setReportableTo(result);
+    }).catch(error=>{
+      setMessage(error.message);
+      setMessageType("error");
+      setOpen(true);
+    })
 
-    await setReportableTo(result);
   };
 
   // fetch reportList
   const fetchReportsDataList = async () => {
     await fetchReportableTo();
-    const res = await api.get(`/api/v1/incidents/${id}/reports/`);
-    const result = res.data.data.results;
+     await api.get(`/api/v1/incidents/${id}/reports/`)
+    .then((res)=>{
+      const result = res.data.data.results;
 
-    if (result.length > 0) {
-      if (result[0].notifyTo) {
-        let getNotifyTo = result[0].notifyTo.split(",");
-        await setNotifyToList(getNotifyTo);
-      }
-
-      const reportToData = [];
-      for (const key in result) {
-        reportToData.push(result[key].reportTo);
-      }
-      for (var i = 0; i < 8; i++) {
-        if (!reportedToFilterData.includes(reportToData[i])) {
-          if (reportToData[i] !== undefined) {
-            setReportOtherData(reportToData[i]);
+      if (result.length > 0) {
+        if (result[0].notifyTo) {
+          let getNotifyTo = result[0].notifyTo.split(",");
+           setNotifyToList(getNotifyTo);
+        }
+  
+        const reportToData = [];
+        for (const key in result) {
+          reportToData.push(result[key].reportTo);
+        }
+        for (var i = 0; i < 8; i++) {
+          if (!reportedToFilterData.includes(reportToData[i])) {
+            if (reportToData[i] !== undefined) {
+              setReportOtherData(reportToData[i]);
+            }
           }
         }
+  
+         setReportedToObj(result);
+  
+         setForm({ ...form, reportedto: reportToData });
       }
+  
+       setIsLoading(true);
+    })
+    .catch(error=>{
+      setMessage(error.message);
+      setMessageType("error");
+      setOpen(true);
+    })
 
-      await setReportedToObj(result);
-
-      await setForm({ ...form, reportedto: reportToData });
-    }
-
-    await setIsLoading(true);
   };
 
   // fetch incident data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-
-    if (res.status === 200) {
-      const result = res.data.data.results;
-      localStorage.setItem("commonObject", JSON.stringify({ incident: { projectStruct: result.fkProjectStructureIds } }))
-      const incidentOccuredOn = result.incidentOccuredOn;
-      const start_time = new Date(incidentOccuredOn);
-      const incidentReportedOn = result.incidentReportedOn;
-      const end_time = new Date(incidentReportedOn);
-      const diff = end_time - start_time;
-      const hours = Math.floor(diff / 1000 / 60 / 60);
-
-      if (hours >= 4) {
-        await SetLateReport(true);
-      } else {
-        await SetLateReport(false);
+    )
+    .then((res)=>{
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        localStorage.setItem("commonObject", JSON.stringify({ incident: { projectStruct: result.fkProjectStructureIds } }))
+        const incidentOccuredOn = result.incidentOccuredOn;
+        const start_time = new Date(incidentOccuredOn);
+        const incidentReportedOn = result.incidentReportedOn;
+        const end_time = new Date(incidentReportedOn);
+        const diff = end_time - start_time;
+        const hours = Math.floor(diff / 1000 / 60 / 60);
+  
+        if (hours >= 4) {
+           SetLateReport(true);
+        } else {
+           SetLateReport(false);
+        }
+         setSupervisorName(result.supervisorByName);
+         setReportedByName(result.incidentReportedByName);
+         setIncidentsListdata(result);
+  
+        if (!id) {
+           setIsLoading(true);
+        }
       }
-      await setSupervisorName(result.supervisorByName);
-      await setReportedByName(result.incidentReportedByName);
-      await setIncidentsListdata(result);
+    })
 
-      if (!id) {
-        await setIsLoading(true);
-      }
-      handelCommonObject("commonObject", "incident", "incidentNumber", result.incidentNumber)
-    }
+    .catch(error=>{
+      setMessage(error.message);
+      setMessageType("error");
+      setOpen(true);
+    })
   };
 
   // fetch supervisor name
@@ -620,7 +645,11 @@ const ReportingAndNotification = () => {
           setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch((error) => { });
+      .catch(error=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
   };
 
   const fetchReportedBy = () => {
@@ -655,18 +684,25 @@ const ReportingAndNotification = () => {
 
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
-    const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`);
-    if (allEvidence.status === 200) {
-      const data = allEvidence.data.data.results.filter(
-        (item) => item.evidenceCategory === "Initial Evidence"
-      );
-      if (data.length > 0) {
-        let temp = [...evidanceForm];
-        temp = data;
-        setEvidanceForm(temp);
+    await api.get(`/api/v1/incidents/${id}/evidences/`)
+    .then((allEvidence)=>{
+      if (allEvidence.status === 200) {
+        const data = allEvidence.data.data.results.filter(
+          (item) => item.evidenceCategory === "Initial Evidence"
+        );
+        if (data.length > 0) {
+          let temp = [...evidanceForm];
+          temp = data;
+          setEvidanceForm(temp);
+        }
+         setEvidence(data);
       }
-      await setEvidence(data);
-    }
+    })
+    .catch(error=>{
+      setMessage(error.message);
+      setMessageType("error");
+      setOpen(true);
+    })
   };
 
   // fetch value noticefication sent
@@ -680,11 +716,18 @@ const ReportingAndNotification = () => {
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
         headers: HEADER_AUTH,
       };
-      const res = await api(config);
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        setNotificationSentValue(result);
-      }
+      const res = await api(config)
+      .then((res)=>{
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          setNotificationSentValue(result);
+        }
+      }).catch(error=>{
+      setMessage(error.message);
+      setMessageType("error");
+      setOpen(true);
+    })
+      
     } catch (error) { }
   };
 
@@ -1126,6 +1169,7 @@ const ReportingAndNotification = () => {
                 deleteForm={localStorage.getItem("deleteForm")}
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem="Reporting and notification"
+                id={id}
               />
             </Col>
           )}
