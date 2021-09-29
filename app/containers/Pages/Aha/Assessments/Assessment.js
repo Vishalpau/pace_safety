@@ -35,7 +35,7 @@ import { CircularProgress } from '@material-ui/core';
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
-import { handelActionData } from "../../../../utils/CheckerValue";
+import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../../utils/CheckerValue";
 
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -199,8 +199,7 @@ const useStyles = makeStyles((theme) => ({
   // },
 }));
 
-const Assessment = (props) => {
-  console.log(props)
+const Assessment = () => {
   const dispatch = useDispatch();
   const [form, setForm] = useState([]);
   const history = useHistory();
@@ -248,48 +247,85 @@ const Assessment = (props) => {
   const [actionTakenData, setActionTakenData] = useState([])
   const [expanded, setExpanded] = useState(false);
   const [allForms, setAllForms] = useState({})
+  const [actionData, setActionData] = useState([])
+
 
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const fetchHzardsData = async () => {
-    console.log("here")
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
     const result = res.data.data.results;
+    const temp = []
+    result.map((value) => {
+      temp.push({ "id": value.id })
+    })
+    handelCommonObject("commonObject", "aha", "assessmentIds", temp)
     await handelActionTracker(result)
+    await setForm(result)
+
   };
 
-  const handelActionTracker = async (apiData) => {
-    let ahaId = localStorage.getItem("fkAHAId")
-    let allAction = await handelActionData(ahaId, apiData)
-    await setForm(allAction);
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkAHAId")
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["aha"]["assessmentIds"]
+    let allAction = await handelActionData(jhaId, apiData)
+    setActionData(allAction)
   };
+  const handelActionShow = (id) => {
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    return (
+      <Grid>
+
+        {actionData.map((val) => (
+          <>
+            {val.id == id ?
+              <>
+                {
+                  val.action.length > 0 && val.action.map((valueAction) => (
+                    <>
+                      <ActionShow
+                        action={valueAction}
+                        companyId={fkCompanyId}
+                        projectId={projectId}
+                        updatePage={updatePage}
+                      />
+                    </>
+                  ))
+                }
+              </>
+              : null}
+          </>
+        ))}
+      </Grid>
+    )
+  }
 
   const handelActionLink = () => {
-    console.log("sagar")
 
     const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
-
-    console.log("userId");
 
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
 
-    console.log(projectId);
-
-
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
-    console.log(fkCompanyId);
 
     setProjectData({
       projectId: projectId,
@@ -298,13 +334,11 @@ const Assessment = (props) => {
       projectStructId: JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
     })
   }
-  console.log(projectData, "sssss")
 
   const handelRiskAndControl = (changeType, index, value) => {
     const temp = [...form]
 
     if (changeType == "risk") {
-      console.log("KKKK")
       temp[index]["risk"] = value
     } else if (changeType == "control") {
       temp[index]["control"] = value.target.value
@@ -320,14 +354,12 @@ const Assessment = (props) => {
 
   const handleSeverity = (e, index) => {
     const temp = [...form]
-
     temp[index]["severity"] = e.target.value
     setForm(temp)
 
   }
   const handleProbability = (e, index) => {
     const temp = [...form]
-
     temp[index]["probability"] = e.target.value
     setForm(temp)
 
@@ -421,7 +453,6 @@ const Assessment = (props) => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const result = res.data.data.results;
-    console.log(result, "MMMMM");
     await setAHAForm(result);
     setAdditionalJobDetails({
       ...additinalJobDetails,
@@ -434,7 +465,6 @@ const Assessment = (props) => {
     riskResidual.current = await PickListData(76)
     monitor.current = await PickListData(77)
   }
-
 
   const handelCallBack = async () => {
 
@@ -460,7 +490,6 @@ const Assessment = (props) => {
             <Grid container spacing={3} item xs={12} md={9}>
               <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                 <div>
-                  {/* {console.log(form)} */}
                   {form.map((value, index) => (
                     <Accordion
                       expanded={expanded === `panel${index}`}
@@ -562,7 +591,8 @@ const Assessment = (props) => {
                               >
                                 {Object.entries(probability).map(
                                   ([key, value], index) => (
-                                    <MenuItem>
+                                    <MenuItem
+                                      value={value}>
                                       {value}
                                     </MenuItem>
                                   )
@@ -690,14 +720,16 @@ const Assessment = (props) => {
                             />
                           </Grid>
                           <Grid item xs={6} className={classes.createHazardbox}>
-                            {value.action.length > 0 && value.action.map((valueAction) => (
+                            {/* {value.action.length > 0 && value.action.map((valueAction) => (
                               <ActionShow
                                 action={valueAction}
                                 companyId={projectData.companyId}
                                 projectId={projectData.projectId}
                                 updatePage={updatePage}
                               />
-                            ))}
+                            ))} */}
+                            {handelActionShow(value.id)}
+
 
                           </Grid>
                         </Grid>
@@ -780,9 +812,5 @@ const Assessment = (props) => {
     </>
   );
 };
-// const AhaAssementInit = connect((state) => ({
-//   initialValues: state.getIn(["IncidentReducer"]),
-// }))(Assessment);
 
-// export default withStyles(styles)(AhaAssementInit);
 export default Assessment;

@@ -188,10 +188,23 @@ const ProjectAreaHazards = () => {
   const handlePhysicalHazards = (e, index, value, checkListID) => {
     console.log(form, "''''''''")
     let temp = [...form]
+    console.log(temp, "<<<<<<")
     let tempRemove = []
     if (e.target.checked == false) {
       temp.map((ahaValue, index) => {
+        console.log(ahaValue.fkChecklistId)
+        console.log(temp[index]['fkChecklistId'])
+        console.log(checkListID)
         if (ahaValue['fkChecklistId'] === checkListID) {
+          console.log(temp, "LLLLLLLLLL")
+
+          // if(temp[index].id){
+          //   console.log(temp[index].id)
+          //   const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
+
+          // }
+
+
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
 
@@ -219,6 +232,8 @@ const ProjectAreaHazards = () => {
 
   };
 
+  console.log(form, "??????")
+
   const handleOtherHazards = async (e, key) => {
     const temp = [...otherHazards];
     const value = e.target.value;
@@ -226,6 +241,8 @@ const ProjectAreaHazards = () => {
     setOtherHazards(temp);
 
   }
+
+
 
   const handleAdd = (e) => {
     if (Object.keys(otherHazards).length < 100) {
@@ -256,12 +273,17 @@ const ProjectAreaHazards = () => {
     };
   }
 
+
+
+
+
   const handleSubmit = async (e) => {
     await setSubmitLoader(true)
 
     let hazardNew = []
     let hazardUpdate = []
     let allHazard = [form, otherHazards]
+
     allHazard.map((values, index) => {
       allHazard[index].map((value) => {
         if (value["id"] == undefined) {
@@ -279,12 +301,27 @@ const ProjectAreaHazards = () => {
 
 
     const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
+
     const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
+
     history.push("/app/pages/aha/assessments/assessment")
 
   }
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const files = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path}
+      {' '}
+      -
+      {file.size}
+      {' '}
+      bytes
+    </li>
+  ));
+
+
+
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateChange = (date) => {
@@ -301,6 +338,14 @@ const ProjectAreaHazards = () => {
   const environmentalHazardsList = useRef([{}])
 
   const fetchCheckList = async () => {
+    // let list = []
+    //   const res = await api.get(`/api/v1/core/checklists/1/`)
+    //   const result = res.data.data.results.checklistGroups
+    //   const checkListValues = result[0].checkListValues
+    //   checkListValues.map((value) => {
+    //     list.push({label : value.inputLabel ,  value : value.inputValue})
+    //   })
+    //   await setChemicalList(list)
     physicalHazardsList.current = await CheckListData(0)
     chemicalHazardsList.current = await CheckListData(1);
     energyHazardList.current = await CheckListData(2);
@@ -319,6 +364,9 @@ const ProjectAreaHazards = () => {
       }
     }
   }
+
+
+
 
   const handelUpdate = async () => {
     const temp = {}
@@ -351,13 +399,12 @@ const ProjectAreaHazards = () => {
     setSelectedOption(temp)
   }
 
-  const handelCallback = async () => {
-    awaitcheckList()
-    awaithandelUpdate()
-  }
 
   useEffect(() => {
-    handelCallback
+
+    checkList()
+    handelUpdate()
+
   }, []);
   return (
     <>
@@ -396,6 +443,39 @@ const ProjectAreaHazards = () => {
               >
                 <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
               </Grid>
+              {/* {others.map((value,index ) => (<>
+
+        <Grid
+        item
+        md={6}
+        xs={11}
+        className={classes.createHazardbox}
+        >
+        <TextField
+            label="Other Hazards"
+            margin="dense"
+            name="otherhazards"
+            id="otherhazards"
+            defaultValue={riskVales.length !== 0 ? riskVales.otherhazards.length > 0 && riskVales.otherhazards[index] : ""}  
+            fullWidth
+            variant="outlined"
+            className={classes.formControl}
+            onChange={(e) => {handleOthers(e, index)}
+            }
+        />
+        </Grid>
+        {others.length > 1 ?
+        (<Grid item md={1} className={classes.createHazardbox}>
+            <IconButton
+                variant="contained"
+                color="primary"
+                onClick={(e) => {handelRemove(e, index)}}
+            >
+                <DeleteForeverIcon />
+            </IconButton>
+        </Grid>):null }
+
+        </> ))} */}
 
               {otherHazards.map((value, index) => (
                 <>

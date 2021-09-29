@@ -233,9 +233,9 @@ const ObservationInitialNotification = (props) => {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
   const userDetails =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails"))
-        : null;
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
   const userCompany = userDetails.companies.filter((company) => company.companyId === fkCompanyId)
   const userDepartment = userCompany[0].departments.filter((userDepartment) => userDepartment.fkUserId === userId)
   const project =
@@ -278,7 +278,6 @@ const ObservationInitialNotification = (props) => {
             temp["supervisorId"] = result[i].id;
             temp["badgeNo"] = result[i].badgeNo;
             user.push(temp);
-            // filterSuperVisorBadgeNo.push(result[i].badgeNo);
           }
           setSuperVisorName(user);
         }
@@ -297,7 +296,7 @@ const ObservationInitialNotification = (props) => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
           const userDetails =
             JSON.parse(localStorage.getItem("userDetails")) !== null
               ? JSON.parse(localStorage.getItem("userDetails"))
@@ -308,22 +307,22 @@ const ObservationInitialNotification = (props) => {
             badgeNo: userDetails.badgeNo,
           };
           let user = [];
-          for (var i in result) {
+
+          // let user = [];
+          let data = result.filter((item) =>
+            item['companyId'] == fkCompanyId
+          )
+          for (var i in data[0].users) {
             let temp = {};
 
-            temp["inputValue"] = result[i].name;
-            temp["reportedById"] = result[i].id;
-            temp["badgeNo"] = result[i].badgeNo;
-
+            temp["inputValue"] = data[0].users[i].name;
+            temp["reportedById"] = data[0].users[i].id;
+            temp["badgeNo"] = data[0].users[i].badgeNo;
             user.push(temp);
-            // filterReportedById.push(result[i].id);
-            // filterReportedByBedgeID.push(result[i].badgeNo);
+
           }
           setReportedByDetails(user);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -342,7 +341,7 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
-          
+
           let user = [];
 
           for (var i in result) {
@@ -489,7 +488,6 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-    console.log(form)
     const res = await api.post("/api/v1/observations/", data);
     if (res.status === 201) {
       const id = res.data.data.results;
@@ -691,7 +689,7 @@ const ObservationInitialNotification = (props) => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const fetchTags = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -761,18 +759,17 @@ const ObservationInitialNotification = (props) => {
         if (key == index + 1) {
           await api
             .get(
-              `${SSO_URL}/${
-                projectData.projectName.breakdown[key].structure[0].url
+              `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
               }${value}`
             )
-            .then(function(response) {
+            .then(function (response) {
               if (response.status === 200) {
                 temp[key].breakDownData = response.data.data.results;
                 //  temp[key].select=e.
                 setBreakdown1ListData(temp);
               }
             })
-            .catch(function(error) {});
+            .catch(function (error) { });
         }
       }
     }
@@ -789,9 +786,8 @@ const ObservationInitialNotification = (props) => {
       if (breakDown[key].slice(0, 2) === "1L") {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
 
@@ -827,9 +823,8 @@ const ObservationInitialNotification = (props) => {
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key - 1].substring(2)}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -875,7 +870,7 @@ const ObservationInitialNotification = (props) => {
   useEffect(() => {
     fetchTags();
     fetchDepartment();
-    fetchAttachment();
+    // fetchAttachment();
     fetchNotificationSent();
     fetchSuperVisorName();
     fetchReportedBy();
@@ -944,14 +939,14 @@ const ObservationInitialNotification = (props) => {
                     >
                       {data.breakDownData.length !== 0
                         ? data.breakDownData.map((selectvalues, index) => (
-                            <MenuItem
-                              key={index}
-                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                              value={selectvalues.id}
-                            >
-                              {selectvalues.structureName}
-                            </MenuItem>
-                          ))
+                          <MenuItem
+                            key={index}
+                            // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                            value={selectvalues.id}
+                          >
+                            {selectvalues.structureName}
+                          </MenuItem>
+                        ))
                         : null}
                     </Select>
                     {error && error[`projectStructure${[key]}`] && (
@@ -1066,7 +1061,7 @@ const ObservationInitialNotification = (props) => {
                 id="badgenumberreportingperson"
                 value={
                   form.reportedByBadgeId !== null &&
-                  form.reportedByBadgeId !== undefined
+                    form.reportedByBadgeId !== undefined
                     ? form.reportedByBadgeId
                     : ""
                 }
@@ -1270,7 +1265,7 @@ const ObservationInitialNotification = (props) => {
                 }
                 value={
                   form.supervisorByBadgeId !== null &&
-                  form.supervisorByBadgeId !== undefined
+                    form.supervisorByBadgeId !== undefined
                     ? form.supervisorByBadgeId
                     : ""
                 }
@@ -1725,7 +1720,7 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {attachment !== undefined ? (
+            {/* {attachment !== undefined ? (
               <Grid item md={12} xs={12} className={classes.formBBanner}>
                 <Avatar
                   className={classes.observationFormBox}
@@ -1734,7 +1729,7 @@ const ObservationInitialNotification = (props) => {
                   src={attachment}
                 />
               </Grid>
-            ) : null}
+            ) : null} */}
             {/* {attachment ===
                               null ? null : typeof attachment ===
                                 "string" ? (
