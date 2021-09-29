@@ -19,6 +19,7 @@ import axios from "axios";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import Paper from "@material-ui/core/Paper";
+import ActionShow from '../../Forms/ActionShow'
 
 import {
   DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
@@ -41,6 +42,7 @@ import InitialNotificationValidator from "../../Validator/Observation/InitialNot
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import apiAction from "../../../utils/axiosActionTracker"
+import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../utils/CheckerValue";
 
 import {
   access_token,
@@ -167,6 +169,15 @@ function ObservationCorrectiveAction() {
   const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).companies
   : null;
+
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+    createdBy: "",
+    projectStructId: ""
+  })
+  const [actionData, setActionData] = useState([])
+
   let client = []
   let client_id = []
   companies.map((value, i)=>{
@@ -291,6 +302,45 @@ function ObservationCorrectiveAction() {
     
   }
 
+  const handelActionTracker = async () => {
+    let observationId = localStorage.getItem("fkobservationId")
+    // let apiData = JSON.parse(localStorage.getItem("commonObject"))["jha"]["assessmentIds"]
+    let allAction = await handelActionData(observationId, [], "title")
+    console.log(allAction)
+
+    setActionData(allAction)
+  };
+
+  const handelActionShow = (id) => {
+    return (<>
+    {console.log(actionData,">>>><<<<<")}
+      <Grid>
+        {actionData.map((val) => (
+          <>
+            
+              <>
+                {
+                  actionData.map((valueAction) => (
+                    <>
+                      <ActionShow
+                        action={{"id":valueAction.id,"number":valueAction.actionNumber}}
+                        title={{"title":valueAction.actionTitle}}
+                        companyId={fkCompanyId}
+                        projectId={projectId}
+                        updatePage={updatePage}
+                      />
+                    </>
+                  ))
+                }
+              </>
+             
+          </>
+        ))}
+      </Grid>
+      </>
+    )
+  }
+
   
     
   const fetchInitialiObservationData = async () => {
@@ -354,16 +404,16 @@ function ObservationCorrectiveAction() {
         setError({...error , reviewedOn : errorMessage})
     }
 }
-  const handelActionTracker = async () => {
-    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    // const api_action = axios.create({
-    //   baseURL: API_URL_ACTION_TRACKER,
-    // });
-    let ActionToCause = {}
-    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
+  // const handelActionTracker = async () => {
+  //   // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+  //   // const api_action = axios.create({
+  //   //   baseURL: API_URL_ACTION_TRACKER,
+  //   // });
+  //   let ActionToCause = {}
+  //   const allActionTrackerData = await apiAction.get("/api/v1/actions/")
+  //   const allActionTracker = allActionTrackerData.data.data.results.results
 
-  }
+  // }
   const handleReview  = (e ,value) => {
     let temp ={ ...form}
 temp.reviewedByName = value.name
@@ -510,8 +560,9 @@ newData.push(allActionTracker[i])
           
             {' '}
           </Typography>
-          
-          {actionTakenData.length > 0   ? 
+          {handelActionShow(id)}
+
+          {/* {actionTakenData.length > 0   ? 
             <TableContainer component={Paper}>
             <Table style={{ minWidth: 100 }} size="small">
             <TableHead><TableRow>
@@ -539,7 +590,7 @@ newData.push(allActionTracker[i])
           }
             </TableBody>
 </Table>
-</TableContainer>: null}
+</TableContainer>: null} */}
             {/* <Typography className={classes.labelValue}>
                     {' '}{action.actionTitle}
             

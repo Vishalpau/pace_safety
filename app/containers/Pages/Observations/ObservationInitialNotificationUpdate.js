@@ -235,7 +235,7 @@ const ObservationInitialNotificationUpdate = () => {
     setSelectedDate(date);
   };
 
-
+console.log(reportedByName,">>>>>>>>>")
   const [catagory, setCatagory] = useState();
   const [catagoryName, setCatagoryName] = useState();
 
@@ -472,6 +472,10 @@ const ObservationInitialNotificationUpdate = () => {
             item['companyId'] == fkCompanyId
         )
         console.log(data[0].users,"LLLLL")
+        let temp= []
+        // data[0].users.map((dName, i) => {
+        //   temp.push(dName.name)
+        // })
           setReportedByName(data[0].users);
         }
       })
@@ -728,11 +732,12 @@ const ObservationInitialNotificationUpdate = () => {
               options={reportedByName}
               value={initialData.assigneeName ? initialData.assigneeName : ""}
               className={classes.mT30}
+              loading={isLoading}
               getOptionLabel={(option) => option.name}
-              onChange={(e, value) => {
+              onChange={(e, option) => {
                 setInitialData({
                   ...initialData,
-                  assigneeName: value,
+                  assigneeName: option.name,
                 });
               }}
               renderInput={(params) => (
@@ -740,7 +745,8 @@ const ObservationInitialNotificationUpdate = () => {
                   {...params}
                   label="Assignee"
                   variant="outlined"
-                />
+              // value={initialData.assigneeName ? initialData.assigneeName : ""}
+              />
               )}
             />
           </Grid>
