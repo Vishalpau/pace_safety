@@ -725,7 +725,7 @@ const ObservationInitialNotification = (props) => {
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
     const attachment = await api.get(
-      `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
+      `/api/v1/corepatterns/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
     if (result !== undefined) {
@@ -1249,7 +1249,7 @@ const ObservationInitialNotification = (props) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Supervisor's Name*"
+                    label="Foreman's Name*"
                     error={error.supervisorName}
                     helperText={
                       error.supervisorName ? error.supervisorName : ""
@@ -1261,7 +1261,7 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
-                label="Supervisor's Badge Number"
+                label="Foreman's Badge Number"
                 name="supervisorbadgenumber"
                 id="supervisorbadgenumber"
                 error={error.supervisorByBadgeId}

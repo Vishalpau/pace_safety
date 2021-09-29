@@ -289,7 +289,7 @@ const ObservationCorrectiveActionView = () => {
           </Typography>
         </Grid>
 
-        <Grid item md={12}>
+        <Grid item md={12}>{actionTakenData.length > 0 ? 
           <TableContainer component={Paper}>
             <Table style={{ minWidth: 100 }} size="small">
               <TableHead><TableRow>
@@ -324,7 +324,7 @@ const ObservationCorrectiveActionView = () => {
                 }
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> : null}
         </Grid>
 
 

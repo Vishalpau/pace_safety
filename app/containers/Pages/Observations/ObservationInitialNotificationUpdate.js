@@ -39,6 +39,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import ComingSoon from '../ComingSoon';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -193,7 +194,6 @@ const ObservationInitialNotificationUpdate = () => {
 
   let filterReportedByName = []
   let filterDepartmentName = []
-
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
     : null;
@@ -235,7 +235,7 @@ const ObservationInitialNotificationUpdate = () => {
     setSelectedDate(date);
   };
 
-
+console.log(reportedByName,">>>>>>>>>")
   const [catagory, setCatagory] = useState();
   const [catagoryName, setCatagoryName] = useState();
 
@@ -467,20 +467,19 @@ const ObservationInitialNotificationUpdate = () => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
-          let user = [];
-          user = result;
-          for (var i in result) {
-            filterReportedByName.push(result[i].name);
-          }
-          setReportedByName(filterReportedByName);
+          const result = response.data.data.results;
+          let data = result.filter((item) =>          
+            item['companyId'] == fkCompanyId
+        )
+        console.log(data[0].users,"LLLLL")
+        let temp= []
+        // data[0].users.map((dName, i) => {
+        //   temp.push(dName.name)
+        // })
+          setReportedByName(data[0].users);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
       });
   };
 
@@ -497,6 +496,7 @@ const ObservationInitialNotificationUpdate = () => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
+          console.log(result,"4444444");
           let user = [];
           user = result;
           for (var i in result) {
@@ -594,6 +594,10 @@ const ObservationInitialNotificationUpdate = () => {
       }
     }
   };
+  if(initialData.departmentName !== ""){
+    console.log(initialData.departmentName)
+
+  }
   
 
   useEffect(() => {
@@ -699,28 +703,7 @@ const ObservationInitialNotificationUpdate = () => {
             </FormGroup>
 
           </Grid>
-          <Grid item md={6} xs={12} className={classes.formBox}>
-            <Autocomplete
-              id="combo-box-demo"
-              options={reportedByName}
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-              className={classes.mT30}
-              getOptionLabel={(option) => option}
-              onChange={(e, value) => {
-                setInitialData({
-                  ...initialData,
-                  assigneeName: value,
-                });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Assignee"
-                  variant="outlined"
-                />
-              )}
-            />
-          </Grid>
+
           <Grid item md={6} xs={12} className={classes.formBox}>
 
             <TextField
@@ -743,6 +726,31 @@ const ObservationInitialNotificationUpdate = () => {
               ))}
             </TextField>
           </Grid>
+          <Grid item md={6} xs={12} className={classes.formBox}>
+            <Autocomplete
+              id="combo-box-demo"
+              options={reportedByName}
+              value={initialData.assigneeName ? initialData.assigneeName : ""}
+              className={classes.mT30}
+              loading={isLoading}
+              getOptionLabel={(option) => option.name}
+              onChange={(e, option) => {
+                setInitialData({
+                  ...initialData,
+                  assigneeName: option.name,
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Assignee"
+                  variant="outlined"
+              // value={initialData.assigneeName ? initialData.assigneeName : ""}
+              />
+              )}
+            />
+          </Grid>
+         
           <Grid
             item
             md={12}

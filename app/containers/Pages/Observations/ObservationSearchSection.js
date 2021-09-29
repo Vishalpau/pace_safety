@@ -369,7 +369,7 @@ export default function SimpleTabs(props) {
 					  <Tab label="My Observations" {...a11yProps(0)} />
 					  {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
 					  <Tab label="Big Picture" {...a11yProps(2)} />
-					<Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} />
+					{/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
 					</Tabs>
 				  </div>  
 			  </AppBar>

@@ -38,8 +38,7 @@ import Box from "@material-ui/core/Box";
 import api from "../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from '@material-ui/lab/Pagination';
-
-
+import { handelCommonObject } from "../../../utils/CheckerValue"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -205,8 +204,9 @@ function Aha(props) {
 
   const handleSummaryPush = async (index) => {
     const id = allAHAData[index].id
+    const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
       localStorage.setItem('fkAHAId', id)
-
+      handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
     //console.log("Ashutosh")
     history.push(
       `/app/pages/aha/aha-summary/${id}`
