@@ -30,6 +30,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../utils/constants";
+import ActionShow from "./ActionShow"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -92,7 +93,6 @@ export default function ActionTracker(props) {
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
       const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`)
-      console.log(res.data.data.results)
     }
   }
 
@@ -141,7 +141,6 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
-    console.log(form)
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
@@ -151,6 +150,7 @@ export default function ActionTracker(props) {
         await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
+        await props.handelShowData()
       }
     }
   };

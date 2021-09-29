@@ -30,13 +30,15 @@ import Link from "@material-ui/core/Link";
 import Divider from "@material-ui/core/Divider";
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
-import ActionTracker from "../ActionTracker";
+import ActionTracker from "../../../Forms/ActionTracker";
 import { CircularProgress } from '@material-ui/core';
-import apiAction from '../../../../utils/axiosActionTracker';
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
+import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../../utils/CheckerValue";
 
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import axios from "axios";
 import api from "../../../../utils/axios";
@@ -198,6 +200,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Assessment = () => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState([]);
   const history = useHistory();
   const handleChange = (event) => {
@@ -213,6 +216,12 @@ const Assessment = () => {
   const [ahaform, setAHAForm] = useState({});
   const riskResidual = useRef([])
   const [updatePage, setUpdatePage] = useState(false)
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+    createdBy: "",
+    projectStructId: ""
+  })
 
   const monitor = useRef([])
   const [additinalJobDetails, setAdditionalJobDetails] = useState({
@@ -236,47 +245,100 @@ const Assessment = () => {
   const approver = ['Yes', 'No']
   const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
   const [actionTakenData, setActionTakenData] = useState([])
-
-  // console.log(Object.keys(obj[2])[0])
   const [expanded, setExpanded] = useState(false);
+  const [allForms, setAllForms] = useState({})
+  const [actionData, setActionData] = useState([])
+
 
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  
   const fetchHzardsData = async () => {
-    let temp = {}
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
     const result = res.data.data.results;
-    await setForm(result);
+    const temp = []
+    result.map((value) => {
+      temp.push({ "id": value.id })
+    })
+    handelCommonObject("commonObject", "aha", "assessmentIds", temp)
     await handelActionTracker(result)
+    await setForm(result)
 
-    // result.map((value) => {
-    //   temp[value.id] = { "severity": "", "probability": "" }
-    // })
-    // await setColorId(temp)
   };
 
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkAHAId")
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["aha"]["assessmentIds"]
+    let allAction = await handelActionData(jhaId, apiData)
+    setActionData(allAction)
+  };
+  const handelActionShow = (id) => {
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+        const projectId =
+        JSON.parse(localStorage.getItem("projectName")) !== null
+          ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+          : null;
+    return (
+      <Grid>
+
+        {actionData.map((val) => (
+          <>
+            {val.id == id ?
+              <>
+                {
+                  val.action.length > 0 && val.action.map((valueAction) => (
+                    <>
+                      <ActionShow
+                        action={valueAction}
+                        companyId={fkCompanyId}
+                        projectId={projectId}
+                        updatePage={updatePage}
+                      />
+                    </>
+                  ))
+                }
+              </>
+              : null}
+          </>
+        ))}
+      </Grid>
+    )
+  }
+
+  const handelActionLink = () => {
+
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
 
-  const projectId =
-    JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-      : null;
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
 
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
 
-
+    setProjectData({
+      projectId :  projectId,
+      companyId : fkCompanyId,
+      createdBy : userId,
+      projectStructId : JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
+    })
+  }
 
   const handelRiskAndControl = (changeType, index, value) => {
     const temp = [...form]
-    // temp[index]["severity"] = value
 
     if (changeType == "risk") {
-      console.log("KKKK")
       temp[index]["risk"] = value
     } else if (changeType == "control") {
       temp[index]["control"] = value.target.value
@@ -287,22 +349,17 @@ const Assessment = () => {
     } else if (changeType == "monitor") {
       temp[index]["monitor"] = value
     }
-    console.log(temp)
     setForm(temp)
   }
 
-  console.log(form)
-
   const handleSeverity = (e, index) => {
     const temp = [...form]
-
     temp[index]["severity"] = e.target.value
     setForm(temp)
 
   }
   const handleProbability = (e, index) => {
     const temp = [...form]
-
     temp[index]["probability"] = e.target.value
     setForm(temp)
 
@@ -311,7 +368,6 @@ const Assessment = () => {
 
   const handleControlChange = async (e, index) => {
     let temp = [...form];
-    // await setColorId(...colorId,{...temp[index].id , {severity}})
 
     temp[index].control = e.target.value;
     await setForm(temp)
@@ -319,7 +375,6 @@ const Assessment = () => {
   };
   const control = async (e, index) => {
     let temp = [...form];
-    // await setColorId(...colorId,{...temp[index].id , {severity}})
 
     temp[index].control = e.target.value;
     await setForm(temp)
@@ -377,57 +432,22 @@ const Assessment = () => {
     }
   };
 
-
-  const handelActionTracker = async (apiData) => {
-    let ahaId = localStorage.getItem("fkAHAId")
-
-    for (let key in apiData) {
-      const allActionTrackerData = await apiAction.get(
-        `api/v1/actions/?enitityReferenceId=${ahaId}%3A${apiData[key]["id"]
-        }`
-      );
-      if (allActionTrackerData.data.data.results.results.length > 0) {
-        let actionTracker = allActionTrackerData.data.data.results.results;
-        const temp = [];
-        actionTracker.map((value) => {
-          const tempAction = {}
-          let actionTrackerId = value.actionNumber;
-          let actionTrackerTitle = value.actionTitle
-          let actionId = value.id
-          tempAction["number"] = actionTrackerId
-          tempAction["title"] = actionTrackerTitle
-          tempAction["id"] = actionId
-          temp.push(tempAction);
-        });
-        apiData[key]["action"] = temp;
-      } else {
-        apiData[key]["action"] = [];
-      }
-    }
-    setActionTakenData(apiData)
-    setIsLoading(true)
-
-  };
-
-
   const handleRiskValue = async (e, index) => {
     let tempData = [...form]
     tempData[index]['risk'] = e.target.value;
     await setForm(tempData);
   }
-  // console.log(form)
-
 
   const checkList = async () => {
     const temp = {};
     const res = await api.get(
       "/api/v1/core/checklists/aha-document-conditions/1/"
     );
-    // const checklistGroups = res.data.data.results[0];
     const checklistGroups = res.data.data.results[0].checklistValues;
 
     setCheckListGroups(checklistGroups);
   };
+
   const fetchAhaData = async () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
@@ -439,18 +459,25 @@ const Assessment = () => {
       workStopCondition: result.workStopCondition != null ? result.workStopCondition.split(",") : [],
     });
   };
-console.log(form,"SSSSS")
+
   const pickListValue = async () => {
     risk.current = await PickListData(78)
     riskResidual.current = await PickListData(76)
     monitor.current = await PickListData(77)
   }
+
+  const handelCallBack = async () => {
+
+    await fetchHzardsData();
+    await checkList();
+    await fetchAhaData();
+    await handelActionLink()
+    await pickListValue()
+    await setIsLoading(true)
+  }
+
   useEffect(() => {
-    fetchHzardsData();
-    checkList();
-    fetchAhaData();
-    pickListValue()
-    // fetchactionTrackerData()
+    handelCallBack()
   }, []);
 
   const classes = useStyles();
@@ -498,7 +525,6 @@ console.log(form,"SSSSS")
                                 id="incident-type"
                                 label="Identify risk"
                                 value={form[index].risk ? form[index].risk : ""}
-                              // onChange={(e) => {handleRiskValue(e, index)}}
                               >
                                 {risk.current.map(
                                   (value) => (
@@ -535,9 +561,7 @@ console.log(form,"SSSSS")
                                 {Object.entries(severity).map(
                                   ([key, value], index) => (
                                     <MenuItem
-                                      // onClick={(e) => handleSeverity( index, value)}
                                       value={value}
-
                                     >
                                       {value}
                                     </MenuItem>
@@ -568,11 +592,7 @@ console.log(form,"SSSSS")
                                 {Object.entries(probability).map(
                                   ([key, value], index) => (
                                     <MenuItem
-                                      value={value}
-                                    //  onChange={async(e) => {await setProbabilityValue(key) ;await handleRisk()} }>
-
-                                    // onClick={(e) => handelRiskAndControl("probability", index, value)}
-                                    >
+                                      value={value}>
                                       {value}
                                     </MenuItem>
                                   )
@@ -637,7 +657,7 @@ console.log(form,"SSSSS")
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label="Eveluate residual risk"
+                                label="Approve to implement"
                                 value={form[index].approveToImplement ? form[index].approveToImplement : ''}
                               >
                                 {approver.map((value) => (<MenuItem value={value}
@@ -660,14 +680,13 @@ console.log(form,"SSSSS")
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label="Eveluate residual risk"
+                                label="Monitor"
                                 value={form[index].monitor ? form[index].monitor : ""}
                               >
                                 {monitor.current.map(
                                   (value) => (
                                     <MenuItem
                                       value={value.label}
-                                      // onClick={async (e) => await handleSeverity(key)}
                                       onClick={(e) => handelRiskAndControl("monitor", index, value.label)}
 
                                     >
@@ -687,57 +706,32 @@ console.log(form,"SSSSS")
                             <Divider light />
                           </Grid>
 
-                          {/* <Grid item md={2} sm={2} xs={2}>
-                            <Grid item xs={12} className={classes.createHazardbox}>
-                              <ActionTracker
-                                actionContext="aha:hazard"
-                                enitityReferenceId={`${localStorage.getItem("fkJHAId")}:${value.id}`}
-                                setUpdatePage={setUpdatePage}
-                                fkCompanyId={projectData.companyId}
-                                fkProjectId={projectData.projectId}
-                                fkProjectStructureIds={projectData.projectStructId}
-                                createdBy={projectData.createdBy}
-                                updatePage={updatePage}
-                              />
-                            </Grid>
-                            <Grid item xs={12} className={classes.createHazardbox}>
-                              {value.action.length > 0 && value.action.map((valueAction) => (
-                                <ActionShow
-                                  action={valueAction}
-                                  companyId={projectData.companyId}
-                                  projectId={projectData.projectId}
-                                  handelShowData={handelCheckList}
-                                  updatePage={updatePage}
-                                />
-                              ))}
-
-                            </Grid>
-                          </Grid> */}
-
                           <Grid item xs={6} className={classes.createHazardbox}>
-                              <ActionTracker
-                                actionContext="aha:hazard"
-                                enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
-                                setUpdatePage={setUpdatePage}
+                            <ActionTracker
+                              actionContext="aha:hazard"
+                              enitityReferenceId={`${localStorage.getItem("fkAHAId")}:${value.id}`}
+                              setUpdatePage={setUpdatePage}
+                              fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                              fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                              fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
+                              createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                              updatePage={updatePage}
+                              handelShowData={fetchHzardsData}
+                            />
+                          </Grid>
+                          <Grid item xs={6} className={classes.createHazardbox}>
+                            {/* {value.action.length > 0 && value.action.map((valueAction) => (
+                              <ActionShow
+                                action={valueAction}
+                                companyId={projectData.companyId}
+                                projectId={projectData.projectId}
                                 updatePage={updatePage}
                               />
-                          
+                            ))} */}
+                            {handelActionShow(value.id)}
+
+
                           </Grid>
-                          <Grid item xs={12} className={classes.createHazardbox}>
-{console.log(value,"LLLLLLLL")}
-                              {value.action && value.action.map((valueAction) => (
-                                <ActionShow
-                                  action={valueAction}
-                                  companyId={fkCompanyId}
-                                  projectId={projectId}
-                                  handelShowData={fetchHzardsData}
-                                  updatePage={updatePage}
-                                />
-                              ))}
-
-                            </Grid>
-                          
-
                         </Grid>
                       </AccordionDetails>
                     </Accordion>
@@ -759,7 +753,6 @@ console.log(form,"SSSSS")
                     ))}
                   </FormGroup>
                 </FormControl>
-                {/* <Box borderTop={1} marginTop={2} borderColor="grey.300" /> */}
               </Grid>
 
               <Grid item md={12} xs={12} className={classes.formBox}>
@@ -805,14 +798,6 @@ console.log(form,"SSSSS")
                     <CircularProgress color="secondary" />
                   </IconButton>
                 }
-                {/* <Button
-                variant="contained"
-                size="medium"
-                className={classes.button}
-                onClick={() => handleSubmit()}
-              >
-                Next
-              </Button> */}
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -827,5 +812,9 @@ console.log(form,"SSSSS")
     </>
   );
 };
+// const AhaAssementInit = connect((state) => ({
+//   initialValues: state.getIn(["IncidentReducer"]),
+// }))(Assessment);
 
+// export default withStyles(styles)(AhaAssementInit);
 export default Assessment;

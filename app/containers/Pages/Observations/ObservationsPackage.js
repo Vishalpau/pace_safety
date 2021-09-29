@@ -299,6 +299,9 @@ function Actions(props) {
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
   const history = useHistory();
   const handelView = (e) => {
     setListToggle(false);
@@ -368,6 +371,8 @@ function Actions(props) {
   const [isLoading, setIsLoading] = useState(false);
   const searchIncident = props.searchIncident
   const fetchInitialiObservation = async () => {
+    await setPage(1)
+
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =  JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId ||  props.projectName.projectId 
@@ -381,91 +386,91 @@ function Actions(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
  
-      
-      
       if (props.type == "All" || props.type == "Type") {
         // await setAllInitialData(result)
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
       await setPageCount(pageCount)
+
         } else {
           const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-
-        const result = res.data.data.results.results
+          const result = res.data.data.results.results
           await setAllInitialData(result)
+          await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
           let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
-        }
-
-        
-      } else {
-
-        
+          await setPageCount(pageCount)
+        }  
+      } else {  
         if (props.type == "Risk") {
-          
-
           if (props.observation == "My Observations") {
-
-            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk`)
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
+          await setPageCount(pageCount)
           }else{
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
+            await setTotalData(allLogInUserData.data.data.results.count)
+            await setPageData(allLogInUserData.data.data.results.count / 25)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-        await setPageCount(pageCount)
+            await setPageCount(pageCount)
           }
         }
-        if (props.type == "Comments") {
-          
+        if (props.type == "Comments") {  
           if (props.observation == "My Observations") {
-
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
+            const result = allLogInUserData.data.data.results.results
+            await setAllInitialData(result)
+            await setTotalData(allLogInUserData.data.data.results.count)
+            await setPageData(allLogInUserData.data.data.results.count / 25)
+            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+            await setPageCount(pageCount)
           }else{
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-        await setPageCount(pageCount)
+            await setTotalData(allLogInUserData.data.data.results.count)
+            await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+      await setPageCount(pageCount)
           }
         }
         if (props.type == "Positive behavior") {
           
           if (props.observation == "My Observations") {
-
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
+            await setTotalData(allLogInUserData.data.data.results.count)
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-        await setPageCount(pageCount)
+            await setPageData(allLogInUserData.data.data.results.count / 25)
+            await setPageCount(pageCount)
             }else{
               const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior`)
               const result = allLogInUserData.data.data.results.results
               await setAllInitialData(result)
+              await setTotalData(allLogInUserData.data.data.results.count)
+              await setPageData(allLogInUserData.data.data.results.count / 25)
               let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-          await setPageCount(pageCount)
+              await setPageCount(pageCount)
             }
-          }
-        
-        
+          } 
       }
-
     await setIsLoading(true)
-
   }
 
   const handleChange = async (event, value) => {
-
+    
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -479,89 +484,78 @@ function Actions(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    
-    
-    // await setAllInitialData(result)
-    let tempData = []
-    let tempUser = []
-    let temp = []
+ 
     if (props.type == "All" || props.type == "Type") {
-      // await setAllInitialData(result)
       if (props.observation == "My Observations") {
-        const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
+          await setPage(value)
       } else {
         const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    const result = res.data.data.results.results
+        const result = res.data.data.results.results
         await setAllInitialData(result)
-        let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+        await setPage(value)
       }
-
-
     } else {
       if (props.type == "Risk") {
-        
         if (props.observation == "My Observations") {
-
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
-        const result = allLogInUserData.data.data.results.results
-        await setAllInitialData(result)
-        
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
         }else{
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
-        
+          await setPage(value)
         }
       }
       if (props.type == "Comments") {
-      
         if (props.observation == "My Observations") {
-
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
-        const result = allLogInUserData.data.data.results.results
-        await setAllInitialData(result)
-        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-    await setPageCount(pageCount)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+
         }else{
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
-          
+          await setPage(value)
         }
       }
       if (props.type == "Positive behavior") {
-       
         if (props.observation == "My Observations") {
-
           const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
-          
+          await setPage(value)
           }else{
             const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
-        //     let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-        // await setPageCount(pageCount)
+            await setPage(value)
+
           }
         }
 
     }
     
   };
+
+  const handlePrintPush = async (index) => {
+    const id = allInitialData[index].id;
+    localStorage.setItem("fkobservationId", id);
+    //console.log("Ashutosh")
+    history.push(`/app/prints/${id}`);
+  };
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
-    // handleProjectList();
   }, [props.projectName.breakDown, props.type, searchIncident]);
-  // useEffect(() => {
-
-  // })
+  
   return (
     <>
       <Box>
@@ -633,8 +627,8 @@ function Actions(props) {
                                           Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"}  <img src={in_progress_small} className={classes.smallImage} /></span>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}  <img src={completed_small} className={classes.smallImage} /></span>
+                                          {/* <span item xs={1} className={classes.sepHeightOne}></span>
+                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}  <img src={completed_small} className={classes.smallImage} /></span> */}
                                         </Typography>
 
                                       </Grid>
@@ -693,7 +687,7 @@ function Actions(props) {
 
                                       className={classes.listingLabelValue}
                                     >
-                                      {item[1]["location"]}
+                                      {item[1]["location"] ? item[1]["location"] : "-"}
                                     </Typography>
                                   </Grid>
 
@@ -774,7 +768,7 @@ function Actions(props) {
                                 <Typography variant="body2" display="inline">
                                   <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1]['attachmentCount']}</Link>
                                 </Typography>
-                                <span item xs={1} className={classes.sepHeightTen}></span>
+                                {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
                                   variant="body1"
                                   display="inline"
@@ -786,7 +780,7 @@ function Actions(props) {
                                 </Typography>
                                 <Typography variant="body2" display="inline" className={classes.mLeft}>
                                   <Link href="#" color="secondary" className={classes.mLeft}>{item[1]['commentsCount']}</Link>
-                                </Typography>
+                                </Typography> */}
                               </Grid>
 
                               <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
@@ -796,20 +790,20 @@ function Actions(props) {
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   <Typography variant="body1" display="inline">
-                                    <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
+                                   <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
                                   </Typography>
-                                  <span item xs={1} className={classes.sepHeightTen}></span>
+                                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  <Typography variant="body1" display="inline">
+                                  {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                   </Typography>
                                   <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
-                                  </Typography>
+                                  </Typography> */}
                                 </div>
                               </Grid>
                             </Grid>
@@ -865,9 +859,7 @@ function Actions(props) {
                 <div className="gridView">
                   {Object.entries(incidents).map((item, index) => (
                     <Card variant="outlined" className={Incidents.card} key={index}>
-                      {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
                       <CardContent>
-                        {/* {console.log(item[index].incidentTitle)} */}
                         <Grid container spacing={3}>
                           <Grid item xs={12}>
                             <Grid container spacing={3} alignItems="flex-start">
@@ -879,10 +871,6 @@ function Actions(props) {
                               </Grid>
                               <Grid item xs={3}>
                                 <Typography
-
-                                // display="inline"
-                                // color="textPrimary"
-                                // className={classes.listingLabelValue}
                                 >
                                   Work fell down in site
                                   {/* {item[index]["incidentTitle"]} */}
@@ -1098,9 +1086,14 @@ function Actions(props) {
               </TableContainer>
             )}
           </Grid>
+          {/* <div className={classes.pagination}>
+      {totalData}
+    </div> */}
           <div className={classes.pagination}>
-            <Pagination count={pageCount} onChange={handleChange} />
-          </div></>) : "Loading..."}
+          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+         </>) : <h1>Loading...</h1>}
       </Box>
     </>
   );

@@ -139,7 +139,7 @@ export default function ActionTracker(props) {
   const [error, setError] = useState({ actionTitle: "" });
   const [actionTakenData, setActionTakenData] = useState([])
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(props)
   const handleClickOpen = () => {
     setOpen(true);
   };

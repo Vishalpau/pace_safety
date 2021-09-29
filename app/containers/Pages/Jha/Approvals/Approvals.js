@@ -18,8 +18,9 @@ import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
 import { handelJhaId } from "../Utils/checkValue"
 import apiAction from '../../../../utils/axiosActionTracker';
 import ProjectStructureInit from '../../../ProjectStructureId/ProjectStructureId';
-import { handelCommonObject } from "../../../../utils/CheckerValue"
+import { handelCommonObject, handelActionData } from "../../../../utils/CheckerValue"
 import ActionShow from '../../../Forms/ActionShow';
+import { values } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -147,20 +148,14 @@ const Approvals = () => {
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
 
-    const allActionTrackerData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${jhaId}%3A00`);
-    let allActionData = allActionTrackerData.data.data.results.results
-    let allAction = []
-    allActionData.map((value) => {
-      const tempAction = {}
-      let actionTrackerNumber = value.actionNumber;
-      let actionTrackerTitle = value.actionTitle
-      let actionTrackerId = value.id
-      tempAction["number"] = actionTrackerNumber
-      tempAction["title"] = actionTrackerTitle
-      tempAction["id"] = actionTrackerId
-      allAction.push(tempAction)
+    let allAction = await handelActionData(jhaId, [], "title")
+    let temp = []
+    allAction.map((value) => {
+      if (value.enitityReferenceId.split(":")[1] == "00") {
+        temp.push(value)
+      }
     })
-    setActionData(allAction !== null ? allAction : [])
+    setActionData(temp !== null ? temp : [])
   };
 
   const handelActionLink = () => {
@@ -207,7 +202,7 @@ const Approvals = () => {
   return (
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
-        {console.log(projectData)}
+        {/* {console.log(projectData)} */}
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
@@ -265,8 +260,8 @@ const Approvals = () => {
                 <Typography className={classes.aLabelValue}>
                   {actionData.map((value) => (
                     <ActionShow
-                      action={value}
-                      title={value.title}
+                      action={{ id: value.id, number: value.actionNumber }}
+                      title={value.actionTitle}
                       companyId={projectData.companyId}
                       projectId={projectData.projectId}
                       handelShowData={handelActionTracker}

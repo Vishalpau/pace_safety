@@ -261,9 +261,9 @@ export default function Observations() {
             <div className={classes.floatR}>
 				
 				<span className={classes.pLTen}>
-					<Button size="small" className={classes.buttonsNTwo} variant="contained">
+					{/* <Button size="small" className={classes.buttonsNTwo} variant="contained">
 					  <PermIdentityIcon /> GIS
-					</Button>
+					</Button> */}
 				</span>
 				
 				{/* <span className={classes.pLTen}>

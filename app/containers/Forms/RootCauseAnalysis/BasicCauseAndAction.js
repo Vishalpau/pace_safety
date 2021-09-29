@@ -22,7 +22,7 @@ import api from "../../../utils/axios";
 import apiAction from "../../../utils/axiosActionTracker"
 import FormSideBar from "../FormSideBar";
 import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import { BASIC_CAUSE_SUB_TYPES } from "../../../utils/constants";
+import { BASIC_CAUSE_SUB_TYPES, PACE_MANAGEMENT_CONTROL_SUB_TYPES } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 import { handelConvert } from "../../../utils/CheckerValue";
@@ -30,7 +30,7 @@ import ActionTracker from "../ActionTracker";
 import ActionTrack from "../ActionTrack";
 import ActionShow from "../ActionShow"
 
-import { checkValue } from "../../../utils/CheckerValue";
+import { checkValue, handelActionData } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -79,6 +79,7 @@ const BasicCauseAndAction = () => {
   let id = useRef();
   const [actionData, setActionData] = useState({});
   const [updatePage, setUpdatePage] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [projectData, setProjectData] = useState({
     projectId: "",
     companyId: "",
@@ -86,7 +87,7 @@ const BasicCauseAndAction = () => {
 
   const handelShowData = async () => {
     let tempApiData = [];
-    let subTypes = BASIC_CAUSE_SUB_TYPES
+    let subTypes = PACE_MANAGEMENT_CONTROL_SUB_TYPES
     let page_url = window.location.href;
     const lastItem = parseInt(
       page_url.substring(page_url.lastIndexOf("/") + 1)
@@ -104,33 +105,15 @@ const BasicCauseAndAction = () => {
         tempApiData.push(allApiData[index]);
       }
     });
+    tempApiData.map((value) => {
+      value["action"] = [{}]
+    })
     await handelActionTracker(tempApiData);
   };
 
   const handelActionTracker = async (apiData) => {
-
-    for (let key in apiData) {
-      const allActionTrackerData = await apiAction.get(
-        `api/v1/actions/?enitityReferenceId=${putId.current}%3A${apiData[key]["id"]
-        }`
-      );
-      if (allActionTrackerData.data.data.results.results.length > 0) {
-        let actionTracker = allActionTrackerData.data.data.results.results;
-        const temp = [];
-        actionTracker.map((value) => {
-          const tempAction = {}
-          let actionTrackerId = value.id;
-          let actionTrackerNumber = value.actionNumber
-          tempAction["number"] = actionTrackerNumber
-          tempAction["id"] = actionTrackerId
-          temp.push(tempAction);
-        });
-        apiData[key]["action"] = temp;
-      } else {
-        apiData[key]["action"] = [];
-      }
-    }
-    await setData(apiData);
+    let allAction = await handelActionData(putId.current, apiData)
+    await setData(allAction);
   };
 
   const handelActionLink = () => {
@@ -176,8 +159,10 @@ const BasicCauseAndAction = () => {
   };
 
   const handelCallback = async () => {
+    await setIsLoading(true)
     await handelShowData();
     await fetchIncidentDetails();
+    await setIsLoading(false)
   };
 
   const fkCompanyId =
@@ -199,126 +184,128 @@ const BasicCauseAndAction = () => {
   useEffect(() => {
     handelCallback()
     handelActionLink()
-  }, [updatePage]);
+  }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Preventive actions" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        <Grid container item md={9} spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Incident number
-            </Typography>
-
-            <Typography className={Type.labelValue}>
-              {incidentDetail.incidentNumber}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" className={Type.labelName} gutterBottom>
-              Method
-            </Typography>
-            <Typography className={Type.labelValue}>
-              PACE cause analysis
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Corrective actions
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Divider />
-            <Box paddingTop={3}>
-              <Typography variant="h6">
-                Option(s) Selected from Hazardous Acts and Condition
+      {isLoading == false ?
+        <Grid container spacing={3}>
+          <Grid container item md={9} spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Incident number
               </Typography>
-            </Box>
 
-            <TableContainer component={Paper}>
-              <Table className={classes.table}>
-                <TableBody>
-                  {data.map((value) => (
-                    <TableRow>
-                      <TableCell align="left" style={{ width: 160 }}>
-                        {handelConvert(value.rcaSubType)}
-                      </TableCell>
-                      <TableCell align="left">
-                        <span>{value.rcaRemark}</span>
-                      </TableCell>
-                      <TableCell align="right">
+              <Typography className={Type.labelValue}>
+                {incidentDetail.incidentNumber}
+              </Typography>
+            </Grid>
 
-                        <ActionTracker
-                          actionContext="incidents:Pacacuase"
-                          enitityReferenceId={`${putId.current}:${value.id}`}
-                          setUpdatePage={setUpdatePage}
-                          updatePage={updatePage}
-                          fkCompanyId={fkCompanyId}
-                          fkProjectId={project}
-                          fkProjectStructureIds={projectStuctId}
-                          createdBy={userId}
-                        />
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography>
-                          {value.action.length > 0 && value.action.map((actionValue) => (
-                            <ActionShow
-                              action={actionValue}
-                              companyId={projectData.companyId}
-                              projectId={projectData.projectId}
-                              handelShowData={handelShowData}
-                              updatePage={updatePage}
-                            />
-                          ))}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" className={Type.labelName} gutterBottom>
+                Method
+              </Typography>
+              <Typography className={Type.labelValue}>
+                PACE cause analysis
+              </Typography>
+            </Grid>
 
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {data.length == 0 ? (
-              <Grid container item md={9}>
-                <Typography variant="h8">No option(s) selected</Typography>
-              </Grid>
-            ) : null}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                Preventive actions
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider />
+              <Box paddingTop={3}>
+                <Typography variant="h6">
+                  Option(s) Selected from Hazardous Acts and Condition
+                </Typography>
+              </Box>
+
+              <TableContainer component={Paper}>
+                <Table className={classes.table}>
+                  <TableBody>
+                    {data.map((value, index) => (
+                      <TableRow>
+                        <TableCell align="left" style={{ width: 160 }}>
+                          {handelConvert(value.rcaSubType)}
+                        </TableCell>
+                        <TableCell align="left">
+                          <span>{value.rcaRemark}</span>
+                        </TableCell>
+                        <TableCell align="right">
+
+                          <ActionTracker
+                            actionContext="incidents:Pacacuase"
+                            enitityReferenceId={`${putId.current}:${value.id}`}
+                            setUpdatePage={setUpdatePage}
+                            updatePage={updatePage}
+                            fkCompanyId={fkCompanyId}
+                            fkProjectId={project}
+                            fkProjectStructureIds={projectStuctId}
+                            createdBy={userId}
+                            handelShowData={handelShowData}
+                          />
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography>
+                            {value.action.length > 0 && value.action.map((actionValue) => (
+                              <ActionShow
+                                action={actionValue}
+                                companyId={projectData.companyId}
+                                projectId={projectData.projectId}
+                                updatePage={updatePage}
+                              />
+                            ))}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {data.length == 0 ? (
+                <Grid container item md={9}>
+                  <Typography variant="h8">No option(s) selected</Typography>
+                </Grid>
+              ) : null}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelNavigate("previous")}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={(e) => handelNavigate("next")}
+              >
+                Next
+              </Button>
+            </Grid>
           </Grid>
 
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNavigate("previous")}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={(e) => handelNavigate("next")}
-            >
-              Next
-            </Button>
-          </Grid>
+          {isDesktop && (
+            <Grid item md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Preventive actions"}
+              />
+            </Grid>
+          )}
         </Grid>
-
-        {isDesktop && (
-          <Grid item md={3}>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Preventive actions"}
-            />
-          </Grid>
-        )}
-      </Grid>
+        : "Loading..."}
     </PapperBlock>
   );
 };

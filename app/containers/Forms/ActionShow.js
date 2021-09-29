@@ -4,6 +4,7 @@ import { Button, Grid } from "@material-ui/core";
 import { defaults } from "chart.js";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import { SSO_URL } from "../../utils/constants"
 
 
 
@@ -37,7 +38,7 @@ const ActionShow = (props) => {
             <Link
                 className={classes.actionLink}
                 display="block"
-                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${props.companyId
+                href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${props.companyId
                     }&projectId=${props.projectId
                     }&targetPage=/app/pages/Action-Summary/&targetId=${props.action.id
                     }`}
@@ -47,10 +48,8 @@ const ActionShow = (props) => {
             </Link>
         )
     }
-
-    useEffect(() => {
-        props.handelShowData()
-    }, [updatPage]);
+    console.log(props.index)
+    useEffect(() => { }, [updatPage]);
 
     return (
         <Grid container spacing={3}>
