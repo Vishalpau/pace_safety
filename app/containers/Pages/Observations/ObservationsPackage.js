@@ -1090,7 +1090,7 @@ function Actions(props) {
       {totalData}
     </div> */}
           <div className={classes.pagination}>
-          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
+          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}`}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
          </>) : <h1>Loading...</h1>}
