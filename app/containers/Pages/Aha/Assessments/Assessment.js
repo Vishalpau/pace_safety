@@ -252,7 +252,7 @@ const Assessment = (props) => {
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
   const fetchHzardsData = async () => {
     console.log("here")
     const res = await api.get(
@@ -275,30 +275,30 @@ const Assessment = (props) => {
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
 
-      console.log("userId");
+    console.log("userId");
 
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
 
-        console.log(projectId);
+    console.log(projectId);
 
 
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
-        console.log(fkCompanyId);
+    console.log(fkCompanyId);
 
     setProjectData({
-      projectId :  projectId,
-      companyId : fkCompanyId,
-      createdBy : userId,
-      projectStructId : JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
+      projectId: projectId,
+      companyId: fkCompanyId,
+      createdBy: userId,
+      projectStructId: JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
     })
   }
-  console.log(projectData,"sssss")
+  console.log(projectData, "sssss")
 
   const handelRiskAndControl = (changeType, index, value) => {
     const temp = [...form]
@@ -421,7 +421,7 @@ const Assessment = (props) => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const result = res.data.data.results;
-    console.log(result,"MMMMM");
+    console.log(result, "MMMMM");
     await setAHAForm(result);
     setAdditionalJobDetails({
       ...additinalJobDetails,
@@ -780,9 +780,9 @@ const Assessment = (props) => {
     </>
   );
 };
-const AhaAssementInit = connect((state) => ({
-  initialValues: state.getIn(["IncidentReducer"]),
-}))(Assessment);
+// const AhaAssementInit = connect((state) => ({
+//   initialValues: state.getIn(["IncidentReducer"]),
+// }))(Assessment);
 
-export default withStyles(styles)(AhaAssementInit);
-// export default Assessment;
+// export default withStyles(styles)(AhaAssementInit);
+export default Assessment;
