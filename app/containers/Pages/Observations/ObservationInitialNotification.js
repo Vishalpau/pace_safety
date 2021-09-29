@@ -278,7 +278,6 @@ const ObservationInitialNotification = (props) => {
             temp["supervisorId"] = result[i].id;
             temp["badgeNo"] = result[i].badgeNo;
             user.push(temp);
-            // filterSuperVisorBadgeNo.push(result[i].badgeNo);
           }
           setSuperVisorName(user);
         }
@@ -297,7 +296,7 @@ const ObservationInitialNotification = (props) => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
           const userDetails =
             JSON.parse(localStorage.getItem("userDetails")) !== null
               ? JSON.parse(localStorage.getItem("userDetails"))
@@ -308,22 +307,22 @@ const ObservationInitialNotification = (props) => {
             badgeNo: userDetails.badgeNo,
           };
           let user = [];
-          for (var i in result) {
+
+          // let user = [];
+          let data = result.filter((item) =>          
+          item['companyId'] == fkCompanyId
+          )
+          for (var i in data[0].users) {
             let temp = {};
 
-            temp["inputValue"] = result[i].name;
-            temp["reportedById"] = result[i].id;
-            temp["badgeNo"] = result[i].badgeNo;
-
+            temp["inputValue"] = data[0].users[i].name;
+            temp["reportedById"] = data[0].users[i].id;
+            temp["badgeNo"] = data[0].users[i].badgeNo;
             user.push(temp);
-            // filterReportedById.push(result[i].id);
-            // filterReportedByBedgeID.push(result[i].badgeNo);
+
           }
           setReportedByDetails(user);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -489,7 +488,6 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-    console.log(form)
     const res = await api.post("/api/v1/observations/", data);
     if (res.status === 201) {
       const id = res.data.data.results;
@@ -725,7 +723,7 @@ const ObservationInitialNotification = (props) => {
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
     const attachment = await api.get(
-      `/api/v1/corepatterns/?fkCompanyId=${companyId}&fkProjectId=${projectId}&key=observation_pledge`
+      `/api/v1/corepatterns/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
     if (result !== undefined) {
@@ -1249,7 +1247,7 @@ const ObservationInitialNotification = (props) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Supervisor's Name*"
+                    label="Foreman's Name*"
                     error={error.supervisorName}
                     helperText={
                       error.supervisorName ? error.supervisorName : ""
@@ -1261,7 +1259,7 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
-                label="Supervisor's Badge Number"
+                label="Foreman's Badge Number"
                 name="supervisorbadgenumber"
                 id="supervisorbadgenumber"
                 error={error.supervisorByBadgeId}

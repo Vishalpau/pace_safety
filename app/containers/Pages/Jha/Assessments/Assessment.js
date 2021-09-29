@@ -212,6 +212,7 @@ const Assessment = () => {
     projectStructId: ""
   })
   const [actionData, setActionData] = useState([])
+  const [assessmentId, setAssessmentId] = useState([])
 
   const handelCheckList = async () => {
     const tempPerformance = {}
@@ -241,14 +242,16 @@ const Assessment = () => {
       tempPerformance[value.checkListGroupName] = checkList
     })
 
-    setPerformance(tempPerformance)
-    setDocument(apiCondition)
+    await setPerformance(tempPerformance)
+    await setDocument(apiCondition)
     const temp = []
     apiData.map((value) => {
       temp.push({ "id": value.id })
     })
     handelCommonObject("commonObject", "jha", "assessmentIds", temp)
-    setForm(apiData)
+
+    await setAssessmentId(temp)
+    await setForm(apiData)
   }
 
   const handelActionTracker = async () => {
@@ -257,7 +260,6 @@ const Assessment = () => {
     let allAction = await handelActionData(jhaId, apiData)
     setActionData(allAction)
   };
-
   const handelActionShow = (id) => {
     return (
       <Grid>

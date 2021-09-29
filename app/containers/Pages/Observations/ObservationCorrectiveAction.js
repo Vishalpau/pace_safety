@@ -14,11 +14,12 @@ import { FormHelperText } from "@material-ui/core";
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import api from "../../../utils/axios";
 import { useHistory, useParams } from "react-router";
-import ActionTracker from "./ActionTracker";
+// import ActionTracker from "./ActionTracker";
 import axios from "axios";
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import Paper from "@material-ui/core/Paper";
+import ActionShow from '../../Forms/ActionShow'
 
 import {
   DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
@@ -40,7 +41,10 @@ import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveAct
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import ActionTracker from "../../Forms/ActionTracker";
+
 import apiAction from "../../../utils/axiosActionTracker"
+import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../utils/CheckerValue";
 
 import {
   access_token,
@@ -147,50 +151,66 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ObservationCorrectiveAction() {
-  const [form , setForm] = useState({})
-  const [isLoading , setIsLoading] = useState(false);
+  const [form, setForm] = useState({})
+  const [isLoading, setIsLoading] = useState(false);
   const radioDecide = ["Yes", "No"];
   const history = useHistory();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const {id} = useParams();
-  const [actionTakenData , setActionTakenData ]= useState([])
-  const [actionOpen , setActionOpen] = useState(false)
-  const [error, setError] = useState({ comment: "" , reviewedOn : ""});
-  const [reportedByName , setReportedByName] = useState([]);
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const { id } = useParams();
+  const [actionTakenData, setActionTakenData] = useState([])
+  const [actionOpen, setActionOpen] = useState(false)
+  const [error, setError] = useState({ comment: "", reviewedOn: "" });
+  const [reportedByName, setReportedByName] = useState([]);
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
   let filterReportedByName = []
-  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).id
-  : null;
-  const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).companies
-  : null;
-  let client = []
-  let client_id = []
-  companies.map((value, i)=>{
-    
-    if(value.companyId === form.fkCompanyId)
-    {
-      client.push(companies[i])
-      client[0].subscriptions.map((value,i) => {
-        if(value.appCode == "actions"){
-          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
-        }
-      })
-    }
+
+
+
+  const [projectData, setProjectData] = useState({
+    projectId: "",
+    companyId: "",
+    createdBy: "",
+    projectStructId: ""
   })
+  const [actionData, setActionData] = useState([])
+  const [fkProjectStructureIds, setFkProjectStructureId] = useState()
+  const [observationNumber, setObservationNumber] = useState()
+
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
-      const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
-  const [comment , setComment] = useState({
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+
+
+  const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
+
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+
+  let client = []
+  let client_id = []
+  companies.map((value, i) => {
+
+    if (value.companyId === form.fkCompanyId) {
+      client.push(companies[i])
+      client[0].subscriptions.map((value, i) => {
+        if (value.appCode == "actions") {
+          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
+        }
+      })
+    }
+  })
+  const [comment, setComment] = useState({
     "fkCompanyId": parseInt(fkCompanyId),
     "fkProjectId": parseInt(projectId),
     "commentContext": "Observation",
@@ -202,18 +222,45 @@ function ObservationCorrectiveAction() {
     "thanksFlag": "string",
     "status": "Active",
     "createdBy": parseInt(userId),
-    
+
   })
-  const reviewedBy =[
-    "None", 
+  const reviewedBy = [
+    "None",
     "Reviewedby 1",
     "Reviewedby 2",
     "Reviewedby 3",
     "Reviewedby 4",
   ]
 
-  const [fkProjectStructureIds , setFkProjectStructureId]  = useState()
-  const [observationNumber , setObservationNumber] = useState() 
+  const handelActionTracker = async () => {
+    let observationId = localStorage.getItem("fkobservationId")
+    let allAction = await handelActionData(observationId, [], "title")
+    setActionData(allAction)
+  };
+
+  const handelActionShow = (id) => {
+    return (<>
+      <Grid>
+        <>
+          {
+            actionData.map((valueAction) => (
+              <>
+                <ActionShow
+                  action={{ id: valueAction.id, number: valueAction.actionNumber }}
+                  title={valueAction.actionTitle}
+                  companyId={fkCompanyId}
+                  projectId={projectId}
+                  updatePage={updatePage}
+                />
+              </>
+            ))
+          }
+        </>
+      </Grid>
+    </>
+    )
+  }
+
 
   const handleSubmit = async () => {
     const { error, isValid } = CorrectiveActionValidator(form);
@@ -221,18 +268,18 @@ function ObservationCorrectiveAction() {
     if (!isValid) {
       return "Data is not valid";
     }
-    
-      await setLoading(true)
-      if(comment.id){
-        comment['updatedBy'] = parseInt(userId)
-        const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/` ,comment)
-      }else{
-        if(comment.comment !== ""){
-          const res1 = await api.post(`/api/v1/comments/`,comment);
 
-        }
+    await setLoading(true)
+    if (comment.id) {
+      comment['updatedBy'] = parseInt(userId)
+      const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/`, comment)
+    } else {
+      if (comment.comment !== "") {
+        const res1 = await api.post(`/api/v1/comments/`, comment);
+
       }
-      let data = new FormData();
+    }
+    let data = new FormData();
     data.append("fkCompanyId", form.fkCompanyId),
       data.append("fkProjectId", form.fkProjectId),
       data.append("fkProjectStructureIds", form.fkProjectStructureIds),
@@ -256,16 +303,16 @@ function ObservationCorrectiveAction() {
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment)
-      data.append("reportedByBadgeId", form.reportedByBadgeId),
+    data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
       data.append("closedByDepartment", form.closedByDepartment)
-      data.append("reviewedOn", form.reviewedOn)
-      data.append("reviewedByName", form.reviewedByName)
-      data.append("supervisorByBadgeId", form.supervisorByBadgeId),
+    data.append("reviewedOn", form.reviewedOn)
+    data.append("reviewedByName", form.reviewedByName)
+    data.append("supervisorByBadgeId", form.supervisorByBadgeId),
       data.append("supervisorName", form.supervisorName),
       data.append("supervisorDepartment", form.supervisorDepartment)
-      data.append("status", form.status),
+    data.append("status", form.status),
       data.append("observationStatus", form.observationStatus),
       data.append("observationStage", form.observationStage),
       data.append("createdBy", form.createdBy),
@@ -273,64 +320,60 @@ function ObservationCorrectiveAction() {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-      data.append("id", form.id)
+    data.append("id", form.id)
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
     )}/`, data);
-    if(res.status === 200){
+    if (res.status === 200) {
       localStorage.setItem('updateAction', "Done")
-      localStorage.setItem("action" , "Done")
+      localStorage.setItem("action", "Done")
       history.push(
         `/app/observation/details/${localStorage.getItem(
           "fkobservationId"
         )}`
       );
     }
-    
-    
-    
+
+
+
   }
 
-  
-    
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
-    
+
     const result = res.data.data.results;
     await setFkProjectStructureId(result.fkProjectStructureIds)
     await setObservationNumber(result.observationNumber)
-    if(result.isCorrectiveActionTaken == null){
-      result.isCorrectiveActionTaken = "Yes"
-    }
-    if(result.isCorrectiveActionTaken === "Yes"){
+    if (result.isCorrectiveActionTaken === "Yes") {
       await setActionOpen(true);
     }
     await setForm(result);
-    // await setIsLoading(true);
     await handelActionTracker();
-   
+
   };
 
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
     const result = res.data.data.results.results[0]
     const result2 = res.data.data.results.results
-    if(result2.length > 0) {
+    if (result2.length > 0) {
       await setComment(result)
     }
-    
+
     await setIsLoading(true);
   }
-  const handleAction = async  (e) => {
+
+  const handleAction = async (e) => {
     let value = e.target.value
-   
-      if(value === "Yes"){
-         setActionOpen(true)
-      }else{
-        setActionOpen(false)
-      }
-    
-  }  
+
+    if (value === "Yes") {
+      setActionOpen(true)
+    } else {
+      setActionOpen(false)
+    }
+
+  }
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -344,50 +387,45 @@ function ObservationCorrectiveAction() {
 
 
     if (new Date(e) <= new Date()) {
-      
-        setForm({ ...form, reviewedOn: moment(e).toISOString() })
-        setError({...error , reviewedOn : ""})
+
+      setForm({ ...form, reviewedOn: moment(e).toISOString() })
+      setError({ ...error, reviewedOn: "" })
 
     }
     else {
-        let errorMessage = "Reviewed time should not be ahead of current time"
-        setError({...error , reviewedOn : errorMessage})
+      let errorMessage = "Reviewed time should not be ahead of current time"
+      setError({ ...error, reviewedOn: errorMessage })
     }
-}
-  const handelActionTracker = async () => {
-    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    // const api_action = axios.create({
-    //   baseURL: API_URL_ACTION_TRACKER,
-    // });
-    let ActionToCause = {}
-    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
-    const allActionTracker = allActionTrackerData.data.data.results.results
-
   }
-  const handleReview  = (e ,value) => {
-    let temp ={ ...form}
-temp.reviewedByName = value.name
-temp.reviewedById = value.id
+  // const handelActionTracker = async () => {
+  //   // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+  //   // const api_action = axios.create({
+  //   //   baseURL: API_URL_ACTION_TRACKER,
+  //   // });
+  //   let ActionToCause = {}
+  //   const allActionTrackerData = await apiAction.get("/api/v1/actions/")
+  //   const allActionTracker = allActionTrackerData.data.data.results.results
+
+  // }
+  const handleReview = (e, value) => {
+    let temp = { ...form }
+    temp.reviewedByName = value.name
+    temp.reviewedById = value.id
     setForm(temp)
   }
 
-  const fetchactionTrackerData = async () =>{
-    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    // const api_action = axios.create({
-    //   baseURL: API_URL_ACTION_TRACKER,
-    // });
-    // let ActionToCause = {}
+  const fetchactionTrackerData = async () => {
     const allActionTrackerData = await apiAction.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
-    allActionTracker.map((item,i) => {
+    allActionTracker.map((item, i) => {
 
-      if(item.enitityReferenceId == localStorage.getItem("fkobservationId")){
-newData.push(allActionTracker[i])
-      } 
+      if (item.enitityReferenceId == localStorage.getItem("fkobservationId")) {
+        newData.push(allActionTracker[i])
+      }
     }
-      )
-      let sorting = newData.sort((a, b) => a.id - b.id)
+    )
+    let sorting = newData.sort((a, b) => a.id - b.id)
     await setActionTakenData(sorting)
     await setIsLoading(true);
 
@@ -399,7 +437,6 @@ newData.push(allActionTracker[i])
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)
@@ -413,62 +450,62 @@ newData.push(allActionTracker[i])
           }
           setReportedByName(filterReportedByName);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
       });
   };
 
   useEffect(() => {
-    if(id){
+    if (id) {
       fetchInitialiObservationData()
       fetchactionTrackerData()
       fetchComments()
       fetchReportedBy()
     }
-    
-  },[updatePage])
+
+  }, [])
   const classes = useStyles();
   return (
-    <>{isLoading ? 
+    <>{isLoading ?
       <Grid container spacing={3} className={classes.observationCorrectiveActionSection}>
+
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Observation Title
+            Observation Title
           </Typography>
           <Typography className={classes.labelValue}>
-                    {form.observationTitle ? form.observationTitle : "-"}
+            {form.observationTitle ? form.observationTitle : "-"}
           </Typography>
         </Grid>
+
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Observation Type
+            Observation Type
           </Typography>
           <Typography className={classes.labelValue}>
-                  {form.observationType ? form.observationType : "-"}
+            {form.observationType ? form.observationType : "-"}
           </Typography>
         </Grid>
+
         <Grid item md={12}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Observation Description
+            Observation Description
           </Typography>
           <Typography className={classes.labelValue}>
-          {form.observationDetails ? form.observationDetails : "-"}
+            {form.observationDetails ? form.observationDetails : "-"}
           </Typography>
         </Grid>
+
         <Grid item md={8}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Assigned to
+            Assigned to
             {' '}
-            {/* <span className={classes.updateLink}><Link to="">Update</Link></span> */}
           </Typography>
           <Typography className={classes.labelValue}>
-                    {form.assigneeName ? form.assigneeName : "-"}
+            {form.assigneeName ? form.assigneeName : "-"}
           </Typography>
         </Grid>
+
         <Grid
           item
           md={12}
@@ -476,88 +513,63 @@ newData.push(allActionTracker[i])
           className={classes.formBox}
         >
           <FormControl component="fieldset" error={
-                                  error && error["isCorrectiveActionTaken"]
-                                }>
+            error && error["isCorrectiveActionTaken"]
+          }>
             <FormLabel className={classes.labelName} component="legend">Are there any corrective actions to be taken?*</FormLabel>
-            <RadioGroup row aria-label="gender" name="gender1" 
-            onChange={(e) => {
-              setForm({ ...form, isCorrectiveActionTaken: e.target.value });
-                    }}>
+            <RadioGroup row aria-label="gender" name="gender1"
+              onChange={(e) => {
+                setForm({ ...form, isCorrectiveActionTaken: e.target.value });
+              }}>
               {radioDecide.map((value) => (
-                    <FormControlLabel
-                      value={value}
-                      checked={form.isCorrectiveActionTaken === value}
-                      className={classes.labelValue}
-                      onClick={(e) => handleAction(e)}
-                      control={<Radio />}
-                      label={value}
-                    />
-                  ))}
+                <FormControlLabel
+                  value={value}
+                  checked={form.isCorrectiveActionTaken === value}
+                  className={classes.labelValue}
+                  onClick={(e) => handleAction(e)}
+                  control={<Radio />}
+                  label={value}
+                />
+              ))}
             </RadioGroup>
             {error && error["isCorrectiveActionTaken"] && (
-                                  <FormHelperText>
-                                    {error["isCorrectiveActionTaken"]}
-                                  </FormHelperText>
-                                )}
+              <FormHelperText>
+                {error["isCorrectiveActionTaken"]}
+              </FormHelperText>
+            )}
           </FormControl>
         </Grid>
-        <Grid item md={8}>
-        {actionOpen === true ? (<>
-          <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Actions
-          </Typography>
-          <Typography className={classes.labelValue}>
-          
-            {' '}
-          </Typography>
-          
-          {actionTakenData.length > 0   ? 
-            <TableContainer component={Paper}>
-            <Table style={{ minWidth: 100 }} size="small">
-            <TableHead><TableRow>
-            <TableCell style={{ width: 50 }}>
-                          Action number
-                        </TableCell>
-                        <TableCell style={{ width: 50 }}>
-                          Action title
-                        </TableCell>
-            </TableRow></TableHead>
-            <TableBody>
-            {actionTakenData.map((action) => (<>
-              <TableRow>
-                <TableCell style={{ width:50}}>
-                <a
-                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${projectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
-                                target="_blank"
-                              >{action.actionNumber}</a>
-                
-                </TableCell>
-                <TableCell style={{ width:50}}>
-                {action.actionTitle}
-                </TableCell>
-              </TableRow></> ))
-          }
-            </TableBody>
-</Table>
-</TableContainer>: null}
-            {/* <Typography className={classes.labelValue}>
-                    {' '}{action.actionTitle}
-            
-            
-          </Typography> */}
-          
-           
-          
 
-          <Typography className={classes.increaseRowBox}>
-          <ActionTracker
-                                actionContext="Obsevations"
-                                enitityReferenceId={id}
-                                fkProjectStructureIds={fkProjectStructureIds}
-                                setUpdatePage={setUpdatePage}
-                                updatePage={updatePage}
-                              >add</ActionTracker>
-          </Typography></>):null}
+        <Grid item md={8}>
+          {actionOpen === true ? (
+            <>
+              <Typography variant="h6" gutterBottom className={classes.labelName}>
+                Actions
+              </Typography>
+              <Typography className={classes.labelValue}>
+
+                {' '}
+              </Typography>
+              {handelActionShow(id)}
+
+              <Typography className={classes.increaseRowBox}>
+
+                <ActionTracker
+                  actionContext="Obsevations"
+                  enitityReferenceId={id}
+                  setUpdatePage={setUpdatePage}
+                  fkCompanyId={fkCompanyId}
+                  fkProjectId={projectId}
+                  fkProjectStructureIds={fkProjectStructureIds}
+                  createdBy={userId}
+                  updatePage={updatePage}
+                  handelShowData={handelActionTracker}
+                />
+
+              </Typography>
+            </>
+          )
+            :
+            null}
         </Grid>
 
         <Grid
@@ -568,7 +580,6 @@ newData.push(allActionTracker[i])
         >
           <TextField
             label="Reviewed by*"
-            //margin="dense"
             name="reviewedby"
             id="reviewedby"
             select
@@ -577,17 +588,11 @@ newData.push(allActionTracker[i])
             helperText={error.reviewedByName ? error.reviewedByName : null}
             value={form.reviewedByName ? form.reviewedByName : ""}
             variant="outlined"
-            
+
           >
-          {/* {reportedByName.map((option) => (
-                  <MenuItem key={option} value={option.name}
-                  onClick={(e , option) => handleReview(e,option)}>
-                    {option.name}
-                  </MenuItem>
-                ))} */}
             {reportedByName.map((option) => (
               <MenuItem key={option} value={option.name}
-              onClick={(e ) => handleReview(e , option)}>
+                onClick={(e) => handleReview(e, option)}>
                 {option.name}
               </MenuItem>
             ))}
@@ -605,10 +610,9 @@ newData.push(allActionTracker[i])
               className={classes.formControl}
               fullWidth
               label="Reviewed on*"
-              minDate = {form.observedAt}
-              maxDate = {new Date()}
+              minDate={form.observedAt}
+              maxDate={new Date()}
               value={form.reviewedOn ? form.reviewedOn : null}
-              // onChange={handleDateChange}
               error={error.reviewedOn}
               helperText={error.reviewedOn ? error.reviewedOn : null}
               disableFuture={true}
@@ -627,67 +631,41 @@ newData.push(allActionTracker[i])
         >
           <TextField
             label="Provide any additional comments"
-            //margin="dense"
             name="provideadditionalcomments"
             id="provideadditionalcomments"
             multiline
             rows={3}
-            // error={error.comment}
-            //     helperText={error.comment ? error.comment : ""}
-            // disabled={comment.id ? true : false}
             fullWidth
             variant="outlined"
-            value= {comment.comment ? comment.comment : ""}
+            value={comment.comment ? comment.comment : ""}
             className={classes.formControl}
             onChange={(e) => {
-                  setComment({ ...comment, comment: e.target.value });
-                }}
+              setComment({ ...comment, comment: e.target.value });
+            }}
           />
         </Grid>
+
         <Grid
           item
           md={12}
           xs={12}
         >
-        {/* {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
 
-               Submit
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              } */}
-              <div className={classes.loadingWrapper}>
-        <Button
-          variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                  disabled={loading}
-        >
-          Submit
-        </Button>
-        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-      </div>
-      {/* <Button
-                variant="outlined"
-                size="medium"
-                className={classes.custmCancelBtn}
-                onClick={() => handleClose()}
-              >
-                CANCEL
-              </Button> */}
-          {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
-          onClick={() => handleSubmit()}>Submit</Button> */}
-        </Grid> 
-      </Grid>: <h1>Loading...</h1>}
+          <div className={classes.loadingWrapper}>
+            <Button
+              variant="outlined"
+              onClick={(e) => handleSubmit()}
+              className={classes.custmSubmitBtn}
+              style={{ marginLeft: "10px" }}
+              disabled={loading}
+            >
+              Submit
+            </Button>
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </div>
+        </Grid>
+
+      </Grid> : <h1>Loading...</h1>}
     </>
   );
 }

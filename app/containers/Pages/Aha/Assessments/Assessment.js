@@ -37,7 +37,8 @@ import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
 import { handelActionData } from "../../../../utils/CheckerValue";
 
-
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import axios from "axios";
 import api from "../../../../utils/axios";
@@ -198,7 +199,9 @@ const useStyles = makeStyles((theme) => ({
   // },
 }));
 
-const Assessment = () => {
+const Assessment = (props) => {
+  console.log(props)
+  const dispatch = useDispatch();
   const [form, setForm] = useState([]);
   const history = useHistory();
   const handleChange = (event) => {
@@ -244,10 +247,12 @@ const Assessment = () => {
   const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
   const [actionTakenData, setActionTakenData] = useState([])
   const [expanded, setExpanded] = useState(false);
+  const [allForms, setAllForms] = useState({})
 
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  
   const fetchHzardsData = async () => {
     console.log("here")
     const res = await api.get(
@@ -264,29 +269,36 @@ const Assessment = () => {
   };
 
   const handelActionLink = () => {
+    console.log("sagar")
 
     const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
+
+      console.log("userId");
 
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
 
+        console.log(projectId);
+
+
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
+        console.log(fkCompanyId);
 
     setProjectData({
-      projectId: projectId,
-      companyId: fkCompanyId,
-      createdBy: userId,
-      projectStructId: JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]
+      projectId :  projectId,
+      companyId : fkCompanyId,
+      createdBy : userId,
+      projectStructId : JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
     })
   }
-  console.log(projectData)
+  console.log(projectData,"sssss")
 
   const handelRiskAndControl = (changeType, index, value) => {
     const temp = [...form]
@@ -409,6 +421,7 @@ const Assessment = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const result = res.data.data.results;
+    console.log(result,"MMMMM");
     await setAHAForm(result);
     setAdditionalJobDetails({
       ...additinalJobDetails,
@@ -424,11 +437,13 @@ const Assessment = () => {
 
 
   const handelCallBack = async () => {
+
     await fetchHzardsData();
     await checkList();
     await fetchAhaData();
     await handelActionLink()
     await pickListValue()
+    await setIsLoading(true)
   }
 
   useEffect(() => {
@@ -440,7 +455,7 @@ const Assessment = () => {
     <>
       {" "}
       <PapperBlock title="Assessments" icon="ion-md-list-box">
-        {isLoading == false ? (
+        {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
             <Grid container spacing={3} item xs={12} md={9}>
               <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
@@ -612,7 +627,7 @@ const Assessment = () => {
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label="Eveluate residual risk"
+                                label="Approve to implement"
                                 value={form[index].approveToImplement ? form[index].approveToImplement : ''}
                               >
                                 {approver.map((value) => (<MenuItem value={value}
@@ -635,7 +650,7 @@ const Assessment = () => {
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label="Eveluate residual risk"
+                                label="Monitor"
                                 value={form[index].monitor ? form[index].monitor : ""}
                               >
                                 {monitor.current.map(
@@ -668,7 +683,7 @@ const Assessment = () => {
                               setUpdatePage={setUpdatePage}
                               fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                               fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                              fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                              fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
                               createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                               updatePage={updatePage}
                               handelShowData={fetchHzardsData}
@@ -765,5 +780,9 @@ const Assessment = () => {
     </>
   );
 };
+const AhaAssementInit = connect((state) => ({
+  initialValues: state.getIn(["IncidentReducer"]),
+}))(Assessment);
 
-export default Assessment;
+export default withStyles(styles)(AhaAssementInit);
+// export default Assessment;
