@@ -332,11 +332,18 @@ const PeoplesAffected = () => {
   // Fetch the radio button values for Do-you-have-details-to-share-about-the-individuals-Affected.
   const fetchIndividualAffectValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/8/value");
-      const result = res.data.data.results;
-      setIndividualAffecctValue(result);
+      await api.get("api/v1/lists/8/value")
+      .then((res)=>{
+        const result = res.data.data.results;
+        setIndividualAffecctValue(result);
+      }).catch((error)=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
+      
     } catch (error) {
-      setMessage("Something went worng!");
+      setMessage(error.message);
       setMessageType("error");
       setOpen(true);
     }
@@ -345,9 +352,16 @@ const PeoplesAffected = () => {
   // Fetch the dropdown values for the Person-Type.
   const fetchPersonTypeValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/71/value");
-      const result = res.data.data.results;
-      setPersonTypeValue(result);
+      await api.get("api/v1/lists/71/value")
+      .then((res)=>{
+        const result = res.data.data.results;
+        setPersonTypeValue(result);
+      }).catch(error=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
+      
     } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
@@ -358,9 +372,16 @@ const PeoplesAffected = () => {
   // fetch the values for the Departments.
   const fetchDepartmentValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/10/value");
-      const result = res.data.data.results;
-      setDepartmentValue(result);
+      const res = await api.get("api/v1/lists/10/value")
+      .then((res)=>{
+        const result = res.data.data.results;
+        setDepartmentValue(result);
+      }).catch(error=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
+      
     } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
@@ -371,9 +392,16 @@ const PeoplesAffected = () => {
   // Fetch the radio buttons for the "Was that person taken to medical care?".
   const fetchPersonTakenMedicalCare = async () => {
     try {
-      const res = await api.get("api/v1/lists/11/value");
-      const result = res.data.data.results;
-      setMedicalCareValue(result);
+      const res = await api.get("api/v1/lists/11/value")
+      .then((res)=>{
+        const result = res.data.data.results;
+        setMedicalCareValue(result);
+      }).catch(error=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
+
     } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
@@ -387,18 +415,24 @@ const PeoplesAffected = () => {
     try {
       const res = await api.get(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-      );
-
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        const isavailable = result.isPersonDetailsAvailable;
-        setPersonAffect(isavailable);
-        setPersonAffectedComments(result.personAffectedComments);
-        setIncidentsListdata(result);
-        if (!id) {
-          await setIsLoading(true);
+      ).then((res)=>{
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          const isavailable = result.isPersonDetailsAvailable;
+          setPersonAffect(isavailable);
+          setPersonAffectedComments(result.personAffectedComments);
+          setIncidentsListdata(result);
+          if (!id) {
+             setIsLoading(true);
+          }
         }
-      }
+      })
+      .catch(error=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
+      
     } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
@@ -409,16 +443,22 @@ const PeoplesAffected = () => {
   // Fetch the individual page data in case of the update.
   const fetchPersonListData = async () => {
     try {
-      const res = await api.get(`api/v1/incidents/${id}/people/`);
-      const result = res.data.data.results;
-      await setPeopleData(result);
-      if (result.length > 0) {
-        let temp = [...form];
-        temp = result;
-        await setForm(temp);
-      }
-
-      await setIsLoading(true);
+       await api.get(`api/v1/incidents/${id}/people/`)
+      .then((res)=>{
+        const result = res.data.data.results;
+         setPeopleData(result);
+        if (result.length > 0) {
+          let temp = [...form];
+          temp = result;
+           setForm(temp);
+        }
+         setIsLoading(true);
+      })
+      .catch(error=>{
+        setMessage(error.message);
+        setMessageType("error");
+        setOpen(true);
+      })
     } catch (error) {
       setMessage("Something went worng!");
       setMessageType("error");
@@ -716,13 +756,13 @@ const PeoplesAffected = () => {
                 </Grid>
               )}
 
-              <AlertMessage
+             {message&& <AlertMessage
                 message={message}
                 type={messageType}
                 open={open}
                 setOpen={setOpen}
               />
-
+             }
               <Grid item xs={12} md={6}>
                 <Button
                   onClick={() =>
@@ -752,6 +792,7 @@ const PeoplesAffected = () => {
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem="People affected"
+                id={id}
               />
             </Col>
           )}

@@ -207,11 +207,13 @@ const ActivityDetails = () => {
   };
 
   const fetchIncidentDetails = async () => {
-    const res = await api.get(
+    await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentDetail(result);
+    ).then((res)=>{
+      const result = res.data.data.results;
+      setIncidentDetail(result);
+    }).catch(err=>console.log(err))
+    
   };
 
   useEffect(() => {
