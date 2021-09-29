@@ -36,7 +36,7 @@ import { CircularProgress } from '@material-ui/core';
 import Axios from "axios";
 import api from "../../../../utils/axios";
 
-
+import { handelCommonObject } from "../../../../utils/CheckerValue"
 import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
 
 import { AHA } from "../constants";
@@ -325,11 +325,15 @@ bytes
       const res = await api.post("/api/v1/ahas/",form)
       if(res.status === 201){
         let fkAHAId = res.data.data.results.id
+        let fkProjectStructureIds = res.data.data.results.fkProjectStructureIds
         localStorage.setItem("fkAHAId",fkAHAId)
+        handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
 
         for (let i = 0; i < Teamform.length; i++) {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          if(Teamform[i].teamName !== ""){
+            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          }
         }
 
         history.push("/app/pages/aha/assessments/project-area-hazards")

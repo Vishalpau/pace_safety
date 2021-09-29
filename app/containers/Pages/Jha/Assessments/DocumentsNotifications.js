@@ -177,7 +177,6 @@ const DocumentNotification = () => {
       const result = notify.data.data.results;
       setNotificationSentValue(result);
     }
-
   }
 
   let fileTypeError =

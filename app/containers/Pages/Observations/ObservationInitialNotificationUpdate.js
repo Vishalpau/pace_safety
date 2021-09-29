@@ -22,7 +22,9 @@ import {
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
 import { useDropzone } from 'react-dropzone';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete";
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
@@ -39,6 +41,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import ComingSoon from '../ComingSoon';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -138,6 +141,7 @@ const useStyles = makeStyles((theme) => ({
   },
   // });
 }));
+const filter = createFilterOptions();
 
 const ObservationInitialNotificationUpdate = () => {
 
@@ -193,7 +197,6 @@ const ObservationInitialNotificationUpdate = () => {
 
   let filterReportedByName = []
   let filterDepartmentName = []
-
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
     : null;
@@ -235,7 +238,7 @@ const ObservationInitialNotificationUpdate = () => {
     setSelectedDate(date);
   };
 
-
+console.log(reportedByName,">>>>>>>>>")
   const [catagory, setCatagory] = useState();
   const [catagoryName, setCatagoryName] = useState();
 
@@ -467,13 +470,33 @@ const ObservationInitialNotificationUpdate = () => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
+          // const userDetails =
+          //   JSON.parse(localStorage.getItem("userDetails")) !== null
+          //     ? JSON.parse(localStorage.getItem("userDetails"))
+          //     : null;
+          // let us = {
+          //   inputValue: userDetails.name,
+          //   reportedById: userDetails.id,
+          //   badgeNo: userDetails.badgeNo,
+          // };
           let user = [];
-          user = result;
-          for (var i in result) {
-            filterReportedByName.push(result[i].name);
+          let data = result.filter((item) =>          
+            item['companyId'] == fkCompanyId
+        )
+        console.log(data[0].users,"JJJJJJJJ")
+          for (var i in data[0].users) {
+            let temp = {};
+
+            temp["inputValue"] = data[0].users[i].name;
+            temp["reportedById"] = data[0].users[i].id;
+
+            user.push(temp);
+            // filterReportedById.push(result[i].id);
+            // filterReportedByBedgeID.push(result[i].badgeNo);
           }
-          setReportedByName(filterReportedByName);
+          console.log(user,"ERERERERE");
+          setReportedByName(user);
         }
         // else{
         //   window.location.href = {LOGIN_URL}
@@ -483,6 +506,34 @@ const ObservationInitialNotificationUpdate = () => {
         // window.location.href = {LOGIN_URL}
       });
   };
+
+  // const fetchReportedBy = () => {
+  //   const config = {
+  //     method: "get",
+  //     url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+  //     headers: {
+  //       Authorization: `Bearer ${access_token}`,
+  //       // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
+  //     },
+  //   };
+  //   axios(config)
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         const result = response.data.data.results;
+  //         let data = result.filter((item) =>          
+  //           item['companyId'] == fkCompanyId
+  //       )
+  //       console.log(data[0].users,"LLLLL")
+  //       let temp= []
+  //       // data[0].users.map((dName, i) => {
+  //       //   temp.push(dName.name)
+  //       // })
+  //         setReportedByName(data[0].users);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //     });
+  // };
 
   const fetchDepartment = () => {
     const config = {
@@ -497,6 +548,7 @@ const ObservationInitialNotificationUpdate = () => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
+          console.log(result,"4444444");
           let user = [];
           user = result;
           for (var i in result) {
@@ -594,6 +646,10 @@ const ObservationInitialNotificationUpdate = () => {
       }
     }
   };
+  if(initialData.departmentName !== ""){
+    console.log(initialData.departmentName)
+
+  }
   
 
   useEffect(() => {
@@ -699,28 +755,7 @@ const ObservationInitialNotificationUpdate = () => {
             </FormGroup>
 
           </Grid>
-          <Grid item md={6} xs={12} className={classes.formBox}>
-            <Autocomplete
-              id="combo-box-demo"
-              options={reportedByName}
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-              className={classes.mT30}
-              getOptionLabel={(option) => option}
-              onChange={(e, value) => {
-                setInitialData({
-                  ...initialData,
-                  assigneeName: value,
-                });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Assignee"
-                  variant="outlined"
-                />
-              )}
-            />
-          </Grid>
+
           <Grid item md={6} xs={12} className={classes.formBox}>
 
             <TextField
@@ -743,6 +778,107 @@ const ObservationInitialNotificationUpdate = () => {
               ))}
             </TextField>
           </Grid>
+          <Grid item md={6} xs={12} className={classes.formBox}>
+
+          <Autocomplete
+              value={initialData.assigneeName ? initialData.assigneeName : ""}
+                onChange={(event, newValue) => {
+                  if (typeof newValue === "string") {
+                    // setValueReportedBy({
+                    //   inputValue: newValue,
+                    // });
+
+                    setInitialData({
+                      ...initialData,
+                      assigneeName: newValue,
+                      assigneeId: "",
+                    });
+                  } else if (newValue && newValue.inputValue) {
+                    // Create a new value from the user input
+                    // setValueReportedBy({
+                    //   inputValue: newValue.inputValue,
+                    // });
+                    setInitialData({
+                      ...initialData,
+                      assigneeName: newValue.inputValue,
+                      assigneeId: newValue.reportedById,
+                      // reportedByBadgeId: newValue.badgeNo,
+                    });
+                  } else {
+                    // setValueReportedBy(newValue);
+                  }
+                }}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
+
+                  // Suggest the creation of a new value
+                  if (params.inputValue !== "") {
+                    filtered.push({
+                      inputValue: params.inputValue,
+                      inputValue: `${params.inputValue}`,
+                    });
+                  }
+
+                  return filtered;
+                }}
+                className={classes.mT30}
+                handleHomeEndKeys
+                id="free-solo-with-text-demo"
+                options={reportedByName}
+                getOptionLabel={(option) => {
+                  // Value selected with enter, right from the input
+                  if (typeof option === "string") {
+                    return option;
+                  }
+                  // Add "xxx" option created dynamically
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  // Regular option
+                  return option.title;
+                }}
+                renderOption={(option) => option.inputValue}
+                // style={{ width: 300 }}
+                freeSolo
+                selectOnFocus
+                clearOnBlur
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Assignee"
+                    // error={error.reportedByName}
+                    // helperText={
+                    //   error.reportedByName ? error.reportedByName : ""
+                    // }
+                    variant="outlined"
+                  />
+                )}
+              />
+
+            {/* <Autocomplete
+              id="combo-box-demo"
+              options={reportedByName}
+              value={initialData.assigneeName ? initialData.assigneeName : ""}
+              className={classes.mT30}
+              loading={isLoading}
+              getOptionLabel={(option) => option['inputValue']}
+              onChange={(e, option) => {
+                setInitialData({
+                  ...initialData,
+                  assigneeName: option.inputValue,
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Assignee"
+                  variant="outlined"
+              // value={initialData.assigneeName ? initialData.assigneeName : ""}
+              />
+              )}
+            /> */}
+          </Grid>
+         
           <Grid
             item
             md={12}

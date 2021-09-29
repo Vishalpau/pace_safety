@@ -29,9 +29,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ActionShow = (props) => {
+    console.log(props)
     const classes = useStyles();
-    console.log("here")
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
+
     const link = () => {
         return (
             <Link
@@ -47,12 +48,8 @@ const ActionShow = (props) => {
             </Link>
         )
     }
-
-    useEffect(() => {
-        if (props.index == 0) {
-            props.handelShowData()
-        }
-    }, [updatPage]);
+    console.log(props.index)
+    useEffect(() => { }, [updatPage]);
 
     return (
         <Grid container spacing={3}>

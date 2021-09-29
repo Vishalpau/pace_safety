@@ -288,7 +288,9 @@ const ProjectAreaHazards = () => {
             hazardNew.push(value)
           }
         } else {
-          hazardUpdate.push(value)
+          if (value["hazard"] !== "") {
+            hazardUpdate.push(value)
+          }
         }
       })
     })
