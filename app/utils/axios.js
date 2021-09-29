@@ -8,7 +8,7 @@ const api = axios.create({
   baseURL: "",
   headers: HEADER_AUTH
 });
-api.defaults.timeout = 10000;
+// api.defaults.timeout = 10000;
 api.defaults.timeoutErrorMessage = "Timeout"
 
 api.interceptors.request.use(
