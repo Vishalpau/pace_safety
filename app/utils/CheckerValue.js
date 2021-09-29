@@ -66,6 +66,9 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
     else if (checkCommonObject[mainKey] == null || checkCommonObject[mainKey][subKey] == null) {
         checkCommonObject[mainKey][subKey] = subValue
         localStorage.setItem(objName, JSON.stringify(checkCommonObject))
+    } else if (JSON.parse(localStorage.getItem(objName))[mainKey][subKey] !== subValue) {
+        checkCommonObject[mainKey][subKey] = subValue
+        localStorage.setItem(objName, JSON.stringify(checkCommonObject))
     }
 }
 

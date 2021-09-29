@@ -166,8 +166,6 @@ function ObservationCorrectiveAction() {
   const [loading, setLoading] = useState(false)
   let filterReportedByName = []
 
-
-
   const [projectData, setProjectData] = useState({
     projectId: "",
     companyId: "",
@@ -200,7 +198,6 @@ function ObservationCorrectiveAction() {
   let client = []
   let client_id = []
   companies.map((value, i) => {
-
     if (value.companyId === form.fkCompanyId) {
       client.push(companies[i])
       client[0].subscriptions.map((value, i) => {
@@ -210,6 +207,7 @@ function ObservationCorrectiveAction() {
       })
     }
   })
+
   const [comment, setComment] = useState({
     "fkCompanyId": parseInt(fkCompanyId),
     "fkProjectId": parseInt(projectId),
@@ -224,6 +222,7 @@ function ObservationCorrectiveAction() {
     "createdBy": parseInt(userId),
 
   })
+
   const reviewedBy = [
     "None",
     "Reviewedby 1",
