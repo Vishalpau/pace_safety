@@ -812,5 +812,9 @@ const Assessment = () => {
     </>
   );
 };
+// const AhaAssementInit = connect((state) => ({
+//   initialValues: state.getIn(["IncidentReducer"]),
+// }))(Assessment);
 
+// export default withStyles(styles)(AhaAssementInit);
 export default Assessment;

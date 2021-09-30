@@ -209,6 +209,7 @@ const JobDetails = (props) => {
   const [checkUpdate, setUpdate] = useState(false)
   const [workArea, setWorkArea] = useState("")
   const [departmentName, setDepartmentName] = useState([])
+  const [isDateShow, setIsDateShow] = useState(false)
   // fecth jha data
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
@@ -293,10 +294,10 @@ const JobDetails = (props) => {
           .then(async (response) => {
             const result = response.data.data.results;
             await setIsLoading(true);
-            console.log(result)
+            // console.log(result)
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
-                console.log("here")
+                // console.log("here")
                 selectBreakDown = [
                   ...selectBreakDown, {
                     breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
@@ -619,6 +620,7 @@ const JobDetails = (props) => {
             >
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
+                  onClick={(e) => setIsDateShow(true)}
                   className={classes.formControl}
                   fullWidth
                   id="jha_assessment_date"
@@ -635,6 +637,7 @@ const JobDetails = (props) => {
                   helperText={error.jhaAssessmentDate ? error.jhaAssessmentDate : ""}
                   inputVariant="outlined"
                   disableFuture="true"
+                  open={isDateShow}
                 />
 
               </MuiPickersUtilsProvider>
