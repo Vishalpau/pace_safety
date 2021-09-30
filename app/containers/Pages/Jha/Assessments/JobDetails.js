@@ -126,6 +126,7 @@ const useStyles = makeStyles((theme) => ({
   },
   loader: {
     marginLeft: "20px"
+
   },
   // });
 }));
@@ -492,6 +493,11 @@ const JobDetails = (props) => {
       });
   };
 
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
+
   const classes = useStyles();
 
   const handelCallBack = async () => {
@@ -638,6 +644,7 @@ const JobDetails = (props) => {
                   inputVariant="outlined"
                   disableFuture="true"
                   open={isDateShow}
+                  onClose={(e) => handelClose()}
                 />
 
               </MuiPickersUtilsProvider>
@@ -894,21 +901,18 @@ const JobDetails = (props) => {
               xs={12}
               style={{ marginTop: '15px' }}
             >
-              {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
 
-                  Next
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
+              <Button
+                variant="outlined"
+                onClick={(e) => handleSubmit()}
+                className={classes.custmSubmitBtn}
+                style={{ marginLeft: "10px" }}
+              >
+                {submitLoader == false ?
+                  "Next" :
                   <CircularProgress color="secondary" />
-                </IconButton>
-              }
+                }
+              </Button>
             </Grid>
           </Grid>
         </Col>
