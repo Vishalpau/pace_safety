@@ -180,16 +180,16 @@ const ObservationInitialNotificationView = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  
+
   const [projectStructName, setProjectStructName] = useState([])
 
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
 
-      const projectId =
+    const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
@@ -205,7 +205,7 @@ const ObservationInitialNotificationView = () => {
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName,"AAAAAAAAAAAA")
+    console.log(structName, "AAAAAAAAAAAA")
     setProjectStructName(structName)
   }
 
@@ -309,7 +309,7 @@ const ObservationInitialNotificationView = () => {
             </Typography>
             <Typography className={classes.labelValue}>
 
-            {project.projectName}  {projectStructName.map((value) => ` - ${value}`)} 
+              {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
             </Typography>
           </Grid>
           <Grid item md={6}>
@@ -341,10 +341,10 @@ const ObservationInitialNotificationView = () => {
 
           <Grid item md={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
-            Foreman details
+              Foreman details
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}
+              {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" || initialData.supervisorByBadgeId == "" ? "-" : initialData.supervisorByBadgeId}
             </Typography>
           </Grid>
           <Grid item md={12}>
