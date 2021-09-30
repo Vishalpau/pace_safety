@@ -191,53 +191,69 @@ const EnvironmentAffected = () => {
   };
 
   const fetchWaterBodyAffectedValue = async () => {
-    const res = await api.get("api/v1/lists/19/value");
-    const result = res.data.data.results;
-    setWaterbodyAffectedValue(result);
+     await api.get("api/v1/lists/19/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+      setWaterbodyAffectedValue(result);
+    }).catch(error=>console.log(error))
+    
   };
 
   const fetchImpactOnWildLifeValue = async () => {
-    const res = await api.get("api/v1/lists/18/value");
-    const result = res.data.data.results;
-    setImpactOnWildLife(result);
+     await api.get("api/v1/lists/18/value")
+     .then((res)=>{
+      const result = res.data.data.results;
+      setImpactOnWildLife(result);
+     }).catch(error=>console.log(error))
+    
   };
 
   const fetchAnyReleaseValue = async () => {
-    const res = await api.get("api/v1/lists/17/value");
-    const result = res.data.data.results;
-    await setAnyReleaseValue(result);
+    await api.get("api/v1/lists/17/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+      setAnyReleaseValue(result);
+    }).catch(error=>console.log(error))
+   
   };
 
   const fetchEnviornmentAffectedValue = async () => {
-    const res = await api.get("api/v1/lists/16/value");
-    const result = res.data.data.results;
-    setEnvironmentAffectedValue(result);
+    await api.get("api/v1/lists/16/value")
+    .then((res)=>{
+      const result = res.data.data.results;
+      setEnvironmentAffectedValue(result);
+    }).catch(error=>console.log(error))
   };
 
   const fetchEnviornmentListData = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/environment/`);
-    if (res.status === 200) {
-      const result = res.data.data.results;
-      if (result.length > 0) {
-        let temp = [...form];
-        temp = result;
-        setForm(temp);
+    await api.get(`api/v1/incidents/${id}/environment/`)
+    .then((res)=>{
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        if (result.length > 0) {
+          let temp = [...form];
+          temp = result;
+          setForm(temp);
+        }
+         setEnvironmentListData(result);
+         setIsLoading(true);
       }
-      await setEnvironmentListData(result);
-      await setIsLoading(true);
-    }
+    }).catch(error=>console.log(error))
+    
   };
 
   const fetchIncidentsData = async () => {
-    const res = await api.get(
+     await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentsListdata(result);
-    await setEnvComments(result.enviromentalImpactComments);
-    if (!id) {
-      setIsLoading(true);
-    }
+    ).then((res)=>{
+      const result = res.data.data.results;
+       setIncidentsListdata(result);
+       setEnvComments(result.enviromentalImpactComments);
+      if (!id) {
+        setIsLoading(true);
+      }
+    }).catch(error=>console.log(error))
+    
   };
 
   // handle go back
@@ -642,6 +658,7 @@ const EnvironmentAffected = () => {
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
                 selectedItem="Environment impact"
+                id={id}
               />
             </Col>
           )}

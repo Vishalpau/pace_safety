@@ -230,27 +230,30 @@ function PersonalDashboard(props) {
 
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
     if(companyId){
+
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
-  
+            
   
             return res.data.data.results.data.companies[0].subscriptions;
+          
           })
           .catch(function (error) {
             console.log(error);
           });
+        
   
         await setSubscriptions(data)
   
   
         const apps = data.map(app => app.appId)
-        console.log(data)
+      
         let app = data.filter(app => app.appCode === "safety")
-        console.log(app)
+      
         let module = app[0].modules.map(item => {
           if (item.subscriptionStatus == "active") {
-            console.log(item.moduleCode)
+            
             return item.moduleCode
           }
         })
@@ -273,9 +276,9 @@ function PersonalDashboard(props) {
       });
     await setModules(data)
     let data1 = apps.filter(item => item.appId === 1)
-    console.log(data1)
+    
     const codes = data.map(module => module.subscriptionStatus)
-    console.log(apps)
+    
     // setCode(codes)
 
 
@@ -312,10 +315,28 @@ function PersonalDashboard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+// multi tenant architecture, fetch company
+  const fetchCompany = async(url)=>{
+    let config = {
+      method:'get',
+      url:url,
+      headers:HEADER_AUTH,
+    }
+    await (config)
+  }
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
-
+    let hosting = companyListData.filter(company => company.companyId === e)[0]
+    .subscriptions
+    .filter(subscription => subscription.appCode == "safety")[0]
+    .hostings[0].apiDomain
+    let config = {
+      method: "get",
+      url: `${hosting}/api/v1/core/companies/select/${e}/`,
+      headers: HEADER_AUTH,
+    };
+    axios(config)
     let companeyDetails = {};
     companeyDetails.fkCompanyId = e;
     await getSubscriptions(e)
@@ -370,6 +391,7 @@ function PersonalDashboard(props) {
       .then(function (response) {
 
         if (response.status === 200) {
+          
           if (response.data.data.results.data.companies.length > 1) {
             const companey = JSON.parse(localStorage.getItem("company"));
             if (companey === null) {
@@ -378,9 +400,21 @@ function PersonalDashboard(props) {
             }
           }
           if (response.data.data.results.data.companies.length === 1) {
+            let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
+            .subscriptions
+            .filter(subscription => subscription.appCode == "safety")[0]
+            .hostings[0].apiDomain
+            let config = {
+              method: "get",
+              url: `${hosting}/api/v1/core/companies/select/${response.data.data.results.data.companies[0].companyId}/`,
+              headers: HEADER_AUTH,
+            };
+            axios(config)
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
+              console.log({userDetails:response.data.data.results.data.companies})
+            // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
             companeyDetails.fkCompanyName =
@@ -656,10 +690,11 @@ function PersonalDashboard(props) {
                     sm={6}
                     xs={12}
                     className={classesm.cardContentBox}
+                    key={key}
                   >
                     <Card
-                      key={key}
-                      key={key}
+                      
+                  
                       onClick={() => handleProjectName(key)}
                     >
                       <CardActionArea className={classesm.cardActionAreaBox}>

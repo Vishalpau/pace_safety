@@ -233,9 +233,9 @@ const ObservationInitialNotification = (props) => {
       ? JSON.parse(localStorage.getItem("userDetails")).id
       : null;
   const userDetails =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails"))
-        : null;
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
   const userCompany = userDetails.companies.filter((company) => company.companyId === fkCompanyId)
   const userDepartment = userCompany[0].departments.filter((userDepartment) => userDepartment.fkUserId === userId)
   const project =
@@ -309,8 +309,8 @@ const ObservationInitialNotification = (props) => {
           let user = [];
 
           // let user = [];
-          let data = result.filter((item) =>          
-          item['companyId'] == fkCompanyId
+          let data = result.filter((item) =>
+            item['companyId'] == fkCompanyId
           )
           for (var i in data[0].users) {
             let temp = {};
@@ -341,7 +341,7 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
-          
+
           let user = [];
 
           for (var i in result) {
@@ -689,7 +689,7 @@ const ObservationInitialNotification = (props) => {
         const result = res.data.data.results;
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   const fetchTags = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -759,18 +759,17 @@ const ObservationInitialNotification = (props) => {
         if (key == index + 1) {
           await api
             .get(
-              `${SSO_URL}/${
-                projectData.projectName.breakdown[key].structure[0].url
+              `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
               }${value}`
             )
-            .then(function(response) {
+            .then(function (response) {
               if (response.status === 200) {
                 temp[key].breakDownData = response.data.data.results;
                 //  temp[key].select=e.
                 setBreakdown1ListData(temp);
               }
             })
-            .catch(function(error) {});
+            .catch(function (error) { });
         }
       }
     }
@@ -787,9 +786,8 @@ const ObservationInitialNotification = (props) => {
       if (breakDown[key].slice(0, 2) === "1L") {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[0].structure[0].url
-          }`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
           headers: HEADER_AUTH,
         };
 
@@ -825,9 +823,8 @@ const ObservationInitialNotification = (props) => {
       } else {
         var config = {
           method: "get",
-          url: `${SSO_URL}/${
-            projectData.projectName.breakdown[key].structure[0].url
-          }${breakDown[key - 1].substring(2)}`,
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -873,7 +870,7 @@ const ObservationInitialNotification = (props) => {
   useEffect(() => {
     fetchTags();
     fetchDepartment();
-    fetchAttachment();
+    // fetchAttachment();
     fetchNotificationSent();
     fetchSuperVisorName();
     fetchReportedBy();
@@ -942,14 +939,14 @@ const ObservationInitialNotification = (props) => {
                     >
                       {data.breakDownData.length !== 0
                         ? data.breakDownData.map((selectvalues, index) => (
-                            <MenuItem
-                              key={index}
-                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                              value={selectvalues.id}
-                            >
-                              {selectvalues.structureName}
-                            </MenuItem>
-                          ))
+                          <MenuItem
+                            key={index}
+                            // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                            value={selectvalues.id}
+                          >
+                            {selectvalues.structureName}
+                          </MenuItem>
+                        ))
                         : null}
                     </Select>
                     {error && error[`projectStructure${[key]}`] && (
@@ -1064,7 +1061,7 @@ const ObservationInitialNotification = (props) => {
                 id="badgenumberreportingperson"
                 value={
                   form.reportedByBadgeId !== null &&
-                  form.reportedByBadgeId !== undefined
+                    form.reportedByBadgeId !== undefined
                     ? form.reportedByBadgeId
                     : ""
                 }
@@ -1247,11 +1244,11 @@ const ObservationInitialNotification = (props) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Foreman's Name*"
-                    error={error.supervisorName}
-                    helperText={
-                      error.supervisorName ? error.supervisorName : ""
-                    }
+                    label="Foreman's Name"
+                    // error={error.supervisorName}
+                    // helperText={
+                    //   error.supervisorName ? error.supervisorName : ""
+                    // }
                     variant="outlined"
                   />
                 )}
@@ -1268,7 +1265,7 @@ const ObservationInitialNotification = (props) => {
                 }
                 value={
                   form.supervisorByBadgeId !== null &&
-                  form.supervisorByBadgeId !== undefined
+                    form.supervisorByBadgeId !== undefined
                     ? form.supervisorByBadgeId
                     : ""
                 }

@@ -191,7 +191,7 @@ function BlankPage(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  console.log({ api_url: API_URL })
+  
 
   const fetchData = async () => {
     await setPage(1)

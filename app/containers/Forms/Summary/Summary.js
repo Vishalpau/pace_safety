@@ -659,7 +659,7 @@ const Summary = (props) => {
     let roles = res.data.data.results.data.companies[0].subscriptions.filter(item => item.appCode === "safety")
 
     const fetchPermissiondata = await api.get(`${ACCOUNT_API_URL}${roles[0].roles[0].aclUrl.substring(1)}`)
-    console.log({ permission: fetchPermissiondata.data.data.results.permissions[0].incident })
+    
     setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident)
 
   }

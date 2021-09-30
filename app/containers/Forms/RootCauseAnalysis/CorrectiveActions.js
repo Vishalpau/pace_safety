@@ -214,7 +214,7 @@ const CorrectiveAction = () => {
     })
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
-      console.log("here")
+      
       handelNavigate("next")
     }
   }
