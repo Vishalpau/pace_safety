@@ -91,17 +91,15 @@ const CloseOut = () => {
     const fetchIncidentsData = async () => {
         await api.get(
             `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-        ).then(()=>{
+        ).then((res)=>{
             if (res.status === 200) {
                 const result = res.data.data.results;
-    
-                if (Object.entries(result).length > 0) {
                     let temp = { ...form }
                     temp = result
                      setForm(result)
                      setIncidentsListdata(result);
                      setIsLoading(true)
-                }
+                
             }
         }).catch(err=>console.log(err))
         
@@ -168,6 +166,8 @@ const CloseOut = () => {
         temp.closeDate = form.closeDate || incidentsListData.closeDate;
         temp.updatedAt = new Date().toISOString();
         temp.updatedBy = parseInt(userId)
+        temp.incidentStage = "Close out";
+        temp.incidentStatus = "Done"
 
         try {
             if (new Date(form.closeDate) > new Date(form.reviewDate)) {

@@ -168,7 +168,21 @@ const Details = () => {
     let nextPageLink = 0;
     setError(error);
     if (Object.keys(error).length == 0) {
+
       if (checkPost.current !== false) {
+        try {
+          const temp = incidents
+          temp.updatedAt = new Date().toISOString();
+          
+          temp.incidentStage= "Root cause & analysis"
+          temp.incidentStatus= "pending"
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
+          alert("something went wrong")
+        }
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(
             "fkincidentId"
