@@ -46,7 +46,7 @@ import Type from "../../../styles/components/Fonts.scss";
 import { connect } from "react-redux";
 import Axios from "axios";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
-
+import classNames from "classnames";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -168,6 +168,23 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: "600",
     },
   },
+  boldHelperText:{
+    "& .MuiFormHelperText-root":{
+      // fontWeight : "bold",
+      color : "red",
+      fontSize : "16px",
+    fontFamily : "Montserrat-Medium"    }
+  },
+  errorsWrapper:{
+    backgroundColor : "#fff8f8",
+    border : "1px solid #fab9b9" ,
+    "& .MuiTypography-root":{
+      // fontWeight : "bold",
+      color : "red",
+      fontSize : "16px",
+    fontFamily : "Montserrat-Medium"    }
+  }
+
 }));
 
 function Alert(props) {
@@ -252,11 +269,6 @@ const ObservationInitialNotification = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
   const [workArea, setWorkArea] = useState("");
-  let filterReportedByName = [user];
-  let filterReportedById = [];
-  let filterReportedByBedgeID = [];
-  let filterSuperVisorName = [];
-  let filterDepartmentName = [];
   const fetchSuperVisorName = () => {
     let fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const config = {
@@ -386,7 +398,7 @@ const ObservationInitialNotification = (props) => {
     departmentId: 0,
     reportedById: user.id,
     reportedByName: user.name,
-    reportedByDepartment: userDepartment[0].departmentName,
+    reportedByDepartment: userDepartment[0] ? userDepartment[0].departmentName : "",
     reportedDate: new Date().toISOString(),
     reportedByBadgeId: user.badgeNo,
     closedById: 0,
@@ -949,6 +961,7 @@ const ObservationInitialNotification = (props) => {
                         ))
                         : null}
                     </Select>
+                    
                     {error && error[`projectStructure${[key]}`] && (
                       <FormHelperText>
                         {error[`projectStructure${[key]}`]}
@@ -1048,6 +1061,8 @@ const ObservationInitialNotification = (props) => {
                     helperText={
                       error.reportedByName ? error.reportedByName : ""
                     }
+                    className={classNames(classes.formControl,classes.boldHelperText)}
+
                     variant="outlined"
                   />
                 )}
@@ -1141,13 +1156,15 @@ const ObservationInitialNotification = (props) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Observer's Department*"
-                    error={error.reportedByDepartment}
-                    helperText={
-                      error.reportedByDepartment
-                        ? error.reportedByDepartment
-                        : ""
-                    }
+                    label="Observer's Department"
+                    // error={error.reportedByDepartment}
+                    // helperText={
+                    //   error.reportedByDepartment
+                    //     ? error.reportedByDepartment
+                    //     : ""
+                    // }
+                    className={classNames(classes.formControl,classes.boldHelperText)}
+
                     // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
                     variant="outlined"
                   />
@@ -1256,7 +1273,7 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
-                label="Foreman's Badge Number"
+                label="Foreman's Number"
                 name="supervisorbadgenumber"
                 id="supervisorbadgenumber"
                 error={error.supervisorByBadgeId}
@@ -1272,7 +1289,7 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
-                className={classes.formControl}
+                className={classNames(classes.formControl,classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -1358,7 +1375,7 @@ const ObservationInitialNotification = (props) => {
                   error.observationTitle ? error.observationTitle : ""
                 }
                 variant="outlined"
-                className={classes.formControl}
+                className={classNames(classes.formControl,classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({ ...form, observationTitle: e.target.value });
                 }}
@@ -1379,7 +1396,7 @@ const ObservationInitialNotification = (props) => {
                 defaultValue={form.observationDetails}
                 fullWidth
                 variant="outlined"
-                className={classes.formControl}
+                className={classNames(classes.formControl,classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({ ...form, observationDetails: e.target.value });
                 }}
@@ -1412,11 +1429,13 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
-                {error && error["isSituationAddressed"] && (
+                <p style={{ color: "red" }}>{error.isSituationAddressed}</p>
+
+                {/* {error && error["isSituationAddressed"] && (
                   <FormHelperText>
                     {error["isSituationAddressed"]}
                   </FormHelperText>
-                )}
+                )} */}
               </FormControl>
             </Grid>
             {addressSituation === true ? (
@@ -1434,7 +1453,7 @@ const ObservationInitialNotification = (props) => {
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
-                    className={classes.formControl}
+                    className={classNames(classes.formControl,classes.boldHelperText)}
                     onChange={(e) => {
                       setForm({ ...form, actionTaken: e.target.value });
                     }}
@@ -1469,7 +1488,8 @@ const ObservationInitialNotification = (props) => {
                       ...form,
                       observationClassification: e.target.value,
                     });
-                  }}
+                  }}                className={classNames(classes.formControl,classes.boldHelperText)}
+
                 >
                   {radioClassification.map((value) => (
                     <FormControlLabel
@@ -1511,9 +1531,11 @@ const ObservationInitialNotification = (props) => {
                     />
                   ))}
                 </RadioGroup>
-                {error && error["observationType"] && (
+                <p style={{ color: "red" }}>{error.observationType}</p>
+
+                {/* {error && error["observationType"] && (
                   <FormHelperText>{error["observationType"]}</FormHelperText>
-                )}
+                )} */}
               </FormControl>
             </Grid>
 
@@ -1730,6 +1752,19 @@ const ObservationInitialNotification = (props) => {
                 />
               </Grid>
             ) : null}
+            {Object.values(error).length > 0 ? 
+            <Grid item xs={12} md={6} className={classes.errorsWrapper}>
+
+          {  Object.values(error).map((value)=>(
+              <Typography>{value}</Typography>
+          ))}
+            
+            
+            
+            </Grid>
+            : null}
+
+
             {/* {attachment ===
                               null ? null : typeof attachment ===
                                 "string" ? (
@@ -1766,7 +1801,10 @@ const ObservationInitialNotification = (props) => {
                 CANCEL
               </Button>
             </Grid>
+            
+            
           </Grid>
+          
         ) : (
           <h1>Loading...</h1>
         )}

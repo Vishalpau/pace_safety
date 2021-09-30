@@ -46,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
     border: '1px solid rgba(0, 0, 0, .13)',
     borderRadius: '4px',
+  },pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   leftSide: {
     flexGrow: 1,
@@ -150,8 +154,12 @@ function Jha(props) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
   const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
 
   const fetchData = async () => {
+    await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -166,10 +174,13 @@ function Jha(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    console.log(res,"KLKLKL")
     const result = res.data.data.results.results
     await setAllJHAData(result)
-    let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageCount(pageCount)
+    await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          await setPageCount(pageCount)
     handelTableView(result)
 
     await setIsLoading(true)
@@ -191,8 +202,9 @@ function Jha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/jhas/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
+    await setPage(value)
     await handelTableView(res.data.data.results.results)
 
   };
@@ -251,12 +263,13 @@ function Jha(props) {
 
   useEffect(() => {
     fetchData()
-  }, [props.projectName])
+  }, [props.projectName.breakDown])
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
   return (
     <PapperBlock title="JHA" icon="ion-md-list-box">
+    {isLoading ? <>
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
           <Toolbar>
@@ -510,9 +523,11 @@ function Jha(props) {
           />
         )}
 
-      <div className={classes.pagination}>
-        <Pagination count={pageCount} onChange={handleChange} />
-      </div>
+        <div className={classes.pagination}>
+          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}`}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+          </>:<h1>Loading...</h1>}
     </PapperBlock>
   );
 }

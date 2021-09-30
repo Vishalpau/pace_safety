@@ -205,7 +205,6 @@ const ObservationInitialNotificationView = () => {
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName,"AAAAAAAAAAAA")
     setProjectStructName(structName)
   }
 
@@ -344,7 +343,7 @@ const ObservationInitialNotificationView = () => {
             Foreman details
             </Typography>
             <Typography className={classes.labelValue}>
-              {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" ? "" : initialData.supervisorByBadgeId}
+              {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" || initialData.supervisorByBadgeId == "" ? "-" : initialData.supervisorByBadgeId}
             </Typography>
           </Grid>
           <Grid item md={12}>
