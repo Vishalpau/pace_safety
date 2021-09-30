@@ -76,23 +76,24 @@ const InvestigationOverview = () => {
     if (Object.keys(error).length == 0) {
       if (putId.current == "") {
         const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-        const temp = [...incidentsListData]
-        temp.updatedAt = new Date().toISOString();
-        
-        temp.incidentStage= "Investigation",
-        temp.incidentStatus= "pending"
+       
         try {
+          const temp = incidentsListData
+          temp.updatedAt = new Date().toISOString();
+          
+          temp.incidentStage= "Investigation"
+          temp.incidentStatus= "pending"
           const res = await api.put(
             `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
             temp
           );
         } catch (error) {
-          
+          alert("something went wrong")
         }
         await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`);
         
       } else if (putId.current !== "") {
-        
+       
         form["updatedBy"] = "0";
         const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
         await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`

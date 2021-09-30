@@ -275,7 +275,9 @@ const Evidence = () => {
 
   const handleNext = async () => {
     const { error, isValid } = EvidenceValidate(form);
-
+    if(evideceData.length > 0){
+      
+    }
     await setError(error);
 
     if (!isValid) {
@@ -343,6 +345,9 @@ const Evidence = () => {
           );
         }
       } else {
+       
+        
+
         data.append("createdAt", form[i].createdAt);
         data.append("createdBy", form[i].createdBy);
         data.append("updatedAt", form[i].updatedAt);
@@ -371,6 +376,7 @@ const Evidence = () => {
       setIsNext(false);
       let status = 0;
       if (evideceData.length > 0) {
+        
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -411,6 +417,19 @@ const Evidence = () => {
           }
         }
       } else {
+        try {
+          
+          const temp = incidentDetail
+          temp.updatedAt = new Date().toISOString();
+          temp.incidentStage= "Evidence"
+          temp.incidentStatus= "pending"
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
+          alert("something went wrong")
+        }
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
