@@ -5,7 +5,7 @@ function InitialNotificationValidator(data, projectStructure) {
 
   const error = {};
   let isValid = true;
-
+console.log(data)
   const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
   for (let i = 0; i < breakdownValue.length; i++) {
     var element = projectStructure[i]
@@ -23,7 +23,7 @@ function InitialNotificationValidator(data, projectStructure) {
   }
 
   if (validator.isEmpty(data.isSituationAddressed.toString())) {
-    error.isSituationAddressed = "Please select any one";
+    error.isSituationAddressed = "Please select whether you addressed the situation";
     isValid = false;
   }
 
@@ -32,10 +32,10 @@ function InitialNotificationValidator(data, projectStructure) {
     isValid = false;
   }
 
-  if (validator.isEmpty(data.reportedByDepartment.toString())) {
-    error.reportedByDepartment = "Please select the observer department";
-    isValid = false;
-  }
+  // if (validator.isEmpty(data.reportedByDepartment.toString())) {
+  //   error.reportedByDepartment = "Please select the observer department";
+  //   isValid = false;
+  // }
 
   if (validator.isEmpty(data.reportedByName.toString())) {
     error.reportedByName = "Please select the observed by";
@@ -70,9 +70,17 @@ function InitialNotificationValidator(data, projectStructure) {
   // }
 
   if (validator.isEmpty(data.acceptAndPledge.toString())) {
-    error.acceptAndPledge = "Please check the Accept & Pledge";
+    error.acceptAndPledge = "Please check the accept & pledge";
     isValid = false;
   }
+
+  if (data.departmentName !== ""   ) {
+    if(data.assigneeName === ""){
+      error.assigneeName = "Please select the assignee";
+      isValid = false;
+    }
+  
+}
 
 
   return { error, isValid };

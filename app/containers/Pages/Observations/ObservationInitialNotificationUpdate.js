@@ -32,6 +32,7 @@ import axios from "axios";
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import "../../../styles/custom/customheader.css";
+import classNames from "classnames";
 
 import {
   access_token,
@@ -139,6 +140,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  boldHelperText:{
+    "& .MuiFormHelperText-root":{
+      // fontWeight : "bold",
+      color : "red",
+      fontSize : "16px",
+    fontFamily : "Montserrat-Medium"    }
+  },
   // });
 }));
 const filter = createFilterOptions();
@@ -187,6 +195,7 @@ const ObservationInitialNotificationUpdate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tagData, setTagData] = useState([])
   const [reportedByName, setReportedByName] = useState([]);
+  const [reportedBy, setReportedBy] = useState([]);
   const [departmentName, setDepartmentName] = useState([])
   const [submitLoader, setSubmitLoader] = useState(false);
   const [levelLenght, setLevelLenght] = useState(0)
@@ -238,7 +247,6 @@ const ObservationInitialNotificationUpdate = () => {
     setSelectedDate(date);
   };
 
-console.log(reportedByName,">>>>>>>>>")
   const [catagory, setCatagory] = useState();
   const [catagoryName, setCatagoryName] = useState();
 
@@ -291,10 +299,8 @@ console.log(reportedByName,">>>>>>>>>")
   }
 
   
-
   const handleSubmit = async () => {
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
-
     await setError(error);
 
     if (!isValid) {
@@ -392,7 +398,6 @@ console.log(reportedByName,">>>>>>>>>")
     history.push(`/app/observation/details/${id}`)
     await localStorage.setItem("update", "Done");
   }
-
   const fetchCheckBoxData = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
     const tags = response.data.data.results.results
@@ -406,6 +411,7 @@ console.log(reportedByName,">>>>>>>>>")
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
     await setInitialData(result)
+    await fetchAssignee(result.departmentName)
     await fetchBreakDownData(result.fkProjectStructureIds)
     await handelWorkArea(result)
     // await setIsLoading(true);
@@ -458,7 +464,7 @@ console.log(reportedByName,">>>>>>>>>")
     // await setTagData(sorting)
   }
 
-  const fetchReportedBy = () => {
+  const fetchAssignee = (departments) => {
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
@@ -471,69 +477,59 @@ console.log(reportedByName,">>>>>>>>>")
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
-          // const userDetails =
-          //   JSON.parse(localStorage.getItem("userDetails")) !== null
-          //     ? JSON.parse(localStorage.getItem("userDetails"))
-          //     : null;
-          // let us = {
-          //   inputValue: userDetails.name,
-          //   reportedById: userDetails.id,
-          //   badgeNo: userDetails.badgeNo,
-          // };
           let user = [];
           let data = result.filter((item) =>          
             item['companyId'] == fkCompanyId
         )
-        console.log(data[0].users,"JJJJJJJJ")
           for (var i in data[0].users) {
             let temp = {};
 
             temp["inputValue"] = data[0].users[i].name;
             temp["reportedById"] = data[0].users[i].id;
+            temp["department"] = data[0].users[i].department;
 
             user.push(temp);
             // filterReportedById.push(result[i].id);
             // filterReportedByBedgeID.push(result[i].badgeNo);
           }
-          console.log(user,"ERERERERE");
           setReportedByName(user);
-        }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
+          setReportedBy(user);
+if(departments !== ""){
+  let userDepartment = []
+  let fetchingAssignee = [];
+     for (let i = 0; i < user.length; i++){
+       userDepartment.push(user[i].department)
+     }
+     let fetchingDepartments = []
+     userDepartment.map((value) => value.map((d) => {
+       if(d.departmentName === departments){
+        fetchingDepartments.push(d)
+     }}))
+
+       for (var i in fetchingDepartments) {
+         let assigneeData = {};
+
+         assigneeData["inputValue"] = fetchingDepartments[i].userName;
+         assigneeData["reportedById"] = fetchingDepartments[i].id;
+
+         fetchingAssignee.push(assigneeData);
+       }
+       if(fetchingAssignee.length > 0){
+         setReportedBy(fetchingAssignee);
+
+       }else{
+         setReportedBy([]);
+
+       }
+     }
+}
+          
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
       });
   };
 
-  // const fetchReportedBy = () => {
-  //   const config = {
-  //     method: "get",
-  //     url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
-  //     headers: {
-  //       Authorization: `Bearer ${access_token}`,
-  //       // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
-  //     },
-  //   };
-  //   axios(config)
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         const result = response.data.data.results;
-  //         let data = result.filter((item) =>          
-  //           item['companyId'] == fkCompanyId
-  //       )
-  //       console.log(data[0].users,"LLLLL")
-  //       let temp= []
-  //       // data[0].users.map((dName, i) => {
-  //       //   temp.push(dName.name)
-  //       // })
-  //         setReportedByName(data[0].users);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //     });
-  // };
 
   const fetchDepartment = () => {
     const config = {
@@ -548,11 +544,10 @@ console.log(reportedByName,">>>>>>>>>")
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
-          console.log(result,"4444444");
           let user = [];
           user = result;
           for (var i in result) {
-            filterDepartmentName.push(result[i].departmentName);
+            filterDepartmentName.push(result[i]);
             // filterReportedById.push(result[i].id);
           }
           // setReportedByName(filterReportedByName);
@@ -566,7 +561,56 @@ console.log(reportedByName,">>>>>>>>>")
         // window.location.href = {LOGIN_URL}
       });
   };
+  const handleDepartment = (option) => {
+    let temp = {...initialData}
+    temp.departmentName = option.departmentName;
+    temp.departmentId = option.id;
+    if(temp.departmentName !== initialData.departmentName){
+      temp.assigneeName = ""
+      temp.assigneeId = ""
+    }
+    
+     setInitialData(temp)
 
+     let tempAssigneeData = reportedByName
+     let userDepartment = []
+     let user = [];
+        for (let i = 0; i < tempAssigneeData.length; i++){
+          userDepartment.push(tempAssigneeData[i].department)
+        }
+        let LL = []
+        userDepartment.map((value) => value.map((department) => {
+          if(department.departmentName === temp.departmentName){
+            LL.push(department)
+        }}))
+
+          for (var i in LL) {
+            let tempss = {};
+
+            tempss["inputValue"] = LL[i].userName;
+            tempss["reportedById"] = LL[i].id;
+
+            user.push(tempss);
+            // filterReportedById.push(result[i].id);
+            // filterReportedByBedgeID.push(result[i].badgeNo);
+          }
+          if(user.length > 0){
+            setReportedBy(user);
+
+          }else{
+            setReportedBy([]);
+
+          }
+  }
+  const handleAssignee = async (value) => {
+    let tempData = {...initialData}
+    
+    tempData.assigneeName = value.inputValue
+    tempData.assigneeId = value.reportedById
+    
+    
+    await setInitialData(tempData)
+  }
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
@@ -646,10 +690,10 @@ console.log(reportedByName,">>>>>>>>>")
       }
     }
   };
-  if(initialData.departmentName !== ""){
-    console.log(initialData.departmentName)
+  // if(initialData.departmentName !== ""){
+  //   console.log(initialData.departmentName)
 
-  }
+  // }
   
 
   useEffect(() => {
@@ -657,7 +701,7 @@ console.log(reportedByName,">>>>>>>>>")
     fetchInitialiObservation();
     fetchCheckBoxData();
     fetchTags()
-    fetchReportedBy()
+    // fetchReportedBy()
     fetchDepartment()
 
   }, [])
@@ -767,20 +811,49 @@ console.log(reportedByName,">>>>>>>>>")
               fullWidth
               value={initialData.departmentName ? initialData.departmentName : ""}
               variant="outlined"
-              onChange={(e) => {
-                setInitialData({ ...initialData, departmentName: e.target.value });
-              }}
+              // onChange={(e) => {
+              //   setInitialData({ ...initialData, departmentName: e.target.value });
+              // }}
             >
               {departmentName.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
+                <MenuItem key={option} value={option.departmentName} onClick={(e) => 
+                handleDepartment(option)
+              }>
+                  {option.departmentName}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
           <Grid item md={6} xs={12} className={classes.formBox}>
 
-          <Autocomplete
+          
+          <TextField
+              label="Assignee"
+              // margin="dense"
+              name="assignee"
+              id="assignee"
+              select
+              fullWidth
+              value={initialData.assigneeName ? initialData.assigneeName : ""}
+              variant="outlined"
+              // onChange={(e) => {
+              //   setInitialData({ ...initialData, departmentName: e.target.value });
+              // }}
+              error={error ? error.assigneeName : ""}
+              helperText={
+                      error ? error.assigneeName : ""
+                    }
+                    className={classNames(classes.formControl,classes.boldHelperText)}
+            >
+              {reportedBy.map((option) => (
+                <MenuItem key={option} value={option.inputValue} onClick={(e) => 
+                handleAssignee(option)
+              }>
+                  {option.inputValue}
+                </MenuItem>
+              ))}
+            </TextField>
+          {/* <Autocomplete
               value={initialData.assigneeName ? initialData.assigneeName : ""}
                 onChange={(event, newValue) => {
                   if (typeof newValue === "string") {
@@ -853,7 +926,7 @@ console.log(reportedByName,">>>>>>>>>")
                     variant="outlined"
                   />
                 )}
-              />
+              /> */}
 
             {/* <Autocomplete
               id="combo-box-demo"
