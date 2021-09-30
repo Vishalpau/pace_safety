@@ -103,7 +103,22 @@ const AdditionalDetails = () => {
     await setIsLoading(true);
   };
 
+
   const handleNext = async () => {
+    if(incidentDetail.incidentStage === "Evidence"){
+      try {
+        const temp = incidentDetail
+        temp.updatedAt = new Date().toISOString();
+        temp.incidentStatus= "Done"
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        alert("something went wrong")
+      }
+    }
+
     if (id && additionalDetailList.length > 24) {
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
       await setError(error);

@@ -149,6 +149,18 @@ const RootCauseAnalysis = () => {
     const { error, isValid } = RootCauseValidation(form);
     setError(error);
     let nextPageLink = 0;
+    if(incidents.incidentStage === "Root cause & analysis"){
+      const temp = incidents
+      temp.incidentStatus= "Done"
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        
+      }
+    }
     if (Object.keys(error).length == 0) {
       if (checkPost.current !== false) {
         const res = await api.post(

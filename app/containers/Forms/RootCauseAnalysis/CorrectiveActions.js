@@ -180,8 +180,21 @@ const CorrectiveAction = () => {
     }
   }
 
-  const handelNavigate = (navigateType) => {
+  const handelNavigate = async(navigateType) => {
     if (navigateType == "next") {
+      if(incidentDetail.incidentStage === "Root cause & analysis"){
+      try {
+        const temp = incidentDetail
+        temp.updatedAt = new Date().toISOString();
+        temp.incidentStatus= "Done"
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        alert("something went wrong")
+      }
+    }
       let viewMode = {
         initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
@@ -227,6 +240,8 @@ const CorrectiveAction = () => {
   }
 
   const classes = useStyles();
+
+  
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
