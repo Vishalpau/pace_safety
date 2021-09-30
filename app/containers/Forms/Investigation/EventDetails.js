@@ -140,7 +140,7 @@ const EventDetails = () => {
         }
         const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
         const costData = cost.data.data.results
-        console.log(costData)
+    
         if (costData.length !== 0) {
           setOverAllCost(costData)
           costData.map((value) => {
@@ -185,7 +185,7 @@ const EventDetails = () => {
   const handelRemove = async (e, index) => {
     if (weather.length > 1) {
       if (weather[index].id !== undefined) {
-        console.log("here");
+      
         const res = await api.delete(
           `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/${eventId.current}/weatherconditions/${weather[index].id}/`

@@ -216,8 +216,8 @@ const IncidentDetails = (props) => {
           vendorReferenceId: "string",
           contractor: form.contractor,
           subContractor: form.subContractor,
-          incidentStage: "",
-          incidentStatus: ""
+          incidentStage: incidentsListData.incidentStage,
+          incidentStatus: incidentsListData.incidentStatus
         };
         const { error, isValid } = validate(form, selectDepthAndId, levelLenght);
         await setError(error);
@@ -322,8 +322,9 @@ const IncidentDetails = (props) => {
               vendorReferenceId: "string",
               contractor: form.contractor,
               subContractor: form.subContractor,
-              incidentStage: "",
-              incidentStatus: ""
+              incidentStage: "Initial Notification",
+              incidentStatus: "Pending",
+              
             };
             // sent post api
             try {
@@ -394,7 +395,7 @@ const IncidentDetails = (props) => {
       await setContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      console.log(error.message)
+      
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -410,7 +411,7 @@ const IncidentDetails = (props) => {
       await setSubContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      console.log(error.message)
+  
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -425,7 +426,7 @@ const IncidentDetails = (props) => {
       await setPersonAffectedValue(result);
     } catch (error) {
       setIsNext(true);
-      console.log(error.message)
+    
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -440,7 +441,7 @@ const IncidentDetails = (props) => {
       await setPropertiesAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      console.log(error.message)
+      
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -455,7 +456,7 @@ const IncidentDetails = (props) => {
       await setEquipmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      console.log(error.message)
+      
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -470,7 +471,6 @@ const IncidentDetails = (props) => {
       await setEnvironmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      console.log(error.message)
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -512,7 +512,7 @@ const IncidentDetails = (props) => {
 
       } catch (error) {
         setIsNext(true);
-        console.log(error.message)
+        
         setMessage(error.message);
         setMessageType("error");
         setOpen(true);
