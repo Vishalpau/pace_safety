@@ -692,7 +692,7 @@ function BlankPage(props) {
         </div>
       )}
      <div className={classes.pagination}>
-          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
+     {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
     </PapperBlock>
