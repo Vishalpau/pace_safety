@@ -500,11 +500,13 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-    const res = await api.post("/api/v1/observations/", data);
+
+
+    const res = await api.post("/api/v1/observations/", data).then(res => {
     if (res.status === 201) {
       const id = res.data.data.results;
       const fkObservatioId = id.id;
-      await localStorage.setItem("fkobservationId", fkObservatioId);
+      localStorage.setItem("fkobservationId", fkObservatioId);
 
       if (catagory.length > 0) {
         for (let i = 0; i < catagory.length; i++) {
@@ -512,29 +514,35 @@ const ObservationInitialNotification = (props) => {
             "fkobservationId"
           );
         }
-        const resCategory = await api.post(
+        const resCategory =  api.post(
           `/api/v1/observations/${localStorage.getItem(
             "fkobservationId"
           )}/observationtags/`,
           catagory
-        );
-        if (resCategory.status === 200 || resCategory.status === 201) {
-          history.push(
-            `/app/observation/details/${localStorage.getItem(
-              "fkobservationId"
-            )}`
-          );
-          await setLoading(false);
-        }
-      } else {
-        history.push(
-          `/app/observation/details/${localStorage.getItem("fkobservationId")}`
-        );
-        await setLoading(false);
-      }
+        ).then(res => {
+          if (res.status === 200 || res.status === 201) {
+            history.push(
+              `/app/observation/details/${localStorage.getItem(
+                "fkobservationId"
+              )}`
+            );
+            setLoading(false);
+          }
+        }).catch(err => {
+          setLoading(false);
+    
+        })
+        
+      } 
     }
+    }).catch(err => {
+      setLoading(false);
 
-    await setLoading(false);
+    })
+    
+    
+    
+
   };
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check

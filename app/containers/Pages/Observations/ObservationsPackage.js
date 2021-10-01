@@ -112,6 +112,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     fontSize: '1rem',
   },
+  sorryTitle: {
+    flex: 1,
+    fontFamily: 'Montserrat-Medium',
+    fontWeight: '500',
+  },
   chipAction: {
     textAlign: 'right',
   },
@@ -564,7 +569,7 @@ function Actions(props) {
             {listToggle == false ? (
               <div>
                 <div className="gridView">
-                  {
+                  {Object.keys(allInitialData).length > 0 ?
                     Object.entries(allInitialData)
                       .filter(
                         (item) => {
@@ -809,7 +814,9 @@ function Actions(props) {
                             </Grid>
                           </CardActions>
                         </Card>
-                      ))}
+                      )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                      Sorry, no matching records found
+              </Typography>}
 
                 </div>
                 <div>
@@ -1089,10 +1096,12 @@ function Actions(props) {
           {/* <div className={classes.pagination}>
       {totalData}
     </div> */}
+    {totalData != 0 ? 
           <div className={classes.pagination}>
-          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}`}
+          
+          { Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` }
             <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div>
+          </div> : null}
          </>) : <h1>Loading...</h1>}
       </Box>
     </>

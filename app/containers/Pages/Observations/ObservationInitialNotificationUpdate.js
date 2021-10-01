@@ -377,20 +377,22 @@ const ObservationInitialNotificationUpdate = () => {
 
       }
       if (updateCategory.length > 0) {
-        const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory)
+        const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory).then(res => {} ).catch(err => setLoading(false)        )
       }
       if (newCategory.length > 0) {
-        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory);
+        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory).then(res => {} ).catch(err => setLoading(false)        )
       }
 
-
-      const res1 = await api.put(`/api/v1/observations/${id}/`, data);
-      if (res1.status === 200) {
-        await localStorage.setItem("update", "Done");
-        history.push(
-          `/app/observation/details/${id}`
-        );
+      const res1 = await api.put(`/api/v1/observations/${id}/`, data).then(res => {
+        if (res.status === 200) {
+           localStorage.setItem("update", "Done");
+          history.push(
+            `/app/observation/details/${id}`
+          );
+        }
       }
+        ).catch(err => setLoading(false)  )
+      
     }
   };
 

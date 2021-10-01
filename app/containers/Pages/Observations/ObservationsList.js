@@ -40,6 +40,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import Pagination from '@material-ui/lab/Pagination';
 import "../../../styles/custom/customheader.css";
+import { useHistory, useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   pagination:{
@@ -151,7 +152,7 @@ function ObservationsList(props) {
   // };
   
   //   Data for the table view
-  const columns = ['Number', 'Type', 'Date submitted', 'Reported on', 'Reported by'];
+  const columns = ['Number', 'Type', 'Location', 'Reported on', 'Reported by'];
 
   const data = [
     ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
@@ -187,6 +188,8 @@ function ObservationsList(props) {
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
+  const history = useHistory();
+
 
 
 
@@ -235,6 +238,18 @@ const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&project
   await setAllInitialData(res.data.data.results.results);
   await setPage(value)
 };
+
+const handleSummaryPush = async (index) => {
+  const id = allInitialData[index].id;
+  localStorage.setItem("fkobservationId", id);
+  if (allInitialData[index].isCorrectiveActionTaken !== null) {
+    localStorage.setItem("action", "Done");
+  } else {
+    localStorage.removeItem("action");
+  }
+  history.push(`/app/observation/details/${id}`);
+};
+
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
@@ -251,7 +266,7 @@ const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&project
           
           <MUIDataTable
                 data={Object.entries(allInitialData).filter(
-                      (item) => {return (
+                      (item ) => {return (
                          
                         item[1]["observationDetails"]
                           .toLowerCase()
@@ -262,7 +277,14 @@ const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&project
                         )
                       )}
                         
-                    ).map((item) => [
+                    ).map((item,index) => [
+                      <Link
+                                            onClick={() => handleSummaryPush(index)}
+                                            variant="h6"
+                                            className={classes.mLeftfont}
+                                          >
+                                            <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
+                                          </Link>,
                   item[1]["observationNumber"],
                   item[1]["observationType"],
                   item[1]["location"],
@@ -281,7 +303,7 @@ const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&project
             </TableContainer>
             :<h1>Loading...</h1>}
             <div className={classes.pagination}>
-            {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData}` : `${page*25 -24} - ${25*page}`  : `${page*25 -24} - ${25*page}`}
+            {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
       <Pagination count={pageCount} page={page} onChange={handleChange}/>
     </div>
       </Box>
