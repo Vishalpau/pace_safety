@@ -253,7 +253,7 @@ const Assessment = () => {
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
   const fetchHzardsData = async () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
@@ -276,17 +276,8 @@ const Assessment = () => {
     setActionData(allAction)
   };
   const handelActionShow = (id) => {
-    const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
-        const projectId =
-        JSON.parse(localStorage.getItem("projectName")) !== null
-          ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-          : null;
     return (
       <Grid>
-
         {actionData.map((val) => (
           <>
             {val.id == id ?
@@ -296,8 +287,8 @@ const Assessment = () => {
                     <>
                       <ActionShow
                         action={valueAction}
-                        companyId={fkCompanyId}
-                        projectId={projectId}
+                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                         updatePage={updatePage}
                       />
                     </>
@@ -328,10 +319,10 @@ const Assessment = () => {
         : null;
 
     setProjectData({
-      projectId :  projectId,
-      companyId : fkCompanyId,
-      createdBy : userId,
-      projectStructId : JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
+      projectId: projectId,
+      companyId: fkCompanyId,
+      createdBy: userId,
+      projectStructId: JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
     })
   }
 
@@ -473,6 +464,7 @@ const Assessment = () => {
     await fetchAhaData();
     await handelActionLink()
     await pickListValue()
+    await handelActionTracker()
     await setIsLoading(true)
   }
 
@@ -716,7 +708,7 @@ const Assessment = () => {
                               fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
                               createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                               updatePage={updatePage}
-                              handelShowData={fetchHzardsData}
+                              handelShowData={handelActionTracker}
                             />
                           </Grid>
                           <Grid item xs={6} className={classes.createHazardbox}>
