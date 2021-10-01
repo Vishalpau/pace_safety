@@ -140,14 +140,78 @@ const Summary = (props) => {
     await api.get(`api/v1/incidents/${id}/`)
       .then((allIncidents) => {
         setIncidents(allIncidents.data.data.results);
-        if (allIncidents.data.data.results.closeDate) {
-          setCloseout(true)
+        if (allIncidents.data.data.results) {
+          if(allIncidents.data.data.results.incidentStage === "Lesson Learnt" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(true)
+            setLessionlearn(true)
+            setIsLoading(true)
+            
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Close out" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(true)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Root cause & analysis" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+        
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Evidence" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+            
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Investigation" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Initial notification" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(false);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else{
+            setInitialNotificationStatus(false)
+            setInvestigationOverview(false);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
         }
       })
       .catch(err => {
         setOpen(true);
         setMessage(err.message)
-
         setMessageType("error")
       })
   };
@@ -281,11 +345,6 @@ const Summary = (props) => {
     if (initialNoticeficationStatus === false) {
       handelNaviagte(`/incident/${id}/modify/`)
     } else {
-      setInitialNotification(true);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
       let viewMode = {
         initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
       }
@@ -299,14 +358,10 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stage Initial Notification")
       setMessageType("warning")
     }
-    else if (investigationOverview == undefined) {
+    else if (investigationOverview == false) {
       handelNaviagte(`/app/incident-management/registration/investigation/investigation-overview/`)
     } else {
-      setInitialNotification(false);
-      setInvestigation(true);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
+     
       let viewMode = {
         initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
       }
@@ -320,18 +375,14 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification & Investigation")
       setMessageType("warning")
     }
-    else if (investigationOverview == undefined) {
+    else if (investigationOverview == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stage Investigation")
       setMessageType("warning")
     } else if (evidencesData == undefined) {
-      handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`)
+      handelNaviagte(`/app/incident-management/registration/evidence/evidence/`)
     } else {
-      setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(true);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
+     
       let viewMode = {
         initialNotification: false, investigation: false, evidence: true, rootcauseanalysis: false, lessionlearn: false
 
@@ -346,62 +397,40 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification, Investigation & Evidence")
       setMessageType("warning")
     }
-    else if (investigationOverview == undefined) {
+    else if (investigationOverview == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation & Evidence")
       setMessageType("warning")
-    } else if (evidencesData == undefined) {
+    } else if (evidence == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stage Evidence")
       setMessageType("warning")
-    } else if (rcaRecommendedValue.current == "PACE cause analysis") {
-      if (paceCauseData == undefined) {
+    } else if (rootcauseanalysis === false) {
+      
+        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
+     
+    } else if (rootcauseanalysis === false) {
+      if (rootcauseanalysis === false) {
         handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
-        setInitialNotification(false);
-        setInvestigation(false);
-        setEvidence(false);
-        setRootCauseAnalysis(true);
-        setLessionlearn(false);
+        
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
       }
-    } else if (rcaRecommendedValue.current == "Cause analysis") {
-      if (rootCausesData == undefined) {
+    } else if (rootcauseanalysis === false) {
         handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
       } else {
-        setInitialNotification(false);
-        setInvestigation(false);
-        setEvidence(false);
-        setRootCauseAnalysis(true);
-        setLessionlearn(false);
+        
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
         }
         dispatch(tabViewMode(viewMode))
       }
-    } else if (rcaRecommendedValue.current == "Five why analysis") {
-      if (whyData == undefined) {
-        handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
-      } else {
-        setInitialNotification(false);
-        setInvestigation(false);
-        setEvidence(false);
-        setRootCauseAnalysis(true);
-        setLessionlearn(false);
-        let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-
-        }
-        dispatch(tabViewMode(viewMode))
-      }
-    } else {
-      handelNaviagte("/app/incident-management/registration/root-cause-analysis/details/")
-    }
+    
   }
   const handleCloseOutOverView = async => {
     if (initialNoticeficationStatus === false) {
@@ -409,21 +438,21 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence & Root and Cause Analysis")
       setMessageType("warning")
     }
-    else if (investigationOverview == undefined) {
+    else if (investigationOverview == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation, Evidence & Root and Cause Analysis")
       setMessageType("warning")
-    } else if (evidencesData == undefined) {
+    } else if (evidence == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Evidence & Root and Cause Analysis")
       setMessageType("warning")
 
-    } else if (!paceCauseData && !rootCausesData && !whyData) {
+    } else if (rootcauseanalysis === false) {
 
       setOpen(true);
       setMessage("Please complete the previous pending stage Root and Cause Analysis")
       setMessageType("warning")
-    } else if (!closeout) {
+    } else if (closeout === false) {
       handelNaviagte(`/incident/${id}/close-out/new/`)
     }
     else {
@@ -433,12 +462,7 @@ const Summary = (props) => {
 
       }
       dispatch(tabViewMode(viewMode))
-      setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(false);
-      setCloseout(true)
+     
     }
   }
 
@@ -448,32 +472,27 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
     }
-    else if (investigationOverview == undefined) {
+    else if (investigationOverview == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation, Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
-    } else if (evidencesData == undefined) {
+    } else if (evidence == false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
-    } else if (!paceCauseData && !rootCausesData && !whyData) {
+    } else if (rootcauseanalysis === false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Root Cause Analysis & Close Out")
       setMessageType("warning")
     }
-    else if (!closeout) {
+    else if (closeout === false) {
       setOpen(true);
       setMessage("Please complete the previous pending stage(s) close out")
       setMessageType("warning")
-    } else if (!lessionlearnData) {
+    } else if (lessionlearn === false) {
       handelNaviagte(`/incident/${id}/lesson-learnt/new/`)
     }
     else {
-      setInitialNotification(false);
-      setInvestigation(false);
-      setEvidence(false);
-      setRootCauseAnalysis(false);
-      setLessionlearn(true);
       let viewMode = {
         initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
 
@@ -536,7 +555,7 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification & Investigation")
       setMessageType("warning")
     }
-    else if (investigationOverview == undefined) {
+    else if (investigationOverview === false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation")
       setMessageType("warning")
@@ -557,7 +576,7 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification, Investigation & Evidence")
       setMessageType("warning")
     }
-    else if (investigationOverview === undefined) {
+    else if (investigationOverview === false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation and Evidence")
       setMessageType("warning")
@@ -577,16 +596,16 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
     }
-    else if (investigationOverview === undefined) {
+    else if (investigationOverview === false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation, Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
-    } else if (evidencesData === undefined) {
+    } else if (evidence === false) {
 
       setOpen(true);
       setMessage("Please complete the previous pending stages Evidence, Root Cause Analysis & Close Out")
       setMessageType("warning")
-    } else if (!paceCauseData && !rootCausesData && !whyData) {
+    } else if (rootcauseanalysis === false) {
 
       setOpen(true);
       setMessage("Please complete the previous pending stages  Root Cause Analysis & Close Out")
@@ -614,16 +633,16 @@ const Summary = (props) => {
       setMessage("Please complete the previous pending stages Initial Notification, Investigation, Evidence and Root Cause & Analysis")
       setMessageType("warning")
     }
-    else if (investigationOverview === undefined) {
+    else if (investigationOverview === false) {
       setOpen(true);
       setMessage("Please complete the previous pending stages Investigation, Evidence and Root Cause & Analysis")
       setMessageType("warning")
-    } else if (evidencesData === undefined) {
+    } else if (evidence === false) {
 
       setOpen(true);
       setMessage("Please complete the previous pending stages Evidence and Root Cause & Analysis")
       setMessageType("warning")
-    } else if (!paceCauseData && !rootCausesData && !whyData) {
+    } else if (rootcauseanalysis === false) {
 
       setOpen(true);
       setMessage("Please complete the previous pending stage  Root Cause & Analysis")
@@ -636,20 +655,12 @@ const Summary = (props) => {
   const handleActivityHistory = () => {
     setActivityHistory(true);
     setIsComments(false);
-    setInitialNotification(false);
-    setInvestigation(false);
-    setEvidence(false);
-    setRootCauseAnalysis(false);
-    setLessionlearn(false);
+    
   }
   const handleComments = () => {
     setActivityHistory(false);
     setIsComments(true);
-    setInitialNotification(false);
-    setInvestigation(false);
-    setEvidence(false);
-    setRootCauseAnalysis(false);
-    setLessionlearn(false);
+    
 
   }
   const fetchPermissionData = async () => {
@@ -664,12 +675,12 @@ const Summary = (props) => {
 
   }
   useEffect(() => {
-    fetchReportData();
-    fetchInvestigationData();
-    fetchEvidenceData();
-    fetchLessonLerned();
-    handelRcaValue();
-    rootCauseAnalysisCheck();
+    // fetchReportData();
+    // fetchInvestigationData();
+    // fetchEvidenceData();
+    // fetchLessonLerned();
+    // handelRcaValue();
+    // rootCauseAnalysisCheck();
     fetchIncidentData();
     fetchPermissionData();
   }, []);
@@ -720,7 +731,7 @@ const Summary = (props) => {
                 <div className={Styles.item}>
                   <Button
                     href="#investigation"
-                    color={props.viewMode.viewMode.investigation == true ? "secondary" : "primary"}
+                    color={props.viewMode.viewMode.investigation == true  ? "secondary" : "primary"}
                     variant="outlined"
                     size="large"
                     variant={investigationOverview ? "contained" : "outlined"}
@@ -742,33 +753,33 @@ const Summary = (props) => {
                 <div className={Styles.item}>
                   <Button
                     href="#evidence"
-                    color={props.viewMode.viewMode.evidence == true ? "secondary" : "primary"}
-                    variant={evidencesData ? "contained" : "outlined"}
+                    color={props.viewMode.viewMode.evidence == true? "secondary" : "primary"}
+                    variant={evidence ? "contained" : "outlined"}
                     size="large"
                     className={classes.statusButton}
                     // disabled={!permissionListData.view_incidents}
-                    endIcon={evidencesData ? <CheckCircle /> : <AccessTime />}
+                    endIcon={evidence ? <CheckCircle /> : <AccessTime />}
                     onClick={(e) => handelEvidenceView(e)}
                   >
                     Evidence
                   </Button>
                   <Typography className={Fonts.labelValue} display="block">
-                    {evidencesData ? "Done" : "Pending"}
+                    {evidence ? "Done" : "Pending"}
                   </Typography>
                 </div>
                 <div className={Styles.item}>
                   <Button
                     href="#root-cause-analysis"
-                    color={props.viewMode.viewMode.rootcauseanalysis == true ? "secondary" : "primary"}
+                    color={props.viewMode.viewMode.rootcauseanalysis == true? "secondary" : "primary"}
                     variant={
-                      paceCauseData || rootCausesData || whyData
+                      rootcauseanalysis 
                         ? "contained"
                         : "outlined"
                     }
                     size="large"
                     className={classes.statusButton}
                     endIcon={
-                      paceCauseData || rootCausesData || whyData ? (
+                      rootcauseanalysis ? (
                         <CheckCircle />
                       ) : (
                         <AccessTime />
@@ -780,7 +791,7 @@ const Summary = (props) => {
                     Root Cause & Analysis
                   </Button>
                   <Typography className={Fonts.labelValue} display="block">
-                    {paceCauseData || rootCausesData || whyData
+                    {rootcauseanalysis
                       ? "Done"
                       : "Pending"}
                   </Typography>
@@ -788,7 +799,7 @@ const Summary = (props) => {
                 <div className={Styles.item}>
                   <Button
                     href='#close-out'
-                    color={props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
+                    color={ props.viewMode.viewMode.closeout == true ? "secondary" : "primary"}
                     variant={closeout ? "contained" : "outlined"}
                     size="large"
                     className={classes.statusButton}
@@ -807,17 +818,17 @@ const Summary = (props) => {
                   <Button
                     href='#lessons-learnt'
                     color={props.viewMode.viewMode.lessionlearn == true ? "secondary" : "primary"}
-                    variant={lessionlearnData ? "contained" : "outlined"}
+                    variant={lessionlearn ? "contained" : "outlined"}
                     size="large"
                     className={classes.statusButton}
-                    endIcon={lessionlearnData ? <CheckCircle /> : <AccessTime />}
+                    endIcon={lessionlearn ? <CheckCircle /> : <AccessTime />}
                     onClick={(e) => handelLessionLearnedView()}
                   // disabled={!permissionListData.view_incidents}
                   >
                     Lessons Learnt
                   </Button>
                   <Typography className={Fonts.labelValue} display="block">
-                    {lessionlearnData ? "Done" : "Pending"}
+                    {lessionlearn ? "Done" : "Pending"}
                   </Typography>
                 </div>
               </div>
@@ -906,7 +917,7 @@ const Summary = (props) => {
                         </ListItemLink>
                       )}
 
-                      {evidencesData ? (
+                      {evidence ? (
                         <ListItemLink
                           onClick={(e) => modifyEvidence(id)}
                         >
@@ -925,7 +936,7 @@ const Summary = (props) => {
                           <ListItemText primary="Add Evidence" />
                         </ListItemLink>
                       )}
-                      {paceCauseData || rootCausesData || whyData ? (
+                      {rootcauseanalysis ? (
                         <ListItemLink
                           onClick={(e) => modifyRootCauseAnalysis()}
                         >
@@ -944,7 +955,7 @@ const Summary = (props) => {
                           <ListItemText primary="Perform RCA" />
                         </ListItemLink>
                       )}
-                      {lessionlearnData ? (
+                      {lessionlearn ? (
                         <ListItemLink
                           onClick={(e) => handelNaviagte(`/incident/${id}/lesson-learnt/modify/`)}
                         >

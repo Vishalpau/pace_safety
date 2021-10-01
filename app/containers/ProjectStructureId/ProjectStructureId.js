@@ -361,11 +361,13 @@ const ProjectStructure = (props) => {
                 No Data
               </MenuItem>}
           </Select>
-          {props.error && props.error[`projectStructure${[item.index]}`] && (
+          <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+
+          {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
             <FormHelperText>
               {props.error[`projectStructure${[item.index]}`]}
             </FormHelperText>
-          )}
+          )} */}
         </FormControl>
       </Grid>
     ))
@@ -414,11 +416,13 @@ const ProjectStructure = (props) => {
                     No Data
                   </MenuItem>}
               </Select>
-              {props.error && props.error[`projectStructure${[item.index]}`] && (
+              <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+
+              {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
                 <FormHelperText>
                   {props.error[`projectStructure${[item.index]}`]}
                 </FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
         )) :
@@ -466,11 +470,13 @@ const ProjectStructure = (props) => {
                     No Data
                   </MenuItem>}
               </Select>
-              {props.error && props.error[`projectStructure${[item.index]}`] && (
+              <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+
+              {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
                 <FormHelperText>
                   {props.error[`projectStructure${[item.index]}`]}
                 </FormHelperText>
-              )}
+              )} */}
             </FormControl>
           </Grid>
         ))

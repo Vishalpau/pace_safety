@@ -465,27 +465,30 @@ function Header(props) {
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
-    let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
-    for (var key in projectData.projectName.breakdown) {
-      if (key == 0) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
-        const res = await Axios(config)
-        .then((res)=>{
-          if (res.status === 200) {
-            labellist[0].breakdownValue = res.data.data.results
-            setLabelList(labellist)
-            setIsLoading(true)
-          }
-        })
-        .catch(err=>console.log(err.message))       
+    try{
+      let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
+      for (var key in projectData.projectName.breakdown) {
+        if (key == 0) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+              }`,
+            headers: HEADER_AUTH,
+          };
+          const res = await Axios(config)
+          .then((res)=>{
+            if (res.status === 200) {
+              labellist[0].breakdownValue = res.data.data.results
+              setLabelList(labellist)
+              setIsLoading(true)
+            }
+          })
+          .catch(err=>console.log(err.message))       
+        }
       }
+    }catch(err){
+      console.log(err.message)
     }
-
 
   };
 
