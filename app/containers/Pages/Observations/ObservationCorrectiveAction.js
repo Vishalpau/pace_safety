@@ -274,7 +274,7 @@ function ObservationCorrectiveAction() {
       const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/`, comment)
     } else {
       if (comment.comment !== "") {
-        const res1 = await api.post(`/api/v1/comments/`, comment);
+        const res1 = await api.post(`/api/v1/comments/`, comment).then(res => {}).catch(err => {setLoading(false)})
 
       }
     }
@@ -322,16 +322,18 @@ function ObservationCorrectiveAction() {
     data.append("id", form.id)
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
-    )}/`, data);
-    if (res.status === 200) {
-      localStorage.setItem('updateAction', "Done")
-      localStorage.setItem("action", "Done")
-      history.push(
-        `/app/observation/details/${localStorage.getItem(
-          "fkobservationId"
-        )}`
-      );
-    }
+    )}/`, data).then(res => {
+      if (res.status === 200) {
+        localStorage.setItem('updateAction', "Done")
+        localStorage.setItem("action", "Done")
+        history.push(
+          `/app/observation/details/${localStorage.getItem(
+            "fkobservationId"
+          )}`
+        );
+      }
+    }).catch(err => {setLoading(false)})
+    
 
 
 
