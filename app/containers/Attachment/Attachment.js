@@ -40,14 +40,12 @@ export const Attachment = ({ value }) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     let extension = fileName.split(".");
-    console.log(fileName)
-
 
     if (extension[1].toLowerCase() === "pdf") {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                <Icon path={mdiFilePdf} size={1} onClick={() => setOpen(true)} />
+                    <Icon path={mdiFilePdf} size={1} onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
@@ -59,7 +57,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                <Icon path={mdiMicrosoftExcel} size={1} onClick={() => setOpen(true)} />
+                    <Icon path={mdiMicrosoftExcel} size={1} onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
@@ -72,7 +70,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                <Icon path={mdiFileWord} size={1} onClick={() => setOpen(true)} />
+                    <Icon path={mdiFileWord} size={1} onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
@@ -81,10 +79,10 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                <Icon path={mdiFilePowerpoint} size={1} onClick={() => setOpen(true)} />
+                    <Icon path={mdiFilePowerpoint} size={1} onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
-                
+
             </IconButton>
         );
     } else {
@@ -92,12 +90,12 @@ export const Attachment = ({ value }) => {
             <>
                 <IconButton onClick={() => setOpen(true)}>
                     <Tooltip title={fileName}>
-                    <Avatar
-                        alt="image"
-                        src={value}
-                        variant="square"
-                        className={classes.square}
-                    />
+                        <Avatar
+                            alt="image"
+                            src={value}
+                            variant="square"
+                            className={classes.square}
+                        />
                     </Tooltip>
                 </IconButton>
 

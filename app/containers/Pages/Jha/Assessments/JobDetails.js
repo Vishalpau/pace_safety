@@ -51,6 +51,7 @@ import Type from "../../../../styles/components/Fonts.scss";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 import { ACCOUNT_API_URL, access_token } from '../../../../utils/constants';
 import { handelCommonObject } from '../../../../utils/CheckerValue';
+import Error from "../../Error/index"
 
 
 
@@ -413,17 +414,20 @@ const JobDetails = (props) => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
       }
     } else {
-      console.log(form)
-      const res = await api.post("/api/v1/jhas/", form)
-      if (res.status === 201) {
-        let fkJHAId = res.data.data.results.id
-        localStorage.setItem("fkJHAId", fkJHAId)
-        for (let i = 0; i < Teamform.length; i++) {
-          Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
-          const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
+      const res = await api.post("/api/v1/jhas/", form).then(res => {
+        if (res.status === 201) {
+          let fkJHAId = res.data.data.results.id
+          localStorage.setItem("fkJHAId", fkJHAId)
+          for (let i = 0; i < Teamform.length; i++) {
+            Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
+            const res = api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
+          }
+          history.push(`${JHA_FORM["Project Area Hazards"]}`)
         }
-        history.push(`${JHA_FORM["Project Area Hazards"]}`)
-      }
+      }).catch(() => {
+        setSubmitLoader(false)
+        history.push("/app/pages/error")
+      })
     }
     handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
     await setSubmitLoader(false)
