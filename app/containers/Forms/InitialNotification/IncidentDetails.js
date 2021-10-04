@@ -702,13 +702,13 @@ const IncidentDetails = (props) => {
                       required
                       className={classes.formControl}
                     >
-                      <InputLabel id="demo-simple-select-label">
+                      <InputLabel id={data.breakDownLabel}>
                         {data.breakDownLabel}
                       </InputLabel>
                       <Select
-                        labelId="incident-type-label"
-                        id="incident-type"
-                        label="Incident type"
+                        labelId={data.breakDownLabel}
+                        id={data.breakDownLabel}
+                        label={data.breakDownLabel}
                         value={data.selectValue.id || ""}
                         disabled={data.breakDownData.length === 0}
 
@@ -902,7 +902,7 @@ const IncidentDetails = (props) => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor"
-                    value={form.contractor || ""}
+                    value={form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -912,7 +912,7 @@ const IncidentDetails = (props) => {
                   >
                     {contractorValue.length !== 0
                       ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
+                        <MenuItem key={index} value={selectValues.inputValue.trim()}>
                           {selectValues.inputLabel}
                         </MenuItem>
                       ))
