@@ -902,7 +902,7 @@ const IncidentDetails = (props) => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor"
-                    value={form.contractor || ""}
+                    value={form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -912,7 +912,7 @@ const IncidentDetails = (props) => {
                   >
                     {contractorValue.length !== 0
                       ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
+                        <MenuItem key={index} value={selectValues.inputValue.trim()}>
                           {selectValues.inputLabel}
                         </MenuItem>
                       ))
