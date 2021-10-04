@@ -174,7 +174,6 @@ function Jha(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    console.log(res, "KLKLKL")
     const result = res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)

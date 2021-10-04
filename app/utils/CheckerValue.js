@@ -77,8 +77,9 @@ export const handleTimeOutError = (res) => {
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
 
-    const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`);
+    const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`)
     const allAction = allActionData.data.data.results.results
+
     if (type == "all") {
         let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
         apiAllData.map((value) => {
@@ -105,5 +106,5 @@ export const handelActionData = async (incidentId, apiData, type = "all") => {
         return allAction
     }
 
-}
 
+}
