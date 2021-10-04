@@ -132,8 +132,13 @@ export default function ActionTracker(props) {
       });
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const select = async () => {
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
+    console.log(actionSelect, 'select')
+  }
+
+  const handleClickOpen = async () => {
+    await setOpen(true);
   };
 
   const handleClose = async () => {
@@ -144,6 +149,7 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
+    await select()
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
@@ -164,9 +170,15 @@ export default function ActionTracker(props) {
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
 
+
+
+  const handelCallBack = async () => {
+    await handelUpdate()
+    await fetchReportedBy()
+  }
+
   useEffect(() => {
-    handelUpdate()
-    fetchReportedBy()
+    handelCallBack()
   }, [])
 
   return (
