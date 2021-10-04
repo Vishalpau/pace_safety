@@ -168,21 +168,23 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: "600",
     },
   },
-  boldHelperText:{
-    "& .MuiFormHelperText-root":{
+  boldHelperText: {
+    "& .MuiFormHelperText-root": {
       // fontWeight : "bold",
-      color : "red",
-      fontSize : "16px",
-    fontFamily : "Montserrat-Medium"    }
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
   },
-  errorsWrapper:{
-    backgroundColor : "#fff8f8",
-    border : "1px solid #fab9b9" ,
-    "& .MuiTypography-root":{
+  errorsWrapper: {
+    backgroundColor: "#fff8f8",
+    border: "1px solid #fab9b9",
+    "& .MuiTypography-root": {
       // fontWeight : "bold",
-      color : "red",
-      fontSize : "16px",
-    fontFamily : "Montserrat-Medium"    }
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
   }
 
 }));
@@ -500,11 +502,13 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-    const res = await api.post("/api/v1/observations/", data);
+
+
+    const res = await api.post("/api/v1/observations/", data).then(res => {
     if (res.status === 201) {
       const id = res.data.data.results;
       const fkObservatioId = id.id;
-      await localStorage.setItem("fkobservationId", fkObservatioId);
+      localStorage.setItem("fkobservationId", fkObservatioId);
 
       if (catagory.length > 0) {
         for (let i = 0; i < catagory.length; i++) {
@@ -512,29 +516,35 @@ const ObservationInitialNotification = (props) => {
             "fkobservationId"
           );
         }
-        const resCategory = await api.post(
+        const resCategory =  api.post(
           `/api/v1/observations/${localStorage.getItem(
             "fkobservationId"
           )}/observationtags/`,
           catagory
-        );
-        if (resCategory.status === 200 || resCategory.status === 201) {
-          history.push(
-            `/app/observation/details/${localStorage.getItem(
-              "fkobservationId"
-            )}`
-          );
-          await setLoading(false);
-        }
-      } else {
-        history.push(
-          `/app/observation/details/${localStorage.getItem("fkobservationId")}`
-        );
-        await setLoading(false);
-      }
+        ).then(res => {
+          if (res.status === 200 || res.status === 201) {
+            history.push(
+              `/app/observation/details/${localStorage.getItem(
+                "fkobservationId"
+              )}`
+            );
+            setLoading(false);
+          }
+        }).catch(err => {
+          setLoading(false);
+    
+        })
+        
+      } 
     }
+    }).catch(err => {
+      setLoading(false);
 
-    await setLoading(false);
+    })
+    
+    
+    
+
   };
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
@@ -961,7 +971,7 @@ const ObservationInitialNotification = (props) => {
                         ))
                         : null}
                     </Select>
-                    
+
                     {error && error[`projectStructure${[key]}`] && (
                       <FormHelperText>
                         {error[`projectStructure${[key]}`]}
@@ -1061,7 +1071,7 @@ const ObservationInitialNotification = (props) => {
                     helperText={
                       error.reportedByName ? error.reportedByName : ""
                     }
-                    className={classNames(classes.formControl,classes.boldHelperText)}
+                    className={classNames(classes.formControl, classes.boldHelperText)}
 
                     variant="outlined"
                   />
@@ -1163,7 +1173,7 @@ const ObservationInitialNotification = (props) => {
                     //     ? error.reportedByDepartment
                     //     : ""
                     // }
-                    className={classNames(classes.formControl,classes.boldHelperText)}
+                    className={classNames(classes.formControl, classes.boldHelperText)}
 
                     // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
                     variant="outlined"
@@ -1289,7 +1299,7 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
-                className={classNames(classes.formControl,classes.boldHelperText)}
+                className={classNames(classes.formControl, classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -1375,7 +1385,7 @@ const ObservationInitialNotification = (props) => {
                   error.observationTitle ? error.observationTitle : ""
                 }
                 variant="outlined"
-                className={classNames(classes.formControl,classes.boldHelperText)}
+                className={classNames(classes.formControl, classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({ ...form, observationTitle: e.target.value });
                 }}
@@ -1396,7 +1406,7 @@ const ObservationInitialNotification = (props) => {
                 defaultValue={form.observationDetails}
                 fullWidth
                 variant="outlined"
-                className={classNames(classes.formControl,classes.boldHelperText)}
+                className={classNames(classes.formControl, classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({ ...form, observationDetails: e.target.value });
                 }}
@@ -1453,7 +1463,7 @@ const ObservationInitialNotification = (props) => {
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
-                    className={classNames(classes.formControl,classes.boldHelperText)}
+                    className={classNames(classes.formControl, classes.boldHelperText)}
                     onChange={(e) => {
                       setForm({ ...form, actionTaken: e.target.value });
                     }}
@@ -1488,7 +1498,7 @@ const ObservationInitialNotification = (props) => {
                       ...form,
                       observationClassification: e.target.value,
                     });
-                  }}                className={classNames(classes.formControl,classes.boldHelperText)}
+                  }} className={classNames(classes.formControl, classes.boldHelperText)}
 
                 >
                   {radioClassification.map((value) => (
@@ -1742,7 +1752,7 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {attachment !== undefined ? (
+            {/* {attachment !== undefined ? (
               <Grid item md={12} xs={12} className={classes.formBBanner}>
                 <Avatar
                   className={classes.observationFormBox}
@@ -1801,10 +1811,10 @@ const ObservationInitialNotification = (props) => {
                 CANCEL
               </Button>
             </Grid>
-            
-            
+
+
           </Grid>
-          
+
         ) : (
           <h1>Loading...</h1>
         )}

@@ -328,12 +328,12 @@ const ProjectStructure = (props) => {
           required
         >
 
-          <InputLabel id="filter3-label">
+          <InputLabel id={item.breakdownLabel}>
             {item.breakdownLabel}
           </InputLabel>
           <Select
             labelId="filter3-label"
-            id="filter3"
+            id={item.breakdownLabel}
             value={item.selectValue}
             disabled={item.breakdownValue.length > 0 ? false : true}
             onChange={(e) => {
@@ -341,7 +341,7 @@ const ProjectStructure = (props) => {
 
             }}
             value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
-            label="Phases"
+            label={item.breakdownLabel}
             style={{ width: "100%" }}
           >
             {item.breakdownValue.length > 0
@@ -383,12 +383,12 @@ const ProjectStructure = (props) => {
               required
             >
 
-              <InputLabel id="filter3-label">
+              <InputLabel id={item.breakdownLabel}>
                 {item.breakdownLabel}
               </InputLabel>
               <Select
                 labelId="filter3-label"
-                id="filter3"
+                id={item.breakdownLabel}
                 value={item.selectValue}
                 disabled={item.breakdownValue.length > 0 ? false : true}
                 onChange={(e) => {
@@ -396,7 +396,7 @@ const ProjectStructure = (props) => {
 
                 }}
                 value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
-                label="Phases"
+                label={item.breakdownLabel}
                 style={{ width: "100%" }}
               >
                 {item.breakdownValue.length > 0
@@ -437,12 +437,12 @@ const ProjectStructure = (props) => {
               required
             >
 
-              <InputLabel id="filter3-label">
+              <InputLabel id={item.breakdownLabel}>
                 {item.breakdownLabel}
               </InputLabel>
               <Select
                 labelId="filter3-label"
-                id="filter3"
+                id={item.breakdownLabel}
                 value={item.selectValue}
                 disabled={item.breakdownValue.length > 0 ? false : true}
                 onChange={(e) => {
@@ -450,7 +450,7 @@ const ProjectStructure = (props) => {
 
                 }}
                 value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
-                label="Phases"
+                label={item.breakdownLabel}
                 style={{ width: "100%" }}
               >
                 {item.breakdownValue.length > 0

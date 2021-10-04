@@ -51,6 +51,7 @@ import Type from "../../../../styles/components/Fonts.scss";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 import { ACCOUNT_API_URL, access_token } from '../../../../utils/constants';
 import { handelCommonObject } from '../../../../utils/CheckerValue';
+import Error from "../../Error/index"
 
 
 
@@ -126,6 +127,7 @@ const useStyles = makeStyles((theme) => ({
   },
   loader: {
     marginLeft: "20px"
+
   },
   // });
 }));
@@ -209,6 +211,7 @@ const JobDetails = (props) => {
   const [checkUpdate, setUpdate] = useState(false)
   const [workArea, setWorkArea] = useState("")
   const [departmentName, setDepartmentName] = useState([])
+  const [isDateShow, setIsDateShow] = useState(false)
   // fecth jha data
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
@@ -293,10 +296,10 @@ const JobDetails = (props) => {
           .then(async (response) => {
             const result = response.data.data.results;
             await setIsLoading(true);
-            console.log(result)
+            // console.log(result)
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
-                console.log("here")
+                // console.log("here")
                 selectBreakDown = [
                   ...selectBreakDown, {
                     breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
@@ -411,17 +414,20 @@ const JobDetails = (props) => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
       }
     } else {
-      console.log(form)
-      const res = await api.post("/api/v1/jhas/", form)
-      if (res.status === 201) {
-        let fkJHAId = res.data.data.results.id
-        localStorage.setItem("fkJHAId", fkJHAId)
-        for (let i = 0; i < Teamform.length; i++) {
-          Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
-          const res = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
+      const res = await api.post("/api/v1/jhas/", form).then(res => {
+        if (res.status === 201) {
+          let fkJHAId = res.data.data.results.id
+          localStorage.setItem("fkJHAId", fkJHAId)
+          for (let i = 0; i < Teamform.length; i++) {
+            Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
+            const res = api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams/`, Teamform[i]);
+          }
+          history.push(`${JHA_FORM["Project Area Hazards"]}`)
         }
-        history.push(`${JHA_FORM["Project Area Hazards"]}`)
-      }
+      }).catch(() => {
+        setSubmitLoader(false)
+        history.push("/app/pages/error")
+      })
     }
     handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
     await setSubmitLoader(false)
@@ -490,6 +496,11 @@ const JobDetails = (props) => {
       .catch((error) => {
       });
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
   const classes = useStyles();
 
@@ -619,6 +630,7 @@ const JobDetails = (props) => {
             >
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
+                  onClick={(e) => setIsDateShow(true)}
                   className={classes.formControl}
                   fullWidth
                   id="jha_assessment_date"
@@ -635,6 +647,8 @@ const JobDetails = (props) => {
                   helperText={error.jhaAssessmentDate ? error.jhaAssessmentDate : ""}
                   inputVariant="outlined"
                   disableFuture="true"
+                  open={isDateShow}
+                  onClose={(e) => handelClose()}
                 />
 
               </MuiPickersUtilsProvider>
@@ -891,21 +905,18 @@ const JobDetails = (props) => {
               xs={12}
               style={{ marginTop: '15px' }}
             >
-              {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
 
-                  Next
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
+              <Button
+                variant="outlined"
+                onClick={(e) => handleSubmit()}
+                className={classes.custmSubmitBtn}
+                style={{ marginLeft: "10px" }}
+              >
+                {submitLoader == false ?
+                  "Next" :
                   <CircularProgress color="secondary" />
-                </IconButton>
-              }
+                }
+              </Button>
             </Grid>
           </Grid>
         </Col>

@@ -260,7 +260,6 @@ function JhaSummary() {
     let jhaId = localStorage.getItem("fkJHAId")
 
     let actionData = await handelActionData(jhaId, resultHazard)
-    console.log(actionData)
     await setHazard(actionData)
 
     let allAction = await handelActionData(jhaId, [], "title")
@@ -519,7 +518,7 @@ function JhaSummary() {
                                           Work Area
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructName["Work Area"])}
+                                          {checkValue(projectStructName["Work-Area(s)"])}
                                         </Typography>
                                       </Grid>
 
@@ -757,7 +756,7 @@ function JhaSummary() {
                                             <Typography variant="body" className={Fonts.labelValue}>
                                               {checkValue(value.risk)}
                                             </Typography>
-                                            <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "20px" }}>
+                                            <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "10px" }}>
                                               {checkValue(value.hazard)}
                                             </Typography>
                                           </div>
@@ -884,7 +883,7 @@ function JhaSummary() {
                                           gutterBottom
                                           className={Fonts.labelName}
                                         >
-                                          Additional remarks
+                                          Specific human performance aspects that have been discussed before commencing the work
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
                                           {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
@@ -892,6 +891,18 @@ function JhaSummary() {
                                               {value.replace("-", " ")}
                                             </p>
                                           ))}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={12} md={12}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Additional remarks
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.additionalRemarks)}
                                         </Typography>
                                       </Grid>
                                     </>

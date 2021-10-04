@@ -250,7 +250,6 @@ function Aha(props) {
   const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    console.log("++++++++++++++++++",res)
 
     const result = res.data.data.results.results
     await setAllAHAData(result)
@@ -589,7 +588,7 @@ function Aha(props) {
         />
       )}
       <div className={classes.pagination}>
-          {Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}`}
+      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
           </>: <h1>Loading...</h1>}

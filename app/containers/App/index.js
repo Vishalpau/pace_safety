@@ -35,31 +35,31 @@ function App() {
   const [status, setStatus] = useState(0)
   const userLogin = () => {
     try {
-      if(access_token){
-      let config = {
-        method: "get",
-        url: `${SELF_API}`,
-        headers: HEADER_AUTH,
-      };
-      axios(config)
-        .then(function (response) {
+      if (access_token) {
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        axios(config)
+          .then(function (response) {
 
-          localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
-          setStatus(response.status)
-          if (response.status !== 200) {
-            if (window.location.hostname === 'localhost') {
-              window.location.href = `${LOCAL_LOGIN_URL}`;
-            } else {
-              window.location.href = `${LOGIN_URL}`
+            localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+            setStatus(response.status)
+            if (response.status !== 200) {
+              if (window.location.hostname === 'localhost') {
+                window.location.href = `${LOCAL_LOGIN_URL}`;
+              } else {
+                window.location.href = `${LOGIN_URL}`
+              }
             }
-          }
-        })
-        .catch(function (error) {
-        });
+          })
+          .catch(function (error) {
+          });
       }
     } catch (error) {
     }
-  
+
   }
   useEffect(() => {
     userLogin();
@@ -130,19 +130,19 @@ function App() {
 
 
     <ThemeWrapper>
-      <Online>
-        {localStorage.getItem("access_token") !== null ? (
-          <Switch>
-            <Route path="/app" exact component={LandingCorporate} />
-            <Route path="/landing-creative" exact component={LandingCreative} />
-            <Route path="/" component={Application} />
-            <Route path="/blog" component={ArticleNews} />
-            <Route component={Auth} />
-            <Route component={NotFound} />
-          </Switch>
-        ) : null}
-      </Online>
-      <Offline>Turn on internet</Offline>
+      {/* <Online> */}
+      {localStorage.getItem("access_token") !== null ? (
+        <Switch>
+          <Route path="/app" exact component={LandingCorporate} />
+          <Route path="/landing-creative" exact component={LandingCreative} />
+          <Route path="/" component={Application} />
+          <Route path="/blog" component={ArticleNews} />
+          <Route component={Auth} />
+          <Route component={NotFound} />
+        </Switch>
+      ) : null}
+      {/* </Online> */}
+      {/* <Offline>Turn on internet</Offline> */}
 
     </ThemeWrapper>
   );
