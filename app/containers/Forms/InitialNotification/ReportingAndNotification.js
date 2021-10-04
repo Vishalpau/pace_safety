@@ -176,7 +176,8 @@ const ReportingAndNotification = () => {
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
     
-    if(incidentsListData.incidentStage ==="Initial Notification"){
+    if(incidentsListData.incidentStage === "Initial notification"){
+      
       temp.incidentStatus= "Done"
     }
     

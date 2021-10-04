@@ -168,21 +168,23 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: "600",
     },
   },
-  boldHelperText:{
-    "& .MuiFormHelperText-root":{
+  boldHelperText: {
+    "& .MuiFormHelperText-root": {
       // fontWeight : "bold",
-      color : "red",
-      fontSize : "16px",
-    fontFamily : "Montserrat-Medium"    }
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
   },
-  errorsWrapper:{
-    backgroundColor : "#fff8f8",
-    border : "1px solid #fab9b9" ,
-    "& .MuiTypography-root":{
+  errorsWrapper: {
+    backgroundColor: "#fff8f8",
+    border: "1px solid #fab9b9",
+    "& .MuiTypography-root": {
       // fontWeight : "bold",
-      color : "red",
-      fontSize : "16px",
-    fontFamily : "Montserrat-Medium"    }
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
   }
 
 }));
@@ -969,7 +971,7 @@ const ObservationInitialNotification = (props) => {
                         ))
                         : null}
                     </Select>
-                    
+
                     {error && error[`projectStructure${[key]}`] && (
                       <FormHelperText>
                         {error[`projectStructure${[key]}`]}
@@ -1069,7 +1071,7 @@ const ObservationInitialNotification = (props) => {
                     helperText={
                       error.reportedByName ? error.reportedByName : ""
                     }
-                    className={classNames(classes.formControl,classes.boldHelperText)}
+                    className={classNames(classes.formControl, classes.boldHelperText)}
 
                     variant="outlined"
                   />
@@ -1171,7 +1173,7 @@ const ObservationInitialNotification = (props) => {
                     //     ? error.reportedByDepartment
                     //     : ""
                     // }
-                    className={classNames(classes.formControl,classes.boldHelperText)}
+                    className={classNames(classes.formControl, classes.boldHelperText)}
 
                     // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
                     variant="outlined"
@@ -1297,7 +1299,7 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
-                className={classNames(classes.formControl,classes.boldHelperText)}
+                className={classNames(classes.formControl, classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -1383,7 +1385,7 @@ const ObservationInitialNotification = (props) => {
                   error.observationTitle ? error.observationTitle : ""
                 }
                 variant="outlined"
-                className={classNames(classes.formControl,classes.boldHelperText)}
+                className={classNames(classes.formControl, classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({ ...form, observationTitle: e.target.value });
                 }}
@@ -1404,7 +1406,7 @@ const ObservationInitialNotification = (props) => {
                 defaultValue={form.observationDetails}
                 fullWidth
                 variant="outlined"
-                className={classNames(classes.formControl,classes.boldHelperText)}
+                className={classNames(classes.formControl, classes.boldHelperText)}
                 onChange={(e) => {
                   setForm({ ...form, observationDetails: e.target.value });
                 }}
@@ -1461,7 +1463,7 @@ const ObservationInitialNotification = (props) => {
                     defaultValue={form.actionTaken}
                     fullWidth
                     variant="outlined"
-                    className={classNames(classes.formControl,classes.boldHelperText)}
+                    className={classNames(classes.formControl, classes.boldHelperText)}
                     onChange={(e) => {
                       setForm({ ...form, actionTaken: e.target.value });
                     }}
@@ -1496,7 +1498,7 @@ const ObservationInitialNotification = (props) => {
                       ...form,
                       observationClassification: e.target.value,
                     });
-                  }}                className={classNames(classes.formControl,classes.boldHelperText)}
+                  }} className={classNames(classes.formControl, classes.boldHelperText)}
 
                 >
                   {radioClassification.map((value) => (
@@ -1750,7 +1752,7 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {attachment !== undefined ? (
+            {/* {attachment !== undefined ? (
               <Grid item md={12} xs={12} className={classes.formBBanner}>
                 <Avatar
                   className={classes.observationFormBox}
@@ -1809,10 +1811,10 @@ const ObservationInitialNotification = (props) => {
                 CANCEL
               </Button>
             </Grid>
-            
-            
+
+
           </Grid>
-          
+
         ) : (
           <h1>Loading...</h1>
         )}

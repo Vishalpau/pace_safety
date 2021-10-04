@@ -30,7 +30,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams , useHistory } from 'react-router';
+import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
 
 import Axios from "axios";
@@ -52,7 +52,7 @@ import {
 } from "../../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -125,15 +125,15 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '0px !important',
     paddingBottom: '0px !important',
     '& button': {
-        marginTop: '8px',
+      marginTop: '8px',
     },
   },
-// });
+  // });
 }));
 
 const ProjectDetails = () => {
-// class ObservationInitialNotification extends Component {
-  const {id} = useParams();
+  // class ObservationInitialNotification extends Component {
+  const { id } = useParams();
   const history = useHistory();
 
   const fkCompanyId =
@@ -141,17 +141,17 @@ const ProjectDetails = () => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
   const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-    var struct = "";
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  var struct = "";
   for (var i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
@@ -182,10 +182,10 @@ const ProjectDetails = () => {
     <li key={file.path}>
       {file.path}
       {' '}
--
+      -
       {file.size}
       {' '}
-bytes
+      bytes
     </li>
   ));
 
@@ -193,13 +193,13 @@ bytes
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
-  const [isLoading , setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [workArea, setWorkArea] = useState("")
   const [projectBreakout, setProjectBreakout] = useState('')
 
-   const [Teamform, setTeamForm] = useState([{
+  const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
     "createdBy": parseInt(userId),
@@ -207,10 +207,10 @@ bytes
   }]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
-  const radioDecide = ['Yes' , 'No' ]
+  const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
 
-  
+
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
     const value = e.target.value;
@@ -220,10 +220,12 @@ bytes
 
   const handleAdd = (e) => {
     if (Object.keys(Teamform).length < 100) {
-      setTeamForm([...Teamform, { "teamName": "" ,
-      "status": "Active",
-      "createdBy": parseInt(userId),
-      "fkAhaId": 0 }]);
+      setTeamForm([...Teamform, {
+        "teamName": "",
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "fkAhaId": 0
+      }]);
     }
   };
   const handelRemove = async (e, index) => {
@@ -237,15 +239,15 @@ bytes
 
       let temp = Teamform;
       let newData = Teamform.filter((item, key) => key !== index);
-      
+
       await setTeamForm(newData);
-    
-  };
+
+    };
 
   }
 
 
-  const [form , setForm] = useState(
+  const [form, setForm] = useState(
     {
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
@@ -287,60 +289,59 @@ bytes
       return depth;
     }).join(':')
     // await getProjectStr(fkProjectStructureId)
-    console.log(fkProjectStructureId,"KKKKK")
+    console.log(fkProjectStructureId, "KKKKK")
     form["fkProjectStructureIds"] = fkProjectStructureId
     // form["workArea"] = projectBreakout.toString()
-    console.log(form,"KKKKKKKK")
-    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId);
+    console.log(form, "KKKKKKKK")
+    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
     }
     await setSubmitLoader(true);
-    if(form.id){
+    if (form.id) {
       delete form["ahaAssessmentAttachment"]
       // form['updatedBy'] = form['createdBy']
-      console.log(form,"GGGGGGGg")
-      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,form)
+      console.log(form, "GGGGGGGg")
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
-        if(Teamform[i].id){
-          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`,Teamform[i]);
-        }else{
+        if (Teamform[i].id) {
+          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
+        } else {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          if(Teamform[i].teamName !== ""){
-            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          if (Teamform[i].teamName !== "") {
+            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
           }
-          if(res.status === 200){
+          if (res.status === 200) {
             history.push("/app/pages/aha/assessments/project-area-hazards")
           }
         }
-        
+
       }
-      if(res.status === 200){
+      if (res.status === 200) {
         history.push(`/app/pages/aha/assessments/project-area-hazards/`)
       }
-     
 
-    }else{
-      const res = await api.post("/api/v1/ahas/",form)
-      if(res.status === 201){
+    } else {
+      const res = await api.post("/api/v1/ahas/", form)
+      if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
         let fkProjectStructureIds = res.data.data.results.fkProjectStructureIds
-        localStorage.setItem("fkAHAId",fkAHAId)
+        localStorage.setItem("fkAHAId", fkAHAId)
         handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
 
         for (let i = 0; i < Teamform.length; i++) {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          if(Teamform[i].teamName !== ""){
-            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          if (Teamform[i].teamName !== "") {
+            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
           }
         }
 
         history.push("/app/pages/aha/assessments/project-area-hazards")
+      }
     }
-    }
-    
-   
+
+
   }
 
 
@@ -466,8 +467,8 @@ bytes
           headers: HEADER_AUTH,
         };
         await Axios(config)
-          .then(async(response)=> {
-              
+          .then(async (response) => {
+
             await setBreakdown1ListData([
               {
                 breakdownLabel:
@@ -492,42 +493,42 @@ bytes
     await setForm(result)
     await fetchBreakDownData(result.fkProjectStructureIds)
 
-   }
+  }
 
-   const handleBreakdown = async (e, index, label, selectvalue) => {
+  const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-    
+
     const value = e.target.value;
-    
+
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
     // let removeTemp = temp.slice(0, index)
-    for(var i in temp){
-      if(i>index){
-        temp[i].breakDownData=[]
-        temp[i].selectValue.id=""
+    for (var i in temp) {
+      if (i > index) {
+        temp[i].breakDownData = []
+        temp[i].selectValue.id = ""
       }
-      
+
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
-    let sliceData = dataDepthAndId.slice(0,index)
-    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
+    let sliceData = dataDepthAndId.slice(0, index)
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
     setSelectDepthAndId(newdataDepthAndId)
     // await setFetchSelectBreakDownList(removeTemp)
-    if (projectData.projectName.breakdown.length !== index+1) {
+    if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index+1) {
-         
-          
+        if (key == index + 1) {
+
+
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-          }${value}`,)
+            }${value}`)
             .then(function (response) {
               if (response.status === 200) {
 
-               temp[key].breakDownData =response.data.data.results
-              //  temp[key].select=e.
-              setBreakdown1ListData(temp)
+                temp[key].breakDownData = response.data.data.results
+                //  temp[key].select=e.
+                setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
@@ -535,7 +536,7 @@ bytes
             });
         }
       }
-    } 
+    }
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
@@ -619,40 +620,40 @@ bytes
 
 
 
-  const getProjectStr = async(id) => {
+  const getProjectStr = async (id) => {
     console.log(id)
-    if(id != '') {
-      let c_id   = JSON.parse(localStorage.getItem("company")).fkCompanyId
-      let p_id   = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    if (id != '') {
+      let c_id = JSON.parse(localStorage.getItem("company")).fkCompanyId
+      let p_id = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       let data = []
       let breakDown = await id.split(':')
-      console.log(breakDown,"FFFFFF")
-      if (breakDown.length > 1){
-        for(var i=0;i<breakDown.length;i++){
+      console.log(breakDown, "FFFFFF")
+      if (breakDown.length > 1) {
+        for (var i = 0; i < breakDown.length; i++) {
           let level_id = breakDown[i].split('L')
-          let level    = level_id[0] + 'L'
-          let _id      = level_id[1]
+          let level = level_id[0] + 'L'
+          let _id = level_id[1]
           let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
           let res = await api.get(apiurl);
-         data= [...data,res.data.data.results[0].name]
+          data = [...data, res.data.data.results[0].name]
         }
-        console.log(data,"22222")
+        console.log(data, "22222")
         setProjectBreakout(data)
-      }else{
+      } else {
         // for(var i=0;i<breakDown.length;i++){
-          let level_id = breakDown[0].split('L')
-          let level    = level_id[0] + 'L'
-          let _id      = level_id[1]
-          let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
-          let res = await api.get(apiurl);
-         data= [...data,res.data.data.results[0].name]
-         let name = data.toString()
-         console.log(name,"52525252")
+        let level_id = breakDown[0].split('L')
+        let level = level_id[0] + 'L'
+        let _id = level_id[1]
+        let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
+        let res = await api.get(apiurl);
+        data = [...data, res.data.data.results[0].name]
+        let name = data.toString()
+        console.log(name, "52525252")
 
-        await setForm({...form,workArea:name})
+        await setForm({ ...form, workArea: name })
         // setProjectBreakout(data.toString())
       }
-      
+
     }
   }
 
@@ -662,7 +663,7 @@ bytes
   }
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
-    const result =  res.data.data.results
+    const result = res.data.data.results
     await setTeamForm(result)
   }
   const classes = useStyles();
@@ -670,86 +671,86 @@ bytes
   useEffect(() => {
     // fetchBreakdown()
     // getProjectStr()
-    
+
 
     fetchCallBack()
-    
-      fetchAhaData()
-      fetchTeamData()
+
+    fetchAhaData()
+    fetchTeamData()
     // if(selectDepthAndId){
     //   getProjectStr()
     // }
-    
+
   }, []);
   return (
     <>
-        <PapperBlock title="Project Details" icon="ion-md-list-box">
-        {isLoading ? 
+      <PapperBlock title="Project Details" icon="ion-md-list-box">
+        {isLoading ?
 
-    <Grid container spacing={3} className={classes.observationNewSection}>
-    <Grid container spacing={3} item xs={12} md={9}>
-        {/* <Grid item xs={12} className={classes.coponentTitleBox}>
+          <Grid container spacing={3} className={classes.observationNewSection}>
+            <Grid container spacing={3} item xs={12} md={9}>
+              {/* <Grid item xs={12} className={classes.coponentTitleBox}>
             <Typography variant="h5">Initial Notification</Typography>
         </Grid> */}
 
-        <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Project
-        </Typography>
-        <Typography className={classes.labelValue}>
-        {project.projectName}
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom className={classes.labelName}>
+                  Project
+                </Typography>
+                <Typography className={classes.labelValue}>
+                  {project.projectName}
 
-        </Typography>
-        </Grid>
-        {id ? 
-              fetchSelectBreakDownList.map((data, key) => 
-              <Grid item xs={3} md={3} key={key}>
-                <FormControl
-                  error={error && error[`projectStructure${[key]}`]}
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    {data.breakDownLabel}
-                  </InputLabel>
-                  <Select
-                    labelId="incident-type-label"
-                    id="incident-type"
-                    label="Incident type"
-                    value={data.selectValue.id || ""}
-                    disabled={data.breakDownData.length===0}
-                    
-                    onChange={(e) => {
-                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
-                    }}
-                  >
-                    {data.breakDownData.length !== 0
-                      ? data.breakDownData.map((selectvalues, index) => (
-                        <MenuItem key={index} 
-                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                        value={selectvalues.id}>
-                          {selectvalues.structureName}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error[`projectStructure${[key]}`] && (
-                              <FormHelperText>
-                                {error[`projectStructure${[key]}`]}
-                              </FormHelperText>
-                            )}
-                </FormControl>
+                </Typography>
               </Grid>
+              {id ?
+                fetchSelectBreakDownList.map((data, key) =>
+                  <Grid item xs={3} md={3} key={key}>
+                    <FormControl
+                      error={error && error[`projectStructure${[key]}`]}
+                      variant="outlined"
+                      required
+                      className={classes.formControl}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        {data.breakDownLabel}
+                      </InputLabel>
+                      <Select
+                        labelId="incident-type-label"
+                        id="incident-type"
+                        label="Incident type"
+                        value={data.selectValue.id || ""}
+                        disabled={data.breakDownData.length === 0}
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setWorkArea={setWorkArea}
-              setSelectDepthAndId={setSelectDepthAndId} />
+                        onChange={(e) => {
+                          handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                        }}
+                      >
+                        {data.breakDownData.length !== 0
+                          ? data.breakDownData.map((selectvalues, index) => (
+                            <MenuItem key={index}
+                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                              value={selectvalues.id}>
+                              {selectvalues.structureName}
+                            </MenuItem>
+                          ))
+                          : null}
+                      </Select>
+                      {error && error[`projectStructure${[key]}`] && (
+                        <FormHelperText>
+                          {error[`projectStructure${[key]}`]}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+
+                ) : <ProjectStructureInit
+                  selectDepthAndId={selectDepthAndId}
+                  setLevelLenght={setLevelLenght}
+                  error={error}
+                  setWorkArea={setWorkArea}
+                  setSelectDepthAndId={setSelectDepthAndId} />
               }
-        {/* <Grid
+              {/* <Grid
         item
         md={6}
         xs={12}
@@ -773,176 +774,176 @@ bytes
             ))}
         </TextField>
         </Grid> */}
-        <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Work Location*"
-            // margin="dense"
-            name="worklocation"
-            id="worklocation"
-            value={form.location ? form.location : ""}
-            error={error.location}
-            helperText={error.location ? error.location : ""}
-            fullWidth
-            onChange={(e) => setForm({...form,location:e.target.value})}
-            variant="outlined"
-            className={classes.formControl}
-        />
-        </Grid>
-        <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDateTimePicker
-                className={classes.formControl}
-                // margin="dense"
-                fullWidth
-                label="Date & Time*"
-                value={selectedDate}
-                onChange={handleDateChange}
-                value={form.assessmentDate || null}
-                error={error.assessmentDate}
-                  helperText={error.assessmentDate ? error.assessmentDate : null}
-                inputVariant="outlined"
-                disableFuture="true"
-                onChange={(e) => {
-                    setForm({
-                      ...form,
-                      assessmentDate: moment(e).format("YYYY-MM-DD"),
-                    });
-                    // console.log(e.target.value)
-                  }}
-                  InputProps={{ readOnly: true }}
-              />
-            </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormControl component="fieldset" error={
-                                  error && error["permitToPerform"]
-                                }>
-            <FormLabel component="legend" className={classes.labelName} >Do you have a permit to perform the AHA?*</FormLabel>
-            <RadioGroup row aria-label="gender" name="gender1"
-            onChange={(e) => {
-                                    {setForm({...form,permitToPerform:e.target.value})};
-                                  }}
-                                  value={form.permitToPerform ? form.permitToPerform : ""}>
-            {radioDecide.map((value) => (
-              <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
-             ) )}
-            {/* <FormControlLabel value="yes" className={classes.labelValue} control={<Radio />} label="Yes" />
+              <Grid
+                item
+                md={6}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Work Location*"
+                  // margin="dense"
+                  name="worklocation"
+                  id="worklocation"
+                  value={form.location ? form.location : ""}
+                  error={error.location}
+                  helperText={error.location ? error.location : ""}
+                  fullWidth
+                  onChange={(e) => setForm({ ...form, location: e.target.value })}
+                  variant="outlined"
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                className={classes.formBox}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDateTimePicker
+                    className={classes.formControl}
+                    // margin="dense"
+                    fullWidth
+                    label="Date & Time*"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                    value={form.assessmentDate || null}
+                    error={error.assessmentDate}
+                    helperText={error.assessmentDate ? error.assessmentDate : null}
+                    inputVariant="outlined"
+                    disableFuture="true"
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        assessmentDate: moment(e).format("YYYY-MM-DD"),
+                      });
+                      // console.log(e.target.value)
+                    }}
+                    InputProps={{ readOnly: true }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+              >
+                <FormControl component="fieldset" error={
+                  error && error["permitToPerform"]
+                }>
+                  <FormLabel component="legend" className={classes.labelName} >Do you have a permit to perform the AHA?*</FormLabel>
+                  <RadioGroup row aria-label="gender" name="gender1"
+                    onChange={(e) => {
+                      { setForm({ ...form, permitToPerform: e.target.value }) };
+                    }}
+                    value={form.permitToPerform ? form.permitToPerform : ""}>
+                    {radioDecide.map((value) => (
+                      <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
+                    ))}
+                    {/* <FormControlLabel value="yes" className={classes.labelValue} control={<Radio />} label="Yes" />
             <FormControlLabel value="no" className={classes.labelValue} control={<Radio />} label="No" /> */}
-            </RadioGroup>
-            {error && error["permitToPerform"] && (
-                                  <FormHelperText>
-                                    {error["permitToPerform"]}
-                                  </FormHelperText>
-                                )}
-        </FormControl>
-        </Grid>
-        <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Permit Reference"
-            // margin="dense"
-            name="reference"
-            id="reference"
-            multiline
-            value={form.permitNumber ? form.permitNumber : ""}         
-            fullWidth
-            onChange={(e) => {
-                                    {setForm({...form,permitNumber:e.target.value})};
-                                  }}
-            variant="outlined"
-            className={classes.formControl}
-        />
-        </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Description*"
-            // margin="dense"
-            name="description"
-            id="description"
-            multiline
-            error={error.description}
-            helperText={error.description ? error.description : ""}
-            rows={4}
-            value={form.description ? form.description : ""}         
-            fullWidth
-            onChange={(e) => {
-                                    {setForm({...form,description:e.target.value})};
-                                  }}
-            variant="outlined"
-            className={classes.formControl}
-        />
-        </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.createHazardbox}
-        style={{marginTop: '12px'}}
-        >
-        <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
-        </Grid>
-        {Teamform.map((value,index) => (<>
-        <Grid
-        item
-        md={6}
-        xs={11}
-        className={classes.createHazardbox}
-        >
-       
-          <TextField
-            label="Team Name"
-            // margin="dense"
-            name="arename"
-            id="arename"
-            multiline
-            value={Teamform[index].teamName || ""}
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-            onChange={(e) => {handleTeamName(e, index)}
-            }
-        />
-        
-        
-        </Grid>
-        {Teamform.length > 1 ?
-        (<Grid item md={1} className={classes.createHazardbox}>
-            <IconButton
-                variant="contained"
-                color="primary"
-                onClick={(e) => {handelRemove(e, index)}}
-            >
-                <DeleteForeverIcon />
-            </IconButton>
-        </Grid>):null }
-        
-       </> ))}
+                  </RadioGroup>
+                  {error && error["permitToPerform"] && (
+                    <FormHelperText>
+                      {error["permitToPerform"]}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Permit Reference"
+                  // margin="dense"
+                  name="reference"
+                  id="reference"
+                  multiline
+                  value={form.permitNumber ? form.permitNumber : ""}
+                  fullWidth
+                  onChange={(e) => {
+                    { setForm({ ...form, permitNumber: e.target.value }) };
+                  }}
+                  variant="outlined"
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Description*"
+                  // margin="dense"
+                  name="description"
+                  id="description"
+                  multiline
+                  error={error.description}
+                  helperText={error.description ? error.description : ""}
+                  rows={4}
+                  value={form.description ? form.description : ""}
+                  fullWidth
+                  onChange={(e) => {
+                    { setForm({ ...form, description: e.target.value }) };
+                  }}
+                  variant="outlined"
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.createHazardbox}
+                style={{ marginTop: '12px' }}
+              >
+                <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
+              </Grid>
+              {Teamform.map((value, index) => (<>
+                <Grid
+                  item
+                  md={6}
+                  xs={11}
+                  className={classes.createHazardbox}
+                >
 
-        {/* {Teamform.map((item, index) => (<>
+                  <TextField
+                    label="Team Name"
+                    // margin="dense"
+                    name="arename"
+                    id="arename"
+                    multiline
+                    value={Teamform[index].teamName || ""}
+                    fullWidth
+                    variant="outlined"
+                    className={classes.formControl}
+                    onChange={(e) => { handleTeamName(e, index) }
+                    }
+                  />
+
+
+                </Grid>
+                {Teamform.length > 1 ?
+                  (<Grid item md={1} className={classes.createHazardbox}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => { handelRemove(e, index) }}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>) : null}
+
+              </>))}
+
+              {/* {Teamform.map((item, index) => (<>
               
                   <Grid item xs={11} md={6}>
                     <TextField
@@ -969,19 +970,19 @@ bytes
                   ) : null}
                   </>
             ))} */}
-        
-        <Grid item md={12} className={classes.createHazardbox}>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddCircleIcon />}
-                className={classes.button}
-                onClick={() => {handleAdd()}}
-            >
-                Add
-            </Button>
-        </Grid>
-        {/* <Grid
+
+              <Grid item md={12} className={classes.createHazardbox}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddCircleIcon />}
+                  className={classes.button}
+                  onClick={() => { handleAdd() }}
+                >
+                  Add
+                </Button>
+              </Grid>
+              {/* <Grid
         item
         md={12}
         xs={12}
@@ -1039,39 +1040,39 @@ bytes
             />
         </FormGroup>
         </Grid> */}
-        
-        <Grid
-        item
-        md={12}
-        xs={12}
-        style={{marginTop: '15px'}}
-        >
-        {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
 
-                  Next
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
-        </Grid>
-        </Grid>
-        <Grid item xs={12} md={3}>
-        <FormSideBar
+              <Grid
+                item
+                md={12}
+                xs={12}
+                style={{ marginTop: '15px' }}
+              >
+                {submitLoader == false ?
+                  <Button
+                    variant="outlined"
+                    onClick={(e) => handleSubmit()}
+                    className={classes.custmSubmitBtn}
+                    style={{ marginLeft: "10px" }}
+                  >
+
+                    Next
+                  </Button>
+                  :
+                  <IconButton className={classes.loader} disabled>
+                    <CircularProgress color="secondary" />
+                  </IconButton>
+                }
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={AHA}
                 selectedItem="Project Details"
               />
-</Grid>
-    </Grid> :<> loading...</>}
-    </PapperBlock>
+            </Grid>
+          </Grid> : <> loading...</>}
+      </PapperBlock>
     </>
   );
 };

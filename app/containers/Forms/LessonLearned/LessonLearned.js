@@ -149,11 +149,22 @@ const LessionLearned = () => {
     // sent post request
     const { isValid, error } = LessionLearnedValidator(form);
     setError(error);
-
+    if(evidence.length === 0){
+      try {
+        const temp = incidentsListData;
+        temp.incidentStage = "Lesson Learnt";
+        temp.incidentStatus = "Done"
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch(error){}
+    }
     if (isValid === true) {
       if (attachment[0].evidenceDocument !== null) {
         if (typeof attachment[0].evidenceDocument !== "string") {
           if (evidence.length > 0) {
+            
             const formData = new FormData();
             formData.append('evidenceDocument', attachment[0].evidenceDocument);
             formData.append('evidenceCheck', 'Yes');

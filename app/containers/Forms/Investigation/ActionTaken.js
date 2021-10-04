@@ -65,7 +65,7 @@ const ActionTaken = () => {
   const [error, setError] = useState({});
 
   const handleNext = async (e) => {
-    const temp = [...incidentsListData]
+    const temp = incidentsListData
     temp.updatedAt = new Date().toISOString();
     if(incidentsListData.incidentStage === "Investigation"){
       temp.incidentStatus= "Done"

@@ -168,6 +168,19 @@ const WhyAnalysis = () => {
         }
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
+        if(incidents.incidentStage === "Root cause & analysis"){
+          try {
+            const temp = incidents
+            temp.updatedAt = new Date().toISOString();
+            temp.incidentStatus= "Done"
+            const res = await api.put(
+              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+              temp
+            );
+          } catch (error) {
+            alert("something went wrong")
+          }
+        }
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
@@ -175,6 +188,19 @@ const WhyAnalysis = () => {
         dispatch(tabViewMode(viewMode))
         history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
+        if(incidents.incidentStage === "Root cause & analysis"){
+          try {
+            const temp = incidents
+            temp.updatedAt = new Date().toISOString();
+            temp.incidentStatus= "Done"
+            const res = await api.put(
+              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+              temp
+            );
+          } catch (error) {
+            alert("something went wrong")
+          }
+        }
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
