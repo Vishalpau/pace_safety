@@ -14,6 +14,7 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DateFnsUtils from "@date-io/date-fns";
 import moment from "moment";
 import axios from "axios";
@@ -55,40 +56,42 @@ export default function ActionTracker(props) {
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
     actionTitle: "",
-    actionDetail: "string",
-    actionCategory: "string",
-    actionShedule: "string",
-    priority: "string",
-    severity: "",
+    actionDetail: "",
+    actionCategory: "",
+    actionShedule: "Planned",
+    priority: "",
+    severity: "Normal",
     approver: 0,
     assignTo: 0,
+    assignToName: "",
     deligateTo: 0,
-    plannedStartDate: "2021-07-21T17:05:39.604Z",
-    actualStartDate: "2021-07-21T17:05:39.604Z",
+    plannedStartDate: new Date(),
+    actualStartDate: null,
     plannedEndDate: null,
-    actualEndDate: "2021-07-21T17:05:39.604Z",
-    forecaststartDate: "2021-07-21T17:05:39.604Z",
-    forecastEndDate: "2021-07-21T17:05:39.604Z",
-    location: "string",
+    actualEndDate: null,
+    forecaststartDate: null,
+    forecastEndDate: null,
+    location: null,
     latitude: 0,
     longitude: 0,
     supervisorId: 0,
     contractor: 0,
-    contractorName: "string",
-    contractorCompany: "string",
-    actionStatus: "string",
-    actionStage: "string",
+    contractorName: null,
+    contractorCompany: null,
+    actionStatus: null,
+    actionStage: null,
     status: "Active",
     createdBy: props.createdBy,
     reviewedBy: 0,
-    reviewDate: "2021-07-21T17:05:39.605Z",
+    reviewDate: null,
     closedBy: 0,
-    closeDate: "2021-07-21T17:05:39.605Z",
+    closeDate: null,
     source: "Web",
-    vendor: "string",
-    vendorReferenceId: "string",
+    vendor: null,
+    vendorReferenceId: null,
   });
   const [reportedByName, setReportedByName] = useState([]);
+  const [isLoading, setLoading] = useState(false)
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
@@ -129,8 +132,13 @@ export default function ActionTracker(props) {
       });
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const select = async () => {
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
+    console.log(actionSelect, 'select')
+  }
+
+  const handleClickOpen = async () => {
+    await setOpen(true);
   };
 
   const handleClose = async () => {
@@ -141,9 +149,11 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
+    await select()
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
+      setLoading(true)
       let res = await apiAction.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setError({ actionTitle: "" });
@@ -152,6 +162,7 @@ export default function ActionTracker(props) {
         await props.setUpdatePage(!props.updatePage)
         await props.handelShowData()
       }
+      setLoading(false)
     }
   };
 
@@ -159,9 +170,15 @@ export default function ActionTracker(props) {
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
 
+
+
+  const handelCallBack = async () => {
+    await handelUpdate()
+    await fetchReportedBy()
+  }
+
   useEffect(() => {
-    handelUpdate()
-    fetchReportedBy()
+    handelCallBack()
   }, [])
 
   return (
@@ -214,6 +231,7 @@ export default function ActionTracker(props) {
                   setForm({
                     ...form,
                     assignTo: option.id,
+                    assignToName: option.name
                   })
                 }
                 renderInput={(params) => <TextField {...params}
@@ -267,7 +285,7 @@ export default function ActionTracker(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handelSubmit()} color="primary">
-            Create action
+            {isLoading ? <CircularProgress /> : "Create action"}
           </Button>
         </DialogActions>
       </Dialog>
