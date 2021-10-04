@@ -127,7 +127,7 @@ const Approvals = () => {
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
 
-    const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]
+    const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
     setProjectData({
       companyId: fkCompanyId,
       projectId: projectId,
@@ -213,7 +213,7 @@ const Approvals = () => {
                 updatePage={updatePage}
                 fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                 fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
                 createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                 handelShowData={handelActionTracker}
               />

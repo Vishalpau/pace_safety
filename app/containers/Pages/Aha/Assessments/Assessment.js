@@ -206,8 +206,7 @@ const Assessment = () => {
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
-  const [severityValue, setSeverityValue] = useState("");
-  const [probabilityValue, setProbabilityValue] = useState("");
+
   const [colorId, setColorId] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [idPerColor, setIdPerColor] = useState({ 243: "yellow" });
@@ -243,7 +242,7 @@ const Assessment = () => {
     5: "Frequent",
   };
   const approver = ['Yes', 'No']
-  const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
+  // const riskColor = ["1EBD10", "FFEB13", "F3C539", "FF0000"];
   const [actionTakenData, setActionTakenData] = useState([])
   const [expanded, setExpanded] = useState(false);
   const [allForms, setAllForms] = useState({})
@@ -345,6 +344,7 @@ const Assessment = () => {
 
   const handleSeverity = (e, index) => {
     const temp = [...form]
+    
     temp[index]["severity"] = e.target.value
     setForm(temp)
 
@@ -456,6 +456,92 @@ const Assessment = () => {
     riskResidual.current = await PickListData(76)
     monitor.current = await PickListData(77)
   }
+  const [severityValue , setSeverityValue] = useState(0)
+  const [probabilityValue , setProbabilityValue] = useState(0)
+  const [riskValue , setRiskValue] = useState(0)
+  const handleRiskPersentage =  (index) =>{
+    const temp = [...form]
+    let clrValue = ""
+    if( severityValue * probabilityValue  == 0 ){
+      clrValue = "0"
+     
+      
+    }else if(0 < severityValue * probabilityValue  && severityValue * probabilityValue <= 4){
+      clrValue = "25"
+   
+
+    }else if(5 <= severityValue * probabilityValue && severityValue * probabilityValue <= 9){
+      
+      clrValue =  "50"
+ 
+
+    }else if(10 <= severityValue * probabilityValue && severityValue * probabilityValue <= 14){
+      
+      clrValue = "75"
+   
+
+    }else if(15 <= severityValue * probabilityValue && severityValue * probabilityValue <=25){
+      
+      clrValue = "100"
+    }else{
+      clrValue = "0"
+   
+    }
+    temp[index].riskRating = clrValue
+    // console.log(clrValue,"color")
+    // console.log(temp,"temp123")
+    // handleRating(temp)
+    // await setForm(temp)
+    // return clrValue
+    
+  }
+const [riskColor, setRiskColor] = useState("white")
+  const handleColor =   (index) =>{
+    const temp = [...form]
+    let clrValue = ""
+    if(0 < severityValue * probabilityValue  && severityValue * probabilityValue <= 4){
+      clrValue = "green"
+    }else if(5 <= severityValue * probabilityValue && severityValue * probabilityValue <= 9){
+      clrValue = "yellow"
+
+    }else if(10 <= severityValue * probabilityValue && severityValue * probabilityValue <= 14){
+      clrValue = "orange"
+
+    }else if(15 <= severityValue * probabilityValue && severityValue * probabilityValue <=25){
+      clrValue = "red"
+    }else{
+    }
+    handleRiskPersentage(index)
+
+    return clrValue
+  }
+  const handle123 = async (name,value,index) => {
+    if(name === 'severity'){
+    await setSeverityValue(value)
+    }
+    if(name === 'probablity'){
+     await setProbabilityValue(value)
+    }
+    await handleColor(index)
+  }
+  const handleRating = (value) => {
+    setForm(value)
+  }
+
+  
+
+
+  const [ persentage, setPersentage ]  = useState(0) 
+  
+// const handlePercentage = () => {
+//   console.log("sagar")
+
+// let temp = [...form]
+ 
+
+//   }
+console.log("ASASA",form)
+  
 
   const handelCallBack = async () => {
 
@@ -551,9 +637,10 @@ const Assessment = () => {
 
                               >
                                 {Object.entries(severity).map(
-                                  ([key, value], index) => (
+                                  ([key, value]) => (
                                     <MenuItem
                                       value={value}
+                                      onClick={()=> handle123('severity',key,index)}
                                     >
                                       {value}
                                     </MenuItem>
@@ -582,9 +669,10 @@ const Assessment = () => {
                                 }}
                               >
                                 {Object.entries(probability).map(
-                                  ([key, value], index) => (
+                                  ([key, value]) => (
                                     <MenuItem
-                                      value={value}>
+                                      value={value}
+                                      onClick={()=> handle123('probablity',key,index)}>
                                       {value}
                                     </MenuItem>
                                   )
@@ -593,9 +681,15 @@ const Assessment = () => {
                             </FormControl>
                           </Grid>
                           <Grid item md={4} sm={4} xs={12}>
-                            <div style={{ backgroundColor: colorid(index) }}>
-                              50% Risk
-                            </div>
+                          <div
+                          // className={
+                          //   classes.ratioColororange
+                          // }
+                          style={{ backgroundColor: handleColor(index) }}
+                          // onChange={()=>handlePercentage()}
+                        >
+                          {form[index]['riskRating']}% Risk
+                        </div>
                           </Grid>
                           <Grid item md={12} sm={12} xs={12}>
                             <TextField

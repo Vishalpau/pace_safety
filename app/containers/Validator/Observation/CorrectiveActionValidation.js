@@ -6,22 +6,22 @@ function CorrectiveActionValidator(data) {
   const error = {};
   let isValid = true;
   if (data.reviewedByName === null) {
-    error.reviewedByName = "Please select the reviewedBy";
+    error.reviewedByName = "Select the reviewedBy";
     isValid = false;
   }
 
   if (data.isCorrectiveActionTaken === null) {
-    error.isCorrectiveActionTaken = "Please select any one";
+    error.isCorrectiveActionTaken = "Select any one";
     isValid = false;
   }
 
   if (data.reviewedOn === null) {
-    error.reviewedOn = "Please select date and time";
+    error.reviewedOn = "Select date and time";
     isValid = false;
   }
 
   if(data.reviewedOn > new Date()){
-    error.reviewedOn = "Please select correct  time";
+    error.reviewedOn = "Select correct time";
     isValid = false;
   }
 
