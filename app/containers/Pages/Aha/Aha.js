@@ -153,6 +153,10 @@ function Aha(props) {
   const history = useHistory();
   const [data, setData] = useState([])
   const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
 
 
   // Function to toggle the view mode
@@ -231,6 +235,7 @@ function Aha(props) {
 
 
   const fetchAllAHAData = async () => {
+    await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -245,14 +250,15 @@ function Aha(props) {
   const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    console.log("++++++++++++++++++",res)
 
     const result = res.data.data.results.results
     await setAllAHAData(result)
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
-    await setPageCount(pageCount)
+    await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          await setPageCount(pageCount)
 
-    // await setIsLoading(true)
+    await setIsLoading(true)
   };
 
   const handleChange = async(event, value) => {
@@ -272,6 +278,7 @@ function Aha(props) {
   const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
   console.log("----------",res)
     await setAllAHAData(res.data.data.results.results);
+    await setPage(value)
   };
 
   
@@ -300,13 +307,15 @@ function Aha(props) {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-},[props.projectName])
+},[props.projectName.breakDown])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
     <Box>
+    {isLoading ? <>
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
           <Toolbar>
+          
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={7} md={3}>
                 <div className={classes.search}>
@@ -579,8 +588,10 @@ function Aha(props) {
         />
       )}
       <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
+      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+          </>: <h1>Loading...</h1>}
     </Box>
     </PapperBlock>
   );

@@ -6,7 +6,9 @@ import Link from "@material-ui/core/Link";
 import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import { useParams, useHistory } from "react-router";
 import api from "../../../../utils/axios";
-import ActionTracker from "../ActionTracker";
+import ActionTracker from "../../../Forms/ActionTracker";
+import { handelCommonObject, handelActionData } from "../../../../utils/CheckerValue"
+import ActionShow from '../../../Forms/ActionShow';
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -77,7 +79,16 @@ const useStyles = makeStyles((theme) => ({
 const Approvals = () => {
   const [form, setForm] = useState({});
   const history = useHistory();
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
+  const [projectData, setProjectData] = useState({
+    companyId: "",
+    projectId: "",
+    createdBy: "",
+    ProjectStructId: "",
+  })
+
 
   const handelJobDetails = async () => {
     // const jhaId = handelJhaId()
@@ -87,6 +98,43 @@ const Approvals = () => {
     const apiData = res.data.data.results;
     setForm(apiData);
   };
+
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkAHAId")
+
+    let allAction = await handelActionData(jhaId, [], "title")
+    let temp = []
+    allAction.map((value) => {
+      if (value.enitityReferenceId.split(":")[1] == "00") {
+        temp.push(value)
+      }
+    })
+    setActionData(temp !== null ? temp : [])
+  };
+
+  const handelActionLink = () => {
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+
+    const projectStuctId = JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
+    setProjectData({
+      companyId: fkCompanyId,
+      projectId: projectId,
+      createdBy: userId,
+      ProjectStructId: projectStuctId,
+    })
+  }
 
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
@@ -120,6 +168,8 @@ const Approvals = () => {
   useEffect(() => {
     handelJobDetails();
     handelWorkAndPic();
+    handelActionTracker();
+    handelActionLink();
   }, []);
 
   const classes = useStyles();
@@ -138,9 +188,7 @@ const Approvals = () => {
               onClick={(e) => handelWorkAndPic("work")}
             >
               {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
-            </Button> 
-            {/* <Typography variant="h6" gutterBottom className={classes.labelName}>
-            {form.wrpApprovalDateTime}            </Typography> */}
+            </Button>
           </Grid>
           <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -152,37 +200,37 @@ const Approvals = () => {
               className={classes.approvalButton}
               onClick={(e) => handelWorkAndPic("pic")}
             >
-                            {form.picApprovalUser == "" ? "Approve Now" : "Approved"}
+              {form.picApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
           </Grid>
-          <Grid item md={8}>
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
-              Corrective Actions
-            </Typography>
-            <ActionTracker
-                            actionContext="aha"
-                            enitityReferenceId={`${localStorage.getItem("fkAHAId")}`}
-                          />
-            {/* <Typography className={classes.labelValue}>
-              Action title{" "}
-              <span className={classes.updateLink}>
-                <Link to="">AL-nnnnn</Link>
-              </span>
-            </Typography>
-            <Typography className={classes.labelValue}>
-              Action title{" "}
-              <span className={classes.updateLink}>
-                <Link to="">AL-nnnnn</Link>
-              </span>
-            </Typography>
 
-            <Typography className={classes.increaseRowBox}>
-              <ControlPointIcon />{" "}
-              <span className={classes.addLink}>
-                <Link to="">Add a new action</Link>
-              </span>
-            </Typography> */}
+          <Grid item md={6} xs={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              <ActionTracker
+                actionContext="jha:approval"
+                enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
+                setUpdatePage={setUpdatePage}
+                updatePage={updatePage}
+                fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
+                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                handelShowData={handelActionTracker}
+              />
+            </Typography>
+            <Typography className={classes.aLabelValue}>
+              {actionData.map((value) => (
+                <ActionShow
+                  action={{ id: value.id, number: value.actionNumber }}
+                  title={value.actionTitle}
+                  companyId={projectData.companyId}
+                  projectId={projectData.projectId}
+                  updatePage={updatePage}
+                />
+              ))}
+            </Typography>
           </Grid>
+
           <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               Signature
@@ -197,22 +245,22 @@ const Approvals = () => {
           </Grid>
 
           <Grid item md={12} xs={12}>
-          {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handelSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
+            {submitLoader == false ?
+              <Button
+                variant="outlined"
+                onClick={(e) => handelSubmit()}
+                className={classes.custmSubmitBtn}
+                style={{ marginLeft: "10px" }}
+              >
 
-                  Next
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
-        
+                Next
+              </Button>
+              :
+              <IconButton className={classes.loader} disabled>
+                <CircularProgress color="secondary" />
+              </IconButton>
+            }
+
           </Grid>
         </Grid>
       </PapperBlock>

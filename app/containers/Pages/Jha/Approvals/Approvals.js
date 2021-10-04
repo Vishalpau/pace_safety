@@ -196,7 +196,7 @@ const Approvals = () => {
     handelJobDetails()
     handelWorkAndPic()
     handelActionTracker()
-  }, [updatePage])
+  }, [])
 
   const classes = useStyles();
   return (
@@ -255,6 +255,7 @@ const Approvals = () => {
                     fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                     fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
                     createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                    handelShowData={handelActionTracker}
                   />
                 </Typography>
                 <Typography className={classes.aLabelValue}>
@@ -264,7 +265,6 @@ const Approvals = () => {
                       title={value.actionTitle}
                       companyId={projectData.companyId}
                       projectId={projectData.projectId}
-                      handelShowData={handelActionTracker}
                       updatePage={updatePage}
                     />
                   ))}

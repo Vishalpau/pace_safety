@@ -23,7 +23,7 @@ const Error = () => (
             <meta property="twitter:title" content={title} />
             <meta property="twitter:description" content={description} />
           </Helmet>
-          <ErrorWrap title="500" desc="Sorry, server goes wrong" />
+          <ErrorWrap desc="Sorry, server goes wrong" />
         </div>
       );
     }}
