@@ -702,13 +702,13 @@ const IncidentDetails = (props) => {
                       required
                       className={classes.formControl}
                     >
-                      <InputLabel id="demo-simple-select-label">
+                      <InputLabel id={data.breakDownLabel}>
                         {data.breakDownLabel}
                       </InputLabel>
                       <Select
-                        labelId="incident-type-label"
-                        id="incident-type"
-                        label="Incident type"
+                        labelId={data.breakDownLabel}
+                        id={data.breakDownLabel}
+                        label={data.breakDownLabel}
                         value={data.selectValue.id || ""}
                         disabled={data.breakDownData.length === 0}
 
