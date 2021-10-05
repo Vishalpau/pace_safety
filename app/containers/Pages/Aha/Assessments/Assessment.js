@@ -44,6 +44,7 @@ import axios from "axios";
 import api from "../../../../utils/axios";
 
 import { AHA } from "../constants";
+import { keySeq } from "draft-js/lib/DefaultDraftBlockRenderMap";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -226,13 +227,13 @@ const Assessment = () => {
   const [additinalJobDetails, setAdditionalJobDetails] = useState({
     workStopCondition: [],
   })
-  const severity = {
-    1: "Negligible",
-    2: "Minor",
-    3: "Moderate",
-    4: "Major/ Critical",
-    5: "Catastrophic",
-  };
+  const severity = [
+     "Negligible",
+    "Minor",
+    "Moderate",
+     "Major/ Critical",
+     "Catastrophic",
+  ];
 
   const probability = {
     1: "Improbable",
@@ -264,7 +265,75 @@ const Assessment = () => {
     })
     handelCommonObject("commonObject", "aha", "assessmentIds", temp)
     await handelActionTracker(result)
-    await setForm(result)
+
+  //   const severity = [
+  //     "Negligible",
+  //    "Minor",
+  //    "Moderate",
+  //     "Major/ Critical",
+  //     "Catastrophic",
+  //  ];
+
+   let sagar = [...result]
+    for (var i = 0; i <result.length; i++) {
+      if (result[i].severity !== ""){
+        if(result[i].severity === "Negligible") {
+          sagar[i].riskSeverityValue = 1
+        }else if(result[i].severity === "Minor"){
+          sagar[i].riskSeverityValue = 2
+  
+        }else if(result[i].severity === "Moderate"){
+          sagar[i].riskSeverityValue = 3
+  
+        }else if(result[i].severity === "Major/ Critical"){
+          sagar[i].riskSeverityValue = 4
+  
+        }else{
+          sagar[i].riskSeverityValue = 5
+        }
+      }
+    }
+
+
+    let abc = [...sagar]
+    for (var i = 0; i <sagar.length; i++) {
+      if (sagar[i].probability !== ""){
+        if(sagar[i].probability === "Improbable") {
+          abc[i].riskProbabilityValue = 1
+        }else if(sagar[i].probability === "Remote"){
+          abc[i].riskProbabilityValue = 2
+  
+        }else if(sagar[i].probability === "Occasional"){
+          abc[i].riskProbabilityValue = 3
+  
+        }else if(sagar[i].probability === "Probable"){
+          abc[i].riskProbabilityValue = 4
+  
+        }else{
+          abc[i].riskProbabilityValue = 5
+        }
+      }
+    }
+
+    let zzz = [...abc]
+
+    for (var i = 0; i <abc.length; i++) {
+      if (abc[i].riskRating !== ""){
+        if(abc[i].riskRating === "25%") {
+          zzz[i].riskRatingColour = '#1EBD10'
+        }else if(abc[i].riskRating === "50%"){
+          zzz[i].riskRatingColour = '#FFEB13'
+  
+        }else if(abc[i].riskRating === "75%"){
+          zzz[i].riskRatingColour = '#F3C539'
+  
+        }else {
+          zzz[i].riskRatingColour = '#FF0000'
+        }
+      }
+    }
+
+    await setForm(zzz)
 
   };
 
@@ -342,51 +411,7 @@ const Assessment = () => {
     setForm(temp)
   }
 
-  const handleSeverity = (e, index) => {
-    const temp = [...form]
-    
-    temp[index]["severity"] = e.target.value
-    setForm(temp)
-
-  }
-  const handleProbability = (e, index) => {
-    const temp = [...form]
-    temp[index]["probability"] = e.target.value
-    setForm(temp)
-
-  }
-
-
-  const handleControlChange = async (e, index) => {
-    let temp = [...form];
-
-    temp[index].control = e.target.value;
-    await setForm(temp)
-
-  };
-  const control = async (e, index) => {
-    let temp = [...form];
-
-    temp[index].control = e.target.value;
-    await setForm(temp)
-
-  };
-
-  const colorid = (id) => {
-    let idcolor = idPerColor[id]
-    if (idcolor !== undefined) {
-      return red
-    } else {
-      return "white"
-    }
-  }
-
-  const handleProbabilityValue = async (e, index) => {
-    let temp = [...form];
-    temp[index].probability = e.target.value;
-    await setForm(temp);
-  };
-
+ 
   const [checkGroups, setCheckListGroups] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -423,11 +448,6 @@ const Assessment = () => {
     }
   };
 
-  const handleRiskValue = async (e, index) => {
-    let tempData = [...form]
-    tempData[index]['risk'] = e.target.value;
-    await setForm(tempData);
-  }
 
   const checkList = async () => {
     const temp = {};
@@ -456,93 +476,41 @@ const Assessment = () => {
     riskResidual.current = await PickListData(76)
     monitor.current = await PickListData(77)
   }
-  const [severityValue , setSeverityValue] = useState(0)
-  const [probabilityValue , setProbabilityValue] = useState(0)
-  const [riskValue , setRiskValue] = useState(0)
-  const handleRiskPersentage =  (index) =>{
-    const temp = [...form]
-    let clrValue = ""
-    if( severityValue * probabilityValue  == 0 ){
-      clrValue = "0"
-     
-      
-    }else if(0 < severityValue * probabilityValue  && severityValue * probabilityValue <= 4){
-      clrValue = "25"
-   
 
-    }else if(5 <= severityValue * probabilityValue && severityValue * probabilityValue <= 9){
-      
-      clrValue =  "50"
+
+  const handleRiskChange = (e, key, fieldname) => {
  
-
-    }else if(10 <= severityValue * probabilityValue && severityValue * probabilityValue <= 14){
-      
-      clrValue = "75"
-   
-
-    }else if(15 <= severityValue * probabilityValue && severityValue * probabilityValue <=25){
-      
-      clrValue = "100"
-    }else{
-      clrValue = "0"
-   
-    }
-    temp[index].riskRating = clrValue
-    // console.log(clrValue,"color")
-    // console.log(temp,"temp123")
-    // handleRating(temp)
-    // await setForm(temp)
-    // return clrValue
+    const temp = [...form];
+    const txt = e.nativeEvent.target.innerText;
+    temp[key][fieldname] = e.target.value;
+    const riskSeverity = ((temp[key].riskSeverityValue == undefined || temp[key].riskSeverityValue == '' || isNaN(temp[key].riskSeverityValue)) ? 1 : temp[key].riskSeverityValue);
+    const riskProbability = ((temp[key].riskProbabilityValue == undefined || temp[key].riskProbabilityValue == '' || isNaN(temp[key].riskProbabilityValue)) ? 1 : temp[key].riskProbabilityValue);
     
-  }
-const [riskColor, setRiskColor] = useState("white")
-  const handleColor =   (index) =>{
-    const temp = [...form]
-    let clrValue = ""
-    if(0 < severityValue * probabilityValue  && severityValue * probabilityValue <= 4){
-      clrValue = "green"
-    }else if(5 <= severityValue * probabilityValue && severityValue * probabilityValue <= 9){
-      clrValue = "yellow"
+    const riskRating = riskSeverity * riskProbability;
 
-    }else if(10 <= severityValue * probabilityValue && severityValue * probabilityValue <= 14){
-      clrValue = "orange"
-
-    }else if(15 <= severityValue * probabilityValue && severityValue * probabilityValue <=25){
-      clrValue = "red"
-    }else{
+    if (fieldname == 'riskSeverityValue') {
+      temp[key].severity = txt;
+    } else {
+      temp[key].probability = txt;
     }
-    handleRiskPersentage(index)
 
-    return clrValue
-  }
-  const handle123 = async (name,value,index) => {
-    if(name === 'severity'){
-    await setSeverityValue(value)
+    if (riskRating >= 1 && riskRating <= 4) {
+      temp[key].riskRating = '25%';
+      temp[key].riskRatingColour = '#1EBD10';
+    } else if (riskRating > 4 && riskRating <= 9) {
+      temp[key].riskRating = '50%';
+      temp[key].riskRatingColour = '#FFEB13';
+    } else if (riskRating > 9 && riskRating <= 14) {
+      temp[key].riskRating = '75%';
+      temp[key].riskRatingColour = '#F3C539';
+    } else {
+      temp[key].riskRating = '100%';
+      temp[key].riskRatingColour = '#FF0000';
     }
-    if(name === 'probablity'){
-     await setProbabilityValue(value)
-    }
-    await handleColor(index)
-  }
-  const handleRating = (value) => {
-    setForm(value)
-  }
+    setForm(temp);
+  };
 
-  
-
-
-  const [ persentage, setPersentage ]  = useState(0) 
-  
-// const handlePercentage = () => {
-//   console.log("sagar")
-
-// let temp = [...form]
- 
-
-//   }
-console.log("ASASA",form)
-  
-
+    
   const handelCallBack = async () => {
 
     await fetchHzardsData();
@@ -631,21 +599,14 @@ console.log("ASASA",form)
                                 labelId="incident-type-label"
                                 id="incident-type"
                                 label="Incident Type"
-                                value={form[index].severity ? form[index].severity : ''}
-
-                                onChange={(e) => { handleSeverity(e, index) }}
-
+                                value={value.riskSeverityValue}
+                                onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue')}
                               >
-                                {Object.entries(severity).map(
-                                  ([key, value]) => (
-                                    <MenuItem
-                                      value={value}
-                                      onClick={()=> handle123('severity',key,index)}
-                                    >
-                                      {value}
-                                    </MenuItem>
-                                  )
-                                )}
+                                  <MenuItem value={1}>Negligible</MenuItem>
+                                  <MenuItem value={2}>Minor</MenuItem>
+                                  <MenuItem value={3}>Moderate</MenuItem>
+                                  <MenuItem value={4}>Major/ Critical</MenuItem>
+                                  <MenuItem value={5}>Catastrophic</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -662,35 +623,21 @@ console.log("ASASA",form)
                                 labelId="incident-type-label"
                                 id="incident-type"
                                 label="Incident Type"
-                                value={form[index].probability ? form[index].probability : ''}
-
-                                onChange={(e) => {
-                                  handleProbability(e, index);
-                                }}
+                                value={value.riskProbabilityValue}
+                                onChange={(e) => handleRiskChange(e, index, 'riskProbabilityValue')}
                               >
-                                {Object.entries(probability).map(
-                                  ([key, value]) => (
-                                    <MenuItem
-                                      value={value}
-                                      onClick={()=> handle123('probablity',key,index)}>
-                                      {value}
-                                    </MenuItem>
-                                  )
-                                )}
+                                <MenuItem value={1} selected={value.probability == 1}>Improbable</MenuItem>
+                                <MenuItem value={2} selected={value.probability == 2}>Remote</MenuItem>
+                                <MenuItem value={3} selected={value.probability == 3}>Occasional</MenuItem>
+                                <MenuItem value={4} selected={value.probability == 4}>Probable</MenuItem>
+                                <MenuItem value={5} selected={value.probability == 5}>Frequent</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
-                          <Grid item md={4} sm={4} xs={12}>
-                          <div
-                          // className={
-                          //   classes.ratioColororange
-                          // }
-                          style={{ backgroundColor: handleColor(index) }}
-                          // onChange={()=>handlePercentage()}
-                        >
-                          {form[index]['riskRating']}% Risk
-                        </div>
-                          </Grid>
+                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: value.riskRatingColour }}>
+                                            {value.riskRating ? `${value.riskRating} risk` : ''}
+                                          </Grid>
+                          
                           <Grid item md={12} sm={12} xs={12}>
                             <TextField
                               variant="outlined"
