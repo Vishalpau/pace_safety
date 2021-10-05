@@ -174,7 +174,7 @@ function Jha(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    const result = res.data.data.results.results
+    const result = res.data.data.results.results !== undefined && res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)
     await setPageData(res.data.data.results.count / 25)
@@ -183,8 +183,6 @@ function Jha(props) {
     handelTableView(result)
 
     await setIsLoading(true)
-
-
   }
 
   const handleChange = async (event, value) => {
