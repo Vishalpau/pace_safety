@@ -307,63 +307,12 @@ const ObservationInitialNotificationUpdate = () => {
       return "Data is not valid";
     }
     await setLoading(true)
-
-    let data = new FormData();
-    data.append("fkCompanyId", initialData.fkCompanyId),
-      data.append("fkProjectId", initialData.fkProjectId),
-      data.append("fkProjectStructureIds", initialData.fkProjectStructureIds),
-      data.append("observationType", initialData.observationType),
-      data.append("observationClassification", initialData.observationClassification),
-      data.append("stopWork", initialData.stopWork),
-      data.append("nearMiss", initialData.nearMiss),
-      data.append("acceptAndPledge", initialData.acceptAndPledge),
-      data.append("personRecognition", initialData.personRecognition),
-      data.append("observationTitle", initialData.observationTitle),
-      data.append("observationDetails", initialData.observationDetails),
-      data.append("isSituationAddressed", initialData.isSituationAddressed),
-      data.append("actionTaken", initialData.actionTaken),
-      data.append("location", initialData.location),
-      data.append("observedAt", initialData.observedAt),
-      data.append("isNotifiedToSupervisor", initialData.isNotifiedToSupervisor),
-      data.append("assigneeName", initialData.assigneeName),
-      data.append("assigneeId", initialData.assigneeId),
-      data.append("shift", initialData.shift),
-      data.append("departmentName", initialData.departmentName),
-      data.append("departmentId", initialData.departmentId),
-      data.append("reportedById", initialData.reportedById),
-      data.append("reportedByName", initialData.reportedByName),
-      data.append("reportedByDepartment", initialData.reportedByDepartment)
-    if (initialData.reportedDate !== null && typeof initialData.reportedDate !== "string") {
-      data.append("reportedDate", null)
-    }
-    data.append("reportedByBadgeId", initialData.reportedByBadgeId),
-      data.append("closedById", initialData.closedById),
-      data.append("closedByName", initialData.closedByName),
-      data.append("closedByDepartment", initialData.closedByDepartment)
-    if (initialData.closedDate !== null && typeof initialData.closedDate !== "string") {
-      data.append("closedDate", null)
-    }
-    if (initialData.closedoutAttachment !== null && typeof initialData.closedoutAttachment !== "string") {
-      data.append("closedoutAttachment", initialData.closedoutAttachment)
-    }
-    data.append("supervisorName", initialData.supervisorName),
-      data.append("supervisorDepartment", initialData.supervisorDepartment)
-    if (initialData.attachment !== null && typeof initialData.attachment !== "string") {
-      data.append("attachment", initialData.attachment)
-    }
-    data.append("status", initialData.status),
-      data.append("createdBy", initialData.createdBy),
-      data.append("observationStatus", initialData.observationStatus),
-      data.append("observationStage", initialData.observationStage),
-      data.append("updatedBy", userId),
-      data.append("source", initialData.source),
-      data.append("vendor", initialData.vendor),
-      data.append("vendorReferenceId", initialData.vendorReferenceId);
     let newCategory = []
     let updateCategory = []
 
     if (id) {
-      data.append("id", id)
+      initialData['updatedBy'] = userId
+      delete initialData['attachment']
       for (let i = 0; i < catagory.length; i++) {
         if (catagory[i].id) {
           catagory[i].updatedBy = userId
@@ -383,7 +332,7 @@ const ObservationInitialNotificationUpdate = () => {
         const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory).then(res => {} ).catch(err => setLoading(false)        )
       }
 
-      const res1 = await api.put(`/api/v1/observations/${id}/`, data).then(res => {
+      const res1 = await api.put(`/api/v1/observations/${id}/`, initialData).then(res => {
         if (res.status === 200) {
            localStorage.setItem("update", "Done");
           history.push(
