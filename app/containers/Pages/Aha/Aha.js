@@ -250,7 +250,6 @@ function Aha(props) {
   const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    console.log("++++++++++++++++++",res)
 
     const result = res.data.data.results.results
     await setAllAHAData(result)

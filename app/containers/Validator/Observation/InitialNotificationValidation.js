@@ -11,24 +11,24 @@ console.log(data)
     var element = projectStructure[i]
     console.log({ element: element })
     if (projectStructure[i] === undefined) {
-      error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
+      error[`projectStructure${[i]}`] = `Select ${breakdownValue[i].structure[0].name}`;
       isValid = false;
     }
   }
 
 
   if (validator.isEmpty(data.observationDetails.toString())) {
-    error.observationDetails = "Please enter observation details";
+    error.observationDetails = "Enter observation details";
     isValid = false;
   }
 
   if (validator.isEmpty(data.isSituationAddressed.toString())) {
-    error.isSituationAddressed = "Please select whether you addressed the situation";
+    error.isSituationAddressed = "Select whether you addressed the situation";
     isValid = false;
   }
 
   if (validator.isEmpty(data.observationType.toString())) {
-    error.observationType = "Please choose any one observation type";
+    error.observationType = "Choose any one observation type";
     isValid = false;
   }
 
@@ -38,12 +38,12 @@ console.log(data)
   // }
 
   if (validator.isEmpty(data.reportedByName.toString())) {
-    error.reportedByName = "Please select the observed by";
+    error.reportedByName = "Select the observed by";
     isValid = false;
   }
 
   if (data.observedAt === null) {
-    error.observedAt = "Please select date and time";
+    error.observedAt = "Select date and time";
     isValid = false;
   }
   //   if (isNaN(data.supervisorByBadgeId)) {
@@ -53,14 +53,14 @@ console.log(data)
 
   if (data.isSituationAddressed === "Yes") {
     if (validator.isEmpty(data.actionTaken.toString())) {
-      error.actionTaken = "Please enter describe the actions taken";
+      error.actionTaken = "Enter describe the actions taken";
       isValid = false;
 
     }
   }
 
   if (data.observationTitle.length > 255) {
-    error.observationTitle = "Please enter less than 255 characters";
+    error.observationTitle = "Enter less than 255 characters";
     isValid = false;
   }
 
@@ -70,13 +70,13 @@ console.log(data)
   // }
 
   if (validator.isEmpty(data.acceptAndPledge.toString())) {
-    error.acceptAndPledge = "Please check the accept & pledge";
+    error.acceptAndPledge = "Check the accept & pledge";
     isValid = false;
   }
 
   if (data.departmentName !== ""   ) {
     if(data.assigneeName === ""){
-      error.assigneeName = "Please select the assignee";
+      error.assigneeName = "Select the assignee";
       isValid = false;
     }
   

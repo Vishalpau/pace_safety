@@ -529,7 +529,7 @@ const ProjectAreaHazards = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  onClick={() => history.goBack()}
+                  onClick={() => history.push(`/app/pages/aha/assessments/project-details/${localStorage.getItem("fkAHAId")}`)}
                 >
                   Previous
                 </Button>
