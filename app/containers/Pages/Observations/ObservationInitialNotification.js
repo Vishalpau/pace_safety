@@ -471,9 +471,10 @@ const ObservationInitialNotification = (props) => {
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment);
-    if (form.reportedDate !== null && typeof form.reportedDate !== "string") {
-      data.append("reportedDate", null);
-    }
+    // if (form.reportedDate !== null && typeof form.reportedDate !== "string") {
+      console.log(form.reportedDate, "DASA")
+      data.append("reportedDate", form.reportedDate);
+    // }
     data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
@@ -502,7 +503,6 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-
 
     const res = await api.post("/api/v1/observations/", data).then(res => {
     if (res.status === 201) {
@@ -542,10 +542,8 @@ const ObservationInitialNotification = (props) => {
 
     })
     
-    
-    
-
   };
+
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
   const handleChange = async (e, index, value) => {

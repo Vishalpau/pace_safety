@@ -195,18 +195,6 @@ function ObservationCorrectiveAction() {
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
 
-  let client = []
-  let client_id = []
-  companies.map((value, i) => {
-    if (value.companyId === form.fkCompanyId) {
-      client.push(companies[i])
-      client[0].subscriptions.map((value, i) => {
-        if (value.appCode == "actions") {
-          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
-        }
-      })
-    }
-  })
 
   const [comment, setComment] = useState({
     "fkCompanyId": parseInt(fkCompanyId),

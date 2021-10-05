@@ -416,9 +416,10 @@ const ObservationInitialNotificationUpdate = () => {
   }
 
   const fetchAssignee = (departments) => {
+    let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/application/${appId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -429,19 +430,16 @@ const ObservationInitialNotificationUpdate = () => {
         if (response.status === 200) {
           const result = response.data.data.results;
           let user = [];
-          let data = result.filter((item) =>          
-            item['companyId'] == fkCompanyId
-        )
-          for (var i in data[0].users) {
+  
+          for (var i in result[0].users) {
             let temp = {};
 
-            temp["inputValue"] = data[0].users[i].name;
-            temp["reportedById"] = data[0].users[i].id;
-            temp["department"] = data[0].users[i].department;
+            temp["inputValue"] = result[0].users[i].name;
+            temp["reportedById"] = result[0].users[i].id;
+            temp["department"] = result[0].users[i].department;
 
             user.push(temp);
-            // filterReportedById.push(result[i].id);
-            // filterReportedByBedgeID.push(result[i].badgeNo);
+ 
           }
           setReportedByName(user);
           setReportedBy(user);
