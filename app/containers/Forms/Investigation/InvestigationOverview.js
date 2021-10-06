@@ -88,7 +88,7 @@ const InvestigationOverview = () => {
             temp
           );
         } catch (error) {
-          alert("something went wrong")
+          history.push("/app/pages/error")
         }
         await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`);
         
@@ -111,7 +111,7 @@ const InvestigationOverview = () => {
       const result = res.data.data.results;
        setIncidentsListdata(result);
     })
-    .catch((err)=>console.log(err))
+    .catch((err)=>history.push("/app/pages/error"))
     
   };
 

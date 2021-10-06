@@ -149,7 +149,7 @@ const EqiptmentAffected = () => {
                   fkIncidentId: localStorage.getItem("fkincidentId"),
                 }
               )
-            }catch(error){}
+            }catch(error){history.push("/app/pages/error")}
           }else{
           try{const res = await api.post(
             `/api/v1/incidents/${localStorage.getItem(
@@ -162,7 +162,7 @@ const EqiptmentAffected = () => {
               createdBy: parseInt(userId),
               fkIncidentId: localStorage.getItem("fkincidentId"),
             }
-          )}catch(error){}
+          )}catch(error){history.push("/app/pages/error")}
           }
           ;
         }
@@ -206,11 +206,12 @@ const EqiptmentAffected = () => {
         detailsOfEquipmentAffect ||
         incidentsListData.isEquipmentDamagedAvailable;
       temp.updatedAt = new Date().toISOString();
+      try{
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
-  
+      }catch(err){history.push("/app/pages/error")}
         if (nextPath.environmentAffect === "Yes") {
           history.push(
             `/incident/${id}/modify/environment-affected/`
@@ -240,6 +241,7 @@ const EqiptmentAffected = () => {
          setIsLoading(true);
       }
     })
+    .catch((err)=>history.push("/app/pages/error"))
     
   };
 
@@ -259,7 +261,7 @@ const EqiptmentAffected = () => {
          setIsLoading(true);
       }
     })
-    
+    .catch((err)=>history.push("/app/pages/error"))
   };
 
   // fetch equipment type value for dropdown
@@ -269,7 +271,7 @@ const EqiptmentAffected = () => {
       const result = res.data.data.results;
       setEquipmentTypeValue(result);
     })
-    
+    .catch(()=>history.push("/app/pages/error"))
   };
 
   // fetch equipment afftected radio button value
@@ -279,7 +281,7 @@ const EqiptmentAffected = () => {
       const result = res.data.data.results;
        setequipmentAffected(result);
     })
-    
+    .catch(()=>history.push("/app/pages/error"))
   };
 
   // handle go back

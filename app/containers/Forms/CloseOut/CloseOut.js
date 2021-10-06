@@ -103,7 +103,7 @@ const CloseOut = () => {
                      setIsLoading(true)
                 
             }
-        }).catch(err=>console.log(err))
+        }).catch(err=>history.push("/app/pages/error"))
         
 
     };
@@ -157,7 +157,7 @@ const CloseOut = () => {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                history.push("/app/pages/error");
             });
     }
 
@@ -186,7 +186,7 @@ const CloseOut = () => {
                         dispatch(tabViewMode(viewMode));
                         history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
                     }
-                }).catch(err=>console.log(err))
+                }).catch(err=>history.push("/app/pages/error"))
                 
             }
             else {
@@ -195,7 +195,7 @@ const CloseOut = () => {
                 setError(errorMessage)
             }
         } catch (error) {
-            console.log(error)
+            history.push("/app/pages/error")
         }
     }
 
