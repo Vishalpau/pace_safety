@@ -190,6 +190,7 @@ const ReportingAndNotification = () => {
       );
     } catch (error) {
       setIsnext(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -206,6 +207,7 @@ const ReportingAndNotification = () => {
           );
         } catch (err) {
           setIsnext(true);
+          history.push("/app/pages/error")
         }
       }
     }
@@ -225,6 +227,7 @@ const ReportingAndNotification = () => {
           });
         } catch (err) {
           await setIsnext(true);
+          history.push("/app/pages/error")
         }
       }
     }
@@ -272,6 +275,7 @@ const ReportingAndNotification = () => {
                 );
               } catch (error) {
                 setIsnext(true);
+                history.push("/app/pages/error")
               }
             } else {
               if (evidanceId.length > 0) {
@@ -309,6 +313,7 @@ const ReportingAndNotification = () => {
                 );
               } catch (error) {
                 setIsnext(true);
+                history.push("/app/pages/error")
               }
             }
           }
@@ -367,6 +372,7 @@ const ReportingAndNotification = () => {
               status = res.status;
             } catch (err) {
               setIsnext(true);
+              history.push("/app/pages/error")
             }
           }
 
@@ -543,9 +549,7 @@ const ReportingAndNotification = () => {
 
         setReportableTo(result);
       }).catch(error => {
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
 
   };
@@ -583,9 +587,7 @@ const ReportingAndNotification = () => {
         setIsLoading(true);
       })
       .catch(error => {
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
 
   };
@@ -622,9 +624,7 @@ const ReportingAndNotification = () => {
       })
 
       .catch(error => {
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
   };
 
@@ -648,9 +648,7 @@ const ReportingAndNotification = () => {
         }
       })
       .catch(error => {
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
   };
 
@@ -675,12 +673,10 @@ const ReportingAndNotification = () => {
           }
           setReportedByNameList([...result, { name: "other" }]);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
+      
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
+        history.push("/app/pages/error")
       });
   };
 
@@ -701,9 +697,7 @@ const ReportingAndNotification = () => {
         }
       })
       .catch(error => {
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
   };
 
@@ -725,12 +719,10 @@ const ReportingAndNotification = () => {
             setNotificationSentValue(result);
           }
         }).catch(error => {
-          setMessage(error.message);
-          setMessageType("error");
-          setOpen(true);
+          history.push("/app/pages/error")
         })
 
-    } catch (error) { }
+    } catch (error) { history.push("/app/pages/error")}
   };
 
   // handle go back

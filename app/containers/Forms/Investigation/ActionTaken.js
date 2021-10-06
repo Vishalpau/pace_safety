@@ -59,7 +59,7 @@ const ActionTaken = () => {
         setForm(allApiData);
         investigationId.current = allApiData.id;
       }
-    }).catch(error => console.log(error))
+    }).catch(error => history.push("/app/pages/error"))
   };
 
   const [error, setError] = useState({});
@@ -75,7 +75,7 @@ const ActionTaken = () => {
           temp
         );
       } catch (error) {
-
+        history.push("/app/pages/error")
       }
     }
 
@@ -108,7 +108,7 @@ const ActionTaken = () => {
       const result = res.data.data.results;
       setIncidentsListdata(result);
     })
-      .catch((err) => console.log(err))
+      .catch((err) => history.push("/app/pages/error"))
 
   };
 

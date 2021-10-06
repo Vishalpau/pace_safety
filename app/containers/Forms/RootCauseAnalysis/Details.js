@@ -181,7 +181,7 @@ const Details = () => {
             temp
           );
         } catch (error) {
-          alert("something went wrong")
+          history.push("/app/pages/error")
         }
         const res = await api.post(
           `/api/v1/incidents/${localStorage.getItem(

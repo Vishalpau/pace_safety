@@ -195,7 +195,7 @@ const EnvironmentAffected = () => {
     .then((res)=>{
       const result = res.data.data.results;
       setWaterbodyAffectedValue(result);
-    }).catch(error=>console.log(error))
+    }).catch(error=>history.push("/app/pages/error"))
     
   };
 
@@ -213,7 +213,7 @@ const EnvironmentAffected = () => {
     .then((res)=>{
       const result = res.data.data.results;
       setAnyReleaseValue(result);
-    }).catch(error=>console.log(error))
+    }).catch(error=>history.push("/app/pages/error"))
    
   };
 
@@ -222,7 +222,7 @@ const EnvironmentAffected = () => {
     .then((res)=>{
       const result = res.data.data.results;
       setEnvironmentAffectedValue(result);
-    }).catch(error=>console.log(error))
+    }).catch(error=>history.push("/app/pages/error"))
   };
 
   const fetchEnviornmentListData = async () => {
@@ -238,7 +238,7 @@ const EnvironmentAffected = () => {
          setEnvironmentListData(result);
          setIsLoading(true);
       }
-    }).catch(error=>console.log(error))
+    }).catch(error=>history.push("/app/pages/error"))
     
   };
 
@@ -252,7 +252,7 @@ const EnvironmentAffected = () => {
       if (!id) {
         setIsLoading(true);
       }
-    }).catch(error=>console.log(error))
+    }).catch(error=>history.push("/app/pages/error"))
     
   };
 

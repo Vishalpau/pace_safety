@@ -252,7 +252,7 @@ const PropertyAffected = () => {
       const result = res.data.data.results;
       setPropertyAffectedValue(result);
     })
-
+    .catch((err)=>history.push("/app/pages/error"))
   };
 
   // get property type value for dropdown
@@ -263,7 +263,7 @@ const PropertyAffected = () => {
       result.push({ inputValue: "Other", inputLabel: "Other" });
       setPropertyTypeValue(result);
     })
-
+    .catch((err)=>history.push("/app/pages/error"))
     
   };
 
@@ -278,7 +278,7 @@ const PropertyAffected = () => {
       const isAvailable = result.isPropertyDamagedAvailable;
        setDetailsOfPropertyAffect(isAvailable);
     })
-    
+    .catch((err)=>history.push("/app/pages/error")) 
   };
 
   // get property list data
@@ -294,7 +294,7 @@ const PropertyAffected = () => {
        setPropertyListData(result);
        setIsLoading(true);
     })
-     
+    .catch((err)=>history.push("/app/pages/error"))
   };
 
   // handle go back

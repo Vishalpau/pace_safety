@@ -380,10 +380,7 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       await setIncidentTypeValue(result);
     } catch (error) {
-      setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+history.push("/app/pages/error")
     }
   };
 
@@ -397,9 +394,8 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      
+history.push("/app/pages/error")
     }
   };
 
@@ -413,9 +409,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -428,9 +422,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -443,9 +435,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -458,9 +448,7 @@ const IncidentDetails = (props) => {
     } catch (error) {
       setIsNext(true);
 
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -472,9 +460,7 @@ const IncidentDetails = (props) => {
       await setEnvironmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -514,9 +500,7 @@ const IncidentDetails = (props) => {
       } catch (error) {
         setIsNext(true);
 
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       }
     }
   };
@@ -559,7 +543,7 @@ const IncidentDetails = (props) => {
               }
             })
             .catch(function (error) {
-
+              history.push("/app/pages/error")
             });
         }
       }
