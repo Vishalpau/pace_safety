@@ -227,6 +227,7 @@ const ObservationInitialNotification = (props) => {
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
   const [levelLenght, setLevelLenght] = useState(0);
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
@@ -543,6 +544,11 @@ const ObservationInitialNotification = (props) => {
     })
     
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
@@ -1309,16 +1315,17 @@ const ObservationInitialNotification = (props) => {
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
+                  onClick={(e) => setIsDateShow(true)}
                   label="Date & Time*"
-                  defaultValue={form.observedAt}
                   disabled={form.id ? true : false}
                   error={error.observedAt}
                   helperText={error.observedAt ? error.observedAt : null}
-                  onChange={handleDateChange}
                   format="YYYY/MM/DD hh:mm A"
                   className={classes.formControl}
-                  value={form.observedAt || null}
+                  value={form.observedAt ? form.observedAt : null}
                   fullWidth
+                  open={isDateShow}
+                  onClose={(e) => handelClose()}
                   disableFuture={true}
                   inputVariant="outlined"
                   InputProps={{ readOnly: true }}
