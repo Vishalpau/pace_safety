@@ -779,7 +779,7 @@ bytes
     temp[taskIndex].hazards[key][fieldname] = e.target.value;
     // if(fieldname == "riskSeverity"){
     const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverityValue == undefined || temp[taskIndex].hazards[key].riskSeverityValue == '' || isNaN(temp[taskIndex].hazards[key].riskSeverityValue)) ? 1 : temp[taskIndex].hazards[key].riskSeverityValue);
-
+    console.log(riskSeverity,">>>>>")
     // }
     // else if(fieldname == "riskProbability"){
     const riskProbability = ((temp[taskIndex].hazards[key].riskProbabilityValue == undefined || temp[taskIndex].hazards[key].riskProbabilityValue == '' || isNaN(temp[taskIndex].hazards[key].riskProbabilityValue)) ? 1 : temp[taskIndex].hazards[key].riskProbabilityValue);
@@ -820,7 +820,7 @@ bytes
     console.log({ updated: temp });
     setTaskForm(temp);
   };
-
+console.log(taskForm,"!@#")
   const handleFileUpload = (e) => {
     alert('changing file');
     console.log(e.target.file);

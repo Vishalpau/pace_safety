@@ -195,18 +195,6 @@ function ObservationCorrectiveAction() {
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
 
-  let client = []
-  let client_id = []
-  companies.map((value, i) => {
-    if (value.companyId === form.fkCompanyId) {
-      client.push(companies[i])
-      client[0].subscriptions.map((value, i) => {
-        if (value.appCode == "actions") {
-          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
-        }
-      })
-    }
-  })
 
   const [comment, setComment] = useState({
     "fkCompanyId": parseInt(fkCompanyId),
@@ -278,51 +266,11 @@ function ObservationCorrectiveAction() {
 
       }
     }
-    let data = new FormData();
-    data.append("fkCompanyId", form.fkCompanyId),
-      data.append("fkProjectId", form.fkProjectId),
-      data.append("fkProjectStructureIds", form.fkProjectStructureIds),
-      data.append("observationTopic", form.observationTopic),
-      data.append("observationClassification", form.observationClassification),
-      data.append("stopWork", form.stopWork),
-      data.append("nearMiss", form.nearMiss),
-      data.append("personRecognition", form.personRecognition),
-      data.append("observationTitle", form.observationTitle),
-      data.append("observationDetails", form.observationDetails),
-      data.append("isSituationAddressed", form.isSituationAddressed),
-      data.append("actionTaken", form.actionTaken),
-      data.append("location", form.location),
-      data.append("observedAt", form.observedAt),
-      data.append("assigneeName", form.assigneeName),
-      data.append("assigneeId", form.assigneeId),
-      data.append("shift", form.shift),
-      data.append("departmentName", form.departmentName),
-      data.append("departmentId", form.departmentId),
-      data.append("isCorrectiveActionTaken", form.isCorrectiveActionTaken),
-      data.append("reportedById", form.reportedById),
-      data.append("reportedByName", form.reportedByName),
-      data.append("reportedByDepartment", form.reportedByDepartment)
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
-      data.append("closedById", form.closedById),
-      data.append("closedByName", form.closedByName),
-      data.append("closedByDepartment", form.closedByDepartment)
-    data.append("reviewedOn", form.reviewedOn)
-    data.append("reviewedByName", form.reviewedByName)
-    data.append("supervisorByBadgeId", form.supervisorByBadgeId),
-      data.append("supervisorName", form.supervisorName),
-      data.append("supervisorDepartment", form.supervisorDepartment)
-    data.append("status", form.status),
-      data.append("observationStatus", form.observationStatus),
-      data.append("observationStage", form.observationStage),
-      data.append("createdBy", form.createdBy),
-      data.append("updatedBy", form.updatedBy),
-      data.append("source", form.source),
-      data.append("vendor", form.vendor),
-      data.append("vendorReferenceId", form.vendorReferenceId);
-    data.append("id", form.id)
+    form['updateBy'] = userId
+    delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
-    )}/`, data).then(res => {
+    )}/`, form).then(res => {
       if (res.status === 200) {
         localStorage.setItem('updateAction', "Done")
         localStorage.setItem("action", "Done")
@@ -333,10 +281,6 @@ function ObservationCorrectiveAction() {
         );
       }
     }).catch(err => {setLoading(false)})
-    
-
-
-
   }
 
   const fetchInitialiObservationData = async () => {
