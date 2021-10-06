@@ -130,19 +130,19 @@ function App() {
 
 
     <ThemeWrapper>
-      {/* <Online> */}
-      {localStorage.getItem("access_token") !== null ? (
-        <Switch>
-          <Route path="/app" exact component={LandingCorporate} />
-          <Route path="/landing-creative" exact component={LandingCreative} />
-          <Route path="/" component={Application} />
-          <Route path="/blog" component={ArticleNews} />
-          <Route component={Auth} />
-          <Route component={NotFound} />
-        </Switch>
-      ) : null}
-      {/* </Online> */}
-      {/* <Offline>Turn on internet</Offline> */}
+      <Online>
+        {localStorage.getItem("access_token") !== null ? (
+          <Switch>
+            <Route path="/app" exact component={LandingCorporate} />
+            <Route path="/landing-creative" exact component={LandingCreative} />
+            <Route path="/" component={Application} />
+            <Route path="/blog" component={ArticleNews} />
+            <Route component={Auth} />
+            <Route component={NotFound} />
+          </Switch>
+        ) : null}
+      </Online>
+      <Offline>Turn on internet</Offline>
 
     </ThemeWrapper>
   );

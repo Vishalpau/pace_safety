@@ -250,6 +250,11 @@ const DocumentNotification = () => {
     }
   };
 
+  const handelApiError = (res) => {
+    setSubmitLoader(false)
+    history.push("/app/pages/error")
+  }
+
   const handelNext = async () => {
     setSubmitLoader(true)
     if (typeof form.jhaAssessmentAttachment == "object" && form.jhaAssessmentAttachment != null) {
@@ -266,12 +271,12 @@ const DocumentNotification = () => {
       data.append("notifyTo", form.notifyTo.toString())
       data.append("link", form.link)
       data.append("jhaAssessmentAttachment", form.jhaAssessmentAttachment)
-      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data)
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data).catch(() => handelApiError())
     }
     else {
       delete form["jhaAssessmentAttachment"]
       form["notifyTo"] = form.notifyTo.toString()
-      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form).catch(() => handelApiError())
     }
     history.push(SUMMARY_FORM["Summary"])
     localStorage.setItem("Jha Status", JSON.stringify({ "assessment": "done" }))
