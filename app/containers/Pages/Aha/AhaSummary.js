@@ -405,7 +405,26 @@ function AhaSummary() {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
     const result = res.data.data.results;
-    await setForm(result);
+
+    let zzz = [...result]
+
+      for (var i = 0; i <result.length; i++) {
+        if (result[i].riskRating !== ""){
+          if(result[i].riskRating === "25%") {
+            zzz[i].riskRatingColour = '#1EBD10'
+          }else if(result[i].riskRating === "50%"){
+            zzz[i].riskRatingColour = '#FFEB13'
+    
+          }else if(result[i].riskRating === "75%"){
+            zzz[i].riskRatingColour = '#F3C539'
+    
+          }else {
+            zzz[i].riskRatingColour = '#FF0000'
+    
+          }
+        }
+        }
+    await setForm(zzz);
     await handelActionTracker(result)
   };
 
@@ -457,7 +476,7 @@ function AhaSummary() {
       fetchAHASummary();
       fetchTeamData();
       fetchHzardsData();
-      fetchactionTrackerData();
+      // fetchactionTrackerData();
     }
   }, []);
 
@@ -892,8 +911,11 @@ function AhaSummary() {
                                                       className={
                                                         classes.ratioColororange
                                                       }
+                                                      style={{ backgroundColor: item.riskRatingColour }}
                                                     >
-                                                      50% Risk
+                                                      {item.riskRating
+                                                        ? `${item.riskRating} risk`
+                                                        : "-"}
                                                     </div>
                                                   </Grid>
 

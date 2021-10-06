@@ -194,6 +194,7 @@ function UserMenu(props) {
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
         subscriptionData = res.data.data.results.data.companies[0].subscriptions;
         let hostings = subscriptionData.filter(item => item.appCode === "safety")[0].hostings[0].apiDomain
+        let appId = subscriptionData.filter(item => item.appCode === "safety")[0].appId
         let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
         let apiUrlDomain = {}
         
@@ -201,7 +202,8 @@ function UserMenu(props) {
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
           let actionUI = subscriptionAction[0].hostings[0].appDomain
           let actionClientId = subscriptionAction[0].hostings[0].clientId
-          apiUrlDomain = { "safety": hostings, "actions": actionHosting, "actionsUI": actionUI, "actionClientID": actionClientId }
+          
+          apiUrlDomain = { "safety": hostings, "actions": actionHosting, "actionsUI": actionUI, "actionClientID": actionClientId , "appId" : appId}
         } else {
           apiUrlDomain = { "safety": hostings }
         }
