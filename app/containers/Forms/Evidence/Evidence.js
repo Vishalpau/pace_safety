@@ -553,7 +553,7 @@ const Evidence = () => {
 
   useEffect(() => {
     fetchIncidentDetails();
-    if (id) {
+    if (localStorage.getItem("fkincidentId")) {
       fetchEvidenceList();
     } else {
       setIsLoading(true);

@@ -148,7 +148,7 @@ const IncidentDetailsSummary = () => {
 
   const fetchEquipmentAffectData = async () => {
     const response = await api.get(`api/v1/incidents/${fkid}/equipments/`)
-    .then(()=>{
+    .then((response)=>{
       setEquipmentData(response.data.data.results);
     })
      
@@ -806,7 +806,7 @@ const IncidentDetailsSummary = () => {
                   </Typography>
                   {reportsData.length !== 0
                     ? reportsData.map((report, key) => (
-                        <Typography className={Fonts.labelValue}>
+                        <Typography className={Fonts.labelValue} key={key}>
                           {report.reportTo}
                         </Typography>
                       ))
@@ -869,6 +869,7 @@ const IncidentDetailsSummary = () => {
                       )
                       .map((value, index) => (
                         <Grid
+                        key={index}
                           container
                           className="repeatedGrid"
                           item

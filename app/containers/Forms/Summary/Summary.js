@@ -149,9 +149,26 @@ const Summary = (props) => {
             setCloseout(true)
             setLessionlearn(true)
             setIsLoading(true)
-            
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Lesson Learnt" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(true)
+            setLessionlearn(false)
+            setIsLoading(true)
           }
           else if(allIncidents.data.data.results.incidentStage === "Close out" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(true)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Close out" && allIncidents.data.data.results.incidentStatus === "pending"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(true);
             setEvidence(true)
@@ -170,6 +187,16 @@ const Summary = (props) => {
             setIsLoading(true)
         
           }
+          else if(allIncidents.data.data.results.incidentStage === "Root cause & analysis" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+        
+          }
           else if(allIncidents.data.data.results.incidentStage === "Evidence" && allIncidents.data.data.results.incidentStatus === "Done"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(true);
@@ -180,9 +207,28 @@ const Summary = (props) => {
             setIsLoading(true)
             
           }
+          else if(allIncidents.data.data.results.incidentStage === "Evidence" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+            
+          }
           else if(allIncidents.data.data.results.incidentStage === "Investigation" && allIncidents.data.data.results.incidentStatus === "Done"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(true);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Investigation" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(false);
             setEvidence(false)
             setRootCauseAnalysis(false)
             setCloseout(false)
@@ -379,7 +425,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous pending stage Investigation")
       setMessageType("warning")
-    } else if (evidencesData == undefined) {
+    } else if (evidence == false) {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/`)
     } else {
      

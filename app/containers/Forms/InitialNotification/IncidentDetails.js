@@ -91,6 +91,7 @@ const IncidentDetails = (props) => {
   const [hideAffect, setHideAffect] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [workArea, setWorkArea] = useState([])
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -324,7 +325,7 @@ const IncidentDetails = (props) => {
               subContractor: form.subContractor,
               incidentStage: "Initial Notification",
               incidentStatus: "Pending",
-              
+
             };
             // sent post api
             try {
@@ -390,12 +391,12 @@ const IncidentDetails = (props) => {
   const fetchContractorValue = async () => {
     try {
       const res = await api.get("api/v1/lists/2/value")
-      .catch(error=>setMessage(error.message))
+        .catch(error => setMessage(error.message))
       const result = res.data.data.results;
       await setContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      
+
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -406,12 +407,12 @@ const IncidentDetails = (props) => {
   const fetchSubContractorValue = async () => {
     try {
       const res = await api.get("api/v1/lists/3/value")
-      .catch(error=>setMessage(error.message))
+        .catch(error => setMessage(error.message))
       const result = res.data.data.results;
       await setSubContractorValue(result);
     } catch (error) {
       setIsNext(true);
-  
+
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -426,7 +427,7 @@ const IncidentDetails = (props) => {
       await setPersonAffectedValue(result);
     } catch (error) {
       setIsNext(true);
-    
+
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -441,7 +442,7 @@ const IncidentDetails = (props) => {
       await setPropertiesAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      
+
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -456,7 +457,7 @@ const IncidentDetails = (props) => {
       await setEquipmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      
+
       setMessage(error.message);
       setMessageType("error");
       setOpen(true);
@@ -512,7 +513,7 @@ const IncidentDetails = (props) => {
 
       } catch (error) {
         setIsNext(true);
-        
+
         setMessage(error.message);
         setMessageType("error");
         setOpen(true);
@@ -798,6 +799,9 @@ const IncidentDetails = (props) => {
                         incidentOccuredOn: moment(e).toISOString(),
                       });
                     }}
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => {setIsDateShow(false)}}
                     InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
@@ -1162,7 +1166,7 @@ const IncidentDetails = (props) => {
                   )}
                 </FormControl>
                 {/* Alert Message */}
-               {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
+                {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
               </Grid>
 
               {/* Go to next button */}
