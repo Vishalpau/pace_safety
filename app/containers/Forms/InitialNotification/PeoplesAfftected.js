@@ -142,9 +142,7 @@ const PeoplesAffected = () => {
       }
       setForm(temp);
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -185,7 +183,7 @@ const PeoplesAffected = () => {
                     fkIncidentId: localStorage.getItem("fkincidentId"),
                   }
                 );
-              } catch (error) {}
+              } catch (error) {history.push("/app/pages/error")}
             } else {
               try {
                 const res = await api.post(
@@ -204,7 +202,7 @@ const PeoplesAffected = () => {
                     fkIncidentId: localStorage.getItem("fkincidentId"),
                   }
                 );
-              } catch (error) {}
+              } catch (error) {history.push("/app/pages/error")}
             }
           }
 
@@ -220,9 +218,7 @@ const PeoplesAffected = () => {
               temp
             );
           } catch (error) {
-            setMessage("Something went worng!");
-            setMessageType("error");
-            setOpen(true);
+            history.push("/app/pages/error")
           }
           // check condition id
 
@@ -258,9 +254,7 @@ const PeoplesAffected = () => {
             }
           }
         } catch (error) {
-          setMessage("Network error!");
-          setMessageType("error");
-          setOpen(true);
+          history.push("/app/pages/error")
         }
 
         // When no is selected we just have to send the comment and yes/no flag to API via put request.
@@ -276,9 +270,7 @@ const PeoplesAffected = () => {
             temp
           );
         } catch (error) {
-          setMessage("Something went worng!");
-          setMessageType("error");
-          setOpen(true);
+          history.push("/app/pages/error")
         }
 
         // Case when id is available. Update case. Redirect user to specific page.
@@ -337,15 +329,11 @@ const PeoplesAffected = () => {
         const result = res.data.data.results;
         setIndividualAffecctValue(result);
       }).catch((error)=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
       
     } catch (error) {
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -357,15 +345,11 @@ const PeoplesAffected = () => {
         const result = res.data.data.results;
         setPersonTypeValue(result);
       }).catch(error=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
       
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -377,15 +361,11 @@ const PeoplesAffected = () => {
         const result = res.data.data.results;
         setDepartmentValue(result);
       }).catch(error=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
       
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -397,15 +377,11 @@ const PeoplesAffected = () => {
         const result = res.data.data.results;
         setMedicalCareValue(result);
       }).catch(error=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
 
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -428,15 +404,11 @@ const PeoplesAffected = () => {
         }
       })
       .catch(error=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
       
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -455,14 +427,10 @@ const PeoplesAffected = () => {
          setIsLoading(true);
       })
       .catch(error=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+        history.push("/app/pages/error")
       })
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 

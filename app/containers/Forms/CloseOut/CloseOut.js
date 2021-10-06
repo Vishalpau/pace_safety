@@ -71,6 +71,8 @@ const CloseOut = () => {
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({})
+    const [isDateShow, setIsDateShow] = useState(false);
+    const [isReviewDateShow, setIsReviewDateShow] = useState(false);
     const [form, setForm] = useState({
         reviewedBy: 0,
         reviewDate: null,
@@ -101,7 +103,7 @@ const CloseOut = () => {
                      setIsLoading(true)
                 
             }
-        }).catch(err=>console.log(err))
+        }).catch(err=>history.push("/app/pages/error"))
         
 
     };
@@ -110,6 +112,7 @@ const CloseOut = () => {
         if (reason === "clickaway") {
             return;
         }
+        setIsDateShow(false)
         setOpen(false);
     };
     const handleCloseDate = (e) => {
@@ -154,7 +157,7 @@ const CloseOut = () => {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                history.push("/app/pages/error");
             });
     }
 
@@ -183,7 +186,7 @@ const CloseOut = () => {
                         dispatch(tabViewMode(viewMode));
                         history.push(`${SUMMERY_FORM["Summary"]}${id}/`);
                     }
-                }).catch(err=>console.log(err))
+                }).catch(err=>history.push("/app/pages/error"))
                 
             }
             else {
@@ -192,7 +195,7 @@ const CloseOut = () => {
                 setError(errorMessage)
             }
         } catch (error) {
-            console.log(error)
+            history.push("/app/pages/error")
         }
     }
 
@@ -354,6 +357,9 @@ const CloseOut = () => {
                                     label="Reviewed on"
                                     value={form.reviewDate || null}
                                     onChange={(e) => handleReviewDate(e)}
+                                    onClick={(e) => setIsReviewDateShow(true)}
+                                    open={isReviewDateShow}
+                                    onClose={(e) => setIsReviewDateShow(false)}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
@@ -414,7 +420,9 @@ const CloseOut = () => {
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     label="Closed on"
-
+                                    onClick={(e) => setIsDateShow(true)}
+                                    open={isDateShow}
+                                    onClose={(e) => setIsDateShow(false)}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}

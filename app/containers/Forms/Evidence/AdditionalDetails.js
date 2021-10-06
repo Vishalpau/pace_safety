@@ -115,7 +115,7 @@ const AdditionalDetails = () => {
           temp
         );
       } catch (error) {
-        alert("something went wrong")
+        history.push("/app/pages/error")
       }
     }
 

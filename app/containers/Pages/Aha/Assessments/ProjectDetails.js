@@ -198,7 +198,7 @@ const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [workArea, setWorkArea] = useState("")
   const [projectBreakout, setProjectBreakout] = useState('')
-
+  const [isDateShow, setIsDateShow] = useState(false)
   const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
@@ -347,9 +347,10 @@ const ProjectDetails = () => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
   const fetchBreakdown = async (e, index) => {
     const value = e.target.value;
@@ -807,12 +808,15 @@ const ProjectDetails = () => {
                     fullWidth
                     label="Date & Time*"
                     value={selectedDate}
-                    onChange={handleDateChange}
+                    // onChange={handleDateChange}
                     value={form.assessmentDate || null}
                     error={error.assessmentDate}
                     helperText={error.assessmentDate ? error.assessmentDate : null}
                     inputVariant="outlined"
                     disableFuture="true"
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => handelClose()}
                     onChange={(e) => {
                       setForm({
                         ...form,

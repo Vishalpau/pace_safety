@@ -109,6 +109,7 @@ const ReportingAndNotification = () => {
   const [isNext, setIsnext] = useState(true);
   const [evidanceId, setEvidanceId] = useState([]);
   const [notifyToList, setNotifyToList] = useState([]);
+  const [isDateShow, setIsDateShow] = useState(false)
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -175,12 +176,12 @@ const ReportingAndNotification = () => {
       form.additionaldetails || incidentsListData.notificationComments;
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
-    
-    if(incidentsListData.incidentStage === "Initial notification"){
-      
-      temp.incidentStatus= "Done"
+
+    if (incidentsListData.incidentStage === "Initial notification") {
+
+      temp.incidentStatus = "Done"
     }
-    
+
     // put call for update incident Details
     try {
       const res = await api.put(
@@ -189,6 +190,7 @@ const ReportingAndNotification = () => {
       );
     } catch (error) {
       setIsnext(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -205,6 +207,7 @@ const ReportingAndNotification = () => {
           );
         } catch (err) {
           setIsnext(true);
+          history.push("/app/pages/error")
         }
       }
     }
@@ -224,6 +227,7 @@ const ReportingAndNotification = () => {
           });
         } catch (err) {
           await setIsnext(true);
+          history.push("/app/pages/error")
         }
       }
     }
@@ -271,6 +275,7 @@ const ReportingAndNotification = () => {
                 );
               } catch (error) {
                 setIsnext(true);
+                history.push("/app/pages/error")
               }
             } else {
               if (evidanceId.length > 0) {
@@ -308,6 +313,7 @@ const ReportingAndNotification = () => {
                 );
               } catch (error) {
                 setIsnext(true);
+                history.push("/app/pages/error")
               }
             }
           }
@@ -366,6 +372,7 @@ const ReportingAndNotification = () => {
               status = res.status;
             } catch (err) {
               setIsnext(true);
+              history.push("/app/pages/error")
             }
           }
 
@@ -533,59 +540,55 @@ const ReportingAndNotification = () => {
   //  Fetch checkbox value
   const fetchReportableTo = async () => {
     const res = await api.get("/api/v1/lists/20/value")
-    .then((res)=>{
-      const result = res.data.data.results;
+      .then((res) => {
+        const result = res.data.data.results;
 
-      for (var key in result) {
-        reportedToFilterData.push(result[key].inputValue);
-      }
-  
-       setReportableTo(result);
-    }).catch(error=>{
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
-    })
+        for (var key in result) {
+          reportedToFilterData.push(result[key].inputValue);
+        }
+
+        setReportableTo(result);
+      }).catch(error => {
+        history.push("/app/pages/error")
+      })
 
   };
 
   // fetch reportList
   const fetchReportsDataList = async () => {
     await fetchReportableTo();
-     await api.get(`/api/v1/incidents/${id}/reports/`)
-    .then((res)=>{
-      const result = res.data.data.results;
+    await api.get(`/api/v1/incidents/${id}/reports/`)
+      .then((res) => {
+        const result = res.data.data.results;
 
-      if (result.length > 0) {
-        if (result[0].notifyTo) {
-          let getNotifyTo = result[0].notifyTo.split(",");
-           setNotifyToList(getNotifyTo);
-        }
-  
-        const reportToData = [];
-        for (const key in result) {
-          reportToData.push(result[key].reportTo);
-        }
-        for (var i = 0; i < 8; i++) {
-          if (!reportedToFilterData.includes(reportToData[i])) {
-            if (reportToData[i] !== undefined) {
-              setReportOtherData(reportToData[i]);
+        if (result.length > 0) {
+          if (result[0].notifyTo) {
+            let getNotifyTo = result[0].notifyTo.split(",");
+            setNotifyToList(getNotifyTo);
+          }
+
+          const reportToData = [];
+          for (const key in result) {
+            reportToData.push(result[key].reportTo);
+          }
+          for (var i = 0; i < 8; i++) {
+            if (!reportedToFilterData.includes(reportToData[i])) {
+              if (reportToData[i] !== undefined) {
+                setReportOtherData(reportToData[i]);
+              }
             }
           }
+
+          setReportedToObj(result);
+
+          setForm({ ...form, reportedto: reportToData });
         }
-  
-         setReportedToObj(result);
-  
-         setForm({ ...form, reportedto: reportToData });
-      }
-  
-       setIsLoading(true);
-    })
-    .catch(error=>{
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
-    })
+
+        setIsLoading(true);
+      })
+      .catch(error => {
+        history.push("/app/pages/error")
+      })
 
   };
 
@@ -594,37 +597,35 @@ const ReportingAndNotification = () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     )
-    .then((res)=>{
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        localStorage.setItem("commonObject", JSON.stringify({ incident: { projectStruct: result.fkProjectStructureIds } }))
-        const incidentOccuredOn = result.incidentOccuredOn;
-        const start_time = new Date(incidentOccuredOn);
-        const incidentReportedOn = result.incidentReportedOn;
-        const end_time = new Date(incidentReportedOn);
-        const diff = end_time - start_time;
-        const hours = Math.floor(diff / 1000 / 60 / 60);
-  
-        if (hours >= 4) {
-           SetLateReport(true);
-        } else {
-           SetLateReport(false);
-        }
-         setSupervisorName(result.supervisorByName);
-         setReportedByName(result.incidentReportedByName);
-         setIncidentsListdata(result);
-  
-        if (!id) {
-           setIsLoading(true);
-        }
-      }
-    })
+      .then((res) => {
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          localStorage.setItem("commonObject", JSON.stringify({ incident: { projectStruct: result.fkProjectStructureIds } }))
+          const incidentOccuredOn = result.incidentOccuredOn;
+          const start_time = new Date(incidentOccuredOn);
+          const incidentReportedOn = result.incidentReportedOn;
+          const end_time = new Date(incidentReportedOn);
+          const diff = end_time - start_time;
+          const hours = Math.floor(diff / 1000 / 60 / 60);
 
-    .catch(error=>{
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
-    })
+          if (hours >= 4) {
+            SetLateReport(true);
+          } else {
+            SetLateReport(false);
+          }
+          setSupervisorName(result.supervisorByName);
+          setReportedByName(result.incidentReportedByName);
+          setIncidentsListdata(result);
+
+          if (!id) {
+            setIsLoading(true);
+          }
+        }
+      })
+
+      .catch(error => {
+        history.push("/app/pages/error")
+      })
   };
 
   // fetch supervisor name
@@ -646,10 +647,8 @@ const ReportingAndNotification = () => {
           setSuperVisorNameList([...result, { name: "other" }]);
         }
       })
-      .catch(error=>{
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+      .catch(error => {
+        history.push("/app/pages/error")
       })
   };
 
@@ -674,36 +673,32 @@ const ReportingAndNotification = () => {
           }
           setReportedByNameList([...result, { name: "other" }]);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
+      
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
+        history.push("/app/pages/error")
       });
   };
 
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
     await api.get(`/api/v1/incidents/${id}/evidences/`)
-    .then((allEvidence)=>{
-      if (allEvidence.status === 200) {
-        const data = allEvidence.data.data.results.filter(
-          (item) => item.evidenceCategory === "Initial Evidence"
-        );
-        if (data.length > 0) {
-          let temp = [...evidanceForm];
-          temp = data;
-          setEvidanceForm(temp);
+      .then((allEvidence) => {
+        if (allEvidence.status === 200) {
+          const data = allEvidence.data.data.results.filter(
+            (item) => item.evidenceCategory === "Initial Evidence"
+          );
+          if (data.length > 0) {
+            let temp = [...evidanceForm];
+            temp = data;
+            setEvidanceForm(temp);
+          }
+          setEvidence(data);
         }
-         setEvidence(data);
-      }
-    })
-    .catch(error=>{
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
-    })
+      })
+      .catch(error => {
+        history.push("/app/pages/error")
+      })
   };
 
   // fetch value noticefication sent
@@ -718,18 +713,16 @@ const ReportingAndNotification = () => {
         headers: HEADER_AUTH,
       };
       const res = await api(config)
-      .then((res)=>{
-        if (res.status === 200) {
-          const result = res.data.data.results;
-          setNotificationSentValue(result);
-        }
-      }).catch(error=>{
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
-    })
-      
-    } catch (error) { }
+        .then((res) => {
+          if (res.status === 200) {
+            const result = res.data.data.results;
+            setNotificationSentValue(result);
+          }
+        }).catch(error => {
+          history.push("/app/pages/error")
+        })
+
+    } catch (error) { history.push("/app/pages/error")}
   };
 
   // handle go back
@@ -1100,6 +1093,9 @@ const ReportingAndNotification = () => {
                     disableFuture
                     disabled
                     InputProps={{ readOnly: true }}
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => setIsDateShow(false)}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>

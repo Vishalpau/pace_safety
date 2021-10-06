@@ -45,6 +45,7 @@ import ActionTracker from "../../Forms/ActionTracker";
 
 import apiAction from "../../../utils/axiosActionTracker"
 import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../utils/CheckerValue";
+import classNames from "classnames";
 
 import {
   access_token,
@@ -148,6 +149,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  boldHelperText: {
+    "& .MuiFormHelperText-root": {
+      // fontWeight : "bold",
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
+  },
 }));
 
 function ObservationCorrectiveAction() {
@@ -164,6 +173,7 @@ function ObservationCorrectiveAction() {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isDateShow, setIsDateShow] = useState(false)
   let filterReportedByName = []
 
   const [projectData, setProjectData] = useState({
@@ -296,6 +306,11 @@ function ObservationCorrectiveAction() {
     await handelActionTracker();
 
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
@@ -476,11 +491,13 @@ function ObservationCorrectiveAction() {
                 />
               ))}
             </RadioGroup>
-            {error && error["isCorrectiveActionTaken"] && (
+            <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
+
+            {/* {error && error["isCorrectiveActionTaken"] && (
               <FormHelperText>
                 {error["isCorrectiveActionTaken"]}
               </FormHelperText>
-            )}
+            )} */}
           </FormControl>
         </Grid>
 
@@ -531,6 +548,7 @@ function ObservationCorrectiveAction() {
             fullWidth
             error={error.reviewedByName}
             helperText={error.reviewedByName ? error.reviewedByName : null}
+            className={classNames(classes.formControl, classes.boldHelperText)}
             value={form.reviewedByName ? form.reviewedByName : ""}
             variant="outlined"
 
@@ -552,7 +570,7 @@ function ObservationCorrectiveAction() {
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
-              className={classes.formControl}
+              className={classNames(classes.formControl, classes.boldHelperText)}
               fullWidth
               label="Reviewed on*"
               minDate={form.observedAt}
@@ -561,6 +579,9 @@ function ObservationCorrectiveAction() {
               error={error.reviewedOn}
               helperText={error.reviewedOn ? error.reviewedOn : null}
               disableFuture={true}
+              open={isDateShow}
+              onClose={(e) => handelClose()}
+              onClick={(e) => setIsDateShow(true)}
               inputVariant="outlined"
               InputProps={{ readOnly: true }}
               onChange={(e) => handleCloseDate(e)}
