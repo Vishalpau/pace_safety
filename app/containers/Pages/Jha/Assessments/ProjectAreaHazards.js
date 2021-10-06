@@ -274,6 +274,11 @@ const ProjectAreaHazards = () => {
     }
   }
 
+  const handelApiError = () => {
+    setSubmitLoader(false)
+    history.push("/app/pages/error")
+  }
+
   const handleSubmit = async (e) => {
     setSubmitLoader(true)
 
@@ -294,12 +299,8 @@ const ProjectAreaHazards = () => {
         }
       })
     })
-
-
-    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate)
-
-    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew)
-
+    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate).catch(() => handelApiError())
+    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew).catch(() => handelApiError())
     handelNavigate("next")
     setSubmitLoader(false)
   }

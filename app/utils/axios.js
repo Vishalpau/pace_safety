@@ -8,9 +8,6 @@ const api = axios.create({
   baseURL: "",
   timeout: 10000,
   headers: HEADER_AUTH,
-  validateStatus: function (status) {
-    return status >= 200 && status < 300;
-  },
 });
 
 api.interceptors.request.use(
