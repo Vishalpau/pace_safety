@@ -71,6 +71,7 @@ const CloseOut = () => {
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({})
+    const [isDateShow, setIsDateShow] = useState(false)
     const [form, setForm] = useState({
         reviewedBy: 0,
         reviewDate: null,
@@ -110,6 +111,7 @@ const CloseOut = () => {
         if (reason === "clickaway") {
             return;
         }
+        setIsDateShow(false)
         setOpen(false);
     };
     const handleCloseDate = (e) => {
@@ -414,7 +416,9 @@ const CloseOut = () => {
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     label="Closed on"
-
+                                    onClick={(e) => setIsDateShow(true)}
+                                    open={isDateShow}
+                                    onClose={(e) => setIsDateShow(false)}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}

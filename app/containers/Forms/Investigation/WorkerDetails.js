@@ -114,6 +114,7 @@ const WorkerDetails = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const fileRef = useRef("");
+  const [isDateShow, setIsDateShow] = useState(false)
   const TextFieldComponent = (props) => {
     return <TextField {...props} inputProps={{readOnly:true}} />
   }
@@ -638,6 +639,9 @@ const WorkerDetails = () => {
                       inputVariant="outlined"
                       disableFuture="true"
                       TextFieldComponent={TextFieldComponent}
+                      onClick={(e) => setIsDateShow(true)}
+                  open={isDateShow}
+                  onClose={(e) => setIsDateShow(false)}
                       // InputProps={{ readOnly: true }}
                     />
                   </MuiPickersUtilsProvider>
@@ -1019,6 +1023,9 @@ const WorkerDetails = () => {
                       inputVariant="outlined"
                       disableFuture="true"
                       InputProps={{readOnly:true}}
+                      onClick={(e) => setIsDateShow(true)}
+                  open={isDateShow}
+                  onClose={(e) => setIsDateShow(false)}
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -1296,6 +1303,9 @@ const WorkerDetails = () => {
                           format="yyyy/MM/dd"
                           inputVariant="outlined"
                           disableFuture="true"
+                          onClick={(e) => setIsDateShow(true)}
+                  open={isDateShow}
+                  onClose={(e) => setIsDateShow(false)}
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>

@@ -40,7 +40,7 @@ const ActionTaken = () => {
   const investigationId = useRef("");
   const dispatch = useDispatch();
   const [incidentsListData, setIncidentsListdata] = useState([]);
-
+  const [isDateShow, setIsDateShow] = useState(false)
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -51,15 +51,15 @@ const ActionTaken = () => {
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-     await api.get(
+    await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
-    ).then((previousData)=>{
+    ).then((previousData) => {
       let allApiData = previousData.data.data.results[0];
       if (!isNaN(allApiData.id)) {
-         setForm(allApiData);
+        setForm(allApiData);
         investigationId.current = allApiData.id;
       }
-    }).catch(error=> console.log(error)) 
+    }).catch(error => console.log(error))
   };
 
   const [error, setError] = useState({});
@@ -67,27 +67,27 @@ const ActionTaken = () => {
   const handleNext = async (e) => {
     const temp = incidentsListData
     temp.updatedAt = new Date().toISOString();
-    if(incidentsListData.incidentStage === "Investigation"){
-      temp.incidentStatus= "Done"
+    if (incidentsListData.incidentStage === "Investigation") {
+      temp.incidentStatus = "Done"
       try {
         const res = await api.put(
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
       } catch (error) {
-        
+
       }
     }
-    
+
     form.preEventMitigations === null
       ? (form["preEventMitigations"] = "")
       : null;
-    
+
     form["endDate"] = new Date()
     const res = await api.put(
       `api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`,
       form
-    ).then((res)=>{
+    ).then((res) => {
       if (res.status === 200) {
         let viewMode = {
           initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
@@ -95,22 +95,22 @@ const ActionTaken = () => {
         localStorage.setItem("viewMode", JSON.stringify(viewMode))
         dispatch(tabViewMode(viewMode));
         history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
-        
+
       }
     })
-    
+
   };
-     // fetch incident data
-     const fetchIncidentsData = async () => {
-      const res = await api.get(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-      ).then((res)=>{
-        const result = res.data.data.results;
-         setIncidentsListdata(result);
-      })
-      .catch((err)=>console.log(err))
-      
-    };
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentsListdata(result);
+    })
+      .catch((err) => console.log(err))
+
+  };
 
   useEffect(() => {
     handelUpdateCheck();
@@ -161,7 +161,10 @@ const ActionTaken = () => {
                   format="yyyy/MM/dd"
                   inputVariant="outlined"
                   label="Correction action date completed"
-                  InputProps={{readOnly:true}}
+                  InputProps={{ readOnly: true }}
+                  onClick={(e) => setIsDateShow(true)}
+                  open={isDateShow}
+                  onClose={(e) => setIsDateShow(false)}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
