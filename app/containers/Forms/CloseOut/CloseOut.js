@@ -71,7 +71,8 @@ const CloseOut = () => {
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({})
-    const [isDateShow, setIsDateShow] = useState(false)
+    const [isDateShow, setIsDateShow] = useState(false);
+    const [isReviewDateShow, setIsReviewDateShow] = useState(false);
     const [form, setForm] = useState({
         reviewedBy: 0,
         reviewDate: null,
@@ -356,6 +357,9 @@ const CloseOut = () => {
                                     label="Reviewed on"
                                     value={form.reviewDate || null}
                                     onChange={(e) => handleReviewDate(e)}
+                                    onClick={(e) => setIsReviewDateShow(true)}
+                                    open={isReviewDateShow}
+                                    onClose={(e) => setIsReviewDateShow(false)}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
