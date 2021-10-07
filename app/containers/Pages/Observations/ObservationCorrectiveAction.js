@@ -167,7 +167,7 @@ function ObservationCorrectiveAction() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { id } = useParams();
   const [actionTakenData, setActionTakenData] = useState([])
-  const [actionOpen, setActionOpen] = useState(false)
+  const [actionOpen, setActionOpen] = useState(true)
   const [error, setError] = useState({ comment: "", reviewedOn: "" });
   const [reportedByName, setReportedByName] = useState([]);
   const [submitLoader, setSubmitLoader] = useState(false);

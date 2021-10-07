@@ -423,7 +423,7 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
-
+  
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
@@ -705,7 +705,7 @@ const ObservationInitialNotification = (props) => {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -884,6 +884,7 @@ const ObservationInitialNotification = (props) => {
       }
     }
   };
+  console.log('================================',form)
 
   const classes = useStyles();
 
@@ -1333,7 +1334,7 @@ const ObservationInitialNotification = (props) => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      observedAt: moment(e).toISOString(),
+                      observedAt: moment(e).format("YYYY-MM-DDThh:mm:ss"),
                     });
                   }}
                 />
