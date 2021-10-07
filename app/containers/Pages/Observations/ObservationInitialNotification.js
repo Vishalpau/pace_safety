@@ -56,7 +56,9 @@ import {
   SSO_URL,
 } from "../../../utils/constants";
 import { mdiConsole } from "@mdi/js";
+import 'moment-timezone';
 import "../../../styles/custom/customheader.css";
+import { Data } from "@react-google-maps/api";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -471,12 +473,9 @@ const ObservationInitialNotification = (props) => {
       data.append("departmentId", form.departmentId),
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
-      data.append("reportedByDepartment", form.reportedByDepartment);
-    // if (form.reportedDate !== null && typeof form.reportedDate !== "string") {
-      console.log(form.reportedDate, "DASA")
-      data.append("reportedDate", form.reportedDate);
-    // }
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
+      data.append("reportedByDepartment", form.reportedByDepartment),
+      data.append("reportedDate", form.reportedDate),
+      data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
       data.append("closedByDepartment", form.closedByDepartment);
@@ -506,50 +505,49 @@ const ObservationInitialNotification = (props) => {
       data.append("vendorReferenceId", form.vendorReferenceId);
 
     const res = await api.post("/api/v1/observations/", data).then(res => {
-    if (res.status === 201) {
-      const id = res.data.data.results;
-      const fkObservatioId = id.id;
-      localStorage.setItem("fkobservationId", fkObservatioId);
+      if (res.status === 201) {
+        const id = res.data.data.results;
+        const fkObservatioId = id.id;
+        localStorage.setItem("fkobservationId", fkObservatioId);
 
-      if (catagory.length > 0) {
-        for (let i = 0; i < catagory.length; i++) {
-          catagory[i]["fkObservationId"] = localStorage.getItem(
-            "fkobservationId"
-          );
-        }
-        const resCategory =  api.post(
-          `/api/v1/observations/${localStorage.getItem(
-            "fkobservationId"
-          )}/observationtags/`,
-          catagory
-        ).then(res => {
-          if (res.status === 200 || res.status === 201) {
-            history.push(
-              `/app/observation/details/${localStorage.getItem(
-                "fkobservationId"
-              )}`
+        if (catagory.length > 0) {
+          for (let i = 0; i < catagory.length; i++) {
+            catagory[i]["fkObservationId"] = localStorage.getItem(
+              "fkobservationId"
             );
-            setLoading(false);
           }
-        }).catch(err => {
-          setLoading(false);
-    
-        })
-        
-      } 
-    }
+          const resCategory = api.post(
+            `/api/v1/observations/${localStorage.getItem(
+              "fkobservationId"
+            )}/observationtags/`,
+            catagory
+          ).then(res => {
+            if (res.status === 200 || res.status === 201) {
+              history.push(
+                `/app/observation/details/${localStorage.getItem(
+                  "fkobservationId"
+                )}`
+              );
+              setLoading(false);
+            }
+          }).catch(err => {
+            setLoading(false);
+
+          })
+
+        }
+      }
     }).catch(err => {
       setLoading(false);
 
     })
-    
+
   };
 
   const handelClose = () => {
     setIsDateShow(false)
     return true
   }
-
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
   const handleChange = async (e, index, value) => {
@@ -581,12 +579,6 @@ const ObservationInitialNotification = (props) => {
     setOpen(false);
   };
 
-  const handleButtonClick = () => {
-    if (!loading) {
-      setLoading(true);
-    }
-  };
-
   // this function when user upload the file
   const handleFile = async (e) => {
     let TempPpeData = { ...form };
@@ -598,15 +590,6 @@ const ObservationInitialNotification = (props) => {
       document.getElementById("attachment").value = "";
       await setOpen(true);
     }
-  };
-
-  const handleAssignee = async (e, value) => {
-    let tempData = { ...form };
-    tempData.assigneeName = value.name;
-
-    tempData.assigneeId = value.id;
-
-    setForm(tempData);
   };
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -626,14 +609,6 @@ const ObservationInitialNotification = (props) => {
       await setForm(tempData);
     }
   };
-  const handleOther = (e) => {
-    let tempData = [...catagory];
-    tempData[8].observationTag = e.target.value;
-  };
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
   const handlePledge = (e) => {
     if (e.target.checked === true) {
@@ -641,28 +616,6 @@ const ObservationInitialNotification = (props) => {
     } else {
       setForm({ ...form, acceptAndPledge: "No" });
     }
-  };
-
-  const handleReportedBy = (e, value) => {
-    let tempData = { ...form };
-    tempData.reportedByName = value.name;
-    tempData.reportedById = value.id;
-    tempData.reportedByBadgeId = value.badgeNo;
-
-    setForm(tempData);
-  };
-  const handleFileName = (value) => {
-    const fileNameArray = value.split("/");
-    const fileName = fileNameArray[fileNameArray.length - 1];
-    return fileName;
-  };
-
-  const handleSuperVisior = (e, value) => {
-    let tempData = { ...form };
-    tempData.supervisorName = value.name;
-    tempData.supervisorByBadgeId = value.badgeNo;
-
-    setForm(tempData);
   };
 
   const handleNotify = async (value, index, e) => {
@@ -682,21 +635,6 @@ const ObservationInitialNotification = (props) => {
       setNotifyToList(newData);
       setForm({ ...form, notifyTo: newData.toString() });
     }
-  };
-
-  const fetchInitialiObservationData = async () => {
-    const res = await api.get(`/api/v1/observations/${id}/`);
-    const result = res.data.data.results;
-    if (result.isSituationAddressed === "Yes") {
-      await setAddressSituation(true);
-    }
-    if (result.personRecognition) {
-      await setPositiveObservation(false);
-    } else {
-      await setRiskObservation(false);
-    }
-    await setForm(result);
-    await fetchBreakDownData(result.fkProjectStructureIds);
   };
 
   const fetchNotificationSent = async () => {
@@ -735,29 +673,6 @@ const ObservationInitialNotification = (props) => {
     await setTagData(sorting);
   };
 
-  const fetchCheckBoxData = async () => {
-    const response = await api.get(
-      `/api/v1/observations/${id}/observationtags/`
-    );
-    const tags = response.data.data.results.results;
-    await setCatagory(tags);
-    await setIsLoading(true);
-  };
-
-  const fetchAttachment = async () => {
-    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
-      .projectId;
-    const attachment = await api.get(
-      `/api/v1/corepatterns/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
-    );
-    const result = attachment.data.data.results[0];
-    if (result !== undefined) {
-      let ar = result.attachment;
-
-      await setAttachment(ar);
-    }
-  };
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
 
@@ -801,91 +716,23 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-  const fetchBreakDownData = async (projectBreakdown) => {
-    const projectData = JSON.parse(localStorage.getItem("projectName"));
-    let breakdownLength = projectData.projectName.breakdown.length;
-    setLevelLenght(breakdownLength);
-    let selectBreakDown = [];
-    const breakDown = projectBreakdown.split(":");
-    setSelectDepthAndId(breakDown);
-    for (var key in breakDown) {
-      if (breakDown[key].slice(0, 2) === "1L") {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
+  Date.prototype.addHours = function (h) {
+    this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+    return this;
+  }
 
-        await api(config)
-          .then(async (response) => {
-            const result = response.data.data.results;
-            await setIsLoading(true);
-            result.map((item) => {
-              if (breakDown[key].slice(2) == item.id) {
-                selectBreakDown = [
-                  ...selectBreakDown,
-                  {
-                    breakDownLabel:
-                      projectData.projectName.breakdown[0].structure[0].name,
-                    selectValue: {
-                      depth: item.depth,
-                      id: item.id,
-                      name: item.name,
-                      label:
-                        projectData.projectName.breakdown[key].structure[0]
-                          .name,
-                    },
-                    breakDownData: result,
-                  },
-                ];
-              }
-            });
-            setFetchSelectBreakDownList(selectBreakDown);
-          })
-          .catch((error) => {
-            setIsNext(true);
-          });
-      } else {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].substring(2)}`,
-          headers: HEADER_AUTH,
-        };
+  const handelTime = (e) => {
+    // 2021-10-07T15:08:29.411Z
+    let noGmt = e["_d"].toString().replace("GMT+0530 (India Standard Time)", "")
+    let requireTime = moment(noGmt).format().toString()
+    let observedAtTime = requireTime.replace("+05:30", "Z")
+    console.log(observedAtTime)
+    setForm({
+      ...form,
+      observedAt: observedAtTime,
+    })
 
-        await api(config)
-          .then(async (response) => {
-            const result = response.data.data.results;
-
-            const res = result.map((item, index) => {
-              if (parseInt(breakDown[key].slice(2)) == item.id) {
-                selectBreakDown = [
-                  ...selectBreakDown,
-                  {
-                    breakDownLabel:
-                      projectData.projectName.breakdown[key].structure[0].name,
-                    selectValue: {
-                      depth: item.depth,
-                      id: item.id,
-                      name: item.name,
-                      label:
-                        projectData.projectName.breakdown[key].structure[0]
-                          .name,
-                    },
-                    breakDownData: result,
-                  },
-                ];
-              }
-            });
-            setFetchSelectBreakDownList(selectBreakDown);
-          })
-          .catch((error) => {
-            setIsNext(true);
-          });
-      }
-    }
-  };
+  }
 
   const classes = useStyles();
 
@@ -896,7 +743,6 @@ const ObservationInitialNotification = (props) => {
   useEffect(() => {
     fetchTags();
     fetchDepartment();
-    // fetchAttachment();
     fetchNotificationSent();
     fetchSuperVisorName();
     fetchReportedBy();
@@ -1285,6 +1131,7 @@ const ObservationInitialNotification = (props) => {
                 )}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Foreman's Number"
@@ -1312,6 +1159,7 @@ const ObservationInitialNotification = (props) => {
                 }}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
@@ -1322,7 +1170,7 @@ const ObservationInitialNotification = (props) => {
                   helperText={error.observedAt ? error.observedAt : null}
                   format="YYYY/MM/DD hh:mm A"
                   className={classes.formControl}
-                  value={form.observedAt ? form.observedAt : null}
+                  value={form.observedAt !== null ? form.observedAt : null}
                   fullWidth
                   open={isDateShow}
                   onClose={(e) => handelClose()}
@@ -1332,12 +1180,7 @@ const ObservationInitialNotification = (props) => {
                   KeyboardButtonProps={{
                     "aria-label": "change date",
                   }}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      observedAt: moment(e).toISOString(),
-                    });
-                  }}
+                  onChange={(e) => handelTime(e)}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
@@ -1757,34 +1600,7 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {/* {attachment !== undefined ? (
-              <Grid item md={12} xs={12} className={classes.formBBanner}>
-                <Avatar
-                  className={classes.observationFormBox}
-                  variant="rounded"
-                  alt="Observation form banner"
-                  src={attachment}
-                />
-              </Grid>
-            ) : null}
-            {Object.values(error).length > 0 ? 
-            <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
-          {  Object.values(error).map((value)=>(
-              <Typography>{value}</Typography>
-          ))}
-            
-            
-            
-            </Grid>
-            : null}
-
-
-            {/* {attachment ===
-                              null ? null : typeof attachment ===
-                                "string" ? (
-                                <Attachment value={attachment} />
-                              ) : null} */}
             <Grid item xs={12}>
               {/* {submitLoader == false ? */}
               <div className={classes.loadingWrapper}>
