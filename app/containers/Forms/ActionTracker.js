@@ -60,7 +60,7 @@ export default function ActionTracker(props) {
     actionCategory: "",
     actionShedule: "Planned",
     priority: "",
-    severity: "Normal",
+    severity: "",
     approver: 0,
     assignTo: 0,
     assignToName: "",

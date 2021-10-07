@@ -392,13 +392,13 @@ export default function SimpleTabs(props) {
       </Paper> 
 		</Grid>
 
-      <Grid item md={2} sm={12} xs={12} className={classes.floatE}>
+      {/* <Grid item md={2} sm={12} xs={12} className={classes.floatE}>
         <span className={classes.mR10}>
           <img src={preplanning} />
           <img src={progress} className={classes.pLtenPRten} />
           <img src={completed} />
         </span>
-      </Grid>
+      </Grid> */}
 
 			
 		  </Grid>

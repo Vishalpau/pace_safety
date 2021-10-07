@@ -52,7 +52,7 @@ import Attachment from "../../../containers/Attachment/Attachment";
 import { Comments } from "../../pageListAsync";
 import { SUMMARY_FORM } from "./Utils/constants"
 import { SSO_URL, HEADER_AUTH } from "../../../utils/constants";
-import { handelCommonObject, handelActionData } from "../../../utils/CheckerValue"
+import { handelCommonObject, handelActionData, handelApiValue } from "../../../utils/CheckerValue"
 import ActionShow from '../../Forms/ActionShow';
 
 
@@ -300,8 +300,8 @@ function JhaSummary() {
       });
       const workArea = await
         api_work_area.get(`/api/v1/companies/${assessment.fkCompanyId}/projects/${assessment.fkProjectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-      let result = workArea.data.data.results[0]
-      structName[result["structure_name"]] = result["structureName"]
+      // let result = workArea.data.data.results[0]
+      // structName[result["structure_name"]] = result["structureName"]
     }
     setProjectStructName(structName)
   }

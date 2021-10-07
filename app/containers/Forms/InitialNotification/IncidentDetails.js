@@ -91,6 +91,7 @@ const IncidentDetails = (props) => {
   const [hideAffect, setHideAffect] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [workArea, setWorkArea] = useState([])
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -324,7 +325,7 @@ const IncidentDetails = (props) => {
               subContractor: form.subContractor,
               incidentStage: "Initial Notification",
               incidentStatus: "Pending",
-              
+
             };
             // sent post api
             try {
@@ -379,10 +380,7 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       await setIncidentTypeValue(result);
     } catch (error) {
-      setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+history.push("/app/pages/error")
     }
   };
 
@@ -390,15 +388,14 @@ const IncidentDetails = (props) => {
   const fetchContractorValue = async () => {
     try {
       const res = await api.get("api/v1/lists/2/value")
-      .catch(error=>setMessage(error.message))
+        .catch(error => setMessage(error.message))
       const result = res.data.data.results;
       await setContractorValue(result);
     } catch (error) {
       setIsNext(true);
+
       
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+history.push("/app/pages/error")
     }
   };
 
@@ -406,15 +403,13 @@ const IncidentDetails = (props) => {
   const fetchSubContractorValue = async () => {
     try {
       const res = await api.get("api/v1/lists/3/value")
-      .catch(error=>setMessage(error.message))
+        .catch(error => setMessage(error.message))
       const result = res.data.data.results;
       await setSubContractorValue(result);
     } catch (error) {
       setIsNext(true);
-  
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -426,10 +421,8 @@ const IncidentDetails = (props) => {
       await setPersonAffectedValue(result);
     } catch (error) {
       setIsNext(true);
-    
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -441,10 +434,8 @@ const IncidentDetails = (props) => {
       await setPropertiesAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -456,10 +447,8 @@ const IncidentDetails = (props) => {
       await setEquipmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -471,9 +460,7 @@ const IncidentDetails = (props) => {
       await setEnvironmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage(error.message);
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -512,10 +499,8 @@ const IncidentDetails = (props) => {
 
       } catch (error) {
         setIsNext(true);
-        
-        setMessage(error.message);
-        setMessageType("error");
-        setOpen(true);
+
+        history.push("/app/pages/error")
       }
     }
   };
@@ -558,7 +543,7 @@ const IncidentDetails = (props) => {
               }
             })
             .catch(function (error) {
-
+              history.push("/app/pages/error")
             });
         }
       }
@@ -702,13 +687,13 @@ const IncidentDetails = (props) => {
                       required
                       className={classes.formControl}
                     >
-                      <InputLabel id="demo-simple-select-label">
+                      <InputLabel id={data.breakDownLabel}>
                         {data.breakDownLabel}
                       </InputLabel>
                       <Select
-                        labelId="incident-type-label"
-                        id="incident-type"
-                        label="Incident type"
+                        labelId={data.breakDownLabel}
+                        id={data.breakDownLabel}
+                        label={data.breakDownLabel}
                         value={data.selectValue.id || ""}
                         disabled={data.breakDownData.length === 0}
 
@@ -798,6 +783,9 @@ const IncidentDetails = (props) => {
                         incidentOccuredOn: moment(e).toISOString(),
                       });
                     }}
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => {setIsDateShow(false)}}
                     InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
@@ -902,7 +890,7 @@ const IncidentDetails = (props) => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor"
-                    value={form.contractor || ""}
+                    value={form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -912,7 +900,7 @@ const IncidentDetails = (props) => {
                   >
                     {contractorValue.length !== 0
                       ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
+                        <MenuItem key={index} value={selectValues.inputValue.trim()}>
                           {selectValues.inputLabel}
                         </MenuItem>
                       ))
@@ -1162,7 +1150,7 @@ const IncidentDetails = (props) => {
                   )}
                 </FormControl>
                 {/* Alert Message */}
-               {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
+                {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
               </Grid>
 
               {/* Go to next button */}

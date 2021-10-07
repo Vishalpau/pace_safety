@@ -209,14 +209,19 @@ function BlankPage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     if (fkProjectStructureIds) {
-      const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
-      // debugger;
-      await setIncidents(res.data.data.results.results);
-
-      await setTotalData(res.data.data.results.count)
-      await setPageData(res.data.data.results.count / 25)
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-  await setPageCount(pageCount)
+      try{
+        const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
+        // debugger;
+        await setIncidents(res.data.data.results.results);
+  
+        await setTotalData(res.data.data.results.count)
+        await setPageData(res.data.data.results.count / 25)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
+      }
+      catch(err){
+        history.push("/app/pages/error")
+      }
     } else {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
         // alert('hey')
@@ -228,7 +233,7 @@ function BlankPage(props) {
           let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
         })
-        .catch(err => console.log(err.message))
+        .catch(err => history.push("/app/pages/error"))
       // handleTimeOutError(res)
 
 

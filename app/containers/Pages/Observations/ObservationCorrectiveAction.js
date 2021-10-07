@@ -45,6 +45,7 @@ import ActionTracker from "../../Forms/ActionTracker";
 
 import apiAction from "../../../utils/axiosActionTracker"
 import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../utils/CheckerValue";
+import classNames from "classnames";
 
 import {
   access_token,
@@ -148,6 +149,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  boldHelperText: {
+    "& .MuiFormHelperText-root": {
+      // fontWeight : "bold",
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
+  },
 }));
 
 function ObservationCorrectiveAction() {
@@ -164,6 +173,7 @@ function ObservationCorrectiveAction() {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isDateShow, setIsDateShow] = useState(false)
   let filterReportedByName = []
 
   const [projectData, setProjectData] = useState({
@@ -195,18 +205,6 @@ function ObservationCorrectiveAction() {
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
 
-  let client = []
-  let client_id = []
-  companies.map((value, i) => {
-    if (value.companyId === form.fkCompanyId) {
-      client.push(companies[i])
-      client[0].subscriptions.map((value, i) => {
-        if (value.appCode == "actions") {
-          client_id.push(client[0].subscriptions[i].hostings[0].clientId)
-        }
-      })
-    }
-  })
 
   const [comment, setComment] = useState({
     "fkCompanyId": parseInt(fkCompanyId),
@@ -278,51 +276,11 @@ function ObservationCorrectiveAction() {
 
       }
     }
-    let data = new FormData();
-    data.append("fkCompanyId", form.fkCompanyId),
-      data.append("fkProjectId", form.fkProjectId),
-      data.append("fkProjectStructureIds", form.fkProjectStructureIds),
-      data.append("observationTopic", form.observationTopic),
-      data.append("observationClassification", form.observationClassification),
-      data.append("stopWork", form.stopWork),
-      data.append("nearMiss", form.nearMiss),
-      data.append("personRecognition", form.personRecognition),
-      data.append("observationTitle", form.observationTitle),
-      data.append("observationDetails", form.observationDetails),
-      data.append("isSituationAddressed", form.isSituationAddressed),
-      data.append("actionTaken", form.actionTaken),
-      data.append("location", form.location),
-      data.append("observedAt", form.observedAt),
-      data.append("assigneeName", form.assigneeName),
-      data.append("assigneeId", form.assigneeId),
-      data.append("shift", form.shift),
-      data.append("departmentName", form.departmentName),
-      data.append("departmentId", form.departmentId),
-      data.append("isCorrectiveActionTaken", form.isCorrectiveActionTaken),
-      data.append("reportedById", form.reportedById),
-      data.append("reportedByName", form.reportedByName),
-      data.append("reportedByDepartment", form.reportedByDepartment)
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
-      data.append("closedById", form.closedById),
-      data.append("closedByName", form.closedByName),
-      data.append("closedByDepartment", form.closedByDepartment)
-    data.append("reviewedOn", form.reviewedOn)
-    data.append("reviewedByName", form.reviewedByName)
-    data.append("supervisorByBadgeId", form.supervisorByBadgeId),
-      data.append("supervisorName", form.supervisorName),
-      data.append("supervisorDepartment", form.supervisorDepartment)
-    data.append("status", form.status),
-      data.append("observationStatus", form.observationStatus),
-      data.append("observationStage", form.observationStage),
-      data.append("createdBy", form.createdBy),
-      data.append("updatedBy", form.updatedBy),
-      data.append("source", form.source),
-      data.append("vendor", form.vendor),
-      data.append("vendorReferenceId", form.vendorReferenceId);
-    data.append("id", form.id)
+    form['updateBy'] = userId
+    delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
-    )}/`, data).then(res => {
+    )}/`, form).then(res => {
       if (res.status === 200) {
         localStorage.setItem('updateAction', "Done")
         localStorage.setItem("action", "Done")
@@ -333,10 +291,6 @@ function ObservationCorrectiveAction() {
         );
       }
     }).catch(err => {setLoading(false)})
-    
-
-
-
   }
 
   const fetchInitialiObservationData = async () => {
@@ -352,6 +306,11 @@ function ObservationCorrectiveAction() {
     await handelActionTracker();
 
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
   const fetchComments = async () => {
     const res = await api.get(`/api/v1/comments/Observation/${localStorage.getItem("fkobservationId")}/`)
@@ -532,11 +491,13 @@ function ObservationCorrectiveAction() {
                 />
               ))}
             </RadioGroup>
-            {error && error["isCorrectiveActionTaken"] && (
+            <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
+
+            {/* {error && error["isCorrectiveActionTaken"] && (
               <FormHelperText>
                 {error["isCorrectiveActionTaken"]}
               </FormHelperText>
-            )}
+            )} */}
           </FormControl>
         </Grid>
 
@@ -587,6 +548,7 @@ function ObservationCorrectiveAction() {
             fullWidth
             error={error.reviewedByName}
             helperText={error.reviewedByName ? error.reviewedByName : null}
+            className={classNames(classes.formControl, classes.boldHelperText)}
             value={form.reviewedByName ? form.reviewedByName : ""}
             variant="outlined"
 
@@ -608,7 +570,7 @@ function ObservationCorrectiveAction() {
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
-              className={classes.formControl}
+              className={classNames(classes.formControl, classes.boldHelperText)}
               fullWidth
               label="Reviewed on*"
               minDate={form.observedAt}
@@ -617,6 +579,9 @@ function ObservationCorrectiveAction() {
               error={error.reviewedOn}
               helperText={error.reviewedOn ? error.reviewedOn : null}
               disableFuture={true}
+              open={isDateShow}
+              onClose={(e) => handelClose()}
+              onClick={(e) => setIsDateShow(true)}
               inputVariant="outlined"
               InputProps={{ readOnly: true }}
               onChange={(e) => handleCloseDate(e)}

@@ -227,6 +227,7 @@ const ObservationInitialNotification = (props) => {
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
   const [levelLenght, setLevelLenght] = useState(0);
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
@@ -422,6 +423,7 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
+
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
@@ -471,10 +473,8 @@ const ObservationInitialNotification = (props) => {
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment);
-    if (form.reportedDate !== null && typeof form.reportedDate !== "string") {
-      data.append("reportedDate", null);
-    }
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
+      data.append("reportedDate", form.reportedDate);
+      data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
       data.append("closedByDepartment", form.closedByDepartment);
@@ -502,7 +502,6 @@ const ObservationInitialNotification = (props) => {
       data.append("source", form.source),
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
-
 
     const res = await api.post("/api/v1/observations/", data).then(res => {
     if (res.status === 201) {
@@ -542,10 +541,13 @@ const ObservationInitialNotification = (props) => {
 
     })
     
-    
-    
-
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
+
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
   const handleChange = async (e, index, value) => {
@@ -1311,16 +1313,17 @@ const ObservationInitialNotification = (props) => {
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
+                  onClick={(e) => setIsDateShow(true)}
                   label="Date & Time*"
-                  defaultValue={form.observedAt}
                   disabled={form.id ? true : false}
                   error={error.observedAt}
                   helperText={error.observedAt ? error.observedAt : null}
-                  onChange={handleDateChange}
                   format="YYYY/MM/DD hh:mm A"
                   className={classes.formControl}
-                  value={form.observedAt || null}
+                  value={form.observedAt ? form.observedAt : null}
                   fullWidth
+                  open={isDateShow}
+                  onClose={(e) => handelClose()}
                   disableFuture={true}
                   inputVariant="outlined"
                   InputProps={{ readOnly: true }}

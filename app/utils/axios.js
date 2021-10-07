@@ -6,10 +6,9 @@ import { apiUrl } from "./helper";
 
 const api = axios.create({
   baseURL: "",
-  headers: HEADER_AUTH
+  timeout: 10000,
+  headers: HEADER_AUTH,
 });
-// api.defaults.timeout = 10000;
-api.defaults.timeoutErrorMessage = "Timeout"
 
 api.interceptors.request.use(
   function (config) {
