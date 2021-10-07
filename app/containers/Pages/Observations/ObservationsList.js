@@ -259,7 +259,7 @@ const handleSummaryPush = async (index) => {
   return (
     <>
       <Box>
-      {isLoading ? 
+      {isLoading ? <>
         <TableContainer component={Paper}>
        
           <Grid component={Paper}>
@@ -301,11 +301,11 @@ const handleSummaryPush = async (index) => {
               </Grid>
 
             </TableContainer>
-            :<h1>Loading...</h1>}
+            
             <div className={classes.pagination}>
             {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
       <Pagination count={pageCount} page={page} onChange={handleChange}/>
-    </div>
+    </div></>:<h1>Loading...</h1>}
       </Box>
     </>
   );

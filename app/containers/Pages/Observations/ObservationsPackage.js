@@ -395,7 +395,6 @@ function Actions(props) {
         // await setAllInitialData(result)
         if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`)
-          console.log(allLogInUserData , "QQQQQQQ")
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(allLogInUserData.data.data.results.count)
@@ -554,7 +553,6 @@ function Actions(props) {
   const handlePrintPush = async (index) => {
     const id = allInitialData[index].id;
     localStorage.setItem("fkobservationId", id);
-    //console.log("Ashutosh")
     history.push(`/app/prints/${id}`);
   };
   const classes = useStyles();

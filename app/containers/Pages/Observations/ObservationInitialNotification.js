@@ -423,6 +423,7 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
+
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
@@ -472,11 +473,8 @@ const ObservationInitialNotification = (props) => {
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment);
-    // if (form.reportedDate !== null && typeof form.reportedDate !== "string") {
-      console.log(form.reportedDate, "DASA")
       data.append("reportedDate", form.reportedDate);
-    // }
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
+      data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
       data.append("closedByDepartment", form.closedByDepartment);
