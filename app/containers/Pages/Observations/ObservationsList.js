@@ -285,7 +285,6 @@ const handleSummaryPush = async (index) => {
                                           >
                                             <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
                                           </Link>,
-                  item[1]["observationNumber"],
                   item[1]["observationType"],
                   item[1]["location"],
                   moment(item[1]["createdAt"]).format(
