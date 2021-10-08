@@ -39,6 +39,7 @@ import api from "../../../utils/axios";
 import { JHA_FORM } from './Utils/constants';
 import { handelIncidentId } from "./Utils/checkValue"
 import Pagination from '@material-ui/lab/Pagination';
+import { handelCommonObject } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -174,8 +175,7 @@ function Jha(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    console.log(res, "KLKLKL")
-    const result = res.data.data.results.results
+    const result = res.data.data.results.results !== undefined && res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)
     await setPageData(res.data.data.results.count / 25)
@@ -184,8 +184,6 @@ function Jha(props) {
     handelTableView(result)
 
     await setIsLoading(true)
-
-
   }
 
   const handleChange = async (event, value) => {
@@ -251,10 +249,12 @@ function Jha(props) {
   };
 
   const handleSummaryPush = async (e, index) => {
-    const jhaId = allJHAData[index].id
 
-    localStorage.setItem("fkJHAId", jhaId)
-    history.push(`/app/pages/jha/jha-summary/${jhaId}`);
+    const jha = allJHAData[index]
+
+    localStorage.setItem("fkJHAId", jha.id)
+    handelCommonObject("commonObject", "jha", "projectStruct", jha.fkProjectStructureIds)
+    history.push(`/app/pages/jha/jha-summary/${jha.id}`);
   };
 
   const handleNewJhaPush = async () => {

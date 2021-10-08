@@ -227,6 +227,7 @@ const ObservationInitialNotification = (props) => {
   const [success, setSuccess] = useState(false);
   const timer = React.useRef();
   const [levelLenght, setLevelLenght] = useState(0);
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
@@ -422,6 +423,7 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
+
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
@@ -471,10 +473,7 @@ const ObservationInitialNotification = (props) => {
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment);
-    // if (form.reportedDate !== null && typeof form.reportedDate !== "string") {
-      console.log(form.reportedDate, "DASA")
-      data.append("reportedDate", form.reportedDate);
-    // }
+    data.append("reportedDate", form.reportedDate);
     data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
@@ -505,44 +504,55 @@ const ObservationInitialNotification = (props) => {
       data.append("vendorReferenceId", form.vendorReferenceId);
 
     const res = await api.post("/api/v1/observations/", data).then(res => {
-    if (res.status === 201) {
-      const id = res.data.data.results;
-      const fkObservatioId = id.id;
-      localStorage.setItem("fkobservationId", fkObservatioId);
+      if (res.status === 201) {
+        const id = res.data.data.results;
+        const fkObservatioId = id.id;
+        localStorage.setItem("fkobservationId", fkObservatioId);
 
-      if (catagory.length > 0) {
-        for (let i = 0; i < catagory.length; i++) {
-          catagory[i]["fkObservationId"] = localStorage.getItem(
-            "fkobservationId"
+        if (catagory.length > 0) {
+          for (let i = 0; i < catagory.length; i++) {
+            catagory[i]["fkObservationId"] = localStorage.getItem(
+              "fkobservationId"
+            );
+          }
+          const resCategory = api.post(
+            `/api/v1/observations/${localStorage.getItem(
+              "fkobservationId"
+            )}/observationtags/`,
+            catagory
+          ).then(res => {
+            if (res.status === 200 || res.status === 201) {
+              history.push(
+                `/app/observation/details/${localStorage.getItem(
+                  "fkobservationId"
+                )}`
+              );
+              setLoading(false);
+            }
+          }).catch(err => {
+            setLoading(false);
+
+          })
+
+        } else {
+          history.push(
+            `/app/observation/details/${localStorage.getItem(
+              "fkobservationId"
+            )}`
           );
         }
-        const resCategory =  api.post(
-          `/api/v1/observations/${localStorage.getItem(
-            "fkobservationId"
-          )}/observationtags/`,
-          catagory
-        ).then(res => {
-          if (res.status === 200 || res.status === 201) {
-            history.push(
-              `/app/observation/details/${localStorage.getItem(
-                "fkobservationId"
-              )}`
-            );
-            setLoading(false);
-          }
-        }).catch(err => {
-          setLoading(false);
-    
-        })
-        
-      } 
-    }
+      }
     }).catch(err => {
       setLoading(false);
 
     })
-    
+
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
 
   // this function called when user clicked and unclick checkBox and set thier value acording to click or unclick check
@@ -701,7 +711,7 @@ const ObservationInitialNotification = (props) => {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -1309,16 +1319,17 @@ const ObservationInitialNotification = (props) => {
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
+                  onClick={(e) => setIsDateShow(true)}
                   label="Date & Time*"
-                  defaultValue={form.observedAt}
                   disabled={form.id ? true : false}
                   error={error.observedAt}
                   helperText={error.observedAt ? error.observedAt : null}
-                  onChange={handleDateChange}
                   format="YYYY/MM/DD hh:mm A"
                   className={classes.formControl}
-                  value={form.observedAt || null}
+                  value={form.observedAt ? form.observedAt : null}
                   fullWidth
+                  open={isDateShow}
+                  onClose={(e) => handelClose()}
                   disableFuture={true}
                   inputVariant="outlined"
                   InputProps={{ readOnly: true }}
@@ -1328,7 +1339,7 @@ const ObservationInitialNotification = (props) => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      observedAt: moment(e).toISOString(),
+                      observedAt: moment(e).format("YYYY-MM-DDThh:mm:ss"),
                     });
                   }}
                 />
@@ -1759,27 +1770,20 @@ const ObservationInitialNotification = (props) => {
                   src={attachment}
                 />
               </Grid>
-            ) : null}
-            {Object.values(error).length > 0 ? 
-            <Grid item xs={12} md={6} className={classes.errorsWrapper}>
+            ) : null} */}
+            {Object.values(error).length > 0 ?
+              <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
-          {  Object.values(error).map((value)=>(
-              <Typography>{value}</Typography>
-          ))}
-            
-            
-            
-            </Grid>
-            : null}
+                {Object.values(error).map((value) => (
+                  <Typography>{value}</Typography>
+                ))}
 
 
-            {/* {attachment ===
-                              null ? null : typeof attachment ===
-                                "string" ? (
-                                <Attachment value={attachment} />
-                              ) : null} */}
+
+              </Grid>
+              : null}
+
             <Grid item xs={12}>
-              {/* {submitLoader == false ? */}
               <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"

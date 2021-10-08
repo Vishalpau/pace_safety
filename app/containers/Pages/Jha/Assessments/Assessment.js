@@ -287,7 +287,6 @@ const Assessment = () => {
     )
   }
 
-
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
@@ -356,14 +355,19 @@ const Assessment = () => {
     setForm(temp)
   }
 
+  const handelApiError = () => {
+    setSubmitLoader(false)
+    history.push("/app/pages/error")
+  }
+
   const handelNext = async () => {
     setSubmitLoader(true)
-    await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form)
+    const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, form).catch(() => handelApiError())
     delete jobDetails["jhaAssessmentAttachment"]
     jobDetails["humanPerformanceAspects"] = additinalJobDetails.humanPerformanceAspects.toString()
     jobDetails["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     jobDetails["additionalRemarks"] = additinalJobDetails.additionalRemarks
-    const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jobDetails)
+    const resJobDetails = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jobDetails).catch(() => handelApiError())
     handelNavigate("next")
     setSubmitLoader(false)
   }

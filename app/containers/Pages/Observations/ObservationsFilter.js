@@ -247,7 +247,7 @@ class ObservationsFilter extends React.Component {
     }else if(value === "Positive behaviour"){
       this.setState({type:"Positive behavior"})
     }else if(value === "All"){
-      this.setState({type:"All"})
+      this.setState({type:"Type"})
 
     }
   }

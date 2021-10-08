@@ -735,7 +735,7 @@ function PersonalDashboard(props) {
         onClose={handleProjectClose}
       >
         <DialogTitle onClose={handleProjectClose}>
-          Switch to a Different Project
+        Select a Project
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
