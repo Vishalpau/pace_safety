@@ -158,7 +158,7 @@ const LessionLearned = () => {
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
         );
-      } catch(error){}
+      } catch(error){history.push("/app/pages/error")}
     }
     if (isValid === true) {
       if (attachment[0].evidenceDocument !== null) {
@@ -178,7 +178,7 @@ const LessionLearned = () => {
                 `api/v1/incidents/${id}/evidences/${attachment[0].id}/`,
                 formData
               );
-            } catch (error) { }
+            } catch (error) {history.push("/app/pages/error") }
           }else{
            
               const formData = new FormData();
@@ -194,7 +194,7 @@ const LessionLearned = () => {
                   `api/v1/incidents/${id}/evidences/`,
                   formData
                 );
-              } catch (error) { }
+              } catch (error) { history.push("/app/pages/error")}
             }
 
         }
@@ -270,7 +270,7 @@ const LessionLearned = () => {
       const result = res.data.data.results;
        setIncidentsListdata(result);
     })
-    .catch((err)=>console.log(err))
+    .catch((err)=>history.push("/app/pages/error"))
     
   };
 
@@ -288,13 +288,10 @@ const LessionLearned = () => {
         if (response.status === 200) {
           const result = response.data.data.results;
           setDepartment(result);
-        } else {
-          // window.location.href = {LOGIN_URL}
-        }
+        } 
       })
       .catch((error) => {
-        console.log(err)
-        // window.location.href = {LOGIN_URL}
+        history.push("/app/pages/error")
       });
   };
 

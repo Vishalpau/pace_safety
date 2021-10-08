@@ -149,9 +149,26 @@ const Summary = (props) => {
             setCloseout(true)
             setLessionlearn(true)
             setIsLoading(true)
-            
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Lesson Learnt" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(true)
+            setLessionlearn(false)
+            setIsLoading(true)
           }
           else if(allIncidents.data.data.results.incidentStage === "Close out" && allIncidents.data.data.results.incidentStatus === "Done"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(true)
+            setCloseout(true)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Close out" && allIncidents.data.data.results.incidentStatus === "pending"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(true);
             setEvidence(true)
@@ -170,6 +187,16 @@ const Summary = (props) => {
             setIsLoading(true)
         
           }
+          else if(allIncidents.data.data.results.incidentStage === "Root cause & analysis" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(true)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+        
+          }
           else if(allIncidents.data.data.results.incidentStage === "Evidence" && allIncidents.data.data.results.incidentStatus === "Done"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(true);
@@ -180,9 +207,28 @@ const Summary = (props) => {
             setIsLoading(true)
             
           }
+          else if(allIncidents.data.data.results.incidentStage === "Evidence" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(true);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+            
+          }
           else if(allIncidents.data.data.results.incidentStage === "Investigation" && allIncidents.data.data.results.incidentStatus === "Done"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(true);
+            setEvidence(false)
+            setRootCauseAnalysis(false)
+            setCloseout(false)
+            setLessionlearn(false)
+            setIsLoading(true)
+          }
+          else if(allIncidents.data.data.results.incidentStage === "Investigation" && allIncidents.data.data.results.incidentStatus === "pending"){
+            setInitialNotificationStatus(true)
+            setInvestigationOverview(false);
             setEvidence(false)
             setRootCauseAnalysis(false)
             setCloseout(false)
@@ -210,130 +256,11 @@ const Summary = (props) => {
         }
       })
       .catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
-      })
-  };
-
-  const fetchReportData = async () => {
-    await api.get(`api/v1/incidents/${id}/reports/`)
-
-      .then((res) => {
-
-        if (res.data.data.results.length > 0) {
-          setInitialNotificationStatus(true);
-        }
-      })
-      .catch(err => {
-        setOpen(true);
-        setMessage(err.res)
-        setMessageType("error")
-      })
-  };
-
-  const fetchInvestigationData = async () => {
-    await api.get(`/api/v1/incidents/${id}/investigations/`)
-      .then((res) => {
-
-        let result = res.data.data.results[0];
-        setInvestigationOverview(result);
-      })
-      .catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
-      })
-  };
-
-  const fetchEvidenceData = async () => {
-    await api.get(`/api/v1/incidents/${id}/activities/`)
-      .then((allEvidence) => {
-        const result = allEvidence.data.data.results[24];
-        setEvidencesData(result);
-      })
-      .catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
-      })
-
-  };
-
-  const fetchLessonLerned = async () => {
-    await api.get(`api/v1/incidents/${id}/learnings/`)
-      .then((res) => {
-        const result = res.data.data.results[0];
-        setLessionLearnData(result);
-      })
-      .catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
-      })
-  };
-
-  const handelRcaValue = async () => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-    let previousData = await api.get(`/api/v1/incidents/${incidentId}/causeanalysis/`);
-
-
-    let rcaRecommended = previousData.data.data.results[0] !== undefined ? previousData.data.data.results[0].rcaRecommended : []
-    rcaRecommendedValue.current = rcaRecommended
-
-
-  }
-
-  const rootCauseAnalysisCheck = async () => {
-    let page_url = window.location.href;
-    const lastItem = parseInt(page_url.substring(page_url.lastIndexOf("/") + 1));
-
-    let incidentId = !isNaN(lastItem) ? lastItem : localStorage.getItem("fkincidentId");
-
-    await api.get(`/api/v1/incidents/${incidentId}/pacecauses/`)
-      .then((paceCause) => {
-        let paceCauseData = paceCause.data.data.results[0];
-        setPaceCauseData(paceCauseData);
-      }).catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
-      })
-
-
-    await api.get(`/api/v1/incidents/${incidentId}/rootcauses/`)
-      .then((rootCause) => {
-        let rootCauseData = rootCause.data.data.results[0];
-        setRootCausesData(rootCauseData);
-      }).catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
-      })
-
-    await api.get(`/api/v1/incidents/${incidentId}/fivewhy/`)
-      .then((whyAnalysis) => {
-        if (whyAnalysis.status === 200) {
-          setIsLoading(true)
-        }
-        let whyAnalysisData = whyAnalysis.data.data.results[0];
-        setWhyData(whyAnalysisData);
-      })
-      .catch(err => {
-        setOpen(true);
-        setMessage(err.message)
-        setMessageType("error")
+        history.push("/app/pages/error")
       })
   };
 
 
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
 
   const classes = useStyles();
@@ -379,7 +306,7 @@ const Summary = (props) => {
       setOpen(true);
       setMessage("Please complete the previous pending stage Investigation")
       setMessageType("warning")
-    } else if (evidencesData == undefined) {
+    } else if (evidence == false) {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/`)
     } else {
      

@@ -212,7 +212,7 @@ const ActivityDetails = () => {
     ).then((res)=>{
       const result = res.data.data.results;
       setIncidentDetail(result);
-    }).catch(err=>console.log(err))
+    }).catch(err=>history.push("/app/pages/error"))
     
   };
 

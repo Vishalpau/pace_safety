@@ -178,7 +178,7 @@ const WhyAnalysis = () => {
               temp
             );
           } catch (error) {
-            alert("something went wrong")
+            history.push("/app/pages/error")
           }
         }
         let viewMode = {
@@ -198,7 +198,7 @@ const WhyAnalysis = () => {
               temp
             );
           } catch (error) {
-            alert("something went wrong")
+            history.push("/app/pages/error")
           }
         }
         let viewMode = {

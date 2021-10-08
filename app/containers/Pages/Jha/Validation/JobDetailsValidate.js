@@ -1,10 +1,21 @@
 import validator from "validator";
 
-function JobDetailsValidate(data) {
+function JobDetailsValidate(data, projectStructure) {
 
 
     const error = {};
     let isValid = true;
+
+    const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
+    for (let i = 0; i < breakdownValue.length; i++) {
+        var element = projectStructure[i]
+        console.log({ element: element })
+        if (projectStructure[i] === undefined) {
+            error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
+            isValid = false;
+        }
+    }
+
     if (validator.isEmpty(data.jobTitle.toString())) {
         error.jobTitle = "Please enter the job title";
         isValid = false;

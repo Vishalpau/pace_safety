@@ -158,7 +158,7 @@ const RootCauseAnalysis = () => {
           temp
         );
       } catch (error) {
-        
+        history.push("/app/pages/error")
       }
     }
     if (Object.keys(error).length == 0) {
