@@ -534,6 +534,12 @@ const ObservationInitialNotification = (props) => {
     
         })
         
+      }else{
+        history.push(
+          `/app/observation/details/${localStorage.getItem(
+            "fkobservationId"
+          )}`
+        );
       } 
     }
     }).catch(err => {
@@ -884,7 +890,6 @@ const ObservationInitialNotification = (props) => {
       }
     }
   };
-  console.log('================================',form)
 
   const classes = useStyles();
 
@@ -1765,7 +1770,7 @@ const ObservationInitialNotification = (props) => {
                   src={attachment}
                 />
               </Grid>
-            ) : null}
+            ) : null} */}
             {Object.values(error).length > 0 ? 
             <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
@@ -1778,14 +1783,7 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             : null}
 
-
-            {/* {attachment ===
-                              null ? null : typeof attachment ===
-                                "string" ? (
-                                <Attachment value={attachment} />
-                              ) : null} */}
             <Grid item xs={12}>
-              {/* {submitLoader == false ? */}
               <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"
