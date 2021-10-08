@@ -423,7 +423,7 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
-  
+
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
@@ -473,8 +473,8 @@ const ObservationInitialNotification = (props) => {
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment);
-      data.append("reportedDate", form.reportedDate);
-      data.append("reportedByBadgeId", form.reportedByBadgeId),
+    data.append("reportedDate", form.reportedDate);
+    data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
       data.append("closedByDepartment", form.closedByDepartment);
@@ -504,49 +504,49 @@ const ObservationInitialNotification = (props) => {
       data.append("vendorReferenceId", form.vendorReferenceId);
 
     const res = await api.post("/api/v1/observations/", data).then(res => {
-    if (res.status === 201) {
-      const id = res.data.data.results;
-      const fkObservatioId = id.id;
-      localStorage.setItem("fkobservationId", fkObservatioId);
+      if (res.status === 201) {
+        const id = res.data.data.results;
+        const fkObservatioId = id.id;
+        localStorage.setItem("fkobservationId", fkObservatioId);
 
-      if (catagory.length > 0) {
-        for (let i = 0; i < catagory.length; i++) {
-          catagory[i]["fkObservationId"] = localStorage.getItem(
-            "fkobservationId"
+        if (catagory.length > 0) {
+          for (let i = 0; i < catagory.length; i++) {
+            catagory[i]["fkObservationId"] = localStorage.getItem(
+              "fkobservationId"
+            );
+          }
+          const resCategory = api.post(
+            `/api/v1/observations/${localStorage.getItem(
+              "fkobservationId"
+            )}/observationtags/`,
+            catagory
+          ).then(res => {
+            if (res.status === 200 || res.status === 201) {
+              history.push(
+                `/app/observation/details/${localStorage.getItem(
+                  "fkobservationId"
+                )}`
+              );
+              setLoading(false);
+            }
+          }).catch(err => {
+            setLoading(false);
+
+          })
+
+        } else {
+          history.push(
+            `/app/observation/details/${localStorage.getItem(
+              "fkobservationId"
+            )}`
           );
         }
-        const resCategory =  api.post(
-          `/api/v1/observations/${localStorage.getItem(
-            "fkobservationId"
-          )}/observationtags/`,
-          catagory
-        ).then(res => {
-          if (res.status === 200 || res.status === 201) {
-            history.push(
-              `/app/observation/details/${localStorage.getItem(
-                "fkobservationId"
-              )}`
-            );
-            setLoading(false);
-          }
-        }).catch(err => {
-          setLoading(false);
-    
-        })
-        
-      }else{
-        history.push(
-          `/app/observation/details/${localStorage.getItem(
-            "fkobservationId"
-          )}`
-        );
-      } 
-    }
+      }
     }).catch(err => {
       setLoading(false);
 
     })
-    
+
   };
 
   const handelClose = () => {
@@ -1771,17 +1771,17 @@ const ObservationInitialNotification = (props) => {
                 />
               </Grid>
             ) : null} */}
-            {Object.values(error).length > 0 ? 
-            <Grid item xs={12} md={6} className={classes.errorsWrapper}>
+            {Object.values(error).length > 0 ?
+              <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
-          {  Object.values(error).map((value)=>(
-              <Typography>{value}</Typography>
-          ))}
-            
-            
-            
-            </Grid>
-            : null}
+                {Object.values(error).map((value) => (
+                  <Typography>{value}</Typography>
+                ))}
+
+
+
+              </Grid>
+              : null}
 
             <Grid item xs={12}>
               <div className={classes.loadingWrapper}>

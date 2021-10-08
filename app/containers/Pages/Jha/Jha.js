@@ -39,6 +39,7 @@ import api from "../../../utils/axios";
 import { JHA_FORM } from './Utils/constants';
 import { handelIncidentId } from "./Utils/checkValue"
 import Pagination from '@material-ui/lab/Pagination';
+import { handelCommonObject } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -248,10 +249,12 @@ function Jha(props) {
   };
 
   const handleSummaryPush = async (e, index) => {
-    const jhaId = allJHAData[index].id
 
-    localStorage.setItem("fkJHAId", jhaId)
-    history.push(`/app/pages/jha/jha-summary/${jhaId}`);
+    const jha = allJHAData[index]
+
+    localStorage.setItem("fkJHAId", jha.id)
+    handelCommonObject("commonObject", "jha", "projectStruct", jha.fkProjectStructureIds)
+    history.push(`/app/pages/jha/jha-summary/${jha.id}`);
   };
 
   const handleNewJhaPush = async () => {
