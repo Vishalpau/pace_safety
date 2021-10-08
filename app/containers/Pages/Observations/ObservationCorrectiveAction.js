@@ -403,11 +403,16 @@ function ObservationCorrectiveAction() {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          console.log(response)
+          const result = response.data.data.results;
           let user = [];
-          user = result;
-          for (var i in result) {
-            filterReportedByName.push(result[i]);
+          // user = result;
+          let data = result.filter((item) =>
+            item['companyId'] == fkCompanyId
+          )
+          
+          for (var i in data[0].users) {
+            filterReportedByName.push(data[0].users[i]);
           }
           setReportedByName(filterReportedByName);
         }
