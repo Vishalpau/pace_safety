@@ -423,7 +423,7 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
-
+  
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
@@ -534,6 +534,12 @@ const ObservationInitialNotification = (props) => {
     
         })
         
+      }else{
+        history.push(
+          `/app/observation/details/${localStorage.getItem(
+            "fkobservationId"
+          )}`
+        );
       } 
     }
     }).catch(err => {
@@ -705,7 +711,7 @@ const ObservationInitialNotification = (props) => {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -1333,7 +1339,7 @@ const ObservationInitialNotification = (props) => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      observedAt: moment(e).toISOString(),
+                      observedAt: moment(e).format("YYYY-MM-DDThh:mm:ss"),
                     });
                   }}
                 />
@@ -1764,7 +1770,7 @@ const ObservationInitialNotification = (props) => {
                   src={attachment}
                 />
               </Grid>
-            ) : null}
+            ) : null} */}
             {Object.values(error).length > 0 ? 
             <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
@@ -1777,14 +1783,7 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             : null}
 
-
-            {/* {attachment ===
-                              null ? null : typeof attachment ===
-                                "string" ? (
-                                <Attachment value={attachment} />
-                              ) : null} */}
             <Grid item xs={12}>
-              {/* {submitLoader == false ? */}
               <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"
