@@ -6,7 +6,7 @@ import { apiUrl } from "./helper";
 
 const api = axios.create({
   baseURL: "",
-  timeout: 10000,
+  // timeout: 10000,
   headers: HEADER_AUTH,
 });
 

@@ -1,4 +1,5 @@
 import apiAction from "./axiosActionTracker"
+import moment from 'moment';
 
 export const checkValue = (value) => {
     let noValue = "-"
@@ -105,6 +106,16 @@ export const handelActionData = async (incidentId, apiData, type = "all") => {
     } else {
         return allAction
     }
+}
 
-
+export const handelDateTime = (value) => {
+    let observedDateAndTime = value.split("T")
+    let observedDate = moment(value.split("T")[0]).format('MMMM Do YYYY')
+    let observedTime = observedDateAndTime[1].replace("Z", "")
+    var timeString = observedTime;
+    var H = +timeString.substr(0, 2);
+    var h = H % 12 || 12;
+    var ampm = (H < 12 || H === 24) ? " AM" : " PM";
+    timeString = h + timeString.substr(2, 3) + ampm;
+    return `${observedDate} ${timeString}`
 }

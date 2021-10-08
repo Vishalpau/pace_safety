@@ -59,10 +59,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
-  pagination:{
-    padding:"1rem 0",
-    display:"flex",
-    justifyContent:"flex-end"
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   root: {
     flexGrow: 1,
@@ -162,8 +162,8 @@ function Observations(props) {
   const [pageCount, setPageCount] = useState(0);
 
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).name
-  : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).name
+    : null;
   const handelView = (e) => {
     setListToggle(false);
     history.push(`/app/observations`);
@@ -238,11 +238,11 @@ function Observations(props) {
   ];
 
   const options = {
-    print : false,
+    print: false,
     search: false,
     filter: false,
     viewColumns: false,
-    download :false,
+    download: false,
     pagination: false,
   };
 
@@ -258,20 +258,20 @@ function Observations(props) {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
     await setAllInitialData(result)
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
     await setPageCount(pageCount)
 
     await setIsLoading(true)
@@ -282,21 +282,21 @@ function Observations(props) {
     // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
   };
 
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
   };
   const classes = useStyles();
@@ -350,7 +350,16 @@ function Observations(props) {
                     </div>
                   </div>
                 </div>
-
+                {/* /// */}
+                <div>
+                  {allInitialData.length < 2 ? <div>{Objects.entries(allInitialData).map((key, value) => (
+                    <>
+                      <p>{key}</p>
+                      <p>{value}</p>
+                    </>
+                  ))}</div> : ""}
+                </div>
+                {/* ///// */}
                 <Button
                   variant="contained"
                   // color="primary"
@@ -373,17 +382,19 @@ function Observations(props) {
                 {
                   Object.entries(allInitialData)
                     .filter(
-                      (item) => {return (
-                         
-                        item[1]["observationDetails"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
+                      (item) => {
+                        return (
+
+                          item[1]["observationDetails"]
+                            .toLowerCase()
+                            .includes(searchIncident.toLowerCase()) ||
                           item[1]["observationNumber"].toLowerCase().includes(
                             searchIncident.toLowerCase()
-                          
+
+                          )
                         )
-                      )}
-                        
+                      }
+
                     )
                     .map((item, index) => (
                       <Card variant="outlined" className={Incidents.card}>
@@ -408,9 +419,9 @@ function Observations(props) {
                                   justify="flex-end"
                                 >
                                   <Chip
-                              avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
-                              label={item[1]["username"]?item[1]["username"]:"Admin"}
-                            />
+                                    avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
+                                    label={item[1]["username"] ? item[1]["username"] : "Admin"}
+                                  />
                                 </Grid>
                               </Grid>
                             </Grid>
@@ -517,7 +528,7 @@ function Observations(props) {
 
                               <Typography className={classes.listingLabelValue}>
                                 {/* {item[1]} */}
-                                {item[1]["username"]?item[1]["username"]:"Admin"}
+                                {item[1]["username"] ? item[1]["username"] : "Admin"}
                               </Typography>
                             </Grid>
                           </Grid>
@@ -598,7 +609,7 @@ function Observations(props) {
 
                 ))} */}
               </div>
-             
+
 
               {/* ))} */}
             </>
@@ -608,18 +619,20 @@ function Observations(props) {
             <div className="listView">
               <MUIDataTable
                 data={Object.entries(allInitialData).filter(
-                      (item) => {return (
-                         
-                        item[1]["observationDetails"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                          item[1]["observationNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-                          
-                        )
-                      )}
-                        
-                    ).map((item) => [
+                  (item) => {
+                    return (
+
+                      item[1]["observationDetails"]
+                        .toLowerCase()
+                        .includes(searchIncident.toLowerCase()) ||
+                      item[1]["observationNumber"].toLowerCase().includes(
+                        searchIncident.toLowerCase()
+
+                      )
+                    )
+                  }
+
+                ).map((item) => [
                   item[1]["observationNumber"],
                   item[1]["observationType"],
                   item[1]["location"],
@@ -634,12 +647,12 @@ function Observations(props) {
             </div>
           )}
           <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
-         
+            <Pagination count={pageCount} onChange={handleChange} />
+          </div>
+
         </Box>
-        
-        
+
+
       ) : (
         <h1>Loading...</h1>
       )}
@@ -655,4 +668,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(Observations);
+export default connect(mapStateToProps, null)(Observations);
