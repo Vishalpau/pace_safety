@@ -176,6 +176,7 @@ export default function ActionTracker(props) {
     await handelUpdate()
     await fetchReportedBy()
   }
+  console.log(props)
 
   useEffect(() => {
     handelCallBack()
@@ -184,7 +185,16 @@ export default function ActionTracker(props) {
   return (
     <>
 
-
+{props.isCorrectiveActionTaken === null ?
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClickOpen}
+        disabled={props.isCorrectiveActionTaken === null ? true :false}
+      >
+        Actions<FlashOnIcon />
+        </Button>
+        :
       <Button
         variant="contained"
         color="primary"
@@ -192,6 +202,7 @@ export default function ActionTracker(props) {
       >
         Actions<FlashOnIcon />
       </Button>
+}
       {/* {console.log(reportedByName)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>

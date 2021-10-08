@@ -492,12 +492,12 @@ function Actions(props) {
  
     if (props.type == "All" || props.type == "Type") {
       if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
       } else {
-        const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
         const result = res.data.data.results.results
         await setAllInitialData(result)
         await setPage(value)
@@ -505,12 +505,12 @@ function Actions(props) {
     } else {
       if (props.type == "Risk") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -518,13 +518,13 @@ function Actions(props) {
       }
       if (props.type == "Comments") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
 
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -532,12 +532,12 @@ function Actions(props) {
       }
       if (props.type == "Positive behavior") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
 
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)

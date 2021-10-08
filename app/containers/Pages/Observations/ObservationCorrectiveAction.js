@@ -167,7 +167,7 @@ function ObservationCorrectiveAction() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { id } = useParams();
   const [actionTakenData, setActionTakenData] = useState([])
-  const [actionOpen, setActionOpen] = useState(false)
+  const [actionOpen, setActionOpen] = useState(true)
   const [error, setError] = useState({ comment: "", reviewedOn: "" });
   const [reportedByName, setReportedByName] = useState([]);
   const [submitLoader, setSubmitLoader] = useState(false);
@@ -234,6 +234,7 @@ function ObservationCorrectiveAction() {
     let allAction = await handelActionData(observationId, [], "title")
     setActionData(allAction)
   };
+  console.log("AVCS",actionData)
 
   const handelActionShow = (id) => {
     return (<>
@@ -260,7 +261,7 @@ function ObservationCorrectiveAction() {
 
 
   const handleSubmit = async () => {
-    const { error, isValid } = CorrectiveActionValidator(form);
+    const { error, isValid } = CorrectiveActionValidator(form , actionData);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -500,6 +501,8 @@ function ObservationCorrectiveAction() {
             )} */}
           </FormControl>
         </Grid>
+        {actionData.length == 0 ?   <Grid item md={8}>
+<p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
         <Grid item md={8}>
           {actionOpen === true ? (
@@ -522,6 +525,7 @@ function ObservationCorrectiveAction() {
                   fkCompanyId={fkCompanyId}
                   fkProjectId={projectId}
                   fkProjectStructureIds={fkProjectStructureIds}
+                  isCorrectiveActionTaken={form.isCorrectiveActionTaken}
                   createdBy={userId}
                   updatePage={updatePage}
                   handelShowData={handelActionTracker}
