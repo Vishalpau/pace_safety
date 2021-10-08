@@ -423,6 +423,14 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
+  const handelTime = (value) => {
+    let noGmt = value.toString().replace("GMT+0530 (India Standard Time)", "")
+    let requireTime = moment(noGmt).format().toString()
+    let observedAtTime = requireTime.replace("+05:30", ".000Z")
+    console.log(observedAtTime)
+    return observedAtTime
+  }
+
 
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
@@ -463,7 +471,7 @@ const ObservationInitialNotification = (props) => {
       data.append("isSituationAddressed", form.isSituationAddressed),
       data.append("actionTaken", form.actionTaken),
       data.append("location", form.location),
-      data.append("observedAt", form.observedAt),
+      data.append("observedAt", handelTime(form.observedAt)),
       data.append("isNotifiedToSupervisor", form.isNotifiedToSupervisor),
       data.append("assigneeName", form.assigneeName),
       data.append("assigneeId", form.assigneeId),
@@ -472,12 +480,12 @@ const ObservationInitialNotification = (props) => {
       data.append("departmentId", form.departmentId),
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
-      data.append("reportedByDepartment", form.reportedByDepartment);
-    data.append("reportedDate", form.reportedDate);
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
+      data.append("reportedByDepartment", form.reportedByDepartment),
+      data.append("reportedDate", form.reportedDate),
+      data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
-      data.append("closedByDepartment", form.closedByDepartment);
+      data.append("closedByDepartment", form.closedByDepartment)
 
     if (form.closedDate !== null && typeof form.closedDate !== "string") {
       data.append("closedDate", null);
@@ -1289,6 +1297,7 @@ const ObservationInitialNotification = (props) => {
                 )}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Foreman's Number"
@@ -1316,6 +1325,7 @@ const ObservationInitialNotification = (props) => {
                 }}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
@@ -1339,7 +1349,7 @@ const ObservationInitialNotification = (props) => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      observedAt: moment(e).format("YYYY-MM-DDThh:mm:ss"),
+                      observedAt: e["_d"],
                     });
                   }}
                 />
