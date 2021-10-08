@@ -709,7 +709,7 @@ const ReportingAndNotification = () => {
         .projectName.projectId;
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom`,
         headers: HEADER_AUTH,
       };
       const res = await api(config)
