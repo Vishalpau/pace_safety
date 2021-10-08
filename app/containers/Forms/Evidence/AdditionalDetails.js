@@ -95,12 +95,15 @@ const AdditionalDetails = () => {
 
   const fetchActivityList = async () => {
     let lastId = id ? id : localStorage.getItem("fkincidentId");
-    const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
-    const result = res.data.data.results;
-    if (result.length) {
-      await setAdditionalDetailList(result);
-    }
-    await setIsLoading(true);
+    const res = await api.get(`/api/v1/incidents/${lastId}/activities/`)
+    .then((res)=>{
+      const result = res.data.data.results;
+      if (result.length) {
+         setAdditionalDetailList(result);
+      }
+       setIsLoading(true);
+    })
+    
   };
 
 
@@ -224,9 +227,11 @@ const AdditionalDetails = () => {
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentDetail(result);
+    ).then((res)=>{
+      const result = res.data.data.results;
+     setIncidentDetail(result);
+    })
+    .catch(()=>{})  
   };
   useEffect(() => {
     fetchIncidentDetails();

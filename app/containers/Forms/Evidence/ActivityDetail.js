@@ -129,27 +129,32 @@ const ActivityDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
-    const result = res.data.data.results;
-    if (result.length) {
-      await setActvityList(result);
-    }
-    await setIsLoading(true);
+    await api.get(`/api/v1/incidents/${id}/activities/`)
+    .then((res)=>{
+      const result = res.data.data.results;
+      if (result.length) {
+        setActvityList(result);
+      }
+      setIsLoading(true);
+    })
+    .catch(()=>{history.push("/app/pages/error")})
   };
 
   const fetchActivityData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-    );
-    const result = res.data.data.results;
-    if (result.length) {
-      let temp = [...activtyList];
-      temp = result;
-      await setActvityList(temp);
-    }
-    if (!id) {
-      setIsLoading(true);
-    }
+    ).then((res)=>{
+      const result = res.data.data.results;
+      if (result.length) {
+        let temp = [...activtyList];
+        temp = result;
+        setActvityList(temp);
+      }
+      if (!id) {
+        setIsLoading(true);
+      }
+    }).catch(()=>{history.push("/app/pages/error")})
+    
   };
 
   const handleNext = async () => {

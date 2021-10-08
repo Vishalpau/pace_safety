@@ -286,15 +286,45 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = (appCode) => {
-    if (appCode === "observations") {
-      history.push('/app/observations')
+    let fkAppId = ""
 
+    let fkApp = modules.map(module => {
+      if (module.moduleCode === appCode) {
+        fkAppId = module.fkAppId
+        return module.fkAppId && module.fkAppId;
+      }
+    })
+
+    let targetPage = modules.map(module => {
+      if (module.moduleCode == appCode) {
+        return module.targetPage;
+      }
+    }).join(' ')
+    // console.log({targetPage:apps.appId})
+
+    let clientId = ''
+    let hostings = subscriptions.map(apps => {
+
+      if (fkAppId === apps.appId) {
+        clientId = apps.hostings[0].clientId
+        return apps.hostings;
+      }
+    })[0];
+
+
+    if (clientId) {
+
+      window.open(
+        ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
+        '_blank' // <- This is what makes it open in a new window.
+      ).onClick();
     }
-    else if (appCode === "incidents") {
-      history.push('/incidents/')
 
-    } else if (appCode === "assessments")
-      history.push('/app/pages/assesments/xflha')
+    // window.open(
+    //   window.location.href = process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+clientId+'&response_type=code',
+    //   '_blank' // <- This is what makes it open in a new window.
+    // );
+
   }
 
   const handleDisableModule = (appcode) => {
@@ -381,7 +411,7 @@ function PersonalDashboard(props) {
   };
 
   // fetch user data
-  const userDetails = async () => {
+  const userDetails = async (comId = 0, proId = 0, redback = '', tarPage = '', tarId) => {
     let config = {
       method: "get",
       url: `${SELF_API}`,
@@ -391,6 +421,9 @@ function PersonalDashboard(props) {
       .then(function (response) {
 
         if (response.status === 200) {
+          if (comId != 0) {
+            response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
+          }
           
           if (response.data.data.results.data.companies.length > 1) {
             const companey = JSON.parse(localStorage.getItem("company"));
@@ -423,6 +456,9 @@ function PersonalDashboard(props) {
             dispatch(company(companeyDetails))
             let newData = response.data.data.results.data.companies[0];
             if (newData) {
+              if (proId != 0) {
+                newData.projects = newData.projects.filter(proj => proj.projectId == proId)
+              }
               if (newData.projects.length === 1) {
                 dispatch(projectName(newData.projects[0]));
                 localStorage.setItem(
@@ -452,7 +488,29 @@ function PersonalDashboard(props) {
   };
 
   useEffect(() => {
-    userDetails();
+    let state = localStorage.getItem('direct_landing')
+    let comId = 0
+    let proId = 0
+    let redback = ''
+    let tarPage = ''
+    let tarId = 0
+    
+    if (state != null) {
+      let internal = state.split("{'")[1].split("'}")[0].split("', '")
+      let newArr = {}
+      internal.map(i => {
+        newArr[i.split("':")[0]] = i.split(": '")[1]
+      })
+      state = newArr
+
+      comId = state.companyId
+      proId = state.projectId
+      redback = state.redirect_back
+      tarPage = state.targetPage
+      tarId = state.targetId
+    }
+    userDetails(comId, proId, redback, tarPage, tarId);
+    // userDetails();
     getSubscriptions();
     
   }, []);
