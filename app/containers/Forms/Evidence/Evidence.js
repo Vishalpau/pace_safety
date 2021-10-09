@@ -219,56 +219,62 @@ const Evidence = () => {
 
   const fetchEvidenceList = async () => {
     const lastItem = id || localStorage.getItem("fkincidentId");
-    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
-    const result = res.data.data.results;
-    const newData = result.filter(
-      (item) =>
-        item.evidenceCategory !== "Lessons Learned" &&
-        item.evidenceCategory !== "Initial Evidence"
-    );
-
-    const tempData = [];
-    if (newData.length > 0) {
-      for (let i = 0; i < newData.length; i++) {
-        if (newData[i].evidenceCheck !== "Yes") {
-          tempData.push({
-            evidenceCategory: newData[i].evidenceCategory,
-            evidenceCheck: newData[i].evidenceCheck,
-            evidenceRemark: newData[i].evidenceRemark,
-            evidenceDocument: null,
-            status: "Active",
-            createdBy: 0,
-            updatedBy: 0,
-            fkIncidentId: id || localStorage.getItem("fkincidentId"),
-            pk: newData[i].id,
-          });
-        } else {
-          tempData.push({
-            evidenceCategory: newData[i].evidenceCategory,
-            evidenceCheck: newData[i].evidenceCheck,
-            evidenceRemark: newData[i].evidenceRemark,
-            evidenceDocument: newData[i].evidenceDocument,
-            status: "Active",
-            createdBy: 0,
-            updatedBy: 0,
-            fkIncidentId: id || localStorage.getItem("fkincidentId"),
-            pk: newData[i].id,
-          });
+    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`)
+    .then((res)=>{
+      const result = res.data.data.results;
+      const newData = result.filter(
+        (item) =>
+          item.evidenceCategory !== "Lessons Learned" &&
+          item.evidenceCategory !== "Initial Evidence"
+      );
+      const tempData = [];
+      if (newData.length > 0) {
+        for (let i = 0; i < newData.length; i++) {
+          if (newData[i].evidenceCheck !== "Yes") {
+            tempData.push({
+              evidenceCategory: newData[i].evidenceCategory,
+              evidenceCheck: newData[i].evidenceCheck,
+              evidenceRemark: newData[i].evidenceRemark,
+              evidenceDocument: null,
+              status: "Active",
+              createdBy: 0,
+              updatedBy: 0,
+              fkIncidentId: id || localStorage.getItem("fkincidentId"),
+              pk: newData[i].id,
+            });
+          } else {
+            tempData.push({
+              evidenceCategory: newData[i].evidenceCategory,
+              evidenceCheck: newData[i].evidenceCheck,
+              evidenceRemark: newData[i].evidenceRemark,
+              evidenceDocument: newData[i].evidenceDocument,
+              status: "Active",
+              createdBy: 0,
+              updatedBy: 0,
+              fkIncidentId: id || localStorage.getItem("fkincidentId"),
+              pk: newData[i].id,
+            });
+          }
         }
+  
+         setForm(tempData);
+         setEvideceData(tempData);
       }
+       setIsLoading(true);
+    })
+    .catch(()=>{})
 
-      await setForm(tempData);
-      await setEvideceData(tempData);
-    }
-    await setIsLoading(true);
+
   };
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentDetail(result);
+    ).then(()=>{
+      const result = res.data.data.results;
+      setIncidentDetail(result);
+    })
+  
   };
 
   // On the next button click function call.

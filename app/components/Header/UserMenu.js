@@ -42,7 +42,7 @@ import {
   SELF_API,
   SSO_CLIENT_ID,
   SSO_URL,
-  getApiUrl
+  API_VERSION
 } from "../../utils/constants";
 import axios from "axios";
 import Topbar from "./Topbar";
@@ -234,6 +234,21 @@ function UserMenu(props) {
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
+  const handleClick = (clientId,targetPage) => {
+    if (clientId) {
+
+      window.open(
+        ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
+        '_blank' // <- This is what makes it open in a new window.
+      ).onClick();
+    }
+
+    // window.open(
+    //   window.location.href = process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+clientId+'&response_type=code',
+    //   '_blank' // <- This is what makes it open in a new window.
+    // );
+
+  }
   useEffect(() => {
     getSubscribedApps();
     getSubscriptions();
@@ -382,7 +397,7 @@ function UserMenu(props) {
         {isLoading ?
           <div elevation={3} className={classnames.list}>
             <List component="nav">
-
+        {/* https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=6PZZ5hTD0cV7TLTE15GqQU5hucV6PV88VSxNv3NT&response_type=code&targetPage=actions&companyId=1&projectId=undefined */}
               {subscriptions.map((subscription,key) => (
                 (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div key={key}>
@@ -395,7 +410,7 @@ function UserMenu(props) {
                       {subscription.modules.map((module,mIndex) => (
                         <div key={mIndex}>
 
-                          <ListItemLink disabled={!apps.includes(subscription.appId)} href={ACCOUNT_API_URL + 'api/v1/user/auth/authorize/?client_id=' + (subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "") + '&response_type=code&targetPage=' + module.targetPage + '&companyId=' + (localStorage.getItem('companyId') === null ? 1 : localStorage.getItem('companyId')) + '&projectId=' + (localStorage.getItem('ssoProjectId') === null ? 1 : localStorage.getItem('ssoProjectId'))} className={classnames.appDrawerLink}>
+                          <ListItemLink  disabled={!apps.includes(subscription.appId)} onClick={()=>handleClick(subscription.hostings[0] != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings[0].clientId : "")) : "",module.targetPage,)} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />
                             <ListItemText primary={module.moduleWebName} />
