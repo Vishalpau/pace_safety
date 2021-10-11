@@ -312,7 +312,7 @@ const PaceManagementControl = () => {
             fkIncidentId: putId.current,
             rcaRemark: value,
             rcaSubType: api_data["rcaSubType"],
-            rcaType: "PACE Managemnt control",
+            rcaType: "PACE Management control",
             remarkType: api_data["remarkType"],
             status: "Active",
           };

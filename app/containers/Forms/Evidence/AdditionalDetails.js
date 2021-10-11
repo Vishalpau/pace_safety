@@ -16,6 +16,7 @@ import { EVIDENCE_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import api from "../../../utils/axios";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -45,6 +46,7 @@ const AdditionalDetails = () => {
   const dispatch = useDispatch();
   const [additionalDetailList, setAdditionalDetailList] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isNext, setIsNext] = useState(true);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [additionalList, setAdditionalList] = useState([
     {
@@ -95,16 +97,20 @@ const AdditionalDetails = () => {
 
   const fetchActivityList = async () => {
     let lastId = id ? id : localStorage.getItem("fkincidentId");
-    const res = await api.get(`/api/v1/incidents/${lastId}/activities/`);
-    const result = res.data.data.results;
-    if (result.length) {
-      await setAdditionalDetailList(result);
-    }
-    await setIsLoading(true);
+    const res = await api.get(`/api/v1/incidents/${lastId}/activities/`)
+    .then((res)=>{
+      const result = res.data.data.results;
+      if (result.length) {
+         setAdditionalDetailList(result);
+      }
+       setIsLoading(true);
+    })
+    
   };
 
 
   const handleNext = async () => {
+    setIsNext(false)
     if(incidentDetail.incidentStage === "Evidence"){
       try {
         const temp = incidentDetail
@@ -120,6 +126,7 @@ const AdditionalDetails = () => {
     }
 
     if (id && additionalDetailList.length > 24) {
+      try{
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
       await setError(error);
       if (!isValid) {
@@ -142,8 +149,10 @@ const AdditionalDetails = () => {
           `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
         );
       }
+    }catch(err){setIsNext(true)}
     } else if (additionalDetailList.length == 25) {
       {
+        try{
         const { error, isValid } = AdditionalDetailValidate(additionalList);
         await setError(error);
         if (!isValid) {
@@ -168,8 +177,10 @@ const AdditionalDetails = () => {
             `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
           );
         }
+      }catch(err){setIsNext(true)}
       }
     } else {
+      try{
       const { error, isValid } = AdditionalDetailValidate(additionalList);
       await setError(error);
       if (!isValid) {
@@ -191,6 +202,9 @@ const AdditionalDetails = () => {
       history.push(
         `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
       );
+      }catch(err){
+        setIsNext(true)
+      }
     }
   };
 
@@ -224,9 +238,11 @@ const AdditionalDetails = () => {
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentDetail(result);
+    ).then((res)=>{
+      const result = res.data.data.results;
+     setIncidentDetail(result);
+    })
+    .catch(()=>{})  
   };
   useEffect(() => {
     fetchIncidentDetails();
@@ -332,7 +348,7 @@ const AdditionalDetails = () => {
                   className={classes.button}
                   onClick={() => handleNext()}
                 >
-                  Submit
+                  Submit{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>
