@@ -33,6 +33,7 @@ import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import { Row, Col } from "react-grid-system";
 import axios from "axios";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -1155,7 +1156,7 @@ const ReportingAndNotification = () => {
                   className={classes.button}
                   onClick={(e) => handelNext(e)}
                 >
-                  Submit
+                  Submit{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

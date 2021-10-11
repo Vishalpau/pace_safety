@@ -24,6 +24,7 @@ import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -49,6 +50,7 @@ const PersonalAndPpeDetails = () => {
   const [ppeList, setPpeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
+  const [isNext, setIsNext] = useState(true)
   const [ppeData, setPpeData] = useState([
     {
       questionCode: "PPE-08",
@@ -207,14 +209,21 @@ const PersonalAndPpeDetails = () => {
   ]);
 
   const handleNext = async () => {
+    setIsNext(false)
     if (id && ppeList.length > 19) {
+      try{
       const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
       if (res.status === 200) {
         history.push(
           `/app/incident-management/registration/evidence/additional-details/${id}`
         );
       }
+      }catch(err){
+        setIsNext(true)
+      }
+      
     } else if (localStorage.getItem("fkincidentId") && ppeList.length > 19) {
+      try{
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         ppeList
@@ -224,6 +233,7 @@ const PersonalAndPpeDetails = () => {
           `/app/incident-management/registration/evidence/additional-details/`
         );
       }
+    }catch(err){setIsNext(true)}
     } else {
       const valdation = ppeData;
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
@@ -231,15 +241,18 @@ const PersonalAndPpeDetails = () => {
       if (!isValid) {
         return "Data is not valid";
       }
-
+      try{
       const res = await api.post(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         ppeData
       );
-
-      history.push(
-        "/app/incident-management/registration/evidence/additional-details/"
-      );
+       
+          history.push(
+            "/app/incident-management/registration/evidence/additional-details/"
+          );
+        
+      
+      }catch(err){setIsNext(true)}
     }
     // }
   };
@@ -878,7 +891,7 @@ const PersonalAndPpeDetails = () => {
                   className={classes.button}
                   onClick={() => handleNext()}
                 >
-                  Next
+                  Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

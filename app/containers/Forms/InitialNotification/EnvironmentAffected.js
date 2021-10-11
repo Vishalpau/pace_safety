@@ -14,6 +14,7 @@ import { useHistory, useParams } from "react-router";
 import moment from "moment";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { INITIAL_NOTIFICATION_FORM, INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
@@ -126,7 +127,7 @@ const EnvironmentAffected = () => {
   const handleNext = async () => {
 
     // if close out 
-    
+    setIsNext(false)
     // check condition id is defined or env data not less than 0 other wise post data
     if (environmentListData.length > 0) {
       const { error, isValid } = EnvironmentValidate(form);
@@ -141,7 +142,7 @@ const EnvironmentAffected = () => {
               environmentListData[i]
             );
           }
-        } catch (error) {}
+        } catch (error) {setIsNext(true)}
         const temp = incidentsListData;
         temp.updatedAt = new Date().toISOString();
         temp.enviromentalImpactComments =
@@ -154,7 +155,7 @@ const EnvironmentAffected = () => {
           history.push(
             `/incident/${id}/modify/reporting-and-notification/`
           );
-        } catch (error) {}
+        } catch (error) {setIsNext(true)}
       }
     } else {
       const { error, isValid } = EnvironmentValidate(form);
@@ -184,7 +185,7 @@ const EnvironmentAffected = () => {
               `/incident/${id}/modify/reporting-and-notification/`
             );
           }
-        } catch (error) {}
+        } catch (error) {setIsNext(true)}
       }
     }
   
@@ -648,7 +649,7 @@ const EnvironmentAffected = () => {
                   onClick={() => handleNext()}
                   className={classes.button}
                 >
-                  Next
+                  Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>
