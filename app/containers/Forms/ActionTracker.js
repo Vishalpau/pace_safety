@@ -93,6 +93,7 @@ export default function ActionTracker(props) {
   });
   const [reportedByName, setReportedByName] = useState([]);
   const [isLoading, setLoading] = useState(false)
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
@@ -100,10 +101,16 @@ export default function ActionTracker(props) {
     }
   }
 
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
+
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
 
   const fetchReportedBy = () => {
+    let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
     let filterReportedByName = []
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -111,7 +118,7 @@ export default function ActionTracker(props) {
         : null;
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/application/${appId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -119,12 +126,12 @@ export default function ActionTracker(props) {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
 
           let user = [];
           user = result;
-          for (var i in result) {
-            filterReportedByName.push(result[i]);
+          for (var i in result[0].users) {
+            filterReportedByName.push(result[0].users[i]);
           }
           setReportedByName(filterReportedByName);
         }
@@ -177,6 +184,7 @@ export default function ActionTracker(props) {
     await handelUpdate()
     await fetchReportedBy()
   }
+  console.log(props)
 
   useEffect(() => {
     handelCallBack()
@@ -185,7 +193,16 @@ export default function ActionTracker(props) {
   return (
     <>
 
-
+{props.isCorrectiveActionTaken === null ?
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClickOpen}
+        disabled={props.isCorrectiveActionTaken === null ? true :false}
+      >
+        Actions<FlashOnIcon />
+        </Button>
+        :
       <Button
         variant="contained"
         color="primary"
@@ -193,6 +210,7 @@ export default function ActionTracker(props) {
       >
         Actions<FlashOnIcon />
       </Button>
+}
       {/* {console.log(reportedByName)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
@@ -250,6 +268,9 @@ export default function ActionTracker(props) {
                   inputVariant="outlined"
                   value={form.plannedEndDate}
                   disablePast={true}
+                  open={isDateShow}
+                  onClose={(e) => handelClose()}
+                  onClick={(e) => setIsDateShow(true)}
                   onChange={(e) => {
                     setForm({
                       ...form,
