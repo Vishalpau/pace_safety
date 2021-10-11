@@ -253,9 +253,13 @@ const ObservationInitialNotificationUpdate = () => {
   const handelSelectOption = (cate) => {
     if (catagory !== undefined) {
       for (let i = 0; i <= catagory.length; i++) {
-        if (catagory[i] != undefined && catagory[i]["observationTag"] == cate) {
+        if (catagory[i] != undefined){
+          if(catagory[i]["observationTag"] == cate.replace(/\s*$/,'')){
           return true
-        }
+          }
+        } 
+          
+        
       }
     }
   }
@@ -265,11 +269,11 @@ const ObservationInitialNotificationUpdate = () => {
     let temp = [...catagory]
     let tempRemove = []
     if (e.target.checked == false) {
-      temp.map((ahaValue, index) => {
-        if (ahaValue['observationTag'] === value.tagName) {
+      temp.map((catagoryValue, index) => {
+        if (catagoryValue['observationTag'] === value.tagName) {
+          if (catagoryValue['id']) {
 
-          if (ahaValue['id']) {
-            const res = api.delete(`/api/v1/observations/${id}/observationtags/${ahaValue.id}/`)
+            const res = api.delete(`/api/v1/observations/${id}/observationtags/${catagoryValue.id}/`)
 
           }
 
@@ -278,6 +282,7 @@ const ObservationInitialNotificationUpdate = () => {
       })
     }
     else if (e.target.checked) {
+
       temp.push({
         "fkObservationId": id,
         "fkTagId": value.id,
@@ -579,7 +584,7 @@ if(departments !== ""){
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            await setIsLoading(true);
+            // await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
 
@@ -739,6 +744,7 @@ if(departments !== ""){
                       name={value}
                       // checked={catagoryName.includes(value.tagName)}
                       checked={handelSelectOption(value.tagName)}
+                      // checked={catagory[index] !== undefined ? catagory[index]['observationTag'] == value.tagName ? true : false : false }
                       onChange={(e) => handleChange(e, index, value)}
                     />
                   }
@@ -802,103 +808,7 @@ if(departments !== ""){
                 </MenuItem>
               ))}
             </TextField>
-          {/* <Autocomplete
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-                onChange={(event, newValue) => {
-                  if (typeof newValue === "string") {
-                    // setValueReportedBy({
-                    //   inputValue: newValue,
-                    // });
-
-                    setInitialData({
-                      ...initialData,
-                      assigneeName: newValue,
-                      assigneeId: "",
-                    });
-                  } else if (newValue && newValue.inputValue) {
-                    // Create a new value from the user input
-                    // setValueReportedBy({
-                    //   inputValue: newValue.inputValue,
-                    // });
-                    setInitialData({
-                      ...initialData,
-                      assigneeName: newValue.inputValue,
-                      assigneeId: newValue.reportedById,
-                      // reportedByBadgeId: newValue.badgeNo,
-                    });
-                  } else {
-                    // setValueReportedBy(newValue);
-                  }
-                }}
-                filterOptions={(options, params) => {
-                  const filtered = filter(options, params);
-
-                  // Suggest the creation of a new value
-                  if (params.inputValue !== "") {
-                    filtered.push({
-                      inputValue: params.inputValue,
-                      inputValue: `${params.inputValue}`,
-                    });
-                  }
-
-                  return filtered;
-                }}
-                className={classes.mT30}
-                handleHomeEndKeys
-                id="free-solo-with-text-demo"
-                options={reportedByName}
-                getOptionLabel={(option) => {
-                  // Value selected with enter, right from the input
-                  if (typeof option === "string") {
-                    return option;
-                  }
-                  // Add "xxx" option created dynamically
-                  if (option.inputValue) {
-                    return option.inputValue;
-                  }
-                  // Regular option
-                  return option.title;
-                }}
-                renderOption={(option) => option.inputValue}
-                // style={{ width: 300 }}
-                freeSolo
-                selectOnFocus
-                clearOnBlur
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Assignee"
-                    // error={error.reportedByName}
-                    // helperText={
-                    //   error.reportedByName ? error.reportedByName : ""
-                    // }
-                    variant="outlined"
-                  />
-                )}
-              /> */}
-
-            {/* <Autocomplete
-              id="combo-box-demo"
-              options={reportedByName}
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-              className={classes.mT30}
-              loading={isLoading}
-              getOptionLabel={(option) => option['inputValue']}
-              onChange={(e, option) => {
-                setInitialData({
-                  ...initialData,
-                  assigneeName: option.inputValue,
-                });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Assignee"
-                  variant="outlined"
-              // value={initialData.assigneeName ? initialData.assigneeName : ""}
-              />
-              )}
-            /> */}
+       
           </Grid>
          
           <Grid
@@ -906,21 +816,7 @@ if(departments !== ""){
             md={12}
             xs={12}
           >
-            {/* {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
-
-               Submit
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              } */}
+        
             <div className={classes.loadingWrapper}>
               <Button
                 variant="outlined"
@@ -933,14 +829,7 @@ if(departments !== ""){
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             </div>
-            {/* <Button
-                variant="outlined"
-                size="medium"
-                className={classes.custmCancelBtn}
-                onClick={() => handleClose()}
-              >
-                CANCEL
-              </Button> */}
+            
           </Grid>
         </Grid> : <h1>Loading...</h1>}
       {/* </PapperBlock> */}

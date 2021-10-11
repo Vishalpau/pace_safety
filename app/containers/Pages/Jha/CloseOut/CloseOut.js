@@ -156,7 +156,7 @@ const CloseOut = () => {
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Aha assessment data
+                                Jha assessment data
                             </Typography>
                             <Typography className={Type.labelValue}>
                                 {moment(jhaListData.jhaAssessmentDate).format(

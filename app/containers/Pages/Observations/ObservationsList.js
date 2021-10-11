@@ -154,21 +154,22 @@ function ObservationsList(props) {
   //   Data for the table view
   const columns = ['Number', 'Type', 'Location', 'Reported on', 'Reported by'];
 
-  const data = [
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ];
+
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
     print: false,
     filter: false,
     search: true,
+    onSearchChange: searchText => {
+      if (searchText != null) {
+        setSeacrhIncident(searchText);
+
+      } else {
+        setSeacrhIncident("");
+
+      }
+    },
     download: true,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
@@ -182,16 +183,16 @@ function ObservationsList(props) {
   };
 
 
+
+
   const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
+  const [data, setData] = useState([])
   const [totalData, setTotalData] = useState(0);
   const history = useHistory();
-
-
-
 
   const fetchInitialiObservation = async () => {
     await setPage(1)
@@ -208,15 +209,20 @@ function ObservationsList(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    const result = res.data.data.results.results
-    await setAllInitialData(result)
-    let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageData(res.data.data.results.count / 25)
-    await setTotalData(res.data.data.results.count)
-    await setPageCount(pageCount)
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    console.log(res)
+    if (res.status === 200) {
+      const result = res.data.data.results.results
+      await setAllInitialData(result)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageData(res.data.data.results.count / 25)
+      await setTotalData(res.data.data.results.count)
+      await setPageCount(pageCount)
+      await handelTableView(result)
 
-    await setIsLoading(true)
+      await setIsLoading(true)
+    }
+
   };
 
 
@@ -234,11 +240,30 @@ function ObservationsList(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
+    await handelTableView(res.data.data.results.results)
     await setPage(value)
   };
 
+  const handelTableView = async (result) => {
+    const temp = []
+    console.log(result, ">>>>>")
+    result.map((value) => {
+      temp.push([
+        value.observationNumber,
+        value.observationType,
+        value.location,
+        moment(value.createdAt).format(
+          "Do MMMM YYYY, h:mm:ss a"
+        ),
+        value.reportedByName,
+      ])
+    })
+    console.log(temp, " OOOOOO")
+    await setData(temp)
+  }
+  console.log(data, "1111")
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
     localStorage.setItem("fkobservationId", id);
@@ -254,7 +279,7 @@ function ObservationsList(props) {
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName.breakDown]);
+  }, [props.projectName.breakDown, searchIncident]);
 
   return (
     <>
@@ -263,37 +288,8 @@ function ObservationsList(props) {
           <TableContainer component={Paper}>
 
             <Grid component={Paper}>
-
               <MUIDataTable
-                data={Object.entries(allInitialData).filter(
-                  (item) => {
-                    return (
-
-                      item[1]["observationDetails"]
-                        .toLowerCase()
-                        .includes(searchIncident.toLowerCase()) ||
-                      item[1]["observationNumber"].toLowerCase().includes(
-                        searchIncident.toLowerCase()
-
-                      )
-                    )
-                  }
-
-                ).map((item, index) => [
-                  <Link
-                    onClick={() => handleSummaryPush(index)}
-                    variant="h6"
-                    className={classes.mLeftfont}
-                  >
-                    <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
-                  </Link>,
-                  item[1]["observationType"],
-                  item[1]["location"],
-                  moment(item[1]["createdAt"]).format(
-                    "Do MMMM YYYY, h:mm:ss a"
-                  ),
-                  item[1]["reportedByName"],
-                ])}
+                data={data}
                 title="Observations List"
 
                 columns={columns}
@@ -302,6 +298,7 @@ function ObservationsList(props) {
             </Grid>
 
           </TableContainer>
+
 
           <div className={classes.pagination}>
             {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
