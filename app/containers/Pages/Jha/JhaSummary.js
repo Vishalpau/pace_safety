@@ -300,9 +300,10 @@ function JhaSummary() {
       });
       const workArea = await
         api_work_area.get(`/api/v1/companies/${assessment.fkCompanyId}/projects/${assessment.fkProjectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-      // let result = workArea.data.data.results[0]
-      // structName[result["structure_name"]] = result["structureName"]
+      let result = workArea.data.data.results[0]
+      structName[result["structure_name"]] = result["structureName"]
     }
+    console.log(structName)
     setProjectStructName(structName)
   }
 
@@ -518,7 +519,7 @@ function JhaSummary() {
                                           Work Area
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructName["Work-Area(s)"])}
+                                          {checkValue(projectStructName["Work Area(s)"])}
                                         </Typography>
                                       </Grid>
 

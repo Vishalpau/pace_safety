@@ -33,6 +33,7 @@ import api from "../../../utils/axios";
 import "../../../styles/custom.css";
 import { FormHelperText, FormLabel } from "@material-ui/core";
 import AlertMessage from "./Alert";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -84,6 +85,7 @@ const PeoplesAffected = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [peopleData, setPeopleData] = useState([]);
+  const [isNext, setIsNext] = useState(false)
 
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState("");
@@ -151,7 +153,7 @@ const PeoplesAffected = () => {
    
       // Next path handlings.
       const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-
+      setIsNext(true)
       // This is the condition when Yes is clicked on the form.
       if (personAffect === "Yes") {
         // Validate the form.
@@ -159,7 +161,7 @@ const PeoplesAffected = () => {
 
         // End the function exeution if isvalid is false.
         setError(error);
-
+        
         // Loop over all the people added and hit them with the help of the Post API.
         // We don't have single API.
 
@@ -183,7 +185,7 @@ const PeoplesAffected = () => {
                     fkIncidentId: localStorage.getItem("fkincidentId"),
                   }
                 );
-              } catch (error) {history.push("/app/pages/error")}
+              } catch (error) {setIsNext(false)}
             } else {
               try {
                 const res = await api.post(
@@ -202,7 +204,7 @@ const PeoplesAffected = () => {
                     fkIncidentId: localStorage.getItem("fkincidentId"),
                   }
                 );
-              } catch (error) {history.push("/app/pages/error")}
+              } catch (error) {history.push("/app/pages/error");setIsNext(false)}
             }
           }
 
@@ -750,7 +752,7 @@ const PeoplesAffected = () => {
                   color="primary"
                   className={classes.button}
                 >
-                  Next
+                  Next {isNext && <CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

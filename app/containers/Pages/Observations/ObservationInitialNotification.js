@@ -601,8 +601,8 @@ const ObservationInitialNotification = (props) => {
 
   // this function when user upload the file
   const handleFile = async (e) => {
+    console.log(e)
     let TempPpeData = { ...form };
-    // if user file size is grater than 5 MB then that goes to else part
     if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
       await setForm(TempPpeData);
@@ -610,6 +610,7 @@ const ObservationInitialNotification = (props) => {
       document.getElementById("attachment").value = "";
       await setOpen(true);
     }
+
   };
 
   const handleAssignee = async (e, value) => {
@@ -1735,6 +1736,7 @@ const ObservationInitialNotification = (props) => {
               </Typography>
               <input
                 type="file"
+                multiple name="file"
                 id="attachment"
                 accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                 onChange={(e) => {
@@ -1752,9 +1754,6 @@ const ObservationInitialNotification = (props) => {
               <FormGroup className={classes.customCheckBoxList}>
                 <FormControlLabel
                   className={classes.labelValue}
-                  // helperText={
-                  //   error.acceptAndPledge ? error.acceptAndPledge : ""
-                  // }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -1771,24 +1770,13 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {/* {attachment !== undefined ? (
-              <Grid item md={12} xs={12} className={classes.formBBanner}>
-                <Avatar
-                  className={classes.observationFormBox}
-                  variant="rounded"
-                  alt="Observation form banner"
-                  src={attachment}
-                />
-              </Grid>
-            ) : null} */}
+
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
                 {Object.values(error).map((value) => (
                   <Typography>{value}</Typography>
                 ))}
-
-
 
               </Grid>
               : null}

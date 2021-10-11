@@ -21,6 +21,7 @@ import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import TextButton from "../../CommonComponents/TextButton";
 import { Row, Col } from "react-grid-system";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -68,6 +69,7 @@ const PropertyAffected = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
   const [isOther, setIsOther] = useState(true);
+  const [isNext, setIsNext] = useState(true);
   const nextPath = localStorage.getItem("nextPath");
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -136,6 +138,7 @@ const PropertyAffected = () => {
     // if check property have or not . if property data have then put else create new
 
     // If yes selected.
+    await setIsNext(false)
     if (detailsOfPropertyAffect === "Yes") {
      
       // Validate property data.
@@ -144,6 +147,7 @@ const PropertyAffected = () => {
       let status = 0;
       for (var i = 0; i < form.length; i++) {
         if(form[i].id){
+          
           const res = await api.put(
             `api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -155,8 +159,13 @@ const PropertyAffected = () => {
               fkIncidentId: localStorage.getItem("fkincidentId"),
               createdBy: parseInt(userId),
             }
-          );
-          status = res.status;
+          ).then((res)=>{
+            status = res.status;
+          })
+          .catch(()=>{
+            setIsNext(true)
+          })
+          
         }else{
           const res = await api.post(
             `api/v1/incidents/${localStorage.getItem(
@@ -169,8 +178,12 @@ const PropertyAffected = () => {
               fkIncidentId: localStorage.getItem("fkincidentId"),
               createdBy: parseInt(userId),
             }
-          );
-          status = res.status;
+          ).then((res)=>{
+            status = res.status;
+          })
+          .catch(()=>{
+            setIsNext(true)
+          })
         }
         
         
@@ -182,10 +195,14 @@ const PropertyAffected = () => {
       temp["isPropertyDamagedAvailable"] =
         detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
       temp["updatedAt"] = new Date().toISOString();
+      try{
       const res = await api.put(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
         temp
       );
+      }catch(err){
+        await setIsNext(true)
+      }
       // If api success
       if (status === 201 ||status === 200) {
           if (nextPath.equipmentAffect === "Yes") {
@@ -210,7 +227,7 @@ const PropertyAffected = () => {
         for (var i = 0; i < propertyListData.length; i++) {
           const res = await api.delete(
             `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`
-          );
+          ).catch(()=> setIsNext(true))
         }
 
         // If that is not the case as if,
@@ -511,7 +528,7 @@ const PropertyAffected = () => {
                   onClick={handleNext}
                   className={classes.button}
                 >
-                  Next
+                  Next {isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>
