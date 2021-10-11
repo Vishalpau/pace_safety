@@ -16,6 +16,7 @@ import { EVIDENCE_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import Type from "../../../styles/components/Fonts.scss";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import api from "../../../utils/axios";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -45,6 +46,7 @@ const AdditionalDetails = () => {
   const dispatch = useDispatch();
   const [additionalDetailList, setAdditionalDetailList] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isNext, setIsNext] = useState(true);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [additionalList, setAdditionalList] = useState([
     {
@@ -108,6 +110,7 @@ const AdditionalDetails = () => {
 
 
   const handleNext = async () => {
+    setIsNext(false)
     if(incidentDetail.incidentStage === "Evidence"){
       try {
         const temp = incidentDetail
@@ -123,6 +126,7 @@ const AdditionalDetails = () => {
     }
 
     if (id && additionalDetailList.length > 24) {
+      try{
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
       await setError(error);
       if (!isValid) {
@@ -145,8 +149,10 @@ const AdditionalDetails = () => {
           `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
         );
       }
+    }catch(err){setIsNext(true)}
     } else if (additionalDetailList.length == 25) {
       {
+        try{
         const { error, isValid } = AdditionalDetailValidate(additionalList);
         await setError(error);
         if (!isValid) {
@@ -171,8 +177,10 @@ const AdditionalDetails = () => {
             `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
           );
         }
+      }catch(err){setIsNext(true)}
       }
     } else {
+      try{
       const { error, isValid } = AdditionalDetailValidate(additionalList);
       await setError(error);
       if (!isValid) {
@@ -194,6 +202,9 @@ const AdditionalDetails = () => {
       history.push(
         `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
       );
+      }catch(err){
+        setIsNext(true)
+      }
     }
   };
 
@@ -337,7 +348,7 @@ const AdditionalDetails = () => {
                   className={classes.button}
                   onClick={() => handleNext()}
                 >
-                  Submit
+                  Submit{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

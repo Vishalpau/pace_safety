@@ -30,6 +30,7 @@ import {
 import api from "../../../utils/axios";
 import EquipmentValidate from "../../Validator/EquipmentValidation";
 import "../../../styles/custom.css";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -65,6 +66,7 @@ const EqiptmentAffected = () => {
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState([]);
   const [equipmentDamagedComments, setEequipmentDamagedComments] = useState("");
+  const [isNext, setIsNext] = useState(true);
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -479,7 +481,7 @@ const EqiptmentAffected = () => {
                   onClick={handleNext}
                   className={classes.button}
                 >
-                  Next
+                  Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>
