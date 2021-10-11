@@ -423,6 +423,14 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
+  const handelTime = (value) => {
+    let noGmt = value.toString().replace("GMT+0530 (India Standard Time)", "")
+    let requireTime = moment(noGmt).format().toString()
+    let observedAtTime = requireTime.replace("+05:30", ".000Z")
+    console.log(observedAtTime)
+    return observedAtTime
+  }
+
 
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
@@ -463,7 +471,7 @@ const ObservationInitialNotification = (props) => {
       data.append("isSituationAddressed", form.isSituationAddressed),
       data.append("actionTaken", form.actionTaken),
       data.append("location", form.location),
-      data.append("observedAt", form.observedAt),
+      data.append("observedAt", handelTime(form.observedAt)),
       data.append("isNotifiedToSupervisor", form.isNotifiedToSupervisor),
       data.append("assigneeName", form.assigneeName),
       data.append("assigneeId", form.assigneeId),
@@ -472,12 +480,12 @@ const ObservationInitialNotification = (props) => {
       data.append("departmentId", form.departmentId),
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
-      data.append("reportedByDepartment", form.reportedByDepartment);
-    data.append("reportedDate", form.reportedDate);
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
+      data.append("reportedByDepartment", form.reportedByDepartment),
+      data.append("reportedDate", form.reportedDate),
+      data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
-      data.append("closedByDepartment", form.closedByDepartment);
+      data.append("closedByDepartment", form.closedByDepartment)
 
     if (form.closedDate !== null && typeof form.closedDate !== "string") {
       data.append("closedDate", null);
@@ -593,8 +601,8 @@ const ObservationInitialNotification = (props) => {
 
   // this function when user upload the file
   const handleFile = async (e) => {
+    console.log(e)
     let TempPpeData = { ...form };
-    // if user file size is grater than 5 MB then that goes to else part
     if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
       await setForm(TempPpeData);
@@ -602,6 +610,7 @@ const ObservationInitialNotification = (props) => {
       document.getElementById("attachment").value = "";
       await setOpen(true);
     }
+
   };
 
   const handleAssignee = async (e, value) => {
@@ -1289,6 +1298,7 @@ const ObservationInitialNotification = (props) => {
                 )}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Foreman's Number"
@@ -1316,6 +1326,7 @@ const ObservationInitialNotification = (props) => {
                 }}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
@@ -1339,7 +1350,7 @@ const ObservationInitialNotification = (props) => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      observedAt: moment(e).format("YYYY-MM-DDThh:mm:ss"),
+                      observedAt: e["_d"],
                     });
                   }}
                 />
@@ -1725,6 +1736,7 @@ const ObservationInitialNotification = (props) => {
               </Typography>
               <input
                 type="file"
+                multiple name="file"
                 id="attachment"
                 accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                 onChange={(e) => {
@@ -1742,9 +1754,6 @@ const ObservationInitialNotification = (props) => {
               <FormGroup className={classes.customCheckBoxList}>
                 <FormControlLabel
                   className={classes.labelValue}
-                  // helperText={
-                  //   error.acceptAndPledge ? error.acceptAndPledge : ""
-                  // }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -1761,24 +1770,13 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {/* {attachment !== undefined ? (
-              <Grid item md={12} xs={12} className={classes.formBBanner}>
-                <Avatar
-                  className={classes.observationFormBox}
-                  variant="rounded"
-                  alt="Observation form banner"
-                  src={attachment}
-                />
-              </Grid>
-            ) : null} */}
+
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
                 {Object.values(error).map((value) => (
                   <Typography>{value}</Typography>
                 ))}
-
-
 
               </Grid>
               : null}

@@ -43,10 +43,10 @@ import "../../../styles/custom/customheader.css";
 import { useHistory, useParams } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
-  pagination:{
-    padding:"1rem 0",
-    display:"flex",
-    justifyContent:"flex-end"
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   root: {
     flexGrow: 1,
@@ -142,7 +142,7 @@ function ObservationsList(props) {
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
-  const [page , setPage] = useState(1)
+  const [page, setPage] = useState(1)
 
 
   const [value, setValue] = React.useState(2);
@@ -150,11 +150,11 @@ function ObservationsList(props) {
   // const handleChange = (event, newValue) => {
   //   setValue(newValue);
   // };
-  
+
   //   Data for the table view
   const columns = ['Number', 'Type', 'Location', 'Reported on', 'Reported by'];
 
- 
+
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -162,14 +162,14 @@ function ObservationsList(props) {
     filter: false,
     search: true,
     onSearchChange: searchText => {
-      if(searchText != null){
+      if (searchText != null) {
         setSeacrhIncident(searchText);
 
-      }else{
+      } else {
         setSeacrhIncident("");
 
       }
-},
+    },
     download: true,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
@@ -179,10 +179,10 @@ function ObservationsList(props) {
     selectableRows: false,
     rowsPerPage: 10,
     page: 0,
-    pagination : false,
+    pagination: false,
   };
 
-  
+
 
 
   const [allInitialData, setAllInitialData] = useState([]);
@@ -190,120 +190,120 @@ function ObservationsList(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
-  const  [data, setData] = useState([])
+  const [data, setData] = useState([])
   const [totalData, setTotalData] = useState(0);
   const history = useHistory();
 
-const fetchInitialiObservation = async () => {
-  await setPage(1)
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
+  const fetchInitialiObservation = async () => {
+    await setPage(1)
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
-  const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-  console.log(res)
-  if(res.status === 200){
-    const result = res.data.data.results.results
-    await setAllInitialData(result)
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
-    await setPageData(res.data.data.results.count/25)
-    await setTotalData(res.data.data.results.count)
-    await setPageCount(pageCount)
-    await handelTableView(result)
-  
-    await setIsLoading(true)
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    console.log(res)
+    if (res.status === 200) {
+      const result = res.data.data.results.results
+      await setAllInitialData(result)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageData(res.data.data.results.count / 25)
+      await setTotalData(res.data.data.results.count)
+      await setPageCount(pageCount)
+      await handelTableView(result)
+
+      await setIsLoading(true)
+    }
+
+  };
+
+
+  const handleChange = async (event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllInitialData(res.data.data.results.results);
+    await handelTableView(res.data.data.results.results)
+    await setPage(value)
+  };
+
+  const handelTableView = async (result) => {
+    const temp = []
+    console.log(result, ">>>>>")
+    result.map((value) => {
+      temp.push([
+        value.observationNumber,
+        value.observationType,
+        value.location,
+        moment(value.createdAt).format(
+          "Do MMMM YYYY, h:mm:ss a"
+        ),
+        value.reportedByName,
+      ])
+    })
+    console.log(temp, " OOOOOO")
+    await setData(temp)
   }
-  
-};
-
-
-const handleChange = async(event, value) => {
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-  await setAllInitialData(res.data.data.results.results);
-  await handelTableView(res.data.data.results.results)
-  await setPage(value)
-};
-
-const handelTableView = async (result) => {
-  const temp = []
-  console.log(result,">>>>>")
-  result.map((value) => {
-    temp.push([
-      value.observationNumber,
-      value.observationType,
-      value.location,
-      moment(value.createdAt).format(
-        "Do MMMM YYYY, h:mm:ss a"
-      ),
-      value.reportedByName,
-    ])
-  })
-  console.log(temp , " OOOOOO")
-  await setData(temp)
-}
-console.log(data, "1111")
-const handleSummaryPush = async (index) => {
-  const id = allInitialData[index].id;
-  localStorage.setItem("fkobservationId", id);
-  if (allInitialData[index].isCorrectiveActionTaken !== null) {
-    localStorage.setItem("action", "Done");
-  } else {
-    localStorage.removeItem("action");
-  }
-  history.push(`/app/observation/details/${id}`);
-};
+  console.log(data, "1111")
+  const handleSummaryPush = async (index) => {
+    const id = allInitialData[index].id;
+    localStorage.setItem("fkobservationId", id);
+    if (allInitialData[index].isCorrectiveActionTaken !== null) {
+      localStorage.setItem("action", "Done");
+    } else {
+      localStorage.removeItem("action");
+    }
+    history.push(`/app/observation/details/${id}`);
+  };
 
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName.breakDown,searchIncident]);
+  }, [props.projectName.breakDown, searchIncident]);
 
   return (
     <>
       <Box>
-      {isLoading ? <>
-        <TableContainer component={Paper}>
-       
-          <Grid component={Paper}>
-          <MUIDataTable
+        {isLoading ? <>
+          <TableContainer component={Paper}>
+
+            <Grid component={Paper}>
+              <MUIDataTable
                 data={data}
                 title="Observations List"
 
                 columns={columns}
                 options={options}
               />
-              </Grid>
+            </Grid>
 
-            </TableContainer>
-         
-            
-            <div className={classes.pagination}>
-            {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-      <Pagination count={pageCount} page={page} onChange={handleChange}/>
-    </div></>:<h1>Loading...</h1>}
+          </TableContainer>
+
+
+          <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div></> : <h1>Loading...</h1>}
       </Box>
     </>
   );
@@ -318,4 +318,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(ObservationsList);
+export default connect(mapStateToProps, null)(ObservationsList);

@@ -1,4 +1,4 @@
-import React , {useRef , useState} from 'react';
+import React, { useRef, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -15,56 +15,54 @@ import Grid from "@material-ui/core/Grid";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
 const useStyles = makeStyles((theme) => ({
-    root: {
-      width: "100%",
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightMedium,
-    },
-    modal: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    paper: {
-      position: "absolute",
-      width: 650,
-      backgroundColor: theme.palette.background.paper,
-      // boxShadow: theme.shadows[5],
-      padding: theme.spacing(4),
-    },
-    incidentTitle: {
-      fontSize: "1.35rem !important",
-    },
-    closeButton: {
-      position: "absolute",
-      right: theme.spacing(1),
-      top: theme.spacing(1),
-    },
-    modalButton: {
-      width: "100%",
-    },
-  }));
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
+  root: {
+    width: "100%",
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightMedium,
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    position: "absolute",
+    width: 650,
+    backgroundColor: theme.palette.background.paper,
+    // boxShadow: theme.shadows[5],
+    padding: theme.spacing(4),
+  },
+  incidentTitle: {
+    fontSize: "1.35rem !important",
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
+  modalButton: {
+    width: "100%",
+  },
+}));
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-export default function AlertDialog({open, setOpen,documentUrl}) {
-//   const [open, setOpen] = React.useState(false);
+export default function AlertDialog({ open, setOpen, documentUrl }) {
+  //   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   let doc = documentUrl.split('-')
-    let document = doc[doc.length - 1]
-    let extension = document.split('.')
-    let lastname = extension[extension.length - 1]
-    let uname = lastname.toLowerCase()
+  let document = doc[doc.length - 1]
+  let extension = document.split('.')
+  let lastname = extension[extension.length - 1]
+  let uname = lastname.toLowerCase()
 
-    console.log("sss",uname)
-  
   const handleClose = () => {
     setOpen(false);
   };
@@ -79,29 +77,29 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
 
   return (
     <div>
-     
-     <Dialog
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Transition}
-          keepMounted
-          PaperProps={{
-            style: {
-              width: 700,
-            },
-          }}
-        >
-          <DialogTitle id="alert-dialog-slide-title">
-            {" Please choose what do you want to?"}
-          </DialogTitle>
-          <IconButton onClick={handleClose} className={classes.closeButton}>
-            <Close />
-          </IconButton>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
-              <Grid container spacing={3}>
-                
-                {uname == "docx" || uname == "pptx" || uname == "doc" || uname == "ppt" || uname == "xls" || uname == "xlsx" ? null :
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        keepMounted
+        PaperProps={{
+          style: {
+            width: 700,
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {" Please choose what do you want to?"}
+        </DialogTitle>
+        <IconButton onClick={handleClose} className={classes.closeButton}>
+          <Close />
+        </IconButton>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            <Grid container spacing={3}>
+
+              {uname == "docx" || uname == "pptx" || uname == "doc" || uname == "ppt" || uname == "xls" || uname == "xlsx" ? null :
                 <Grid item xs={12} md={6}>
                   <Button
                     startIcon={<VisibilityIcon />}
@@ -114,25 +112,25 @@ export default function AlertDialog({open, setOpen,documentUrl}) {
                   >
                     View Attachment
                   </Button>
-                  </Grid>}
-                
-                <Grid item xs={12} md={6}>
-                  <Button
-                    startIcon={<GetAppIcon />}
-                    variant="contained"
-                    color="primary"
-                    className={classes.modalButton}
-                    disableElevation
-                    onClick={() => download(documentUrl)}
-                  >
-                    Download
-                  </Button>
-                </Grid>
+                </Grid>}
+
+              <Grid item xs={12} md={6}>
+                <Button
+                  startIcon={<GetAppIcon />}
+                  variant="contained"
+                  color="primary"
+                  className={classes.modalButton}
+                  disableElevation
+                  onClick={() => download(documentUrl)}
+                >
+                  Download
+                </Button>
               </Grid>
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-     
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
