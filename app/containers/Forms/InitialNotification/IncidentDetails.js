@@ -35,6 +35,7 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 // redux
@@ -1162,7 +1163,7 @@ history.push("/app/pages/error")
                   color="primary"
                   onClick={(e) => handelNext(e)}
                 >
-                  Next
+                  Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

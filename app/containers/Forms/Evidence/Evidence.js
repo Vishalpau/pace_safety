@@ -29,6 +29,7 @@ import { EVIDENCE_FORM } from "../../../utils/constants";
 import EvidenceValidate from "../../Validator/EvidenceValidation";
 import Type from "../../../styles/components/Fonts.scss";
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Attachment from "../../Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
@@ -270,10 +271,11 @@ const Evidence = () => {
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
-    ).then(()=>{
+    ).then((res)=>{
       const result = res.data.data.results;
       setIncidentDetail(result);
     })
+    .catch(()=>history.push("/app/pages/error"))
   
   };
 
@@ -378,6 +380,20 @@ const Evidence = () => {
   };
 
   const handleSubmit = async () => {
+    const temp = incidentDetail;
+    if(incidentDetail.incidentStage == "Investigation"){
+      try {
+        temp.updatedAt = new Date().toISOString();
+        temp.incidentStage= "Evidence"
+        temp.incidentStatus= "pending"
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        alert("something went wrong")
+      }
+    }
     if (isNext === true) {
       setIsNext(false);
       let status = 0;
@@ -423,19 +439,7 @@ const Evidence = () => {
           }
         }
       } else {
-        try {
-          
-          const temp = incidentDetail
-          temp.updatedAt = new Date().toISOString();
-          temp.incidentStage= "Evidence"
-          temp.incidentStatus= "pending"
-          const res = await api.put(
-            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-            temp
-          );
-        } catch (error) {
-          alert("something went wrong")
-        }
+        
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -723,7 +727,7 @@ const Evidence = () => {
                   color="primary"
                   onClick={() => handleSubmit()}
                 >
-                  Next
+                  Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

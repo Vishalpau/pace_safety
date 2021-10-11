@@ -21,6 +21,7 @@ import FormSideBar from "../FormSideBar";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -47,6 +48,7 @@ const ActivityDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isNext, setIsNext] = useState(true)
   const [incidentDetail, setIncidentDetail] = useState({});
   const [activtyList, setActvityList] = useState([
     {
@@ -158,8 +160,9 @@ const ActivityDetails = () => {
   };
 
   const handleNext = async () => {
-
+    await setIsNext(false)
     if (id && activtyList.length > 0 && activtyList[0].id) {
+      try{
       const res = await api.put(
         `api/v1/incidents/${id}/activities/`,
         activtyList
@@ -169,11 +172,13 @@ const ActivityDetails = () => {
           `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
         );
       }
+    }catch(err){setIsNext(true)}
     } else if (
       localStorage.getItem("fkincidentId") &&
       activtyList.length > 6 &&
       activtyList[0].id
     ) {
+      try{
       const res = await api.put(
         `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
         activtyList
@@ -183,7 +188,9 @@ const ActivityDetails = () => {
           `/app/incident-management/registration/evidence/personal-and-ppedetails/`
         );
       }
+    }catch(err){setIsNext(true)}
     } else {
+      try{
       const { error, isValid } = ActivityDetailValidate(activtyList);
       await setError(error);
       if (!isValid) {
@@ -196,6 +203,7 @@ const ActivityDetails = () => {
       history.push(
         "/app/incident-management/registration/evidence/personal-and-ppedetails/"
       );
+    }catch(err){setIsNext(true)}
     }
   };
 
@@ -311,7 +319,7 @@ const ActivityDetails = () => {
                   onClick={() => handleNext()}
                   // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
                 >
-                  Next
+                  Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>
