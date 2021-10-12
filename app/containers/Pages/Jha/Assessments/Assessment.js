@@ -435,9 +435,9 @@ const Assessment = () => {
                 <div>
                   {form.map((value, index) => (
                     <Accordion
-                      expanded={expanded === `panel${index}`}
+                      // expanded={expanded === `panel${index}`}
                       onChange={handleExpand(`panel${index}`)}
-                      defaultExpanded
+                      defaultExpanded={true}
                       className={classes.backPaper}
                       key={index}
                     >
@@ -509,19 +509,7 @@ const Assessment = () => {
                               />
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
-                              {/* {handelActionShow(value.id).map((valueAction) => (
-                                <ActionShow
-                                  action={valueAction}
-                                  companyId={projectData.companyId}
-                                  projectId={projectData.projectId}
-                                  updatePage={updatePage}
-                                />
-                              ))} */}
                               {handelActionShow(value.id)}
-
-
-
-
                             </Grid>
                           </Grid>
 
@@ -544,7 +532,7 @@ const Assessment = () => {
                   gutterBottom
                   className={classes.labelName}
                 >
-                  Specific human performance aspects that have been discussed  before commencing the work
+                  {preformace !== {} ? "Specific human performance aspects that have been discussed  before commencing the work" : null}
                 </Typography>
               </Grid>
               {Object.entries(preformace).map(([key, value]) => (
@@ -568,7 +556,13 @@ const Assessment = () => {
 
               <Grid item md={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">Discuss and document conditions when the work must be stopped</FormLabel>
+                  <FormLabel component="legend">
+                    {
+                      document.length > 0 ?
+                        "Discuss and document conditions when the work must be stopped" :
+                        null
+                    }
+                  </FormLabel>
                   <FormGroup>
                     {document.map((option) => (
                       <FormControlLabel
