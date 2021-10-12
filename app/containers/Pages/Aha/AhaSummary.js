@@ -154,6 +154,7 @@ function AhaSummary() {
   const [comments, setComments] = useState(false);
   const [activity, setActivity] = useState(false);
   //const [summary, setSummary] = useState(false);
+  const [isLoading , setIsLoading] = useState(false)
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
@@ -172,6 +173,8 @@ function AhaSummary() {
   const [actionTakenData, setActionTakenData] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [isNext, setIsNext] = useState(false)
+  const [approvalActionData, setApprovalactionData] = useState([])
+
 
 
   const project =
@@ -219,8 +222,8 @@ function AhaSummary() {
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
       }
-      setCloseOutView(false);
-      setLessonsLearnedView(false);
+      setCloseOut(false);
+      setLessonsLearned(false);
       setComments(false);
       setActivity(false);
     } else if (viewName == "lession") {
@@ -299,7 +302,7 @@ function AhaSummary() {
         : null;
     let structName = []
     let projectStructId = assessment.fkProjectStructureIds.split(":")
-
+console.log(projectStructId,"PPPPP")
     for (let key in projectStructId) {
       let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
       const api_work_area = axios.create({
@@ -307,10 +310,14 @@ function AhaSummary() {
         headers: HEADER_AUTH
       });
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      console.log(workArea,"!@#$")
       structName.push(workArea.data.data.results[0]["structureName"])
     }
+    console.log(structName,"@@@@@@")
     setProjectStructName(structName)
   }
+
+  console.log(projectStructName,"LLL")
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -429,24 +436,23 @@ function AhaSummary() {
   };
 
   const handelActionTracker = async (resultHazard) => {
-    let jhaId = localStorage.getItem("fkAHAId")
+    let ahaId = localStorage.getItem("fkAHAId")
 
-    let actionData = await handelActionData(jhaId, resultHazard)
+    let actionData = await handelActionData(ahaId, resultHazard)
     await setForm(actionData);
 
-    // let allAction = await handelActionData(jhaId, [], "title")
-    // let temp = []
-    // allAction.map((value) => {
-    //   if (value.enitityReferenceId.split(":")[1] == "00") {
-    //     temp.push(value)
-    //   }
-    // })
-    // setApprovalactionData(temp !== null ? temp : [])
+    let allAction = await handelActionData(ahaId, [], "title")
+    let temp = []
+    allAction.map((value) => {
+      if (value.enitityReferenceId.split(":")[1] == "00") {
+        temp.push(value)
+      }
+    })
+    setApprovalactionData(temp !== null ? temp : [])
   };
   const handelShowData = () => {
 
   }
-
 
 
   const fkCompanyId =
@@ -489,7 +495,7 @@ function AhaSummary() {
     <PapperBlock
       title={`Assesment : ${ahaData.ahaNumber}`}
       icon="ion-md-list-box"
-    >
+    >{isLoading ? <>
       <Box paddingBottom={1}>
         <div className={Styles.incidents}>
           <div className={Styles.item}>
@@ -1265,36 +1271,26 @@ function AhaSummary() {
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Grid container spacing={3}>
-                            <Grid item xs={12} md={8}>
-                              {actionTakenData.map((action, key) => (
-                                <>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    <span
-                                      key={key}
-                                      className={classes.updateLink}
-                                    >
-                                      <a target="_blank"
-                                        href={`http://dev-actions.pace-os.com/app/pages/Action-Summary/${action.id
-                                          }`}
-                                      // href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${action.fkCompanyId}&projectId=${action.fkProjectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
-                                      >
-                                        {action.actionNumber}
-                                      </a>
-                                    </span>
-                                    <div className={classes.actionTitleLable}>
-                                      {action.actionTitle}
-                                    </div>
+                                    {approvalActionData.map((value) => (
+                                      <>
+
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                          projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                          handelShowData={handelShowData}
+                                        />
+
+                                      </>
+                                    ))}
                                   </Typography>
-                                </>
-                              ))}
-                              {/* <Typography className={classes.aLabelValue}>
-                                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                                  <div className={classes.actionTitleLable}>Action title</div>
-                                </Typography> */}
+                                </Grid>
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        </Grid>
 
                         <Grid item xs={12}>
                           <Typography className={classes.heading}>
@@ -1529,6 +1525,7 @@ function AhaSummary() {
           </Grid>
         </Grid>
       </Box>
+      </>: <h1>Loading...</h1> }
     </PapperBlock>
   );
 }

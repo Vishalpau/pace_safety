@@ -221,14 +221,6 @@ function ObservationCorrectiveAction() {
 
   })
 
-  const reviewedBy = [
-    "None",
-    "Reviewedby 1",
-    "Reviewedby 2",
-    "Reviewedby 3",
-    "Reviewedby 4",
-  ]
-
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
     let allAction = await handelActionData(observationId, [], "title")
@@ -358,16 +350,7 @@ function ObservationCorrectiveAction() {
       setError({ ...error, reviewedOn: errorMessage })
     }
   }
-  // const handelActionTracker = async () => {
-  //   // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  //   // const api_action = axios.create({
-  //   //   baseURL: API_URL_ACTION_TRACKER,
-  //   // });
-  //   let ActionToCause = {}
-  //   const allActionTrackerData = await apiAction.get("/api/v1/actions/")
-  //   const allActionTracker = allActionTrackerData.data.data.results.results
 
-  // }
   const handleReview = (e, value) => {
     let temp = { ...form }
     temp.reviewedByName = value.name
@@ -499,15 +482,10 @@ function ObservationCorrectiveAction() {
             </RadioGroup>
             <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
 
-            {/* {error && error["isCorrectiveActionTaken"] && (
-              <FormHelperText>
-                {error["isCorrectiveActionTaken"]}
-              </FormHelperText>
-            )} */}
           </FormControl>
         </Grid>
         {actionData.length == 0 ?   <Grid item md={8}>
-<p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+          <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
         <Grid item md={8}>
           {actionOpen === true ? (
@@ -537,11 +515,30 @@ function ObservationCorrectiveAction() {
                 />
 
               </Typography>
+              
             </>
           )
             :
             null}
+         
         </Grid>
+           {/* <Grid item md={4}>
+           <TextField
+            label="Action taken"
+            name="Action taken"
+            id="Action taken"
+            multiline
+            fullWidth
+            variant="outlined"
+            // value={comment.comment ? comment.comment : ""}
+            className={classes.formControl}
+            // onChange={(e) => {
+            // //   setComment({ ...comment, comment: e.target.value });
+            // // }}
+          />
+            </Grid> */}
+
+
 
         <Grid
           item
