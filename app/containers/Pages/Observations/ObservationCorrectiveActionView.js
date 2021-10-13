@@ -132,7 +132,6 @@ const ObservationCorrectiveActionView = () => {
 
 
   const [actionTakenData, setActionTakenData] = useState([]);
-console.log(actionTakenData,"HHHHHHH")
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -236,7 +235,6 @@ console.log(actionTakenData,"HHHHHHH")
 
   }
 
-  console.log(actionTakenData, "::::::")
   useEffect(() => {
     if (id) {
       fetchInitialiObservation();

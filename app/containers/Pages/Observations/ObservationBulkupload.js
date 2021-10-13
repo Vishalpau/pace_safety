@@ -102,23 +102,23 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'text-top',
   },
   bulkBTNTopBox: {
-      '& button': {
-        marginBottom: '10px',
-        marginLeft: '10px',
-      },
+    '& button': {
+      marginBottom: '10px',
+      marginLeft: '10px',
+    },
   },
   errorBTNTable: {
     color: '#06425c',
     textAlign: 'center',
     display: 'block',
     '& span': {
-        fontSize: '13px',
-        textTransform: 'capitalize',
-      },
-      '&:hover': {
-        color: '#ff8533',
-        cursor: 'pointer',
-      },
+      fontSize: '13px',
+      textTransform: 'capitalize',
+    },
+    '&:hover': {
+      color: '#ff8533',
+      cursor: 'pointer',
+    },
   },
 }));
 
@@ -142,12 +142,12 @@ function ObservationBulkupload() {
       }
     },
     {
-        name: 'File name',
-        options: {
-          filter: true,
-  
-        }
-      },
+      name: 'File name',
+      options: {
+        filter: true,
+
+      }
+    },
     {
       name: 'Processed records',
       options: {
@@ -179,21 +179,21 @@ function ObservationBulkupload() {
       },
     },
     {
-       name: 'Failed record',
-       options: {
+      name: 'Failed record',
+      options: {
         filter: true,
         customBodyRender: (value) => {
           if (value === 'NA') {
-            return (<span label="NA" style={{textAlign: 'center', display: 'block'}}>NA </span>);
+            return (<span label="NA" style={{ textAlign: 'center', display: 'block' }}>NA </span>);
           }
           if (value === 'Failed') {
             return (<Link className={classes.errorBTNTable}>Failed 25 </Link>);
           }
           return (<Chip label="Unknown" />);
         }
-       },
+      },
     },
-    
+
   ];
 
   const data = [
@@ -235,37 +235,37 @@ function ObservationBulkupload() {
   return (
     // <PapperBlock title="Observation Upload" icon="ion-md-list-box" desc="">
     //   <Box>
-      <CustomPapperBlock title="Observation Upload" icon={observationsLogoSymbol} whiteBg>
-        <Grid container spacing={3}>
-          <Grid item md={12} xs={12}>
-            <div className="bulkUploadSection">
-              <Grid container spacing={3}>
-                  <Grid item xs={12} align="right" className={classes.bulkBTNTopBox}>
-                      <Button
-                          variant="contained"
-                          // color="primary"
-                          size="small"
-                          className={classes.newFormButton}
-                          disableElevation
-                          startIcon={<CloudUploadIcon />}
-                          //onClick={() => handleBulkUploadPush()}
-                          style={{marginLeft: '10px'}}
-                          onClick={() => handleBulkUploadfilePush()}
-                      >
-                          Upload
-                      </Button>
-                  </Grid>
+    <CustomPapperBlock title="Observation Upload" icon={observationsLogoSymbol} whiteBg>
+      <Grid container spacing={3}>
+        <Grid item md={12} xs={12}>
+          <div className="bulkUploadSection">
+            <Grid container spacing={3}>
+              <Grid item xs={12} align="right" className={classes.bulkBTNTopBox}>
+                <Button
+                  variant="contained"
+                  // color="primary"
+                  size="small"
+                  className={classes.newFormButton}
+                  disableElevation
+                  startIcon={<CloudUploadIcon />}
+                  //onClick={() => handleBulkUploadPush()}
+                  style={{ marginLeft: '10px' }}
+                  onClick={() => handleBulkUploadfilePush()}
+                >
+                  Upload
+                </Button>
               </Grid>
-              <MUIDataTable
-                className="dataTableSectionDesign"
-                columns={columns}
-                data={data}
-                options={options}
-              />
-            </div>
-          </Grid>
+            </Grid>
+            <MUIDataTable
+              className="dataTableSectionDesign"
+              columns={columns}
+              data={data}
+              options={options}
+            />
+          </div>
         </Grid>
-      </CustomPapperBlock>
+      </Grid>
+    </CustomPapperBlock>
     //   </Box>
     // </PapperBlock>
   );

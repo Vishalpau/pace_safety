@@ -37,6 +37,7 @@ import "../../../../styles/custom.css";
 import { handelJhaId, checkValue } from "../Utils/checkValue"
 import { CLOSE_OUT_FORM } from "../Utils/constants"
 import { SUMMARY_FORM } from "../Utils/constants"
+import JhaCommonInfo from "../JhaCommonInfo";
 
 
 function Alert(props) {
@@ -143,45 +144,10 @@ const CloseOut = () => {
             {isLoading ? (
                 <Grid container spacing={3}>
                     <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
-
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha number
-                            </Typography>
-
-                            <Typography varint="body1" className={Type.labelValue}>
-                                {jhaListData.jhaNumber}
-                            </Typography>
+                        <Grid item xs={12}>
+                            <JhaCommonInfo />
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Aha assessment data
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {moment(jhaListData.jhaAssessmentDate).format(
-                                    "Do MMMM YYYY"
-                                )}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha description
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {jhaListData.description}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha location
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {jhaListData.location}
-                            </Typography>
-                        </Grid>
 
                         <Grid item xs={12}>
                             <Typography variant="h6" gutterBottom>

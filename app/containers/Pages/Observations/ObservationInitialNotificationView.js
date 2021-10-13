@@ -51,6 +51,7 @@ import {
 } from "../../../utils/constants";
 
 import { breakDownDetails } from "../../../redux/actions/initialDetails";
+import { handelDateTime } from '../../../utils/CheckerValue';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -334,9 +335,7 @@ const ObservationInitialNotificationView = () => {
               Observed On
             </Typography>
             <Typography className={classes.labelValue}>
-              {moment(initialData["observedAt"]).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              )}
+              {handelDateTime(initialData["observedAt"])}
             </Typography>
           </Grid>
 

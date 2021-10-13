@@ -352,22 +352,24 @@ const DocumentNotification = () => {
               />
             </Grid>
 
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Notifications to be sent to</FormLabel>
-                <FormGroup>
-                  {notificationSentValue.map((value, index) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value.roleName} />}
-                      label={value.roleName}
-                      checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
-                      onChange={async (e) => handelNotifyTo(e, value.id.toString())}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+            {notificationSentValue.length > 0 ?
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Notifications to be sent to</FormLabel>
+                  <FormGroup>
+                    {notificationSentValue.map((value, index) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value.roleName} />}
+                        label={value.roleName}
+                        checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
+                        onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
+              : null}
 
             <Grid
               item

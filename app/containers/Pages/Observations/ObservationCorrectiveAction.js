@@ -226,7 +226,6 @@ function ObservationCorrectiveAction() {
     let allAction = await handelActionData(observationId, [], "title")
     setActionData(allAction)
   };
-  console.log("AVCS",actionData)
 
   const handelActionShow = (id) => {
     return (<>
@@ -270,6 +269,10 @@ function ObservationCorrectiveAction() {
       }
     }
     form['updateBy'] = userId
+    if(form["reviewedByName"] !== ""){
+      form["observationStage"] = "Completed"
+      form["observationStatus"] = "Reviewed"
+    }
     delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
@@ -502,7 +505,7 @@ function ObservationCorrectiveAction() {
               <Typography className={classes.increaseRowBox}>
 
                 <ActionTracker
-                  actionContext="Obsevations"
+                  actionContext="Observation"
                   enitityReferenceId={id}
                   setUpdatePage={setUpdatePage}
                   fkCompanyId={fkCompanyId}

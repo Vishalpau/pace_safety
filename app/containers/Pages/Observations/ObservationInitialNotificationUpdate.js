@@ -174,7 +174,7 @@ const ObservationInitialNotificationUpdate = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [error, setError] = useState();
 
-  let filterDepartmentName = []
+  let filterDepartmentName = [];
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
     : null;
@@ -226,6 +226,7 @@ const ObservationInitialNotificationUpdate = () => {
   };
   
   const handleSubmit = async () => {
+    console.log(initialData['assigneeName'],"LLLL")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
     await setError(error);
 
@@ -237,6 +238,10 @@ const ObservationInitialNotificationUpdate = () => {
     let updateCategory = []
 
     if (id) {
+      if(initialData['assigneeName'] !== ""){
+        initialData['observationStage'] = "Planned"
+        initialData['observationStatus'] = "Assigned"
+      }
       initialData['updatedBy'] = userId
       delete initialData['attachment']
       for (let i = 0; i < catagory.length; i++) {

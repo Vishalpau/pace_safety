@@ -176,6 +176,7 @@ function JhaSummary() {
     companyId: "",
   })
   const [projectStructName, setProjectStructName] = useState([])
+
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
@@ -288,6 +289,7 @@ function JhaSummary() {
   const handelShowData = () => {
 
   }
+
   const handelWorkArea = async (assessment) => {
     let structName = {}
     let projectStructId = assessment.fkProjectStructureIds.split(":")
@@ -300,10 +302,22 @@ function JhaSummary() {
       });
       const workArea = await
         api_work_area.get(`/api/v1/companies/${assessment.fkCompanyId}/projects/${assessment.fkProjectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-      // let result = workArea.data.data.results[0]
-      // structName[result["structure_name"]] = result["structureName"]
+      let result = workArea.data.data.results[0]
+      structName[result["structure_name"]] = result["structureName"]
     }
     setProjectStructName(structName)
+  }
+
+  const handelInputValue = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
+    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
+    console.log(apiDataPerformance)
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
+    const apiCondition = documentCondition.data.data.results[0].checklistValues
+    console.log(apiCondition)
   }
 
   let errorMessage = "Please fill"
@@ -365,6 +379,7 @@ function JhaSummary() {
     await handelAsessment()
     await handelProjectStructre()
     await handelActionLink()
+    await handelInputValue()
     await setLoader(false)
   }
 
@@ -518,7 +533,7 @@ function JhaSummary() {
                                           Work Area
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructName["Work-Area(s)"])}
+                                          {checkValue(projectStructName["Work Area(s)"])}
                                         </Typography>
                                       </Grid>
 
@@ -753,9 +768,7 @@ function JhaSummary() {
                                         </Typography>
                                         {hazard !== undefined && hazard.map((value) => (
                                           <div>
-                                            <Typography variant="body" className={Fonts.labelValue}>
-                                              {checkValue(value.risk)}
-                                            </Typography>
+
                                             <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "10px" }}>
                                               {checkValue(value.hazard)}
                                             </Typography>
@@ -806,7 +819,7 @@ function JhaSummary() {
                                                   <MenuOpenOutlinedIcon
                                                     className={classes.headingIcon}
                                                   />
-                                                  {`Hazard ${index} ${value.hazard}`}
+                                                  {`${value.hazard}`}
                                                 </Typography>
                                               </AccordionSummary>
                                               <AccordionDetails>
@@ -861,38 +874,49 @@ function JhaSummary() {
 
                                       </Grid>
 
-                                      <Grid item xs={12} md={12}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Conditions when the work must be stopped
-                                        </Typography>
+                                      {assessment.workStopCondition !== undefined &&
+                                        assessment.workStopCondition !== "" &&
+                                        assessment.workStopCondition.split(",").length > 0 ?
+                                        <Grid item xs={12} md={12}>
+                                          {console.log(assessment.workStopCondition.split(","))}
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Conditions when the work must be stopped
+                                          </Typography>
 
-                                        {checkValue(assessment.workStopCondition).split(",").map((value) => (
-                                          <p>
-                                            {value.replace("-", " ")}
-                                          </p>
-                                        ))}
-
-                                      </Grid>
-                                      <Grid item xs={12} md={12}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Specific human performance aspects that have been discussed before commencing the work
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
+                                          {checkValue(assessment.workStopCondition).split(",").map((value) => (
                                             <p>
                                               {value.replace("-", " ")}
                                             </p>
                                           ))}
-                                        </Typography>
-                                      </Grid>
+                                        </Grid>
+                                        : null}
+
+                                      {assessment.humanPerformanceAspects !== undefined &&
+                                        assessment.humanPerformanceAspects !== "" &&
+                                        assessment.humanPerformanceAspects.split(",").length > 0 ?
+
+                                        <Grid item xs={12} md={12}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Specific human performance aspects that have been discussed before commencing the work
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
+                                              <p>
+                                                {value.replace("-", " ")}
+                                              </p>
+                                            ))}
+                                          </Typography>
+                                        </Grid>
+                                        :
+                                        null}
                                       <Grid item xs={12} md={12}>
                                         <Typography
                                           variant="h6"
