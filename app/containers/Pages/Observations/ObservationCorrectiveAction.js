@@ -493,14 +493,19 @@ function ObservationCorrectiveAction() {
         <Grid item md={8}>
           {actionOpen === true ? (
             <>
+
+              
+
+
+
+
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Actions
               </Typography>
               <Typography className={classes.labelValue}>
-
-                {' '}
+                {handelActionShow(id)}
               </Typography>
-              {handelActionShow(id)}
+              
 
               <Typography className={classes.increaseRowBox}>
 
