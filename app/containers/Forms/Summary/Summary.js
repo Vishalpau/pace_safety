@@ -235,7 +235,7 @@ const Summary = (props) => {
             setLessionlearn(false)
             setIsLoading(true)
           }
-          else if(allIncidents.data.data.results.incidentStage === "Initial notification" && allIncidents.data.data.results.incidentStatus === "Done"){
+          else if(allIncidents.data.data.results.incidentStage === "Initial Notification" && allIncidents.data.data.results.incidentStatus === "Done"){
             setInitialNotificationStatus(true)
             setInvestigationOverview(false);
             setEvidence(false)

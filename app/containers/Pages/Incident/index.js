@@ -257,28 +257,7 @@ function BlankPage(props) {
   useEffect(() => {
     // fetchPermission();
   }, [])
-  const handelSearchIncident = async (e) => {
-    let allSeacrh = [];
-    if (e.target.value.length === 0) {
-      await setShowIncident([]);
-    } else {
-      await setSeacrhIncident(e.target.value.toLowerCase());
-      Object.entries(incidents).map((item) => {
-        if (item[1]["incidentNumber"].toLowerCase().includes(searchIncident)) {
-          allSeacrh.push([
-            item[1]["incidentNumber"],
-            item[1]["incidentReportedByName"],
-            item[1]["incidentLocation"],
-            moment(item[1]["incidentReportedOn"]).format(
-              "Do MMMM YYYY, h:mm:ss a"
-            ),
-            item[1]["incidentReportedByName"],
-          ]);
-        }
-      });
-      await setShowIncident(allSeacrh);
-    }
-  };
+
 
   const columns = [
     {
@@ -378,6 +357,30 @@ function BlankPage(props) {
       })
 
   };
+  const handleSearchIncident = (serchValue)=>{
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`)
+    
+    .then((res)=>{
+      setIncidents(res.data.data.results.results);
+      setTotalData(res.data.data.results.count)
+      setPageData(res.data.data.results.count / 25)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      setPageCount(pageCount)
+    })
+  }
   const classes = useStyles();
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -402,7 +405,7 @@ function BlankPage(props) {
                         root: classes.inputRoot,
                         input: classes.inputInput,
                       }}
-                      onChange={(e) => setSeacrhIncident(e.target.value)}
+                      onChange={(e) => handleSearchIncident(e.target.value)}
                     />
                   </Paper>
                 </div>

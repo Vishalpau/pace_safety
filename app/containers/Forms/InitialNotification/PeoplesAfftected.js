@@ -751,6 +751,7 @@ const PeoplesAffected = () => {
                   variant="contained"
                   color="primary"
                   className={classes.button}
+                  disabled={isNext}
                 >
                   Next {isNext && <CircularProgress size={20}/>}
                 </Button>

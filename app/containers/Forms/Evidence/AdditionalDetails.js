@@ -347,6 +347,7 @@ const AdditionalDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
+                  disabled={!isNext}
                 >
                   Submit{isNext?null:<CircularProgress size={20}/>}
                 </Button>
