@@ -153,42 +153,10 @@ const filter = createFilterOptions();
 
 const ObservationInitialNotificationUpdate = () => {
 
-  const assignee = [
-    'None',
-    'Assignee',
-    'Assignee 1',
-    'Assignee 2',
-    'Assignee 3',
-    'Assignee 4',
-  ];
-
-  const assigneeDepartment = [
-    'None',
-    'Assignee Department',
-    'Assignee Department 1',
-    'Assignee Department 2',
-    'Assignee Department 3',
-    'Assignee Department 4',
-
-  ];
-
   const { id } = useParams();
   const history = useHistory();
-
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
   const [loading, setLoading] = useState(false);
-
-  // const handleChange = (event) => {
-  //   setState({ ...state, [event.target.name]: event.target.checked });
-  // };
-
   const [initialData, setInitialData] = useState({});
-
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
@@ -199,19 +167,16 @@ const ObservationInitialNotificationUpdate = () => {
   const [departmentName, setDepartmentName] = useState([])
   const [submitLoader, setSubmitLoader] = useState(false);
   const [levelLenght, setLevelLenght] = useState(0)
-
+  const [catagory, setCatagory] = useState();
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [projectSturcturedData, setProjectSturcturedData] = useState([])
   const [isNext, setIsNext] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [error, setError] = useState();
 
-  let filterReportedByName = []
-  let filterDepartmentName = []
+  let filterDepartmentName = [];
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
-
-  const selectBreakdown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
 
   const fkCompanyId = JSON.parse(localStorage.getItem("company")) !== null
@@ -222,34 +187,6 @@ const ObservationInitialNotificationUpdate = () => {
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
 
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-    setRiskObservation(true);
-  };
-
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-    setRiskObservation(false);
-  };
-
-  const handelAddressSituationYes = (e) => {
-    setAddressSituation(false);
-  };
-
-  const handelAddressSituationNo = (e) => {
-    setAddressSituation(true);
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [error, setError] = useState();
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const [catagory, setCatagory] = useState();
-  const [catagoryName, setCatagoryName] = useState();
-
   const handelSelectOption = (cate) => {
     if (catagory !== undefined) {
       for (let i = 0; i <= catagory.length; i++) {
@@ -258,8 +195,6 @@ const ObservationInitialNotificationUpdate = () => {
           return true
           }
         } 
-          
-        
       }
     }
   }
@@ -267,22 +202,17 @@ const ObservationInitialNotificationUpdate = () => {
   const handleChange = async (e, index, value) => {
 
     let temp = [...catagory]
-    let tempRemove = []
     if (e.target.checked == false) {
       temp.map((catagoryValue, index) => {
         if (catagoryValue['observationTag'] === value.tagName) {
           if (catagoryValue['id']) {
-
             const res = api.delete(`/api/v1/observations/${id}/observationtags/${catagoryValue.id}/`)
-
           }
-
           temp.splice(index, 1);
         }
       })
     }
     else if (e.target.checked) {
-
       temp.push({
         "fkObservationId": id,
         "fkTagId": value.id,
@@ -291,20 +221,12 @@ const ObservationInitialNotificationUpdate = () => {
         "createdBy": parseInt(userId),
         "updatedBy": 0,
       })
-
-      //  await catagoryName.push(value.tagName)
     }
     await setCatagory(temp)
-
-
   };
-  const handleOther = (e) => {
-    let tempData = [...catagory]
-    tempData[8].observationTag = e.target.value
-  }
-
   
   const handleSubmit = async () => {
+    console.log(initialData['assigneeName'],"LLLL")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
     await setError(error);
 
@@ -316,6 +238,10 @@ const ObservationInitialNotificationUpdate = () => {
     let updateCategory = []
 
     if (id) {
+      if(initialData['assigneeName'] !== ""){
+        initialData['observationStage'] = "Planned"
+        initialData['observationStatus'] = "Assigned"
+      }
       initialData['updatedBy'] = userId
       delete initialData['attachment']
       for (let i = 0; i < catagory.length; i++) {
@@ -325,10 +251,7 @@ const ObservationInitialNotificationUpdate = () => {
 
         } else {
           newCategory.push(catagory[i])
-
-
         }
-
       }
       if (updateCategory.length > 0) {
         const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory).then(res => {} ).catch(err => setLoading(false)        )
@@ -336,7 +259,6 @@ const ObservationInitialNotificationUpdate = () => {
       if (newCategory.length > 0) {
         const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory).then(res => {} ).catch(err => setLoading(false)        )
       }
-
       const res1 = await api.put(`/api/v1/observations/${id}/`, initialData).then(res => {
         if (res.status === 200) {
            localStorage.setItem("update", "Done");

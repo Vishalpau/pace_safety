@@ -147,7 +147,15 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     marginTop: -12,
-    marginLeft: -12,
+    marginLeft: +30,
+  },
+  buttonProgressSave: {
+    // color: "green",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -55,
   },
   boldHelperText: {
     "& .MuiFormHelperText-root": {
@@ -173,6 +181,7 @@ function ObservationCorrectiveAction() {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
   let filterReportedByName = []
 
@@ -221,20 +230,11 @@ function ObservationCorrectiveAction() {
 
   })
 
-  const reviewedBy = [
-    "None",
-    "Reviewedby 1",
-    "Reviewedby 2",
-    "Reviewedby 3",
-    "Reviewedby 4",
-  ]
-
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
     let allAction = await handelActionData(observationId, [], "title")
     setActionData(allAction)
   };
-  console.log("AVCS",actionData)
 
   const handelActionShow = (id) => {
     return (<>
@@ -261,7 +261,7 @@ function ObservationCorrectiveAction() {
 
 
   const handleSubmit = async () => {
-    const { error, isValid } = CorrectiveActionValidator(form , actionData);
+    const { error, isValid } = CorrectiveActionValidator(form , actionData,"submit");
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -278,6 +278,10 @@ function ObservationCorrectiveAction() {
       }
     }
     form['updateBy'] = userId
+    if(form["reviewedByName"] !== ""){
+      form["observationStage"] = "Completed"
+      form["observationStatus"] = "Reviewed"
+    }
     delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
@@ -292,6 +296,44 @@ function ObservationCorrectiveAction() {
         );
       }
     }).catch(err => {setLoading(false)})
+  }
+  const handleSave = async () => {
+    const { error, isValid } = CorrectiveActionValidator(form , actionData,"save");
+    
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
+
+    await setSaveLoading(true)
+    if (comment.id) {
+      comment['updatedBy'] = parseInt(userId)
+      const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/`, comment)
+    } else {
+      if (comment.comment !== "") {
+        const res1 = await api.post(`/api/v1/comments/`, comment).then(res => {}).catch(err => {setLoading(false)})
+
+      }
+    }
+    form['updateBy'] = userId
+    if(form["reviewedByName"] !== ""){
+      form["observationStage"] = "Completed"
+      form["observationStatus"] = "Reviewed"
+    }
+    delete form['attachment']
+    const res = await api.put(`/api/v1/observations/${localStorage.getItem(
+      "fkobservationId"
+    )}/`, form).then(res => {
+      if (res.status === 200) {
+        localStorage.setItem('updateAction', "Done")
+        localStorage.setItem("action", "Done")
+        history.push(
+          `/app/observation/details/${localStorage.getItem(
+            "fkobservationId"
+          )}`
+        );
+      }
+    }).catch(err => {setSaveLoading(false)})
   }
 
   const fetchInitialiObservationData = async () => {
@@ -358,16 +400,7 @@ function ObservationCorrectiveAction() {
       setError({ ...error, reviewedOn: errorMessage })
     }
   }
-  // const handelActionTracker = async () => {
-  //   // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  //   // const api_action = axios.create({
-  //   //   baseURL: API_URL_ACTION_TRACKER,
-  //   // });
-  //   let ActionToCause = {}
-  //   const allActionTrackerData = await apiAction.get("/api/v1/actions/")
-  //   const allActionTracker = allActionTrackerData.data.data.results.results
 
-  // }
   const handleReview = (e, value) => {
     let temp = { ...form }
     temp.reviewedByName = value.name
@@ -403,7 +436,6 @@ function ObservationCorrectiveAction() {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          console.log(response)
           const result = response.data.data.results;
           let user = [];
           // user = result;
@@ -499,32 +531,26 @@ function ObservationCorrectiveAction() {
             </RadioGroup>
             <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
 
-            {/* {error && error["isCorrectiveActionTaken"] && (
-              <FormHelperText>
-                {error["isCorrectiveActionTaken"]}
-              </FormHelperText>
-            )} */}
           </FormControl>
         </Grid>
         {actionData.length == 0 ?   <Grid item md={8}>
-<p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+          <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
         <Grid item md={8}>
-          {actionOpen === true ? (
+          {form.isCorrectiveActionTaken === "Yes" || form.isCorrectiveActionTaken === null ? (
             <>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Actions
               </Typography>
               <Typography className={classes.labelValue}>
-
-                {' '}
+                {handelActionShow(id)}
               </Typography>
-              {handelActionShow(id)}
+              
 
               <Typography className={classes.increaseRowBox}>
 
                 <ActionTracker
-                  actionContext="Obsevations"
+                  actionContext="Observation"
                   enitityReferenceId={id}
                   setUpdatePage={setUpdatePage}
                   fkCompanyId={fkCompanyId}
@@ -537,11 +563,30 @@ function ObservationCorrectiveAction() {
                 />
 
               </Typography>
+              
             </>
           )
             :
             null}
+         
         </Grid>
+           {/* <Grid item md={4}>
+           <TextField
+            label="Action taken"
+            name="Action taken"
+            id="Action taken"
+            multiline
+            fullWidth
+            variant="outlined"
+            // value={comment.comment ? comment.comment : ""}
+            className={classes.formControl}
+            // onChange={(e) => {
+            // //   setComment({ ...comment, comment: e.target.value });
+            // // }}
+          />
+            </Grid> */}
+
+
 
         <Grid
           item
@@ -627,6 +672,16 @@ function ObservationCorrectiveAction() {
         >
 
           <div className={classes.loadingWrapper}>
+          <Button
+              variant="outlined"
+              onClick={(e) => handleSave()}
+              className={classes.custmSubmitBtn}
+              style={{ marginLeft: "10px" }}
+              disabled={saveLoading}
+            >
+              Save
+            </Button>
+            {saveLoading && <CircularProgress size={24} className={classes.buttonProgressSave} />}
             <Button
               variant="outlined"
               onClick={(e) => handleSubmit()}

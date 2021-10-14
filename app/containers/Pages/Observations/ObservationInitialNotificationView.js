@@ -165,6 +165,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
+    localStorage.setItem('fkobservationId' , id)
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
