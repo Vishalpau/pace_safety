@@ -142,10 +142,6 @@ const ObservationCorrectiveActionView = () => {
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
-  //       const client_id = JSON.parse(localStorage.getItem('userDetails')) !== null
-  // ? JSON.parse(localStorage.getItem('userDetails')).companies[0].subscriptions[1].hostings[0].clientId
-  // : null;
-
   const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).companies
     : null;
@@ -270,7 +266,7 @@ const ObservationCorrectiveActionView = () => {
             Reviewed By
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData["reviewedByName"]}
+            {initialData["reviewedByName"] ? initialData["reviewedByName"] : "-"}
 
           </Typography>
         </Grid>
