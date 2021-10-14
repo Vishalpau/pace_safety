@@ -1,39 +1,19 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import AddIcon from '@material-ui/icons/Add';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import classNames from "classnames";
-import Button from '@material-ui/core/Button';
-import ReorderIcon from '@material-ui/icons/Reorder';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ViewColumnIcon from '@material-ui/icons/ViewColumn';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-import ObservationsLookAhead from './ObservationsLookAhead';
-import ObservationsFilter from './ObservationsFilter';
-import ObservationBookmarkFilter from './ObservationBookmarkFilter';
-import ObservationsKanban from './ObservationsKanban';
-import SearchIcon from '@material-ui/icons/Search';
-
-import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
 import InputBase from '@material-ui/core/InputBase';
-import Tooltip from '@material-ui/core/Tooltip';
-import preplanning from 'dan-images/preplanning.png';
-import progress from 'dan-images/progress.png';
-import completed from 'dan-images/completed.png';
-import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
-import GamesOutlinedIcon from '@material-ui/icons/GamesOutlined';
-import StarsIcon from '@material-ui/icons/Stars';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
+import PropTypes from 'prop-types';
+import React, { useState } from "react";
 import "../../../styles/custom/customheader.css";
+import ObservationBookmarkFilter from './ObservationBookmarkFilter';
+import ObservationsFilter from './ObservationsFilter';
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

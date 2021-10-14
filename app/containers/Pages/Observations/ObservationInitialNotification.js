@@ -1,62 +1,48 @@
-import React, { useEffect, useState, Component } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { PapperBlock } from "dan-components";
+import MomentUtils from "@date-io/moment";
+import { Button, CircularProgress, FormHelperText, Grid, TextField, Typography } from "@material-ui/core";
+import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from "@material-ui/core/FormGroup";
-import { FormHelperText } from "@material-ui/core";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import FormLabel from "@material-ui/core/FormLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Select from "@material-ui/core/Select";
 import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles } from "@material-ui/core/styles";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import MuiAlert from "@material-ui/lab/Alert";
+import Autocomplete, {
+  createFilterOptions
+} from "@material-ui/lab/Autocomplete";
 import {
   KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-import moment from "moment";
-import { useDropzone } from "react-dropzone";
-import { useHistory, useParams } from "react-router";
-import api from "../../../utils/axios";
-import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
-import FormObservationbanner from "dan-images/addFormObservationbanner.jpg";
-import Avatar from "@material-ui/core/Avatar";
-
-import Autocomplete, {
-  createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
 import axios from "axios";
-import Attachment from "../../Attachment/Attachment";
-// import PickListData from "../../../utils/Picklist/InitialPicklist";
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import { CircularProgress } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import { Comments } from "../../pageListAsync";
-
-import Type from "../../../styles/components/Fonts.scss";
-import { connect } from "react-redux";
-import Axios from "axios";
-import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 import classNames from "classnames";
+import { PapperBlock } from "dan-components";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useHistory, useParams } from "react-router";
+import "../../../styles/custom/customheader.css";
+import api from "../../../utils/axios";
 import {
   access_token,
   ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
-import { mdiConsole } from "@mdi/js";
-import "../../../styles/custom/customheader.css";
+// import PickListData from "../../../utils/Picklist/InitialPicklist";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
+import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
+
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -1460,7 +1446,7 @@ const ObservationInitialNotification = (props) => {
                 </RadioGroup>
               </FormControl>
             </Grid>
-
+            {tagData.length > 0 ? (
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormLabel className={classes.labelName} component="legend">
                 Categories
@@ -1481,7 +1467,7 @@ const ObservationInitialNotification = (props) => {
                   />
                 ))}
               </FormGroup>
-            </Grid>
+            </Grid>): null}
 
             <Grid item md={12} xs={12} className={classes.addLabelTitleBox}>
               <Typography
