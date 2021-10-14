@@ -1,28 +1,19 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'dan-components';
-import Link from '@material-ui/core/Link';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import { useParams, useHistory } from 'react-router';
-import { Col, Row } from "react-grid-system";
-import axios from "axios";
 import moment from "moment";
-
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from "react-grid-system";
+import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import FormSideBar from '../../../Forms/FormSideBar';
-import { APPROVAL_FORM } from "../Utils/constants"
-import ActionTracker from "../../../Forms/ActionTracker";
-import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
-import { handelJhaId } from "../Utils/checkValue"
-import apiAction from '../../../../utils/axiosActionTracker';
-import ProjectStructureInit from '../../../ProjectStructureId/ProjectStructureId';
-import { handelCommonObject, handelActionData } from "../../../../utils/CheckerValue"
+import { handelActionData } from "../../../../utils/CheckerValue";
 import ActionShow from '../../../Forms/ActionShow';
-import { values } from 'lodash';
-import JhaCommonInfo from "../JhaCommonInfo"
+import ActionTracker from "../../../Forms/ActionTracker";
+import FormSideBar from '../../../Forms/FormSideBar';
+import JhaCommonInfo from "../JhaCommonInfo";
+import { handelJhaId } from "../Utils/checkValue";
+import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -127,6 +118,7 @@ const Approvals = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const apiData = res.data.data.results
+
     setForm(apiData)
     setCheck({
       ...check,
@@ -243,7 +235,7 @@ const Approvals = () => {
                   {form.wrpApprovalDateTime !== undefined
                     &&
                     form.wrpApprovalDateTime !== null ?
-                    moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')
+                    `${form.wrpApprovalUser} ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
                     : null
                   }
                 </div>
@@ -271,7 +263,7 @@ const Approvals = () => {
                   {form.picApprovalDateTime !== undefined
                     &&
                     form.picApprovalDateTime !== null ?
-                    moment(form.picApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')
+                    `${form.picApprovalUser} ${moment(form.picApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
                     : null
                   }
                 </div>
