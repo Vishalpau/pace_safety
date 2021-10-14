@@ -725,6 +725,7 @@ const Evidence = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleSubmit()}
+                  disabled={!isNext}
                 >
                   Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>

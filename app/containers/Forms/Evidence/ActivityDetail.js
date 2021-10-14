@@ -315,6 +315,7 @@ const ActivityDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
+                  disabled={!isNext}
                   // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
                 >
                   Next{isNext?null:<CircularProgress size={20}/>}

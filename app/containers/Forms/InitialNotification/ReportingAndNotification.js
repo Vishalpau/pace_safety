@@ -178,7 +178,7 @@ const ReportingAndNotification = () => {
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
 
-    if (incidentsListData.incidentStage === "Initial notification") {
+    if (incidentsListData.incidentStage === "Initial Notification") {
 
       temp.incidentStatus = "Done"
     }
@@ -1155,6 +1155,7 @@ const ReportingAndNotification = () => {
                   color="primary"
                   className={classes.button}
                   onClick={(e) => handelNext(e)}
+                  disabled={!isNext}
                 >
                   Submit{isNext?null:<CircularProgress size={20}/>}
                 </Button>

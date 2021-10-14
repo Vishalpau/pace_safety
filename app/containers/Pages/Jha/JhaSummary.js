@@ -1,59 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { PapperBlock } from 'dan-components';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from '@material-ui/core/Box';
-import CheckCircle from '@material-ui/icons/CheckCircle';
-import Grid from '@material-ui/core/Grid';
-import AccessTime from '@material-ui/icons/AccessTime';
+import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import classNames from 'classnames';
-
+import Grid from '@material-ui/core/Grid';
 // List
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import { useHistory, useParams } from 'react-router';
-
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import AccessTime from '@material-ui/icons/AccessTime';
+import Add from '@material-ui/icons/Add';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import Close from '@material-ui/icons/Close';
+import Comment from '@material-ui/icons/Comment';
+import Edit from '@material-ui/icons/Edit';
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import History from '@material-ui/icons/History';
+import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 // Icons
 import Print from '@material-ui/icons/Print';
 import Share from '@material-ui/icons/Share';
-import Close from '@material-ui/icons/Close';
-import Comment from '@material-ui/icons/Comment';
-import History from '@material-ui/icons/History';
-import Edit from '@material-ui/icons/Edit';
-import Add from '@material-ui/icons/Add';
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
-import Styles from 'dan-styles/Summary.scss';
-import Fonts from 'dan-styles/Fonts.scss';
-
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import moment from "moment";
-
-import ImageIcon from '@material-ui/icons/Image';
-import Avatar from '@material-ui/core/Avatar';
-import Link from '@material-ui/core/Link';
-import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import axios from "axios";
-
-import api from "../../../utils/axios";
-import apiAction from '../../../utils/axiosActionTracker';
-import { handelJhaId, checkValue } from "../Jha/Utils/checkValue"
-import Assessment from './Assessments/Assessment';
-import { handelFileName } from "../Jha/Utils/checkValue"
+import { PapperBlock } from 'dan-components';
+import Fonts from 'dan-styles/Fonts.scss';
+import Styles from 'dan-styles/Summary.scss';
+import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import Attachment from "../../../containers/Attachment/Attachment";
-import { Comments } from "../../pageListAsync";
-import { SUMMARY_FORM } from "./Utils/constants"
-import { SSO_URL, HEADER_AUTH } from "../../../utils/constants";
-import { handelCommonObject, handelActionData, handelApiValue } from "../../../utils/CheckerValue"
+import api from "../../../utils/axios";
+import { handelActionData } from "../../../utils/CheckerValue";
+import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
+import { Comments } from "../../pageListAsync";
+import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
+
 
 
 

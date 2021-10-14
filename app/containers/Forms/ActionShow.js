@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import { Grid } from "@material-ui/core";
+import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Grid } from "@material-ui/core";
-import { defaults } from "chart.js";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { SSO_URL } from "../../utils/constants"
@@ -72,14 +71,14 @@ const ActionShow = (props) => {
 
     return (
         <Grid container spacing={3}>
-            
-                    <Grid item md={6} sm={6} xs={12} className={classes.actionLinkListSection} >
-                        {props.title !== undefined ?
-                            <>
-                                <ListItem>
-                                    <ListItemText className={classes.actionLinkList} primary={props.title} secondary={link()} />
-                                </ListItem>
-                                {/* <Grid item md={6}>
+
+            <Grid item md={6} sm={6} xs={12} className={classes.actionLinkListSection} >
+                {props.title !== undefined ?
+                    <>
+                        <ListItem>
+                            <ListItemText className={classes.actionLinkList} primary={props.title} secondary={link()} />
+                        </ListItem>
+                        {/* <Grid item md={6}>
                                     <Typography>
                                         {props.title}
                                     </Typography>
@@ -87,16 +86,16 @@ const ActionShow = (props) => {
                                 <Grid item md={6}>
                                     {link()}
                                 </Grid> */}
-                            </>
-                            :
-                            <>
-                                {link()}
-                            </>
-                        }
-                    </Grid>
+                    </>
+                    :
+                    <>
+                        {link()}
+                    </>
+                }
+            </Grid>
 
-                     
-            
+
+
 
         </Grid>
     )

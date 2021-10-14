@@ -95,7 +95,7 @@ const EventDetails = () => {
   const [errorWeather, setErrorWeather] = useState({});
   const [errorCost, setErrorCost] = useState({});
   const [loading, setLoading] = useState(false)
-
+// check upadte 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -932,7 +932,6 @@ const EventDetails = () => {
         )}
       </Grid>
     </PapperBlock>
-
   );
 };
 

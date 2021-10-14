@@ -28,6 +28,7 @@ import { useHistory, useParams } from "react-router";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
 import { LESSION_LEARNED_FORM } from "../../../utils/constants";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FormSideBar from "../FormSideBar";
 import {
@@ -73,6 +74,7 @@ const CloseOut = () => {
     const [error, setError] = useState({})
     const [isDateShow, setIsDateShow] = useState(false);
     const [isReviewDateShow, setIsReviewDateShow] = useState(false);
+    const [isNext, setIsNext] = useState(true)
     const [form, setForm] = useState({
         reviewedBy: 0,
         reviewDate: null,
@@ -162,6 +164,7 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
+        await setIsNext(false)
         const temp = incidentsListData;
         temp.reviewedByName = form.reviewedBy || incidentsListData.reviewedBy;
         temp.reviewDate = form.reviewDate || incidentsListData.reviewDate;
@@ -440,8 +443,9 @@ const CloseOut = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleNext()}
+                                disabled={!isNext}
                             >
-                                Submit
+                                Submit{isNext?null:<CircularProgress  size={20}/>}
                             </Button>
                         </Grid>
                     </Grid>

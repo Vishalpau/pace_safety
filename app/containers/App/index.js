@@ -103,6 +103,9 @@ function App() {
         .then(function (response) {
           console.log(response)
           if (response.status === 200) {
+            const companyId = searchParams.get("companyId");
+            const pro =searchParams.get("projectId");
+            localStorage.setItem("access_id", JSON.stringify({pro:pro,com:companyId}));
             localStorage.setItem("access_token", response.data.access_token);
             window.location.href = "/";
           }

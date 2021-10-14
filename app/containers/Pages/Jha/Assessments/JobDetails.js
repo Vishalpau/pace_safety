@@ -1,57 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
+import DateFnsUtils from '@date-io/date-fns';
+import { Button, FormHelperText, Grid, Select, TextField, Typography } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button, Select, FormHelperText,
-} from '@material-ui/core';
-import PropTypes, { string } from 'prop-types';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputLabel from "@material-ui/core/InputLabel";
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import {
-  DateTimePicker,
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
+import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { Col, Row } from "react-grid-system";
-import { useParams, useHistory } from 'react-router';
-import moment from "moment";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { connect } from 'react-redux'
-import axios from 'axios'
-
-import FormSideBar from '../../../Forms/FormSideBar';
-import { JHA_FORM } from "../Utils/constants"
-import JobDetailsValidate from '../Validation/JobDetailsValidate';
-import api from "../../../../utils/axios";
-import { handelJhaId } from "../Utils/checkValue"
 import {
-  INITIAL_NOTIFICATION_FORM,
-  SSO_URL,
-  HEADER_AUTH,
-} from "../../../../utils/constants";
-import Type from "../../../../styles/components/Fonts.scss";
-import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
-import { ACCOUNT_API_URL, access_token } from '../../../../utils/constants';
+  KeyboardDatePicker, MuiPickersUtilsProvider
+} from '@material-ui/pickers';
+import axios from 'axios';
+import { PapperBlock } from 'dan-components';
+import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from "react-grid-system";
+import { connect } from 'react-redux';
+import { useHistory, useParams } from 'react-router';
+import api from "../../../../utils/axios";
 import { handelCommonObject } from '../../../../utils/CheckerValue';
-import Error from "../../Error/index"
+import { access_token, ACCOUNT_API_URL, HEADER_AUTH, SSO_URL } from "../../../../utils/constants";
+import FormSideBar from '../../../Forms/FormSideBar';
+import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import { handelJhaId } from "../Utils/checkValue";
+import { JHA_FORM } from "../Utils/constants";
+import JobDetailsValidate from '../Validation/JobDetailsValidate';
+
 
 
 
