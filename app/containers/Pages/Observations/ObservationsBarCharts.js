@@ -1,29 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
 import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
+import { PapperBlock } from 'dan-components';
+import PropTypes from 'prop-types';
+import React from 'react';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  CartesianAxis,
-  Tooltip,
-  Legend
+  Bar, BarChart, CartesianAxis, CartesianGrid, Legend, Tooltip, XAxis,
+  YAxis
 } from 'recharts';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Grid from '@material-ui/core/Grid';
-import ViewColumnOutlinedIcon from '@material-ui/icons/ViewColumnOutlined';
-import InsertChartOutlinedOutlinedIcon from '@material-ui/icons/InsertChartOutlinedOutlined';
-import NoteAddOutlinedIcon from '@material-ui/icons/NoteAddOutlined';
-import RecentActorsIcon from '@material-ui/icons/RecentActors';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
+import "../../../styles/custom/customheader.css";
 import styles from './demos/fluidChart-jss';
 import { data1 } from './demos/sampleData';
-import { PapperBlock } from 'dan-components';
 
 const theme = createTheme(ThemePallete.greyTheme);
 const color = ({
@@ -32,7 +19,6 @@ const color = ({
   secondary: theme.palette.secondary.main,
   secondaryDark: theme.palette.secondary.dark,
 });
-import "../../../styles/custom/customheader.css";
 
 function BarSimple(props) {
   const { classes } = props;

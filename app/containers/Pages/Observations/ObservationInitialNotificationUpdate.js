@@ -1,48 +1,29 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import { makeStyles } from '@material-ui/core/styles';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import Autocomplete, {
-  createFilterOptions,
+  createFilterOptions
 } from "@material-ui/lab/Autocomplete";
-import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
-import { useHistory, useParams } from "react-router";
-import api from "../../../utils/axios";
 import axios from "axios";
-import { CircularProgress } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import "../../../styles/custom/customheader.css";
 import classNames from "classnames";
-
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from "react-router";
+import "../../../styles/custom/customheader.css";
+import api from "../../../utils/axios";
 import {
   access_token,
   ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
-import ComingSoon from '../ComingSoon';
+import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -650,7 +631,8 @@ if(departments !== ""){
               }}
             />
           </Grid>
-
+          
+          {tagData.length > 0 ? (
           <Grid item md={12} xs={12} className={classes.formBox}>
             <FormLabel className={classes.labelName} component="legend">
               Categories
@@ -675,7 +657,7 @@ if(departments !== ""){
               ))}
             </FormGroup>
 
-          </Grid>
+          </Grid>): null}
 
           <Grid item md={6} xs={12} className={classes.formBox}>
 

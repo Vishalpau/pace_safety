@@ -1,30 +1,27 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
+import { FormHelperText } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import Grid from "@material-ui/core/Grid";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
-import { FormHelperText } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-grid-system";
 import { useHistory, useParams } from "react-router";
-import moment from "moment";
-import api from "../../../utils/axios";
-
-import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
-
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
+import FormSideBar from "../FormSideBar";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
