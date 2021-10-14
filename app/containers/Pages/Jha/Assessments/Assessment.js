@@ -1,53 +1,34 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { useParams, useHistory } from 'react-router';
-import { PapperBlock } from 'dan-components';
-import PropTypes, { string } from 'prop-types';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Chip from '@material-ui/core/Chip';
-import { Col, Row } from "react-grid-system";
-import MUIDataTable from 'mui-datatables';
-import Box from "@material-ui/core/Box";
-
-import MenuItem from '@material-ui/core/MenuItem';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Box from "@material-ui/core/Box";
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import Link from '@material-ui/core/Link';
-import Divider from '@material-ui/core/Divider';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import axios from "axios";
-import apiAction from '../../../../utils/axiosActionTracker';
-
+import { PapperBlock } from 'dan-components';
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from "react-grid-system";
+import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { handelJhaId } from "../Utils/checkValue"
-import { JHA_FORM } from "../Utils/constants"
-import FormSideBar from '../../../Forms/FormSideBar';
+import { handelActionData, handelCommonObject } from "../../../../utils/CheckerValue";
+import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
-import { PickListData } from "../Utils/checkValue"
-import { result } from 'lodash';
-import { SUMMARY_FORM } from "../Utils/constants"
-import AssessmentActions from "./AssessmentActons"
-import ActionShow from '../../../Forms/ActionShow'
-import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../../utils/CheckerValue";
+import FormSideBar from '../../../Forms/FormSideBar';
+import { handelJhaId, PickListData } from "../Utils/checkValue";
+import { JHA_FORM } from "../Utils/constants";
+
+
 
 
 const useStyles = makeStyles((theme) => ({
