@@ -1,6 +1,7 @@
-import { Grid } from "@material-ui/core";
-import Link from "@material-ui/core/Link";
+import React, { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Button, Grid } from "@material-ui/core";
+import { defaults } from "chart.js";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import { SSO_URL } from "../../utils/constants"
@@ -78,14 +79,6 @@ const ActionShow = (props) => {
                         <ListItem>
                             <ListItemText className={classes.actionLinkList} primary={props.title} secondary={link()} />
                         </ListItem>
-                        {/* <Grid item md={6}>
-                                    <Typography>
-                                        {props.title}
-                                    </Typography>
-                                </Grid>
-                                <Grid item md={6}>
-                                    {link()}
-                                </Grid> */}
                     </>
                     :
                     <>
