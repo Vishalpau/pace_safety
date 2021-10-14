@@ -41,6 +41,7 @@ const ActionTaken = () => {
   const dispatch = useDispatch();
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isDateShow, setIsDateShow] = useState(false)
+  // handle update check
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -97,7 +98,7 @@ const ActionTaken = () => {
         history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
 
       }
-    })
+    }).catch(()=>{history.push("/app/pages/error")});
 
   };
   // fetch incident data

@@ -39,6 +39,7 @@ import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
 
 import Attachment from "../../Attachment/Attachment";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // redux
 
@@ -90,6 +91,7 @@ const LessionLearned = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const [isNext, setIsNext] = useState(true)
 
   const handleForm = (e, key, fieldname) => {
     const temp = [...form];
@@ -144,6 +146,7 @@ const LessionLearned = () => {
     setOpen(false);
   };
   const handleNext = async () => {
+    await setIsNext(false)
     // sent put request
     let status = 0;
     // sent post request
@@ -203,6 +206,7 @@ const LessionLearned = () => {
 
       for (var i = 0; i < form.length; i++) {
         if (form[i].id) {
+          try{
           const res = await api.put(
             `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
             {
@@ -217,7 +221,9 @@ const LessionLearned = () => {
           if (res.status === 200) {
             status = 201
           }
+        }catch(err){ history.push("/app/pages/error")}
         } else {
+          try{
           const res = await api.post(
             `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
             {
@@ -229,6 +235,7 @@ const LessionLearned = () => {
               fkIncidentId: localStorage.getItem('fkincidentId'),
             }
           );
+          }catch(err){ history.push("/app/pages/error")}
           status = res.status;
         }
 
@@ -258,6 +265,9 @@ const LessionLearned = () => {
       }
        setLearningList(result);
       setIsLoading(true);
+    })
+    .catch(()=>{
+      history.push("/app/pages/error");
     })
    
   };
@@ -309,7 +319,9 @@ const LessionLearned = () => {
         }
       }
     })
-
+    .catch(()=>{
+      history.push("/app/pages/error");
+    })
     
   };
 
@@ -604,8 +616,9 @@ const LessionLearned = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleNext()}
+                  disabled={!isNext}
                 >
-                  Submit
+                  Submit{isNext?null:<CircularProgress size={20}/>}
                 </Button>
               </Grid>
             </Grid>

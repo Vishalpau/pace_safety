@@ -132,7 +132,6 @@ const ObservationCorrectiveActionView = () => {
 
 
   const [actionTakenData, setActionTakenData] = useState([]);
-console.log(actionTakenData,"HHHHHHH")
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -142,10 +141,6 @@ console.log(actionTakenData,"HHHHHHH")
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
-
-  //       const client_id = JSON.parse(localStorage.getItem('userDetails')) !== null
-  // ? JSON.parse(localStorage.getItem('userDetails')).companies[0].subscriptions[1].hostings[0].clientId
-  // : null;
 
   const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).companies
@@ -236,7 +231,6 @@ console.log(actionTakenData,"HHHHHHH")
 
   }
 
-  console.log(actionTakenData, "::::::")
   useEffect(() => {
     if (id) {
       fetchInitialiObservation();
@@ -272,7 +266,7 @@ console.log(actionTakenData,"HHHHHHH")
             Reviewed By
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData["reviewedByName"]}
+            {initialData["reviewedByName"] ? initialData["reviewedByName"] : "-"}
 
           </Typography>
         </Grid>
@@ -289,9 +283,9 @@ console.log(actionTakenData,"HHHHHHH")
           </Typography>
         </Grid>
 
-        <Grid item md={12}>{actionTakenData.length > 0 ? 
+        <Grid item md={12} sm={12} xs={12}>{actionTakenData.length > 0 ? 
           <TableContainer component={Paper}>
-            <Table style={{ minWidth: 100 }} size="small">
+            <Table style={{ minWidth: 450 }} size="small">
               <TableHead><TableRow>
                 <TableCell style={{ width: 50 }}>
                   Action number

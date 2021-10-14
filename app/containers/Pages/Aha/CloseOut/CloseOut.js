@@ -75,6 +75,8 @@ const CloseOut = () => {
         closeDate: null
     })
     const [isDateShow, setIsDateShow] = useState(false)
+    let filterUserListName = []
+
 
     const userId =
         JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -131,9 +133,10 @@ const CloseOut = () => {
     //   fetch user data
 
     const fetchUserList = async () => {
+        let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
         var config = {
             method: 'get',
-            url: `${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,
+            url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -143,8 +146,17 @@ const CloseOut = () => {
             .then(function (response) {
 
                 if (response.status === 200) {
-                    const result = response.data.data.results[0].users
-                    setUserList(result)
+                    const result = response.data.data.results;
+                    let user = [];
+                    // user = result;
+                    let data = result.filter((item) =>
+                      item['companyId'] == fkCompanyId
+                    )
+                    
+                    for (var i in data[0].users) {
+                        filterUserListName.push(data[0].users[i]);
+                    }
+                    setUserList(filterUserListName);
                 }
             })
             .catch(function (error) {

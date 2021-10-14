@@ -527,6 +527,7 @@ const PropertyAffected = () => {
                   color="primary"
                   onClick={handleNext}
                   className={classes.button}
+                  disabled={!isNext}
                 >
                   Next {isNext?null:<CircularProgress size={20}/>}
                 </Button>

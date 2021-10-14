@@ -340,7 +340,7 @@ const [notifyToList,setNotifyToList] = useState([]);
             onChange={(e) => setAHAForm({...ahaform , link: e.target.value})}
         />
         </Grid>
-        <Grid
+        {/* <Grid
         item
         md={12}
         xs={12}
@@ -366,20 +366,9 @@ const [notifyToList,setNotifyToList] = useState([]);
 
         ))}
             
-            {/* <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Supervisor"
-            /> */}
+            
         </FormGroup>
-        </Grid>
+        </Grid> */}
         
         <Grid
         item
