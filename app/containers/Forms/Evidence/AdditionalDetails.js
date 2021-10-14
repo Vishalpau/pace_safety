@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import { spacing } from "@material-ui/system";
-import { PapperBlock } from "dan-components";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { useHistory, useParams } from "react-router";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Col, Row } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM, SUMMERY_FORM } from "../../../utils/constants";
-import Type from "../../../styles/components/Fonts.scss";
-import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
-import api from "../../../utils/axios";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from "react";
+import { Col, Row } from "react-grid-system";
 // Redux
 import { useDispatch } from "react-redux";
+import { useHistory, useParams } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
+import Type from "../../../styles/components/Fonts.scss";
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
+import FormSideBar from "../FormSideBar";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {

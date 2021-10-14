@@ -1,60 +1,33 @@
-import React, { useEffect, useState, Component } from 'react';
-import {
-  Grid, Typography, TextField, Button, ListItemText
-} from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import DateFnsUtils from '@date-io/moment';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { FormHelperText } from "@material-ui/core";
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import api from "../../../utils/axios";
-import { useHistory, useParams } from "react-router";
+import { makeStyles } from '@material-ui/core/styles';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import ActionTracker from "./ActionTracker";
 import axios from "axios";
-import MomentUtils from "@date-io/moment";
-import moment from "moment";
-import Paper from "@material-ui/core/Paper";
-import ActionShow from '../../Forms/ActionShow'
-
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/moment';
-import MenuItem from '@material-ui/core/MenuItem';
-// import { TableHead } from 'mui-datatables';
-// import { useHistory, useParams } from "react-router";
-
-// Table
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-
-import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
-import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
-import { CircularProgress } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import ActionTracker from "../../Forms/ActionTracker";
-
-import apiAction from "../../../utils/axiosActionTracker"
-import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../utils/CheckerValue";
 import classNames from "classnames";
-
+import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from "react-router";
+import api from "../../../utils/axios";
+import apiAction from "../../../utils/axiosActionTracker";
+import { handelActionData } from "../../../utils/CheckerValue";
 import {
   access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  ACCOUNT_API_URL
 } from "../../../utils/constants";
+import ActionShow from '../../Forms/ActionShow';
+import ActionTracker from "../../Forms/ActionTracker";
+import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
 

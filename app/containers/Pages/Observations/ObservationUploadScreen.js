@@ -1,66 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
-import brand from 'dan-api/dummy/brand';
-import { PapperBlock } from 'dan-components';
-// import api from "../../../utils/axios";
-// import api from "../../../"
-import { object } from 'prop-types';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Print from '@material-ui/icons/Print';
-import Share from '@material-ui/icons/Share';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import InfoIcon from '@material-ui/icons/Info';
-import Box from '@material-ui/core/Box';
-import { spacing } from '@material-ui/system';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import MUIDataTable from 'mui-datatables';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import moment from 'moment';
-import MomentUtils from '@date-io/moment';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
-import ListIcon from '@material-ui/icons/List';
-import FormatListBulleted from '@material-ui/icons/FormatListBulleted';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import MessageIcon from '@material-ui/icons/Message';
-import BuildIcon from '@material-ui/icons/Build';
-import CalendarTodayOutlinedIcon from '@material-ui/icons/CalendarTodayOutlined';
-
-// import Fonts from "dan-styles/Fonts.scss";
-// import Incidents from "dan-styles/IncidentsList.scss";
-import { List } from 'immutable';
-import { useHistory, useParams } from 'react-router';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-
-import { useDropzone } from 'react-dropzone';
-import Snackbar from '@material-ui/core/Snackbar';
-
+import Typography from '@material-ui/core/Typography';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import observationsLogoSymbol from 'dan-images/observationsLogoSymbol.png';
+import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   root: {
