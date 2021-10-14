@@ -29,6 +29,8 @@ import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
 import { useHistory, useParams } from "react-router";
 import "../../../styles/custom/customheader.css";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -220,6 +222,11 @@ export default function Observations() {
     setValue(newValue);
   };
 
+  const handleBulkUploadfilePush = async () => {
+    history.push(
+      '/app/observation-bulkuploadfile'
+    );
+    }
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
       localStorage.removeItem("value")
@@ -231,16 +238,32 @@ export default function Observations() {
     <div className={classes.root}>
       <Grid item sm={12} xs={12} className={classes.borderTop}>
         <Grid container spacing={3}>
-          <Grid item sm={10} xs={12} className={classes.pLFiveHt40}>
+          <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
             <img src={obsIcon} className={classes.attachImg} alt="decoration" />
             <Typography variant="h5"> Observations</Typography>
           </Grid>
-          <Grid item sm={2} xs={12}>
-              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary"                    onClick={() => handleInitialNotificationPush()}
->
+          <Grid item sm={5} xs={12}>
+              
+
+              <Button
+                variant="contained"
+                // color="primary"
+                size="small"
+                className={classNames(classes.buttonsNew, classes.floatR)}
+                disableElevation
+                startIcon={<CloudUploadIcon />}
+                //onClick={() => handleBulkUploadPush()}
+                style={{marginLeft: '10px'}}
+                onClick={() => handleBulkUploadfilePush()}
+              >
+                Upload
+              </Button>
+              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
                 <AddIcon className={classes.floatR} /> Add new
               </Button>
+              
           </Grid>
+              
         </Grid>
       </Grid>
       <Grid container spacing={3}>

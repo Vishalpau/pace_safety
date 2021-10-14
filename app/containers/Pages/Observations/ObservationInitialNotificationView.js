@@ -51,6 +51,7 @@ import {
 } from "../../../utils/constants";
 
 import { breakDownDetails } from "../../../redux/actions/initialDetails";
+import { handelDateTime } from '../../../utils/CheckerValue';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -164,6 +165,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
+    localStorage.setItem('fkobservationId' , id)
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
@@ -333,9 +335,7 @@ const ObservationInitialNotificationView = () => {
               Observed On
             </Typography>
             <Typography className={classes.labelValue}>
-              {moment(initialData["observedAt"]).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              )}
+              {handelDateTime(initialData["observedAt"])}
             </Typography>
           </Grid>
 

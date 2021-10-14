@@ -1,47 +1,33 @@
-import React, { useEffect, useState, Component, useRef } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import FormLabel from '@material-ui/core/FormLabel';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import Box from "@material-ui/core/Box";
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { PapperBlock } from 'dan-components';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { Col, Row } from "react-grid-system";
 import Snackbar from "@material-ui/core/Snackbar";
-import { useParams, useHistory } from 'react-router';
-import FormControl from '@material-ui/core/FormControl';
-import Box from "@material-ui/core/Box";
-import CircularProgress from '@material-ui/core/CircularProgress';
-
-import PropTypes from 'prop-types';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Chip from '@material-ui/core/Chip';
-import MUIDataTable from 'mui-datatables';
-
-import { useDropzone } from 'react-dropzone';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from "@material-ui/lab/Alert";
-import axios from "axios";
-
-import FormSideBar from '../../../Forms/FormSideBar';
-import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
-import api from "../../../../utils/axios";
-import { handelJhaId } from "../Utils/checkValue"
-import { handelFileName } from "../../../../utils/CheckerValue";
+import { PapperBlock } from 'dan-components';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Col, Row } from "react-grid-system";
+import { useHistory } from 'react-router';
 import Attachment from "../../../../containers/Attachment/Attachment";
+import api from "../../../../utils/axios";
+import { handelCommonObject, handelFileName } from "../../../../utils/CheckerValue";
 import {
   HEADER_AUTH,
-  SSO_URL,
+  SSO_URL
 } from "../../../../utils/constants";
-import { from } from 'form-data';
-import { handelCommonObject } from "../../../../utils/CheckerValue"
+import FormSideBar from '../../../Forms/FormSideBar';
+import { handelJhaId } from "../Utils/checkValue";
+import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
+
+
+
 
 
 
@@ -352,22 +338,24 @@ const DocumentNotification = () => {
               />
             </Grid>
 
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Notifications to be sent to</FormLabel>
-                <FormGroup>
-                  {notificationSentValue.map((value, index) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value.roleName} />}
-                      label={value.roleName}
-                      checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
-                      onChange={async (e) => handelNotifyTo(e, value.id.toString())}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+            {notificationSentValue.length > 0 ?
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Notifications to be sent to</FormLabel>
+                  <FormGroup>
+                    {notificationSentValue.map((value, index) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value.roleName} />}
+                        label={value.roleName}
+                        checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
+                        onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
+              : null}
 
             <Grid
               item

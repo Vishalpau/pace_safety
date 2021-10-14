@@ -228,7 +228,6 @@ const ObservationInitialNotification = (props) => {
   const timer = React.useRef();
   const [levelLenght, setLevelLenght] = useState(0);
   const [isDateShow, setIsDateShow] = useState(false)
-
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [breakdownData, setBreakDownData] = useState([]);
@@ -237,12 +236,11 @@ const ObservationInitialNotification = (props) => {
   const [valueReportedBy, setValueReportedBy] = React.useState(null);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
-  let filterSuperVisorId = [];
-  let filterSuperVisorBadgeNo = [];
+
   const radioType = ["Risk", "Comments", "Positive behavior"];
   const radioSituation = ["Yes", "No"];
   const radioClassification = ["People", "Property"];
-  const reportedBy = ["Mayank Singh", "Prakash Joshi", "Saddam", "Ajay"];
+
   // form state for post api
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -305,7 +303,6 @@ const ObservationInitialNotification = (props) => {
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)
@@ -323,51 +320,42 @@ const ObservationInitialNotification = (props) => {
           };
           let user = [];
 
-          // let user = [];
           let data = result.filter((item) =>
             item['companyId'] == fkCompanyId
           )
           for (var i in data[0].users) {
             let temp = {};
-
             temp["inputValue"] = data[0].users[i].name;
             temp["reportedById"] = data[0].users[i].id;
             temp["badgeNo"] = data[0].users[i].badgeNo;
             user.push(temp);
-
           }
           setReportedByDetails(user);
         }
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
       });
   };
+
   const fetchDepartment = () => {
     const config = {
       method: "get",
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/departments/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
-
           let user = [];
-
           for (var i in result) {
             let temp = {};
-
             temp["inputValue"] = result[i].departmentName;
             temp["departmentId"] = result[i].id;
-
             user.push(temp);
           }
-
           setDepartmentName(user);
         }
       })
@@ -423,6 +411,13 @@ const ObservationInitialNotification = (props) => {
     vendorReferenceId: "string",
   });
 
+  const handelTime = (value) => {
+    let noGmt = value.toString().replace("GMT+0530 (India Standard Time)", "")
+    let requireTime = moment(noGmt).format().toString()
+    let observedAtTime = requireTime.replace("+05:30", ".000Z")
+    return observedAtTime
+  }
+
 
   // it is used for catagory for tag post api
   const [catagory, setCatagory] = useState([]);
@@ -463,7 +458,7 @@ const ObservationInitialNotification = (props) => {
       data.append("isSituationAddressed", form.isSituationAddressed),
       data.append("actionTaken", form.actionTaken),
       data.append("location", form.location),
-      data.append("observedAt", form.observedAt),
+      data.append("observedAt", handelTime(form.observedAt)),
       data.append("isNotifiedToSupervisor", form.isNotifiedToSupervisor),
       data.append("assigneeName", form.assigneeName),
       data.append("assigneeId", form.assigneeId),
@@ -472,12 +467,12 @@ const ObservationInitialNotification = (props) => {
       data.append("departmentId", form.departmentId),
       data.append("reportedById", form.reportedById),
       data.append("reportedByName", form.reportedByName),
-      data.append("reportedByDepartment", form.reportedByDepartment);
-    data.append("reportedDate", form.reportedDate);
-    data.append("reportedByBadgeId", form.reportedByBadgeId),
+      data.append("reportedByDepartment", form.reportedByDepartment),
+      data.append("reportedDate", form.reportedDate),
+      data.append("reportedByBadgeId", form.reportedByBadgeId),
       data.append("closedById", form.closedById),
       data.append("closedByName", form.closedByName),
-      data.append("closedByDepartment", form.closedByDepartment);
+      data.append("closedByDepartment", form.closedByDepartment)
 
     if (form.closedDate !== null && typeof form.closedDate !== "string") {
       data.append("closedDate", null);
@@ -522,6 +517,7 @@ const ObservationInitialNotification = (props) => {
             catagory
           ).then(res => {
             if (res.status === 200 || res.status === 201) {
+              const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
               history.push(
                 `/app/observation/details/${localStorage.getItem(
                   "fkobservationId"
@@ -535,6 +531,8 @@ const ObservationInitialNotification = (props) => {
           })
 
         } else {
+          const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
+
           history.push(
             `/app/observation/details/${localStorage.getItem(
               "fkobservationId"
@@ -585,16 +583,11 @@ const ObservationInitialNotification = (props) => {
     setOpen(false);
   };
 
-  const handleButtonClick = () => {
-    if (!loading) {
-      setLoading(true);
-    }
-  };
 
   // this function when user upload the file
   const handleFile = async (e) => {
+    console.log(e)
     let TempPpeData = { ...form };
-    // if user file size is grater than 5 MB then that goes to else part
     if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
       await setForm(TempPpeData);
@@ -602,6 +595,7 @@ const ObservationInitialNotification = (props) => {
       document.getElementById("attachment").value = "";
       await setOpen(true);
     }
+
   };
 
   const handleAssignee = async (e, value) => {
@@ -612,11 +606,6 @@ const ObservationInitialNotification = (props) => {
 
     setForm(tempData);
   };
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>{file.path}</li>
-  ));
 
   const handelAddressSituationYes = async (e) => {
     let tempData = { ...form };
@@ -630,15 +619,7 @@ const ObservationInitialNotification = (props) => {
       await setForm(tempData);
     }
   };
-  const handleOther = (e) => {
-    let tempData = [...catagory];
-    tempData[8].observationTag = e.target.value;
-  };
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
+ 
   const handlePledge = (e) => {
     if (e.target.checked === true) {
       setForm({ ...form, acceptAndPledge: "Yes" });
@@ -647,67 +628,32 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-  const handleReportedBy = (e, value) => {
-    let tempData = { ...form };
-    tempData.reportedByName = value.name;
-    tempData.reportedById = value.id;
-    tempData.reportedByBadgeId = value.badgeNo;
-
-    setForm(tempData);
-  };
   const handleFileName = (value) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
     return fileName;
   };
 
-  const handleSuperVisior = (e, value) => {
-    let tempData = { ...form };
-    tempData.supervisorName = value.name;
-    tempData.supervisorByBadgeId = value.badgeNo;
-
-    setForm(tempData);
-  };
-
   const handleNotify = async (value, index, e) => {
     if (e.target.checked === true) {
       let temp = [...notifyToList];
-
       temp.push(value);
       let uniq = [...new Set(temp)];
       setNotifyToList(uniq);
-
       setForm({ ...form, notifyTo: temp.toString() });
     } else {
       let temp = [...notifyToList];
-
       let newData = temp.filter((item) => item !== value);
-
       setNotifyToList(newData);
       setForm({ ...form, notifyTo: newData.toString() });
     }
   };
 
-  const fetchInitialiObservationData = async () => {
-    const res = await api.get(`/api/v1/observations/${id}/`);
-    const result = res.data.data.results;
-    if (result.isSituationAddressed === "Yes") {
-      await setAddressSituation(true);
-    }
-    if (result.personRecognition) {
-      await setPositiveObservation(false);
-    } else {
-      await setRiskObservation(false);
-    }
-    await setForm(result);
-    await fetchBreakDownData(result.fkProjectStructureIds);
-  };
 
   const fetchNotificationSent = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
-
     try {
       var config = {
         method: "get",
@@ -721,6 +667,7 @@ const ObservationInitialNotification = (props) => {
       }
     } catch (error) { }
   };
+
   const fetchTags = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -739,14 +686,7 @@ const ObservationInitialNotification = (props) => {
     await setTagData(sorting);
   };
 
-  const fetchCheckBoxData = async () => {
-    const response = await api.get(
-      `/api/v1/observations/${id}/observationtags/`
-    );
-    const tags = response.data.data.results.results;
-    await setCatagory(tags);
-    await setIsLoading(true);
-  };
+
 
   const fetchAttachment = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -762,6 +702,8 @@ const ObservationInitialNotification = (props) => {
       await setAttachment(ar);
     }
   };
+
+
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
 
@@ -769,7 +711,6 @@ const ObservationInitialNotification = (props) => {
 
     const temp = [...fetchSelectBreakDownList];
     temp[index]["selectValue"].id = value;
-    // let removeTemp = temp.slice(0, index)
     for (var i in temp) {
       if (i > index) {
         temp[i].breakDownData = [];
@@ -805,92 +746,6 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-  const fetchBreakDownData = async (projectBreakdown) => {
-    const projectData = JSON.parse(localStorage.getItem("projectName"));
-    let breakdownLength = projectData.projectName.breakdown.length;
-    setLevelLenght(breakdownLength);
-    let selectBreakDown = [];
-    const breakDown = projectBreakdown.split(":");
-    setSelectDepthAndId(breakDown);
-    for (var key in breakDown) {
-      if (breakDown[key].slice(0, 2) === "1L") {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
-
-        await api(config)
-          .then(async (response) => {
-            const result = response.data.data.results;
-            await setIsLoading(true);
-            result.map((item) => {
-              if (breakDown[key].slice(2) == item.id) {
-                selectBreakDown = [
-                  ...selectBreakDown,
-                  {
-                    breakDownLabel:
-                      projectData.projectName.breakdown[0].structure[0].name,
-                    selectValue: {
-                      depth: item.depth,
-                      id: item.id,
-                      name: item.name,
-                      label:
-                        projectData.projectName.breakdown[key].structure[0]
-                          .name,
-                    },
-                    breakDownData: result,
-                  },
-                ];
-              }
-            });
-            setFetchSelectBreakDownList(selectBreakDown);
-          })
-          .catch((error) => {
-            setIsNext(true);
-          });
-      } else {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].substring(2)}`,
-          headers: HEADER_AUTH,
-        };
-
-        await api(config)
-          .then(async (response) => {
-            const result = response.data.data.results;
-
-            const res = result.map((item, index) => {
-              if (parseInt(breakDown[key].slice(2)) == item.id) {
-                selectBreakDown = [
-                  ...selectBreakDown,
-                  {
-                    breakDownLabel:
-                      projectData.projectName.breakdown[key].structure[0].name,
-                    selectValue: {
-                      depth: item.depth,
-                      id: item.id,
-                      name: item.name,
-                      label:
-                        projectData.projectName.breakdown[key].structure[0]
-                          .name,
-                    },
-                    breakDownData: result,
-                  },
-                ];
-              }
-            });
-            setFetchSelectBreakDownList(selectBreakDown);
-          })
-          .catch((error) => {
-            setIsNext(true);
-          });
-      }
-    }
-  };
-
   const classes = useStyles();
 
   const PickList = async () => {
@@ -900,7 +755,6 @@ const ObservationInitialNotification = (props) => {
   useEffect(() => {
     fetchTags();
     fetchDepartment();
-    // fetchAttachment();
     fetchNotificationSent();
     fetchSuperVisorName();
     fetchReportedBy();
@@ -971,7 +825,6 @@ const ObservationInitialNotification = (props) => {
                         ? data.breakDownData.map((selectvalues, index) => (
                           <MenuItem
                             key={index}
-                            // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
                             value={selectvalues.id}
                           >
                             {selectvalues.structureName}
@@ -1289,6 +1142,7 @@ const ObservationInitialNotification = (props) => {
                 )}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <TextField
                 label="Foreman's Number"
@@ -1316,6 +1170,7 @@ const ObservationInitialNotification = (props) => {
                 }}
               />
             </Grid>
+
             <Grid item md={6} xs={12} className={classes.formBox}>
               <MuiPickersUtilsProvider utils={MomentUtils}>
                 <KeyboardDateTimePicker
@@ -1339,7 +1194,7 @@ const ObservationInitialNotification = (props) => {
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      observedAt: moment(e).format("YYYY-MM-DDThh:mm:ss"),
+                      observedAt: e["_d"],
                     });
                   }}
                 />
@@ -1552,9 +1407,6 @@ const ObservationInitialNotification = (props) => {
                 </RadioGroup>
                 <p style={{ color: "red" }}>{error.observationType}</p>
 
-                {/* {error && error["observationType"] && (
-                  <FormHelperText>{error["observationType"]}</FormHelperText>
-                )} */}
               </FormControl>
             </Grid>
 
@@ -1725,6 +1577,7 @@ const ObservationInitialNotification = (props) => {
               </Typography>
               <input
                 type="file"
+                multiple name="file"
                 id="attachment"
                 accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
                 onChange={(e) => {
@@ -1742,9 +1595,6 @@ const ObservationInitialNotification = (props) => {
               <FormGroup className={classes.customCheckBoxList}>
                 <FormControlLabel
                   className={classes.labelValue}
-                  // helperText={
-                  //   error.acceptAndPledge ? error.acceptAndPledge : ""
-                  // }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -1761,24 +1611,13 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-            {/* {attachment !== undefined ? (
-              <Grid item md={12} xs={12} className={classes.formBBanner}>
-                <Avatar
-                  className={classes.observationFormBox}
-                  variant="rounded"
-                  alt="Observation form banner"
-                  src={attachment}
-                />
-              </Grid>
-            ) : null} */}
+
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
 
                 {Object.values(error).map((value) => (
                   <Typography>{value}</Typography>
                 ))}
-
-
 
               </Grid>
               : null}

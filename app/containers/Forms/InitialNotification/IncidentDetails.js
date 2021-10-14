@@ -1162,6 +1162,7 @@ history.push("/app/pages/error")
                   variant="contained"
                   color="primary"
                   onClick={(e) => handelNext(e)}
+                  disabled={!isNext}
                 >
                   Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>

@@ -624,6 +624,14 @@ export const ObservationInitialNotificationUpdate = loadable(() => import("./Pag
   fallback: <Loading />,
 });
 
+export const ObservationBulkupload = loadable(() => import("./Pages/Observations/ObservationBulkupload"), {
+  fallback: <Loading />,
+});
+
+export const ObservationUploadScreen = loadable(() => import("./Pages/Observations/ObservationUploadScreen"), {
+  fallback: <Loading />,
+});
+
 // checklist
 
 export const CheckList = loadable(() =>

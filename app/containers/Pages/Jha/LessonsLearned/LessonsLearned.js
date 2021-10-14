@@ -1,26 +1,22 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import { PapperBlock } from 'dan-components';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import Link from '@material-ui/core/Link';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import { makeStyles } from '@material-ui/core/styles';
+import { PapperBlock } from 'dan-components';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
-import { useParams, useHistory } from 'react-router';
-import FormSideBar from '../../../Forms/FormSideBar';
-import { LESSION_LEARNED_FORM, SUMMARY_FORM } from "../Utils/constants"
-
-import { handelJhaId } from "../Utils/checkValue"
+import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
+import FormSideBar from '../../../Forms/FormSideBar';
+import { handelJhaId } from "../Utils/checkValue";
+import { LESSION_LEARNED_FORM, SUMMARY_FORM } from "../Utils/constants";
+
 
 
 const useStyles = makeStyles((theme) => ({
