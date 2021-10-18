@@ -188,6 +188,7 @@ function Application(props) {
       //settings
         <Route path="/app/settings/setting" component={Setting} />
         {/* Home */}
+        <Route exact path="/:?code" component={PersonalDashboard} />
         <Route exact path="/" component={PersonalDashboard} />
         <Route path="/app/crm-dashboard" component={CrmDashboard} />
         <Route path="/app/crypto-dashboard" component={CryptoDashboard} />
@@ -233,7 +234,8 @@ function Application(props) {
         <Route path="/register" component={Register} />
 
         {/*Incident List  */}
-        <Route path="/incidents/" component={Incident} />
+        <Route exact path="/incidents/" component={Incident} />
+        <Route exact path="/api/v1/user/auth/authorize/incidents" component={Incident} />
 
         {/* form initialNotification */}
         <Route
@@ -514,7 +516,8 @@ function Application(props) {
         {/* Observation Routes  */}
         {/* <Route path="/app/pages/summary" component={Summary} /> */}
         {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
-        <Route path="/app/observations" component={Observations} />
+        <Route exact path="/app/observations" component={Observations} />
+        <Route exact path="/api/v1/user/auth/authorize/observations" component={Observations} />
         {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
         <Route path="/app/observations#table" component={Observations} />
         <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
