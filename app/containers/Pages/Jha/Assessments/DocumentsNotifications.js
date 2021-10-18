@@ -1,5 +1,7 @@
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
-import Box from "@material-ui/core/Box";
+import {
+  Button, Grid, TextField, Typography
+} from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from '@material-ui/core/FormControl';
@@ -7,29 +9,23 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
-import Snackbar from "@material-ui/core/Snackbar";
+import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
-import MuiAlert from "@material-ui/lab/Alert";
+import MuiAlert from '@material-ui/lab/Alert';
 import { PapperBlock } from 'dan-components';
 import React, { useEffect, useRef, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Col, Row } from "react-grid-system";
+import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
-import Attachment from "../../../../containers/Attachment/Attachment";
-import api from "../../../../utils/axios";
-import { handelCommonObject, handelFileName } from "../../../../utils/CheckerValue";
+import api from '../../../../utils/axios';
+import { handelCommonObject, handelFileName } from '../../../../utils/CheckerValue';
 import {
   HEADER_AUTH,
   SSO_URL
-} from "../../../../utils/constants";
+} from '../../../../utils/constants';
+import Attachment from '../../../Attachment/Attachment';
 import FormSideBar from '../../../Forms/FormSideBar';
-import { handelJhaId } from "../Utils/checkValue";
-import { JHA_FORM, SUMMARY_FORM } from "../Utils/constants";
-
-
-
-
-
+import { handelJhaId } from '../Utils/checkValue';
+import { JHA_FORM, SUMMARY_FORM } from '../Utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -75,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#ff8533',
       border: 'none',
     },
-    marginLeft: "10px"
+    marginLeft: '10px'
   },
   formBox: {
     '& .dropzone': {
@@ -128,79 +124,75 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DocumentNotification = () => {
-
-  const [form, setForm] = useState({})
+  const [form, setForm] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
-  const history = useHistory()
+  const history = useHistory();
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
   const [open, setOpen] = useState(false);
-  const [messageType, setMessageType] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitLoader, setSubmitLoader] = useState(false)
+  const [messageType, setMessageType] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitLoader, setSubmitLoader] = useState(false);
   const ref = useRef();
 
   const handelJobDetails = async () => {
-    const jhaId = handelJhaId()
-    const res = await api.get(`/api/v1/jhas/${jhaId}/`)
-    const apiData = res.data.data.results
-    apiData["notifyTo"] == null ? apiData["notifyTo"] = "" : apiData["notifyTo"] = apiData["notifyTo"].split(',')
-    setForm(apiData)
-    handelCommonObject("commonObject", "jha", "projectStruct", apiData.fkProjectStructureIds)
+    const jhaId = handelJhaId();
+    const res = await api.get(`/api/v1/jhas/${jhaId}/`);
+    const apiData = res.data.data.results;
+    apiData.notifyTo == null ? apiData.notifyTo = '' : apiData.notifyTo = apiData.notifyTo.split(',');
+    setForm(apiData);
+    handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
 
-    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-    var config = {
-      method: "get",
+    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
+    const config = {
+      method: 'get',
       url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/`,
       headers: HEADER_AUTH,
     };
     const notify = await api(config);
     if (notify.status === 200) {
-      console.log(notify.data.data.results)
+      console.log(notify.data.data.results);
       const result = notify.data.data.results;
       setNotificationSentValue(result);
     }
-  }
+  };
 
-  let fileTypeError =
-    "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
-  let fielSizeError = "Size less than 25Mb allowed";
+  const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
+  const fielSizeError = 'Size less than 25Mb allowed';
   const handleFile = async (e) => {
-    let acceptFileTypes = [
-      "pdf",
-      "png",
-      "jpeg",
-      "jpg",
-      "xls",
-      "xlsx",
-      "doc",
-      "word",
-      "ppt",
+    const acceptFileTypes = [
+      'pdf',
+      'png',
+      'jpeg',
+      'jpg',
+      'xls',
+      'xlsx',
+      'doc',
+      'word',
+      'ppt',
     ];
-    let file = e.target.files[0].name.split(".");
+    const file = e.target.files[0].name.split('.');
 
     if (
-      acceptFileTypes.includes(file[file.length - 1]) &&
-      e.target.files[0].size < 25670647
+      acceptFileTypes.includes(file[file.length - 1])
+      && e.target.files[0].size < 25670647
     ) {
       const temp = { ...form };
-      temp.jhaAssessmentAttachment = e.target.files[0];
+      const filesAll = e.target.files[0];
+      temp.jhaAssessmentAttachment = filesAll;
       await setForm(temp);
     } else {
-      ref.current.value = "";
+      ref.current.value = '';
       !acceptFileTypes.includes(file[file.length - 1])
         ? await setMessage(fileTypeError)
         : await setMessage(`${fielSizeError}`);
-      await setMessageType("error");
+      await setMessageType('error');
       await setOpen(true);
     }
   };
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       // setOpenError(false)
       return;
     }
@@ -210,20 +202,17 @@ const DocumentNotification = () => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
   const handelNavigate = (navigateType) => {
-    if (navigateType == "next") {
-      history.push("/app/pages/jha/jha-summary")
-    } else if (navigateType == "previous") {
-      history.push("/app/pages/Jha/assessments/assessment")
+    if (navigateType === 'next') {
+      history.push('/app/pages/jha/jha-summary');
+    } else if (navigateType === 'previous') {
+      history.push('/app/pages/Jha/assessments/assessment');
     }
-  }
+  };
 
   const handelNotifyTo = async (e, value) => {
-    if (e.target.checked == false) {
-      let newData = form.notifyTo.filter((item) => item !== value);
+    if (e.target.checked === false) {
+      const newData = form.notifyTo.filter((item) => item !== value);
       setForm({
         ...form,
         notifyTo: newData
@@ -236,42 +225,41 @@ const DocumentNotification = () => {
     }
   };
 
-  const handelApiError = (res) => {
-    setSubmitLoader(false)
-    history.push("/app/pages/error")
-  }
+  const handelApiError = () => {
+    setSubmitLoader(false);
+    history.push('/app/pages/error');
+  };
 
   const handelNext = async () => {
-    setSubmitLoader(true)
-    if (typeof form.jhaAssessmentAttachment == "object" && form.jhaAssessmentAttachment != null) {
-      let data = new FormData();
-      data.append("fkCompanyId", form.fkCompanyId);
-      data.append("fkProjectId", form.fkProjectId);
-      data.append("location", form.location);
-      data.append("jhaAssessmentDate", form.jhaAssessmentDate);
-      data.append("permitToPerform", form.permitToPerform);
-      data.append("jobTitle", form.jobTitle);
-      data.append("description", form.description);
-      data.append("classification", form.classification);
-      data.append("workHours", form.workHours);
-      data.append("notifyTo", form.notifyTo.toString())
-      data.append("link", form.link)
-      data.append("jhaAssessmentAttachment", form.jhaAssessmentAttachment)
-      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, data).catch(() => handelApiError())
+    setSubmitLoader(true);
+    if (typeof form.jhaAssessmentAttachment === 'object' && form.jhaAssessmentAttachment != null) {
+      const data = new FormData();
+      data.append('fkCompanyId', form.fkCompanyId);
+      data.append('fkProjectId', form.fkProjectId);
+      data.append('location', form.location);
+      data.append('jhaAssessmentDate', form.jhaAssessmentDate);
+      data.append('permitToPerform', form.permitToPerform);
+      data.append('jobTitle', form.jobTitle);
+      data.append('description', form.description);
+      data.append('classification', form.classification);
+      data.append('workHours', form.workHours);
+      data.append('notifyTo', form.notifyTo.toString());
+      data.append('link', form.link);
+      data.append('jhaAssessmentAttachment', form.jhaAssessmentAttachment);
+      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiError());
+    } else {
+      delete form.jhaAssessmentAttachment;
+      form.notifyTo = form.notifyTo.toString();
+      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, form).catch(() => handelApiError());
     }
-    else {
-      delete form["jhaAssessmentAttachment"]
-      form["notifyTo"] = form.notifyTo.toString()
-      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form).catch(() => handelApiError())
-    }
-    history.push(SUMMARY_FORM["Summary"])
-    localStorage.setItem("Jha Status", JSON.stringify({ "assessment": "done" }))
-    setSubmitLoader(false)
-  }
+    history.push(SUMMARY_FORM.Summary);
+    localStorage.setItem('Jha Status', JSON.stringify({ assessment: 'done' }));
+    setSubmitLoader(false);
+  };
 
   useEffect(() => {
-    handelJobDetails()
-  }, [])
+    handelJobDetails();
+  }, []);
 
   const classes = useStyles();
   return (
@@ -307,12 +295,12 @@ const DocumentNotification = () => {
                   }}
                 />
                 <Typography title={handelFileName(form.jhaAssessmentAttachment)}>
-                  {form.jhaAssessmentAttachment != "" &&
-                    typeof form.jhaAssessmentAttachment == "string" ? (
-                    <Attachment value={form.jhaAssessmentAttachment} />
-                  ) : (
-                    <p />
-                  )}
+                  {form.jhaAssessmentAttachment !== ''
+                    && typeof form.jhaAssessmentAttachment === 'string' ? (
+                      <Attachment value={form.jhaAssessmentAttachment} />
+                    ) : (
+                      <p />
+                    )}
                 </Typography>
               </Grid>
             </Grid>
@@ -325,9 +313,8 @@ const DocumentNotification = () => {
               <TextField
                 label="Link"
                 name="link"
-                name="link"
                 id="link"
-                value={form.link != null ? form.link : ""}
+                value={form.link != null ? form.link : ''}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
@@ -338,23 +325,25 @@ const DocumentNotification = () => {
               />
             </Grid>
 
-            {notificationSentValue.length > 0 ?
-              <Grid item md={12}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">Notifications to be sent to</FormLabel>
-                  <FormGroup>
-                    {notificationSentValue.map((value, index) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value.roleName} />}
-                        label={value.roleName}
-                        checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
-                        onChange={async (e) => handelNotifyTo(e, value.id.toString())}
-                      />
-                    ))}
-                  </FormGroup>
-                </FormControl>
-                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-              </Grid>
+            {notificationSentValue.length > 0
+              ? (
+                <Grid item md={12}>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">Notifications to be sent to</FormLabel>
+                    <FormGroup>
+                      {notificationSentValue.map((value) => (
+                        <FormControlLabel
+                          control={<Checkbox name={value.roleName} />}
+                          label={value.roleName}
+                          checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
+                          onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                  <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+                </Grid>
+              )
               : null}
 
             <Grid
@@ -366,41 +355,44 @@ const DocumentNotification = () => {
                 variant="outlined"
                 size="medium"
                 className={classes.custmSubmitBtn}
-                onClick={(e) => handelNavigate("previous")}
+                onClick={() => handelNavigate('previous')}
               >
                 Previous
               </Button>
-              {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handelNext()}
-                  className={classes.custmSubmitBtn}
-                >
+              {submitLoader === false
+                ? (
+                  <Button
+                    variant="outlined"
+                    onClick={() => handelNext()}
+                    className={classes.custmSubmitBtn}
+                  >
 
-                  Submit
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
+                    Submit
+                  </Button>
+                )
+                : (
+                  <IconButton className={classes.loader} disabled>
+                    <CircularProgress color="secondary" />
+                  </IconButton>
+                )
               }
               <Button
                 variant="outlined"
                 size="medium"
                 color="secondary"
                 className={classes.custmSubmitBtn}
-                onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                onClick={() => history.push(SUMMARY_FORM.Summary)}
               >
                 Cancel
               </Button>
             </Grid>
           </Grid>
-        </Col >
+        </Col>
         <Col md={3}>
           <FormSideBar
-            deleteForm={"hideArray"}
+            deleteForm="hideArray"
             listOfItems={JHA_FORM}
-            selectedItem={"Documents & Notifications"}
+            selectedItem="Documents & Notifications"
           />
         </Col>
       </Row>

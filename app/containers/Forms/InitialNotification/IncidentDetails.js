@@ -324,7 +324,7 @@ const IncidentDetails = (props) => {
               vendorReferenceId: "string",
               contractor: form.contractor,
               subContractor: form.subContractor,
-              incidentStage: "Initial Notification",
+              incidentStage: "Initial notification",
               incidentStatus: "Pending",
 
             };

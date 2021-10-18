@@ -235,10 +235,6 @@ function BlankPage(props) {
         })
         .catch(err => history.push("/app/pages/error"))
       // handleTimeOutError(res)
-
-
-
-
     }
   };
 

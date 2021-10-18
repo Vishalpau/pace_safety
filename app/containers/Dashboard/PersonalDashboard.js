@@ -311,7 +311,7 @@ function PersonalDashboard(props) {
       }
     })[0];
 
-
+    
     if (clientId) {
 
       window.open(

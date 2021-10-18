@@ -234,7 +234,7 @@ export default function Observations() {
           <Grid item sm={5} xs={12}>
               
 
-              <Button
+              {/* <Button
                 variant="contained"
                 // color="primary"
                 size="small"
@@ -246,7 +246,7 @@ export default function Observations() {
                 onClick={() => handleBulkUploadfilePush()}
               >
                 Upload
-              </Button>
+              </Button> */}
               <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
                 <AddIcon className={classes.floatR} /> Add new
               </Button>
