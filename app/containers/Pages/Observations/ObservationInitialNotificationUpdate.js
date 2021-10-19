@@ -253,9 +253,9 @@ const ObservationInitialNotificationUpdate = () => {
     }
   };
 
-  const handleClose = async () => {
+  const handleCancle = async () => {
     history.push(`/app/observation/details/${id}`)
-    await localStorage.setItem("update", "Done");
+    await localStorage.setItem("update", "Pending");
   }
   const fetchCheckBoxData = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
@@ -732,6 +732,15 @@ if(departments !== ""){
                 Submit
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+              <Button
+                variant="outlined"
+                onClick={(e) => handleCancle()}
+                className={classes.custmSubmitBtn}
+                style={{ marginLeft: "10px" }}
+                // disabled={loading}
+              >
+                Cancle
+              </Button>
             </div>
             
           </Grid>

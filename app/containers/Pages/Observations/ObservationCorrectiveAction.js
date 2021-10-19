@@ -309,6 +309,16 @@ function ObservationCorrectiveAction() {
     }).catch(err => {setSaveLoading(false)})
   }
 
+  const handleCancle = async () => {
+    history.push(`/app/observation/details/${id}`)
+    if(form.isCorrectiveActionTaken == ""){
+      await localStorage.setItem("update", "Pending");
+    }else{
+      await localStorage.setItem("ActionUpdate", "Pending");
+
+    }
+  }
+
   const fetchInitialiObservationData = async () => {
     const res = await api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/`);
 
@@ -665,6 +675,15 @@ function ObservationCorrectiveAction() {
               Submit
             </Button>
             {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            <Button
+                variant="outlined"
+                onClick={(e) => handleCancle()}
+                className={classes.custmSubmitBtn}
+                style={{ marginLeft: "10px" }}
+                // disabled={loading}
+              >
+                Cancle
+              </Button>
           </div>
         </Grid>
 
