@@ -10,19 +10,21 @@ import AddIcon from '@material-ui/icons/Add';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ReorderIcon from '@material-ui/icons/Reorder';
-import classNames from "classnames";
+import classNames from 'classnames';
 import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useHistory } from "react-router";
-import "../../../styles/custom/customheader.css";
+import { useHistory } from 'react-router';
+import '../../../styles/custom/customheader.css';
 import ObservationSearchSection from './ObservationSearchSection';
 import ObservationsKanban from './ObservationsKanban';
 import ObservationsList from './ObservationsList';
 
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const {
+    value, index, ...other
+  } = props;
 
   return (
     <div
@@ -34,7 +36,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {/* <Typography>{children}</Typography> */}
         </Box>
       )}
     </div>
@@ -42,7 +44,6 @@ function TabPanel(props) {
 }
 
 TabPanel.propTypes = {
-  children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
@@ -54,11 +55,11 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   navTabBack: {
     backgroundColor: 'transparent',
     color: 'black',
-	marginTop: '3px',
+    marginTop: '3px',
     '& .MuiTab-root': {
       minWidth: '80px',
       minHeight: '40px',
@@ -77,13 +78,13 @@ const useStyles = makeStyles((theme) => ({
       marginRight: '5px',
     },
   },
-  pLtenPRten: {padding: '0px 10px 0px 10px',},
-  pLTen : {
+  pLtenPRten: { padding: '0px 10px 0px 10px', },
+  pLTen: {
     marginRight: '5px',
-    },
-    mTtop20 : {
-      marginTop: '20px',
-    },
+  },
+  mTtop20: {
+    marginTop: '20px',
+  },
   attachImg: {
     float: 'left',
   },
@@ -107,104 +108,104 @@ const useStyles = makeStyles((theme) => ({
     '& svg:not(:root)': {
       overflow: 'hidden',
       marginRight: '5px',
+    },
   },
+  borderTop: {
+    marginTop: '20px',
+    borderBottom: '1px solid #ccc',
+    paddingBottom: '10px',
+    '& .MuiTypography-h5': {
+      fontSize: '1.5rem',
+      fontFamily: 'Xolonium',
+      fontWeight: '400',
+      lineHeight: '1.8',
+      color: '#23343e',
+    },
+    textCenter: {
+      textAlign: 'right',
+      verticalAlign: 'middle',
+      margin: '20px 16px 12px 16px!important',
+      float: 'right',
+    },
   },
-  borderTop: {marginTop: '20px', 
-  borderBottom : '1px solid #ccc', 
-  paddingBottom: '10px',
-  '& .MuiTypography-h5': {
-    fontSize: '1.5rem',
-    fontFamily: 'Xolonium',
-    fontWeight: '400',
-    lineHeight: '1.8',
-    color: '#23343e',
-},
-textCenter: {
-  textAlign: 'right',
-  verticalAlign: 'middle',
-  margin: '20px 16px 12px 16px!important',
-  float: 'right',
-},
-},
   floatRTop10: {
-  float: 'right',
-  marginTop: '10px',
-},
-floatL: {
-  float: 'left',
-},
-activeTab: {
-  color: 'orange',
-},
-buttonsNew: {
-  borderRadius: '5px',
-  backgroundColor: '#06425c',
-  padding: '3px 10px 3px 6px',
-  marginTop: '10px',
-  float: 'right',
-},
-paddLRzero: {
-  padding: '0px 0px 24px 0px',
-  '& .MuiBox-root': {
-    padding: '0px',
+    float: 'right',
+    marginTop: '10px',
   },
-pL0: {
-  paddingLeft: '0px !important',
-},
-pLFiveHt40: {
-  paddingLeft: '15px 5px 5px 5px',
-},
-ptotop20: {
-  paddingTop: '20px',
-},
-listTabColor: {
-  color: '#06425c !important',
-},
-buttonsNewChild: {
-  borderRadius: '5px 5px 5px 5px !important',
-  backgroundColor: '#517b8d',
-  color: '#ffffff',
-  maxHeight: '40px',
-  minHeight: '40px',
-  opacity: '10',
-},
-buttonsNTwo: {
-  borderRadius: '5px 5px 5px 5px !important',
-  backgroundColor: '#517b8d',
-  color: '#ffffff',
-  maxHeight: '40px',
-  minHeight: '40px',
-  opacity: '10',
-},
-active: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px 5px 5px 5px',
-  color: '#ffffff',
-  minWidth: '100px',
-  marginRight: '6px',
-  maxHeight: '40px',
-  minHeight: '40px',
-  marginLeft: '5px',
-},
-activeFont: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-  minWidth: '34px',
-  padding: '4px 5px 5px 4px',
-},
-floatR: {
-  float: 'right',
-  textAlign: 'right',
-},
-},
+  floatL: {
+    float: 'left',
+  },
+  activeTab: {
+    color: 'orange',
+  },
+  buttonsNew: {
+    borderRadius: '5px',
+    backgroundColor: '#06425c',
+    padding: '3px 10px 3px 6px',
+    marginTop: '10px',
+    float: 'right',
+  },
+  paddLRzero: {
+    padding: '0px 0px 24px 0px',
+    '& .MuiBox-root': {
+      padding: '0px',
+    },
+    pL0: {
+      paddingLeft: '0px !important',
+    },
+    pLFiveHt40: {
+      paddingLeft: '15px 5px 5px 5px',
+    },
+    ptotop20: {
+      paddingTop: '20px',
+    },
+    listTabColor: {
+      color: '#06425c !important',
+    },
+    buttonsNewChild: {
+      borderRadius: '5px 5px 5px 5px !important',
+      backgroundColor: '#517b8d',
+      color: '#ffffff',
+      maxHeight: '40px',
+      minHeight: '40px',
+      opacity: '10',
+    },
+    buttonsNTwo: {
+      borderRadius: '5px 5px 5px 5px !important',
+      backgroundColor: '#517b8d',
+      color: '#ffffff',
+      maxHeight: '40px',
+      minHeight: '40px',
+      opacity: '10',
+    },
+    active: {
+      backgroundColor: '#f47607',
+      borderRadius: '5px 5px 5px 5px',
+      color: '#ffffff',
+      minWidth: '100px',
+      marginRight: '6px',
+      maxHeight: '40px',
+      minHeight: '40px',
+      marginLeft: '5px',
+    },
+    activeFont: {
+      backgroundColor: '#f47607',
+      borderRadius: '5px',
+      color: '#ffffff',
+      minWidth: '34px',
+      padding: '4px 5px 5px 4px',
+    },
+    floatR: {
+      float: 'right',
+      textAlign: 'right',
+    },
+  },
 }));
 
 export default function Observations() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const history = useHistory();
-  const [searchText , setSearchText] = React.useState('')
 
 
   const handleChange = (event, newValue) => {
@@ -215,12 +216,12 @@ export default function Observations() {
     history.push(
       '/app/observation-bulkuploadfile'
     );
-    }
+  };
   const handleInitialNotificationPush = async () => {
-    localStorage.removeItem("action");
-      localStorage.removeItem("value")
+    localStorage.removeItem('action');
+    localStorage.removeItem('value');
 
-    history.push("/app/observation-initial-notification");
+    history.push('/app/observation-initial-notification');
   };
 
   return (
@@ -232,79 +233,54 @@ export default function Observations() {
             <Typography variant="h5"> Observations</Typography>
           </Grid>
           <Grid item sm={5} xs={12}>
-              
 
-              {/* <Button
-                variant="contained"
-                // color="primary"
-                size="small"
-                className={classNames(classes.buttonsNew, classes.floatR)}
-                disableElevation
-                startIcon={<CloudUploadIcon />}
-                //onClick={() => handleBulkUploadPush()}
-                style={{marginLeft: '10px'}}
-                onClick={() => handleBulkUploadfilePush()}
-              >
-                Upload
-              </Button> */}
-              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
-                <AddIcon className={classes.floatR} /> Add new
-              </Button>
-              
+
+            <Button
+              variant="contained"
+              // color="primary"
+              size="small"
+              className={classNames(classes.buttonsNew, classes.floatR)}
+              disableElevation
+              startIcon={<CloudUploadIcon />}
+              // onClick={() => handleBulkUploadPush()}
+              style={{ marginLeft: '10px' }}
+              onClick={() => handleBulkUploadfilePush()}
+            >
+              Upload
+            </Button>
+            <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
+              <AddIcon className={classes.floatR} />
+              {' '}
+              Add new
+            </Button>
+
           </Grid>
-              
+
         </Grid>
       </Grid>
       <Grid container spacing={3}>
         <Grid item sm={8} xs={12}>
-      <AppBar position="static" className={classes.navTabBack}>
-      <div className={classes.floatL}>
-        <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-		  <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon  className={classNames(classes.pL0, classes.active)} />} />
-          <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />}  classNames={classes.pLTen} />
-		  {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
-          <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
-        </Tabs>
-      </div>  
-      </AppBar>
-      </Grid>
-      <Grid item sm={4} xs={12}>
-          <Grid className={classes.Lheight}>
-            <div className={classes.floatR}>
-				
-				<span className={classes.pLTen}>
-					{/* <Button size="small" className={classes.buttonsNTwo} variant="contained">
-					  <PermIdentityIcon /> GIS
-					</Button> */}
-				</span>
-				
-				{/* <span className={classes.pLTen}>
-					<Button size="small" className={classes.buttonsNTwo} variant="contained">
-					  <DateRangeOutlinedIcon />iPlanner
-					</Button>
-				</span>
-				
-			  <span className={classes.pLTen}>
-				<Button size="small" className={classes.buttonsNTwo} variant="contained">
-				  <GamesOutlinedIcon /> 3D
-				</Button>
-				</span>*/} 
+          <AppBar position="static" className={classes.navTabBack}>
+            <div className={classes.floatL}>
+              <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
+                <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+              </Tabs>
             </div>
-          </Grid>
+          </AppBar>
         </Grid>
+        <Grid item sm={4} xs={12} />
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
         <ObservationSearchSection />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-		<ObservationsList />      
+        <ObservationsList />
       </TabPanel>
-	  <TabPanel value={value} index={2} className={classes.paddLRzero}>
+      <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />
       </TabPanel>
-      {/* <TabPanel value={value} index={3} className={classes.paddLRzero}>
-        <ObservationsBarCharts />
-      </TabPanel> */}
+
     </div>
   );
 }
