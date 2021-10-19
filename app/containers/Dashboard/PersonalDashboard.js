@@ -1,43 +1,43 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import brand from "dan-api/dummy/brand";
-import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet";
 import { withStyles } from "@material-ui/core/styles";
-import Hidden from "@material-ui/core/Hidden";
-import {
-  SliderWidget,
-  CounterIconsWidget,
-  PerformanceChartWidget,
-  DateWidget,
-  TaskWidget,
-  WeatherWidget,
-  ContactWidget,
-  TimelineWidget,
-  FilesWidget,
-} from "dan-components";
+// import Hidden from "@material-ui/core/Hidden";
+// import {
+//   SliderWidget,
+//   CounterIconsWidget,
+//   PerformanceChartWidget,
+//   DateWidget,
+//   TaskWidget,
+//   WeatherWidget,
+//   ContactWidget,
+//   TimelineWidget,
+//   FilesWidget,
+// } from "dan-components";
 import styles from "./dashboard-jss";
-import Container from "@material-ui/core/Container";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
+// import Container from "@material-ui/core/Container";
+// import Box from "@material-ui/core/Box";
+// import Paper from "@material-ui/core/Paper";
 import { PapperBlock } from "dan-components";
 
 import "../../styles/custom/hexagon.css";
-import icons from "dan-api/images/icons";
+// import icons from "dan-api/images/icons";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+// import Button from "@material-ui/core/Button";
+// import MenuItem from "@material-ui/core/MenuItem";
+// import FormHelperText from "@material-ui/core/FormHelperText";
+// import FormControl from "@material-ui/core/FormControl";
+// import InputLabel from "@material-ui/core/InputLabel";
+// import Select from "@material-ui/core/Select";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import Modal from "@material-ui/core/Modal";
-import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+// import Modal from "@material-ui/core/Modal";
+// import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
+// import VisibilityIcon from "@material-ui/icons/Visibility";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -58,13 +58,13 @@ import cTower from "dan-images/projectImages/cTower.png";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CardActions from "@material-ui/core/CardActions";
 import Divider from "@material-ui/core/Divider";
-import EditIcon from "@material-ui/icons/Edit";
+// import EditIcon from "@material-ui/icons/Edit";
 
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 
 import axios from "axios";
 import api from "../../utils/axios";
@@ -315,11 +315,11 @@ function PersonalDashboard(props) {
     if (clientId) {
 
       window.open(
-        ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
+        '/' + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
         '_blank' // <- This is what makes it open in a new window.
       ).onClick();
     }
-
+    // https://dev-safety.pace-os.com/?code=5vg97deXu6GwCfHZbSLg4MkGnqfZA1&state=%7B%27companyId%27%3A+%271%27%2C+%27projectId%27%3A+%2716%27%2C+%27targetPage%27%3A+%27+++++incidents+%27%2C+%27targetId%27%3A+%27%27%2C+%27redirect_back%27%3A+%27%27%7D
     // window.open(
     //   window.location.href = process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+clientId+'&response_type=code',
     //   '_blank' // <- This is what makes it open in a new window.
