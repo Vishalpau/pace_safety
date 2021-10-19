@@ -1,3 +1,5 @@
+import React from 'react';
+import { useHistory } from 'react-router';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
@@ -7,10 +9,6 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import observationsLogoSymbol from 'dan-images/observationsLogoSymbol.png';
 import MUIDataTable from 'mui-datatables';
-import React, { useState } from 'react';
-import { useHistory } from 'react-router';
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -120,10 +118,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ObservationBulkupload() {
-  const [listToggle, setListToggle] = useState(false);
   const history = useHistory();
 
-  const handleBulkUploadfilePush = async () => {
+  const handleBulkUploadfilePush = async (e) => {
+    console.log(e);
     history.push(
       '/app/observation-bulkuploadfile'
     );
@@ -184,7 +182,7 @@ function ObservationBulkupload() {
             return (<span label="NA" style={{ textAlign: 'center', display: 'block' }}>NA </span>);
           }
           if (value === 'Failed') {
-            return (<Link className={classes.errorBTNTable}>Failed 25 </Link>);
+            return (<Link>Failed 25 </Link>);
           }
           return (<Chip label="Unknown" />);
         }
@@ -216,22 +214,13 @@ function ObservationBulkupload() {
     selectableRowsHideCheckboxes: false,
     selectableRowsHeader: false,
     selectableRowsOnClick: false,
-    viewColumns: false,
     selectableRows: false,
     search: false,
-  };
-
-  const handlePrintPush = async () => {
-    history.push(
-      "/app/pages/prints"
-    );
   };
 
   const classes = useStyles();
 
   return (
-    // <PapperBlock title="Observation Upload" icon="ion-md-list-box" desc="">
-    //   <Box>
     <CustomPapperBlock title="Observation Upload" icon={observationsLogoSymbol} whiteBg>
       <Grid container spacing={3}>
         <Grid item md={12} xs={12}>
@@ -240,18 +229,17 @@ function ObservationBulkupload() {
               <Grid item xs={12} align="right" className={classes.bulkBTNTopBox}>
                 <Button
                   variant="contained"
-                  // color="primary"
                   size="small"
                   className={classes.newFormButton}
                   disableElevation
                   startIcon={<CloudUploadIcon />}
-                  //onClick={() => handleBulkUploadPush()}
                   style={{ marginLeft: '10px' }}
-                  onClick={() => handleBulkUploadfilePush()}
+                  onClick={(e) => handleBulkUploadfilePush(e)}
                 >
                   Upload
                 </Button>
               </Grid>
+
             </Grid>
             <MUIDataTable
               className="dataTableSectionDesign"
@@ -263,8 +251,6 @@ function ObservationBulkupload() {
         </Grid>
       </Grid>
     </CustomPapperBlock>
-    //   </Box>
-    // </PapperBlock>
   );
 }
 
