@@ -81,16 +81,21 @@ function ObservationBulkupload() {
   };
 
   const handleClick = () => {
+    console.log(fileObjects)
     const data = new FormData();
     for (let i = 0; i < fileObjects.length; i += 1) {
       data.append('images', fileObjects[i]);
     }
   };
 
+  const handleDelete = (deleted) => {
+    setFileObjects(fileObjects.filter(f => f !== deleted));
+  };
+
   useEffect(() => {
     // handleClick(acceptedFiles)
   },
-  [files]);
+    [files]);
 
 
   return (
@@ -137,12 +142,10 @@ function ObservationBulkupload() {
                     onAdd={newFileObjs => {
                       setFileObjects([].concat(fileObjects, newFileObjs));
                     }}
-                    onDelete={deleteFileObj => {
-                      console.log('onDelete', deleteFileObj);
-                    }}
                     onClick={(e) => handleChange(e)}
                     filesLimit={5}
                     maxFileSize={5000000.00}
+                    onDelete={handleDelete}
                   />
                   <aside>
                     <ul>{files}</ul>
