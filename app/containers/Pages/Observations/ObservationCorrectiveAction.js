@@ -1,60 +1,33 @@
-import React, { useEffect, useState, Component } from 'react';
-import {
-  Grid, Typography, TextField, Button, ListItemText
-} from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import DateFnsUtils from '@date-io/moment';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { FormHelperText } from "@material-ui/core";
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import api from "../../../utils/axios";
-import { useHistory, useParams } from "react-router";
+import { makeStyles } from '@material-ui/core/styles';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 // import ActionTracker from "./ActionTracker";
 import axios from "axios";
-import MomentUtils from "@date-io/moment";
-import moment from "moment";
-import Paper from "@material-ui/core/Paper";
-import ActionShow from '../../Forms/ActionShow'
-
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/moment';
-import MenuItem from '@material-ui/core/MenuItem';
-// import { TableHead } from 'mui-datatables';
-// import { useHistory, useParams } from "react-router";
-
-// Table
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-
-import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
-import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
-import { CircularProgress } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import ActionTracker from "../../Forms/ActionTracker";
-
-import apiAction from "../../../utils/axiosActionTracker"
-import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../utils/CheckerValue";
 import classNames from "classnames";
-
+import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from "react-router";
+import api from "../../../utils/axios";
+import apiAction from "../../../utils/axiosActionTracker";
+import { handelActionData } from "../../../utils/CheckerValue";
 import {
   access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  ACCOUNT_API_URL
 } from "../../../utils/constants";
+import ActionShow from '../../Forms/ActionShow';
+import ActionTracker from "../../Forms/ActionTracker";
+import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -147,7 +120,15 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     marginTop: -12,
-    marginLeft: -12,
+    marginLeft: +30,
+  },
+  buttonProgressSave: {
+    // color: "green",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -55,
   },
   boldHelperText: {
     "& .MuiFormHelperText-root": {
@@ -167,12 +148,13 @@ function ObservationCorrectiveAction() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { id } = useParams();
   const [actionTakenData, setActionTakenData] = useState([])
-  const [actionOpen, setActionOpen] = useState(false)
+  const [actionOpen, setActionOpen] = useState(true)
   const [error, setError] = useState({ comment: "", reviewedOn: "" });
   const [reportedByName, setReportedByName] = useState([]);
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
   let filterReportedByName = []
 
@@ -221,14 +203,6 @@ function ObservationCorrectiveAction() {
 
   })
 
-  const reviewedBy = [
-    "None",
-    "Reviewedby 1",
-    "Reviewedby 2",
-    "Reviewedby 3",
-    "Reviewedby 4",
-  ]
-
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
     let allAction = await handelActionData(observationId, [], "title")
@@ -260,7 +234,7 @@ function ObservationCorrectiveAction() {
 
 
   const handleSubmit = async () => {
-    const { error, isValid } = CorrectiveActionValidator(form);
+    const { error, isValid } = CorrectiveActionValidator(form , actionData,"submit");
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
@@ -277,6 +251,10 @@ function ObservationCorrectiveAction() {
       }
     }
     form['updateBy'] = userId
+    if(form["reviewedByName"] !== ""){
+      form["observationStage"] = "Completed"
+      form["observationStatus"] = "Reviewed"
+    }
     delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
       "fkobservationId"
@@ -291,6 +269,44 @@ function ObservationCorrectiveAction() {
         );
       }
     }).catch(err => {setLoading(false)})
+  }
+  const handleSave = async () => {
+    const { error, isValid } = CorrectiveActionValidator(form , actionData,"save");
+    
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
+
+    await setSaveLoading(true)
+    if (comment.id) {
+      comment['updatedBy'] = parseInt(userId)
+      const res1 = await api.put(`/api/v1/comments/${comment.commentContext}/${comment.contextReferenceIds}/${comment.id}/`, comment)
+    } else {
+      if (comment.comment !== "") {
+        const res1 = await api.post(`/api/v1/comments/`, comment).then(res => {}).catch(err => {setLoading(false)})
+
+      }
+    }
+    form['updateBy'] = userId
+    if(form["reviewedByName"] !== ""){
+      form["observationStage"] = "Completed"
+      form["observationStatus"] = "Reviewed"
+    }
+    delete form['attachment']
+    const res = await api.put(`/api/v1/observations/${localStorage.getItem(
+      "fkobservationId"
+    )}/`, form).then(res => {
+      if (res.status === 200) {
+        localStorage.setItem('updateAction', "Done")
+        localStorage.setItem("action", "Done")
+        history.push(
+          `/app/observation/details/${localStorage.getItem(
+            "fkobservationId"
+          )}`
+        );
+      }
+    }).catch(err => {setSaveLoading(false)})
   }
 
   const fetchInitialiObservationData = async () => {
@@ -357,16 +373,7 @@ function ObservationCorrectiveAction() {
       setError({ ...error, reviewedOn: errorMessage })
     }
   }
-  // const handelActionTracker = async () => {
-  //   // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  //   // const api_action = axios.create({
-  //   //   baseURL: API_URL_ACTION_TRACKER,
-  //   // });
-  //   let ActionToCause = {}
-  //   const allActionTrackerData = await apiAction.get("/api/v1/actions/")
-  //   const allActionTracker = allActionTrackerData.data.data.results.results
 
-  // }
   const handleReview = (e, value) => {
     let temp = { ...form }
     temp.reviewedByName = value.name
@@ -402,11 +409,15 @@ function ObservationCorrectiveAction() {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
           let user = [];
-          user = result;
-          for (var i in result) {
-            filterReportedByName.push(result[i]);
+          // user = result;
+          let data = result.filter((item) =>
+            item['companyId'] == fkCompanyId
+          )
+          
+          for (var i in data[0].users) {
+            filterReportedByName.push(data[0].users[i]);
           }
           setReportedByName(filterReportedByName);
         }
@@ -493,46 +504,62 @@ function ObservationCorrectiveAction() {
             </RadioGroup>
             <p style={{ color: "red" }}>{error.isCorrectiveActionTaken}</p>
 
-            {/* {error && error["isCorrectiveActionTaken"] && (
-              <FormHelperText>
-                {error["isCorrectiveActionTaken"]}
-              </FormHelperText>
-            )} */}
           </FormControl>
         </Grid>
+        {actionData.length == 0 ?   <Grid item md={8}>
+          <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
         <Grid item md={8}>
-          {actionOpen === true ? (
+          {form.isCorrectiveActionTaken === "Yes" || form.isCorrectiveActionTaken === null ? (
             <>
               <Typography variant="h6" gutterBottom className={classes.labelName}>
                 Actions
               </Typography>
               <Typography className={classes.labelValue}>
-
-                {' '}
+                {handelActionShow(id)}
               </Typography>
-              {handelActionShow(id)}
+              
 
               <Typography className={classes.increaseRowBox}>
 
                 <ActionTracker
-                  actionContext="Obsevations"
+                  actionContext="Observation"
                   enitityReferenceId={id}
                   setUpdatePage={setUpdatePage}
                   fkCompanyId={fkCompanyId}
                   fkProjectId={projectId}
                   fkProjectStructureIds={fkProjectStructureIds}
+                  isCorrectiveActionTaken={form.isCorrectiveActionTaken}
                   createdBy={userId}
                   updatePage={updatePage}
                   handelShowData={handelActionTracker}
                 />
 
               </Typography>
+              
             </>
           )
             :
             null}
+         
         </Grid>
+           {/* <Grid item md={4}>
+           <TextField
+            label="Action taken"
+            name="Action taken"
+            id="Action taken"
+            multiline
+            fullWidth
+            variant="outlined"
+            // value={comment.comment ? comment.comment : ""}
+            className={classes.formControl}
+            // onChange={(e) => {
+            // //   setComment({ ...comment, comment: e.target.value });
+            // // }}
+          />
+            </Grid> */}
+
+
 
         <Grid
           item
@@ -618,6 +645,16 @@ function ObservationCorrectiveAction() {
         >
 
           <div className={classes.loadingWrapper}>
+          <Button
+              variant="outlined"
+              onClick={(e) => handleSave()}
+              className={classes.custmSubmitBtn}
+              style={{ marginLeft: "10px" }}
+              disabled={saveLoading}
+            >
+              Save
+            </Button>
+            {saveLoading && <CircularProgress size={24} className={classes.buttonProgressSave} />}
             <Button
               variant="outlined"
               onClick={(e) => handleSubmit()}

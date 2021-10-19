@@ -1,56 +1,29 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import moment from 'moment';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import ImageIcon from '@material-ui/icons/Image';
-import Avatar from '@material-ui/core/Avatar';
-import Link from '@material-ui/core/Link';
-import { useHistory, useParams } from "react-router";
-import api from "../../../utils/axios";
-import IconButton from "@material-ui/core/IconButton";
+import { Button, Grid, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
 import Slide from "@material-ui/core/Slide";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import GetAppIcon from "@material-ui/icons/GetApp";
+import { makeStyles } from '@material-ui/core/styles';
 import Close from "@material-ui/icons/Close";
-import { saveAs } from 'file-saver';
-import { initial } from 'lodash';
+import GetAppIcon from "@material-ui/icons/GetApp";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import axios from "axios";
-import Attachment from "../../Attachment/Attachment";
+import { saveAs } from 'file-saver';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
 import "../../../styles/custom/customheader.css";
+import api from "../../../utils/axios";
+import { handelDateTime } from '../../../utils/CheckerValue';
 import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
+import Attachment from "../../Attachment/Attachment";
 
-import { breakDownDetails } from "../../../redux/actions/initialDetails";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -164,6 +137,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
+    localStorage.setItem('fkobservationId' , id)
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
@@ -333,9 +307,7 @@ const ObservationInitialNotificationView = () => {
               Observed On
             </Typography>
             <Typography className={classes.labelValue}>
-              {moment(initialData["observedAt"]).format(
-                "Do MMMM YYYY, h:mm:ss a"
-              )}
+              {handelDateTime(initialData["observedAt"])}
             </Typography>
           </Grid>
 

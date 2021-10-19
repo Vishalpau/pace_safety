@@ -1,52 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { PapperBlock } from 'dan-components';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
-import Share from '@material-ui/icons/Share';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import TableContainer from '@material-ui/core/TableContainer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import Tooltip from '@material-ui/core/Tooltip';
-import Incidents from 'dan-styles/IncidentsList.scss';
-import ViewColumnOutlinedIcon from '@material-ui/icons/ViewColumnOutlined';
-import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import InsertChartOutlinedOutlinedIcon from '@material-ui/icons/InsertChartOutlinedOutlined';
-import DnsOutlinedIcon from '@material-ui/icons/DnsOutlined';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import MUIDataTable from 'mui-datatables';
-import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import api from "../../../utils/axios";
-import axios from "axios";
-import { connect } from "react-redux";
-import moment from "moment";
+import TableContainer from '@material-ui/core/TableContainer';
 import Pagination from '@material-ui/lab/Pagination';
+import moment from "moment";
+import MUIDataTable from 'mui-datatables';
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
-import { useHistory, useParams } from "react-router";
+import api from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
-  pagination:{
-    padding:"1rem 0",
-    display:"flex",
-    justifyContent:"flex-end"
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   root: {
     flexGrow: 1,
@@ -142,7 +112,7 @@ function ObservationsList(props) {
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
-  const [page , setPage] = useState(1)
+  const [page, setPage] = useState(1)
 
 
   const [value, setValue] = React.useState(2);
@@ -150,25 +120,26 @@ function ObservationsList(props) {
   // const handleChange = (event, newValue) => {
   //   setValue(newValue);
   // };
-  
+
   //   Data for the table view
   const columns = ['Number', 'Type', 'Location', 'Reported on', 'Reported by'];
 
-  const data = [
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-    ['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-	['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-	['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-	['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-	['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-	['OB-125-256-251', 'Observation', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ];
+
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
     print: false,
     filter: false,
     search: true,
+    onSearchChange: searchText => {
+      if (searchText != null) {
+        setSeacrhIncident(searchText);
+
+      } else {
+        setSeacrhIncident("");
+
+      }
+    },
     download: true,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
@@ -178,8 +149,10 @@ function ObservationsList(props) {
     selectableRows: false,
     rowsPerPage: 10,
     page: 0,
-    pagination : false,
+    pagination: false,
   };
+
+
 
 
   const [allInitialData, setAllInitialData] = useState([]);
@@ -187,124 +160,120 @@ function ObservationsList(props) {
   const [searchIncident, setSeacrhIncident] = useState("");
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
+  const [data, setData] = useState([])
   const [totalData, setTotalData] = useState(0);
   const history = useHistory();
 
+  const fetchInitialiObservation = async () => {
+    await setPage(1)
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    console.log(res)
+    if (res.status === 200) {
+      const result = res.data.data.results.results
+      await setAllInitialData(result)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageData(res.data.data.results.count / 25)
+      await setTotalData(res.data.data.results.count)
+      await setPageCount(pageCount)
+      await handelTableView(result)
+
+      await setIsLoading(true)
+    }
+
+  };
 
 
+  const handleChange = async (event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
 
-const fetchInitialiObservation = async () => {
-  await setPage(1)
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllInitialData(res.data.data.results.results);
+    await handelTableView(res.data.data.results.results)
+    await setPage(value)
+  };
 
-  const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-  const result = res.data.data.results.results
-  await setAllInitialData(result)
-  let pageCount  = Math.ceil(res.data.data.results.count/25)
-  await setPageData(res.data.data.results.count/25)
-  await setTotalData(res.data.data.results.count)
-  await setPageCount(pageCount)
-
-  await setIsLoading(true)
-};
-
-
-const handleChange = async(event, value) => {
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-  await setAllInitialData(res.data.data.results.results);
-  await setPage(value)
-};
-
-const handleSummaryPush = async (index) => {
-  const id = allInitialData[index].id;
-  localStorage.setItem("fkobservationId", id);
-  if (allInitialData[index].isCorrectiveActionTaken !== null) {
-    localStorage.setItem("action", "Done");
-  } else {
-    localStorage.removeItem("action");
+  const handelTableView = async (result) => {
+    const temp = []
+    console.log(result, ">>>>>")
+    result.map((value) => {
+      temp.push([
+        value.observationNumber,
+        value.observationType,
+        value.location,
+        moment(value.createdAt).format(
+          "Do MMMM YYYY, h:mm:ss a"
+        ),
+        value.reportedByName,
+      ])
+    })
+    console.log(temp, " OOOOOO")
+    await setData(temp)
   }
-  history.push(`/app/observation/details/${id}`);
-};
+  console.log(data, "1111")
+  const handleSummaryPush = async (index) => {
+    const id = allInitialData[index].id;
+    localStorage.setItem("fkobservationId", id);
+    if (allInitialData[index].isCorrectiveActionTaken !== null) {
+      localStorage.setItem("action", "Done");
+    } else {
+      localStorage.removeItem("action");
+    }
+    history.push(`/app/observation/details/${id}`);
+  };
 
   const classes = useStyles();
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName.breakDown]);
+  }, [props.projectName.breakDown, searchIncident]);
 
   return (
     <>
       <Box>
-      {isLoading ? <>
-        <TableContainer component={Paper}>
-       
-          <Grid component={Paper}>
-          
-          <MUIDataTable
-                data={Object.entries(allInitialData).filter(
-                      (item ) => {return (
-                         
-                        item[1]["observationDetails"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                          item[1]["observationNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-                          
-                        )
-                      )}
-                        
-                    ).map((item,index) => [
-                      <Link
-                                            onClick={() => handleSummaryPush(index)}
-                                            variant="h6"
-                                            className={classes.mLeftfont}
-                                          >
-                                            <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
-                                          </Link>,
-                  item[1]["observationType"],
-                  item[1]["location"],
-                  moment(item[1]["createdAt"]).format(
-                    "Do MMMM YYYY, h:mm:ss a"
-                  ),
-                  item[1]["reportedByName"],
-                ])}
+        {isLoading ? <>
+          <TableContainer component={Paper}>
+
+            <Grid component={Paper}>
+              <MUIDataTable
+                data={data}
                 title="Observations List"
 
                 columns={columns}
                 options={options}
               />
-              </Grid>
+            </Grid>
 
-            </TableContainer>
-            
-            <div className={classes.pagination}>
-            {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-      <Pagination count={pageCount} page={page} onChange={handleChange}/>
-    </div></>:<h1>Loading...</h1>}
+          </TableContainer>
+
+
+          <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div></> : <h1>Loading...</h1>}
       </Box>
     </>
   );
@@ -319,4 +288,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(ObservationsList);
+export default connect(mapStateToProps, null)(ObservationsList);

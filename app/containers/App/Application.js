@@ -129,6 +129,8 @@ import {
   ObservationInitialNotificationView,
   ObservationCorrectiveAction,
   ObservationInitialNotificationUpdate,
+  ObservationBulkupload,
+  ObservationUploadScreen,
   CheckList,
   Groups,
   Options,
@@ -529,6 +531,8 @@ function Application(props) {
         <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
         <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />
         <Route path="/app/prints/:id" component={Prints} />
+        <Route path="/app/observation-bulkupload" component={ObservationBulkupload} />
+        <Route path="/app/observation-bulkuploadfile" component={ObservationUploadScreen} />
 
         {/* Aha Routes */}
 

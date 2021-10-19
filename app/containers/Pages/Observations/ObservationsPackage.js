@@ -1,48 +1,38 @@
-import React, { useState, useEffect } from "react";
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import TableContainer from '@material-ui/core/TableContainer';
 import Typography from '@material-ui/core/Typography';
+import AttachmentIcon from '@material-ui/icons/Attachment';
+import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
+import Print from '@material-ui/icons/Print';
 import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
 import Share from '@material-ui/icons/Share';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import TableContainer from '@material-ui/core/TableContainer';
-import { makeStyles } from '@material-ui/core/styles';
-import Incidents from 'dan-styles/IncidentsList.scss';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import MUIDataTable from 'mui-datatables';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import completed_small from 'dan-images/completed_small.png';
-import in_progress_small from 'dan-images/in_progress_small.png';
-import "../../../styles/custom/customheader.css";
-import StarsIcon from '@material-ui/icons/Stars';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-import api from "../../../utils/axios";
-import axios from "axios";
-import { connect } from "react-redux";
-import moment from "moment";
 import Pagination from '@material-ui/lab/Pagination';
-import { useHistory, useParams } from "react-router";
-import SimpleTabs from "./ObservationSearchSection"
-import Print from '@material-ui/icons/Print';
+import in_progress_small from 'dan-images/in_progress_small.png';
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import Incidents from 'dan-styles/IncidentsList.scss';
+import moment from "moment";
+import MUIDataTable from 'mui-datatables';
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useHistory } from "react-router";
+import "../../../styles/custom/customheader.css";
+import api from "../../../utils/axios";
 
 
 
@@ -492,12 +482,12 @@ function Actions(props) {
  
     if (props.type == "All" || props.type == "Type") {
       if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
       } else {
-        const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
         const result = res.data.data.results.results
         await setAllInitialData(result)
         await setPage(value)
@@ -505,12 +495,12 @@ function Actions(props) {
     } else {
       if (props.type == "Risk") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -518,13 +508,13 @@ function Actions(props) {
       }
       if (props.type == "Comments") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
 
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -532,12 +522,12 @@ function Actions(props) {
       }
       if (props.type == "Positive behavior") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
 
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)

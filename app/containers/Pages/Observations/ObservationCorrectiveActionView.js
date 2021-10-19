@@ -1,32 +1,8 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
 import {
-  Grid, Typography, TextField, Button
+  Grid, Typography
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import moment from 'moment';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from "@material-ui/core/Paper";
-
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import Link from '@material-ui/core/Link';
-import { useHistory, useParams } from "react-router";
-import api from "../../../utils/axios";
-import axios from "axios";
-
+import { makeStyles } from '@material-ui/core/styles';
 // Table
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -34,19 +10,20 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-
-import ActionTracker from "./ActionTracker";
-import apiAction from "../../../utils/axiosActionTracker"
-
+import axios from "axios";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useParams } from "react-router";
+import api from "../../../utils/axios";
+import apiAction from "../../../utils/axiosActionTracker";
 import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
-  ACTIONS_CLIENT_ID,
+  SSO_URL
 } from "../../../utils/constants";
+
+
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -132,7 +109,6 @@ const ObservationCorrectiveActionView = () => {
 
 
   const [actionTakenData, setActionTakenData] = useState([]);
-console.log(actionTakenData,"HHHHHHH")
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -142,10 +118,6 @@ console.log(actionTakenData,"HHHHHHH")
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
-
-  //       const client_id = JSON.parse(localStorage.getItem('userDetails')) !== null
-  // ? JSON.parse(localStorage.getItem('userDetails')).companies[0].subscriptions[1].hostings[0].clientId
-  // : null;
 
   const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).companies
@@ -236,7 +208,6 @@ console.log(actionTakenData,"HHHHHHH")
 
   }
 
-  console.log(actionTakenData, "::::::")
   useEffect(() => {
     if (id) {
       fetchInitialiObservation();
@@ -272,7 +243,7 @@ console.log(actionTakenData,"HHHHHHH")
             Reviewed By
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData["reviewedByName"]}
+            {initialData["reviewedByName"] ? initialData["reviewedByName"] : "-"}
 
           </Typography>
         </Grid>
@@ -289,9 +260,9 @@ console.log(actionTakenData,"HHHHHHH")
           </Typography>
         </Grid>
 
-        <Grid item md={12}>{actionTakenData.length > 0 ? 
+        <Grid item md={12} sm={12} xs={12}>{actionTakenData.length > 0 ? 
           <TableContainer component={Paper}>
-            <Table style={{ minWidth: 100 }} size="small">
+            <Table style={{ minWidth: 450 }} size="small">
               <TableHead><TableRow>
                 <TableCell style={{ width: 50 }}>
                   Action number

@@ -1,48 +1,29 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import { makeStyles } from '@material-ui/core/styles';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import Autocomplete, {
-  createFilterOptions,
+  createFilterOptions
 } from "@material-ui/lab/Autocomplete";
-import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
-import { useHistory, useParams } from "react-router";
-import api from "../../../utils/axios";
 import axios from "axios";
-import { CircularProgress } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import "../../../styles/custom/customheader.css";
 import classNames from "classnames";
-
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from "react-router";
+import "../../../styles/custom/customheader.css";
+import api from "../../../utils/axios";
 import {
   access_token,
   ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
-import ComingSoon from '../ComingSoon';
+import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -153,42 +134,10 @@ const filter = createFilterOptions();
 
 const ObservationInitialNotificationUpdate = () => {
 
-  const assignee = [
-    'None',
-    'Assignee',
-    'Assignee 1',
-    'Assignee 2',
-    'Assignee 3',
-    'Assignee 4',
-  ];
-
-  const assigneeDepartment = [
-    'None',
-    'Assignee Department',
-    'Assignee Department 1',
-    'Assignee Department 2',
-    'Assignee Department 3',
-    'Assignee Department 4',
-
-  ];
-
   const { id } = useParams();
   const history = useHistory();
-
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
   const [loading, setLoading] = useState(false);
-
-  // const handleChange = (event) => {
-  //   setState({ ...state, [event.target.name]: event.target.checked });
-  // };
-
   const [initialData, setInitialData] = useState({});
-
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
@@ -199,19 +148,16 @@ const ObservationInitialNotificationUpdate = () => {
   const [departmentName, setDepartmentName] = useState([])
   const [submitLoader, setSubmitLoader] = useState(false);
   const [levelLenght, setLevelLenght] = useState(0)
-
+  const [catagory, setCatagory] = useState();
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [projectSturcturedData, setProjectSturcturedData] = useState([])
   const [isNext, setIsNext] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [error, setError] = useState();
 
-  let filterReportedByName = []
-  let filterDepartmentName = []
+  let filterDepartmentName = [];
   const project = JSON.parse(localStorage.getItem("projectName")) !== null
     ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
-
-  const selectBreakdown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
 
   const fkCompanyId = JSON.parse(localStorage.getItem("company")) !== null
@@ -222,40 +168,14 @@ const ObservationInitialNotificationUpdate = () => {
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
 
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-    setRiskObservation(true);
-  };
-
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-    setRiskObservation(false);
-  };
-
-  const handelAddressSituationYes = (e) => {
-    setAddressSituation(false);
-  };
-
-  const handelAddressSituationNo = (e) => {
-    setAddressSituation(true);
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [error, setError] = useState();
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const [catagory, setCatagory] = useState();
-  const [catagoryName, setCatagoryName] = useState();
-
   const handelSelectOption = (cate) => {
     if (catagory !== undefined) {
       for (let i = 0; i <= catagory.length; i++) {
-        if (catagory[i] != undefined && catagory[i]["observationTag"] == cate) {
+        if (catagory[i] != undefined){
+          if(catagory[i]["observationTag"] == cate.replace(/\s*$/,'')){
           return true
-        }
+          }
+        } 
       }
     }
   }
@@ -263,16 +183,12 @@ const ObservationInitialNotificationUpdate = () => {
   const handleChange = async (e, index, value) => {
 
     let temp = [...catagory]
-    let tempRemove = []
     if (e.target.checked == false) {
-      temp.map((ahaValue, index) => {
-        if (ahaValue['observationTag'] === value.tagName) {
-
-          if (ahaValue['id']) {
-            const res = api.delete(`/api/v1/observations/${id}/observationtags/${ahaValue.id}/`)
-
+      temp.map((catagoryValue, index) => {
+        if (catagoryValue['observationTag'] === value.tagName) {
+          if (catagoryValue['id']) {
+            const res = api.delete(`/api/v1/observations/${id}/observationtags/${catagoryValue.id}/`)
           }
-
           temp.splice(index, 1);
         }
       })
@@ -286,20 +202,12 @@ const ObservationInitialNotificationUpdate = () => {
         "createdBy": parseInt(userId),
         "updatedBy": 0,
       })
-
-      //  await catagoryName.push(value.tagName)
     }
     await setCatagory(temp)
-
-
   };
-  const handleOther = (e) => {
-    let tempData = [...catagory]
-    tempData[8].observationTag = e.target.value
-  }
-
   
   const handleSubmit = async () => {
+    console.log(initialData['assigneeName'],"LLLL")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
     await setError(error);
 
@@ -311,6 +219,10 @@ const ObservationInitialNotificationUpdate = () => {
     let updateCategory = []
 
     if (id) {
+      if(initialData['assigneeName'] !== ""){
+        initialData['observationStage'] = "Planned"
+        initialData['observationStatus'] = "Assigned"
+      }
       initialData['updatedBy'] = userId
       delete initialData['attachment']
       for (let i = 0; i < catagory.length; i++) {
@@ -320,10 +232,7 @@ const ObservationInitialNotificationUpdate = () => {
 
         } else {
           newCategory.push(catagory[i])
-
-
         }
-
       }
       if (updateCategory.length > 0) {
         const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory).then(res => {} ).catch(err => setLoading(false)        )
@@ -331,7 +240,6 @@ const ObservationInitialNotificationUpdate = () => {
       if (newCategory.length > 0) {
         const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory).then(res => {} ).catch(err => setLoading(false)        )
       }
-
       const res1 = await api.put(`/api/v1/observations/${id}/`, initialData).then(res => {
         if (res.status === 200) {
            localStorage.setItem("update", "Done");
@@ -579,7 +487,7 @@ if(departments !== ""){
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            await setIsLoading(true);
+            // await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
 
@@ -723,7 +631,8 @@ if(departments !== ""){
               }}
             />
           </Grid>
-
+          
+          {tagData.length > 0 ? (
           <Grid item md={12} xs={12} className={classes.formBox}>
             <FormLabel className={classes.labelName} component="legend">
               Categories
@@ -739,6 +648,7 @@ if(departments !== ""){
                       name={value}
                       // checked={catagoryName.includes(value.tagName)}
                       checked={handelSelectOption(value.tagName)}
+                      // checked={catagory[index] !== undefined ? catagory[index]['observationTag'] == value.tagName ? true : false : false }
                       onChange={(e) => handleChange(e, index, value)}
                     />
                   }
@@ -747,7 +657,7 @@ if(departments !== ""){
               ))}
             </FormGroup>
 
-          </Grid>
+          </Grid>): null}
 
           <Grid item md={6} xs={12} className={classes.formBox}>
 
@@ -802,103 +712,7 @@ if(departments !== ""){
                 </MenuItem>
               ))}
             </TextField>
-          {/* <Autocomplete
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-                onChange={(event, newValue) => {
-                  if (typeof newValue === "string") {
-                    // setValueReportedBy({
-                    //   inputValue: newValue,
-                    // });
-
-                    setInitialData({
-                      ...initialData,
-                      assigneeName: newValue,
-                      assigneeId: "",
-                    });
-                  } else if (newValue && newValue.inputValue) {
-                    // Create a new value from the user input
-                    // setValueReportedBy({
-                    //   inputValue: newValue.inputValue,
-                    // });
-                    setInitialData({
-                      ...initialData,
-                      assigneeName: newValue.inputValue,
-                      assigneeId: newValue.reportedById,
-                      // reportedByBadgeId: newValue.badgeNo,
-                    });
-                  } else {
-                    // setValueReportedBy(newValue);
-                  }
-                }}
-                filterOptions={(options, params) => {
-                  const filtered = filter(options, params);
-
-                  // Suggest the creation of a new value
-                  if (params.inputValue !== "") {
-                    filtered.push({
-                      inputValue: params.inputValue,
-                      inputValue: `${params.inputValue}`,
-                    });
-                  }
-
-                  return filtered;
-                }}
-                className={classes.mT30}
-                handleHomeEndKeys
-                id="free-solo-with-text-demo"
-                options={reportedByName}
-                getOptionLabel={(option) => {
-                  // Value selected with enter, right from the input
-                  if (typeof option === "string") {
-                    return option;
-                  }
-                  // Add "xxx" option created dynamically
-                  if (option.inputValue) {
-                    return option.inputValue;
-                  }
-                  // Regular option
-                  return option.title;
-                }}
-                renderOption={(option) => option.inputValue}
-                // style={{ width: 300 }}
-                freeSolo
-                selectOnFocus
-                clearOnBlur
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Assignee"
-                    // error={error.reportedByName}
-                    // helperText={
-                    //   error.reportedByName ? error.reportedByName : ""
-                    // }
-                    variant="outlined"
-                  />
-                )}
-              /> */}
-
-            {/* <Autocomplete
-              id="combo-box-demo"
-              options={reportedByName}
-              value={initialData.assigneeName ? initialData.assigneeName : ""}
-              className={classes.mT30}
-              loading={isLoading}
-              getOptionLabel={(option) => option['inputValue']}
-              onChange={(e, option) => {
-                setInitialData({
-                  ...initialData,
-                  assigneeName: option.inputValue,
-                });
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Assignee"
-                  variant="outlined"
-              // value={initialData.assigneeName ? initialData.assigneeName : ""}
-              />
-              )}
-            /> */}
+       
           </Grid>
          
           <Grid
@@ -906,21 +720,7 @@ if(departments !== ""){
             md={12}
             xs={12}
           >
-            {/* {submitLoader == false ?
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                >
-
-               Submit
-                </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              } */}
+        
             <div className={classes.loadingWrapper}>
               <Button
                 variant="outlined"
@@ -933,14 +733,7 @@ if(departments !== ""){
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             </div>
-            {/* <Button
-                variant="outlined"
-                size="medium"
-                className={classes.custmCancelBtn}
-                onClick={() => handleClose()}
-              >
-                CANCEL
-              </Button> */}
+            
           </Grid>
         </Grid> : <h1>Loading...</h1>}
       {/* </PapperBlock> */}

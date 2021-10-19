@@ -1,27 +1,25 @@
-import React, { useEffect, useState, useRef } from "react";
-import Grid from "@material-ui/core/Grid";
+import { FormHelperText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import Grid from "@material-ui/core/Grid";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router-dom";
-import api from "../../../utils/axios";
-import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
-import { FormHelperText } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Row, Col } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from "react";
+import { Col, Row } from "react-grid-system";
+import { useHistory, useParams } from "react-router-dom";
 import Type from "../../../styles/components/Fonts.scss";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {

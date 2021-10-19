@@ -1,36 +1,35 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
+import { FormHelperText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { PapperBlock } from "dan-components";
+import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { FormHelperText, withStyles } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MuiAlert from "@material-ui/lab/Alert";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-grid-system";
 import { useHistory, useParams } from "react-router";
-import { result } from "lodash";
-import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import EvidenceValidate from "../../Validator/EvidenceValidation";
 import Type from "../../../styles/components/Fonts.scss";
-
-import CircularProgress from '@material-ui/core/CircularProgress';
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM } from "../../../utils/constants";
 import Attachment from "../../Attachment/Attachment";
+import EvidenceValidate from "../../Validator/EvidenceValidation";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {

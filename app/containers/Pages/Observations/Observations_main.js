@@ -1,34 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import AddIcon from '@material-ui/icons/Add';
-import obsIcon from 'dan-images/obsIcon.png';
-import classNames from "classnames";
 import Button from '@material-ui/core/Button';
-import ReorderIcon from '@material-ui/icons/Reorder';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ViewColumnIcon from '@material-ui/icons/ViewColumn';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-import ObservationSearchSection from './ObservationSearchSection';
-import ObservationsFilter from './ObservationsFilter';
-import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
-import GamesOutlinedIcon from '@material-ui/icons/GamesOutlined';
-import ObservationsKanban from './ObservationsKanban';
-import ObservationsBarCharts from './ObservationsBarCharts';
-import ObservationsList from './ObservationsList';
-import preplanning from 'dan-images/preplanning.png';
-import progress from 'dan-images/progress.png';
-import completed from 'dan-images/completed.png';
-import { useHistory, useParams } from "react-router";
+import ReorderIcon from '@material-ui/icons/Reorder';
+import classNames from "classnames";
+import obsIcon from 'dan-images/obsIcon.png';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
+import ObservationSearchSection from './ObservationSearchSection';
+import ObservationsKanban from './ObservationsKanban';
+import ObservationsList from './ObservationsList';
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -220,6 +211,11 @@ export default function Observations() {
     setValue(newValue);
   };
 
+  const handleBulkUploadfilePush = async () => {
+    history.push(
+      '/app/observation-bulkuploadfile'
+    );
+    }
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
       localStorage.removeItem("value")
@@ -231,16 +227,32 @@ export default function Observations() {
     <div className={classes.root}>
       <Grid item sm={12} xs={12} className={classes.borderTop}>
         <Grid container spacing={3}>
-          <Grid item sm={10} xs={12} className={classes.pLFiveHt40}>
+          <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
             <img src={obsIcon} className={classes.attachImg} alt="decoration" />
             <Typography variant="h5"> Observations</Typography>
           </Grid>
-          <Grid item sm={2} xs={12}>
-              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary"                    onClick={() => handleInitialNotificationPush()}
->
+          <Grid item sm={5} xs={12}>
+              
+
+              {/* <Button
+                variant="contained"
+                // color="primary"
+                size="small"
+                className={classNames(classes.buttonsNew, classes.floatR)}
+                disableElevation
+                startIcon={<CloudUploadIcon />}
+                //onClick={() => handleBulkUploadPush()}
+                style={{marginLeft: '10px'}}
+                onClick={() => handleBulkUploadfilePush()}
+              >
+                Upload
+              </Button> */}
+              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
                 <AddIcon className={classes.floatR} /> Add new
               </Button>
+              
           </Grid>
+              
         </Grid>
       </Grid>
       <Grid container spacing={3}>

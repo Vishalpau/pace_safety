@@ -33,7 +33,7 @@ import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
 
-import Axios from "axios";
+import axios from "axios";
 import api from "../../../../utils/axios";
 
 import { handelCommonObject } from "../../../../utils/CheckerValue"
@@ -176,20 +176,6 @@ const ProjectDetails = () => {
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0)
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
-      -
-      {file.size}
-      {' '}
-      bytes
-    </li>
-  ));
-
-
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
@@ -288,11 +274,21 @@ const ProjectDetails = () => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
-    // await getProjectStr(fkProjectStructureId)
-    console.log(fkProjectStructureId, "KKKKK")
     form["fkProjectStructureIds"] = fkProjectStructureId
-    // form["workArea"] = projectBreakout.toString()
-    console.log(form, "KKKKKKKK")
+
+    let structName = []
+    let projectStructId = fkProjectStructureId.split(":")
+
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${project.projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    form["workArea"] = structName[structName.length - 1]
     const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
     await setError(error);
     if (!isValid) {
@@ -302,7 +298,6 @@ const ProjectDetails = () => {
     if (form.id) {
       delete form["ahaAssessmentAttachment"]
       // form['updatedBy'] = form['createdBy']
-      console.log(form, "GGGGGGGg")
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
@@ -336,14 +331,10 @@ const ProjectDetails = () => {
             const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
           }
         }
-
         history.push("/app/pages/aha/assessments/project-area-hazards")
       }
     }
-
-
   }
-
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -352,108 +343,6 @@ const ProjectDetails = () => {
     return true
   }
 
-  const fetchBreakdown = async (e, index) => {
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    temp[index - 1][`selectValue`] = value;
-    setBreakdown1ListData(temp)
-    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
-      const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
-      removeBreakDownList[index][`selectValue`] = "";
-
-      await setBreakdown1ListData(removeBreakDownList)
-
-      let name = breakdown1ListData[index - 1].breakdownValue.map(
-        async (item) => {
-          if (item.id === value) {
-            setSelectBreakDown([
-              ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]);
-            dispatch(breakDownDetails([
-              ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name },
-              ])
-            );
-            return;
-          }
-
-        }
-      );
-    } else {
-      let name = breakdown1ListData[index - 1].breakdownValue.map(
-        async (item) => {
-          if (item.id === value) {
-            await setSelectBreakDown([
-              ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]);
-            dispatch(breakDownDetails([
-              ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name },
-              ])
-            );
-            return;
-          }
-
-        }
-      );
-    }
-
-
-    for (var key in projectData.projectName.breakdown) {
-      if (key == index) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`,
-          headers: HEADER_AUTH,
-        };
-        await Axios(config)
-          .then(function (response) {
-            if (response.status === 200) {
-
-              if (
-                breakdown1ListData.filter(
-                  (item) =>
-                    item.breakdownLabel ===
-                    projectData.projectName.breakdown[index].structure[0].name
-                ).length > 0
-              ) {
-                return;
-              } else {
-                setBreakdown1ListData([
-                  ...breakdown1ListData,
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[index].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: ""
-                  },
-                ]);
-              }
-            }
-          })
-          .catch(function (error) {
-
-          });
-      }
-    }
-  };
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
   const fetchCallBack = async () => {
@@ -467,9 +356,8 @@ const ProjectDetails = () => {
             }`,
           headers: HEADER_AUTH,
         };
-        await Axios(config)
+        await axios(config)
           .then(async (response) => {
-
             await setBreakdown1ListData([
               {
                 breakdownLabel:
@@ -478,7 +366,6 @@ const ProjectDetails = () => {
                 selectValue: ""
               },
             ]);
-
             setIsLoading(true);
           })
           .catch(function (error) {
@@ -493,7 +380,6 @@ const ProjectDetails = () => {
     const result = res.data.data.results;
     await setForm(result)
     await fetchBreakDownData(result.fkProjectStructureIds)
-
   }
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
@@ -503,7 +389,6 @@ const ProjectDetails = () => {
 
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
-    // let removeTemp = temp.slice(0, index)
     for (var i in temp) {
       if (i > index) {
         temp[i].breakDownData = []
@@ -520,20 +405,15 @@ const ProjectDetails = () => {
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
-
-
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
             }${value}`)
             .then(function (response) {
               if (response.status === 200) {
-
                 temp[key].breakDownData = response.data.data.results
-                //  temp[key].select=e.
                 setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
-
             });
         }
       }
@@ -541,7 +421,6 @@ const ProjectDetails = () => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
     setLevelLenght(breakdownLength)
@@ -563,16 +442,13 @@ const ProjectDetails = () => {
             await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown, {
                     breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
                     selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                     breakDownData: result
                   }
-
                 ];
-
               }
             });
             setFetchSelectBreakDownList(selectBreakDown)
@@ -596,7 +472,6 @@ const ProjectDetails = () => {
 
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown,
                   {
@@ -605,11 +480,9 @@ const ProjectDetails = () => {
                     breakDownData: result
                   }
                 ];
-
               }
             });
             setFetchSelectBreakDownList(selectBreakDown)
-
           })
           .catch((error) => {
             console.log(error)
@@ -619,69 +492,21 @@ const ProjectDetails = () => {
     }
   };
 
-
-
-  const getProjectStr = async (id) => {
-    console.log(id)
-    if (id != '') {
-      let c_id = JSON.parse(localStorage.getItem("company")).fkCompanyId
-      let p_id = JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-      let data = []
-      let breakDown = await id.split(':')
-      console.log(breakDown, "FFFFFF")
-      if (breakDown.length > 1) {
-        for (var i = 0; i < breakDown.length; i++) {
-          let level_id = breakDown[i].split('L')
-          let level = level_id[0] + 'L'
-          let _id = level_id[1]
-          let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
-          let res = await api.get(apiurl);
-          data = [...data, res.data.data.results[0].name]
-        }
-        console.log(data, "22222")
-        setProjectBreakout(data)
-      } else {
-        // for(var i=0;i<breakDown.length;i++){
-        let level_id = breakDown[0].split('L')
-        let level = level_id[0] + 'L'
-        let _id = level_id[1]
-        let apiurl = `${ACCOUNT_API_URL}api/v1/companies/${c_id}/projects/${p_id}/projectstructure/${level}/${_id}/`
-        let res = await api.get(apiurl);
-        data = [...data, res.data.data.results[0].name]
-        let name = data.toString()
-        console.log(name, "52525252")
-
-        await setForm({ ...form, workArea: name })
-        // setProjectBreakout(data.toString())
-      }
-
-    }
-  }
-
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...selectDepthAndId, `${depth}${id}`]
-    setSelectDepthAndId([... new Set(newData)])
-  }
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
     const result = res.data.data.results
     await setTeamForm(result)
   }
+
   const classes = useStyles();
 
   useEffect(() => {
-    // fetchBreakdown()
-    // getProjectStr()
-
-
     fetchCallBack()
-
+    if(id){
     fetchAhaData()
     fetchTeamData()
-    // if(selectDepthAndId){
-    //   getProjectStr()
-    // }
-
+    }
+    
   }, []);
   return (
     <>
@@ -690,10 +515,6 @@ const ProjectDetails = () => {
 
           <Grid container spacing={3} className={classes.observationNewSection}>
             <Grid container spacing={3} item xs={12} md={9}>
-              {/* <Grid item xs={12} className={classes.coponentTitleBox}>
-            <Typography variant="h5">Initial Notification</Typography>
-        </Grid> */}
-
               <Grid item md={12}>
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
                   Project
@@ -729,7 +550,6 @@ const ProjectDetails = () => {
                         {data.breakDownData.length !== 0
                           ? data.breakDownData.map((selectvalues, index) => (
                             <MenuItem key={index}
-                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
                               value={selectvalues.id}>
                               {selectvalues.structureName}
                             </MenuItem>
@@ -751,30 +571,6 @@ const ProjectDetails = () => {
                   setWorkArea={setWorkArea}
                   setSelectDepthAndId={setSelectDepthAndId} />
               }
-              {/* <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Work Area"
-            margin="dense"
-            name="workarea"
-            id="workarea"
-            value={form.workArea ? form.workArea : ""}
-            select
-            fullWidth
-            onChange={(e) => setForm({...form,workArea:e.target.value})}
-            variant="outlined"
-        >
-            {areaName.map((option) => (
-            <MenuItem key={option} value={option}>
-                {option}
-            </MenuItem>
-            ))}
-        </TextField>
-        </Grid> */}
               <Grid
                 item
                 md={6}
@@ -846,8 +642,6 @@ const ProjectDetails = () => {
                     {radioDecide.map((value) => (
                       <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
                     ))}
-                    {/* <FormControlLabel value="yes" className={classes.labelValue} control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" className={classes.labelValue} control={<Radio />} label="No" /> */}
                   </RadioGroup>
                   {error && error["permitToPerform"] && (
                     <FormHelperText>
@@ -946,35 +740,6 @@ const ProjectDetails = () => {
                   </Grid>) : null}
 
               </>))}
-
-              {/* {Teamform.map((item, index) => (<>
-              
-                  <Grid item xs={11} md={6}>
-                    <TextField
-                      label="Team Name"
-            margin="dense"
-            name="arename"
-            id="arename"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-            onClick={() => {handleTeamName(e, index)}}
-                    />
-                  </Grid>
-                  {Teamform.length > 1 ? (
-                    <Grid item  md={1} justify="center">
-                      <IconButton variant="contained"
-                color="primary" onClick={(e) => handelRemove(e, index)}>
-                      <DeleteForeverIcon />
-                      </IconButton>
-                    </Grid>
-                    
-                  ) : null}
-                  </>
-            ))} */}
-
               <Grid item md={12} className={classes.createHazardbox}>
                 <Button
                   variant="contained"
@@ -986,65 +751,6 @@ const ProjectDetails = () => {
                   Add
                 </Button>
               </Grid>
-              {/* <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormLabel className={classes.labelName} component="legend">Discuss and document conditions when the work must be Stopped</FormLabel>
-        <FormGroup className={classes.customCheckBoxList}>
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 1"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 2"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 3"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 4"
-            />
-        </FormGroup>
-        </Grid> */}
-
               <Grid
                 item
                 md={12}

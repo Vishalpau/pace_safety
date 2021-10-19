@@ -1,41 +1,25 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import Box from "@material-ui/core/Box";
+import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button,
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import { useParams, useHistory } from 'react-router';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { PapperBlock } from 'dan-components';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
-import Box from "@material-ui/core/Box";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import classNames from "classnames"
-
-import FormSideBar from '../../../Forms/FormSideBar';
-import { JHA_FORM } from "../Utils/constants"
+import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { handelJhaId } from "../Utils/checkValue"
-import { TramOutlined, TramRounded } from '@material-ui/icons';
+import FormSideBar from '../../../Forms/FormSideBar';
+import { handelJhaId } from "../Utils/checkValue";
+import { JHA_FORM } from "../Utils/constants";
+
 
 
 

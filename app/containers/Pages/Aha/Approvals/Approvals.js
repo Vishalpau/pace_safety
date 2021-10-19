@@ -88,6 +88,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
+  const [isLoading, setIsLoading] = useState(false)
 
 
   const handelJobDetails = async () => {
@@ -97,6 +98,7 @@ const Approvals = () => {
     );
     const apiData = res.data.data.results;
     setForm(apiData);
+    setIsLoading(true)
   };
 
   const handelActionTracker = async () => {
@@ -176,6 +178,7 @@ const Approvals = () => {
   return (
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
+      {isLoading ? <>
         <Grid container spacing={3}>
           <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -262,7 +265,7 @@ const Approvals = () => {
             }
 
           </Grid>
-        </Grid>
+        </Grid> </>: <h1>Loading...</h1>}
       </PapperBlock>
     </>
   );
