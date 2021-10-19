@@ -173,7 +173,7 @@ const Summary = (props) => {
             setInvestigationOverview(true);
             setEvidence(true)
             setRootCauseAnalysis(true)
-            setCloseout(true)
+            setCloseout(false)
             setLessionlearn(false)
             setIsLoading(true)
           }

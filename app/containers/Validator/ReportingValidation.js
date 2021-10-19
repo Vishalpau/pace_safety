@@ -1,6 +1,6 @@
 import validator from "validator";
 
-function ReportingValidation(data, otherData,notifyTo) {
+function ReportingValidation(data, otherData,notifyTo, notifyList) {
  
   let isValid = true;
   const error = {};
@@ -19,11 +19,15 @@ function ReportingValidation(data, otherData,notifyTo) {
       }
     }
   }
-  if(validator.isEmpty(notifyTo)){
+
+  if(notifyList!==0){
+    if(validator.isEmpty(notifyTo)){
       
-    error[`notifyTo`] = "Please choose notification sent";
-    isValid = false;
+      error[`notifyTo`] = "Please choose notification sent";
+      isValid = false;
+    }
   }
+  
 
   return { error, isValid };
 }

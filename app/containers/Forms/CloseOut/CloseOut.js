@@ -173,10 +173,15 @@ const CloseOut = () => {
         temp.updatedAt = new Date().toISOString();
         temp.updatedBy = parseInt(userId)
         temp.incidentStage = "Close out";
-        temp.incidentStatus = "Done"
+        if(form.closeDate ){
+            temp.incidentStatus = "Done"
+        }else{
+            temp.incidentStatus = "pending" 
+        }
+        
 
         try {
-            if (new Date(form.closeDate) > new Date(form.reviewDate)) {
+           
                  await api.put(
                     `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
                     temp
@@ -191,12 +196,7 @@ const CloseOut = () => {
                     }
                 }).catch(err=>history.push("/app/pages/error"))
                 
-            }
-            else {
-                setForm({ ...form, closeDate: null })
-                let errorMessage = "Closed date cannot be prior to reviewed date"
-                setError(errorMessage)
-            }
+            
         } catch (error) {
             history.push("/app/pages/error")
         }
@@ -363,6 +363,7 @@ const CloseOut = () => {
                                     onClick={(e) => setIsReviewDateShow(true)}
                                     open={isReviewDateShow}
                                     onClose={(e) => setIsReviewDateShow(false)}
+                                   
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
@@ -431,6 +432,7 @@ const CloseOut = () => {
                                     }}
                                     InputProps={{ readOnly: true }}
                                     disableFuture
+                                    minDate={new Date(form.reviewDate)}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>

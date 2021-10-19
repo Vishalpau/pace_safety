@@ -331,7 +331,8 @@ const ReportingAndNotification = () => {
         const { error, isValid } = ReportingValidation(
           form,
           reportOtherData,
-          stringNotifyList
+          stringNotifyList,
+          notifyToList.length
         );
         setError(error);
 
@@ -820,7 +821,7 @@ const ReportingAndNotification = () => {
                   />
                 </Grid>
               ) : null}
-
+{notificationSentValue.length>0 && 
               <Grid item xs={12}>
                 <FormControl
                   error={error && error.notifyTo}
@@ -850,7 +851,7 @@ const ReportingAndNotification = () => {
                   )}
                 </FormControl>
               </Grid>
-
+}
               <Grid item xs={12}>
                 <Box marginTop={3} marginBottom={4}>
                   <Typography variant="h6" gutterBottom>

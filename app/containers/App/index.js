@@ -112,19 +112,42 @@ function App() {
   }, [status])
   const getToken = async () => {
     const url = window.location
-        
-          
+    let search = window.location.search.substring(1)
+    let json =JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+    console.log(json.state)  
+    let state = json.state
+    let comId = 0
+    let proId = 0
+    let redback = ''
+    let tarPage = ''
+    let tarId = 0  
+     
+    if (state != null) {
+      let internal = state.split("{'")[1].split("'}")[0].split("', '")
+      let newArr = {}  
+      internal.map(i => {
+        newArr[i.split("':")[0]] = i.split(": '")[1]
+      })
+      state = newArr
+      console.log(state)
+
+      comId = state.companyId
+      proId = state.projectId
+      redback = state.redirect_back
+      tarPage = state.targetPage
+      tarId = state.targetId
+    }
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
-    const tagetPage = searchParams.get("targetPage");
-    const targetId = searchParams.get("targetId");
-    const companyId = searchParams.get("companyId");
-    const projectId = searchParams.get('projectId')
+    const tagetPage = searchParams.get("targetPage") ||tarPage
+    const targetId = searchParams.get("targetId") || tarId
+    const companyId = searchParams.get("companyId")||comId
+    const projectId = searchParams.get('projectId')||proId
     
    if(companyId !==null && projectId !== null && tagetPage!== null){
     localStorage.setItem('loading',JSON.stringify({tagetPage:tagetPage,companyId:companyId,projectId:projectId}))
     let targetPage = tagetPage.trim()
-    window.location.href = targetPage
+    window.location.href = `${targetPage}`
     userDetails(companyId,projectId,tagetPage)
     
    }
