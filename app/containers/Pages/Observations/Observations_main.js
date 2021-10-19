@@ -7,7 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import classNames from 'classnames';
@@ -19,7 +18,6 @@ import '../../../styles/custom/customheader.css';
 import ObservationSearchSection from './ObservationSearchSection';
 import ObservationsKanban from './ObservationsKanban';
 import ObservationsList from './ObservationsList';
-
 
 function TabPanel(props) {
   const {
@@ -212,11 +210,6 @@ export default function Observations() {
     setValue(newValue);
   };
 
-  const handleBulkUploadfilePush = async () => {
-    history.push(
-      '/app/observation-bulkuploadfile'
-    );
-  };
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem('action');
     localStorage.removeItem('value');
@@ -233,7 +226,6 @@ export default function Observations() {
             <Typography variant="h5"> Observations</Typography>
           </Grid>
           <Grid item sm={5} xs={12}>
-
 
             {/* <Button
               variant="contained"

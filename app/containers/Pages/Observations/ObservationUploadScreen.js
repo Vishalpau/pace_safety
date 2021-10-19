@@ -81,7 +81,7 @@ function ObservationBulkupload() {
   };
 
   const handleClick = () => {
-    console.log(fileObjects)
+    console.log(fileObjects);
     const data = new FormData();
     for (let i = 0; i < fileObjects.length; i += 1) {
       data.append('images', fileObjects[i]);
@@ -95,7 +95,7 @@ function ObservationBulkupload() {
   useEffect(() => {
     // handleClick(acceptedFiles)
   },
-    [files]);
+  [files]);
 
 
   return (
@@ -161,7 +161,6 @@ function ObservationBulkupload() {
             Upload
           </Button>
         </Grid>
-
 
         <Card className={classes.msgUploadSection}>
           <CardContent>This is a message</CardContent>
