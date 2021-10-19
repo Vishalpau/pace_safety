@@ -318,7 +318,7 @@ const ProjectStructure = (props) => {
       </Grid>)}
 
     {labelList.length === 1 ? labelList.map((item, index) => (
-      <Grid item xs={3}>
+      <Grid item md={3} sm={3} xs={12}>
         <FormControl
           key={index}
           variant="outlined"
@@ -373,7 +373,7 @@ const ProjectStructure = (props) => {
     ))
       : labelList.length === selectBreakdown.length ?
         labelList.slice(selectBreakdown.length - 1).map((item, index) => (
-          <Grid item xs={3}>
+          <Grid item md={3} sm={3} xs={12}>
             <FormControl
               key={index}
               variant="outlined"
@@ -427,7 +427,7 @@ const ProjectStructure = (props) => {
           </Grid>
         )) :
         labelList.length > 0 ? labelList.slice(selectBreakdown.length).map((item, index) => (
-          <Grid item xs={3}>
+          <Grid item md={3} sm={3} xs={12}>
             <FormControl
               key={index}
               variant="outlined"
