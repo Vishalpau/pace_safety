@@ -32,8 +32,6 @@ import { JHA_FORM } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 
 
-
-
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {

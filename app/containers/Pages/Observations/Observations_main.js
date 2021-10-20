@@ -7,22 +7,22 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ReorderIcon from '@material-ui/icons/Reorder';
-import classNames from 'classnames';
+import classNames from "classnames";
 import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useHistory } from 'react-router';
-import '../../../styles/custom/customheader.css';
+import { useHistory } from "react-router";
+import "../../../styles/custom/customheader.css";
 import ObservationSearchSection from './ObservationSearchSection';
 import ObservationsKanban from './ObservationsKanban';
 import ObservationsList from './ObservationsList';
 
+
 function TabPanel(props) {
-  const {
-    value, index, ...other
-  } = props;
+  const { children, value, index, ...other } = props;
 
   return (
     <div
@@ -34,7 +34,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          {/* <Typography>{children}</Typography> */}
+          <Typography>{children}</Typography>
         </Box>
       )}
     </div>
@@ -42,6 +42,7 @@ function TabPanel(props) {
 }
 
 TabPanel.propTypes = {
+  children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
@@ -53,7 +54,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   navTabBack: {
     backgroundColor: 'transparent',
     color: 'black',
@@ -204,17 +205,23 @@ export default function Observations() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const history = useHistory();
+  const [searchText, setSearchText] = React.useState('')
 
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const handleBulkUploadfilePush = async () => {
+    history.push(
+      '/app/observation-bulkuploadfile'
+    );
+  }
   const handleInitialNotificationPush = async () => {
-    localStorage.removeItem('action');
-    localStorage.removeItem('value');
+    localStorage.removeItem("action");
+    localStorage.removeItem("value")
 
-    history.push('/app/observation-initial-notification');
+    history.push("/app/observation-initial-notification");
   };
 
   return (
@@ -227,24 +234,22 @@ export default function Observations() {
           </Grid>
           <Grid item sm={5} xs={12}>
 
-            {/* <Button
-              variant="contained"
-              // color="primary"
-              size="small"
-              className={classNames(classes.buttonsNew, classes.floatR)}
-              disableElevation
-              startIcon={<CloudUploadIcon />}
-              // onClick={() => handleBulkUploadPush()}
-              style={{ marginLeft: '10px' }}
-              onClick={() => handleBulkUploadfilePush()}
-            >
-              Upload
-            </Button> */}
 
+            {/* <Button
+                variant="contained"
+                // color="primary"
+                size="small"
+                className={classNames(classes.buttonsNew, classes.floatR)}
+                disableElevation
+                startIcon={<CloudUploadIcon />}
+                //onClick={() => handleBulkUploadPush()}
+                style={{marginLeft: '10px'}}
+                onClick={() => handleBulkUploadfilePush()}
+              >
+                Upload
+              </Button> */}
             <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
-              <AddIcon className={classes.floatR} />
-              {' '}
-              Add new
+              <AddIcon className={classes.floatR} /> Add new
             </Button>
 
           </Grid>
@@ -258,11 +263,36 @@ export default function Observations() {
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+          <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
         </Grid>
-        <Grid item sm={4} xs={12} />
+        <Grid item sm={4} xs={12}>
+          <Grid className={classes.Lheight}>
+            <div className={classes.floatR}>
+
+              <span className={classes.pLTen}>
+                {/* <Button size="small" className={classes.buttonsNTwo} variant="contained">
+					  <PermIdentityIcon /> GIS
+					</Button> */}
+              </span>
+
+              {/* <span className={classes.pLTen}>
+					<Button size="small" className={classes.buttonsNTwo} variant="contained">
+					  <DateRangeOutlinedIcon />iPlanner
+					</Button>
+				</span>
+				
+			  <span className={classes.pLTen}>
+				<Button size="small" className={classes.buttonsNTwo} variant="contained">
+				  <GamesOutlinedIcon /> 3D
+				</Button>
+				</span>*/}
+            </div>
+          </Grid>
+        </Grid>
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
         <ObservationSearchSection />
@@ -273,7 +303,9 @@ export default function Observations() {
       <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />
       </TabPanel>
-
+      {/* <TabPanel value={value} index={3} className={classes.paddLRzero}>
+        <ObservationsBarCharts />
+      </TabPanel> */}
     </div>
   );
 }
