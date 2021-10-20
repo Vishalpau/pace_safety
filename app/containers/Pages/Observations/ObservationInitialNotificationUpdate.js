@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     marginTop: -12,
-    marginLeft: -12,
+    marginLeft: -80,
   },
   boldHelperText:{
     "& .MuiFormHelperText-root":{
@@ -998,20 +998,16 @@ if(departments !== ""){
               <Button
                 variant="outlined"
                 onClick={(e) => handleSubmit()}
-                className={classes.custmSubmitBtn}
-                style={{ marginLeft: "10px" }}
+               size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
                 disabled={loading}
               >
                 Submit
               </Button>
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
-              <Button
-                variant="outlined"
-                onClick={(e) => handleCancle()}
-                className={classes.custmSubmitBtn}
-                style={{ marginLeft: "10px" }}
-                // disabled={loading}
-              >
+              <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={(e) => handleCancle()}
+>
+
+             
                 Cancle
               </Button>
             </div>
