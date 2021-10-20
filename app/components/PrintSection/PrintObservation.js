@@ -6,6 +6,7 @@ import PaceLogo from 'dan-images/paceLogoWhite.png';
 import moment from 'moment';
 import api from "../../utils/axios";
 import axios from "axios";
+import apiAction from "../../utils/axiosActionTracker";
 
 import {
   access_token,
@@ -52,7 +53,8 @@ const PrintObservation = React.forwardRef((props, ref) => {
       baseURL: API_URL_ACTION_TRACKER,
     });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
+    console.log(allActionTrackerData,"!!!!")
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = allActionTracker.filter(
       (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 

@@ -39,7 +39,7 @@ function App() {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
 
-  const userDetails = async (proId, compId, access_token) => {
+  const userDetails = async (compId,proId, access_token,tagetPage) => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -48,10 +48,13 @@ function App() {
           url: `${SELF_API}`,
           headers: { Authorization: `Bearer ${access_token}` },
         };
+        console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
+          
         await axios(config)
           .then(function (response) {
             if (response.status === 200) {
-
+              console.log(response)
               localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
               setStatus(response.status)
               if (compId) {
@@ -70,7 +73,7 @@ function App() {
                 dispatch(projectName(project[0]))
               }
 
-
+              window.location.href = `/${tagetPage}`
             }
           })
           .catch(function (error) {
@@ -126,20 +129,18 @@ function App() {
       let json = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
       console.log({ jsonData: json })
       let state = json.state
-      jsonCode = json.code
-      if (state != null) {
-        let internal = state.split("{'")[1].split("'}")[0].split("', '")
-        let newArr = {}
-        internal.map(i => {
-          newArr[i.split("':")[0]] = i.split(": '")[1]
-        })
+      if (state) {
+        jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
+        let newArr = (0, eval)('(' + jsonCode + ')')
+        console.log({jsonCode:newArr})
         state = newArr
         console.log({ array: state })
         comId = state.companyId
         proId = state.projectId
         redback = state.redirect_back
-        tarPage = state.targetPage
+        tarPage = state.targetPage.trim()
         tarId = state.targetId
+        console.log(tarPage)
       }
     }
     const searchParams = new URLSearchParams(window.location.search);
@@ -148,14 +149,14 @@ function App() {
     // const targetId = searchParams.get("targetId");
     const companyId = searchParams.get("companyId") || comId;
     const projectId = searchParams.get('projectId') || proId
+    console.log({code:code})
+     if(code==="" && companyId !==0 && projectId !== 0 && tagetPage!== undefined){
+      localStorage.setItem('loading',JSON.stringify({tagetPage:tagetPage,companyId:companyId,projectId:projectId}))
+      let targetPage = tagetPage.trim()
+      // window.location.href = targetPage
+      userDetails(companyId,projectId, access_token,tagetPage)
 
-    //  if(companyId !==0 && projectId !== 0 && tagetPage!== undefined){
-    //   localStorage.setItem('loading',JSON.stringify({tagetPage:tagetPage,companyId:companyId,projectId:projectId}))
-    //   let targetPage = tagetPage.trim()
-    //   window.location.href = targetPage
-    //   userDetails(companyId,projectId,tagetPage)
-
-    //  }
+     }
     let data = {}
     if (code) {
       if (window.location.hostname === 'localhost') {
@@ -190,14 +191,13 @@ function App() {
 
       await axios(config)
         .then(function (response) {
-
+          // https://dev-safety.pace-os.com/?code=mwU544MwUQYVY4Df2fL45QBDkIMNC7&state=%7B%27companyId%27%3A+%271%27%2C+%27projectId%27%3A+%2713%27%2C+%27targetPage%27%3A+%27incidents%27%2C+%27targetId%27%3A+%27%27%2C+%27redirect_back%27%3A+%27%27%7D
           if (response.status === 200) {
-            userDetails(companyId, projectId, response.data.access_token)
             localStorage.setItem("access_token", response.data.access_token);
             if (!tagetPage) {
-              window.location.href = '/'
+              window.location.href = "/"
             } else {
-              window.location.href = `/${tagetPage}`
+              userDetails(companyId, projectId, response.data.access_token,tagetPage)
             }
           }
         })

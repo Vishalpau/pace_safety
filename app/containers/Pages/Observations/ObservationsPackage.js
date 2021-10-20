@@ -768,9 +768,9 @@ function Actions(props) {
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  <Typography variant="body1" display="inline">
+                                  {/* <Typography variant="body1" display="inline">
                                    <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
-                                  </Typography>
+                                  </Typography> */}
                                   {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
