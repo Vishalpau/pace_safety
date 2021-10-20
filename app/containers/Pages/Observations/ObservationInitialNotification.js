@@ -1402,9 +1402,8 @@ const ObservationInitialNotification = (props) => {
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl
                 component="fieldset"
-                error={error && error["observationType"]}
               >
-                <FormLabel component="legend" className={classes.labelName}>
+                <FormLabel component="legend" className={classes.labelName} error={error && error["observationType"]}>
                   Type of observation*
                 </FormLabel>
                 <RadioGroup

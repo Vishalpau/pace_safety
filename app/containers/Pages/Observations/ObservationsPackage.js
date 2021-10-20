@@ -267,10 +267,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     marginBottom: '30px',
   },
-  title: {
-    fontSize: '20px',
-    fontFamily: 'Montserrat !important',
-    color: '#06425c',
+  title:  {
+    fontSize: '1.25rem',
+    fontFamily: 'Montserrat-Regular',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '500',
+    lineHeight: '1.6',
   },
   pr0: { paddingRight: '0px !important', },
 }));
@@ -571,6 +573,7 @@ function Actions(props) {
                                       <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
                                         <Typography
                                           className={classes.title}
+                                          variant="h6"
                                         >
                                           {item[1]["observationDetails"]}
                                         </Typography>
