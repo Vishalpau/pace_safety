@@ -39,7 +39,7 @@ function App() {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
 
-  const userDetails = async (compId,proId, access_token) => {
+  const userDetails = async (compId,proId, access_token,tagetPage) => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -49,6 +49,8 @@ function App() {
           headers: { Authorization: `Bearer ${access_token}` },
         };
         console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
+          
         await axios(config)
           .then(function (response) {
             if (response.status === 200) {
@@ -71,7 +73,7 @@ function App() {
                 dispatch(projectName(project[0]))
               }
 
-
+              window.location.href = `/${tagetPage}`
             }
           })
           .catch(function (error) {
@@ -128,19 +130,17 @@ function App() {
       console.log({ jsonData: json })
       let state = json.state
       if (state) {
-        jsonCode = json.code
-        let internal = state.split("{'")[1].split("'}")[0].split("', '")
-        let newArr = {}
-        internal.map(i => {
-          newArr[i.split("':")[0]] = i.split(": '")[1]
-        })
+        jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
+        let newArr = (0, eval)('(' + jsonCode + ')')
+        console.log({jsonCode:newArr})
         state = newArr
         console.log({ array: state })
         comId = state.companyId
         proId = state.projectId
         redback = state.redirect_back
-        tarPage = state.targetPage
+        tarPage = state.targetPage.trim()
         tarId = state.targetId
+        console.log(tarPage)
       }
     }
     const searchParams = new URLSearchParams(window.location.search);
@@ -154,7 +154,7 @@ function App() {
       localStorage.setItem('loading',JSON.stringify({tagetPage:tagetPage,companyId:companyId,projectId:projectId}))
       let targetPage = tagetPage.trim()
       // window.location.href = targetPage
-      userDetails(companyId,projectId, access_token)
+      userDetails(companyId,projectId, access_token,tagetPage)
 
      }
     let data = {}
@@ -191,14 +191,13 @@ function App() {
 
       await axios(config)
         .then(function (response) {
-
+          // https://dev-safety.pace-os.com/?code=mwU544MwUQYVY4Df2fL45QBDkIMNC7&state=%7B%27companyId%27%3A+%271%27%2C+%27projectId%27%3A+%2713%27%2C+%27targetPage%27%3A+%27incidents%27%2C+%27targetId%27%3A+%27%27%2C+%27redirect_back%27%3A+%27%27%7D
           if (response.status === 200) {
-            userDetails(companyId, projectId, response.data.access_token)
             localStorage.setItem("access_token", response.data.access_token);
             if (!tagetPage) {
-              window.location.href = '/'
+              window.location.href = "/"
             } else {
-              window.location.href = `/${tagetPage}`
+              userDetails(companyId, projectId, response.data.access_token,tagetPage)
             }
           }
         })
