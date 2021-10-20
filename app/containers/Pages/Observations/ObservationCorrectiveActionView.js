@@ -225,7 +225,7 @@ const ObservationCorrectiveActionView = () => {
             Are there any corrective actions to be taken?
           </Typography>
           <Typography className={classes.labelValue}>
-            {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : ""}
+            {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : "-"}
           </Typography>
         </Grid>
 
