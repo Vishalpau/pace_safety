@@ -39,7 +39,7 @@ function App() {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
 
-  const userDetails = async (proId, compId, access_token) => {
+  const userDetails = async (compId,proId, access_token) => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -48,10 +48,11 @@ function App() {
           url: `${SELF_API}`,
           headers: { Authorization: `Bearer ${access_token}` },
         };
+        console.log(config)
         await axios(config)
           .then(function (response) {
             if (response.status === 200) {
-
+              console.log(response)
               localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
               setStatus(response.status)
               if (compId) {
@@ -126,8 +127,8 @@ function App() {
       let json = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
       console.log({ jsonData: json })
       let state = json.state
-      jsonCode = json.code
-      if (state != null) {
+      if (state) {
+        jsonCode = json.code
         let internal = state.split("{'")[1].split("'}")[0].split("', '")
         let newArr = {}
         internal.map(i => {
@@ -148,14 +149,14 @@ function App() {
     // const targetId = searchParams.get("targetId");
     const companyId = searchParams.get("companyId") || comId;
     const projectId = searchParams.get('projectId') || proId
+    console.log({code:code})
+     if(code==="" && companyId !==0 && projectId !== 0 && tagetPage!== undefined){
+      localStorage.setItem('loading',JSON.stringify({tagetPage:tagetPage,companyId:companyId,projectId:projectId}))
+      let targetPage = tagetPage.trim()
+      // window.location.href = targetPage
+      userDetails(companyId,projectId, access_token)
 
-    //  if(companyId !==0 && projectId !== 0 && tagetPage!== undefined){
-    //   localStorage.setItem('loading',JSON.stringify({tagetPage:tagetPage,companyId:companyId,projectId:projectId}))
-    //   let targetPage = tagetPage.trim()
-    //   window.location.href = targetPage
-    //   userDetails(companyId,projectId,tagetPage)
-
-    //  }
+     }
     let data = {}
     if (code) {
       if (window.location.hostname === 'localhost') {
