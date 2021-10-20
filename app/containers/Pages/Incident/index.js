@@ -191,7 +191,7 @@ function BlankPage(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  
+
 
   const fetchData = async () => {
     await setPage(1)
@@ -209,29 +209,29 @@ function BlankPage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     if (fkProjectStructureIds) {
-      try{
+      try {
         const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
         // debugger;
         await setIncidents(res.data.data.results.results);
-  
+
         await setTotalData(res.data.data.results.count)
         await setPageData(res.data.data.results.count / 25)
         let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageCount(pageCount)
+        await setPageCount(pageCount)
       }
-      catch(err){
+      catch (err) {
         history.push("/app/pages/error")
       }
     } else {
       const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`)
         // alert('hey')
-        .then(async(res) => {
+        .then(async (res) => {
           // debugger;
           setIncidents(res.data.data.results.results);
           await setTotalData(res.data.data.results.count)
           await setPageData(res.data.data.results.count / 25)
           let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+          await setPageCount(pageCount)
         })
         .catch(err => history.push("/app/pages/error"))
       // handleTimeOutError(res)
@@ -314,7 +314,7 @@ function BlankPage(props) {
     viewColumns: false,
     download: false,
     paging: false,
-    pagination:false
+    pagination: false
 
   };
   const fetchPermissionData = async () => {
@@ -353,7 +353,7 @@ function BlankPage(props) {
       })
 
   };
-  const handleSearchIncident = (serchValue)=>{
+  const handleSearchIncident = (serchValue) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -368,14 +368,14 @@ function BlankPage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${serchValue}`)
-    
-    .then((res)=>{
-      setIncidents(res.data.data.results.results);
-      setTotalData(res.data.data.results.count)
-      setPageData(res.data.data.results.count / 25)
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      setPageCount(pageCount)
-    })
+
+      .then((res) => {
+        setIncidents(res.data.data.results.results);
+        setTotalData(res.data.data.results.count)
+        setPageData(res.data.data.results.count / 25)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+        setPageCount(pageCount)
+      })
   }
   const classes = useStyles();
 
@@ -690,15 +690,15 @@ function BlankPage(props) {
             ])}
             columns={columns}
             options={options}
-           
+
 
           />
         </div>
       )}
-     <div className={classes.pagination}>
-     {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div>
+      <div className={classes.pagination}>
+        {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+        <Pagination count={pageCount} page={page} onChange={handleChange} />
+      </div>
     </PapperBlock>
   );
 }
