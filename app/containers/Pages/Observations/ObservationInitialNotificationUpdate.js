@@ -888,8 +888,8 @@ if(departments !== ""){
           <Paper elevation={1} className="paperSection">
             <Grid container spacing={3}>
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Classification
+          <FormLabel component="legend" className="viewLabel">
+                        Classification
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.observationClassification ? initialData.observationClassification : "-"}
@@ -904,16 +904,16 @@ if(departments !== ""){
           </Typography>
         </Grid> */}
           <Grid item md={6}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Stop Work
+          <FormLabel component="legend" className="viewLabel">
+                        Stop Work
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.stopWork ? initialData.stopWork : "-"}
             </Typography>
           </Grid>
           <Grid item md={6}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Near Miss
+          <FormLabel component="legend" className="viewLabel">
+                        Near Miss
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.nearMiss ? initialData.nearMiss : "-"}
@@ -939,8 +939,8 @@ if(departments !== ""){
             </Typography>
           </Grid> */}
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Categories
+          <FormLabel component="legend" className="viewLabel">
+                        Categories
             </FormLabel>
             {/* {tagsData.} */}
 

@@ -322,32 +322,32 @@ const ObservationInitialNotificationView = () => {
           <Paper elevation={1} className="paperSection">
             <Grid container spacing={3}>         
              <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Observation Type
+             <FormLabel component="legend" className="viewLabel">
+                           Observation Type
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.observationType ? initialData.observationType : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Observation Title
+          <FormLabel component="legend" className="viewLabel">
+                        Observation Title
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.observationTitle ? initialData.observationTitle : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Observation Description
+          <FormLabel component="legend" className="viewLabel">
+                        Observation Description
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.observationDetails ? initialData.observationDetails : "-"}
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Details of immediate actions taken
+          <FormLabel component="legend" className="viewLabel">
+                        Details of immediate actions taken
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.actionTaken ? initialData.actionTaken : "-"}
@@ -382,24 +382,24 @@ const ObservationInitialNotificationView = () => {
 
          
             <Grid item md={4} sm={4} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Observed By
+            <FormLabel component="legend" className="viewLabel">
+                          Observed By
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
             </Typography>
           </Grid>
           <Grid item md={4} sm={4} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Observer Department
+          <FormLabel component="legend" className="viewLabel">
+                        Observer Department
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
             </Typography>
           </Grid>
           <Grid item md={4} sm={4} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Observed On
+          <FormLabel component="legend" className="viewLabel">
+                        Observed On
             </FormLabel>
             <Typography className="viewLabelValue">
               {handelDateTime(initialData["observedAt"])}
@@ -407,24 +407,24 @@ const ObservationInitialNotificationView = () => {
           </Grid>
 
           <Grid item md={4} sm={4} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Foreman details
+          <FormLabel component="legend" className="viewLabel">
+                        Foreman details
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" || initialData.supervisorByBadgeId == "" ? "-" : initialData.supervisorByBadgeId}
             </Typography>
           </Grid>
           <Grid item md={8} sm={8} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Location
+          <FormLabel component="legend" className="viewLabel">
+                        Location
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.location ? initialData.location : "-"}
             </Typography>
           </Grid>
           <Grid item md={4} sm={4} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Submited by
+          <FormLabel component="legend" className="viewLabel">
+                        Submited by
             </FormLabel>
             <Typography className="viewLabelValue">
               {userName} , {userBadgeNo}
@@ -433,8 +433,8 @@ const ObservationInitialNotificationView = () => {
           </Grid>
 
           <Grid item md={4} sm={4} xs={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Submited on
+          <FormLabel component="legend" className="viewLabel">
+                        Submited on
             </FormLabel>
             <Typography className="viewLabelValue">
               {moment(initialData["createdAt"]).format(
@@ -460,8 +460,8 @@ const ObservationInitialNotificationView = () => {
           <Paper elevation={1} className="paperSection">
             <Grid container spacing={3}>
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Classification
+          <FormLabel component="legend" className="viewLabel">
+                        Classification
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.observationClassification ? initialData.observationClassification : "-"}
@@ -476,16 +476,16 @@ const ObservationInitialNotificationView = () => {
           </Typography>
         </Grid> */}
           <Grid item md={6}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Stop Work
+          <FormLabel component="legend" className="viewLabel">
+                        Stop Work
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.stopWork ? initialData.stopWork : "-"}
             </Typography>
           </Grid>
           <Grid item md={6}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Near Miss
+          <FormLabel component="legend" className="viewLabel">
+                        Near Miss
             </FormLabel>
             <Typography className="viewLabelValue">
               {initialData.nearMiss ? initialData.nearMiss : "-"}
@@ -511,8 +511,8 @@ const ObservationInitialNotificationView = () => {
             </Typography>
           </Grid> */}
           <Grid item md={12}>
-            <FormLabel variant="h6" gutterBottom className={classes.labelName}>
-              Categories
+          <FormLabel component="legend" className="viewLabel">
+                        Categories
             </FormLabel>
             {/* {tagsData.} */}
 
