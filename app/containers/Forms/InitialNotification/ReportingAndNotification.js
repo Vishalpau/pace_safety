@@ -644,7 +644,7 @@ const ReportingAndNotification = () => {
   const fetchReportedBy = () => {
     const config = {
       method: 'get',
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/1/company-users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -654,7 +654,7 @@ const ReportingAndNotification = () => {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results.users;
           let user = [];
           user = result;
           for (const i in result) {
