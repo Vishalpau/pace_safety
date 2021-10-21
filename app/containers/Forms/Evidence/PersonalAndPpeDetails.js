@@ -887,6 +887,7 @@ const PersonalAndPpeDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
+                  disabled={!isNext}
                 >
                   Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>

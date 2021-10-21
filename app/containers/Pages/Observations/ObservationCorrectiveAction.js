@@ -688,7 +688,7 @@ function ObservationCorrectiveAction() {
                 style={{ marginLeft: "10px" }}
                 // disabled={loading}
               >
-                Cancle
+                Cancel
               </Button>
           </div>
         </Grid>
