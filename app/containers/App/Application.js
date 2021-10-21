@@ -517,7 +517,8 @@ function Application(props) {
         {/* <Route path="/app/pages/summary" component={Summary} /> */}
         {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
         <Route exact path="/app/observations" component={Observations} />
-        <Route exact path="/api/v1/user/auth/authorize/observations" component={Observations} />
+        <Route exact path="/observations" component={Observations} />
+        <Route exact path="/api/v1/user/auth/authorize/" component={Observations} />
         {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
         <Route path="/app/observations#table" component={Observations} />
         <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />

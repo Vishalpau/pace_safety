@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     marginTop: -12,
-    marginLeft: +30,
+    marginLeft: -20,
   },
   buttonProgressSave: {
     // color: "green",
@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     marginTop: -12,
-    marginLeft: -55,
+    marginLeft: -105,
   },
   boldHelperText: {
     "& .MuiFormHelperText-root": {

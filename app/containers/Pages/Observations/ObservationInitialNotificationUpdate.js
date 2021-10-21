@@ -816,7 +816,7 @@ if(departments !== ""){
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Observed On</FormLabel>
                   <Typography className="viewLabelValue">
-                  {/* {handelDateTime(initialData["observedAt"])} */}
+                  {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
@@ -840,15 +840,18 @@ if(departments !== ""){
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Reported on</FormLabel>
                   <Typography className="viewLabelValue">
-                  {moment(initialData["createdAt"]).format(
+                  {/* {handelDateTime(initialData["createdAt"])} */}
+                  {initialData["reportedDate"] ? handelDateTime(initialData["reportedDate"]) : "-"}
+
+                  {/* {moment(initialData["createdAt"]).format(
                 "Do MMMM YYYY, h:mm a"
-              )}
+              )} */}
                  </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Source</FormLabel>
                   <Typography className="viewLabelValue">
-                    Web
+                  {initialData.source ? initialData.source : "-"}
                   </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12}>

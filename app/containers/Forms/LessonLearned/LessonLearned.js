@@ -1,50 +1,50 @@
-import React, { useEffect, useState, useRef } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import { PapperBlock } from "dan-components";
-import TextField from "@material-ui/core/TextField";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import IconButton from "@material-ui/core/IconButton";
-import moment from "moment";
-import TextButton from "../../CommonComponents/TextButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import { Row, Col } from "react-grid-system";
+import React, { useEffect, useState, useRef } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import { PapperBlock } from 'dan-components';
+import TextField from '@material-ui/core/TextField';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from '@material-ui/core/IconButton';
+import moment from 'moment';
+import Tooltip from '@material-ui/core/Tooltip';
+import { Row, Col } from 'react-grid-system';
 
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-import AddIcon from "@material-ui/icons/Add";
-import { useHistory, useParams } from "react-router";
-import axios from "axios";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import LessionLearnedValidator from "../../Validator/LessonLearn/LessonLearn";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import AddIcon from '@material-ui/icons/Add';
+import { useHistory, useParams } from 'react-router';
+import axios from 'axios';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import LessionLearnedValidator from '../../Validator/LessonLearn/LessonLearn';
 
-import FormSideBar from "../FormSideBar";
+import FormSideBar from '../FormSideBar';
 import {
   LOGIN_URL,
   access_token,
   ACCOUNT_API_URL,
   LESSION_LEARNED_FORM,
   SUMMERY_FORM
-} from "../../../utils/constants";
-import api from "../../../utils/axios";
-import Type from "../../../styles/components/Fonts.scss";
-import "../../../styles/custom.css";
+} from '../../../utils/constants';
+import api from '../../../utils/axios';
+import Type from '../../../styles/components/Fonts.scss';
+import '../../../styles/custom.css';
 
-import Attachment from "../../Attachment/Attachment";
+import Attachment from '../../Attachment/Attachment';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // redux
 
-import { useDispatch } from "react-redux";
-import { tabViewMode } from "../../../redux/actions/initialDetails";
+import { useDispatch } from 'react-redux';
+import TextButton from '../../CommonComponents/TextButton';
+import { tabViewMode } from '../../../redux/actions/initialDetails';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -52,52 +52,49 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    width: '100%',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   fullWidth: {
-    width: "100%",
+    width: '100%',
   },
 }));
 
 const LessionLearned = () => {
- 
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
   const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
+  const radioDecide = ['Yes', 'No'];
   const classes = useStyles();
   const history = useHistory();
   const ref = useRef();
   const { id } = useParams();
   const dispatch = useDispatch();
   const [error, setError] = useState({});
-  const [form, setForm] = useState([{ teamOrDepartment: "", learnings: "" }]);
+  const [form, setForm] = useState([{ teamOrDepartment: '', learnings: '' }]);
   const [learningList, setLearningList] = useState([]);
   const [attachment, setAttachment] = useState([{ evidenceDocument: null }]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [department, setDepartment] = useState([]);
   const [evidence, setEvidence] = useState([]);
-  const userId =
-    JSON.parse(localStorage.getItem("userDetails")) !== null
-      ? JSON.parse(localStorage.getItem("userDetails")).id
-      : null;
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-  const [isNext, setIsNext] = useState(true)
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+  const [isNext, setIsNext] = useState(true);
 
   const handleForm = (e, key, fieldname) => {
     const temp = [...form];
     const { value } = e.target;
     if (e.target.value === "Don't Know") {
-      temp[key][fieldname] = "N/A";
+      temp[key][fieldname] = 'N/A';
     } else {
       temp[key][fieldname] = value;
     }
@@ -105,7 +102,7 @@ const LessionLearned = () => {
   };
 
   const addNewTeamOrDeparment = async () => {
-    await setForm([...form, { teamOrDepartment: "", learnings: "" }]);
+    await setForm([...form, { teamOrDepartment: '', learnings: '' }]);
   };
 
   // handleAttchment
@@ -113,77 +110,75 @@ const LessionLearned = () => {
   const handleAttchment = async (e) => {
     const inputValue = e.target.files[0].name;
 
-    const file = inputValue.split(".");
+    const file = inputValue.split('.');
 
     if (
-      file[1].toLowerCase() === "jpg" ||
-      file[1].toLowerCase() === "jpeg" ||
-      file[1].toLowerCase() === "png"
+      file[1].toLowerCase() === 'jpg'
+      || file[1].toLowerCase() === 'jpeg'
+      || file[1].toLowerCase() === 'png'
     ) {
       if (e.target.files[0].size <= 1024 * 1024 * 25) {
         const temp = [...attachment];
         temp[0].evidenceDocument = e.target.files[0];
         await setAttachment(temp);
       } else {
-        ref.current.value = "";
-        await setMessage("File uploading failed! Select file less than 25MB!");
-        await setMessageType("error");
+        ref.current.value = '';
+        await setMessage('File uploading failed! Select file less than 25MB!');
+        await setMessageType('error');
         await setOpen(true);
       }
     } else {
-      ref.current.value = "";
-      await setMessage("Only JPG & PNG File is allowed!");
-      await setMessageType("error");
+      ref.current.value = '';
+      await setMessage('Only JPG & PNG File is allowed!');
+      await setMessageType('error');
       await setOpen(true);
     }
   };
   // handle close snackbar
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       // setOpenError(false)
       return;
     }
     setOpen(false);
   };
   const handleNext = async () => {
-    await setIsNext(false)
+    await setIsNext(false);
     // sent put request
-    let status = 0;
+    const status = 0;
     // sent post request
     const { isValid, error } = LessionLearnedValidator(form);
     setError(error);
-    if(evidence.length === 0){
+    if (isValid) {
       try {
         const temp = incidentsListData;
-        temp.incidentStage = "Lesson Learnt";
-        temp.incidentStatus = "Done"
+        temp.incidentStage = 'Lesson Learnt';
+        temp.incidentStatus = 'Done';
         const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`,
           temp
         );
-      } catch(error){history.push("/app/pages/error")}
-    }
-    if (isValid === true) {
-      if (attachment[0].evidenceDocument !== null) {
-        if (typeof attachment[0].evidenceDocument !== "string") {
-          if (evidence.length > 0) {
-            
-            const formData = new FormData();
-            formData.append('evidenceDocument', attachment[0].evidenceDocument);
-            formData.append('evidenceCheck', 'Yes');
-            formData.append('evidenceNumber', 'string');
-            formData.append('evidenceCategory', 'Lessons Learned');
-            formData.append('createdBy', parseInt(userId));
-            formData.append('status', 'Active');
-            formData.append('fkIncidentId', id);
-            try {
-              const res = await api.put(
-                `api/v1/incidents/${id}/evidences/${attachment[0].id}/`,
-                formData
-              );
-            } catch (error) {history.push("/app/pages/error") }
-          }else{
-           
+      } catch (error) { history.push('/app/pages/error'); }
+
+      if (isValid === true) {
+        if (attachment[0].evidenceDocument !== null) {
+          if (typeof attachment[0].evidenceDocument !== 'string') {
+            if (evidence.length > 0) {
+              const formData = new FormData();
+              formData.append('evidenceDocument', attachment[0].evidenceDocument);
+              formData.append('evidenceCheck', 'Yes');
+              formData.append('evidenceNumber', 'string');
+              formData.append('evidenceCategory', 'Lessons Learned');
+              formData.append('createdBy', parseInt(userId));
+              formData.append('status', 'Active');
+              formData.append('fkIncidentId', id);
+              try {
+                const res = await api.put(
+                  `api/v1/incidents/${id}/evidences/${attachment[0].id}/`,
+                  formData
+                );
+              } catch (error) { history.push('/app/pages/error'); }
+            } else {
               const formData = new FormData();
               formData.append('evidenceDocument', attachment[0].evidenceDocument);
               formData.append('evidenceCheck', 'Yes');
@@ -197,97 +192,88 @@ const LessionLearned = () => {
                   `api/v1/incidents/${id}/evidences/`,
                   formData
                 );
-              } catch (error) { history.push("/app/pages/error")}
+              } catch (error) { history.push('/app/pages/error'); }
             }
-
-        }
-      }
-
-
-      for (var i = 0; i < form.length; i++) {
-        if (form[i].id) {
-          try{
-          const res = await api.put(
-            `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
-            {
-              teamOrDepartment: form[i].teamOrDepartment,
-              learnings: form[i].learnings,
-              status: 'Active',
-              createdBy: parseInt(userId),
-              updatedBy: parseInt(userId),
-              fkIncidentId: localStorage.getItem('fkincidentId'),
-            }
-          );
-          if (res.status === 200) {
-            status = 201
           }
-        }catch(err){ history.push("/app/pages/error")}
         } else {
-          try{
-          const res = await api.post(
-            `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
-            {
-              teamOrDepartment: form[i].teamOrDepartment,
-              learnings: form[i].learnings,
-              status: 'Active',
-              createdBy: parseInt(userId),
-              updatedBy: parseInt(userId),
-              fkIncidentId: localStorage.getItem('fkincidentId'),
+          for (let i = 0; i < form.length; i++) {
+            if (form[i].id) {
+              try {
+                const res = await api.put(
+                  `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
+                  {
+                    teamOrDepartment: form[i].teamOrDepartment,
+                    learnings: form[i].learnings,
+                    status: 'Active',
+                    createdBy: parseInt(userId),
+                    updatedBy: parseInt(userId),
+                    fkIncidentId: localStorage.getItem('fkincidentId'),
+                  }
+                );
+              } catch (err) { history.push('/app/pages/error'); }
+            } else {
+              try {
+                const res = await api.post(
+                  `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
+                  {
+                    teamOrDepartment: form[i].teamOrDepartment,
+                    learnings: form[i].learnings,
+                    status: 'Active',
+                    createdBy: parseInt(userId),
+                    updatedBy: parseInt(userId),
+                    fkIncidentId: localStorage.getItem('fkincidentId'),
+                  }
+                );
+              } catch (err) { history.push('/app/pages/error'); }
             }
-          );
-          }catch(err){ history.push("/app/pages/error")}
-          status = res.status;
+          }
         }
 
-      }
-      if (status === 201) {
-        let viewMode = {
-          initialNotification:false,investigation:false,evidence:false,rootcauseanalysis:false,lessionlearn:true
 
-        }
+        const viewMode = {
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
+
+        };
         dispatch(tabViewMode(viewMode));
-        history.push(`${SUMMERY_FORM['Summary']}${id}/`);
-        
+        history.push(`${SUMMERY_FORM.Summary}${id}/`);
       }
-    }
+    } else { await setIsNext(true); }
   };
 
   //  Fetch Lession learn data
   const fetchLessonLerned = async () => {
     const res = await api.get(`api/v1/incidents/${id}/learnings/`)
-    .then((res)=>{
-      const result = res.data.data.results;
+      .then((res) => {
+        const result = res.data.data.results;
 
-      if (result.length > 0) {
-        let temp = [...form];
-        temp = result;
-         setForm(temp);
-      }
-       setLearningList(result);
-      setIsLoading(true);
-    })
-    .catch(()=>{
-      history.push("/app/pages/error");
-    })
-   
+        if (result.length > 0) {
+          let temp = [...form];
+          temp = result;
+          setForm(temp);
+        }
+        setLearningList(result);
+        setIsLoading(true);
+      })
+      .catch(() => {
+        history.push('/app/pages/error');
+      });
   };
 
   // fetch incident data
   const fetchIncidentsData = async () => {
     const res = await api.get(
-      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    ).then((res)=>{
+      `/api/v1/incidents/${localStorage.getItem('fkincidentId')}/`
+    ).then((res) => {
       const result = res.data.data.results;
-       setIncidentsListdata(result);
+      setIncidentsListdata(result);
     })
-    .catch((err)=>history.push("/app/pages/error"))
-    
+      .catch((err) => history.push('/app/pages/error'));
   };
 
   // fetch team or deparment
   const fetchDepartment = () => {
     const config = {
-      method: "get",
+      method: 'get',
       url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -298,34 +284,33 @@ const LessionLearned = () => {
         if (response.status === 200) {
           const result = response.data.data.results;
           setDepartment(result);
-        } 
+        }
       })
       .catch((error) => {
-        history.push("/app/pages/error")
+        history.push('/app/pages/error');
       });
   };
 
   // Fetch Evidance data
   const fetchEvidanceData = async () => {
     const allEvidence = await api.get(`/api/v1/incidents/${id}/evidences/`)
-    .then((allEvidence)=>{
-      if (allEvidence.status === 200) {
-        const newData = allEvidence.data.data.results.filter(
-          (item) => item.evidenceCategory === "Lessons Learned"
-        );
-         setEvidence(newData);
-        if (newData.length > 0) {
-          setAttachment(newData);
+      .then((allEvidence) => {
+        if (allEvidence.status === 200) {
+          const newData = allEvidence.data.data.results.filter(
+            (item) => item.evidenceCategory === 'Lessons Learned'
+          );
+          setEvidence(newData);
+          if (newData.length > 0) {
+            setAttachment(newData);
+          }
         }
-      }
-    })
-    .catch(()=>{
-      history.push("/app/pages/error");
-    })
-    
+      })
+      .catch(() => {
+        history.push('/app/pages/error');
+      });
   };
 
- 
+
   // handle Remove
 
   const handleRemove = async (key) => {
@@ -337,7 +322,7 @@ const LessionLearned = () => {
 
   // handle file name
   const handelFileName = (value) => {
-    const fileNameArray = value.split("/");
+    const fileNameArray = value.split('/');
     const fileName = fileNameArray[fileNameArray.length - 1];
     return fileName;
   };
@@ -361,7 +346,7 @@ const LessionLearned = () => {
     }
     fetchIncidentsData();
   }, []);
-  const isDesktop = useMediaQuery("(min-width:992px)");
+  const isDesktop = useMediaQuery('(min-width:992px)');
   return (
     <PapperBlock title="Lessons Learnt" icon="ion-md-list-box">
       {isLoading ? (
@@ -380,7 +365,7 @@ const LessionLearned = () => {
                 <Typography varint="body1" className={Type.labelValue}>
                   {incidentsListData.incidentNumber
                     ? incidentsListData.incidentNumber
-                    : "-"}
+                    : '-'}
                 </Typography>
               </Grid>
 
@@ -394,7 +379,7 @@ const LessionLearned = () => {
                 </Typography>
                 <Typography className={Type.labelValue}>
                   {moment(incidentsListData.incidentOccuredOn).format(
-                    "Do MMMM YYYY, h:mm:ss a"
+                    'Do MMMM YYYY, h:mm:ss a'
                   )}
                 </Typography>
               </Grid>
@@ -409,7 +394,7 @@ const LessionLearned = () => {
                 </Typography>
                 <Typography className={Type.labelValue}>
                   {moment(incidentsListData.incidentReportedOn).format(
-                    "Do MMMM YYYY, h:mm:ss a"
+                    'Do MMMM YYYY, h:mm:ss a'
                   )}
                 </Typography>
               </Grid>
@@ -425,7 +410,7 @@ const LessionLearned = () => {
                 <Typography className={Type.labelValue}>
                   {incidentsListData.incidentReportedByName
                     ? incidentsListData.incidentReportedByName
-                    : "-"}
+                    : '-'}
                 </Typography>
               </Grid>
 
@@ -440,7 +425,8 @@ const LessionLearned = () => {
                 <Typography className={Type.labelValue}>
                   {incidentsListData.incidentType
                     ? incidentsListData.incidentType
-                    : "-"}{" "}
+                    : '-'}
+                  {' '}
                 </Typography>
               </Grid>
 
@@ -455,7 +441,7 @@ const LessionLearned = () => {
                 <Typography className={Type.labelValue}>
                   {incidentsListData.incidentTitle
                     ? incidentsListData.incidentTitle
-                    : "-"}
+                    : '-'}
                 </Typography>
               </Grid>
 
@@ -470,7 +456,7 @@ const LessionLearned = () => {
                 <Typography className={Type.labelValue}>
                   {incidentsListData.incidentDetails
                     ? incidentsListData.incidentDetails
-                    : "-"}
+                    : '-'}
                 </Typography>
               </Grid>
 
@@ -485,7 +471,7 @@ const LessionLearned = () => {
                 <Typography className={Type.labelValue}>
                   {incidentsListData.incidentLocation
                     ? incidentsListData.incidentLocation
-                    : "-"}
+                    : '-'}
                 </Typography>
               </Grid>
 
@@ -512,8 +498,8 @@ const LessionLearned = () => {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         label="Team/department"
-                        value={value.teamOrDepartment || ""}
-                        onChange={(e) => handleForm(e, key, "teamOrDepartment")}
+                        value={value.teamOrDepartment || ''}
+                        onChange={(e) => handleForm(e, key, 'teamOrDepartment')}
                       >
                         {department.map((selectValues, index) => (
                           <MenuItem
@@ -546,8 +532,8 @@ const LessionLearned = () => {
                       variant="outlined"
                       rows="3"
                       multiline
-                      value={value.learnings || ""}
-                      onChange={(e) => handleForm(e, key, "learnings")}
+                      value={value.learnings || ''}
+                      onChange={(e) => handleForm(e, key, 'learnings')}
                     />
                   </Grid>
                   {form.length > 1 ? (
@@ -587,27 +573,27 @@ const LessionLearned = () => {
 
                 {attachment.length > 0
                   ? attachment.map((item, index) => (
-                      <>
-                        <Box paddingBottom={3}>
-                          <Typography variant="h6"> Add attachment</Typography>
-                        </Box>
-                        <input
-                          type="file"
-                          ref={ref}
-                          accept=".png, jpg, jpeg"
-                          onChange={(e) => handleAttchment(e)}
-                          style={{
-                            color:
-                              typeof item.evidenceDocument === "string" &&
-                              "transparent",
-                          }}
-                        />
+                    <>
+                      <Box paddingBottom={3}>
+                        <Typography variant="h6"> Add attachment</Typography>
+                      </Box>
+                      <input
+                        type="file"
+                        ref={ref}
+                        accept=".png, jpg, jpeg"
+                        onChange={(e) => handleAttchment(e)}
+                        style={{
+                          color:
+                            typeof item.evidenceDocument === 'string'
+                            && 'transparent',
+                        }}
+                      />
 
-                        {typeof item.evidenceDocument === "string" && (
-                          <Attachment value={evidence[0].evidenceDocument} />
-                        )}
-                      </>
-                    ))
+                      {typeof item.evidenceDocument === 'string' && (
+                        <Attachment value={evidence[0].evidenceDocument} />
+                      )}
+                    </>
+                  ))
                   : null}
               </Grid>
 
@@ -618,7 +604,8 @@ const LessionLearned = () => {
                   onClick={() => handleNext()}
                   disabled={!isNext}
                 >
-                  Submit{isNext?null:<CircularProgress size={20}/>}
+                  Submit
+                  {isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

@@ -424,7 +424,7 @@ const ObservationInitialNotificationView = () => {
           </Grid>
           <Grid item md={4} sm={4} xs={12}>
           <FormLabel component="legend" className="viewLabel">
-                        Submited by
+          Reported by
             </FormLabel>
             <Typography className="viewLabelValue">
               {userName} , {userBadgeNo}
@@ -434,7 +434,7 @@ const ObservationInitialNotificationView = () => {
 
           <Grid item md={4} sm={4} xs={12}>
           <FormLabel component="legend" className="viewLabel">
-                        Submited on
+          Reported on
             </FormLabel>
             <Typography className="viewLabelValue">
               {moment(initialData["createdAt"]).format(
@@ -442,6 +442,12 @@ const ObservationInitialNotificationView = () => {
               )}
             </Typography>
           </Grid>
+          <Grid item md={4} sm={4} xs={12}>
+                <FormLabel component="legend" className="viewLabel">Source</FormLabel>
+                <Typography className="viewLabelValue">
+                  {initialData.source ? initialData.source : "-"}
+                </Typography>
+              </Grid>
           </Grid>
           </Paper>
           </Grid>
@@ -626,13 +632,13 @@ const ObservationInitialNotificationView = () => {
               <Grid item xs={6}>
                 <FormLabel component="legend" className="viewLabel">Assign to</FormLabel>
                 <Typography className="viewLabelValue">
-                  Vijay Kumar
+                {initialData['assigneeName'] ? initialData['assigneeName'] :"-"}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <FormLabel component="legend" className="viewLabel">Department</FormLabel>
                 <Typography className="viewLabelValue">
-                  Safety
+                {initialData['departmentName'] ? initialData['departmentName'] :"-"}
                 </Typography>
               </Grid>
             </Grid>
