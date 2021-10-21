@@ -708,7 +708,7 @@ function ObservationCorrectiveAction() {
             <Grid container spacing={3}>
         <Grid
           item
-          md={5}
+          md={6}
           xs={12}
           className={classes.formBox}
         >
@@ -736,7 +736,7 @@ function ObservationCorrectiveAction() {
 
         <Grid
           item
-          md={5}
+          md={6}
           xs={12}
           className={classes.formBox}
         >
@@ -764,27 +764,43 @@ function ObservationCorrectiveAction() {
         </Paper>
         </Grid>
 
-        <Grid
-          item
-          md={10}
-          xs={12}
-          className={classes.formBox}
-        >
-          <TextField
-            label="Provide any additional comments"
-            name="provideadditionalcomments"
-            id="provideadditionalcomments"
-            multiline
-            rows={3}
-            fullWidth
-            variant="outlined"
-            value={comment.comment ? comment.comment : ""}
-            className={classes.formControl}
-            onChange={(e) => {
-              setComment({ ...comment, comment: e.target.value });
-            }}
-          />
+        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Typography variant="h6" className="sectionHeading">
+            <svg id="comment" xmlns="http://www.w3.org/2000/svg" width="24.15" height="21.856" viewBox="0 0 24.15 21.856">
+              <path id="Path_5096" data-name="Path 5096" d="M5.216,0H18.863A5.26,5.26,0,0,1,24.15,5.216v7a5.274,5.274,0,0,1-3.787,5l-.071,4a.571.571,0,0,1-1,.429l-3.93-4.216H5.216A5.245,5.245,0,0,1,0,12.218v-7A5.245,5.245,0,0,1,5.216,0ZM18.863,1.215H5.216a4,4,0,0,0-4,4v7a4,4,0,0,0,4,4H15.5a1.868,1.868,0,0,1,.572.214l3.072,3.287V16.791a.686.686,0,0,1,.5-.643,4.051,4.051,0,0,0,3.287-3.93v-7A4.011,4.011,0,0,0,18.863,1.215Z" fill="#06425c"/>
+              <path id="Path_5097" data-name="Path 5097" d="M80.643,74.215A.64.64,0,0,1,80,73.572.63.63,0,0,1,80.643,73H92.075a.564.564,0,0,1,.572.572.584.584,0,0,1-.572.643Z" transform="translate(-74.284 -67.784)" fill="#06425c"/>
+              <path id="Path_5098" data-name="Path 5098" d="M80.643,116.215a.63.63,0,0,1-.643-.572.64.64,0,0,1,.643-.643H92.075a.584.584,0,0,1,.572.643.564.564,0,0,1-.572.572Z" transform="translate(-74.284 -106.783)" fill="#06425c"/>
+              <path id="Path_5099" data-name="Path 5099" d="M80.643,159.215a.64.64,0,0,1-.643-.643.584.584,0,0,1,.643-.572H92.075a.526.526,0,0,1,.572.572.584.584,0,0,1-.572.643Z" transform="translate(-74.284 -146.711)" fill="#06425c"/>
+            </svg> Comments
+          </Typography>
         </Grid>
+        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+                <TextField
+                  label="Provide any additional comments"
+                  name="provideadditionalcomments"
+                  id="provideadditionalcomments"
+                  multiline
+                  rows={3}
+                  fullWidth
+                  variant="outlined"
+                  value={comment.comment ? comment.comment : ""}
+                  className="formControl"
+                  onChange={(e) => {
+                    setComment({ ...comment, comment: e.target.value });
+                  }}
+                />
+              </Grid>              
+            </Grid>
+          </Paper>
+        </Grid>
+
 
         <Grid
           item

@@ -276,6 +276,8 @@ html .custmCancelBtn {
   border: 1px solid #E7E7E7;
 }
 
+
+
 .sectionHeading {
   font-size: 16px !important;
   line-height: 19px;
@@ -621,9 +623,14 @@ html .custmCancelBtn {
   display: inline-block;
   margin-right: 15px;
 }
-.SummaryTabList li button.MuiButton-containedPrimary:hover {
-  border-color: #ff8533;
+.SummaryTabList li button.MuiButton-containedPrimary:hover, .SummaryTabList li button.MuiButton-containedSecondary  {
+  border-color: #ff8533 !important;
 }
+.SummaryTabList li button.MuiButton-outlinedSecondary, .SummaryTabList li button.MuiButton-outlinedSecondary:hover, .SummaryTabList li button.MuiButton-outlinedPrimary:hover {
+  color: #ff9900;
+  border: 1px solid #ff9900;
+  background-color: transparent;
+} 
 
 
 @media (max-width: 1280px) {

@@ -173,7 +173,18 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "16px",
       fontFamily: "Montserrat-Medium"
     }
-  }
+  },
+  sectionHeading: {
+    '& .MuiFormControlLabel-label': {
+      fontSize: '16px !important',
+      lineHeight: '19px',
+      color: '#06425C',
+      fontFamily: 'Montserrat-SemiBold !important',
+    },
+  },
+  customCheckBoxListCondition: {
+    display: 'block',
+  },
 
 }));
 
@@ -764,39 +775,28 @@ const ObservationInitialNotification = (props) => {
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Paper elevation={1} className="paperSection">
-          <Grid container spacing={3}>
-          <Grid item md={12} sm={12} xs={12}>
-                  <Typography gutterBottom className={classes.labelName}>
-                          Project Name
-                  </Typography>
-                  <Typography className={classes.labelValue}>
+            <Grid container spacing={3}>
+              <Grid item md={12} sm={12} xs={12}>
+                <Typography gutterBottom className="labelName">
+                  Project Name
+                </Typography>
+                <Typography className="labelValue">
                   {project.projectName}
-                  </Typography>
-                </Grid>
-              {/* <Typography
-                variant="h6"
-                gutterBottom
-                className={classes.labelName}
-              >
-                Project
-              </Typography>
-              <Typography className={classes.labelValue}>
-                {project.projectName}
-              </Typography> */}
-            <Grid item md={3} sm={6} xs={12}>
+                </Typography>
+              </Grid>
 
-    
-              <ProjectStructureInit
-                selectDepthAndId={selectDepthAndId}
-                setLevelLenght={setLevelLenght}
-                error={error}
-                setWorkArea={setWorkArea}
-                setSelectDepthAndId={setSelectDepthAndId}
-              />
+                <ProjectStructureInit
+                  selectDepthAndId={selectDepthAndId}
+                  setLevelLenght={setLevelLenght}
+                  error={error}
+                  setWorkArea={setWorkArea}
+                  setSelectDepthAndId={setSelectDepthAndId}
+                  className="formControl"
+                />
+              
             </Grid>
-            </Grid>
-            </Paper>
-            </Grid>
+          </Paper>
+        </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -860,7 +860,7 @@ const ObservationInitialNotification = (props) => {
 
                   return filtered;
                 }}
-                className={classes.mT30}
+                className="formControl"
                 handleHomeEndKeys
                 id="free-solo-with-text-demo"
                 options={reportedByDetails}
@@ -911,7 +911,7 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
-                className={classes.formControl}
+                className="formControl"
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -960,7 +960,7 @@ const ObservationInitialNotification = (props) => {
 
                   return filtered;
                 }}
-                className={classes.mT30}
+                className="formControl"
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
@@ -991,8 +991,8 @@ const ObservationInitialNotification = (props) => {
                     //     ? error.reportedByDepartment
                     //     : ""
                     // }
-                    className={classNames(classes.formControl, classes.boldHelperText)}
-
+                    // className={classNames(classes.formControl, classes.boldHelperText)}
+                    className="formControl"
                     // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
                     variant="outlined"
                   />
@@ -1009,7 +1009,7 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
-                className={classes.formControl}
+                className="formControl"
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -1065,7 +1065,7 @@ const ObservationInitialNotification = (props) => {
 
                   return filtered;
                 }}
-                className={classes.mT30}
+                className="formControl"
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
@@ -1118,7 +1118,7 @@ const ObservationInitialNotification = (props) => {
                 fullWidth
                 variant="outlined"
                 autoComplete="off"
-                className={classNames(classes.formControl, classes.boldHelperText)}
+                className="formControl"
                 onChange={(e) => {
                   setForm({
                     ...form,
@@ -1137,7 +1137,7 @@ const ObservationInitialNotification = (props) => {
                   error={error.observedAt}
                   helperText={error.observedAt ? error.observedAt : null}
                   format="YYYY/MM/DD hh:mm A"
-                  className={classes.formControl}
+                  className="formControl"
                   value={form.observedAt ? form.observedAt : null}
                   fullWidth
                   open={isDateShow}
@@ -1166,6 +1166,7 @@ const ObservationInitialNotification = (props) => {
                 defaultValue={form.shift}
                 select
                 fullWidth
+                className="formControl"
                 variant="outlined"
                 onChange={(e) => {
                   setForm({
@@ -1264,7 +1265,7 @@ const ObservationInitialNotification = (props) => {
                   error.observationTitle ? error.observationTitle : ""
                 }
                 variant="outlined"
-                className={classNames(classes.formControl, classes.boldHelperText)}
+                className="formControl"
                 onChange={(e) => {
                   setForm({ ...form, observationTitle: e.target.value });
                 }}
@@ -1285,7 +1286,7 @@ const ObservationInitialNotification = (props) => {
                 defaultValue={form.observationDetails}
                 fullWidth
                 variant="outlined"
-                className={classNames(classes.formControl, classes.boldHelperText)}
+                className="formControl"
                 onChange={(e) => {
                   setForm({ ...form, observationDetails: e.target.value });
                 }}
@@ -1296,13 +1297,14 @@ const ObservationInitialNotification = (props) => {
                 component="fieldset"
                 error={error && error["isSituationAddressed"]}
               >
-                <FormLabel className={classes.labelName} component="legend">
+                <FormLabel className="checkRadioLabel" component="legend">
                   Did you address the situation?*
                 </FormLabel>
                 <RadioGroup
                   row
                   aria-label="gender"
                   name="gender1"
+                  className="formControl"
                   defaultValue={form.isSituationAddressed}
                   onChange={(e) => {
                     setForm({ ...form, isSituationAddressed: e.target.value });
@@ -1371,7 +1373,7 @@ const ObservationInitialNotification = (props) => {
               <Grid container spacing={3}>
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
+                <FormLabel component="legend" className="checkRadioLabel">
                   Classification
                 </FormLabel>
                 <RadioGroup
@@ -1389,7 +1391,7 @@ const ObservationInitialNotification = (props) => {
                   {radioClassification.map((value) => (
                     <FormControlLabel
                       value={value}
-                      className={classes.labelValue}
+                      className="selectLabel"                    
                       control={<Radio />}
                       label={value}
                     />
@@ -1402,7 +1404,7 @@ const ObservationInitialNotification = (props) => {
               <FormControl
                 component="fieldset"
               >
-                <FormLabel component="legend" className={classes.labelName} error={error && error["observationType"]}>
+                <FormLabel component="legend" className="checkRadioLabel" error={error && error["observationType"]}>
                   Type of observation*
                 </FormLabel>
                 <RadioGroup
@@ -1413,7 +1415,7 @@ const ObservationInitialNotification = (props) => {
                   {radioType.map((value) => (
                     <FormControlLabel
                       value={value}
-                      className={classes.labelValue}
+                      className="selectLabel"                    
                       control={<Radio />}
                       label={value}
                       onClick={(e) => {
@@ -1432,7 +1434,7 @@ const ObservationInitialNotification = (props) => {
 
             <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
+                <FormLabel component="legend" className="checkRadioLabel">
                   Stop Work
                 </FormLabel>
                 <RadioGroup
@@ -1447,7 +1449,7 @@ const ObservationInitialNotification = (props) => {
                   {radioSituation.map((value) => (
                     <FormControlLabel
                       value={value}
-                      className={classes.labelValue}
+                      className="selectLabel"                    
                       control={<Radio />}
                       label={value}
                     />
@@ -1457,7 +1459,7 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
+                <FormLabel component="legend" className="checkRadioLabel">
                   Near Miss
                 </FormLabel>
                 <RadioGroup
@@ -1472,7 +1474,7 @@ const ObservationInitialNotification = (props) => {
                   {radioSituation.map((value) => (
                     <FormControlLabel
                       value={value}
-                      className={classes.labelValue}
+                      className="selectLabel"                    
                       control={<Radio />}
                       label={value}
                     />
@@ -1482,13 +1484,13 @@ const ObservationInitialNotification = (props) => {
             </Grid>
             {tagData.length > 0 ? (
             <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormLabel className={classes.labelName} component="legend">
+              <FormLabel className="checkRadioLabel" component="legend">
                 Categories
               </FormLabel>
               <FormGroup className={classes.customCheckBoxList}>
                 {tagData.map((value, index) => (
                   <FormControlLabel
-                    className={classes.labelValue}
+                      className="selectLabel"                    
                     control={
                       <Checkbox
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
@@ -1519,7 +1521,7 @@ const ObservationInitialNotification = (props) => {
                 <Grid container spacing={3}>
             <Grid item md={6} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
+                <FormLabel component="legend" className="checkRadioLabel">
                   Is this an Employee Recognition?
                 </FormLabel>
                 <RadioGroup
@@ -1534,7 +1536,7 @@ const ObservationInitialNotification = (props) => {
                   {radioSituation.map((value) => (
                     <FormControlLabel
                       value={value}
-                      className={classes.labelValue}
+                      className="selectLabel"                    
                       control={<Radio />}
                       label={value}
                     />
@@ -1545,7 +1547,7 @@ const ObservationInitialNotification = (props) => {
 
             <Grid item md={12} xs={12} className={classes.formBox}>
               <FormControl component="fieldset">
-                <FormLabel component="legend" className={classes.labelName}>
+                <FormLabel component="legend" className="checkRadioLabel">
                   Do you need to escalate the issue to Safety Management?
                 </FormLabel>
                 <RadioGroup
@@ -1562,7 +1564,7 @@ const ObservationInitialNotification = (props) => {
                   {radioSituation.map((value) => (
                     <FormControlLabel
                       value={value}
-                      className={classes.labelValue}
+                      className="selectLabel"                    
                       control={<Radio />}
                       label={value}
                     />
@@ -1575,8 +1577,8 @@ const ObservationInitialNotification = (props) => {
               <Grid item md={12} xs={12} className={classes.formBox}>
                 <FormGroup>
                   <FormControlLabel
-                    className={classes.labelValue}
-                    control={
+                      className="selectLabel"                    
+                      control={
                       <Checkbox
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         checkedIcon={<CheckBoxIcon fontSize="small" />}
@@ -1627,10 +1629,10 @@ const ObservationInitialNotification = (props) => {
               </Alert>
             </Snackbar>
 
-            <Grid item md={12} xs={12} className={classes.formBox}>
-              <FormGroup className={classes.customCheckBoxList}>
+            <Grid item md={12} xs={12} className="paddBRemove">
+              <FormGroup className={classes.customCheckBoxListCondition}>
                 <FormControlLabel
-                  className={classes.labelValue}
+                className={classes.sectionHeading }
                   control={
                     <Checkbox
                       icon={<CheckBoxOutlineBlankIcon fontSize="small" />}

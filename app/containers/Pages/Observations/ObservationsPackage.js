@@ -33,7 +33,11 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
-
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,9 +49,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
-    // border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: '4px',
-    fontFamily: 'Montserrat-Medium',
   },
   leftSide: {
     flexGrow: 1,
@@ -63,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     border: '1px solid #ccc',
     borderRadius: theme.shape.borderRadius,
-    // backgroundColor: theme.palette.primary.dark,
     marginRight: theme.spacing(1),
     marginLeft: 0,
     width: '100%',
@@ -86,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -101,11 +101,6 @@ const useStyles = makeStyles((theme) => ({
   toggleTitle: {
     marginRight: theme.spacing(1),
     fontSize: '1rem',
-  },
-  sorryTitle: {
-    flex: 1,
-    fontFamily: 'Montserrat-Medium',
-    fontWeight: '500',
   },
   chipAction: {
     textAlign: 'right',
@@ -127,23 +122,23 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-  },
-  PLR0: {
-    paddingRight: '0px',
-    minWidth: '30px',
-    paddingLeft: '0px',
+    ['@media (max-width:480px)']: { 
+      marginLeft: '3px',
+      marginRight: '3px',
+    },
   },
   pLeft5: {
     paddingLeft: '5px',
   },
-  pt15: {
-    paddingTop: '15px !important',
-  },
   mLeftfont: {
     marginLeft: '2px',
     fontSize: '14px',
-    textDecoration: 'underline',
+    textDecoration: 'none',
     color: 'rgba(0, 0, 0, 0.87) !important',
+    fontWeight: '500',
+    '&:hover':{
+      textDecoration: 'none',
+    },
   },
   spacerRight: {
     marginRight: '4px',
@@ -154,12 +149,12 @@ const useStyles = makeStyles((theme) => ({
   listingLabelName: {
     color: '#7692a4',
     fontSize: '0.88rem',
-    fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Regular',
   },
   listingLabelValue: {
     color: '#333333',
     fontSize: '0.88rem',
-    fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Regular',
     '& a': {
       paddingLeft: '5px',
       cursor: 'pointer',
@@ -173,6 +168,24 @@ const useStyles = makeStyles((theme) => ({
   dataTableNew: {
     minWidth: '1360px !important',
   },
+
+  title:  {
+    fontSize: '1.25rem',
+    fontFamily: 'Montserrat-Regular',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '500',
+    lineHeight: '1.6',
+  },
+  pt30: {
+    paddingTop: '30px',
+
+  },
+
+  mTopThirtybtten: {
+    marginTop: '0rem',
+    float: 'right',
+  },
+
   TableToolbar: {
     display: 'none',
   },
@@ -191,6 +204,9 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
+    ['@media (max-width:800px)']: { 
+      paddingTop: '55px',
+    },
   },
   searchHeaderTop: {
     border: '1px solid #f1f1f1',
@@ -223,6 +239,21 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
+    ['@media (max-width:480px)']: { 
+      margin: '10px 5px 10px 5px',
+    },
+  },
+  floatR: {
+    float: 'right',
+    textTransform: 'capitalize',
+    ['@media (max-width:480px)']: { 
+      float: 'left',
+    },
+  },
+  Chip: {
+    backgroundColor: '#eaeaea',
+    borderRadius: ' 50px',
+    paddingRight: '12px',
   },
   sepHeightOne: {
     borderLeft: '3px solid #cccccc',
@@ -238,26 +269,28 @@ const useStyles = makeStyles((theme) => ({
   iconColor: {
     color: '#a7a7a7',
   },
-  floatR: {
-    float: 'right',
-    textTransform: 'capitalize',
-  },
   iconteal: {
     color: '#06425c',
-    fontSize: '28px',
   },
   listHeadColor: { backgroundColor: '#fafafa', },
   marginTopBottom: {
     '& .MuiTypography-h6 .MuiTypography-h5': {
-      fontFamily: 'Montserrat-Medium',
+      fontFamily: 'Montserrat-Regular',
     },
   },
   textRight: {
     textAlign: 'right',
+    ['@media (max-width:480px)']: { 
+      textAlign: 'left',
+      padding: '0px 8px 15px 8px !important',
+    },
   },
   userImage: {
-    height: '56px',
-    width: '58px',
+    borderRadius: '50px',
+    width: '52px',
+    height: '50px',
+    marginRight: '0px',
+
   },
   mrFifteen: {
     marginRight: '15px',
@@ -266,15 +299,76 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 0px 2px #ccc',
     borderRadius: '10px',
     marginBottom: '30px',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      webkitBoxShadow: '0 1px 5px 2px #dcdada',
+      boxShadow: '0 1px 5px 2px #dcdada',
+    },
+    '&:hover .MuiGrid-align-items-xs-flex-start': {
+      backgroundColor: '#f0f0f0',
+    },
   },
-  title:  {
-    fontSize: '1.25rem',
-    fontFamily: 'Montserrat-Regular',
-    color: 'rgba(0, 0, 0, 0.87)',
-    fontWeight: '500',
-    lineHeight: '1.6',
+
+  cardLinkAction: {
+    width: '100%',
+    float: 'left',
+    padding: '14px',
+    cursor: 'pointer',
+    textDecoration: 'none !important',
+    ['@media (max-width:800px)']: { 
+      paddingTop: '85px',
+    }
   },
-  pr0: { paddingRight: '0px !important', },
+  userPictureBox: {
+    position: 'absolute',
+    right: '0px',
+    ['@media (max-width:800px)']: { 
+      right: 'auto',
+    }
+  },
+  cardContentSection: {
+    position: 'relative',
+  },
+  usrProfileListBox: {
+    '& ul': {
+      paddingTop: '0px',
+      '& li': {
+        paddingLeft: '0px',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        '& div': {
+          '& span': {
+            display: 'inline-block',
+            float: 'left',
+            paddingRight: '14px',
+            fontSize: '15px',
+            fontWeight: '600',
+          },
+          '& p': {
+            display: 'inline-block',
+            float: 'left',
+          },
+        },
+      },
+    },
+  },
+  cardBottomSection: {
+    '& p': {
+      ['@media (max-width:480px)']: { 
+        fontSize: '12px !important',
+      },
+    },
+    // '& p': {
+    //   ['@media (max-width:375px)']: { 
+    //     fontSize: '12px !important',
+    //   },
+    // },
+  },
+  cardActionBottomBox: {
+    ['@media (max-width:480px)']: { 
+      padding: '8px !important',
+    },
+  },
 }));
 
 function Actions(props) {
@@ -300,6 +394,16 @@ function Actions(props) {
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
   const history = useHistory();
+
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+const handleMyUserPClickOpen = () => {
+  setMyUserPOpen(true);
+};
+const handleMyUserPClose = () => {
+  setMyUserPOpen(false);
+};
+
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -565,7 +669,18 @@ function Actions(props) {
                       .map((item, index) => (
                         <Card variant="outlined" className={classes.card}>
                           <CardContent>
-                            <Grid container spacing={3}>
+                            <Grid container spacing={3} className={classes.cardContentSection}>
+                               <Grid item md={2} sm={4} xs={12} 
+                                  className={classes.userPictureBox}
+                                >
+                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)} >
+                                    <img src={paceLogoSymbol} className={classes.userImage} /> Admin
+                                  </Button>
+                                </Grid>
+                                  <Link
+                                  onClick={() => handleSummaryPush(index)}
+                                  className={classes.cardLinkAction}
+                                >
                               <Grid item xs={12}>
                                 <Grid container spacing={3} alignItems="flex-start">
                                   <Grid item sm={12} xs={12} className={classes.listHeadColor}>
@@ -616,22 +731,12 @@ function Actions(props) {
                                       </Grid>
 
 
-                                      <Grid item md={2} sm={4} xs={12}>
+                                      {/* <Grid item md={2} sm={4} xs={12}>
                                         <Button className={classes.floatR}>
                                           <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
                                         </Button>
-                                        {/* <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                              >
-                                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleClose}>My account</MenuItem>
-                                <MenuItem onClick={handleClose}>Logout</MenuItem>
-                              </Menu> */}
-                                      </Grid>
+                                     
+                                      </Grid> */}
                                     </Grid>
                                   </Grid>
                                 </Grid>
@@ -727,7 +832,9 @@ function Actions(props) {
                         29 Dec 2020
                       </Typography>
                     </Grid> */}
+                              </Link>
                             </Grid>
+                            
                           </CardContent>
                           <Divider />
                           <CardActions className={Incidents.cardActions}>
@@ -797,49 +904,70 @@ function Actions(props) {
 
                 </div>
                 <div>
-                  <Dialog
-                    open={MyFavopen}
-                    onClose={handleMyFavClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">{"My Favorite Package"}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        <img src={paceLogoSymbol} className={classes.userImage} /> Prakash
+                <Dialog
+                  open={myUserPOpen}
+                  onClose={handleMyUserPClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  fullWidth={true}
+                  maxWidth={'sm'}
+                >
+                  <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Grid
+                        item md={12} sm={12} xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Basic Information</h3>
+                        <List>
+                          <ListItem>
+                            {/* <ListItemAvatar>
+                              <Avatar>
+                                <ImageIcon />
+                              </Avatar>
+                            </ListItemAvatar> */}
+                            <ListItemText primary="Full Name:" secondary="Prakash" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Role:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Role Title:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                          </ListItem>
+                        </List>
+                      </Grid>
 
-                        <span className={classes.floatR}><BackspaceOutlinedIcon /></span>
-                      </DialogContentText>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography
-                          variant="subtitle1"
-                          display="inline"
-                        >
-                          <a href="#" >Sparing philosophy</a>
-                        </Typography>
-                      </DialogContentText>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography
-                          variant="body1"
-                        >
-                          Prakash
-                        </Typography>
-                      </DialogContentText>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography
-                          variant="body1"
-                        >
-                          Sparing philosophy defined
-                        </Typography>
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleMyFavClose} color="primary" variant="contained" autoFocus>
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
+                      <Grid
+                        item md={12} sm={12} xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Company Information</h3>
+                        <List>
+                          <ListItem>
+                            <ListItemText primary="Company Name:" secondary="JWIL" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Location:" secondary="Italy" />
+                          </ListItem>
+                        </List>
+                      </Grid>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+
                 <div className="gridView">
                   {Object.entries(incidents).map((item, index) => (
                     <Card variant="outlined" className={Incidents.card} key={index}>

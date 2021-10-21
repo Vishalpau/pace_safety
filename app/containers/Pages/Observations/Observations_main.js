@@ -140,7 +140,7 @@ const useStyles = makeStyles((theme) => ({
   buttonsNew: {
     borderRadius: '5px',
     backgroundColor: '#06425c',
-    padding: '3px 10px 3px 6px',
+    padding: '7px 10px 7px 10px',
     marginTop: '10px',
     float: 'right',
   },

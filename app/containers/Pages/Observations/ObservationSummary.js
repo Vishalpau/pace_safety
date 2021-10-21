@@ -56,11 +56,24 @@ const useStyles = makeStyles((theme) => ({
   },
   statusButton: {
     borderRadius: 4,
-    fontSize: 12,
+    fontSize: 14,
+    width: '100%',
+    textTransform: 'none',
+    fontFamily: 'Montserrat-SemiBold !important',
+    lineHeight: '18px',
+    border: '1px solid #06425c',
   },
   observationSummaryBox: {
     display: 'flex',
     gap: '1.5rem',
+  },
+  statusLabel: {
+    fontSize: '14px',
+    fontFamily: 'Montserrat-Regular',
+    '& svg': {
+      color: '#06425C',
+      //verticalAlign: 'sub',
+    },
   },
 }));
 
@@ -228,66 +241,60 @@ const ObservationSummary = () => {
                       <Grid item md={12} sm={12} xs={12} className={classes.item}>
                         <ul className="SummaryTabList">
                           <li>
-        {/* <Box paddingBottom={1}>
-          <div className={classes.observationSummaryBox}>
-            <div className={classes.item}> */}
-              <Button
-                color={observationInitialNotification === true ? 'secondary' : "primary"}
-                variant="contained"
-                size="small"
-                endIcon={<CheckCircle />}
-                className={classes.statusButton}
-                onClick={(e) => {
-                  setObservationInitialNotification(true);
-                  setObservationCorrectiveAction(false);
-                  setObservationInitialNotificationUpdate(true)
-                  setComment(false)
-                  setActivity(false)
-                  history.push(`/app/observation/details/${id}`)
-                  // setObservationReview(false);
-                  // setObservationCloseOut(false);
-                }}
-              >
-                  Observation
-              </Button>
-              <Typography display="block">
-                  Done
-              </Typography>
-            {/* </div> */}
-
-            {/* <div className={classes.item}> */}
-              <Button
-                color={observationCorrectiveAction === true ? "secondary":"primary"}
-                variant={localStorage.getItem("action") === "Done" ? "contained" :"outlined" }
-                size="small"
-                endIcon={localStorage.getItem("action") === "Done"  ? <CheckCircle /> : <AccessTime  /> }
-                className={classes.statusButton}
-                onClick={(e) => {handleActionButtonClick(e)
-                  // setObservationInitialNotification(false);
-                  // setObservationCorrectiveAction(true);
-                  // setObservationCorrectiveActionView(true)
-                  // setObservationReview(false);
-                  // setObservationCloseOut(false);
-                }}
-              >
-                  Action Tracking
-              </Button>
-              <Typography display="block">
-                  {localStorage.getItem("action") === "Done" ? "Done" : ""}
-              </Typography>
-            {/* </div> */}
-          {/* </div>
-        </Box> */}
-        {/* <Divider /> */}
-        </li>
+        
+                            <Button
+                              color={observationInitialNotification === true ? 'secondary' : "primary"}
+                              variant="contained"
+                              size="small"
+                              // endIcon={<CheckCircle />}
+                              className={classes.statusButton}
+                              onClick={(e) => {
+                                setObservationInitialNotification(true);
+                                setObservationCorrectiveAction(false);
+                                setObservationInitialNotificationUpdate(true)
+                                setComment(false)
+                                setActivity(false)
+                                history.push(`/app/observation/details/${id}`)
+                                // setObservationReview(false);
+                                // setObservationCloseOut(false);
+                              }}
+                            >
+                                Observation
+                            </Button>
+                            <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
+                                Done <CheckCircle />
+                            </Typography>
+                          {/* </div> */}
+                        </li>
+                        <li>
+                          {/* <div className={classes.item}> */}
+                            <Button
+                              color={observationCorrectiveAction === true ? "secondary":"primary"}
+                              variant={localStorage.getItem("action") === "Done" ? "contained" :"outlined" }
+                              size="small"
+                              className={classes.statusButton}
+                              onClick={(e) => {handleActionButtonClick(e)
+                                // setObservationInitialNotification(false);
+                                // setObservationCorrectiveAction(true);
+                                // setObservationCorrectiveActionView(true)
+                                // setObservationReview(false);
+                                // setObservationCloseOut(false);
+                              }}
+                            >
+                                Action Tracking
+                            </Button>
+                            <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
+                                {localStorage.getItem("action") === "Done" ? "Done" : "Pending"} {localStorage.getItem("action") === "Done"  ? <CheckCircle /> : <AccessTime  /> }
+                            </Typography>
+                             
+                          </li>
                         </ul>                        
                       </Grid>
               </Grid>
                 </Paper>
               </Grid>
         {/* <Box marginTop={4}> */}
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={12}>
               {/* summary and part */}
               <>
                 {(() => {
@@ -324,7 +331,7 @@ const ObservationSummary = () => {
                </Grid>
               </Grid>
             </Grid>
-            </Grid>
+            
 
 
 
@@ -431,17 +438,12 @@ const ObservationSummary = () => {
                 
                   </List>
 
-                {/* </List>  */}
-              {/* </Paper> */}
               </div>
             </Grid>
-          
-        {/* </Box> */}
-        </Grid>
+            </Grid>
+        
       </CustomPapperBlock>
-      {/* ) : (
-        <h1> Loading...</h1>
-      )} */}
+      
     </>
   );
 };

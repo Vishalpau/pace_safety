@@ -324,7 +324,7 @@ const ProjectStructure = (props) => {
           variant="outlined"
           error={props.error && props.error[`projectStructure${[item.index]}`]}
           fullWidth={true}
-          className={classes.formControl}
+          className="formControl"
           required
         >
 
@@ -379,7 +379,7 @@ const ProjectStructure = (props) => {
               variant="outlined"
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
-              className={classes.formControl}
+              className="formControl"
               required
             >
 
@@ -433,7 +433,7 @@ const ProjectStructure = (props) => {
               variant="outlined"
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
-              className={classes.formControl}
+              className="formControl"
               required
             >
 
