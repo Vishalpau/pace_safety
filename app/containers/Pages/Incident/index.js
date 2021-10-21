@@ -309,9 +309,7 @@ function BlankPage(props) {
     }
   }, [props.projectName.breakDown,props.projectName.projectName]);
 
-  useEffect(() => {
-    // fetchPermission();
-  }, [])
+ 
 
 
   const columns = [
