@@ -289,9 +289,15 @@ function ObservationCorrectiveAction() {
       }
     }
     form['updateBy'] = userId
-    if(form["reviewedByName"] !== ""){
+    if(form["reviewedByName"] !== null){
       form["observationStage"] = "Completed"
       form["observationStatus"] = "Reviewed"
+    }else{
+      if(form["assigneeName"] !== ""){
+        form["observationStatus"] = "In progress"
+      }else{
+        form["observationStatus"] = "Unassigned"
+      }
     }
     delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
