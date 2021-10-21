@@ -257,6 +257,52 @@ function Observations(props) {
 
     await setIsLoading(true)
   };
+  const userDetails = async (compId, proId) => {
+    console.log("welcome user details")
+    // window.location.href = `/${tagetPage}`
+    try {
+      if (compId) {
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
+
+        await api(config)
+          .then(function (response) {
+            console.log(response)
+            if (response.status === 200) {
+              console.log(response)
+              localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              
+              if (compId) {
+                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+
+                let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                localStorage.setItem('company', JSON.stringify(companeyData))
+
+                dispatch(company(companeyData))
+              }
+              if (proId) {
+                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                localStorage.setItem("projectName", JSON.stringify(project[0]))
+                dispatch(projectName(project[0]))
+              }
+              // fetchPermissionData();
+              localStorage.removeItem("direct_loading")
+
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    } catch (error) {
+    }
+  }
   const handleSearch = (e) => {
     // console.log(e.target.value)
     setSeacrhIncident(e.target.value);
@@ -282,7 +328,14 @@ function Observations(props) {
   };
   const classes = useStyles();
   useEffect(() => {
-    fetchInitialiObservation();
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    if(state!==null){
+      console.log("state is not null")
+      userDetails(state.comId,state.proId)
+    }else{
+      fetchInitialiObservation();
+    }
+    
     // handleProjectList();
   }, [props.projectName]);
 

@@ -543,7 +543,7 @@ const Summary = (props) => {
     // handelRcaValue();
     // rootCauseAnalysisCheck();
     fetchIncidentData();
-    fetchPermissionData();
+    // fetchPermissionData();
   }, []);
 
   const isDesktop = useMediaQuery('(min-width:992px)');
@@ -577,7 +577,7 @@ const Summary = (props) => {
                         )
                       }
                       className={classes.statusButton}
-                      disabled={!permissionListData.view_incidents}
+                      // disabled={!permissionListData.view_incidents}
                       onClick={(e) => {
                         handleInitialNotificationView();
                       }}
@@ -601,7 +601,7 @@ const Summary = (props) => {
                         investigationOverview ? <CheckCircle /> : <AccessTime />
                       }
                       className={classes.statusButton}
-                      disabled={!permissionListData.view_investigation}
+                      // disabled={!permissionListData.view_investigation}
                       onClick={(e) => handelInvestigationView()}
                     >
                     Investigation
@@ -750,7 +750,7 @@ const Summary = (props) => {
 
                       <ListItemLink
                         button
-                        disabled={!permissionListData.add_incidents}
+                        // disabled={!permissionListData.add_incidents}
                       >
                         <ListItemIcon>
                           <Edit />
@@ -775,7 +775,7 @@ const Summary = (props) => {
                       ) : (
                         <ListItemLink
                           button
-                          disabled={!permissionListData.add_investigation}
+                          // disabled={!permissionListData.add_investigation}
                           onClick={(e) => handelInvestigationView()}
                         >
                           <ListItemIcon>
