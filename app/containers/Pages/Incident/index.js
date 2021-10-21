@@ -54,10 +54,10 @@ import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
 
 import { connect } from "react-redux";
-import { tabViewMode } from '../../../redux/actions/initialDetails';
+import { tabViewMode, projectName, company } from '../../../redux/actions/initialDetails';
 import { fetchPermission } from "../../../redux/actions/authentication";
 import { useDispatch } from "react-redux";
-import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, API_URL } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, API_URL,HEADER_AUTH } from "../../../utils/constants";
 import Pagination from '@material-ui/lab/Pagination';
 // import { handleTimeOutError } from "../../../utils/CheckerValue"
 
@@ -236,7 +236,60 @@ function BlankPage(props) {
         .catch(err => history.push("/app/pages/error"))
       // handleTimeOutError(res)
     }
+    const viewMode = {
+      initialNotification: true, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: false
+
+    };
+    dispatch(tabViewMode(viewMode));
+    history.push(`${SUMMERY_FORM.Summary}${id}/`);
   };
+
+  const userDetails = async (compId, proId) => {
+    console.log("welcome user details")
+    // window.location.href = `/${tagetPage}`
+    try {
+      if (compId) {
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
+
+        await api(config)
+          .then(function (response) {
+            console.log(response)
+            if (response.status === 200) {
+              console.log(response)
+              localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              
+              if (compId) {
+                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+
+                let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                localStorage.setItem('company', JSON.stringify(companeyData))
+
+                dispatch(company(companeyData))
+              }
+              if (proId) {
+                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                localStorage.setItem("projectName", JSON.stringify(project[0]))
+                dispatch(projectName(project[0]))
+              }
+              // fetchPermissionData();
+              localStorage.removeItem("direct_loading")
+
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    } catch (error) {
+    }
+  }
 
   const handlePush = async () => {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
@@ -246,13 +299,17 @@ function BlankPage(props) {
     // const userDetails = JSON.parse(localStorage.getItem(''))
   }
   useEffect(() => {
-    fetchData();
-    fetchPermissionData();
-  }, [props.projectName]);
+    
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    if(state!==null){
+      console.log("state is not null")
+      userDetails(state.comId,state.proId)
+    }else{
+      fetchData();
+    }
+  }, [props.projectName.breakDown,props.projectName.projectName]);
 
-  useEffect(() => {
-    // fetchPermission();
-  }, [])
+ 
 
 
   const columns = [
@@ -443,7 +500,7 @@ function BlankPage(props) {
                         size="small"
                         startIcon={<AddCircleIcon />}
                         className={classes.newIncidentButton}
-                        disabled={!permissionListData.add_incidents}
+                        // disabled={!permissionListData.add_incidents}
                         disableElevation
                       >
                         New Incident

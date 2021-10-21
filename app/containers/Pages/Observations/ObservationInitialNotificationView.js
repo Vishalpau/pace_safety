@@ -397,12 +397,12 @@ const ObservationInitialNotificationView = () => {
               {initialData.reportedByDepartment ? initialData.reportedByDepartment : "-"}
             </Typography>
           </Grid>
-          <Grid item md={4} sm={4} xs={12}>
-          <FormLabel component="legend" className="viewLabel">
-                        Observed On
-            </FormLabel>
-            <Typography className="viewLabelValue">
-              {handelDateTime(initialData["observedAt"])}
+          <Grid item md={12}>
+            <Typography variant="h6" gutterBottom className={classes.labelName}>
+              Observed On
+            </Typography>
+            <Typography className={classes.labelValue}>
+              {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"}
             </Typography>
           </Grid>
 
@@ -674,6 +674,13 @@ const ObservationInitialNotificationView = () => {
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
+              {moment(initialData["createdAt"]).format(
+                "Do MMMM YYYY, h:mm A"
+              )}
+            </Typography>
+          </Grid>
+
+        </Grid>
 
               {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
             </Typography>

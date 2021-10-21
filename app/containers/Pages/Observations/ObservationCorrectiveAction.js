@@ -291,9 +291,15 @@ function ObservationCorrectiveAction() {
       }
     }
     form['updateBy'] = userId
-    if(form["reviewedByName"] !== ""){
+    if(form["reviewedByName"] !== null){
       form["observationStage"] = "Completed"
       form["observationStatus"] = "Reviewed"
+    }else{
+      if(form["assigneeName"] !== ""){
+        form["observationStatus"] = "In progress"
+      }else{
+        form["observationStatus"] = "Unassigned"
+      }
     }
     delete form['attachment']
     const res = await api.put(`/api/v1/observations/${localStorage.getItem(
@@ -615,7 +621,7 @@ function ObservationCorrectiveAction() {
           <FormControl component="fieldset" error={
             error && error["isCorrectiveActionTaken"]
           }>
-            <FormLabel className={classes.labelName} component="legend">Are there any corrective actions to be taken?*</FormLabel>
+            <FormLabel className="checkRadioLabel" component="legend">Are there any corrective actions to be taken?*</FormLabel>
             <RadioGroup row aria-label="gender" name="gender1"
               onChange={(e) => {
                 setForm({ ...form, isCorrectiveActionTaken: e.target.value });
@@ -624,7 +630,7 @@ function ObservationCorrectiveAction() {
                 <FormControlLabel
                   value={value}
                   checked={form.isCorrectiveActionTaken === value}
-                  className={classes.labelValue}
+                  className="selectLabel"                    
                   onClick={(e) => handleAction(e)}
                   control={<Radio />}
                   label={value}
@@ -809,21 +815,22 @@ function ObservationCorrectiveAction() {
         >
 
           <div className={classes.loadingWrapper}>
+         
           <Button
-              variant="outlined"
+              variant="contained"
               onClick={(e) => handleSave()}
-              className={classes.custmSubmitBtn}
-              style={{ marginLeft: "10px" }}
+              size="medium" color="primary" className="spacerRight buttonStyle"
+              style={{ marginLeft: "5px" }}
               disabled={saveLoading}
             >
               Save
             </Button>
             {saveLoading && <CircularProgress size={24} className={classes.buttonProgressSave} />}
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={(e) => handleSubmit()}
-              className={classes.custmSubmitBtn}
-              style={{ marginLeft: "10px" }}
+              size="medium" color="primary" className="spacerRight buttonStyle"
+              style={{ marginLeft: "2px" }}
               disabled={loading}
             >
               Submit
@@ -832,9 +839,8 @@ function ObservationCorrectiveAction() {
             <Button
                 variant="outlined"
                 onClick={(e) => handleCancle()}
-                className={classes.custmSubmitBtn}
-                style={{ marginLeft: "10px" }}
-                // disabled={loading}
+                size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+                style={{ marginLeft: "2px" }}
               >
                 Cancle
               </Button>
