@@ -142,10 +142,10 @@ const CloseOut = () => {
   //   fetch user data
 
   const fetchUserList = async () => {
-    api.get(`${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,)
+    api.get(`${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/company-users/`,)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results.users;
           setUserList(result);
         }
       })

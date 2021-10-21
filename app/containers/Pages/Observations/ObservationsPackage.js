@@ -29,10 +29,14 @@ import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
 import React, { useEffect, useState } from "react";
+// react-redux
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
+import { projectName,company } from '../../../redux/actions/initialDetails';
+import { useDispatch } from 'react-redux';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
+import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
 
 
 
@@ -290,7 +294,7 @@ function Actions(props) {
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).name
     : null;
-
+  const dispatch = useDispatch();
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
@@ -545,10 +549,65 @@ function Actions(props) {
     localStorage.setItem("fkobservationId", id);
     history.push(`/app/prints/${id}`);
   };
+  const userDetails = async (compId, proId) => {
+    console.log("welcome user details")
+    // window.location.href = `/${tagetPage}`
+    try {
+      if (compId) {
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
+
+        await api(config)
+          .then(function (response) {
+            console.log(response)
+            if (response.status === 200) {
+              console.log(response)
+              localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              
+              if (compId) {
+                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+
+                let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                localStorage.setItem('company', JSON.stringify(companeyData))
+
+                dispatch(company(companeyData))
+              }
+              if (proId) {
+                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                localStorage.setItem("projectName", JSON.stringify(project[0]))
+                dispatch(projectName(project[0]))
+              }
+              // fetchPermissionData();
+              localStorage.removeItem("direct_loading")
+
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    } catch (error) {
+    }
+  }
   const classes = useStyles();
   useEffect(() => {
-    fetchInitialiObservation();
-  }, [props.projectName.breakDown, props.type, searchIncident]);
+    console.log("welcome")
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    console.log(state)
+    if(state!==null){
+      console.log("state is not null")
+      userDetails(state.comId,state.proId)
+    }else{
+      fetchInitialiObservation();
+    }
+    // fetchInitialiObservation();
+  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident]);
   
   return (
     <>
