@@ -307,7 +307,7 @@ function BlankPage(props) {
     }else{
       fetchData();
     }
-  }, [props.projectName]);
+  }, [props.projectName.breakDown,props.projectName.projectName]);
 
   useEffect(() => {
     // fetchPermission();
