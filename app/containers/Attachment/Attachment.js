@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { IconButton } from "@material-ui/core";
 import {
-    mdiFilePdf,
+    mdiFilePdfBox,
     mdiMicrosoftExcel,
     mdiFileExcel,
     mdiFileWord,
     mdiFilePowerpoint,
+    
 } from "@mdi/js";
 import Icon from "@mdi/react";
 import Avatar from "@material-ui/core/Avatar";
@@ -45,7 +46,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                    <Icon path={mdiFilePdf} size={1} onClick={() => setOpen(true)} />
+                    <Icon path={mdiFilePdfBox} size={1} onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>

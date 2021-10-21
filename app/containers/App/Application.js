@@ -188,7 +188,7 @@ function Application(props) {
       //settings
         <Route path="/app/settings/setting" component={Setting} />
         {/* Home */}
-        <Route exact path="/:?code" component={PersonalDashboard} />
+        {/* <Route exact path="/:?code" component={PersonalDashboard} /> */}
         <Route exact path="/" component={PersonalDashboard} />
         <Route path="/app/crm-dashboard" component={CrmDashboard} />
         <Route path="/app/crypto-dashboard" component={CryptoDashboard} />
@@ -235,7 +235,7 @@ function Application(props) {
 
         {/*Incident List  */}
         <Route exact path="/incidents/" component={Incident} />
-        <Route exact path="/api/v1/user/auth/authorize/incidents" component={Incident} />
+        <Route exact path="/app/incidents" component={Incident} />
 
         {/* form initialNotification */}
         <Route
