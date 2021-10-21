@@ -195,40 +195,38 @@ const LessionLearned = () => {
               } catch (error) { history.push('/app/pages/error'); }
             }
           }
-        } else {
-          for (let i = 0; i < form.length; i++) {
-            if (form[i].id) {
-              try {
-                const res = await api.put(
-                  `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
-                  {
-                    teamOrDepartment: form[i].teamOrDepartment,
-                    learnings: form[i].learnings,
-                    status: 'Active',
-                    createdBy: parseInt(userId),
-                    updatedBy: parseInt(userId),
-                    fkIncidentId: localStorage.getItem('fkincidentId'),
-                  }
-                );
-              } catch (err) { history.push('/app/pages/error'); }
-            } else {
-              try {
-                const res = await api.post(
-                  `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
-                  {
-                    teamOrDepartment: form[i].teamOrDepartment,
-                    learnings: form[i].learnings,
-                    status: 'Active',
-                    createdBy: parseInt(userId),
-                    updatedBy: parseInt(userId),
-                    fkIncidentId: localStorage.getItem('fkincidentId'),
-                  }
-                );
-              } catch (err) { history.push('/app/pages/error'); }
-            }
+        } 
+        for (let i = 0; i < form.length; i++) {
+          if (form[i].id) {
+            try {
+              const res = await api.put(
+                `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/${form[i].id}/`,
+                {
+                  teamOrDepartment: form[i].teamOrDepartment,
+                  learnings: form[i].learnings,
+                  status: 'Active',
+                  createdBy: parseInt(userId),
+                  updatedBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem('fkincidentId'),
+                }
+              );
+            } catch (err) { history.push('/app/pages/error'); }
+          } else {
+            try {
+              const res = await api.post(
+                `api/v1/incidents/${localStorage.getItem('fkincidentId')}/learnings/`,
+                {
+                  teamOrDepartment: form[i].teamOrDepartment,
+                  learnings: form[i].learnings,
+                  status: 'Active',
+                  createdBy: parseInt(userId),
+                  updatedBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem('fkincidentId'),
+                }
+              );
+            } catch (err) { history.push('/app/pages/error'); }
           }
         }
-
 
         const viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
