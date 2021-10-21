@@ -165,14 +165,24 @@ const ObservationSummary = () => {
     const result = res.data.data.results
     await setInitialData(result)
   }
-  if(localStorage.getItem("update") === "Done"){
+  if(localStorage.getItem("update") === "Pending"){
+    setObservationInitialNotification(true)
     setObservationInitialNotificationUpdate(true)
+    setObservationCorrectiveAction(false)
+   localStorage.removeItem("update")
+ }
+ 
+ if(localStorage.getItem("update") === "Done"){
+    setObservationInitialNotification(true)
+    setObservationInitialNotificationUpdate(true)
+    setObservationCorrectiveAction(false)
    localStorage.removeItem("update")
  }
 
- if(localStorage.getItem("updateAction") === "Done"){
+ if(localStorage.getItem("updateAction") === "Done" || localStorage.getItem("ActionUpdate") === "Pending"){
   setObservationCorrectiveActionView(true)
  localStorage.removeItem("updateAction")
+ localStorage.removeItem("ActionUpdate")
 }
 
   const selectValues = [1, 2, 3, 4];
@@ -256,10 +266,10 @@ const ObservationSummary = () => {
                               id={localStorage.getItem("fkobservationId")}
                             />)
                   }
-                  if(activity === true) {
+                  else if(activity === true) {
                     return (<AhaSummary/>)
                   }
-                  if (
+                  else if (
                     observationInitialNotification === true
                       && (observationCorrectiveAction === false
                         )
@@ -268,7 +278,7 @@ const ObservationSummary = () => {
                       observationInitialNotificationUpdate === true ? <ObservationInitialNotificationView /> : <ObservationInitialNotificationUpdate />
                     );
                   }
-                  if (observationCorrectiveAction === true || (observationInitialNotification === false )) {
+                  else if (observationCorrectiveAction === true || (observationInitialNotification === false )) {
                     return (observationCorrectiveActionView === true ?  <ObservationCorrectiveActionView /> : <ObservationCorrectiveAction />);
                   }
                   
