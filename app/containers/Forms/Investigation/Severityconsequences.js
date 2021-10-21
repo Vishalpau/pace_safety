@@ -1,31 +1,24 @@
-import React, { useEffect, useState, useRef } from "react";
 import {
   Button,
-  Grid,
-  Container,
-  Input,
-  Select,
-  FormHelperText,
+  Grid, Select
 } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Row, Col } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
+import { Col, Row } from "react-grid-system";
+import { useHistory } from "react-router";
+import api from "../../../utils/axios";
 import {
-  INVESTIGATION_FORM,
-  HIGHESTPOTENTIALIMPACTOR,
-  RCAOPTION,
+  INVESTIGATION_FORM, RCAOPTION
 } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import api from "../../../utils/axios";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -40,14 +33,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const InvestigationOverview = () => {
-  const notificationSent = ["Manage", "SuperVisor"];
-  const [error, setError] = useState({});
   const putId = useRef("");
   const investigationId = useRef("");
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
-  const selectValues = [1, 2, 3, 4];
   const healthAndSafetyValues = useRef([]);
   const environmentValues = useRef([]);
   const regulationValues = useRef([]);
@@ -55,6 +45,7 @@ const InvestigationOverview = () => {
   const financialValues = useRef([]);
   const classificationValues = useRef([]);
   const highestImpactReceptor = useRef([])
+  const [buttonLoading, setButtonLoading] = useState(false)
 
   const [form, setForm] = useState({});
 
@@ -153,6 +144,7 @@ const InvestigationOverview = () => {
   };
 
   const handleNext = async (e) => {
+    setButtonLoading(true)
     const res = await api.put(
       `api/v1/incidents/${putId.current}/investigations/${investigationId.current
       }/`,
@@ -161,8 +153,7 @@ const InvestigationOverview = () => {
     if (putId.current) {
       if (JSON.parse(localStorage.getItem("personEffected")).length > 0) {
         history.push(
-          `/app/incident-management/registration/investigation/worker-details/0/${putId.current
-          }`
+          `/app/incident-management/registration/investigation/worker-details/0/${putId.current}`
         );
       } else {
         localStorage.setItem(
@@ -175,6 +166,7 @@ const InvestigationOverview = () => {
           )}`
         );
       }
+      setButtonLoading(false)
     }
     localStorage.setItem("WorkerDataFetched", "Yes");
     localStorage.removeItem("WorkerPost");
@@ -624,6 +616,7 @@ const InvestigationOverview = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
+                  disabled={buttonLoading}
                 >
                   Next
                 </Button>
