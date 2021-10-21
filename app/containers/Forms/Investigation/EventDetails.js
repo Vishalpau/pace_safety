@@ -1,30 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button, FormLabel, Grid, Select } from "@material-ui/core";
-import { FormHelperText } from "@material-ui/core";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
+import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { PapperBlock } from "dan-components";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-
-import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
+import { INVESTIGATION_FORM } from "../../../utils/constants";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
 import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
-import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -95,7 +93,9 @@ const EventDetails = () => {
   const [errorWeather, setErrorWeather] = useState({});
   const [errorCost, setErrorCost] = useState({});
   const [loading, setLoading] = useState(false)
-// check upadte 
+  const [buttonLoading, setButtonLoading] = useState(false)
+
+  // check upadte 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -140,7 +140,7 @@ const EventDetails = () => {
         }
         const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
         const costData = cost.data.data.results
-    
+
         if (costData.length !== 0) {
           setOverAllCost(costData)
           costData.map((value) => {
@@ -185,7 +185,7 @@ const EventDetails = () => {
   const handelRemove = async (e, index) => {
     if (weather.length > 1) {
       if (weather[index].id !== undefined) {
-      
+
         const res = await api.delete(
           `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/${eventId.current}/weatherconditions/${weather[index].id}/`
@@ -233,7 +233,7 @@ const EventDetails = () => {
     await setError(error);
     await setErrorWeather(errorWeather);
     await setErrorCost(errorCost)
-
+    setButtonLoading(true)
     // event api call
     if (
       Object.keys(error).length == 0 &&
@@ -354,6 +354,7 @@ const EventDetails = () => {
         );
       }
     }
+    setButtonLoading(false)
   };
 
   const PickListCall = async () => {
@@ -376,9 +377,9 @@ const EventDetails = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        {loading ?
-          <>
+      {loading ?
+        <>
+          <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
               {/* activity */}
               <Grid item xs={12} md={6}>
@@ -909,28 +910,24 @@ const EventDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={(e) => handelNext(e)}
+                  disabled={buttonLoading}
                 >
                   Next
                 </Button>
               </Grid>
             </Grid>
-
-          </>
-          : <Grid container item xs={12} md={9} spacing={3}>
-            <Typography variant="h6">
-              Loading ...
-            </Typography>
-          </Grid>}
-        {isDesktop && (
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Event details"
-            />
+            {isDesktop && (
+              <Grid item md={3}>
+                <FormSideBar
+                  deleteForm={[1, 2, 3]}
+                  listOfItems={INVESTIGATION_FORM}
+                  selectedItem="Event details"
+                />
+              </Grid>
+            )}
           </Grid>
-        )}
-      </Grid>
+        </>
+        : "Loading..."}
     </PapperBlock>
   );
 };
