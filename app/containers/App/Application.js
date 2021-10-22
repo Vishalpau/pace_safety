@@ -232,11 +232,11 @@ function Application(props) {
         {/* Login And Register */}
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
-
+        {/* https://dev-safety.pace-os.com/?code=UrQhtBJlcqmykCPa7Rl4yI2lCkwIyg&state=%7B%27companyId%27%3A+%271%27%2C+%27projectId%27%3A+%2716%27%2C+%27targetPage%27%3A+%27+++++incidents+%27%2C+%27targetId%27%3A+%27%27%2C+%27redirect_back%27%3A+%27%27%7D */}
         {/*Incident List  */}
         <Route exact path="/incidents/" component={Incident} />
         <Route exact path="/app/incidents" component={Incident} />
-
+        {/* <Route exact path="/?code=/state" component={Incident} /> */}
         {/* form initialNotification */}
         <Route
           exact
@@ -518,7 +518,7 @@ function Application(props) {
         {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
         <Route exact path="/app/observations" component={Observations} />
         <Route exact path="/observations" component={Observations} />
-        <Route exact path="/api/v1/user/auth/authorize/" component={Observations} />
+        {/* <Route exact path="/:observations" component={Observations} /> */}
         {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
         <Route path="/app/observations#table" component={Observations} />
         <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />

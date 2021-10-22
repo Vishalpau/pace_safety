@@ -45,18 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CorrectiveAction = () => {
-  const [commonForm, setCommonForm] = useState({
-    rcaNumber: "string",
-    rcaType: "string",
-    status: "Active",
-    createdBy: 0,
-    updatedBy: 0,
-    fkIncidentId: parseInt(localStorage.getItem("fkincidentId")),
-  });
-
   const [error, setError] = useState({});
-
-  const [data, setData] = useState([]);
   const [incidentDetail, setIncidentDetail] = useState({});
   const [form, setForm] = useState({
     managementControl: {
@@ -72,25 +61,12 @@ const CorrectiveAction = () => {
   });
 
   const putId = useRef("");
-  const [fetchApiData, setFetchApiData] = useState({});
-  const { id } = useParams();
   const history = useHistory();
-  const updateIds = useRef();
-  const checkPost = useRef();
   const [paceCauseDelete, setPaceCauseDelete] = useState();
   const [nextButton, setNextButton] = useState(false);
-
+  const [loading, setLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false)
   const dispatch = useDispatch()
-
-
-  const setRemark = (value) => {
-    let remark = value.includes(",") ? value.split(",") : [value];
-    if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected");
-      remark.splice(removeItemIndex, 1);
-    }
-    return remark;
-  };
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -180,21 +156,21 @@ const CorrectiveAction = () => {
     }
   }
 
-  const handelNavigate = async(navigateType) => {
+  const handelNavigate = async (navigateType) => {
     if (navigateType == "next") {
-      if(incidentDetail.incidentStage === "Root cause & analysis"){
-      try {
-        const temp = incidentDetail
-        temp.updatedAt = new Date().toISOString();
-        temp.incidentStatus= "Done"
-        const res = await api.put(
-          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-          temp
-        );
-      } catch (error) {
-        history.push("/app/pages/error")
+      if (incidentDetail.incidentStage === "Root cause & analysis") {
+        try {
+          const temp = incidentDetail
+          temp.updatedAt = new Date().toISOString();
+          temp.incidentStatus = "Done"
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
+          history.push("/app/pages/error")
+        }
       }
-    }
       let viewMode = {
         initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
 
@@ -207,6 +183,7 @@ const CorrectiveAction = () => {
   }
 
   const handelApiCall = async () => {
+    setButtonLoading(true)
     let tempData = []
     Object.entries(form).map(async (item, index) => {
       let api_data = item[1];
@@ -227,9 +204,9 @@ const CorrectiveAction = () => {
     })
     const res = await api.post(`api/v1/incidents/${putId.current}/bulkpacecauses/`, tempData);
     if (res.status == 200) {
-      
       handelNavigate("next")
     }
+    setButtonLoading(false)
   }
 
   const handelNext = async () => {
@@ -241,8 +218,6 @@ const CorrectiveAction = () => {
 
   const classes = useStyles();
 
-  
-
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
@@ -251,102 +226,112 @@ const CorrectiveAction = () => {
     await setIncidentDetail(result);
   };
 
+  const handelCallback = async () => {
+    await setLoading(true)
+    await fetchIncidentDetails();
+    await handelUpdateCheck();
+    await setLoading(false)
+  }
+
   useEffect(() => {
-    fetchIncidentDetails();
-    handelUpdateCheck();
+    handelCallback()
   }, []);
+
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
     <PapperBlock title="Additional information" icon="ion-md-list-box">
-      <Row>
-        <Col md={9}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
+      {loading == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                RCA method
-              </Typography>
-              <Typography className={Type.labelValue}>
-                PACE cause analysis
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  RCA method
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  PACE cause analysis
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <FormControl component="fieldset" error={error.managementControl}>
-                <FormLabel component="legend">Additional information</FormLabel>
-                {MANAGEMENTCONTROL.map((value) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    checked={form.managementControl.rcaRemark.includes(value)}
-                    onChange={async (e) => handelManagementControl(e, value)}
-                  />
-                ))}
-              </FormControl>
-              {error && error.managementControl && (
-                <FormHelperText style={{ color: "red" }}>
-                  {error.managementControl}
-                </FormHelperText>
-              )}
-            </Grid>
+              <Grid item xs={12}>
+                <FormControl component="fieldset" error={error.managementControl}>
+                  <FormLabel component="legend">Additional information</FormLabel>
+                  {MANAGEMENTCONTROL.map((value) => (
+                    <FormControlLabel
+                      control={<Checkbox name={value} />}
+                      label={value}
+                      checked={form.managementControl.rcaRemark.includes(value)}
+                      onChange={async (e) => handelManagementControl(e, value)}
+                    />
+                  ))}
+                </FormControl>
+                {error && error.managementControl && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error.managementControl}
+                  </FormHelperText>
+                )}
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                id="filled-basic"
-                variant="outlined"
-                multiline
-                error={error.reasonsSupportAbove}
-                value={
-                  form.reasonsSupportAbove.rcaRemark !== "No option selected"
-                    ? form.reasonsSupportAbove.rcaRemark
-                    : ""
-                }
-                helperText={error ? error.reasonsSupportAbove : ""}
-                rows={3}
-                label="Details of the reasons to support above"
-                className={classes.formControl}
-                onChange={async (e) => handelreasonsSupportAbove(e)}
-              />
+              <Grid item xs={12}>
+                <TextField
+                  id="filled-basic"
+                  variant="outlined"
+                  multiline
+                  error={error.reasonsSupportAbove}
+                  value={
+                    form.reasonsSupportAbove.rcaRemark !== "No option selected"
+                      ? form.reasonsSupportAbove.rcaRemark
+                      : ""
+                  }
+                  helperText={error ? error.reasonsSupportAbove : ""}
+                  rows={3}
+                  label="Details of the reasons to support above"
+                  className={classes.formControl}
+                  onChange={async (e) => handelreasonsSupportAbove(e)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelNavigate("previous")}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={nextButton == true}
+                  className={classes.button}
+                  onClick={(e) => handelNext(e)}
+                  disabled={buttonLoading}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelNavigate("previous")}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={nextButton == true}
-                className={classes.button}
-                onClick={(e) => handelNext(e)}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
-        </Col>
-        {isDesktop && (
-          <Col md={3}>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Additional information"}
-            />
           </Col>
-        )}
-      </Row>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Additional information"}
+              />
+            </Col>
+          )}
+        </Row>
+        : "Loading..."}
     </PapperBlock>
   );
 };
