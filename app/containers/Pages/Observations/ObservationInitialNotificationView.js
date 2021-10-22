@@ -225,6 +225,15 @@ const ObservationInitialNotificationView = () => {
     handleClose()
   };
 
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
+   const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
+   const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+    return dd[0].projectName
+  }
+
   const handelFileName = (value) => {
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1].split('-');
@@ -653,7 +662,7 @@ const ObservationInitialNotificationView = () => {
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12}>
                 <Typography gutterBottom className="labelValue">
-                {project.projectName} 
+                {handleProjectName(initialData.fkProjectId)} 
                 </Typography>
                 <Typography className="labelValue">
                 {projectStructName.map(value => {return value}).join(" : ")}
