@@ -810,7 +810,7 @@ if(departments !== ""){
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Observed By</FormLabel>
                   <Typography className="viewLabelValue">
-                  {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
+                  {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : "-"}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
@@ -828,13 +828,13 @@ if(departments !== ""){
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Foreman details</FormLabel>
                   <Typography className="viewLabelValue">
-                  {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" || initialData.supervisorByBadgeId == "" ? "-" : initialData.supervisorByBadgeId}
+                  {initialData.supervisorName ? initialData.supervisorName : "-"},{initialData.supervisorByBadgeId == "null" || initialData.supervisorByBadgeId == "-" ? "-" : initialData.supervisorByBadgeId}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Reported by</FormLabel>
                   <Typography className="viewLabelValue">
-                  {userName} , {userBadgeNo}
+                  {userName} , {userBadgeNo !== null ? userBadgeNo : "-"}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
@@ -947,16 +947,12 @@ if(departments !== ""){
             </FormLabel>
             {/* {tagsData.} */}
 
-            {tagsData.length > 0 && tagsData.map((tag, index) => (
-
-
-              <ul className={classes.labelValue} key={index}>
-                {tag.observationTag !== "" ? <li>{tag.observationTag}</li> : "-"}
-
-
-
-              </ul>
-            ))}
+            {tagsData.length > 0 &&
+               <Typography className="viewLabelValue">
+            {tagsData.map(tag => {return tag.observationTag}).join(', ')}
+           
+            </Typography>
+            }
             {tagsData.length == 0 && "-"}
           </Grid>
           </Grid>
@@ -980,7 +976,7 @@ if(departments !== ""){
                 {project.projectName} 
                 </Typography>
                 <Typography className="labelValue">
-                {projectStructName.map((value) => `${value} : `)}
+                {projectStructName.map(value => {return value}).join(" : ")}
                 </Typography>
               </Grid>
             </Grid>

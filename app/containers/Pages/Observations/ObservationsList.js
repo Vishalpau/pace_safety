@@ -261,7 +261,7 @@ function ObservationsList(props) {
               <MUIDataTable
                 data={data}
                 title="Observations List"
-
+                className="dataTableSectionDesign"
                 columns={columns}
                 options={options}
               />

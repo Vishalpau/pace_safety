@@ -386,7 +386,7 @@ const ObservationInitialNotificationView = () => {
                           Observed By
             </FormLabel>
             <Typography className="viewLabelValue">
-              {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : ""}
+              {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : "-"}
             </Typography>
           </Grid>
           <Grid item md={4} sm={4} xs={12}>
@@ -398,10 +398,10 @@ const ObservationInitialNotificationView = () => {
             </Typography>
           </Grid>
           <Grid item md={12}>
-            <Typography variant="h6" gutterBottom className={classes.labelName}>
+            <FormLabel variant="h6" gutterBottom className="viewLabel">
               Observed On
-            </Typography>
-            <Typography className={classes.labelValue}>
+            </FormLabel>
+            <Typography className="viewLabelValue">
               {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"}
             </Typography>
           </Grid>
@@ -427,7 +427,7 @@ const ObservationInitialNotificationView = () => {
           Reported by
             </FormLabel>
             <Typography className="viewLabelValue">
-              {userName} , {userBadgeNo}
+              {userName} , {userBadgeNo !== null ? userBadgeNo : "-"}
               {/* {initialData.observedAt} */}
             </Typography>
           </Grid>
@@ -521,17 +521,12 @@ const ObservationInitialNotificationView = () => {
                         Categories
             </FormLabel>
             {/* {tagsData.} */}
-
-            {tagsData.length > 0 && tagsData.map((tag, index) => (
-
-
-              <ul className={classes.labelValue} key={index}>
-                {tag.observationTag !== "" ? <li>{tag.observationTag}</li> : "-"}
-
-
-
-              </ul>
-            ))}
+            {tagsData.length > 0 &&
+               <Typography className="viewLabelValue">
+            {tagsData.map(tag => {return tag.observationTag}).join(', ')}
+           
+            </Typography>
+            }
             {tagsData.length == 0 && "-"}
           </Grid>
           </Grid>
@@ -661,7 +656,7 @@ const ObservationInitialNotificationView = () => {
                 {project.projectName} 
                 </Typography>
                 <Typography className="labelValue">
-                {projectStructName.map((value) => `${value} : `)}
+                {projectStructName.map(value => {return value}).join(" : ")}
                 </Typography>
               </Grid>
             </Grid>

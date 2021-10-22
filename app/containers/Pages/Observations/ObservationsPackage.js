@@ -398,13 +398,65 @@ function Actions(props) {
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
+  const [userInfo , setUserInfo] = useState({})
   const history = useHistory();
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-const handleMyUserPClickOpen = () => {
+const handleMyUserPClickOpen = (item) => {
+  console.log(item);
+  setUserInfo({name : item[1].username})
   setMyUserPOpen(true);
 };
+console.log(userInfo);
+
+const userDetailsView = () => {
+  return (<>
+    <Grid
+                        item md={12} sm={12} xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Basic Information</h3>
+                        <List>
+                          <ListItem>
+                            {/* <ListItemAvatar>
+                              <Avatar>
+                                <ImageIcon />
+                              </Avatar>
+                            </ListItemAvatar> */}
+                            <ListItemText primary="Full Name:" secondary={userInfo.name} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Role:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Role Title:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                          </ListItem>
+                        </List>
+                      </Grid>
+
+                      <Grid
+                        item md={12} sm={12} xs={12}
+                        className={classes.usrProfileListBox}
+                      >
+                        <h3>Company Information</h3>
+                        <List>
+                          <ListItem>
+                            <ListItemText primary="Company Name:" secondary="JWIL" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Location:" secondary="Italy" />
+                          </ListItem>
+                        </List>
+                      </Grid></>
+  )
+}
 const handleMyUserPClose = () => {
   setMyUserPOpen(false);
 };
@@ -733,8 +785,8 @@ const handleMyUserPClose = () => {
                                <Grid item md={2} sm={4} xs={12} 
                                   className={classes.userPictureBox}
                                 >
-                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)} >
-                                    <img src={paceLogoSymbol} className={classes.userImage} /> Admin
+                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(item)} >
+                                    <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
                                   </Button>
                                 </Grid>
                                   <Link
@@ -975,49 +1027,7 @@ const handleMyUserPClose = () => {
                   <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                      <Grid
-                        item md={12} sm={12} xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Basic Information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
-                              <Avatar>
-                                <ImageIcon />
-                              </Avatar>
-                            </ListItemAvatar> */}
-                            <ListItemText primary="Full Name:" secondary="Prakash" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Organization Role:" secondary="N/A" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Role Title:" secondary="N/A" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                          </ListItem>
-                        </List>
-                      </Grid>
-
-                      <Grid
-                        item md={12} sm={12} xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company Information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText primary="Company Name:" secondary="JWIL" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Location:" secondary="Italy" />
-                          </ListItem>
-                        </List>
-                      </Grid>
+                      {userDetailsView()}
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
