@@ -329,7 +329,7 @@ const Details = () => {
                     labelId="project-name-label"
                     label="RCA recommended"
                     value={form.rcaRecommended || ""}
-                  // disabled={rcaDisable != "" ? true : false}
+                    disabled={rcaDisable != "" ? true : false}
                   >
                     {RCAOPTION.map((selectValues) => (
                       <MenuItem

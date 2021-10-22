@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 // Table
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -18,22 +12,18 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TablePagination from "@material-ui/core/TablePagination";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import { useHistory, useParams } from "react-router";
-import Link from '@material-ui/core/Link';
-import axios from "axios";
-
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Fonts from "dan-styles/Fonts.scss";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import "../../styles/custom/summary.css";
 // Styles
 import api from "../../utils/axios";
-import apiAction from "../../utils/axiosActionTracker";
-import "../../styles/custom/summary.css";
-import Fonts from "dan-styles/Fonts.scss";
+import { handelActionData } from "../../utils/CheckerValue";
 import ActionShow from "../Forms/ActionShow";
-import { checkValue, handelActionData } from "../../utils/CheckerValue";
 
 
 const useStyles = makeStyles((theme) => ({
