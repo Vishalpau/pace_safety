@@ -1,33 +1,30 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, FormHelperText } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import { Button, Grid } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormLabel from "@material-ui/core/FormLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useHistory, useParams } from "react-router";
-import { PapperBlock } from "dan-components";
-import Type from "../../../styles/components/Fonts.scss";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
+import { useHistory } from "react-router";
+import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import { checkValue, handelApiValue } from "../../../utils/CheckerValue";
 import {
+  ASSESSMENTS,
+  BASIC_CAUSE_SUB_TYPES, COMPILANCE,
+  ENGAGEMENT,
   PACE_MANAGEMENT_CONTROL_SUB_TYPES,
   PROACTIVEMANAGEMENT,
-  ASSESSMENTS,
-  COMPILANCE,
-  ENGAGEMENT,
-  BASIC_CAUSE_SUB_TYPES,
+  ROOT_CAUSE_ANALYSIS_FORM
 } from "../../../utils/constants";
-import { checkValue, handelApiValue } from "../../../utils/CheckerValue";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -68,6 +65,7 @@ const PaceManagementControl = () => {
   const putId = useRef("")
   const [optionBasicCause, setOptionBasicCause] = useState([])
   const [allPaceCause, setAllPaceCause] = useState({})
+  const [loading, setLoading] = useState(false)
 
 
   const handelUpdateCheck = async () => {
@@ -279,22 +277,15 @@ const PaceManagementControl = () => {
   const handelNavigate = (nextPageLink, navigateType) => {
     if (navigateType == "next") {
       if (nextPageLink == 201) {
-        history.push(
-          "/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/");
+        history.push(ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]);
       } else if (nextPageLink == 200) {
-        history.push(
-          `/app/incident-management/registration/root-cause-analysis/basic-cause-and-action/${putId.current}`);
+        history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Preventive actions"]}${putId.current}`);
       }
     } else if (navigateType == "previous") {
       if (!isNaN(putId.current)) {
-        history.push(
-          `/app/incident-management/registration/root-cause-analysis/basic-cause/${putId.current
-          }`
-        );
+        history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`);
       } else if (isNaN(putId.current)) {
-        history.push(
-          `/app/incident-management/registration/root-cause-analysis/basic-cause/`
-        );
+        history.push(ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]);
       }
     }
   }
@@ -303,7 +294,7 @@ const PaceManagementControl = () => {
     let nextPageLink = 0;
     let tempData = []
     let lastRemark = Object.values(allPaceCause)
-    Object.entries(form).map(async (item, index) => {
+    Object.entries(form).map(async (item) => {
       let api_data = item[1];
       api_data.rcaRemark.map((value) => {
         if (!lastRemark.includes(value) && value !== "") {
@@ -341,10 +332,16 @@ const PaceManagementControl = () => {
     await setIncidentDetail(result);
   };
 
+  const handelCallBack = async () => {
+    await setLoading(true)
+    await handelUpdateCheck();
+    await fetchIncidentDetails();
+    await handelShowData();
+    await setLoading(false)
+  }
+
   useEffect(() => {
-    handelUpdateCheck();
-    fetchIncidentDetails();
-    handelShowData();
+    handelCallBack()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -355,142 +352,144 @@ const PaceManagementControl = () => {
       title="Basic cause - PACE Management control"
       icon="ion-md-list-box"
     >
-      <Row>
-        <Col md={9}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
+      {loading == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                RCA method
-              </Typography>
-              <Typography className={Type.labelValue}>
-                PACE cause analysis
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  RCA method
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  PACE cause analysis
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6">Basic cause selected</Typography>
-              {optionBasicCause.map((value) => (
-                <p>
-                  <small>{value}</small>
-                </p>
-              ))}
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6">Basic cause selected</Typography>
+                {optionBasicCause.map((value) => (
+                  <p>
+                    <small>{value}</small>
+                  </p>
+                ))}
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            <Grid item xs={12}>
-              <Box paddingBottom={2}>
-                <Typography variant="h6">Management control</Typography>
-              </Box>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Proactive management</FormLabel>
-                <FormGroup>
-                  {PROACTIVEMANAGEMENT.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.ProActiveManagement.rcaRemark.includes(
-                        value
-                      )}
-                      onChange={async (e) =>
-                        await handelProactiveManagement(e, value)
-                      }
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              <Grid item xs={12}>
+                <Box paddingBottom={2}>
+                  <Typography variant="h6">Management control</Typography>
+                </Box>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Proactive management</FormLabel>
+                  <FormGroup>
+                    {PROACTIVEMANAGEMENT.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.ProActiveManagement.rcaRemark.includes(
+                          value
+                        )}
+                        onChange={async (e) =>
+                          await handelProactiveManagement(e, value)
+                        }
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Assessments</FormLabel>
-                <FormGroup>
-                  {ASSESSMENTS.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.Assessments.rcaRemark.includes(value)}
-                      onChange={async (e) => await handelAssessmet(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              <Grid item xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Assessments</FormLabel>
+                  <FormGroup>
+                    {ASSESSMENTS.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.Assessments.rcaRemark.includes(value)}
+                        onChange={async (e) => await handelAssessmet(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Compliance</FormLabel>
-                <FormGroup>
-                  {COMPILANCE.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.Compilance.rcaRemark.includes(value)}
-                      onChange={async (e) => await handelCompilance(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              <Grid item xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Compliance</FormLabel>
+                  <FormGroup>
+                    {COMPILANCE.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.Compilance.rcaRemark.includes(value)}
+                        onChange={async (e) => await handelCompilance(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Engagement</FormLabel>
-                <FormGroup>
-                  {ENGAGEMENT.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.Engagement.rcaRemark.includes(value)}
-                      onChange={async (e) => await handelEngagement(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              <Grid item xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Engagement</FormLabel>
+                  <FormGroup>
+                    {ENGAGEMENT.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.Engagement.rcaRemark.includes(value)}
+                        onChange={async (e) => await handelEngagement(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelNavigate("nextPageLink", "previous")}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                disabled={nextButton == true}
-                onClick={(e) => handelNext(e)}
-              >
-                Next
-              </Button>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelNavigate("nextPageLink", "previous")}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  disabled={nextButton == true}
+                  onClick={(e) => handelNext(e)}
+                >
+                  Next
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </Col>
-        {isDesktop && (
-          <Col md={3}>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Management control"}
-            />
           </Col>
-        )}
-      </Row>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Management control"}
+              />
+            </Col>
+          )}
+        </Row>
+        : "Loading..."}
     </PapperBlock>
   );
 };
