@@ -69,7 +69,7 @@ function App() {
   }, [status])
   const getToken = async () => {
     const url = window.location
-    console.log(url)
+    
 
     let comId = 0
     let proId = 0
@@ -85,9 +85,9 @@ function App() {
       if (state) {
         jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
         let newArr = (0, eval)('(' + jsonCode + ')')
-        console.log({jsonCode:newArr})
+        
         state = newArr;
-        console.log({ array: state });
+        
         comId = state.companyId;
         proId = state.projectId;
         redback = state.redirect_back;
