@@ -137,7 +137,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
-    localStorage.setItem('fkobservationId' , id)
+    localStorage.setItem('fkobservationId', id)
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
@@ -454,7 +454,7 @@ const ObservationInitialNotificationView = () => {
               Submited by
             </Typography>
             <Typography className={classes.labelValue}>
-              {userName} , {userBadgeNo}
+              {userName} , {userBadgeNo !== null ? userBadgeNo : "-"}
               {/* {initialData.observedAt} */}
             </Typography>
           </Grid>
