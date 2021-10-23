@@ -15,10 +15,12 @@ import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
-import { checkValue } from "../../../utils/CheckerValue";
+import { checkValue, handelActionData } from "../../../utils/CheckerValue";
 import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
 import FormSideBar from "../FormSideBar";
+import ActionShow from "../ActionShow";
+import ActionTracker from "../ActionTracker";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,6 +63,9 @@ const WhyAnalysis = () => {
   const [fkid, setFkid] = useState("")
   const [loading, setLoading] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
+
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiDataId = [];
@@ -91,6 +96,11 @@ const WhyAnalysis = () => {
       checkPost.current = false;
     }
     updateIds.current = tempApiDataId;
+  };
+
+  const handelActionTracker = async (incidentID) => {
+    let allAction = await handelActionData(incidentID, [], "one")
+    await setActionData(allAction);
   };
 
   const handelInvestigationData = async () => {
@@ -219,6 +229,7 @@ const WhyAnalysis = () => {
     await handelUpdateCheck();
     await fetchIncidentData();
     await handelInvestigationData();
+    await handelActionTracker(localStorage.getItem("fkincidentId"))
     await setLoading(false)
   }
 
@@ -310,6 +321,37 @@ const WhyAnalysis = () => {
                   </button>
                 </Grid>
               ) : null}
+
+              <Grid item xs={12} >
+                <ActionTracker
+                  actionContext="incidents:whyAnalysis"
+                  enitityReferenceId={`${fkid}:${actionData.length + 1}`}
+                  setUpdatePage={setUpdatePage}
+                  updatePage={updatePage}
+                  fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                  fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                  fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                  createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                  handelShowData={handelActionTracker}
+                />
+              </Grid>
+
+              <Grid item xs={12} >
+                <div>
+
+                  {actionData.length > 0 && actionData.map((actionValue) => (
+                    <>
+                      <ActionShow
+                        action={{ id: actionValue.id, number: actionValue.actionNumber }}
+                        title={actionValue.actionTitle}
+                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                        updatePage={updatePage}
+                      />
+                    </>
+                  ))}
+                </div>
+              </Grid>
 
               <Grid item xs={12}>
                 <Button
