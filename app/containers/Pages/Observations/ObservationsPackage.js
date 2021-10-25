@@ -37,6 +37,7 @@ import { useDispatch } from 'react-redux';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
 import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
+import axios from "axios"
 
 
 
@@ -554,12 +555,12 @@ function Actions(props) {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
+       
         let config = {
           method: "get",
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        console.log(config)
         // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
         await api(config)
@@ -567,25 +568,41 @@ function Actions(props) {
             console.log(response)
             if (response.status === 200) {
               console.log(response)
-              localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
+              .subscriptions.filter(subs=>subs.appCode === "safety")[0]
+              .hostings[0].apiDomain
+            
+              console.log(hosting)
+              let data1 = {
+                method: "get",
+                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+                headers: HEADER_AUTH,
+              };
+              console.log(data1)
+              axios(data1).then((res)=>
               
-              if (compId) {
-                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+{
+  localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              
+  if (compId) {
+    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
 
-                let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                localStorage.setItem('company', JSON.stringify(companeyData))
+    let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+    localStorage.setItem('company', JSON.stringify(companeyData))
 
-                dispatch(company(companeyData))
-              }
-              if (proId) {
-                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                let project = companies[0].projects.filter(item => item.projectId == proId)
+    dispatch(company(companeyData))
+  }
+  if (proId) {
+    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+    let project = companies[0].projects.filter(item => item.projectId == proId)
 
-                localStorage.setItem("projectName", JSON.stringify(project[0]))
-                dispatch(projectName(project[0]))
-              }
-              // fetchPermissionData();
-              localStorage.removeItem("direct_loading")
+    localStorage.setItem("projectName", JSON.stringify(project[0]))
+    dispatch(projectName(project[0]))
+  }
+  // fetchPermissionData();
+  localStorage.removeItem("direct_loading")
+}              )
+             
 
             }
           })
