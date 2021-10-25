@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link";
 import { SSO_URL } from "../../utils/constants"
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import apiAction from "../../utils/axiosActionTracker"
 
 
 
@@ -68,6 +68,8 @@ const ActionShow = (props) => {
         )
     }
     console.log(props.index)
+
+    
     useEffect(() => { }, [updatPage]);
 
     return (
