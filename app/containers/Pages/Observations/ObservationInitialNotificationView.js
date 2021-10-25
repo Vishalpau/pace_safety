@@ -231,6 +231,15 @@ const ObservationInitialNotificationView = () => {
     return lastNameArray;
   };
 
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
+   const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
+   const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+    return dd[0].projectName
+  }
+
   const [positiveObservation, setPositiveObservation] = useState(false);
 
   const handelPositivObservation = (e) => {
@@ -283,7 +292,7 @@ const ObservationInitialNotificationView = () => {
             </Typography>
             <Typography className={classes.labelValue}>
 
-              {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
+              {handleProjectName(initialData.fkProjectId)}  {projectStructName.map((value) => ` - ${value}`)}
             </Typography>
           </Grid>
           <Grid item md={6}>

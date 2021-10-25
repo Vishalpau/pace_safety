@@ -266,6 +266,7 @@ const ObservationInitialNotificationUpdate = () => {
     await setIsLoading(true);
 
   }
+  
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
@@ -418,6 +419,16 @@ if(departments !== ""){
         // window.location.href = {LOGIN_URL}
       });
   };
+
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
+   const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
+   const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+    return dd[0].projectName
+  }
+
   const handleDepartment = (option) => {
     let temp = {...initialData}
     temp.departmentName = option.departmentName;
@@ -603,7 +614,7 @@ if(departments !== ""){
               Project Information
             </Typography>
             <Typography className={classes.labelValue}>
-            {project.projectName}  {projectStructName.map((value) => ` - ${value}`)} 
+            {handleProjectName(initialData.fkProjectId)}  {projectStructName.map((value) => ` - ${value}`)} 
             </Typography>
           </Grid>
           <Grid
