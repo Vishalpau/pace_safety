@@ -236,6 +236,7 @@ const PersonalAndPpeDetails = () => {
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
       await setError(error);
       if (!isValid) {
+        setIsNext(true)
         return "Data is not valid";
       }
       try{
@@ -887,6 +888,7 @@ const PersonalAndPpeDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
+                  disabled={!isNext}
                 >
                   Next{isNext?null:<CircularProgress size={20}/>}
                 </Button>

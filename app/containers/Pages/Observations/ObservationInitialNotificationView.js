@@ -139,7 +139,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
-    localStorage.setItem('fkobservationId' , id)
+    localStorage.setItem('fkobservationId', id)
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
@@ -225,6 +225,14 @@ const ObservationInitialNotificationView = () => {
     handleClose()
   };
 
+  const handelFileName = (value) => {
+    const fileNameArray = value.split("/");
+    const fileName = fileNameArray[fileNameArray.length - 1].split('-');
+    const lastNameArray = fileName[fileName.length - 1]
+    // const lastName = fileName.split("-");
+    return lastNameArray;
+  };
+
   const handleProjectName = (projectId) => {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).companies
@@ -233,14 +241,6 @@ const ObservationInitialNotificationView = () => {
    const dd = abc[0].projects.filter((user) => user.projectId === projectId)
     return dd[0].projectName
   }
-
-  const handelFileName = (value) => {
-    const fileNameArray = value.split("/");
-    const fileName = fileNameArray[fileNameArray.length - 1].split('-');
-    const lastNameArray = fileName[fileName.length - 1]
-    // const lastName = fileName.split("-");
-    return lastNameArray;
-  };
 
   const [positiveObservation, setPositiveObservation] = useState(false);
 
@@ -361,7 +361,6 @@ const ObservationInitialNotificationView = () => {
             <Typography className="viewLabelValue">
               {initialData.actionTaken ? initialData.actionTaken : "-"}
             </Typography>
-
 
           </Grid>
           </Grid>

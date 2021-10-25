@@ -138,7 +138,7 @@ const CloseOutSummary = () => {
                                     Reviewed by
                                 </Typography>
                                 <Typography className={Fonts.labelValue} >
-                                   {incidents.reviewedByName}
+                                   {incidents.reviewedByName==="0"?"-":incidents.reviewedByName}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -151,9 +151,9 @@ const CloseOutSummary = () => {
                                     Reviewed on
                                 </Typography>
                                 <Typography className={Fonts.labelValue}>
-                                    {moment(incidents.reviewDate).format(
+                                    {incidents.reviewDate?moment(incidents.reviewDate).format(
                                         "Do MMMM YYYY, h:mm:ss a"
-                                    )}
+                                    ):"-"}
 
                                 </Typography>
                             </Grid>
@@ -166,7 +166,7 @@ const CloseOutSummary = () => {
                                     Closed by
                                 </Typography>
                                <Typography className={Fonts.labelValue} >
-                                   {incidents.closedByName}
+                                   {incidents.closedByName==="0"?"-":incidents.closedByName}
                                 </Typography>
                                 
                             </Grid>
@@ -179,9 +179,9 @@ const CloseOutSummary = () => {
                                     Close Date
                                 </Typography>
                                 <Typography className={Fonts.labelValue}>
-                                {moment(incidents.closeDate).format(
+                                {incidents.closeDate?moment(incidents.closeDate).format(
                                         "Do MMMM YYYY, h:mm:ss a"
-                                    )}  {}
+                                    ):"-"}  {}
                                 </Typography>
                             </Grid>
                         </Grid>

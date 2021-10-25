@@ -75,6 +75,8 @@ const CloseOut = () => {
   const [error, setError] = useState({});
   const [isDateShow, setIsDateShow] = useState(false);
   const [isReviewDateShow, setIsReviewDateShow] = useState(false);
+  const [closeByName, setCloseByName] = useState(0);
+  const [reviewByName, setReviewByName] = useState(0);
   const [isNext, setIsNext] = useState(true);
   const [form, setForm] = useState({
     reviewedBy: 0,
@@ -106,7 +108,7 @@ const CloseOut = () => {
       }
     }).catch(err => history.push('/app/pages/error'));
   };
-    // handle close snackbar
+  // handle close snackbar
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -157,9 +159,11 @@ const CloseOut = () => {
   const handleNext = async () => {
     await setIsNext(false);
     const temp = incidentsListData;
-    temp.reviewedByName = form.reviewedBy || incidentsListData.reviewedBy;
+    temp.reviewedByName = reviewByName || incidentsListData.reviewedByName;
+    temp.reviewedBy = form.reviewedBy || incidentsListData.reviewedBy;
     temp.reviewDate = form.reviewDate || incidentsListData.reviewDate;
-    temp.closedByName = form.closedBy || incidentsListData.closedBy;
+    temp.closedByName = closeByName || incidentsListData.closedByName;
+    temp.closedBy = form.closedBy || incidentsListData.closedBy;
     temp.closeDate = form.closeDate || incidentsListData.closeDate;
     temp.updatedAt = new Date().toISOString();
     temp.updatedBy = parseInt(userId);
@@ -206,7 +210,7 @@ const CloseOut = () => {
           <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
             <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident number
+                Incident number
               </Typography>
 
               <Typography varint="body1" className={Type.labelValue}>
@@ -218,7 +222,7 @@ const CloseOut = () => {
 
             <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident occured on
+                Incident occured on
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentOccuredOn).format(
@@ -229,7 +233,7 @@ const CloseOut = () => {
 
             <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident reported on
+                Incident reported on
               </Typography>
               <Typography className={Type.labelValue}>
                 {moment(incidentsListData.incidentReportedOn).format(
@@ -240,7 +244,7 @@ const CloseOut = () => {
 
             <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Reported by
+                Reported by
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentReportedByName
@@ -251,7 +255,7 @@ const CloseOut = () => {
 
             <Grid item xs={12} md={6}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident type
+                Incident type
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentType
@@ -263,7 +267,7 @@ const CloseOut = () => {
 
             <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident title
+                Incident title
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentTitle
@@ -274,7 +278,7 @@ const CloseOut = () => {
 
             <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident description
+                Incident description
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentDetails
@@ -285,7 +289,7 @@ const CloseOut = () => {
 
             <Grid item xs={12}>
               <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Incident location
+                Incident location
               </Typography>
               <Typography className={Type.labelValue}>
                 {incidentsListData.incidentLocation
@@ -296,7 +300,7 @@ const CloseOut = () => {
 
             <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
-                                Incident report form review
+                Incident report form review
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -306,19 +310,20 @@ const CloseOut = () => {
                 className={classes.formControl}
               >
                 <InputLabel id="demo-simple-select-label">
-                                    Reviewed by
+                  Reviewed by
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Reviewed by"
-                  value={form.reviewedBy || ''}
+                  defaultValue={form.reviewedBy || ''}
                   onChange={(e) => setForm({ ...form, reviewedBy: e.target.value })}
                 >
                   {userList.map((selectValues, index) => (
                     <MenuItem
-                      value={selectValues.name}
+                      value={selectValues.id }
                       key={index}
+                      onClick={() => setReviewByName(selectValues.name)}
                     >
                       {selectValues.name}
                     </MenuItem>
@@ -364,7 +369,7 @@ const CloseOut = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6" gutterBottom>
-                                Action item close out
+                Action item close out
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -374,19 +379,20 @@ const CloseOut = () => {
                 className={classes.formControl}
               >
                 <InputLabel id="demo-simple-select-label">
-                                    Closed by
+                  Closed by
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Closed by"
-                  value={form.closedBy || ''}
+                  defaultValue={form.closedBy || ''}
                   onChange={(e) => setForm({ ...form, closedBy: e.target.value })}
                 >
                   {userList.map((selectValues, index) => (
                     <MenuItem
-                      value={selectValues.name}
+                      value={selectValues.id}
                       key={index}
+                      onClick={()=>setCloseByName(selectValues.name)}
                     >
                       {selectValues.name}
                     </MenuItem>
@@ -432,7 +438,7 @@ const CloseOut = () => {
                 onClick={() => handleNext()}
                 disabled={!isNext}
               >
-                                Submit
+                Submit
                 {isNext ? null : <CircularProgress size={20} />}
               </Button>
             </Grid>

@@ -129,6 +129,7 @@ const AdditionalDetails = () => {
       const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
       await setError(error);
       if (!isValid) {
+        setIsNext(true)
         return;
       }
       const res = await api.put(
@@ -155,6 +156,7 @@ const AdditionalDetails = () => {
         const { error, isValid } = AdditionalDetailValidate(additionalList);
         await setError(error);
         if (!isValid) {
+          setIsNext(true)
           return;
         }
         const res = await api.put(
@@ -183,6 +185,7 @@ const AdditionalDetails = () => {
       const { error, isValid } = AdditionalDetailValidate(additionalList);
       await setError(error);
       if (!isValid) {
+        setIsNext(true)
         return;
       }
 

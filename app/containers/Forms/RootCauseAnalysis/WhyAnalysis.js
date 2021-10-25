@@ -1,21 +1,27 @@
-import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import { spacing } from "@material-ui/system";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
-import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
+// Redux
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
+import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
+import { checkValue, handelActionData } from "../../../utils/CheckerValue";
+import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
-import { CLOSE_OUT_FORM } from "../../../utils/constants";
-import { checkValue } from "../../../utils/CheckerValue";
+import FormSideBar from "../FormSideBar";
+import ActionShow from "../ActionShow";
+import ActionTracker from "../ActionTracker";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -34,15 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
-import Type from "../../../styles/components/Fonts.scss";
-
-// Redux
-import { useDispatch } from "react-redux";
-import { tabViewMode } from "../../../redux/actions/initialDetails";
-
 const WhyAnalysis = () => {
   const [incidents, setIncidents] = useState([]);
   const putId = useRef("");
@@ -57,18 +54,20 @@ const WhyAnalysis = () => {
   });
 
   const [error, setError] = useState({});
-
   const history = useHistory();
   const [form, setForm] = useState([{ why: "", whyCount: "" }]);
-
   const updateIds = useRef();
   const checkPost = useRef();
   const dispatch = useDispatch();
   const [investigationData, setInvestigationData] = useState({})
   const [fkid, setFkid] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false)
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
+
   // get data and set to states
   const handelUpdateCheck = async () => {
-    let tempApiData = {};
     let tempApiDataId = [];
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -78,7 +77,7 @@ const WhyAnalysis = () => {
       ? lastItem
       : localStorage.getItem("fkincidentId");
 
-      setFkid(incidentId)
+    setFkid(incidentId)
     let previousData = await api.get(
       `/api/v1/incidents/${incidentId}/fivewhy/`
     );
@@ -98,6 +97,24 @@ const WhyAnalysis = () => {
     }
     updateIds.current = tempApiDataId;
   };
+
+  const handelActionTracker = async () => {
+    let incidentID = localStorage.getItem("fkincidentId")
+    let allAction = await handelActionData(incidentID, [], "one")
+    await setActionData(allAction);
+  };
+
+  const handelActionShow = (value) => (
+    <Grid>
+      <ActionShow
+        action={{ id: value.id, number: value.actionNumber }}
+        title={value.actionTitle}
+        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+        updatePage={updatePage}
+      />
+    </Grid>
+  );
 
   const handelInvestigationData = async () => {
     let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
@@ -146,6 +163,7 @@ const WhyAnalysis = () => {
   const handelApiCall = async (e) => {
     const { error, isValid } = WhyAnalysisValidate(form);
     setError(error);
+    setButtonLoading(true)
     let nextPageLink = 0;
     let callObjects = form;
     for (let key in callObjects) {
@@ -168,11 +186,11 @@ const WhyAnalysis = () => {
         }
       }
       if (nextPageLink == 201 && Object.keys(error).length == 0) {
-        if(incidents.incidentStage === "Root cause & analysis"){
+        if (incidents.incidentStage === "Root cause & analysis") {
           try {
             const temp = incidents
             temp.updatedAt = new Date().toISOString();
-            temp.incidentStatus= "Done"
+            temp.incidentStatus = "Done"
             const res = await api.put(
               `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
               temp
@@ -183,16 +201,15 @@ const WhyAnalysis = () => {
         }
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-
         }
         dispatch(tabViewMode(viewMode))
         history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
-        if(incidents.incidentStage === "Root cause & analysis"){
+        if (incidents.incidentStage === "Root cause & analysis") {
           try {
             const temp = incidents
             temp.updatedAt = new Date().toISOString();
-            temp.incidentStatus= "Done"
+            temp.incidentStatus = "Done"
             const res = await api.put(
               `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
               temp
@@ -203,13 +220,13 @@ const WhyAnalysis = () => {
         }
         let viewMode = {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-
         }
         dispatch(tabViewMode(viewMode))
         history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");
+    setButtonLoading(false)
   };
 
   const handelPrevious = () => {
@@ -220,12 +237,13 @@ const WhyAnalysis = () => {
     }
   };
 
-
-
   const handelCallBack = async () => {
+    await setLoading(true)
     await handelUpdateCheck();
     await fetchIncidentData();
     await handelInvestigationData();
+    await handelActionTracker()
+    await setLoading(false)
   }
 
   useEffect(() => {
@@ -236,116 +254,140 @@ const WhyAnalysis = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Five why analysis" icon="ion-md-list-box">
-      <Row>
-        <Col md={9}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidents.incidentNumber}
-              </Typography>
-            </Grid>
+      {loading == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidents.incidentNumber}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Method
-              </Typography>
-              <Typography className={Type.labelValue}>
-                Five why analysis
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Method
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  Five why analysis
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident Description
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidents.incidentDetails}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Level of classification
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {checkValue(investigationData["classification"])}
-              </Typography>
-            </Grid>
-
-            {form.map((item, index) => (
               <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={11}>
-                    <TextField
-                      id="filled-basic"
-                      label={`Why ${index + 1}`}
-                      variant="outlined"
-                      multiline
-                      required
-                      rows={3}
-                      error={error[`why${[index]}`]}
-                      value={form[index].why || ""}
-                      helperText={error ? error[`why${[index]}`] : ""}
-                      className={classes.formControl}
-                      onChange={(e) => handleForm(e, index)}
-                    />
-                  </Grid>
-                  {form.length > 1 ? (
-                    <Grid item xs={12} md={1} justify="center">
-                      <IconButton onClick={(e) => handelRemove(e, index)}>
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Incident Description
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidents.incidentDetails}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Level of classification
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {checkValue(investigationData["classification"])}
+                </Typography>
+              </Grid>
+
+              {form.map((item, index) => (
+                <Grid item xs={12}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={11}>
+                      <TextField
+                        id="filled-basic"
+                        label={`Why ${index + 1}`}
+                        variant="outlined"
+                        multiline
+                        required
+                        rows={3}
+                        error={error[`why${[index]}`]}
+                        value={form[index].why || ""}
+                        helperText={error ? error[`why${[index]}`] : ""}
+                        className={classes.formControl}
+                        onChange={(e) => handleForm(e, index)}
+                      />
                     </Grid>
-                  ) : null}
+                    {form.length > 1 ? (
+                      <Grid item xs={12} md={1} justify="center">
+                        <IconButton onClick={(e) => handelRemove(e, index)}>
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </Grid>
+                    ) : null}
+                  </Grid>
                 </Grid>
-              </Grid>
-            ))}
+              ))}
 
-            {form.length <= 99 ? (
-              <Grid item xs={12} md={1}>
-                {/* This button will add another entry of why input  */}
-                <button
-                  onClick={(e) => handelAdd(e)}
-                  className={classes.textButton}
+              {form.length <= 99 ? (
+                <Grid item xs={12} md={1}>
+                  {/* This button will add another entry of why input  */}
+                  <button
+                    onClick={(e) => handelAdd(e)}
+                    className={classes.textButton}
+                  >
+                    <AddIcon /> Add
+                  </button>
+                </Grid>
+              ) : null}
+
+              <Grid item xs={12} >
+                <ActionTracker
+                  actionContext="incidents:whyAnalysis"
+                  enitityReferenceId={`${fkid}:${actionData.length + 1}`}
+                  setUpdatePage={setUpdatePage}
+                  updatePage={updatePage}
+                  fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                  fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                  fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                  createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                  handelShowData={handelActionTracker}
+                />
+              </Grid>
+
+
+              {actionData.map((value) => (
+                <Grid item xs={12}>
+                  {handelActionShow(value)}
+                </Grid>
+              ))}
+
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelPrevious(e)}
                 >
-                  <AddIcon /> Add
-                </button>
+                  Previous
+                </Button>
+                <Button
+                  id="myBtn"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handelApiCall(e)}
+                  disabled={buttonLoading}
+                >
+                  Submit
+                </Button>
               </Grid>
-            ) : null}
-
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelPrevious(e)}
-              >
-                Previous
-              </Button>
-              <Button
-                id="myBtn"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handelApiCall(e)}
-              >
-                Submit
-              </Button>
             </Grid>
-          </Grid>
-        </Col>
-        {isDesktop && (
-          <Col md={3}>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem={"Five Why analysis"}
-            />
           </Col>
-        )}
-      </Row>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem={"Five Why analysis"}
+              />
+            </Col>
+          )}
+        </Row>
+        : "Loading..."}
     </PapperBlock>
   );
 };

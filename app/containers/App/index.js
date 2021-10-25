@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy,Suspense, useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import NotFound from "containers/Pages/Standalone/NotFoundDedicated";
 import Auth from "./Auth";
-import Application from "./Application";
+// import Application from "";
 import LandingCorporate from "./Landing";
 import LandingCreative from "./LandingCreative";
 import ArticleNews from "./ArticleNews";
 import ThemeWrapper from "./ThemeWrapper";
 import { Offline, Online } from "react-detect-offline";
-
-// import { PersonalDashboard } from "../../containers/pageListAsync";
+import Loading from 'dan-components/Loading';
 
 // redux
 import { useDispatch } from "react-redux";
 import { projectName, company } from "../../redux/actions/initialDetails";
 
 import axios from "axios";
-// import Authentication from "./Authentication";
 
 import {
   SSO_URL,
@@ -34,12 +32,10 @@ import {
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
 
-
+const Application = lazy(() => import(`./Application`))
 function App() {
   const [status, setStatus] = useState(0);
   const dispatch = useDispatch();
-
-
   const userLogin = () => {
     try {
       if (access_token) {
@@ -73,7 +69,7 @@ function App() {
   }, [status])
   const getToken = async () => {
     const url = window.location
-    console.log(url)
+    
 
     let comId = 0
     let proId = 0
@@ -89,9 +85,9 @@ function App() {
       if (state) {
         jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
         let newArr = (0, eval)('(' + jsonCode + ')')
-        console.log({jsonCode:newArr})
+        
         state = newArr;
-        console.log({ array: state });
+        
         comId = state.companyId;
         proId = state.projectId;
         redback = state.redirect_back;
@@ -171,26 +167,28 @@ function App() {
     getToken();
 
   }, []);
-  return (
 
+    return (<Suspense fallback={<Loading/>}>
+      <ThemeWrapper>
+        <Online>
+          {localStorage.getItem("access_token") !== null ? (
+            <Switch>
+              <Route path="/app" exact component={LandingCorporate} />
+              <Route path="/landing-creative" exact component={LandingCreative} />
+              <Route path="/" component={Application} />
+              
+              <Route path="/blog" component={ArticleNews} />
+              <Route component={Auth} />
+              <Route component={NotFound} />
+            </Switch>
+          ) : <Loading/>}
+        </Online>
+        <Offline>Turn on internet</Offline> 
+      </ThemeWrapper>
+      </Suspense>
+    ); 
+  
 
-    <ThemeWrapper>
-      <Online>
-        {localStorage.getItem("access_token") !== null ? (
-          <Switch>
-            <Route path="/app" exact component={LandingCorporate} />
-            <Route path="/landing-creative" exact component={LandingCreative} />
-            <Route path="/" component={Application} />
-            <Route path="/blog" component={ArticleNews} />
-            <Route component={Auth} />
-            <Route component={NotFound} />
-          </Switch>
-        ) : null}
-      </Online>
-      <Offline>Turn on internet</Offline>
-
-    </ThemeWrapper>
-  );
 }
 
 export default App;

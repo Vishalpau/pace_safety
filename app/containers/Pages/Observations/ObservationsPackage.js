@@ -42,7 +42,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
-
+import UserDetailsView from '../../UserDetails/UserDetail';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -405,58 +405,11 @@ function Actions(props) {
 
 const handleMyUserPClickOpen = (item) => {
   console.log(item);
-  setUserInfo({name : item[1].username})
+  setUserInfo({name : item[1].createdBy})
   setMyUserPOpen(true);
 };
 console.log(userInfo);
 
-const userDetailsView = () => {
-  return (<>
-    <Grid
-                        item md={12} sm={12} xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Basic Information</h3>
-                        <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
-                              <Avatar>
-                                <ImageIcon />
-                              </Avatar>
-                            </ListItemAvatar> */}
-                            <ListItemText primary="Full Name:" secondary={userInfo.name} />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Organization Role:" secondary="N/A" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Role Title:" secondary="N/A" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                          </ListItem>
-                        </List>
-                      </Grid>
-
-                      <Grid
-                        item md={12} sm={12} xs={12}
-                        className={classes.usrProfileListBox}
-                      >
-                        <h3>Company Information</h3>
-                        <List>
-                          <ListItem>
-                            <ListItemText primary="Company Name:" secondary="JWIL" />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText primary="Location:" secondary="Italy" />
-                          </ListItem>
-                        </List>
-                      </Grid></>
-  )
-}
 const handleMyUserPClose = () => {
   setMyUserPOpen(false);
 };
@@ -1027,7 +980,7 @@ const handleMyUserPClose = () => {
                   <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                      {userDetailsView()}
+                      <UserDetailsView userId={userInfo.name}/>
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>

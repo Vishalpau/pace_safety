@@ -192,6 +192,7 @@ const ActivityDetails = () => {
       const { error, isValid } = ActivityDetailValidate(activtyList);
       await setError(error);
       if (!isValid) {
+        setIsNext(true)
         return;
       }
       const res = await api.post(

@@ -399,22 +399,7 @@ function ObservationCorrectiveAction() {
     setForm(temp)
   }
 
-  const fetchactionTrackerData = async () => {
-    const allActionTrackerData = await apiAction.get(`/api/v1/actions/?enitityReferenceId=${id}`)
-    const allActionTracker = allActionTrackerData.data.data.results.results
-    const newData = []
-    allActionTracker.map((item, i) => {
 
-      if (item.enitityReferenceId == localStorage.getItem("fkobservationId")) {
-        newData.push(allActionTracker[i])
-      }
-    }
-    )
-    let sorting = newData.sort((a, b) => a.id - b.id)
-    await setActionTakenData(sorting)
-    await setIsLoading(true);
-
-  }
 
   const fetchReportedBy = () => {
     const config = {
@@ -447,7 +432,6 @@ function ObservationCorrectiveAction() {
   useEffect(() => {
     if (id) {
       fetchInitialiObservationData()
-      fetchactionTrackerData()
       fetchComments()
       fetchReportedBy()
     }
@@ -842,7 +826,7 @@ function ObservationCorrectiveAction() {
                 size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
                 style={{ marginLeft: "2px" }}
               >
-                Cancle
+                Cancel
               </Button>
           </div>
         </Grid>

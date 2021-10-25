@@ -16,7 +16,7 @@ import { Typography } from "@material-ui/core";
 import {
   INITIAL_NOTIFICATION_FORM,
   SSO_URL,
-  HEADER_AUTH,
+  HEADER_AUTH,ACCOUNT_API_URL,
 } from "../../utils/constants";
 import api from "../../utils/axios";
 import Type from "../../styles/components/Fonts.scss";
