@@ -332,7 +332,8 @@ const ReportingAndNotification = () => {
 
           // update incident details
           await handleUpdateIncidentDetails();
-
+          // https://us-safety-api.paceos.io/api/v1/incidents/?companyId=2&projectId=9&projectStructureIds=
+          // https://us-safety-api.paceos.io/api/v1/incidents/?companyId=2&projectId=9&projectStructureIds=
           const newData = [];
           reportedToFilterData = [];
           for (var key in reportedTo) {
@@ -620,9 +621,10 @@ const ReportingAndNotification = () => {
   // fetch supervisor name
 
   const fetchSuperVisorName = () => {
+    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const config = {
       method: 'get',
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/roles/4/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/roles/4/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -642,9 +644,10 @@ const ReportingAndNotification = () => {
   };
 
   const fetchReportedBy = () => {
+    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const config = {
       method: 'get',
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/company-users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/company-users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
         // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
@@ -1161,3 +1164,5 @@ const ReportingAndNotification = () => {
 };
 
 export default ReportingAndNotification;
+// http://us-safety-api.paceos.io/api/v1/incidents/?companyId=2&projectId=9&projectStructureIds=
+// https://us-safety-api.paceos.io/api/v1/incidents/?companyId=2&projectId=9&projectStructureIds=
