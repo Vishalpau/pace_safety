@@ -67,12 +67,11 @@ const ActionShow = (props) => {
             </Link>
         )
     }
-    console.log(props.index)
+    // console.log(props.index)
     useEffect(() => { }, [updatPage]);
 
     return (
         <Grid container spacing={3}>
-
             <Grid item md={6} sm={6} xs={12} className={classes.actionLinkListSection} >
                 {props.title !== undefined ?
                     <>

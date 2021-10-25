@@ -1427,10 +1427,9 @@ const InvestigationSummary = () => {
                     >
                       Pre-event mitigations
                     </Typography>
+
                     <Typography variant="body" className={Fonts.labelValue}>
-                      {value.preEventMitigations === null ? null : value.preEventMitigations.lenght > 0
-                        ? value.preEventMitigations
-                        : "-"}
+                      {value.preEventMitigations !== null && value.preEventMitigations !== "" ? value.preEventMitigations : "-"}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>

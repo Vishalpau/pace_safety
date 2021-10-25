@@ -15,10 +15,12 @@ import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
 import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
-import { checkValue } from "../../../utils/CheckerValue";
+import { checkValue, handelActionData } from "../../../utils/CheckerValue";
 import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
 import FormSideBar from "../FormSideBar";
+import ActionShow from "../ActionShow";
+import ActionTracker from "../ActionTracker";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,6 +63,9 @@ const WhyAnalysis = () => {
   const [fkid, setFkid] = useState("")
   const [loading, setLoading] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
+
   // get data and set to states
   const handelUpdateCheck = async () => {
     let tempApiDataId = [];
@@ -92,6 +97,24 @@ const WhyAnalysis = () => {
     }
     updateIds.current = tempApiDataId;
   };
+
+  const handelActionTracker = async () => {
+    let incidentID = localStorage.getItem("fkincidentId")
+    let allAction = await handelActionData(incidentID, [], "one")
+    await setActionData(allAction);
+  };
+
+  const handelActionShow = (value) => (
+    <Grid>
+      <ActionShow
+        action={{ id: value.id, number: value.actionNumber }}
+        title={value.actionTitle}
+        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+        updatePage={updatePage}
+      />
+    </Grid>
+  );
 
   const handelInvestigationData = async () => {
     let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
@@ -219,6 +242,7 @@ const WhyAnalysis = () => {
     await handelUpdateCheck();
     await fetchIncidentData();
     await handelInvestigationData();
+    await handelActionTracker()
     await setLoading(false)
   }
 
@@ -310,6 +334,27 @@ const WhyAnalysis = () => {
                   </button>
                 </Grid>
               ) : null}
+
+              <Grid item xs={12} >
+                <ActionTracker
+                  actionContext="incidents:whyAnalysis"
+                  enitityReferenceId={`${fkid}:${actionData.length + 1}`}
+                  setUpdatePage={setUpdatePage}
+                  updatePage={updatePage}
+                  fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                  fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                  fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                  createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                  handelShowData={handelActionTracker}
+                />
+              </Grid>
+
+
+              {actionData.map((value) => (
+                <Grid item xs={12}>
+                  {handelActionShow(value)}
+                </Grid>
+              ))}
 
               <Grid item xs={12}>
                 <Button
