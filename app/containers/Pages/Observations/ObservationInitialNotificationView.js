@@ -137,7 +137,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
-    localStorage.setItem('fkobservationId' , id)
+    localStorage.setItem('fkobservationId', id)
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
@@ -231,6 +231,15 @@ const ObservationInitialNotificationView = () => {
     return lastNameArray;
   };
 
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
+   const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
+   const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+    return dd[0].projectName
+  }
+
   const [positiveObservation, setPositiveObservation] = useState(false);
 
   const handelPositivObservation = (e) => {
@@ -283,7 +292,7 @@ const ObservationInitialNotificationView = () => {
             </Typography>
             <Typography className={classes.labelValue}>
 
-              {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
+              {handleProjectName(initialData.fkProjectId)}  {projectStructName.map((value) => ` - ${value}`)}
             </Typography>
           </Grid>
           <Grid item md={6}>
@@ -454,7 +463,7 @@ const ObservationInitialNotificationView = () => {
               Submited by
             </Typography>
             <Typography className={classes.labelValue}>
-              {userName} , {userBadgeNo}
+              {userName} , {userBadgeNo !== null ? userBadgeNo : "-"}
               {/* {initialData.observedAt} */}
             </Typography>
           </Grid>

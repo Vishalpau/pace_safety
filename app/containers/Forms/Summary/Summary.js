@@ -37,7 +37,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { connect, useDispatch } from 'react-redux';
 
 import api from '../../../utils/axios';
-
+import apiAction from "../../../utils/axiosActionTracker"
 
 import IncidentDetails from '../InitialNotification/IncidentDetails';
 import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
@@ -126,6 +126,7 @@ const Summary = (props) => {
     rootCauseCheck: '',
     lessionLearntCheck: ''
   });
+  const [whyAction, setWhyAction] = useState([])
 
   const { id } = useParams();
   const history = useHistory();
@@ -250,6 +251,7 @@ const Summary = (props) => {
   const handelNaviagte = (value) => {
     history.push(value);
   };
+
   const handleInitialNotificationView = () => {
     if (initialNoticeficationStatus === false) {
       handelNaviagte(`/incident/${id}/modify/`);
@@ -331,6 +333,7 @@ const Summary = (props) => {
       dispatch(tabViewMode(viewMode));
     }
   };
+
   const handleCloseOutOverView = async => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
@@ -429,6 +432,7 @@ const Summary = (props) => {
       handelNaviagte('/app/incident-management/registration/investigation/investigation-overview/');
     }
   };
+
   const modifyEvidence = (fkid) => {
     if (closeout) {
       setOpen(true);
@@ -446,6 +450,14 @@ const Summary = (props) => {
       handelNaviagte(`/app/incident-management/registration/evidence/evidence/${id}`);
     }
   };
+
+  const whyAnalysisAction = async () => {
+    let incidentId = localStorage.getItem("fkincidentId")
+    const allActionData = await apiAction.get(`api/v1/actions/?actionContext=incidents%3AwhyAnalysis&enitityReferenceId=${incidentId}`)
+    const allAction = allActionData.data.data.results.results
+    setWhyAction(allAction)
+  }
+
   const modifyRootCauseAnalysis = () => {
     if (closeout) {
       setOpen(true);
@@ -463,10 +475,16 @@ const Summary = (props) => {
       setOpen(true);
       setMessage('Please complete the previous pending stage Evidence');
       setMessageType('warning');
-    } else {
+    } else if (whyAction.length > 0) {
+      setOpen(true);
+      setMessage("Can't modify why analysis as actions added");
+      setMessageType('warning');
+    }
+    else {
       handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`);
     }
   };
+
   const modifyLessonLearn = () => {
     if (initialNoticeficationStatus === false) {
       setOpen(true);
@@ -492,6 +510,7 @@ const Summary = (props) => {
       handelNaviagte(`/incident/${id}/lesson-learnt/new/`);
     }
   };
+
   const modifyCloseout = () => {
     if (closeout) {
       setOpen(true);
@@ -517,10 +536,12 @@ const Summary = (props) => {
       handelNaviagte(`/incident/${id}/close-out/new/`);
     }
   };
+
   const handleActivityHistory = () => {
     setActivityHistory(true);
     setIsComments(false);
   };
+
   const handleComments = () => {
     setActivityHistory(false);
     setIsComments(true);
@@ -535,6 +556,7 @@ const Summary = (props) => {
 
     setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident);
   };
+
   useEffect(() => {
     // fetchReportData();
     // fetchInvestigationData();
@@ -542,6 +564,7 @@ const Summary = (props) => {
     // fetchLessonLerned();
     // handelRcaValue();
     // rootCauseAnalysisCheck();
+    whyAnalysisAction()
     fetchIncidentData();
     // fetchPermissionData();
   }, []);
@@ -582,7 +605,7 @@ const Summary = (props) => {
                         handleInitialNotificationView();
                       }}
                     >
-                    Initial Notification
+                      Initial Notification
                     </Button>
                     <Typography className={Fonts.labelValue} display="block">
                       {initialNoticeficationStatus ? 'Done' : 'Pending'}
@@ -604,13 +627,12 @@ const Summary = (props) => {
                       // disabled={!permissionListData.view_investigation}
                       onClick={(e) => handelInvestigationView()}
                     >
-                    Investigation
+                      Investigation
                     </Button>
                     <Typography className={Fonts.labelValue} display="block">
                       {investigationOverview ? 'Done' : 'Pending'}
                     </Typography>
                   </div>
-
 
                   <div className={Styles.item}>
                     <Button
@@ -623,12 +645,13 @@ const Summary = (props) => {
                       endIcon={evidence ? <CheckCircle /> : <AccessTime />}
                       onClick={(e) => handelEvidenceView(e)}
                     >
-                    Evidence
+                      Evidence
                     </Button>
                     <Typography className={Fonts.labelValue} display="block">
                       {evidence ? 'Done' : 'Pending'}
                     </Typography>
                   </div>
+
                   <div className={Styles.item}>
                     <Button
                       href="#root-cause-analysis"
@@ -648,9 +671,9 @@ const Summary = (props) => {
                         )
                       }
                       onClick={(e) => handelRootCauseAnalysisView()}
-                      // disabled={!permissionListData.view_incidents}
+                    // disabled={!permissionListData.view_incidents}
                     >
-                    Root Cause & Analysis
+                      Root Cause & Analysis
                     </Button>
                     <Typography className={Fonts.labelValue} display="block">
                       {rootcauseanalysis
@@ -658,6 +681,7 @@ const Summary = (props) => {
                         : 'Pending'}
                     </Typography>
                   </div>
+
                   <div className={Styles.item}>
                     <Button
                       href="#close-out"
@@ -670,12 +694,13 @@ const Summary = (props) => {
                       onClick={(e) => handleCloseOutOverView()
                       }
                     >
-                    Close out
+                      Close out
                     </Button>
                     <Typography className={Fonts.labelValue} display="block">
                       {closeout ? 'Done' : 'Pending'}
                     </Typography>
                   </div>
+
                   <div className={Styles.item}>
                     <Button
                       href="#lessons-learnt"
@@ -685,9 +710,9 @@ const Summary = (props) => {
                       className={classes.statusButton}
                       endIcon={lessionlearn ? <CheckCircle /> : <AccessTime />}
                       onClick={(e) => handelLessionLearnedView()}
-                      // disabled={!permissionListData.view_incidents}
+                    // disabled={!permissionListData.view_incidents}
                     >
-                    Lessons Learnt
+                      Lessons Learnt
                     </Button>
                     <Typography className={Fonts.labelValue} display="block">
                       {lessionlearn ? 'Done' : 'Pending'}
@@ -747,10 +772,9 @@ const Summary = (props) => {
                         <ListSubheader component="div">Actions</ListSubheader>
                       }
                     >
-
                       <ListItemLink
                         button
-                        // disabled={!permissionListData.add_incidents}
+                      // disabled={!permissionListData.add_incidents}
                       >
                         <ListItemIcon>
                           <Edit />

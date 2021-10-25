@@ -17,7 +17,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import api from "../../utils/axios";
 import moment from "moment";
 import {
- ACCOUNT_API_URL,    
+    ACCOUNT_API_URL,
 } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -79,11 +79,11 @@ const CloseOutSummary = () => {
         }
     }
     const fetchUserList = async () => {
-       
+
 
         await api.get(`${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`)
             .then(function (response) {
-               console.log(response)
+                console.log(response)
                 if (response.status === 200) {
                     const result = response.data.data.results[0].users
                     setUserList(result)
@@ -116,78 +116,79 @@ const CloseOutSummary = () => {
 
                 </Grid>
             )}
-{isLoading?
-            <Grid item xs={12}>
-                <Accordion
-                    expanded={expanded == "panel1"}
-                    onChange={handleExpand("panel1")}
-                >
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography className={classes.heading}>
-                            Close out
-                        </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid container item xs={12} spacing={3}>
-                            <Grid item xs={12} md={6}>
-                                <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                >
-                                    Reviewed by
-                                </Typography>
-                                <Typography className={Fonts.labelValue} >
-                                   {incidents.reviewedByName}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                >
+            {isLoading ?
+                <Grid item xs={12}>
+                    <Accordion
+                        expanded={expanded == "panel1"}
+                        onChange={handleExpand("panel1")}
+                    >
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>
+                                Close out
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid container item xs={12} spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                    <Typography
+                                        variant="h6"
+                                        gutterBottom
+                                        className={Fonts.labelName}
+                                    >
+                                        Reviewed by
+                                    </Typography>
+                                    <Typography className={Fonts.labelValue} >
+                                        {console.log(incidents.reviewedByName)}
+                                        {incidents.reviewedByName === null || incidents.reviewedByName === "0" ? "-" : incidents.reviewedByName}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Typography
+                                        variant="h6"
+                                        gutterBottom
+                                        className={Fonts.labelName}
+                                    >
 
-                                    Reviewed on
-                                </Typography>
-                                <Typography className={Fonts.labelValue}>
-                                    {moment(incidents.reviewDate).format(
-                                        "Do MMMM YYYY, h:mm:ss a"
-                                    )}
+                                        Reviewed on
+                                    </Typography>
+                                    <Typography className={Fonts.labelValue}>
+                                        {incidents.reviewDate ? moment(incidents.reviewDate).format(
+                                            "Do MMMM YYYY, h:mm:ss a"
+                                        ) : "-"}
 
-                                </Typography>
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Typography
+                                        variant="h6"
+                                        gutterBottom
+                                        className={Fonts.labelName}
+                                    >
+                                        Closed by
+                                    </Typography>
+                                    <Typography className={Fonts.labelValue} >
+                                        {incidents.closedByName === null || incidents.closedByName === "0" ? "-" : incidents.closedByName}
+                                    </Typography>
+
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Typography
+                                        variant="h6"
+                                        gutterBottom
+                                        className={Fonts.labelName}
+                                    >
+                                        Close Date
+                                    </Typography>
+                                    <Typography className={Fonts.labelValue}>
+                                        {incidents.closeDate ? moment(incidents.closeDate).format(
+                                            "Do MMMM YYYY, h:mm:ss a"
+                                        ) : "-"}  { }
+                                    </Typography>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                >
-                                    Closed by
-                                </Typography>
-                               <Typography className={Fonts.labelValue} >
-                                   {incidents.closedByName}
-                                </Typography>
-                                
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                >
-                                    Close Date
-                                </Typography>
-                                <Typography className={Fonts.labelValue}>
-                                {moment(incidents.closeDate).format(
-                                        "Do MMMM YYYY, h:mm:ss a"
-                                    )}  {}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
-            </Grid>:null}
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid> : null}
         </Grid>
     );
 };

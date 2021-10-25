@@ -74,7 +74,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WorkerDetails = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [testTaken, setTesttaken] = useState(false);
   const [error, setError] = useState({});
   const workerType = useRef([]);
@@ -116,8 +115,10 @@ const WorkerDetails = () => {
   const fileRef = useRef("");
   const [isDateShow, setIsDateShow] = useState(false)
   const [isTimeShow, setIsTimeShow] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false)
   const TextFieldComponent = (props) => {
-    return <TextField {...props} inputProps={{readOnly:true}} />
+    return <TextField {...props} inputProps={{ readOnly: true }} />
   }
 
   let [workerData, setworkerData] = useState({
@@ -198,7 +199,6 @@ const WorkerDetails = () => {
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
     }
-    await setIsLoading(true);
   };
 
   const handelTestTaken = async (e) => {
@@ -213,11 +213,13 @@ const WorkerDetails = () => {
       setTesttaken(false);
     }
   };
+
   let fileTypeError =
     "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
+
   let fielSizeError = "Size less than 25Mb allowed";
   const handleFile = async (e) => {
-    
+
     let acceptFileTypes = [
       "pdf",
       "png",
@@ -235,7 +237,7 @@ const WorkerDetails = () => {
       acceptFileTypes.includes(file[file.length - 1]) &&
       e.target.files[0].size < 25670647
     ) {
-      
+
       const temp = { ...form };
       temp.attachments = e.target.files[0];
       await setForm(temp);
@@ -264,6 +266,7 @@ const WorkerDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
+    setButtonLoading(true)
     if (Object.keys(error).length === 0) {
       let data = new FormData();
       data.append("name", form.name);
@@ -377,6 +380,7 @@ const WorkerDetails = () => {
       await handelUpdateCheck();
     }
     document.getElementById("workerForm").reset();
+    setButtonLoading(false)
   };
 
   const handelAddNew = async () => {
@@ -458,7 +462,8 @@ const WorkerDetails = () => {
     await handelUpdateCheck();
   };
 
-  const PickList = async () => {
+  const handelCallBack = async () => {
+    await setIsLoading(true);
     await handelUpdateCheck();
     workerType.current = await PickListData(71);
     setDepartmentName(await PickListData(10));
@@ -479,17 +484,11 @@ const WorkerDetails = () => {
     setSupervisorTimeInIndustry(await PickListData(54));
     setSupervisorTimeOnProject(await PickListData(55));
     setSupervisorTimeInCompany(await PickListData(56));
-    await setIsLoading(true);
-  };
-
-  const imageNameFromUrl = (url) => {
-    let imageArray = url.split("/");
-    let image_name = imageArray[imageArray.length - 1];
-    return image_name;
+    await setIsLoading(false);
   };
 
   useEffect(() => {
-    PickList();
+    handelCallBack();
   }, []);
 
   const classes = useStyles();
@@ -497,7 +496,7 @@ const WorkerDetails = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
-      {isLoading ? (
+      {isLoading == false ? (
         <form id="workerForm">
           <Row>
             <Col md={9}>
@@ -1023,10 +1022,10 @@ const WorkerDetails = () => {
                       format="yyyy/MM/dd"
                       inputVariant="outlined"
                       disableFuture="true"
-                      InputProps={{readOnly:true}}
+                      InputProps={{ readOnly: true }}
                       onClick={(e) => setIsDateShow(true)}
-                  open={isDateShow}
-                  onClose={(e) => setIsDateShow(false)}
+                      open={isDateShow}
+                      onClose={(e) => setIsDateShow(false)}
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -1305,8 +1304,8 @@ const WorkerDetails = () => {
                           inputVariant="outlined"
                           disableFuture="true"
                           onClick={(e) => setIsDateShow(true)}
-                  open={isDateShow}
-                  onClose={(e) => setIsDateShow(false)}
+                          open={isDateShow}
+                          onClose={(e) => setIsDateShow(false)}
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
@@ -1537,6 +1536,7 @@ const WorkerDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
+                    disabled={buttonLoading}
                   >
                     Next
                   </Button>
@@ -1599,7 +1599,7 @@ const WorkerDetails = () => {
           </Row>
         </form>
       ) : (
-        <h1>Loading...</h1>
+        "Loading..."
       )}
     </PapperBlock>
   );

@@ -393,7 +393,8 @@ const Evidence = () => {
         alert("something went wrong")
       }
     }
-    if (isNext === true) {
+    const { error, isValid } = EvidenceValidate(form);
+    if (isValid === true) {
       setIsNext(false);
       let status = 0;
       if (evideceData.length > 0) {
@@ -477,7 +478,7 @@ const Evidence = () => {
           )}`
         );
       }
-    }
+    }else{setIsNext(true)}
   };
 
   const handleClose = (event, reason) => {

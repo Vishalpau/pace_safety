@@ -232,7 +232,7 @@ export default function ActionTracker(props) {
                 error={error.actionTitle}
                 helperText={error ? error.actionTitle : null}
                 onChange={(e) =>
-                  setForm({ ...form, actionTitle: e.target.value })
+                  setForm({ ...form, actionTitle: e.target.value, actionDetail: e.target.value })
                 }
               />
             </Grid>

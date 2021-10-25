@@ -1,36 +1,30 @@
-import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormLabel from "@material-ui/core/FormLabel";
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { useHistory, useParams } from "react-router";
-import { PapperBlock } from "dan-components";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import {
-  ROOT_CAUSE_ANALYSIS_FORM,
-  SAFETYITEMS,
-} from "../../../utils/constants";
-import HazardiousConditionsValidation from "../../Validator/RCAValidation/HazardiousConditonsValidation";
-import {
-  HAZARDIOUS_CONDITION_SUB_TYPES,
-  WARNINGSYSTEM,
-  ENERGIES,
-  TOOLS,
-  CONDITIONSAFETYITEMS,
-} from "../../../utils/constants";
+import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
-import { checkValue, handelApiValue } from "../../../utils/CheckerValue"
+import api from "../../../utils/axios";
+import { handelApiValue } from "../../../utils/CheckerValue";
+import {
+  CONDITIONSAFETYITEMS,
+  ENERGIES,
+  HAZARDIOUS_CONDITION_SUB_TYPES,
+  ROOT_CAUSE_ANALYSIS_FORM,
+  TOOLS, WARNINGSYSTEM
+} from "../../../utils/constants";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -68,12 +62,11 @@ const HazardiousCondition = () => {
 
   const putId = useRef("");
   const history = useHistory();
-  const [error, setError] = useState({})
   const [incidentDetail, setIncidentDetail] = useState({});
   const [paceCauseDelete, setPaceCauseDelete] = useState()
   const [nextButton, setNextButton] = useState(false)
-  const [paceCauseRemark, setPaceCauseRemark] = useState()
   const [allPaceCause, setAllPaceCause] = useState({})
+  const [loading, setLoading] = useState(false)
 
   // get data and set to states
   const handelUpdateCheck = async () => {
@@ -320,19 +313,18 @@ const HazardiousCondition = () => {
   const handelPrevious = () => {
     if (!isNaN(putId.current)) {
       history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/${putId.current
-        }`
+        `${ROOT_CAUSE_ANALYSIS_FORM["Hazardous acts"]}${putId.current}`
       );
     } else if (isNaN(putId.current)) {
-      history.push(
-        `/app/incident-management/registration/root-cause-analysis/hazardious-acts/`
-      );
+      history.push(`${ROOT_CAUSE_ANALYSIS_FORM["Hazardous acts"]}`);
     }
   };
 
   const handelCallback = async () => {
+    await setLoading(true)
     await handelUpdateCheck();
     await fetchIncidentDetails();
+    await setLoading(false)
   };
 
   useEffect(() => {
@@ -346,149 +338,149 @@ const HazardiousCondition = () => {
       title="Immediate causes - hazardous conditions"
       icon="ion-md-list-box"
     >
-      <Row>
-        <Col md={9}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                Incident number
-              </Typography>
-              <Typography className={Type.labelValue}>
-                {incidentDetail.incidentNumber}
-              </Typography>
-            </Grid>
+      {loading == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  Incident number
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  {incidentDetail.incidentNumber}
+                </Typography>
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" className={Type.labelName} gutterBottom>
-                RCA method
-              </Typography>
-              <Typography className={Type.labelValue}>
-                PACE cause analysis
-              </Typography>
-            </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" className={Type.labelName} gutterBottom>
+                  RCA method
+                </Typography>
+                <Typography className={Type.labelValue}>
+                  PACE cause analysis
+                </Typography>
+              </Grid>
 
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Warning system</FormLabel>
-                <FormGroup>
-                  {WARNINGSYSTEM.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.warningSystem.rcaRemark.includes(value)}
-                      onChange={async (e) => handelWarningSystems(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Warning system</FormLabel>
+                  <FormGroup>
+                    {WARNINGSYSTEM.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.warningSystem.rcaRemark.includes(value)}
+                        onChange={async (e) => handelWarningSystems(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            {/* energy types */}
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Energy types</FormLabel>
-                <FormGroup>
-                  {ENERGIES.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.energyTypes.rcaRemark.includes(value)}
-                      onChange={async (e) => handelEnergyTypes(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              {/* energy types */}
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Energy types</FormLabel>
+                  <FormGroup>
+                    {ENERGIES.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.energyTypes.rcaRemark.includes(value)}
+                        onChange={async (e) => handelEnergyTypes(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            {/* tools */}
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Tools</FormLabel>
-                <FormGroup>
-                  {TOOLS.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.tools.rcaRemark.includes(value)}
-                      onChange={async (e) => handelTools(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              {/* tools */}
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Tools</FormLabel>
+                  <FormGroup>
+                    {TOOLS.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.tools.rcaRemark.includes(value)}
+                        onChange={async (e) => handelTools(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            {/* safety items */}
-            <Grid item md={12}>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Safety items</FormLabel>
-                <FormGroup>
-                  {CONDITIONSAFETYITEMS.map((value) => (
-                    <FormControlLabel
-                      control={<Checkbox name={value} />}
-                      label={value}
-                      checked={form.safetyitems.rcaRemark.includes(value)}
-                      onChange={async (e) => handelSafetyItems(e, value)}
-                    />
-                  ))}
-                </FormGroup>
-              </FormControl>
-              <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-            </Grid>
+              {/* safety items */}
+              <Grid item md={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">Safety items</FormLabel>
+                  <FormGroup>
+                    {CONDITIONSAFETYITEMS.map((value) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        checked={form.safetyitems.rcaRemark.includes(value)}
+                        onChange={async (e) => handelSafetyItems(e, value)}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+              </Grid>
 
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                id="filled-basic"
-                label="Others"
-                multiline
-                error={error.others}
-                value={
-                  form.others.rcaRemark !== "No option selected"
-                    ? form.others.rcaRemark
-                    : ""
-                }
-                helperText={error ? error.others : null}
-                rows={3}
-                className={classes.formControl}
-                onChange={async (e) => handelOthers(e)}
-              />
-            </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  id="filled-basic"
+                  label="Others"
+                  multiline
+                  value={
+                    form.others.rcaRemark !== "No option selected"
+                      ? form.others.rcaRemark
+                      : ""
+                  }
+                  rows={3}
+                  className={classes.formControl}
+                  onChange={async (e) => handelOthers(e)}
+                />
+              </Grid>
 
-            <Grid item md={12}>
-              <Box marginTop={3}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={(e) => handelPrevious(e)}
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={nextButton == true}
-                  className={classes.button}
-                  onClick={(e) => handelNext(e)}
-                >
-                  Next
-                </Button>
-              </Box>
+              <Grid item md={12}>
+                <Box marginTop={3}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={(e) => handelPrevious(e)}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={nextButton == true}
+                    className={classes.button}
+                    onClick={(e) => handelNext(e)}
+                  >
+                    Next
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </Col>
-        {isDesktop && (
-          <Col md={3}>
-            <FormSideBar
-              listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
-              selectedItem="Hazardous conditions"
-            />
           </Col>
-        )}
-      </Row>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                listOfItems={ROOT_CAUSE_ANALYSIS_FORM}
+                selectedItem="Hazardous conditions"
+              />
+            </Col>
+          )}
+        </Row>
+        : "Loading..."}
     </PapperBlock>
   );
 };

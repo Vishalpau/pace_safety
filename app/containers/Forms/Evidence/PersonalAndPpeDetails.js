@@ -236,6 +236,7 @@ const PersonalAndPpeDetails = () => {
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
       await setError(error);
       if (!isValid) {
+        setIsNext(true)
         return "Data is not valid";
       }
       try{

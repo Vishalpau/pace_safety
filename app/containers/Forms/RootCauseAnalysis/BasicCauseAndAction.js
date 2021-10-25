@@ -1,36 +1,30 @@
-import React, { useEffect, useState, useRef, lazy } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
 import ListItem from "@material-ui/core/ListItem";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router";
-import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
-import Divider from "@material-ui/core/Divider";
-import axios from "axios";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Link from '@material-ui/core/Link';
-import Paper from "@material-ui/core/Paper";
-
-import api from "../../../utils/axios";
-import apiAction from "../../../utils/axiosActionTracker"
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import { BASIC_CAUSE_SUB_TYPES, PACE_MANAGEMENT_CONTROL_SUB_TYPES } from "../../../utils/constants";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import { handelConvert } from "../../../utils/CheckerValue";
+import api from "../../../utils/axios";
+import { handelActionData, handelConvert } from "../../../utils/CheckerValue";
+import { PACE_MANAGEMENT_CONTROL_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
+import ActionShow from "../ActionShow";
 import ActionTracker from "../ActionTracker";
-import ActionTrack from "../ActionTrack";
-import ActionShow from "../ActionShow"
+import FormSideBar from "../FormSideBar";
 
-import { checkValue, handelActionData } from "../../../utils/CheckerValue";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
