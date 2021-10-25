@@ -423,14 +423,17 @@ const ObservationInitialNotificationUpdate = () => {
   };
 
   const handleProjectName = (projectId) => {
+    let pname = ""
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).companies
-      : null;
-    console.log(userName)
-    const abc = userName.filter((user) => user.companyId === initialData.fkCompanyId)
-
+    ? JSON.parse(localStorage.getItem('userDetails')).companies
+    : null;
+    
+   const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
+   if (abc.length > 0) {
     const dd = abc[0].projects.filter((user) => user.projectId === projectId)
-    return dd[0].projectName
+   pname = dd[0].projectName
+   }
+   return pname
   }
 
   const handleDepartment = (option) => {
