@@ -1,39 +1,39 @@
-import React, { useEffect, useState, useRef } from "react";
+import DateFnsUtils from "@date-io/date-fns";
 import { Button, Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-
-import moment from "moment";
-import DateFnsUtils from "@date-io/date-fns";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import FormLabel from "@material-ui/core/FormLabel";
-import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION, SUMMERY_FORM } from "../../../utils/constants";
-import api from "../../../utils/axios";
-import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
-
-import Type from "../../../styles/components/Fonts.scss";
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import { checkValue } from "../../../utils/CheckerValue";
 // Redux
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
+import Type from "../../../styles/components/Fonts.scss";
+import api from "../../../utils/axios";
+import { handelActionData, handelValueToLabel } from "../../../utils/CheckerValue";
+import { RCAOPTION, ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
+import ActionShow from "../ActionShow";
+import ActionTracker from "../ActionTracker";
+import FormSideBar from "../FormSideBar";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -77,6 +77,8 @@ const RootCauseAnalysis = () => {
   const classificationValues = useRef([]);
   const [loading, setLoading] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
+  const [updatePage, setUpdatePage] = useState(false);
+  const [actionData, setActionData] = useState([])
 
   const handelUpdateCheck = async () => {
     const page_url = window.location.href;
@@ -128,6 +130,24 @@ const RootCauseAnalysis = () => {
     }
     classificationValues.current = await PickListData(40);
     2;
+  };
+
+  const handelActionShow = (value) => (
+    <Grid>
+      <ActionShow
+        action={{ id: value.id, number: value.actionNumber }}
+        title={value.actionTitle}
+        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+        updatePage={updatePage}
+      />
+    </Grid>
+  );
+
+  const handelActionTracker = async () => {
+    let incidentID = localStorage.getItem("fkincidentId")
+    let allAction = await handelActionData(incidentID, [], "one")
+    await setActionData(allAction);
   };
 
   const fetchIncidentData = async () => {
@@ -217,6 +237,7 @@ const RootCauseAnalysis = () => {
     await setLoading(true)
     await handelUpdateCheck();
     await fetchIncidentData()
+    await handelActionTracker()
     await setLoading(false)
   }
 
@@ -232,6 +253,7 @@ const RootCauseAnalysis = () => {
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
+
               <Grid item xs={12}>
                 <Typography variant="h6" className={Type.labelName} gutterBottom>
                   Incident number
@@ -301,7 +323,7 @@ const RootCauseAnalysis = () => {
                   Level of classification
                 </Typography>
                 <Typography className={Type.labelValue}>
-                  {checkValue(investigationData.current["classification"])}
+                  {handelValueToLabel(investigationData.current["classification"])}
                 </Typography>
               </Grid>
 
@@ -332,6 +354,7 @@ const RootCauseAnalysis = () => {
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   className={classes.formControl}
@@ -412,6 +435,28 @@ const RootCauseAnalysis = () => {
                   />
                 </Grid>
               ) : null}
+              <Grid>
+
+                <Grid item xs={12} >
+                  <ActionTracker
+                    actionContext="incidents:causeAnalysis"
+                    enitityReferenceId={`${fkid}:${actionData.length + 1}`}
+                    setUpdatePage={setUpdatePage}
+                    updatePage={updatePage}
+                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                    fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                    handelShowData={handelActionTracker}
+                  />
+                </Grid>
+              </Grid>
+
+              {actionData.map((value) => (
+                <Grid item xs={12}>
+                  {handelActionShow(value)}
+                </Grid>
+              ))}
 
               <Grid item xs={12}>
                 <Button

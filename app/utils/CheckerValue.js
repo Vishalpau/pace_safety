@@ -77,35 +77,44 @@ export const handleTimeOutError = (res) => {
 }
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
+    const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
 
-    const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`)
-    const allAction = allActionData.data.data.results.results
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
 
-    if (type == "all") {
-        let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
-        apiAllData.map((value) => {
-            allAction.map((valueAction) => {
-                if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
-                    const tempAction = {
-                        "number": valueAction.actionNumber,
-                        "id": valueAction.id,
-                        "title": valueAction.actionTitle
-                    };
-                    if (value["action"] == undefined) {
-                        value["action"] = [tempAction]
-                    } else if (value["action"] !== undefined) {
-                        value["action"].push(tempAction)
+    if (actionSelect.status === 200) {
+        const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`)
+        const allAction = allActionData.data.data.results.results
+
+        if (type == "all") {
+            let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
+            apiAllData.map((value) => {
+                allAction.map((valueAction) => {
+                    if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
+                        const tempAction = {
+                            "number": valueAction.actionNumber,
+                            "id": valueAction.id,
+                            "title": valueAction.actionTitle
+                        };
+                        if (value["action"] == undefined) {
+                            value["action"] = [tempAction]
+                        } else if (value["action"] !== undefined) {
+                            value["action"].push(tempAction)
+                        }
                     }
+                })
+                if (value["action"] == undefined) {
+                    value["action"] = []
                 }
             })
-            if (value["action"] == undefined) {
-                value["action"] = []
-            }
-        })
-        return apiAllData
-    } else {
-        return allAction
+            return apiAllData
+        } else {
+            return allAction
+        }
     }
+
 }
 
 export const handelDateTime = (value) => {
@@ -118,4 +127,15 @@ export const handelDateTime = (value) => {
     var ampm = (H < 12 || H === 24) ? " AM" : " PM";
     timeString = h + timeString.substr(2, 3) + ampm;
     return `${observedDate} ${timeString}`
+}
+
+export const handelValueToLabel = (value) => {
+    let label = ""
+    if (value !== null && value !== undefined && value !== "") {
+        let arrVal = value.split("-")
+        label = arrVal.slice(0, arrVal.length - 1).join(' ') + " " + arrVal.slice(-1)
+    } else {
+        label = "-"
+    }
+    return label
 }
