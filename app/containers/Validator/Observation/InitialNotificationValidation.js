@@ -5,7 +5,7 @@ function InitialNotificationValidator(data, projectStructure) {
 
   const error = {};
   let isValid = true;
-console.log(data)
+  console.log(data)
   const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
   for (let i = 0; i < breakdownValue.length; i++) {
     var element = projectStructure[i]
@@ -74,13 +74,13 @@ console.log(data)
     isValid = false;
   }
 
-  if (data.departmentName !== ""   ) {
-    if(data.assigneeName === ""){
+  if (data.departmentName !== "") {
+    if (data.assigneeName === "") {
       error.assigneeName = "Select the assignee";
       isValid = false;
     }
-  
-}
+
+  }
 
 
   return { error, isValid };
