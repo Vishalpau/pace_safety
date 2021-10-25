@@ -25,7 +25,6 @@ import api from "../../utils/axios";
 import { handelActionData } from "../../utils/CheckerValue";
 import ActionShow from "../Forms/ActionShow";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -58,6 +57,7 @@ const RootCauseAnalysisSummary = () => {
     projectId: "",
     companyId: "",
   })
+  const [whyAction, setWhyAction] = useState([])
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -140,6 +140,10 @@ const RootCauseAnalysisSummary = () => {
     let valueArray = value.replace(",", ",  ");
     return valueArray;
   };
+  const handelWhyAnalysisAction = async (incidentID) => {
+    let allAction = await handelActionData(incidentID, [], "one")
+    await setWhyAction(allAction);
+  };
   const history = useHistory();
 
   const handelRootCauseAnalysis = (e, value) => {
@@ -160,6 +164,7 @@ const RootCauseAnalysisSummary = () => {
     fetchCauseAnalysiseData();
     fetchPaceCausesData();
     handelActionLink()
+    handelWhyAnalysisAction(fkid)
   }, []);
 
   const classes = useStyles();
@@ -300,6 +305,18 @@ const RootCauseAnalysisSummary = () => {
                   </>
                 ))}
               </Grid>
+              <Grid>
+                {whyAction.map((actionValue) => (
+                  <>
+                    <ActionShow
+                      action={{ id: actionValue.id, number: actionValue.actionNumber }}
+                      title={actionValue.actionTitle}
+                      companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                    />
+                  </>
+                ))}
+              </Grid>
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -332,6 +349,18 @@ const RootCauseAnalysisSummary = () => {
                       {fw.why}
                     </Typography>
                   </Grid>
+                ))}
+              </Grid>
+              <Grid>
+                {whyAction.length > 0 && whyAction.map((actionValue) => (
+                  <>
+                    <ActionShow
+                      action={{ id: actionValue.id, number: actionValue.actionNumber }}
+                      title={actionValue.actionTitle}
+                      companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                    />
+                  </>
                 ))}
               </Grid>
             </AccordionDetails>

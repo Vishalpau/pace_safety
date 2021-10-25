@@ -145,7 +145,7 @@ const LessionLearned = () => {
   const handleNext = async () => {
     await setIsNext(false);
     // sent put request
-    const status = 0;
+    let status = 0;
     // sent post request
     const { isValid, error } = LessionLearnedValidator(form);
     setError(error);
@@ -177,6 +177,7 @@ const LessionLearned = () => {
                   `api/v1/incidents/${id}/evidences/${attachment[0].id}/`,
                   formData
                 );
+                status = res.status
               } catch (error) { history.push('/app/pages/error'); }
             } else {
               const formData = new FormData();
@@ -192,10 +193,11 @@ const LessionLearned = () => {
                   `api/v1/incidents/${id}/evidences/`,
                   formData
                 );
+                status = res.status
               } catch (error) { history.push('/app/pages/error'); }
             }
           }
-        } 
+        }
         for (let i = 0; i < form.length; i++) {
           if (form[i].id) {
             try {
@@ -210,6 +212,8 @@ const LessionLearned = () => {
                   fkIncidentId: localStorage.getItem('fkincidentId'),
                 }
               );
+              status = res.status
+              
             } catch (err) { history.push('/app/pages/error'); }
           } else {
             try {
@@ -224,16 +228,20 @@ const LessionLearned = () => {
                   fkIncidentId: localStorage.getItem('fkincidentId'),
                 }
               );
+              status = res.status
+          
             } catch (err) { history.push('/app/pages/error'); }
           }
         }
+        
+        if (status === 200 || status === 201) {
+          const viewMode = {
+            initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
 
-        const viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
-
-        };
-        dispatch(tabViewMode(viewMode));
-        history.push(`${SUMMERY_FORM.Summary}${id}/`);
+          };
+          dispatch(tabViewMode(viewMode));
+          history.push(`${SUMMERY_FORM.Summary}${id}/`);
+        } else { setIsNext(true) }
       }
     } else { await setIsNext(true); }
   };
@@ -482,38 +490,22 @@ const LessionLearned = () => {
               {form.map((value, key) => (
                 <React.Fragment key={key}>
                   <Grid item xs={12}>
-                    <FormControl
-                      variant="outlined"
+                    <TextField
+                      id="outlined-search"
                       required
-                      className={classes.formControl}
                       error={error && error[`teamOrDepartment${[key]}`]}
-                      required
-                    >
-                      <InputLabel id="demo-simple-select-label">
-                        Team/department
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        label="Team/department"
-                        value={value.teamOrDepartment || ''}
-                        onChange={(e) => handleForm(e, key, 'teamOrDepartment')}
-                      >
-                        {department.map((selectValues, index) => (
-                          <MenuItem
-                            value={selectValues.departmentName}
-                            key={index}
-                          >
-                            {selectValues.departmentName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {error && error[`teamOrDepartment${[key]}`] && (
-                        <FormHelperText>
-                          {error[`teamOrDepartment${[key]}`]}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
+                      helperText={
+                        error && error[`teamOrDepartment${[key]}`]
+                          ? error[`teamOrDepartment${[key]}`]
+                          : null
+                      }
+                      label="Cause"
+                      className={classes.formControl}
+                      variant="outlined"
+                      rows="3"
+                      value={value.teamOrDepartment || ''}
+                      onChange={(e) => handleForm(e, key, 'teamOrDepartment')}
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
