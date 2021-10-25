@@ -421,12 +421,17 @@ if(departments !== ""){
   };
 
   const handleProjectName = (projectId) => {
+    let pname = ""
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).companies
     : null;
+    
    const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
-   const dd = abc[0].projects.filter((user) => user.projectId === projectId)
-    return dd[0].projectName
+   if (abc.length > 0) {
+    const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+   pname = dd[0].projectName
+   }
+   return pname
   }
 
   const handleDepartment = (option) => {
