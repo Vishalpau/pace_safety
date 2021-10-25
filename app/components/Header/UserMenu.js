@@ -409,7 +409,7 @@ function UserMenu(props) {
                     <List>
                       {subscription.modules.map((module,mIndex) => (
                         <div key={mIndex}>
-                          {console.log({subscription:subscription})}
+                    
                           <ListItemLink  disabled={!apps.includes(subscription.appId)} onClick={()=>handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting=>hosting.fkCompanyId ===JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "",module.targetPage,)} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <AssignmentIcon />

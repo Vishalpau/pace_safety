@@ -25,9 +25,6 @@ import api from "../../utils/axios";
 import { handelActionData } from "../../utils/CheckerValue";
 import ActionShow from "../Forms/ActionShow";
 
-
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -305,6 +302,18 @@ const RootCauseAnalysisSummary = () => {
                         </>
                       ) : null}
                     </Grid>
+                  </>
+                ))}
+              </Grid>
+              <Grid>
+                {whyAction.map((actionValue) => (
+                  <>
+                    <ActionShow
+                      action={{ id: actionValue.id, number: actionValue.actionNumber }}
+                      title={actionValue.actionTitle}
+                      companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                    />
                   </>
                 ))}
               </Grid>

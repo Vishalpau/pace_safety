@@ -53,7 +53,6 @@ const ActionShow = (props) => {
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
 
     const link = () => {
-
         return (
             <Link
                 className={classes.actionLink}

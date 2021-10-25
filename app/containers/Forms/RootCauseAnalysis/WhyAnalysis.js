@@ -98,10 +98,23 @@ const WhyAnalysis = () => {
     updateIds.current = tempApiDataId;
   };
 
-  const handelActionTracker = async (incidentID) => {
+  const handelActionTracker = async () => {
+    let incidentID = localStorage.getItem("fkincidentId")
     let allAction = await handelActionData(incidentID, [], "one")
     await setActionData(allAction);
   };
+
+  const handelActionShow = (value) => (
+    <Grid>
+      <ActionShow
+        action={{ id: value.id, number: value.actionNumber }}
+        title={value.actionTitle}
+        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+        updatePage={updatePage}
+      />
+    </Grid>
+  );
 
   const handelInvestigationData = async () => {
     let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
@@ -229,7 +242,7 @@ const WhyAnalysis = () => {
     await handelUpdateCheck();
     await fetchIncidentData();
     await handelInvestigationData();
-    await handelActionTracker(localStorage.getItem("fkincidentId"))
+    await handelActionTracker()
     await setLoading(false)
   }
 
@@ -336,22 +349,12 @@ const WhyAnalysis = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} >
-                <div>
 
-                  {actionData.length > 0 && actionData.map((actionValue) => (
-                    <>
-                      <ActionShow
-                        action={{ id: actionValue.id, number: actionValue.actionNumber }}
-                        title={actionValue.actionTitle}
-                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                        updatePage={updatePage}
-                      />
-                    </>
-                  ))}
-                </div>
-              </Grid>
+              {actionData.map((value) => (
+                <Grid item xs={12}>
+                  {handelActionShow(value)}
+                </Grid>
+              ))}
 
               <Grid item xs={12}>
                 <Button

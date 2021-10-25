@@ -75,4 +75,4 @@ app.listen(port, host, async err => {
   } else {
     logger.appStarted(port, prettyHost);
   }
-})
+});
