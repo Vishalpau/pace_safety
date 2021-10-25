@@ -37,7 +37,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { connect, useDispatch } from 'react-redux';
 
 import api from '../../../utils/axios';
-
+import apiAction from "../../../utils/axiosActionTracker"
 
 import IncidentDetails from '../InitialNotification/IncidentDetails';
 import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
@@ -126,6 +126,7 @@ const Summary = (props) => {
     rootCauseCheck: '',
     lessionLearntCheck: ''
   });
+  const [whyAction, setWhyAction] = useState([])
 
   const { id } = useParams();
   const history = useHistory();
@@ -450,6 +451,13 @@ const Summary = (props) => {
     }
   };
 
+  const whyAnalysisAction = async () => {
+    let incidentId = localStorage.getItem("fkincidentId")
+    const allActionData = await apiAction.get(`api/v1/actions/?actionContext=incidents%3AwhyAnalysis&enitityReferenceId=${incidentId}`)
+    const allAction = allActionData.data.data.results.results
+    setWhyAction(allAction)
+  }
+
   const modifyRootCauseAnalysis = () => {
     if (closeout) {
       setOpen(true);
@@ -467,7 +475,12 @@ const Summary = (props) => {
       setOpen(true);
       setMessage('Please complete the previous pending stage Evidence');
       setMessageType('warning');
-    } else {
+    } else if (whyAction.length > 0) {
+      setOpen(true);
+      setMessage("Can't modify why analysis as actions added");
+      setMessageType('warning');
+    }
+    else {
       handelNaviagte(`/app/incident-management/registration/root-cause-analysis/details/${id}`);
     }
   };
@@ -543,6 +556,7 @@ const Summary = (props) => {
 
     setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident);
   };
+
   useEffect(() => {
     // fetchReportData();
     // fetchInvestigationData();
@@ -550,6 +564,7 @@ const Summary = (props) => {
     // fetchLessonLerned();
     // handelRcaValue();
     // rootCauseAnalysisCheck();
+    whyAnalysisAction()
     fetchIncidentData();
     // fetchPermissionData();
   }, []);
@@ -759,7 +774,7 @@ const Summary = (props) => {
                     >
                       <ListItemLink
                         button
-                        // disabled={!permissionListData.add_incidents}
+                      // disabled={!permissionListData.add_incidents}
                       >
                         <ListItemIcon>
                           <Edit />
