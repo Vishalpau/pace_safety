@@ -52,6 +52,7 @@ import { useHistory, useParams } from "react-router";
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import { List } from "immutable";
+import axios from 'axios'
 
 import { connect } from "react-redux";
 import { tabViewMode, projectName, company } from '../../../redux/actions/initialDetails';
@@ -261,26 +262,42 @@ function BlankPage(props) {
           .then(function (response) {
             console.log(response)
             if (response.status === 200) {
-              console.log(response)
-              localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
-              
-              if (compId) {
-                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-
-                let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                localStorage.setItem('company', JSON.stringify(companeyData))
-
-                dispatch(company(companeyData))
-              }
-              if (proId) {
-                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                let project = companies[0].projects.filter(item => item.projectId == proId)
-
-                localStorage.setItem("projectName", JSON.stringify(project[0]))
-                dispatch(projectName(project[0]))
-              }
-              // fetchPermissionData();
-              localStorage.removeItem("direct_loading")
+              let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
+              .subscriptions.filter(subs=>subs.appCode === "safety")[0]
+              .hostings[0].apiDomain
+            
+              console.log(hosting)
+              let data1 = {
+                method: "get",
+                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+                headers: HEADER_AUTH,
+              };
+              axios(data1).then((res)=>{
+                console.log(response)
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+                
+                if (compId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+  
+                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                  localStorage.setItem('company', JSON.stringify(companeyData))
+                  
+                  dispatch(company(companeyData))
+                }
+                if (proId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let project = companies[0].projects.filter(item => item.projectId == proId)
+  
+                  localStorage.setItem("projectName", JSON.stringify(project[0]))
+                  dispatch(projectName(project[0]))
+                }
+                // fetchPermissionData();
+                localStorage.removeItem("direct_loading")
+              })
+            
+        
+        
+            
 
             }
           })
