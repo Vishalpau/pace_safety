@@ -78,16 +78,16 @@ export const handleTimeOutError = (res) => {
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
     const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
 
     const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
 
-    if(actionSelect.status === 200){
+    if (actionSelect.status === 200) {
         const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}`)
         const allAction = allActionData.data.data.results.results
-    
+
         if (type == "all") {
             let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
             apiAllData.map((value) => {
@@ -114,7 +114,7 @@ export const handelActionData = async (incidentId, apiData, type = "all") => {
             return allAction
         }
     }
-   
+
 }
 
 export const handelDateTime = (value) => {
@@ -127,4 +127,15 @@ export const handelDateTime = (value) => {
     var ampm = (H < 12 || H === 24) ? " AM" : " PM";
     timeString = h + timeString.substr(2, 3) + ampm;
     return `${observedDate} ${timeString}`
+}
+
+export const handelValueToLabel = (value) => {
+    let label = ""
+    if (value !== null && value !== undefined && value !== "") {
+        let arrVal = value.split("-")
+        label = arrVal.slice(0, arrVal.length - 1).join(' ') + " " + arrVal.slice(-1)
+    } else {
+        label = "-"
+    }
+    return label
 }

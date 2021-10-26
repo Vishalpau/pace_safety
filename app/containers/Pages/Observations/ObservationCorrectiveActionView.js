@@ -196,7 +196,6 @@ const ObservationCorrectiveActionView = () => {
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
     allActionTracker.map((item, i) => {
-
       if (item.enitityReferenceId == localStorage.getItem("fkobservationId")) {
         newData.push(allActionTracker[i])
       }
@@ -275,6 +274,7 @@ const ObservationCorrectiveActionView = () => {
                 </TableCell>
               </TableRow></TableHead>
               <TableBody>
+              {console.log(actionTakenData,"!!!")}
                 {actionTakenData.map((action, index) => (<>
                   <TableRow>
                     <TableCell style={{ width: 50 }}>

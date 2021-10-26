@@ -21,7 +21,8 @@ import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
 import {
   checkValue,
-  handelCommonObject
+  handelCommonObject,
+  handelValueToLabel
 } from "../../../utils/CheckerValue";
 import {
   DETAILS,
@@ -312,7 +313,7 @@ const Details = () => {
                   Level of classification
                 </Typography>
                 <Typography className={Type.labelValue}>
-                  {checkValue(investigationData["classification"])}
+                  {handelValueToLabel(investigationData["classification"])}
                 </Typography>
               </Grid>
 

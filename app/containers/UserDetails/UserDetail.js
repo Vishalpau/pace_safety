@@ -352,7 +352,7 @@ const UserDetailsView = (props) => {
     const UserDetails =() => {
     const config = {
         method: "get",
-        url: `${ACCOUNT_API_URL}api/v1/user/self/${props.userId}/`,
+        url: `${ACCOUNT_API_URL}api/v1/user/${props.userId}/`,
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -360,7 +360,7 @@ const UserDetailsView = (props) => {
       axios(config)
         .then((response) => {
           if (response.status === 200) {
-            let userData = response.data.data.results.data;
+            let userData = response.data.data.results;
             setData(userData)
             console.log(userData)
           }

@@ -123,12 +123,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -80,
   },
-  boldHelperText:{
-    "& .MuiFormHelperText-root":{
+  boldHelperText: {
+    "& .MuiFormHelperText-root": {
       // fontWeight : "bold",
-      color : "red",
-      fontSize : "16px",
-    fontFamily : "Montserrat-Medium"    }
+      color: "red",
+      fontSize: "16px",
+      fontFamily: "Montserrat-Medium"
+    }
   },
   // });
 }));
@@ -178,11 +179,11 @@ const ObservationInitialNotificationUpdate = () => {
   const handelSelectOption = (cate) => {
     if (catagory !== undefined) {
       for (let i = 0; i <= catagory.length; i++) {
-        if (catagory[i] != undefined){
-          if(catagory[i]["observationTag"] == cate.replace(/\s*$/,'')){
-          return true
+        if (catagory[i] != undefined) {
+          if (catagory[i]["observationTag"] == cate.replace(/\s*$/, '')) {
+            return true
           }
-        } 
+        }
       }
     }
   }
@@ -212,9 +213,9 @@ const ObservationInitialNotificationUpdate = () => {
     }
     await setCatagory(temp)
   };
-  
+
   const handleSubmit = async () => {
-    console.log(initialData['assigneeName'],"LLLL")
+    console.log(initialData['assigneeName'], "LLLL")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
     await setError(error);
 
@@ -226,7 +227,7 @@ const ObservationInitialNotificationUpdate = () => {
     let updateCategory = []
 
     if (id) {
-      if(initialData['assigneeName'] !== ""){
+      if (initialData['assigneeName'] !== "") {
         initialData['observationStage'] = "Planned"
         initialData['observationStatus'] = "Assigned"
       }
@@ -242,21 +243,21 @@ const ObservationInitialNotificationUpdate = () => {
         }
       }
       if (updateCategory.length > 0) {
-        const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory).then(res => {} ).catch(err => setLoading(false)        )
+        const res = await api.put(`/api/v1/observations/${id}/observationtags/`, updateCategory).then(res => { }).catch(err => setLoading(false))
       }
       if (newCategory.length > 0) {
-        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory).then(res => {} ).catch(err => setLoading(false)        )
+        const resCategory = await api.post(`/api/v1/observations/${id}/observationtags/`, newCategory).then(res => { }).catch(err => setLoading(false))
       }
       const res1 = await api.put(`/api/v1/observations/${id}/`, initialData).then(res => {
         if (res.status === 200) {
-           localStorage.setItem("update", "Done");
+          localStorage.setItem("update", "Done");
           history.push(
             `/app/observation/details/${id}`
           );
         }
       }
-        ).catch(err => setLoading(false)  )
-      
+      ).catch(err => setLoading(false))
+
     }
   };
 
@@ -273,7 +274,7 @@ const ObservationInitialNotificationUpdate = () => {
     await setIsLoading(true);
 
   }
-  
+
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     const result = res.data.data.results
@@ -288,11 +289,11 @@ const ObservationInitialNotificationUpdate = () => {
 
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
 
-      const projectId =
+    const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
@@ -352,7 +353,7 @@ const ObservationInitialNotificationUpdate = () => {
         if (response.status === 200) {
           const result = response.data.data.results;
           let user = [];
-  
+
           for (var i in result[0].users) {
             let temp = {};
 
@@ -361,40 +362,41 @@ const ObservationInitialNotificationUpdate = () => {
             temp["department"] = result[0].users[i].department;
 
             user.push(temp);
- 
+
           }
           setReportedByName(user);
           setReportedBy(user);
-if(departments !== ""){
-  let userDepartment = []
-  let fetchingAssignee = [];
-     for (let i = 0; i < user.length; i++){
-       userDepartment.push(user[i].department)
-     }
-     let fetchingDepartments = []
-     userDepartment.map((value) => value.map((d) => {
-       if(d.departmentName === departments){
-        fetchingDepartments.push(d)
-     }}))
+          if (departments !== "") {
+            let userDepartment = []
+            let fetchingAssignee = [];
+            for (let i = 0; i < user.length; i++) {
+              userDepartment.push(user[i].department)
+            }
+            let fetchingDepartments = []
+            userDepartment.map((value) => value.map((d) => {
+              if (d.departmentName === departments) {
+                fetchingDepartments.push(d)
+              }
+            }))
 
-       for (var i in fetchingDepartments) {
-         let assigneeData = {};
+            for (var i in fetchingDepartments) {
+              let assigneeData = {};
 
-         assigneeData["inputValue"] = fetchingDepartments[i].userName;
-         assigneeData["reportedById"] = fetchingDepartments[i].id;
+              assigneeData["inputValue"] = fetchingDepartments[i].userName;
+              assigneeData["reportedById"] = fetchingDepartments[i].id;
 
-         fetchingAssignee.push(assigneeData);
-       }
-       if(fetchingAssignee.length > 0){
-         setReportedBy(fetchingAssignee);
+              fetchingAssignee.push(assigneeData);
+            }
+            if (fetchingAssignee.length > 0) {
+              setReportedBy(fetchingAssignee);
 
-       }else{
-         setReportedBy([]);
+            } else {
+              setReportedBy([]);
 
-       }
-     }
-}
-          
+            }
+          }
+        }
+
       })
       .catch((error) => {
         // window.location.href = {LOGIN_URL}
@@ -434,62 +436,68 @@ if(departments !== ""){
   };
 
   const handleProjectName = (projectId) => {
+    let pname = ""
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).companies
     : null;
+    
    const abc =  userName.filter((user) => user.companyId === initialData.fkCompanyId)
-   const dd = abc[0].projects.filter((user) => user.projectId === projectId)
-    return dd[0].projectName
+   if (abc.length > 0) {
+    const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+   pname = dd[0].projectName
+   }
+   return pname
   }
 
   const handleDepartment = (option) => {
-    let temp = {...initialData}
+    let temp = { ...initialData }
     temp.departmentName = option.departmentName;
     temp.departmentId = option.id;
-    if(temp.departmentName !== initialData.departmentName){
+    if (temp.departmentName !== initialData.departmentName) {
       temp.assigneeName = ""
       temp.assigneeId = ""
     }
-    
-     setInitialData(temp)
 
-     let tempAssigneeData = reportedByName
-     let userDepartment = []
-     let user = [];
-        for (let i = 0; i < tempAssigneeData.length; i++){
-          userDepartment.push(tempAssigneeData[i].department)
-        }
-        let LL = []
-        userDepartment.map((value) => value.map((department) => {
-          if(department.departmentName === temp.departmentName){
-            LL.push(department)
-        }}))
+    setInitialData(temp)
 
-          for (var i in LL) {
-            let tempss = {};
+    let tempAssigneeData = reportedByName
+    let userDepartment = []
+    let user = [];
+    for (let i = 0; i < tempAssigneeData.length; i++) {
+      userDepartment.push(tempAssigneeData[i].department)
+    }
+    let LL = []
+    userDepartment.map((value) => value.map((department) => {
+      if (department.departmentName === temp.departmentName) {
+        LL.push(department)
+      }
+    }))
 
-            tempss["inputValue"] = LL[i].userName;
-            tempss["reportedById"] = LL[i].id;
+    for (var i in LL) {
+      let tempss = {};
 
-            user.push(tempss);
-            // filterReportedById.push(result[i].id);
-            // filterReportedByBedgeID.push(result[i].badgeNo);
-          }
-          if(user.length > 0){
-            setReportedBy(user);
+      tempss["inputValue"] = LL[i].userName;
+      tempss["reportedById"] = LL[i].id;
 
-          }else{
-            setReportedBy([]);
+      user.push(tempss);
+      // filterReportedById.push(result[i].id);
+      // filterReportedByBedgeID.push(result[i].badgeNo);
+    }
+    if (user.length > 0) {
+      setReportedBy(user);
 
-          }
+    } else {
+      setReportedBy([]);
+
+    }
   }
   const handleAssignee = async (value) => {
-    let tempData = {...initialData}
-    
+    let tempData = { ...initialData }
+
     tempData.assigneeName = value.inputValue
     tempData.assigneeId = value.reportedById
-    
-    
+
+
     await setInitialData(tempData)
   }
   const fetchBreakDownData = async (projectBreakdown) => {
@@ -546,7 +554,7 @@ if(departments !== ""){
             const result = response.data.data.results;
 
             const res = result.map((item, index) => {
-              
+
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
@@ -575,7 +583,7 @@ if(departments !== ""){
   //   console.log(initialData.departmentName)
 
   // }
-  
+
 
   useEffect(() => {
 
@@ -984,7 +992,7 @@ if(departments !== ""){
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12}>
                 <Typography gutterBottom className="labelValue">
-                {project.projectName} 
+                {handleProjectName(initialData.fkProjectId)} 
                 </Typography>
                 <Typography className="labelValue">
                 {projectStructName.map(value => {return value}).join(" : ")}
@@ -1003,7 +1011,7 @@ if(departments !== ""){
             md={12}
             xs={12}
           >
-        
+
             <div className={classes.loadingWrapper}>
               <Button
                 variant="outlined"
@@ -1016,12 +1024,10 @@ if(departments !== ""){
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
               <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={(e) => handleCancle()}
 >
-
-             
                 Cancle
               </Button>
             </div>
-            
+
           </Grid>
         </Grid> : <h1>Loading...</h1>}
       {/* </PapperBlock> */}

@@ -1,41 +1,38 @@
-import React, { useEffect, useState, useRef } from "react";
+import DateFnsUtils from "@date-io/date-fns";
 import { Button, Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-
-import moment from "moment";
-import DateFnsUtils from "@date-io/date-fns";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import FormLabel from "@material-ui/core/FormLabel";
-import { useHistory, useParams } from "react-router";
 import { PapperBlock } from "dan-components";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, RCAOPTION, SUMMERY_FORM } from "../../../utils/constants";
-import api from "../../../utils/axios";
-import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
-
-import Type from "../../../styles/components/Fonts.scss";
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import { checkValue, handelActionData } from "../../../utils/CheckerValue";
 // Redux
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
+import Type from "../../../styles/components/Fonts.scss";
+import api from "../../../utils/axios";
+import { handelActionData, handelValueToLabel } from "../../../utils/CheckerValue";
+import { RCAOPTION, ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 import ActionShow from "../ActionShow";
 import ActionTracker from "../ActionTracker";
+import FormSideBar from "../FormSideBar";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -326,7 +323,7 @@ const RootCauseAnalysis = () => {
                   Level of classification
                 </Typography>
                 <Typography className={Type.labelValue}>
-                  {checkValue(investigationData.current["classification"])}
+                  {handelValueToLabel(investigationData.current["classification"])}
                 </Typography>
               </Grid>
 
@@ -460,7 +457,6 @@ const RootCauseAnalysis = () => {
                   {handelActionShow(value)}
                 </Grid>
               ))}
-
 
               <Grid item xs={12}>
                 <Button
