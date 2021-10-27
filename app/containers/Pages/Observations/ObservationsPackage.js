@@ -46,6 +46,9 @@ import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
 import UserDetailsView from '../../UserDetails/UserDetail';
 import StarsIcon from '@material-ui/icons/Stars';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import axios from "axios"
+
+
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -666,6 +669,7 @@ const handleMyUserPClose = () => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
+       
         let config = {
           method: "get",
           url: `${SELF_API}`,
@@ -676,25 +680,42 @@ const handleMyUserPClose = () => {
         await api(config)
           .then(function (response) {
             if (response.status === 200) {
-              localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              console.log(response)
+              let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
+              .subscriptions.filter(subs=>subs.appCode === "safety")[0]
+              .hostings[0].apiDomain
+            
+              console.log(hosting)
+              let data1 = {
+                method: "get",
+                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+                headers: HEADER_AUTH,
+              };
+              console.log(data1)
+              axios(data1).then((res)=>
               
-              if (compId) {
-                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+{
+  localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+              
+  if (compId) {
+    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
 
-                let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                localStorage.setItem('company', JSON.stringify(companeyData))
+    let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+    localStorage.setItem('company', JSON.stringify(companeyData))
 
-                dispatch(company(companeyData))
-              }
-              if (proId) {
-                let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                let project = companies[0].projects.filter(item => item.projectId == proId)
+    dispatch(company(companeyData))
+  }
+  if (proId) {
+    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+    let project = companies[0].projects.filter(item => item.projectId == proId)
 
-                localStorage.setItem("projectName", JSON.stringify(project[0]))
-                dispatch(projectName(project[0]))
-              }
-              // fetchPermissionData();
-              localStorage.removeItem("direct_loading")
+    localStorage.setItem("projectName", JSON.stringify(project[0]))
+    dispatch(projectName(project[0]))
+  }
+  // fetchPermissionData();
+  localStorage.removeItem("direct_loading")
+}              )
+             
 
             }
           })
