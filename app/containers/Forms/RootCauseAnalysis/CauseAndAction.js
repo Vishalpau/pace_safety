@@ -84,16 +84,19 @@ const BasicCauseAndAction = () => {
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
     );
+   
     putId.current = handelIncidentId();
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     )
+    
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
         tempApiData.push(allApiData[index]);
       }
     });
+    
     tempApiData.map((value) => {
       if (value["action"] == undefined) {
         value["action"] = [{}]
@@ -148,6 +151,7 @@ const BasicCauseAndAction = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
+    
     await setIncidentDetail(result);
   };
 
