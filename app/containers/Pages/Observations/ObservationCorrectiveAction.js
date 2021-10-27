@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     left: '50%',
     marginTop: -12,
-    marginLeft: -105,
+    marginLeft: -130,
   },
   boldHelperText: {
     "& .MuiFormHelperText-root": {

@@ -13,7 +13,9 @@ import React, { useState } from "react";
 import "../../../styles/custom/customheader.css";
 import ObservationBookmarkFilter from './ObservationBookmarkFilter';
 import ObservationsFilter from './ObservationsFilter';
-
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -322,6 +324,7 @@ export default function SimpleTabs(props) {
   const [value, setValue] = React.useState(0);
   const [observation, setObservation] = useState("My Observations");
   const [searchIncident, setSeacrhIncident] = useState("")
+  const [status, setStatus] = useState('')
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -336,6 +339,7 @@ export default function SimpleTabs(props) {
   const handleSearch = (e) => {
     setSeacrhIncident(e.target.value);
   };
+  console.log(status)
 
   return (
     <div className={classes.root}>
@@ -372,13 +376,13 @@ export default function SimpleTabs(props) {
       </Paper> 
 		</Grid>
 
-      {/* <Grid item md={2} sm={12} xs={12} className={classes.floatE}>
+      <Grid item md={2} sm={12} xs={12} className={classes.floatE}>
         <span className={classes.mR10}>
-          <img src={preplanning} />
-          <img src={progress} className={classes.pLtenPRten} />
-          <img src={completed} />
+          <img src={preplanning} onClick={(e) => setStatus("Open")} />
+          <img src={progress} className={classes.pLtenPRten} onClick={(e) => setStatus("Planned")} />
+          <img src={completed} onClick={(e) => setStatus("Completed")} />
         </span>
-      </Grid> */}
+      </Grid>
 
 			
 		  </Grid>
@@ -386,13 +390,13 @@ export default function SimpleTabs(props) {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			<ObservationsFilter observation={observation} search={searchIncident}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			<ObservationsFilter observation={observation} search={searchIncident}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			<ObservationsFilter observation={observation} search={searchIncident}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status}/>
 		  </TabPanel>
 		<TabPanel value={value} index={3}>
 			<ObservationBookmarkFilter />

@@ -150,7 +150,7 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
+    await setForm({ ...form, plannedEndDate: null, actionTitle: "" , severity:""});
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
   };
@@ -164,7 +164,7 @@ export default function ActionTracker(props) {
       let res = await apiAction.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
+        await setForm({ ...form, plannedEndDate: null, actionTitle: "" , severity : ""});
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
         await props.handelShowData()

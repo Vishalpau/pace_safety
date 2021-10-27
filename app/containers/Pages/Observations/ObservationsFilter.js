@@ -278,6 +278,8 @@ class ObservationsFilter extends React.Component {
     const { anchor, open, type } = this.state;
 
     const drawer = (
+      <div className="catDrawerSection">
+
       <Drawer
         variant="persistent"
         anchor={anchor}
@@ -378,6 +380,7 @@ class ObservationsFilter extends React.Component {
         </List>
         {/* <MenuData /> */}
       </Drawer>
+      </div> 
     );
 
     const menuBtn = (
@@ -465,6 +468,7 @@ class ObservationsFilter extends React.Component {
               type={this.state.type}
               observation={this.props.observation}
               searchIncident={this.props.search}
+              status={this.props.status}
             />
           </main>
           {after}

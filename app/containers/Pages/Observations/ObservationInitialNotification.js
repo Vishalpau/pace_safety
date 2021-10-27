@@ -1663,10 +1663,10 @@ const ObservationInitialNotification = (props) => {
             <Grid item xs={12}>
               <div className={classes.loadingWrapper}>
                 <Button
-                  variant="outlined"
+                  size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
                   onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
+                  // className={classes.custmSubmitBtn}
+                  // style={{ marginLeft: "10px" }}
                   disabled={loading}
                 >
                   Submit

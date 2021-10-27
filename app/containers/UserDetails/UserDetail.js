@@ -362,7 +362,6 @@ const UserDetailsView = (props) => {
           if (response.status === 200) {
             let userData = response.data.data.results;
             setData(userData)
-            console.log(userData)
           }
         })
         .catch((error) => {

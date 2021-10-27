@@ -25,6 +25,7 @@ import Share from '@material-ui/icons/Share';
 import Pagination from '@material-ui/lab/Pagination';
 import in_progress_small from 'dan-images/in_progress_small.png';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import completed_small from 'dan-images/completed-small.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
@@ -43,7 +44,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
 import UserDetailsView from '../../UserDetails/UserDetail';
-
+import StarsIcon from '@material-ui/icons/Stars';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -404,11 +406,9 @@ function Actions(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
 const handleMyUserPClickOpen = (item) => {
-  console.log(item);
   setUserInfo({name : item[1].createdBy})
   setMyUserPOpen(true);
 };
-console.log(userInfo);
 
 const handleMyUserPClose = () => {
   setMyUserPOpen(false);
@@ -481,6 +481,7 @@ const handleMyUserPClose = () => {
   const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const searchIncident = props.searchIncident
+  const status = props.status;
   const fetchInitialiObservation = async () => {
     await setPage(1)
 
@@ -500,7 +501,7 @@ const handleMyUserPClose = () => {
       if (props.type == "All" || props.type == "Type") {
         // await setAllInitialData(result)
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(allLogInUserData.data.data.results.count)
@@ -509,7 +510,7 @@ const handleMyUserPClose = () => {
       await setPageCount(pageCount)
 
         } else {
-          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
           const result = res.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(res.data.data.results.count)
@@ -520,7 +521,7 @@ const handleMyUserPClose = () => {
       } else {  
         if (props.type == "Risk") {
           if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(allLogInUserData.data.data.results.count)
@@ -528,7 +529,7 @@ const handleMyUserPClose = () => {
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
           await setPageCount(pageCount)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -539,7 +540,7 @@ const handleMyUserPClose = () => {
         }
         if (props.type == "Comments") {  
           if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -547,7 +548,7 @@ const handleMyUserPClose = () => {
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
             await setPageCount(pageCount)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -559,7 +560,7 @@ const handleMyUserPClose = () => {
         if (props.type == "Positive behavior") {
           
           if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -567,7 +568,7 @@ const handleMyUserPClose = () => {
             await setPageData(allLogInUserData.data.data.results.count / 25)
             await setPageCount(pageCount)
             }else{
-              const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior`)
+              const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
               const result = allLogInUserData.data.data.results.results
               await setAllInitialData(result)
               await setTotalData(allLogInUserData.data.data.results.count)
@@ -598,12 +599,12 @@ const handleMyUserPClose = () => {
  
     if (props.type == "All" || props.type == "Type") {
       if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
       } else {
-        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`);
         const result = res.data.data.results.results
         await setAllInitialData(result)
         await setPage(value)
@@ -611,12 +612,12 @@ const handleMyUserPClose = () => {
     } else {
       if (props.type == "Risk") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -624,13 +625,13 @@ const handleMyUserPClose = () => {
       }
       if (props.type == "Comments") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
 
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -638,12 +639,12 @@ const handleMyUserPClose = () => {
       }
       if (props.type == "Positive behavior") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
 
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
@@ -662,7 +663,6 @@ const handleMyUserPClose = () => {
     history.push(`/app/prints/${id}`);
   };
   const userDetails = async (compId, proId) => {
-    console.log("welcome user details")
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -671,14 +671,11 @@ const handleMyUserPClose = () => {
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        console.log(config)
         // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
         await api(config)
           .then(function (response) {
-            console.log(response)
             if (response.status === 200) {
-              console.log(response)
               localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
               
               if (compId) {
@@ -708,18 +705,26 @@ const handleMyUserPClose = () => {
     }
   }
   const classes = useStyles();
+
+  const handleDelete = async (item) => {
+    console.log(item[1].id)
+    let data = item[1]
+    // let id = item[1].id
+    data.status="Delete"
+    delete data.attachment
+    console.log(data,"!!!!!!!!!")
+    await setIsLoading(false)
+    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))    
+  }
   useEffect(() => {
-    console.log("welcome")
     let state = JSON.parse(localStorage.getItem('direct_loading'))
-    console.log(state)
     if(state!==null){
-      console.log("state is not null")
       userDetails(state.comId,state.proId)
     }else{
       fetchInitialiObservation();
     }
     // fetchInitialiObservation();
-  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident]);
+  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident , props.status]);
   
   return (
     <>
@@ -789,8 +794,8 @@ const handleMyUserPClose = () => {
                                           Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"}  <img src={in_progress_small} className={classes.smallImage} /></span>
-                                          {/* <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}  <img src={completed_small} className={classes.smallImage} /></span> */}
+                                          <span item xs={1} className={classes.sepHeightOne}></span>
+                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"} </span>
                                         </Typography>
 
                                       </Grid>
@@ -953,11 +958,13 @@ const handleMyUserPClose = () => {
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                                  </Typography>
+                                  </Typography> */}
                                   <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography variant="body1" display="inline">
-                                    <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
-                                  </Typography> */}
+
+                                  {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                                    <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+                                  </Typography>
                                 </div>
                               </Grid>
                             </Grid>
