@@ -517,7 +517,7 @@ const LessionLearned = () => {
                           ? error[`learnings${[key]}`]
                           : null
                       }
-                      label="Team/department learnings"
+                      label="Learnings"
                       className={classes.formControl}
                       variant="outlined"
                       rows="3"

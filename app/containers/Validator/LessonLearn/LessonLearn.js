@@ -11,7 +11,7 @@ function LessionLearnedValidator(data) {
       isValid = false;
     }
     if (validator.isEmpty(data[i].learnings.toString())) {
-      error[`learnings${[i]}`] = "Please enter Team/Department learnings";
+      error[`learnings${[i]}`] = "Please enter learnings";
       isValid = false;
     }
     if(data[i].teamOrDepartment.length>64){
