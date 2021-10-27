@@ -547,7 +547,7 @@ const LessionLearned = () => {
                   startIcon={<AddIcon />}
                   onClick={() => addNewTeamOrDeparment()}
                 >
-                  Add learnings from another team/department
+                  ADD LEARNINGS
                 </TextButton>
               </Grid>
               <Grid item xs={12}>
