@@ -175,6 +175,7 @@ import {
   PrintFlha,
   FlhaActivities,
   FlhaComments,
+  GeneralObservationPrints,
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -532,6 +533,7 @@ function Application(props) {
         <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
         <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />
         <Route path="/app/prints/:id" component={Prints} />
+        <Route path="/app/pages/general-observation-prints/:id" component={GeneralObservationPrints} />
         <Route path="/app/observation-bulkupload" component={ObservationBulkupload} />
         <Route path="/app/observation-bulkuploadfile" component={ObservationUploadScreen} />
 
