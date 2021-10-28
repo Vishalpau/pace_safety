@@ -1,72 +1,203 @@
-import Paper from '@material-ui/core/Paper';
-import { createTheme, withStyles } from '@material-ui/core/styles';
-import ThemePallete from 'dan-api/palette/themePalette';
-import { PapperBlock } from 'dan-components';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {
-  Bar, BarChart, CartesianAxis, CartesianGrid, Legend, Tooltip, XAxis,
-  YAxis
-} from 'recharts';
-import "../../../styles/custom/customheader.css";
-import styles from './demos/fluidChart-jss';
-import { data1 } from './demos/sampleData';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import React, { useEffect, useState } from 'react';
+import { connect } from "react-redux";
+import api from "../../../utils/axios";
 
-const theme = createTheme(ThemePallete.greyTheme);
-const color = ({
-  primary: theme.palette.primary.main,
-  primaryDark: theme.palette.primary.dark,
-  secondary: theme.palette.secondary.main,
-  secondaryDark: theme.palette.secondary.dark,
-});
+
 
 function BarSimple(props) {
-  const { classes } = props;
+
+  const [tagData, setTagData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [charData, setCharData] = useState([])
+  // const [projectStruct, setProjectStruct] = useState("")
+
+  const handelProjectStruct = () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    // setProjectStruct(fkProjectStructureIds)
+    return fkProjectStructureIds
+  }
+
+  const fetchTags = async () => {
+    let allTags = []
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    const res = await api.get(
+      `/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`
+    );
+    const result = res.data.data.results.results;
+    let temp = [];
+    result.map((value) => {
+      if (value.status === "Active") {
+        temp.push(value);
+      }
+    });
+    let sorting = temp.sort((a, b) => a.id - b.id);
+
+    sorting.map((value) => {
+      allTags.push(value.tagName)
+    })
+    await setTagData(allTags);
+    await allTyepCount(allTags)
+  };
+
+  const allTyepCount = async (allTags) => {
+    let projectStruct = handelProjectStruct()
+    let tagsToType = {}
+    let allResults = []
+    allTags.map((value) => {
+      tagsToType[value] = { "Risk": 0, "Comments": 0, "Positive Behavious": 0 }
+    })
+
+    for (let key in allTags) {
+      let res = await api.get(`/api/v1/observations/analyticdetails/?company=1&project=1&projectStructure=${projectStruct}&createdDate[Start]=2021-09-01&createdDate[End]=2021-10-29&category=${allTags[key]}`)
+      let results = res.data.data.results.results
+      console.log(results)
+      results.length > 0 && results.map((value) => {
+        if (value["observationType"] == "Risk") {
+          tagsToType[allTags[key]]["Risk"] += 1
+        } else if (value["observationType"] == "Comments") {
+          tagsToType[allTags[key]]["Comments"] += 1
+        } else if (value["observationType"] == "Positive behavior") {
+          tagsToType[allTags[key]]["Positive Behavious"] += 1
+        }
+      })
+    }
+
+
+    console.log(tagsToType)
+    graphSeries(tagsToType)
+  }
+
+  const graphSeries = (tagsToType) => {
+    let datSeries = [{
+      name: 'Risk',
+      data: []
+    }, {
+      name: 'Comments',
+      data: []
+    }, {
+      name: 'Positive Behavious',
+      data: []
+    }]
+    Object.entries(tagsToType).map(([key, value]) => {
+      Object.entries(value).map(([keys, values]) => {
+        if (keys == "Risk") {
+          datSeries[0]["data"].push(values)
+        } else if (keys == "Comments") {
+          datSeries[1]["data"].push(values)
+        } else if (keys == "Positive Behavious") {
+          datSeries[2]["data"].push(values)
+        }
+      })
+    })
+    setCharData(datSeries)
+  }
+
+  const options = {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: ''
+    },
+    xAxis: {
+      min: 0,
+      max: tagData.length,
+      categories: tagData,
+      labels: {
+        rotation: 65
+      }
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: ''
+      },
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: 'bold',
+          color: ( // theme
+            Highcharts.defaultOptions.title.style &&
+            Highcharts.defaultOptions.title.style.color
+          ) || 'gray'
+        }
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    legend: {
+      align: 'right',
+      x: -30,
+      verticalAlign: 'top',
+      y: 25,
+      floating: true,
+      backgroundColor:
+        Highcharts.defaultOptions.legend.backgroundColor || 'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
+    },
+    tooltip: {
+      headerFormat: '<b>{point.x}</b><br/>',
+      pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    },
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
+    series: charData
+  }
+
+  const callBack = async () => {
+    await setLoading(true)
+    await fetchTags()
+    await handelProjectStruct()
+    await setLoading(false)
+  }
+
+  useEffect(() => {
+    callBack()
+  }, [])
+
   return (
-    <div className={classes.chartFluid}>
-      <PapperBlock whiteBg noMargin title="Trend" icon="ion-ios-analytics-outline" desc="">
-        <Paper elevation={3}>
-          <BarChart
-            width={1200}
-            height={450}
-            data={data1}
-            margin={{
-              top: 25,
-              right: 30,
-              left: 20,
-              bottom: 15
-            }}
-          >
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color.primary} stopOpacity={0.8} />
-                <stop offset="95%" stopColor={color.primaryDark} stopOpacity={1} />
-              </linearGradient>
-              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color.secondary} stopOpacity={0.8} />
-                <stop offset="95%" stopColor={color.secondaryDark} stopOpacity={1} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="name" tickLine={false} />
-            <YAxis axisLine={false} tickSize={3} tickLine={false} tick={{ stroke: 'none' }} />
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
-            <CartesianAxis vertical={false} />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="PlannedStartDate" fillOpacity="1" fill="url(#colorUv)" />
-            <Bar dataKey="PlannedFinishDate" fillOpacity="0.8" fill="url(#colorPv)" />
-          </BarChart>
-
-
-        </Paper>
-
-      </PapperBlock>
+    <div className="App">
+      {loading == false ?
+        <div>
+          <HighchartsReact highcharts={Highcharts} options={options} />
+        </div>
+        :
+        "Loading..."}
     </div>
   );
 }
 
-BarSimple.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
+const mapStateToProps = state => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state
 
-export default withStyles(styles)(BarSimple);
+  }
+}
+
+export default connect(mapStateToProps, null)(BarSimple);
