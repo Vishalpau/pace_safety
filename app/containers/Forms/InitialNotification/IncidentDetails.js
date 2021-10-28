@@ -253,7 +253,7 @@ const IncidentDetails = (props) => {
                 );
               } else if (nextPath.environmentAffect === "Yes") {
                 history.push(
-                  `/incident/${id}/modify/peoples-afftected/`
+                  `/incident/${id}/modify/environment-affected/`
                 );
               } else {
                 history.push(
@@ -352,7 +352,7 @@ const IncidentDetails = (props) => {
                   );
                 } else if (nextPath.environmentAffect === "Yes") {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
+                    `/incident/${res.data.data.results.id}/modify/environment-affected/`
                   );
                 } else {
                   history.push(
