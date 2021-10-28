@@ -11,6 +11,7 @@ function BarSimple(props) {
   const [tagData, setTagData] = useState([])
   const [loading, setLoading] = useState(false)
   const [charData, setCharData] = useState([])
+  const [chartSize, setChartSize] = useState({ width: "100%", height: "50px" })
   // const [projectStruct, setProjectStruct] = useState("")
 
   const handelProjectStruct = () => {
@@ -58,7 +59,6 @@ function BarSimple(props) {
   const allTyepCount = async (allTags) => {
     let projectStruct = handelProjectStruct()
     let tagsToType = {}
-    let allResults = []
     allTags.map((value) => {
       tagsToType[value] = { "Risk": 0, "Comments": 0, "Positive Behavious": 0 }
     })
@@ -66,7 +66,6 @@ function BarSimple(props) {
     for (let key in allTags) {
       let res = await api.get(`/api/v1/observations/analyticdetails/?company=1&project=1&projectStructure=${projectStruct}&createdDate[Start]=2021-09-01&createdDate[End]=2021-10-29&category=${allTags[key]}`)
       let results = res.data.data.results.results
-      console.log(results)
       results.length > 0 && results.map((value) => {
         if (value["observationType"] == "Risk") {
           tagsToType[allTags[key]]["Risk"] += 1
@@ -77,9 +76,6 @@ function BarSimple(props) {
         }
       })
     }
-
-
-    console.log(tagsToType)
     graphSeries(tagsToType)
   }
 
@@ -166,7 +162,17 @@ function BarSimple(props) {
         }
       }
     },
-    series: charData
+    series: charData,
+  }
+
+  const handelChartSize = (sizeChangeType) => {
+    if (sizeChangeType === "small") {
+      setChartSize({ width: "50%", height: "50px" })
+    } else if (sizeChangeType === "large") {
+      setChartSize({ width: "75%", height: "75px" })
+    } else if (sizeChangeType === "auto") {
+      setChartSize({ width: "100%", height: "85px" })
+    }
   }
 
   const callBack = async () => {
@@ -183,8 +189,11 @@ function BarSimple(props) {
   return (
     <div className="App">
       {loading == false ?
-        <div>
+        <div id="chart" style={chartSize}>
           <HighchartsReact highcharts={Highcharts} options={options} />
+          <button id="small" onClick={() => handelChartSize("small")}>Small</button>
+          <button id="large" onClick={() => handelChartSize("large")}>Large</button>
+          <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
         </div>
         :
         "Loading..."}
