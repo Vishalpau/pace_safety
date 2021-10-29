@@ -1,7 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
+import { PapperBlock } from "dan-components";
+import Grid from "@material-ui/core/Grid";
+
 import api from "../../../utils/axios";
 
 
@@ -11,6 +14,7 @@ function BarSimple(props) {
   const [tagData, setTagData] = useState([])
   const [loading, setLoading] = useState(false)
   const [charData, setCharData] = useState([])
+  const [secondCharData, setSecondChartData] = useState([])
   const [chartSize, setChartSize] = useState({ width: "100%", height: "50px" })
   // const [projectStruct, setProjectStruct] = useState("")
 
@@ -59,6 +63,7 @@ function BarSimple(props) {
   const allTyepCount = async (allTags) => {
     let projectStruct = handelProjectStruct()
     let tagsToType = {}
+    let allRisks = []
     allTags.map((value) => {
       tagsToType[value] = { "Risk": 0, "Comments": 0, "Positive Behavious": 0 }
     })
@@ -68,6 +73,8 @@ function BarSimple(props) {
       let results = res.data.data.results.results
       results.length > 0 && results.map((value) => {
         if (value["observationType"] == "Risk") {
+          value["category"] = allTags[key]
+          allRisks.push(value)
           tagsToType[allTags[key]]["Risk"] += 1
         } else if (value["observationType"] == "Comments") {
           tagsToType[allTags[key]]["Comments"] += 1
@@ -77,7 +84,10 @@ function BarSimple(props) {
       })
     }
     graphSeries(tagsToType)
+    secondGrpahSeries(allRisks, allTags)
   }
+
+
 
   const graphSeries = (tagsToType) => {
     let datSeries = [{
@@ -92,6 +102,7 @@ function BarSimple(props) {
     }]
     Object.entries(tagsToType).map(([key, value]) => {
       Object.entries(value).map(([keys, values]) => {
+
         if (keys == "Risk") {
           datSeries[0]["data"].push(values)
         } else if (keys == "Comments") {
@@ -104,7 +115,54 @@ function BarSimple(props) {
     setCharData(datSeries)
   }
 
-  const options = {
+  const secondGrpahSeries = (allRisks, allTags) => {
+    let typeToAddressed = {}
+
+    let dataSeries = [{
+      name: 'Risk',
+      data: []
+    }, {
+      name: 'Addressed',
+      data: []
+    }, {
+      name: 'Is corrective actions taken',
+      data: []
+    }]
+
+    allTags.map((value) => {
+      typeToAddressed[value] = []
+    })
+
+    allRisks.map((value) => {
+      if (value["category"] in typeToAddressed) {
+        typeToAddressed[value["category"]].push(value)
+      }
+    })
+    Object.entries(typeToAddressed).map(([key, value]) => {
+      if (value.length == 0) {
+        dataSeries[0]["data"].push(0)
+        dataSeries[1]["data"].push(0)
+        dataSeries[2]["data"].push(0)
+      } else {
+        dataSeries[0]["data"].push(value.length)
+        let isAddressed = 0
+        let isActionTaken = 0
+        value.map((riskValue) => {
+          if (riskValue["isSituationAddressed"] == "Yes") {
+            isAddressed += 1
+          }
+          if (riskValue["isCorrectiveActionTaken"] == "Yes") {
+            isActionTaken += 1
+          }
+        })
+        dataSeries[1]["data"].push(isAddressed)
+        dataSeries[2]["data"].push(isActionTaken)
+      }
+    })
+    setSecondChartData(dataSeries)
+  }
+
+  const mainChart = {
     chart: {
       type: 'column'
     },
@@ -165,6 +223,48 @@ function BarSimple(props) {
     series: charData,
   }
 
+  const secondChart = {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: ''
+    },
+    subtitle: {
+      text: ''
+    },
+    xAxis: {
+      categories: tagData,
+      crosshair: true,
+      labels: {
+        rotation: 65
+      },
+      min: 0,
+      max: tagData.length,
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: ''
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0
+      }
+    },
+    series: secondCharData,
+  }
+
   const handelChartSize = (sizeChangeType) => {
     if (sizeChangeType === "small") {
       setChartSize({ width: "50%", height: "50px" })
@@ -187,17 +287,22 @@ function BarSimple(props) {
   }, [])
 
   return (
-    <div className="App">
+    <PapperBlock >
       {loading == false ?
-        <div id="chart" style={chartSize}>
-          <HighchartsReact highcharts={Highcharts} options={options} />
-          <button id="small" onClick={() => handelChartSize("small")}>Small</button>
-          <button id="large" onClick={() => handelChartSize("large")}>Large</button>
-          <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
-        </div>
+        <Grid container spacing={3}>
+          <Grid item md={12} >
+            <HighchartsReact highcharts={Highcharts} options={mainChart} />
+            <button id="small" onClick={() => handelChartSize("small")}>Small</button>
+            <button id="large" onClick={() => handelChartSize("large")}>Large</button>
+            <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
+          </Grid>
+          <Grid item md={12} >
+            <HighchartsReact highcharts={Highcharts} options={secondChart} />
+          </Grid>
+        </Grid>
         :
         "Loading..."}
-    </div>
+    </PapperBlock>
   );
 }
 
