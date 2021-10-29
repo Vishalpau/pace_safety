@@ -854,7 +854,7 @@ const ObservationInitialNotificationUpdate = () => {
                   <FormLabel component="legend" className="viewLabel">Reported by</FormLabel>
                   <Typography className="viewLabelValue">
                   
-                  {initialData["username"] ? handelDateTime(initialData["username"]) : "-"}
+                  {initialData["username"] ? initialData["username"] : "-"}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>

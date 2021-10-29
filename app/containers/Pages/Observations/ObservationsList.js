@@ -359,7 +359,7 @@ function ObservationsList(props) {
   // const [observation , setObservation] = useState("My Observation");
 
   // const [searchIncident, setSeacrhIncident] = useState("")
-  const [status, setStatus] = useState('')
+  // const [status, setStatus] = useState('')
   const [obs , setObs] = useState("My Observation")
 
   const handleButtonChange = (event, newValue) => {
@@ -430,14 +430,15 @@ function ObservationsList(props) {
 
   const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchIncident, setSeacrhIncident] = useState("");
+  const searchIncident = props.searchIncident
+  const status = props.status;
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [data, setData] = useState([])
   const [totalData, setTotalData] = useState(0);
   const history = useHistory();
 
-  const fetchInitialiObservation = async (observation) => {
+  const fetchInitialiObservation = async () => {
     await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -455,8 +456,8 @@ function ObservationsList(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     // let observation  = observation === undefined ? "My Observation" : "";
-    if(observation === "My Observation" || observation === undefined){
-    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+    if(props.observation === "My Observations"){
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`);
     if (res.status === 200) {
       const result = res.data.data.results.results
       await setAllInitialData(result)
@@ -464,12 +465,11 @@ function ObservationsList(props) {
       await setPageData(res.data.data.results.count / 25)
       await setTotalData(res.data.data.results.count)
       await setPageCount(pageCount)
-      await handelTableView(result)
 
       await setIsLoading(true)
     }
   }else{
-      const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+      const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
     if (res.status === 200) {
       const result = res.data.data.results.results
       await setAllInitialData(result)
@@ -477,7 +477,6 @@ function ObservationsList(props) {
       await setPageData(res.data.data.results.count / 25)
       await setTotalData(res.data.data.results.count)
       await setPageCount(pageCount)
-      await handelTableView(result)
 
       await setIsLoading(true)
     }
@@ -502,34 +501,17 @@ function ObservationsList(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    if(obs === "My Observation"){
-    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+    if(props.observation === "My Observations"){
+    const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
-    await handelTableView(res.data.data.results.results)
     await setPage(value)
     }else{
-      const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+      const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
-    await handelTableView(res.data.data.results.results)
     await setPage(value)
     }
   };
 
-  const handelTableView = async (result) => {
-    const temp = []
-    result.map((value) => {
-      temp.push([
-        value.observationNumber,
-        value.observationType,
-        value.location,
-        moment(value.createdAt).format(
-          "Do MMMM YYYY, h:mm:ss a"
-        ),
-        value.reportedByName,
-      ])
-    })
-    await setData(temp)
-  }
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
     localStorage.setItem("fkobservationId", id);
@@ -545,56 +527,13 @@ function ObservationsList(props) {
   useEffect(() => {
     fetchInitialiObservation();
     // handleProjectList();
-  }, [props.projectName.breakDown, searchIncident]);
+  }, [props.projectName.breakDown,props.projectName.projectName, searchIncident , props.status]);
 
   return (
     <>
       <Box>
           {/* <ObservationSearchSection/> */}
-          <Grid item md={12} className={classes.AppBarHeader}>
-		  <Grid container spacing={3}>
-			
-			<Grid item md={7} sm={12} xs={12}>
-				<AppBar position="static" className={classes.navTabBack}>
-				  <div className={classes.floatL}>
-					<Tabs className={classes.minwdTab} value={value} onChange={handleButtonChange} aria-label="Tabs" indicatorColor="none">
-					  <Tab label="My Observations" {...a11yProps(0)} />
-					  {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
-					  <Tab label="Big Picture" {...a11yProps(2)} />
-					{/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
-					</Tabs>
-				  </div>  
-			  </AppBar>
-			</Grid>
-		<Grid item md={3} sm={12} xs={12} className={classes.pR0}>
-		  <Paper elevation={1} className={classes.search}>
-        <div className={classes.searchIcon}>
-        <SearchIcon />
-        </div>
-        <InputBase
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ 'aria-label': 'search' }}
-          onChange={(e) => handleSearch(e)}
-
-        />
-      </Paper> 
-		</Grid>
-
-      {/* <Grid item md={2} sm={12} xs={12} className={classes.statusIconBox}>
-        <span className={classes.mR10}>
-          <img src={preplanning} onClick={(e) => setStatus("Open")} selected={true} />
-          <img src={progress} className={classes.pLtenPRten} onClick={(e) => setStatus("Planned")} />
-          <img src={completed} onClick={(e) => setStatus("Completed")} />
-        </span>
-      </Grid> */}
-
-			
-		  </Grid>
-	  </Grid>
+         
           <TableContainer component={Paper}>
           
     {isLoading ? <>
@@ -605,11 +544,11 @@ function ObservationsList(props) {
                 data={Object.entries(allInitialData).map((item) => [
                   item[1]["observationNumber"],
                   item[1]["observationType"],
-                  item[1]["location"],
+                  item[1]["location"] ? item[1]["location"] : "-",
                   moment(item[1]["createdAt"]).format(
                     "Do MMMM YYYY, h:mm:ss a"
                   ),
-                  item[1]["username"],
+                  item[1]["username"] ? item[1]["username"] : "-",
                 ])}
                 // title="Observations List"
                 className="dataTableSectionDesign"

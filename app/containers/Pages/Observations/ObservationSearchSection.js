@@ -354,7 +354,6 @@ export default function SimpleTabs(props) {
   const handleSearch = (e) => {
     setSeacrhIncident(e.target.value);
   };
-  console.log(status)
 
   return (
     <div className={classes.root}>
@@ -405,13 +404,13 @@ export default function SimpleTabs(props) {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			<ObservationsFilter observation={observation} search={searchIncident} status={status}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			<ObservationsFilter observation={observation} search={searchIncident} status={status}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			<ObservationsFilter observation={observation} search={searchIncident} status={status}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value}/>
 		  </TabPanel>
 		<TabPanel value={value} index={3}>
 			<ObservationBookmarkFilter />

@@ -215,6 +215,8 @@ export default function Observations() {
     setValue(newValue);
   };
 
+  console.log(value)
+
   const handleBulkUploadfilePush = async () => {
     history.push(
       '/app/observation-bulkuploadfile'
@@ -266,7 +268,7 @@ export default function Observations() {
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-                <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
           <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />
               </Tabs>
             </div>
@@ -298,10 +300,10 @@ export default function Observations() {
         </Grid>
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <ObservationSearchSection />
+        <ObservationSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-        <ObservationsList />
+      <ObservationSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />
