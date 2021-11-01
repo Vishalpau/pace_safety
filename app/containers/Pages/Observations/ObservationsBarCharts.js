@@ -113,7 +113,7 @@ function BarSimple(props) {
       name: 'Comments',
       data: []
     }, {
-      name: 'Positive Behavious',
+      name: 'Positive Behaviour',
       data: []
     }]
     Object.entries(tagsToType).map(([key, value]) => {
@@ -138,10 +138,10 @@ function BarSimple(props) {
       name: 'Risk',
       data: []
     }, {
-      name: 'Addressed',
+      name: 'Intervention',
       data: []
     }, {
-      name: 'Is corrective actions taken',
+      name: 'Actions taken',
       data: []
     }]
 
@@ -183,7 +183,8 @@ function BarSimple(props) {
       type: 'column'
     },
     title: {
-      text: ''
+      align: 'left',
+      text: 'Observations by Type and Category At Risk Observations'
     },
     xAxis: {
       categories: tagData,
@@ -212,9 +213,9 @@ function BarSimple(props) {
     },
     legend: {
       align: 'right',
-      x: -10,
+      x: 7,
       verticalAlign: 'top',
-      y: 10,
+      y: -7,
       floating: true,
       backgroundColor:
         Highcharts.defaultOptions.legend.backgroundColor || 'white',
@@ -249,7 +250,8 @@ function BarSimple(props) {
       type: 'column'
     },
     title: {
-      text: ''
+      align: 'left',
+      text: 'Interventions and Actions Taken'
     },
     subtitle: {
       text: ''
@@ -275,9 +277,9 @@ function BarSimple(props) {
     },
     legend: {
       align: 'right',
-      x: -10,
+      x: 7,
       verticalAlign: 'top',
-      y: 10,
+      y: -7,
       floating: true,
       backgroundColor:
         Highcharts.defaultOptions.legend.backgroundColor || 'white',
@@ -332,12 +334,10 @@ function BarSimple(props) {
       {loading == false ?
         <>
           <Grid container spacing={3}>
-            <Grid item md={6} sm={6} xs={6}>
-              <span>
-                <HighchartsReact highcharts={Highcharts} options={mainChart} />
-              </span>
+            <Grid item md={6} sm={12} xs={12}>
+              <HighchartsReact highcharts={Highcharts} options={mainChart} />
             </Grid>
-            <Grid item md={6} sm={6} xs={6}>
+            <Grid item md={6} sm={12} xs={12}>
               <HighchartsReact highcharts={Highcharts} options={secondChart} />
             </Grid>
           </Grid>
