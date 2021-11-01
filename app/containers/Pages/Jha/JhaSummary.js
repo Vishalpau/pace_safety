@@ -863,6 +863,7 @@ function JhaSummary() {
 
                                       {assessment.workStopCondition !== undefined &&
                                         assessment.workStopCondition !== "" &&
+                                        assessment.workStopCondition !== null &&
                                         assessment.workStopCondition.split(",").length > 0 ?
                                         <Grid item xs={12} md={12}>
                                           {console.log(assessment.workStopCondition.split(","))}

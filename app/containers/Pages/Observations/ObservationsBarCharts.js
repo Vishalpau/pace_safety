@@ -4,6 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { connect } from "react-redux";
 import { PapperBlock } from "dan-components";
 import Grid from "@material-ui/core/Grid";
+import moment from 'moment';
 
 import api from "../../../utils/axios";
 
@@ -61,8 +62,24 @@ function BarSimple(props) {
     await allTyepCount(allTags)
   };
 
+  const handelDate = () => {
+    var minutesToAdd = 10080;
+    var currentDate = new Date();
+    var pastDate = new Date(currentDate.getTime() - minutesToAdd * 60000);
+
+    let dateData = {
+      lastData: moment(pastDate).format('YYYY-MM-DD'),
+      todayDate: moment(currentDate).format('YYYY-MM-DD')
+    }
+    return dateData
+  }
+
   const allTyepCount = async (allTags) => {
+    let dataValues = handelDate()
     let projectStruct = handelProjectStruct()
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     let tagsToType = {}
     let allRisks = []
     allTags.map((value) => {
@@ -70,7 +87,7 @@ function BarSimple(props) {
     })
 
     for (let key in allTags) {
-      let res = await api.get(`/api/v1/observations/analyticdetails/?company=1&project=1&projectStructure=${projectStruct}&createdDate[Start]=2021-09-01&createdDate[End]=2021-10-29&category=${allTags[key]}`)
+      let res = await api.get(`/api/v1/observations/analyticdetails/?company=${companyId}&project=${projectId}&projectStructure=${projectStruct}&createdDate[Start]=${dataValues["lastData"]}&createdDate[End]=${dataValues["todayDate"]}&category=${allTags[key]}`)
       let results = res.data.data.results.results
       results.length > 0 && results.map((value) => {
         if (value["observationType"] == "Risk") {
@@ -169,12 +186,10 @@ function BarSimple(props) {
       text: ''
     },
     xAxis: {
-      min: 0,
-      max: tagData.length,
       categories: tagData,
       labels: {
-        rotation: 65
-      }
+        rotation: 75,
+      },
     },
     yAxis: {
       min: 0,
@@ -197,9 +212,9 @@ function BarSimple(props) {
     },
     legend: {
       align: 'right',
-      x: -30,
+      x: -10,
       verticalAlign: 'top',
-      y: 25,
+      y: 10,
       floating: true,
       backgroundColor:
         Highcharts.defaultOptions.legend.backgroundColor || 'white',
@@ -216,6 +231,13 @@ function BarSimple(props) {
         stacking: 'normal',
         dataLabels: {
           enabled: true
+        }
+      }
+    },
+    dataLabels: {
+      formatter: function () {
+        if (this.x != 0) {
+          return this.x;
         }
       }
     },
@@ -236,29 +258,47 @@ function BarSimple(props) {
       categories: tagData,
       crosshair: true,
       labels: {
-        rotation: 65
+        rotation: 75
       },
-      min: 0,
-      max: tagData.length,
     },
     yAxis: {
       min: 0,
       title: {
         text: ''
+      },
+      stackLabels: {
+        enabled: true
       }
+    },
+    credits: {
+      enabled: false
+    },
+    legend: {
+      align: 'right',
+      x: -10,
+      verticalAlign: 'top',
+      y: 10,
+      floating: true,
+      backgroundColor:
+        Highcharts.defaultOptions.legend.backgroundColor || 'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
     },
     tooltip: {
       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
       footerFormat: '</table>',
       shared: true,
       useHTML: true
     },
     plotOptions: {
       column: {
-        pointPadding: 0.2,
-        borderWidth: 0
+        dataLabels: {
+          enabled: true
+        },
+
       }
     },
     series: secondCharData,
@@ -277,6 +317,7 @@ function BarSimple(props) {
 
   const callBack = async () => {
     await setLoading(true)
+    await handelDate()
     await fetchTags()
     await handelProjectStruct()
     await setLoading(false)
@@ -291,11 +332,12 @@ function BarSimple(props) {
       {loading == false ?
         <>
           <Grid container spacing={3}>
-            <Grid item md={12} sm={12} xs={12}>
-              <span style={chartSize}>
+            <Grid item md={6} sm={6} xs={6}>
+              <span>
                 <HighchartsReact highcharts={Highcharts} options={mainChart} />
               </span>
-            
+            </Grid>
+            <Grid item md={6} sm={6} xs={6}>
               <HighchartsReact highcharts={Highcharts} options={secondChart} />
             </Grid>
           </Grid>
