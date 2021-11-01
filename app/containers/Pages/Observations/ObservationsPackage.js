@@ -26,6 +26,9 @@ import Pagination from '@material-ui/lab/Pagination';
 import in_progress_small from 'dan-images/in_progress_small.png';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 import completed_small from 'dan-images/completed-small.png';
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
@@ -814,7 +817,7 @@ const handleMyUserPClose = () => {
                                         >
                                           Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"}  <img src={in_progress_small} className={classes.smallImage} /></span>
+                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"} </span>
                                         </Typography>

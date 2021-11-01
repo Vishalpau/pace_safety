@@ -15,6 +15,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
 import "../../../styles/custom/customheader.css";
+import ObservationsList from "./ObservationsList";
 import ObservationsPackage from "./ObservationsPackage";
 
 const drawerWidth = 240;
@@ -409,6 +410,7 @@ class ObservationsFilter extends React.Component {
 
     return (
       <div className={classes.root}>
+      {this.props.value === 0 && 
         <div className={classes.appFrame}>
           <AppBar
             className={classNames(classes.appBar, classes.MuiAppBarColor, {
@@ -472,7 +474,31 @@ class ObservationsFilter extends React.Component {
             />
           </main>
           {after}
+        </div> }
+        {this.props.value === 1 && 
+          <div className={classes.appFrame}>
+          
+          <main
+            className={classNames(
+              classes.content,
+              classes.padd0,
+              classes[`content-${anchor}`],
+              {
+                [classes.contentShift]: open,
+                [classes[`contentShift-${anchor}`]]: open,
+              }
+            )}
+          >
+            <ObservationsList 
+              observation={this.props.observation}
+              searchIncident={this.props.search}
+              status={this.props.status}
+            />
+          </main>
+          {after}
         </div>
+          
+        }
       </div>
     );
   }

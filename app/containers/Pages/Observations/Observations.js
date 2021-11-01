@@ -599,21 +599,7 @@ function Observations(props) {
 
             <div className="listView">
               <MUIDataTable
-                data={Object.entries(allInitialData).filter(
-                  (item) => {
-                    return (
-
-                      item[1]["observationDetails"]
-                        .toLowerCase()
-                        .includes(searchIncident.toLowerCase()) ||
-                      item[1]["observationNumber"].toLowerCase().includes(
-                        searchIncident.toLowerCase()
-
-                      )
-                    )
-                  }
-
-                ).map((item) => [
+                data={Object.entries(allInitialData).map((item) => [
                   item[1]["observationNumber"],
                   item[1]["observationType"],
                   item[1]["location"],

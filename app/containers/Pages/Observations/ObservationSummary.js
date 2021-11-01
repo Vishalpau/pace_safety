@@ -174,7 +174,7 @@ const ObservationSummary = () => {
   const handlePrintPush = async () => {
     //console.log("Ashutosh")
     history.push(
-      `/app/prints/${id}`
+      `/app/pages/general-observation-prints/${id}`
     );
   };
 

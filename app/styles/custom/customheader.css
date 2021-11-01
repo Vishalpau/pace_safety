@@ -447,7 +447,6 @@ html .custmCancelBtn {
 }
 .attachFileThumb {
   width: 150px;
-  float: left;
   display: inline-block;
 }
 .attachFileStyle {

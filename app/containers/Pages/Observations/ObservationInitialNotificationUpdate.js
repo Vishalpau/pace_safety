@@ -853,7 +853,8 @@ const ObservationInitialNotificationUpdate = () => {
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">Reported by</FormLabel>
                   <Typography className="viewLabelValue">
-                  {userName} , {userBadgeNo !== null ? userBadgeNo : "-"}
+                  
+                  {initialData["username"] ? initialData["username"] : "-"}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
