@@ -287,36 +287,25 @@ function BarSimple(props) {
   }, [])
 
   return (
-    // <PapperBlock>
     <>
       {loading == false ?
         <>
           <Grid container spacing={3}>
             <Grid item md={12} sm={12} xs={12}>
-              {/* <div id="chart" style={chartSize}> */}
               <span style={chartSize}>
                 <HighchartsReact highcharts={Highcharts} options={mainChart} />
               </span>
-              <button id="small" onClick={() => handelChartSize("small")}>Small</button>
+              {/* <button id="small" onClick={() => handelChartSize("small")}>Small</button>
               <button id="large" onClick={() => handelChartSize("large")}>Large</button>
-              <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
-              {/* </div> */}
+              <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button> */}
               <HighchartsReact highcharts={Highcharts} options={secondChart} />
             </Grid>
           </Grid>
-          {/* <Grid container spacing={3}>
-            <Grid item md={12} sm={12} xs={12}>
-              <div id="second_chart" style={secondChartSize}>
-                <HighchartsReact highcharts={Highcharts} options={secondChart} />
-              </div>
-            </Grid>
-          </Grid> */}
         </>
         :
         "Loading..."
       }
     </>
-    // </PapperBlock >
   );
 }
 
