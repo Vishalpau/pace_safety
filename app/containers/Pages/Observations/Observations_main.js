@@ -305,10 +305,10 @@ export default function Observations() {
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
       <ObservationSearchSection value={value} />
       </TabPanel>
-      <TabPanel value={value} index={2} className={classes.paddLRzero}>
+      {/* <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />
-      </TabPanel>
-      <TabPanel value={value} index={3} className={classes.paddLRzero}>
+      </TabPanel> */}
+      <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsBarCharts />
       </TabPanel>
     </div>

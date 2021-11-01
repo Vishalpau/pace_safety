@@ -297,9 +297,9 @@ function BarSimple(props) {
               <span style={chartSize}>
                 <HighchartsReact highcharts={Highcharts} options={mainChart} />
               </span>
-              <button id="small" onClick={() => handelChartSize("small")}>Small</button>
+              {/* <button id="small" onClick={() => handelChartSize("small")}>Small</button>
               <button id="large" onClick={() => handelChartSize("large")}>Large</button>
-              <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
+              <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button> */}
               {/* </div> */}
               <HighchartsReact highcharts={Highcharts} options={secondChart} />
             </Grid>
