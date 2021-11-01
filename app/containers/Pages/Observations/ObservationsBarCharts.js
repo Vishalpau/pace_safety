@@ -16,6 +16,7 @@ function BarSimple(props) {
   const [charData, setCharData] = useState([])
   const [secondCharData, setSecondChartData] = useState([])
   const [chartSize, setChartSize] = useState({ width: "100%", height: "50px" })
+  const [secondChartSize, setSecondChartSize] = useState({ width: "100%", height: "50px" })
   // const [projectStruct, setProjectStruct] = useState("")
 
   const handelProjectStruct = () => {
@@ -86,8 +87,6 @@ function BarSimple(props) {
     graphSeries(tagsToType)
     secondGrpahSeries(allRisks, allTags)
   }
-
-
 
   const graphSeries = (tagsToType) => {
     let datSeries = [{
@@ -267,6 +266,7 @@ function BarSimple(props) {
 
   const handelChartSize = (sizeChangeType) => {
     if (sizeChangeType === "small") {
+      console.log("here")
       setChartSize({ width: "50%", height: "50px" })
     } else if (sizeChangeType === "large") {
       setChartSize({ width: "75%", height: "75px" })
@@ -287,22 +287,36 @@ function BarSimple(props) {
   }, [])
 
   return (
-    <PapperBlock >
+    // <PapperBlock>
+    <>
       {loading == false ?
-        <Grid container spacing={3}>
-          <Grid item md={12} >
-            <HighchartsReact highcharts={Highcharts} options={mainChart} />
-            <button id="small" onClick={() => handelChartSize("small")}>Small</button>
-            <button id="large" onClick={() => handelChartSize("large")}>Large</button>
-            <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
+        <>
+          <Grid container spacing={3}>
+            <Grid item md={12} sm={12} xs={12}>
+              {/* <div id="chart" style={chartSize}> */}
+              <span style={chartSize}>
+                <HighchartsReact highcharts={Highcharts} options={mainChart} />
+              </span>
+              <button id="small" onClick={() => handelChartSize("small")}>Small</button>
+              <button id="large" onClick={() => handelChartSize("large")}>Large</button>
+              <button id="auto" onClick={() => handelChartSize("auto")}>Auto</button>
+              {/* </div> */}
+              <HighchartsReact highcharts={Highcharts} options={secondChart} />
+            </Grid>
           </Grid>
-          <Grid item md={12} >
-            <HighchartsReact highcharts={Highcharts} options={secondChart} />
-          </Grid>
-        </Grid>
+          {/* <Grid container spacing={3}>
+            <Grid item md={12} sm={12} xs={12}>
+              <div id="second_chart" style={secondChartSize}>
+                <HighchartsReact highcharts={Highcharts} options={secondChart} />
+              </div>
+            </Grid>
+          </Grid> */}
+        </>
         :
-        "Loading..."}
-    </PapperBlock>
+        "Loading..."
+      }
+    </>
+    // </PapperBlock >
   );
 }
 
