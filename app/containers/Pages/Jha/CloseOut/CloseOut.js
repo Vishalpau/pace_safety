@@ -73,6 +73,9 @@ const CloseOut = () => {
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
         console.log(result)
+        if (result.closedDate == null) {
+            result["closedDate"] = new Date()
+        }
         setJhaListdata(result)
     };
     // handle close snackbar

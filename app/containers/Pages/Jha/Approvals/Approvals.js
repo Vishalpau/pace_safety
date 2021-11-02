@@ -15,6 +15,15 @@ import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
 
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -98,6 +107,11 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
+  closeIcon: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem'
+  }
 }));
 
 const Approvals = () => {
@@ -112,7 +126,8 @@ const Approvals = () => {
     projectId: "",
     createdBy: "",
     ProjectStructId: "",
-  })
+  });
+  const [open, setOpen] = useState(false);
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -131,7 +146,8 @@ const Approvals = () => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.id
     if (type == "work") {
-      check.wrp == false && alert("You have approved work responsible person")
+      // check.wrp == false && alert("You have approved work responsible person")
+      setOpen(false)
       setCheck({ ...check, wrp: !check.wrp })
       setForm({ ...form, wrpApprovalUser: name, wrpApprovalDateTime: new Date() })
     } else if (type == "pic") {
@@ -188,15 +204,20 @@ const Approvals = () => {
   }
 
   const handelCallBack = async () => {
-    await handelActionLink()
-    await handelJobDetails()
-    await handelWorkAndPic()
-    await handelActionTracker()
+    await handelActionLink();
+    await handelJobDetails();
+    await handelWorkAndPic();
+    await handelActionTracker();
+  }
+
+  const handleClose = () => {
+    setOpen(false)
   }
 
   useEffect(() => {
     handelCallBack()
   }, [])
+
 
   const classes = useStyles();
   return (
@@ -227,49 +248,74 @@ const Approvals = () => {
                   variant="contained"
                   color={check.wrp ? "secondary" : "primary"}
                   className={classes.approvalButton}
-                  onClick={(e) => handelWorkAndPic("work")}
+                  onClick={(e) => setOpen(true)}
                 >
                   {check.wrp ? "Approved" : "Approve Now"}
                 </Button>
+                {/* Approved by userName on Date "date" (edited)  */}
                 <div>
                   {form.wrpApprovalDateTime !== undefined
-                    &&
-                    form.wrpApprovalDateTime !== null ?
-                    `${form.wrpApprovalUser} ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
-                    : null
+                    ?
+                    `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
+                    :
+                    `Approved by: ${"Mukund"} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}`
                   }
                 </div>
 
               </Grid>
-
-              <Grid
-                item
-                md={8}
-                xs={12}
-                className={classes.formBox}
+              <Dialog
+                className={classes.projectDialog}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    width: "100%",
+                    maxWidth: 400,
+                  },
+                }}
               >
+                <DialogTitle onClose={() => handleClose()}>
+                  Confirmation
+                </DialogTitle>
+                <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
+                <DialogContent>
+                  <DialogContentText>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.projectSelectionTitle}
+                    >
+                      You are approving work responsible person.
+                    </Typography>
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Tooltip title="Cancel">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleClose()}
+                    >
+                      cancel
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Ok">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => handelWorkAndPic("work")}
+                    >
+                      Ok
+                    </Button>
+                  </Tooltip>
+                </DialogActions>
+              </Dialog>
+
+              <Grid item md={12} xs={12}>
+                <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography>
                 <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  PIC (Person-in-charge)
-                </Typography>
-                <Button
-                  variant="contained"
-                  color={check.pic ? "secondary" : "primary"}
-                  className={classes.approvalButton}
-                  onClick={(e) => handelWorkAndPic("pic")}
-                >
-                  {check.pic ? "Approved" : "Approve Now"}
-                </Button>
-                <div>
-                  {form.picApprovalDateTime !== undefined
-                    &&
-                    form.picApprovalDateTime !== null ?
-                    `${form.picApprovalUser} ${moment(form.picApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
-                    : null
-                  }
-                </div>
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <Typography variant="h6" gutterBottom className={classes.labelName}>
+
                   <ActionTracker
                     actionContext="jha:approval"
                     enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
@@ -293,17 +339,6 @@ const Approvals = () => {
                     />
                   ))}
                 </Typography>
-              </Grid>
-              <Grid
-                item
-                md={8}
-                xs={12}
-                className={classes.formBox}
-              >
-                <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  Signature
-                </Typography>
-                <Button variant="contained" color="primary" className={classes.approvalButton}>Sign Now</Button>
               </Grid>
 
               <Grid

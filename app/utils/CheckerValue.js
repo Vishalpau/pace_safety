@@ -117,6 +117,19 @@ export const handelActionData = async (incidentId, apiData, type = "all") => {
 
 }
 
+export const handelActionWithEntity = async (incidentId, actionContextValue) => {
+
+    const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
+    const allActionData = await apiAction.get(`api/v1/actions/?actionContext=${actionContextValue}&enitityReferenceId=${incidentId}`)
+    const allAction = allActionData.data.data.results.results
+    return allAction
+}
+
 export const handelDateTime = (value) => {
     let observedDateAndTime = value.split("T")
     let observedDate = moment(value.split("T")[0]).format('MMMM Do YYYY')
