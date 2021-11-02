@@ -275,7 +275,7 @@ const Approvals = () => {
                 }}
               >
                 <DialogTitle onClose={() => handleClose()}>
-                  Message
+                Confirmation
                 </DialogTitle>
                 <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
                 <DialogContent>
