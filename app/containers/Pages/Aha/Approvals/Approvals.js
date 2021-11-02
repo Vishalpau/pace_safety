@@ -11,6 +11,12 @@ import { handelCommonObject, handelActionData } from "../../../../utils/CheckerV
 import ActionShow from '../../../Forms/ActionShow';
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import moment from "moment";
+import Type from "../../../../styles/components/Fonts.scss";
+import { Col, Row } from "react-grid-system";
+import FormSideBar from '../../../Forms/FormSideBar';
+
+import { APPROVAL_FORM } from "../constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +80,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px",
     fontWeight: "400",
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Approvals = () => {
@@ -89,7 +108,10 @@ const Approvals = () => {
     ProjectStructId: "",
   })
   const [isLoading, setIsLoading] = useState(false)
-
+  const user =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
 
   const handelJobDetails = async () => {
     // const jhaId = handelJhaId()
@@ -144,7 +166,7 @@ const Approvals = () => {
     if (type == "work") {
       setForm({
         ...form,
-        wrpApprovalUser: name,
+        wrpApprovalUser: user.name,
         wrpApprovalDateTime: new Date(),
       });
     } else if (type == "pic") {
@@ -158,8 +180,9 @@ const Approvals = () => {
   console.log(form);
 
   const handelSubmit = async () => {
-    delete form["ahaAssessmentAttachment"];
     await setSubmitLoader(true)
+
+    delete form["ahaAssessmentAttachment"];
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,
       form
@@ -179,8 +202,49 @@ const Approvals = () => {
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
       {isLoading ? <>
+        <Row>
+          <Col md={9}>
         <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+                    <Typography variant="h6" className={Type.labelName} gutterBottom>
+                        Aha number
+                    </Typography>
+
+                    <Typography varint="body1" className={Type.labelValue}>
+                        {form.ahaNumber ? form.ahaNumber :"-"}
+                    </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <Typography variant="h6" className={Type.labelName} gutterBottom>
+                        Aha assessment data
+                    </Typography>
+                    <Typography className={Type.labelValue}>
+                        {moment(form.ahaAssessmentDate).format(
+                            "Do MMMM YYYY"
+                        )}
+                    </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <Typography variant="h6" className={Type.labelName} gutterBottom>
+                        Aha description
+                    </Typography>
+                    <Typography className={Type.labelValue}>
+                        {form.description ? form.description : "-"}
+                    </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                    <Typography variant="h6" className={Type.labelName} gutterBottom>
+                        Aha location
+                    </Typography>
+                    <Typography className={Type.labelValue}>
+                        {form.location ? form.location : "-"}
+                    </Typography>
+                </Grid>
           <Grid item md={8} xs={12} className={classes.formBox}>
+          
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               Work Responsible Person (WRP)
             </Typography>
@@ -192,8 +256,18 @@ const Approvals = () => {
             >
               {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
+            <div>
+                  {form.wrpApprovalDateTime !== undefined
+                    &&
+                    form.wrpApprovalDateTime !== null ?
+                    `${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
+                    : null
+                  }
+                </div>
           </Grid>
-          <Grid item md={8} xs={12} className={classes.formBox}>
+          
+          {/* {form.wrpApprovalUser ? form.wrpApprovalUser : "",form.wrpApprovalDateTime ? form.wrpApprovalDateTime :""} */}
+          {/* <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               PIC (if attended the Toolbox meeting)
             </Typography>
@@ -205,7 +279,7 @@ const Approvals = () => {
             >
               {form.picApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
-          </Grid>
+          </Grid> */}
 
           <Grid item md={6} xs={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -234,7 +308,7 @@ const Approvals = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={8} xs={12} className={classes.formBox}>
+          {/* <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               Signature
             </Typography>
@@ -245,27 +319,37 @@ const Approvals = () => {
             >
               Sign Now
             </Button>
-          </Grid>
+          </Grid> */}
 
           <Grid item md={12} xs={12}>
-            {submitLoader == false ?
+          <div className={classes.loadingWrapper}>
+
               <Button
                 variant="outlined"
                 onClick={(e) => handelSubmit()}
                 className={classes.custmSubmitBtn}
                 style={{ marginLeft: "10px" }}
+                disabled={submitLoader}
               >
-
-                Next
+                Submit
               </Button>
-              :
-              <IconButton className={classes.loader} disabled>
-                <CircularProgress color="secondary" />
-              </IconButton>
-            }
-
+              {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
           </Grid>
-        </Grid> </>: <h1>Loading...</h1>}
+        </Grid>
+        </Col>
+          <Col md={3}>
+            <FormSideBar
+              deleteForm={"hideArray"}
+              listOfItems={APPROVAL_FORM}
+              selectedItem={"Approval"}
+            />
+          </Col>
+        </Row> </>: <h1>Loading...</h1>}
       </PapperBlock>
     </>
   );

@@ -122,11 +122,24 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   createHazardbox: {
-    paddingTop: '0px !important',
+    paddingTop: '20px !important',
     paddingBottom: '0px !important',
     '& button': {
       marginTop: '8px',
     },
+  },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
   },
   // });
 }));
@@ -182,6 +195,7 @@ const ProjectDetails = () => {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [workArea, setWorkArea] = useState("")
   const [projectBreakout, setProjectBreakout] = useState('')
   const [isDateShow, setIsDateShow] = useState(false)
@@ -195,7 +209,7 @@ const ProjectDetails = () => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
-
+  const permitType = ["Permit 1" , "Permit 2" , "Permit 3" , "Permit 4"]
 
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -240,7 +254,7 @@ const ProjectDetails = () => {
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "",
       "location": "",
-      "assessmentDate": null,
+      "assessmentDate": new Date().toISOString().split('T')[0],
       "permitToPerform": "",
       "permitNumber": "",
       "ahaNumber": "",
@@ -294,7 +308,7 @@ const ProjectDetails = () => {
     if (!isValid) {
       return "Data is not valid";
     }
-    await setSubmitLoader(true);
+    await setLoading(true);
     if (form.id) {
       delete form["ahaAssessmentAttachment"]
       // form['updatedBy'] = form['createdBy']
@@ -633,7 +647,7 @@ const ProjectDetails = () => {
                 <FormControl component="fieldset" error={
                   error && error["permitToPerform"]
                 }>
-                  <FormLabel component="legend" className={classes.labelName} >Do you have a permit to perform the AHA?*</FormLabel>
+                  <FormLabel component="legend" className={classes.labelName} >Confirm if AHA required for permit?*</FormLabel>
                   <RadioGroup row aria-label="gender" name="gender1"
                     onChange={(e) => {
                       { setForm({ ...form, permitToPerform: e.target.value }) };
@@ -649,7 +663,31 @@ const ProjectDetails = () => {
                     </FormHelperText>
                   )}
                 </FormControl>
-              </Grid>
+              </Grid>{form.permitToPerform === "Yes" || form.permitToPerform === "" ? 
+              <Grid item md={6} sm={12} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Type of permit
+                              </InputLabel>
+                              <Select
+                                label="Type of permit"
+                              >
+                                {permitType.map(
+                                  (value) => (
+                                    <MenuItem
+                                      value={value}
+                                    >
+                                      {value}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>: null}
               <Grid
                 item
                 md={6}
@@ -757,21 +795,26 @@ const ProjectDetails = () => {
                 xs={12}
                 style={{ marginTop: '15px' }}
               >
-                {submitLoader == false ?
+                            <div className={classes.loadingWrapper}>
+
                   <Button
                     variant="outlined"
                     onClick={(e) => handleSubmit()}
                     className={classes.custmSubmitBtn}
                     style={{ marginLeft: "10px" }}
+                    disabled={loading}
                   >
 
                     Next
                   </Button>
-                  :
-                  <IconButton className={classes.loader} disabled>
-                    <CircularProgress color="secondary" />
-                  </IconButton>
-                }
+                  {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+                </div>
+                  
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>

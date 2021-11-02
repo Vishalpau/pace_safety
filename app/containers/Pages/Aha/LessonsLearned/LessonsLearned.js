@@ -16,9 +16,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import api from "../../../../utils/axios";
 import { useParams, useHistory } from "react-router";
-
+import { Col, Row } from "react-grid-system";
 import { CircularProgress } from '@material-ui/core';
+import FormSideBar from '../../../Forms/FormSideBar';
 import IconButton from '@material-ui/core/IconButton';
+import { LESSION_LEARNED_FORM} from "../constants";
+
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -98,6 +101,19 @@ const useStyles = makeStyles((theme) => ({
   formLablBox: {
     paddingBottom: '0px !important',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const LessonsLearned = () => {
@@ -144,6 +160,8 @@ const LessonsLearned = () => {
   return (
     <>
     <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
+    <Row>
+          <Col md={9}>
         <Grid container spacing={3}>
             <Grid
             item
@@ -295,23 +313,35 @@ const LessonsLearned = () => {
             md={12}
             xs={12}
             >
-                {submitLoader == false ?
+                      <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"
                   onClick={(e) => handelSubmit()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
                 >
 
-                  Next
+                  Submit
                 </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
+               
             </Grid>
         </Grid>
+        </Col>
+        <Col md={3}>
+            <FormSideBar
+              deleteForm={"hideArray"}
+              listOfItems={LESSION_LEARNED_FORM}
+              selectedItem={"Lessons Learned"}
+            />
+          </Col>
+        </Row>
     </PapperBlock>
     </>
   );

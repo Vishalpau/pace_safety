@@ -13,6 +13,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -98,6 +99,19 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Approvals = () => {
@@ -105,6 +119,7 @@ const Approvals = () => {
   const [form, setForm] = useState({})
   const [check, setCheck] = useState({ wrp: false, pic: false })
   const history = useHistory()
+  const [submitLoader, setSubmitLoader] = useState(false)
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
@@ -179,6 +194,7 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
+    await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
       form["wrpApprovalUser"] = ""
@@ -327,14 +343,24 @@ const Approvals = () => {
                 md={12}
                 xs={12}
               >
+              <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"
                   size="medium"
                   className={classes.custmSubmitBtn}
                   onClick={(e) => handelSubmit()}
+                  style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
                 >
                   Submit
                 </Button>
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
                 <Button
                   variant="outlined"
                   size="medium"

@@ -136,6 +136,19 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const DocumentNotification = () => {
@@ -153,6 +166,7 @@ const DocumentNotification = () => {
 
   const [ahaform , setAHAForm] = useState({})
   const handleSubmit = async () => {
+    await setSubmitLoader(true)
 
     let data = new FormData()
     
@@ -195,7 +209,6 @@ const DocumentNotification = () => {
       data.append("source", ahaform.source),
       data.append("vendor" , ahaform.vendor)
       data.append("vendorReferenceId", ahaform.vendorReferenceId)
-      await setSubmitLoader(true)
       const res = await api.put(
         `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
         data
@@ -305,9 +318,6 @@ const [notifyToList,setNotifyToList] = useState([]);
           xs={12} 
           className={classes.fileUploadFileDetails}
         >
-          <h4>Files</h4>
-          <ul>{attachmentName.current ? attachmentName.current : ''}</ul>
-          
           {/* <DeleteIcon /> */}
           <Typography title={handelFileName(ahaform.jhaAssessmentAttachment)}>
                   {ahaform.ahaAssessmentAttachment != "" &&
@@ -317,11 +327,10 @@ const [notifyToList,setNotifyToList] = useState([]);
                     <p />
                   )}
                 </Typography>
+                <input type="file" onChange={(e) => handleFile(e)}/>
+
         </Grid>
-        <div {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} onChange={(e) => handleFile(e)}/>
-          <p>Drag 'n' drop some files here, or click to select files</p>
-        </div>
+         
       </Grid>
       <Grid
         item
@@ -383,21 +392,25 @@ const [notifyToList,setNotifyToList] = useState([]);
                 >
                   Previous
                 </Button>
-        {submitLoader == false ?
+                <div className={classes.loadingWrapper}>
                 <Button
                   variant="contained"
                   onClick={(e) => handleSubmit()}
                   className={classes.button}
                   style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
                 >
 
                   Next
                 </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+                  </div>
+               
         {/* <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}
         onClick={() =>handleSubmit()}>
         Submit</Button> */}
@@ -409,7 +422,7 @@ const [notifyToList,setNotifyToList] = useState([]);
                 listOfItems={AHA}
                 selectedItem="Documents & Notifications"
               />
-</Grid>
+        </Grid>
     </Grid> ): (<h1>Loading...</h1>)}
     </PapperBlock>
     </>

@@ -493,7 +493,7 @@ console.log(projectStructId,"PPPPP")
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber}`}
+      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber :""}`}
       icon="ion-md-list-box"
     >{isLoading ? <>
       <Box paddingBottom={1}>
