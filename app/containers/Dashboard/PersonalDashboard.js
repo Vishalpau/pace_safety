@@ -468,7 +468,7 @@ function PersonalDashboard(props) {
   
     getSubscriptions();
     
-  }, []);
+  }, [props.initialValues.companyListData]);
   if(isLoading){
     return (
       <PapperBlock title="Home" icon="ion-md-list-box">
