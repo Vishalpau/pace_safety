@@ -216,7 +216,7 @@ const ObservationSummary = () => {
     <>
       {/* {isLoading ? ( */}
       <CustomPapperBlock
-        title={`Observation Number: ${initialData.observationNumber}`}
+        title={`Observation Number: ${initialData.observationNumber ? initialData.observationNumber : ""}`}
         // icon="ion-md-list-box"
         variant="h5"
         icon={obsIcon} 
@@ -390,7 +390,7 @@ const ObservationSummary = () => {
                   </ListItem>
                 
                   )}
-
+{/* 
                   <ListItem button>
                   <ListItemIcon>
                   <Comment />
@@ -401,7 +401,7 @@ const ObservationSummary = () => {
                   >
                     <ListItemText primary="Comments" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                   {/* <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
                     <Comment />
@@ -409,7 +409,7 @@ const ObservationSummary = () => {
                     <ListItemText primary="Comments" />
                   </ListItem> */}
 
-                  <ListItem button>
+                  {/* <ListItem button>
                   <ListItemIcon>
                   <History />
                   </ListItemIcon>
@@ -419,12 +419,12 @@ const ObservationSummary = () => {
                   >
                     <ListItemText primary="Activity History" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                  
                   
                 {/* <Divider /> */}
 
-                <ListItem button>
+                {/* <ListItem button>
                   <ListItemIcon>
                   <Print />
                   </ListItemIcon>
@@ -434,7 +434,7 @@ const ObservationSummary = () => {
                   >
                     <ListItemText primary="Print" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                 
                   </List>
 
