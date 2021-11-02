@@ -327,7 +327,7 @@ function BarSimple(props) {
 
   useEffect(() => {
     callBack()
-  }, [])
+  }, [props.projectName])
 
   return (
     <>
