@@ -144,7 +144,7 @@ const JobDetails = (props) => {
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "",
       "location": "",
-      "jhaAssessmentDate": null,
+      "jhaAssessmentDate": new Date().toISOString().split('T')[0],
       "permitToPerform": "",
       "permitNumber": "",
       "jobTitle": "",
@@ -461,6 +461,7 @@ const JobDetails = (props) => {
     await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
     await setSubmitLoader(false)
   }
+  const typeOfPremit = ["Type1", "Type2", "Type3", "Type4", "Type5"]
 
   const classes = useStyles();
 
@@ -655,6 +656,32 @@ const JobDetails = (props) => {
                 )}
               </Grid>
 
+              {/* permit type */}
+              {form.permitToPerform == "Yes" ?
+                <Grid item md={6} xs={11}>
+                  <TextField
+                    label="Type of permit"
+                    name="typeOfPermit"
+                    id="typeOfPermit"
+                    select
+                    fullWidth
+                    // value={form.department ? form.department : ""}
+                    // onChange={(e) => setForm({ ...form, department: e.target.value })}
+                    variant="outlined"
+                  >
+                    {typeOfPremit.map((option) => (
+                      <MenuItem key={option}
+                        value={option}
+                      >
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                :
+                null
+              }
+
               {/* scope work */}
               <Grid
                 item
@@ -701,7 +728,6 @@ const JobDetails = (props) => {
                     margin="dense"
                     name="arename"
                     id="arename"
-                    multiline
                     value={Teamform[index].teamName || ""}
                     fullWidth
                     variant="outlined"
@@ -757,7 +783,6 @@ const JobDetails = (props) => {
                   label="Supervisor"
                   name="supervisor"
                   id="supervisor"
-                  multiline
                   value={form.supervisorName ? form.supervisorName : ""}
                   fullWidth
                   variant="outlined"
@@ -798,7 +823,6 @@ const JobDetails = (props) => {
                   label="Emergency Phone Number"
                   name="emergencyphonenumber"
                   id="emergencyphonenumber"
-                  multiline
                   value={form.emergencyNumber ? form.emergencyNumber : ""}
                   onChange={(e) => setForm({ ...form, emergencyNumber: e.target.value })}
                   fullWidth
@@ -817,7 +841,6 @@ const JobDetails = (props) => {
                   label="Evacuation assembly point"
                   name="evacuationassemblypoint"
                   id="evacuationassemblypoint"
-                  multiline
                   value={form.evacuationAssemblyPoint ? form.evacuationAssemblyPoint : ""}
                   onChange={(e) => setForm({ ...form, evacuationAssemblyPoint: e.target.value })}
                   fullWidth
@@ -836,7 +859,6 @@ const JobDetails = (props) => {
                   label="Permit number"
                   name="permitnumber"
                   id="permitnumber"
-                  multiline
                   value={form.permitNumber ? form.permitNumber : ""}
                   onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                   fullWidth
@@ -855,7 +877,6 @@ const JobDetails = (props) => {
                   label="Order number"
                   name="ordernumber"
                   id="ordernumber"
-                  multiline
                   value={form.jobOrderNumber ? form.jobOrderNumber : ""}
                   onChange={(e) => setForm({ ...form, jobOrderNumber: e.target.value })}
                   fullWidth

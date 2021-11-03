@@ -58,8 +58,9 @@ const CloseOut = () => {
         reviewedBy: 0,
         reviewDate: null,
         closedBy: 0,
-        closeDate: null
+        closeDate: new Date()
     })
+    const [isDateShow, setIsDateShow] = useState(false)
 
     const userId =
         JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -72,6 +73,9 @@ const CloseOut = () => {
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
         console.log(result)
+        if (result.closedDate == null) {
+            result["closedDate"] = new Date()
+        }
         setJhaListdata(result)
     };
     // handle close snackbar
@@ -115,6 +119,11 @@ const CloseOut = () => {
             });
     }
 
+    const handelClose = () => {
+        setIsDateShow(false)
+        return true
+    }
+
     const handleNext = async () => {
         delete jhaListData["jhaAssessmentAttachment"]
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
@@ -143,6 +152,40 @@ const CloseOut = () => {
                                 Action item close out
                             </Typography>
                         </Grid>
+
+                        <Grid item md={12}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
+                                    // error={error.closeDate}
+                                    // helperText={
+                                    //     error.closeDate ? error.closeDate : null
+                                    // }
+                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Work completion"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    // onChange={(e) => {
+                                    //     setJhaListdata({
+                                    //         ...jhaListData,
+                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                    //     });
+                                    // }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"
@@ -175,6 +218,7 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
                                     error={error.closeDate}
                                     helperText={
                                         error.closeDate ? error.closeDate : null
@@ -197,12 +241,11 @@ const CloseOut = () => {
                                     }}
                                     disableFuture
                                     InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
-
-
-
 
                         <Grid item xs={12}>
                             <Button
