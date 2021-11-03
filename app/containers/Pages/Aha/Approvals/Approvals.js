@@ -10,7 +10,16 @@ import ActionTracker from "../../../Forms/ActionTracker";
 import { handelCommonObject, handelActionData } from "../../../../utils/CheckerValue"
 import ActionShow from '../../../Forms/ActionShow';
 import { CircularProgress } from '@material-ui/core';
+import moment from "moment";
+
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +83,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "13px",
     fontWeight: "400",
   },
+  closeIcon: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem'
+  }
 }));
 
 const Approvals = () => {
@@ -88,7 +102,8 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
 
   const handelJobDetails = async () => {
@@ -147,6 +162,7 @@ const Approvals = () => {
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
+      setOpen(false)
     } else if (type == "pic") {
       setForm({
         ...form,
@@ -155,7 +171,9 @@ const Approvals = () => {
       });
     }
   };
-  console.log(form);
+  const handleClose = ()=>{
+    setOpen(false)
+  }
 
   const handelSubmit = async () => {
     delete form["ahaAssessmentAttachment"];
@@ -188,12 +206,20 @@ const Approvals = () => {
               variant="contained"
               color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
               className={classes.approvalButton}
-              onClick={(e) => handelWorkAndPic("work")}
+              onClick={(e) => setOpen(true)}
             >
               {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
+           {form.wrpApprovalUser !=="" && <div>
+                  {form.wrpApprovalDateTime !== undefined
+                    &&
+                    form.wrpApprovalDateTime !== `Approved by: ${form.wrpApprovalUser} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}` ?
+                    `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
+                    : null
+                  }
+                </div>}
           </Grid>
-          <Grid item md={8} xs={12} className={classes.formBox}>
+          {/* <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               PIC (if attended the Toolbox meeting)
             </Typography>
@@ -205,9 +231,58 @@ const Approvals = () => {
             >
               {form.picApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
-          </Grid>
+          </Grid> */}
+              <Dialog
+                className={classes.projectDialog}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    width: "100%",
+                    maxWidth: 400,
+                  },
+                }}
+              >
+                <DialogTitle onClose={() => handleClose()}>
+                Confirmation
+                </DialogTitle>
+                <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
+                <DialogContent>
+                  <DialogContentText>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      className={classes.projectSelectionTitle}
+                    >
+                      You are approving work responsible person.
+                    </Typography>
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Tooltip title="Cancel">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleClose()}
+                    >
+                      cancel
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Ok">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => handelWorkAndPic("work")}
+                    >
+                      Ok
+                    </Button>
+                  </Tooltip>
+                </DialogActions>
+              </Dialog>
 
           <Grid item md={6} xs={12}>
+          <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               <ActionTracker
                 actionContext="jha:approval"
@@ -234,7 +309,7 @@ const Approvals = () => {
             </Typography>
           </Grid>
 
-          <Grid item md={8} xs={12} className={classes.formBox}>
+          {/* <Grid item md={8} xs={12} className={classes.formBox}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               Signature
             </Typography>
@@ -245,7 +320,7 @@ const Approvals = () => {
             >
               Sign Now
             </Button>
-          </Grid>
+          </Grid> */}
 
           <Grid item md={12} xs={12}>
             {submitLoader == false ?

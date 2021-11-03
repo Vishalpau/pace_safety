@@ -881,7 +881,6 @@ history.push("/app/pages/error")
                 <FormControl
                   variant="outlined"
                   error={error.contractor}
-                  required
                   className={classes.formControl}
                 >
                   <InputLabel id="demo-simple-select-label">
