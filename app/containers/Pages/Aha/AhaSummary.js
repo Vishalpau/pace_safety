@@ -154,7 +154,7 @@ function AhaSummary() {
   const [comments, setComments] = useState(false);
   const [activity, setActivity] = useState(false);
   //const [summary, setSummary] = useState(false);
-  const [isLoading , setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
@@ -302,7 +302,7 @@ function AhaSummary() {
         : null;
     let structName = []
     let projectStructId = assessment.fkProjectStructureIds.split(":")
-console.log(projectStructId,"PPPPP")
+    console.log(projectStructId, "PPPPP")
     for (let key in projectStructId) {
       let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
       const api_work_area = axios.create({
@@ -310,14 +310,14 @@ console.log(projectStructId,"PPPPP")
         headers: HEADER_AUTH
       });
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-      console.log(workArea,"!@#$")
+      console.log(workArea, "!@#$")
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName,"@@@@@@")
+    console.log(structName, "@@@@@@")
     setProjectStructName(structName)
   }
 
-  console.log(projectStructName,"LLL")
+  console.log(projectStructName, "LLL")
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -415,22 +415,22 @@ console.log(projectStructId,"PPPPP")
 
     let zzz = [...result]
 
-      for (var i = 0; i <result.length; i++) {
-        if (result[i].riskRating !== ""){
-          if(result[i].riskRating === "25%") {
-            zzz[i].riskRatingColour = '#1EBD10'
-          }else if(result[i].riskRating === "50%"){
-            zzz[i].riskRatingColour = '#FFEB13'
-    
-          }else if(result[i].riskRating === "75%"){
-            zzz[i].riskRatingColour = '#F3C539'
-    
-          }else {
-            zzz[i].riskRatingColour = '#FF0000'
-    
-          }
+    for (var i = 0; i < result.length; i++) {
+      if (result[i].riskRating !== "") {
+        if (result[i].riskRating === "25%") {
+          zzz[i].riskRatingColour = '#1EBD10'
+        } else if (result[i].riskRating === "50%") {
+          zzz[i].riskRatingColour = '#FFEB13'
+
+        } else if (result[i].riskRating === "75%") {
+          zzz[i].riskRatingColour = '#F3C539'
+
+        } else {
+          zzz[i].riskRatingColour = '#FF0000'
+
         }
-        }
+      }
+    }
     await setForm(zzz);
     await handelActionTracker(result)
   };
@@ -493,7 +493,7 @@ console.log(projectStructId,"PPPPP")
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber :""}`}
+      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
       icon="ion-md-list-box"
     >{isLoading ? <>
       <Box paddingBottom={1}>
@@ -1221,116 +1221,34 @@ console.log(projectStructId,"PPPPP")
                                 ) : "-"}
                               </Typography>
                             </Grid>
-                            {/* <Grid
-                              item
-                              xs={12}
-                              style={{ padding: "0px 12px", marginTop: "15px" }}
-                            >
-                              <Typography className={classes.heading}>
-                                Person in-charge
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Approved by
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {ahaData.username ? ahaData.username : "-"}
-                              </Typography>
-                            </Grid> */}
-                            {/* <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Approved on
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {ahaData.picApprovalDateTime ? moment(ahaData["picApprovalDateTime"]).format(
-                                  "Do MMMM YYYY"
-                                ) : "-"}
-                              </Typography>
-                            </Grid> */}
+
                           </Grid>
                         </Grid>
+                        <Grid item md={12}>
+                          <Grid item md={6}>
+                            <Typography className={Fonts.heading}>
+                              Actions
+                            </Typography>
+                            <Typography>
+                              {approvalActionData.map((value) => (
+                                <>
+                                  <ActionShow
+                                    action={{ id: value.actionId, number: value.actionNumber }}
+                                    title={value.actionTitle}
+                                    companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                    projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    handelShowData={handelShowData}
+                                  />
 
-                        <Grid item xs={12}>
-                          <Typography className={Fonts.heading}>
-                            Actions
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                              <Grid container spacing={3}>
-                                <Grid item xs={12} md={8}>
-                                  <Typography className={classes.aLabelValue}>
-                                    {approvalActionData.map((value) => (
-                                      <>
-
-                                        <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
-                                          title={value.actionTitle}
-                                          companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                          projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                          handelShowData={handelShowData}
-                                        />
-
-                                      </>
-                                    ))}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-
-                        {/* <Grid item xs={12}>
-                          <Typography className={classes.heading}>
-                            Sign-offs
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Signed-off by
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                NA
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Signed-off on
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                NA
-                              </Typography>
-                            </Grid>
+                                </>
+                              ))}
+                            </Typography>
                           </Grid>
-                        </Grid> */}
+
+
+
+
+                        </Grid>
                       </>
                     );
                   }
@@ -1525,7 +1443,7 @@ console.log(projectStructId,"PPPPP")
           </Grid>
         </Grid>
       </Box>
-      </>: <h1>Loading...</h1> }
+    </> : <h1>Loading...</h1>}
     </PapperBlock>
   );
 }

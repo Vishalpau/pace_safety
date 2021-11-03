@@ -330,23 +330,23 @@ const LessonsLearned = () => {
                 xs={12}
               >
                 <div className={classes.loadingWrapper}>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className={classes.custmSubmitBtn}
-                  onClick={(e) => handelSubmit()}
-                  style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
-                >
-                  Submit
-                </Button>
-                {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-              </div>
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    className={classes.custmSubmitBtn}
+                    onClick={(e) => handelSubmit()}
+                    style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
+                  >
+                    Submit
+                  </Button>
+                  {submitLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
               </Grid>
             </Grid>
           </Col>
