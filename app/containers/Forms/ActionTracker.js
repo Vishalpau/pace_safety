@@ -1,37 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
+import DateFnsUtils from "@date-io/date-fns";
+import { Button, Grid } from "@material-ui/core";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Button, Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import DateFnsUtils from "@date-io/date-fns";
-import moment from "moment";
-import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from "@material-ui/icons/FlashOn";
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import apiAction from "../../utils/axiosActionTracker"
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import axios from "axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import apiAction from "../../utils/axiosActionTracker";
 import {
   access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  ACCOUNT_API_URL
 } from "../../utils/constants";
-import ActionShow from "./ActionShow"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -156,11 +151,11 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
-    await select()
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
       setLoading(true)
+      await select()
       if (form["severity"] === "") {
         form["severity"] = "Normal"
       }

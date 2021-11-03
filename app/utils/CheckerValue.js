@@ -132,7 +132,7 @@ export const handelActionWithEntity = async (incidentId, actionContextValue) => 
 
 
 export const handelActionDataAssessment = async (incidentId, apiData, type = "all", actionContext) => {
-
+    console.log(actionContext)
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
