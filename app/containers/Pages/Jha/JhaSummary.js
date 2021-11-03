@@ -1018,35 +1018,6 @@ function JhaSummary() {
 
                                   </Typography>
                                 </Grid>
-                                <Grid item xs={12} style={{ padding: '0px 12px', marginTop: '15px' }}>
-                                  <Typography className={classes.heading}>
-                                    Person in-charge
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Approved by
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.picApprovalUser)}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Approved on
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.picApprovalDateTime)).format("DD-MM-YY")}
-                                  </Typography>
-                                </Grid>
                               </Grid>
                             </Grid>
 
@@ -1076,42 +1047,6 @@ function JhaSummary() {
                                 </Grid>
                               </Grid>
                             </Grid>
-
-
-                            <Grid item xs={12}>
-                              <Typography className={classes.heading}>
-                                Sign-offs
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Grid container spacing={3}>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Signed-off by
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.signedUser)}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Signed-off on
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.signedDateTime)}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-
                           </>
                         );
                       }

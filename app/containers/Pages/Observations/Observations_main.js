@@ -235,19 +235,19 @@ export default function Observations() {
           <Grid item sm={5} xs={12}>
 
 
-            {/* <Button
-                variant="contained"
-                // color="primary"
-                size="small"
-                className={classNames(classes.buttonsNew, classes.floatR)}
-                disableElevation
-                startIcon={<CloudUploadIcon />}
-                //onClick={() => handleBulkUploadPush()}
-                style={{marginLeft: '10px'}}
-                onClick={() => handleBulkUploadfilePush()}
-              >
-                Upload
-              </Button> */}
+            <Button
+              variant="contained"
+              // color="primary"
+              size="small"
+              className={classNames(classes.buttonsNew, classes.floatR)}
+              disableElevation
+              startIcon={<CloudUploadIcon />}
+              //onClick={() => handleBulkUploadPush()}
+              style={{ marginLeft: '10px' }}
+              onClick={() => handleBulkUploadfilePush()}
+            >
+              Upload
+            </Button>
             <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
               <AddIcon className={classes.floatR} /> Add new
             </Button>
