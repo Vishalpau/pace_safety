@@ -1221,7 +1221,7 @@ console.log(projectStructId,"PPPPP")
                                 ) : "-"}
                               </Typography>
                             </Grid>
-                            <Grid
+                            {/* <Grid
                               item
                               xs={12}
                               style={{ padding: "0px 12px", marginTop: "15px" }}
@@ -1244,8 +1244,8 @@ console.log(projectStructId,"PPPPP")
                               >
                                 {ahaData.username ? ahaData.username : "-"}
                               </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
+                            </Grid> */}
+                            {/* <Grid item xs={12} md={6}>
                               <Typography
                                 variant="h6"
                                 gutterBottom
@@ -1261,7 +1261,7 @@ console.log(projectStructId,"PPPPP")
                                   "Do MMMM YYYY"
                                 ) : "-"}
                               </Typography>
-                            </Grid>
+                            </Grid> */}
                           </Grid>
                         </Grid>
 
@@ -1292,7 +1292,7 @@ console.log(projectStructId,"PPPPP")
                               </Grid>
                             </Grid>
 
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                           <Typography className={classes.heading}>
                             Sign-offs
                           </Typography>
@@ -1330,7 +1330,7 @@ console.log(projectStructId,"PPPPP")
                               </Typography>
                             </Grid>
                           </Grid>
-                        </Grid>
+                        </Grid> */}
                       </>
                     );
                   }

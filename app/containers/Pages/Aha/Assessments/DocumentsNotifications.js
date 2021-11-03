@@ -401,7 +401,7 @@ const [notifyToList,setNotifyToList] = useState([]);
                   disabled={submitLoader}
                 >
 
-                  Next
+                  Submit
                 </Button>
                 {submitLoader && (
                   <CircularProgress

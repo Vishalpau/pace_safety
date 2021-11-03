@@ -251,6 +251,40 @@ const CloseOut = () => {
                                 Action item close out
                             </Typography>
                         </Grid>
+
+                        <Grid item md={12}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
+                                    // error={error.closeDate}
+                                    // helperText={
+                                    //     error.closeDate ? error.closeDate : null
+                                    // }
+                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Work completion"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    // onChange={(e) => {
+                                    //     setJhaListdata({
+                                    //         ...jhaListData,
+                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                    //     });
+                                    // }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+                        
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"

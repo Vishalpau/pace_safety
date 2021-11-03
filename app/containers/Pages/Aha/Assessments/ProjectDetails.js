@@ -676,6 +676,7 @@ const ProjectDetails = () => {
                               </InputLabel>
                               <Select
                                 label="Type of permit"
+                                value={form.typeOfPermit ? form.typeOfPermit : ""}
                               >
                                 {permitType.map(
                                   (value) => (

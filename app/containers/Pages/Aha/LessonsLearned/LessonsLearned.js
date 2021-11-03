@@ -20,7 +20,10 @@ import { Col, Row } from "react-grid-system";
 import { CircularProgress } from '@material-ui/core';
 import FormSideBar from '../../../Forms/FormSideBar';
 import IconButton from '@material-ui/core/IconButton';
+import { handelActionWithEntity } from "../../../../utils/CheckerValue";
 import { LESSION_LEARNED_FORM} from "../constants";
+import ActionShow from '../../../Forms/ActionShow';
+import ActionTracker from "../../../Forms/ActionTracker";
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -121,6 +124,8 @@ const LessonsLearned = () => {
   const [form, setForm] = useState({})
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
 
   const history = useHistory()
   const handelJobDetails = async () => {
@@ -139,7 +144,31 @@ const LessonsLearned = () => {
     setUser({ ...user, name: user.name, badgeNumber: user.badgeNo })
   }
 
+
+  const handelActionShow = (id) => (
+    <Grid>
+      {actionData.map((val) => (
+        <>
+          {console.log(val)}
+          <ActionShow
+            action={{ id: val.id, number: val.actionNumber }}
+            title={val.actionTitle}
+            companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+            projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+            updatePage={updatePage}
+          />
+        </>
+      ))}
+    </Grid>
+  );
+
   const radioDecide = ["Yes", "No"]
+
+  const handelActionTracker = async () => {
+    let ahaId = localStorage.getItem("fkAHAId")
+    let allAction = await handelActionWithEntity(ahaId, "Aha:lessionLearned")
+    setActionData(allAction)
+  };
 
   const handelSubmit = async () => {
     delete form["ahaAssessmentAttachment"]
@@ -154,6 +183,7 @@ const LessonsLearned = () => {
   useEffect(() => {
     handelJobDetails()
     handelUserName()
+    handelActionTracker()
   }, [])
 
   const classes = useStyles();
@@ -247,6 +277,25 @@ const LessonsLearned = () => {
                           className={classes.formControl}
                           onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
                         />
+                      </Grid>
+
+                      <Grid item md={6} xs={12}>
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          <ActionTracker
+                            actionContext="aha:lessionLearned"
+                            enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
+                            setUpdatePage={setUpdatePage}
+                            updatePage={updatePage}
+                            fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                            fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                            fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
+                            createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                            handelShowData={handelActionTracker}
+                          />
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} className={classes.createHazardbox}>
+                        {handelActionShow(localStorage.getItem("fkAHAId"))}
                       </Grid>
 
                       <Grid

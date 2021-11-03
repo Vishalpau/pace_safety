@@ -751,6 +751,7 @@ const Assessment = () => {
                             xs={12}
                             className={classes.createHazardbox}
                           >
+                          If risk label is red the action must be created by supervisor to ensure control are in place.
                             <Divider light />
                           </Grid>
 
@@ -805,10 +806,10 @@ const Assessment = () => {
 
               <Grid item md={12} xs={12} className={classes.formBox}>
                 <TextField
-                  label="Additional Remarks"
+                  label="Additional hazards/controls"
                   margin="dense"
-                  name="additionalremarks"
-                  id="additionalremarks"
+                  name="additional hazards/controls"
+                  id="additional hazards/controls"
                   multiline
                   rows={4}
                   value={

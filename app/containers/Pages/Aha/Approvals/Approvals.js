@@ -7,7 +7,7 @@ import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import { useParams, useHistory } from "react-router";
 import api from "../../../../utils/axios";
 import ActionTracker from "../../../Forms/ActionTracker";
-import { handelCommonObject, handelActionData } from "../../../../utils/CheckerValue"
+import { handelCommonObject, handelActionData,handelActionDataAssessment } from "../../../../utils/CheckerValue"
 import ActionShow from '../../../Forms/ActionShow';
 import { CircularProgress } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
@@ -125,15 +125,8 @@ const Approvals = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkAHAId")
-
-    let allAction = await handelActionData(jhaId, [], "title")
-    let temp = []
-    allAction.map((value) => {
-      if (value.enitityReferenceId.split(":")[1] == "00") {
-        temp.push(value)
-      }
-    })
-    setActionData(temp !== null ? temp : [])
+    const allAction = await handelActionDataAssessment(jhaId, [], "", "aha:approval");
+    setActionData(allAction)
   };
 
   const handelActionLink = () => {
@@ -280,11 +273,18 @@ const Approvals = () => {
               {form.picApprovalUser == "" ? "Approve Now" : "Approved"}
             </Button>
           </Grid> */}
+          <Grid item md={8} xs={12} className={classes.formBox}>
+
+          <Typography variant="h6" gutterBottom className={classes.labelName}>
+
+          If not approved then create a action.
+          </Typography>
+          </Grid>
 
           <Grid item md={6} xs={12}>
             <Typography variant="h6" gutterBottom className={classes.labelName}>
               <ActionTracker
-                actionContext="jha:approval"
+                actionContext="aha:approval"
                 enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
                 setUpdatePage={setUpdatePage}
                 updatePage={updatePage}
