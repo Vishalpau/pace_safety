@@ -410,7 +410,7 @@ const Details = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControl
                   component="fieldset"
                   required
@@ -439,7 +439,7 @@ const Details = () => {
                     <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
                   )}
                 </FormControl>
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <Button
