@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { handelActionData } from "../../../../utils/CheckerValue";
+import { handelActionData, handelActionDataAssessment } from "../../../../utils/CheckerValue";
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
@@ -160,7 +160,7 @@ const Approvals = () => {
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
 
-    let allAction = await handelActionData(jhaId, [], "title")
+    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
     let temp = []
     allAction.map((value) => {
       if (value.enitityReferenceId.split(":")[1] == "00") {

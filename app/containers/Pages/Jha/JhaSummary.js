@@ -35,7 +35,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
-import { handelActionData } from "../../../utils/CheckerValue";
+import { handelActionData, handelActionWithEntity, handelActionDataAssessment } from "../../../utils/CheckerValue";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
 import { Comments } from "../../pageListAsync";
@@ -163,6 +163,8 @@ function JhaSummary() {
     companyId: "",
   })
   const [projectStructName, setProjectStructName] = useState([])
+  const [lessionAction, setLessionAction] = useState([])
+  const [approvalAction, setApprovalAction] = useState([])
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
@@ -259,6 +261,18 @@ function JhaSummary() {
     })
     setApprovalactionData(temp !== null ? temp : [])
   };
+
+  const handelLessionActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
+    setLessionAction(allAction)
+  };
+
+  const handelApprovalActions = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
+    setApprovalAction(allAction)
+  }
 
   const handelActionLink = async () => {
     const projectId =
@@ -367,6 +381,8 @@ function JhaSummary() {
     await handelProjectStructre()
     await handelActionLink()
     await handelInputValue()
+    await handelLessionActionTracker()
+    await handelApprovalActions()
     await setLoader(false)
   }
 
@@ -1030,7 +1046,7 @@ function JhaSummary() {
                               <Grid container spacing={3}>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {approvalActionData.map((value) => (
+                                    {approvalAction.map((value) => (
                                       <>
 
                                         <ActionShow
@@ -1077,6 +1093,22 @@ function JhaSummary() {
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {checkValue(assessment.lessonLearntDetails)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={8}>
+                                  <Typography className={classes.aLabelValue}>
+                                    {lessionAction.map((value) => (
+                                      <>
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={projectData.companyId}
+                                          projectId={projectData.projectId}
+                                          handelShowData={handelShowData}
+                                        />
+
+                                      </>
+                                    ))}
                                   </Typography>
                                 </Grid>
                               </Grid>
