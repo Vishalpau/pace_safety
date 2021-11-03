@@ -274,6 +274,7 @@ const ProjectDetails = () => {
       "lessonLearntUserName": "",
       "ahaStatus": "",
       "ahaStage": "",
+      "typeOfPermit" : "",
       "badgeNumber": "",
       "status": "Active",
       "createdBy": parseInt(userId),
@@ -513,7 +514,7 @@ const ProjectDetails = () => {
   }
 
   const classes = useStyles();
-
+  console.log(form)
   useEffect(() => {
     fetchCallBack()
     if(id){
@@ -680,6 +681,7 @@ const ProjectDetails = () => {
                                   (value) => (
                                     <MenuItem
                                       value={value}
+                                      onClick={(e) => {setForm({...form,typeOfPermit:value})}}
                                     >
                                       {value}
                                     </MenuItem>
