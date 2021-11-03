@@ -6,13 +6,14 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { handelActionData } from "../../../../utils/CheckerValue";
+import { handelActionData, handelActionDataAssessment } from "../../../../utils/CheckerValue";
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 import Dialog from "@material-ui/core/Dialog";
@@ -107,6 +108,19 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
   closeIcon: {
     position: 'absolute',
     top: '1rem',
@@ -119,6 +133,7 @@ const Approvals = () => {
   const [form, setForm] = useState({})
   const [check, setCheck] = useState({ wrp: false, pic: false })
   const history = useHistory()
+  const [submitLoader, setSubmitLoader] = useState(false)
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
@@ -160,7 +175,7 @@ const Approvals = () => {
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
 
-    let allAction = await handelActionData(jhaId, [], "title")
+    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
     let temp = []
     allAction.map((value) => {
       if (value.enitityReferenceId.split(":")[1] == "00") {
@@ -195,6 +210,7 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
+    await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
       form["wrpApprovalUser"] = ""
