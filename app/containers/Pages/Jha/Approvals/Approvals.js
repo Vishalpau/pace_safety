@@ -128,6 +128,7 @@ const Approvals = () => {
     ProjectStructId: "",
   });
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -144,9 +145,8 @@ const Approvals = () => {
 
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
-    let name = user.id
+    let name = user.name
     if (type == "work") {
-      // check.wrp == false && alert("You have approved work responsible person")
       setOpen(false)
       setCheck({ ...check, wrp: !check.wrp })
       setForm({ ...form, wrpApprovalUser: name, wrpApprovalDateTime: new Date() })
@@ -204,10 +204,12 @@ const Approvals = () => {
   }
 
   const handelCallBack = async () => {
+    await setLoading(true);
     await handelActionLink();
     await handelJobDetails();
     await handelWorkAndPic();
     await handelActionTracker();
+    await setLoading(false);
   }
 
   const handleClose = () => {
@@ -224,172 +226,176 @@ const Approvals = () => {
     <>
       <PapperBlock title="Approval" icon="ion-md-list-box">
         {/* {console.log(projectData)} */}
-        <Row>
-          <Col md={9}>
-            <Grid container spacing={3}>
+        {loading == false ?
+          <Row>
+            <Col md={9}>
+              <Grid container spacing={3}>
 
-              <Grid
-                item
-                xs={12}
-              >
-                <JhaCommonInfo />
-              </Grid>
-
-              <Grid
-                item
-                md={8}
-                xs={12}
-                className={classes.formBox}
-              >
-                <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  Work Responsible Person (WRP)
-                </Typography>
-                <Button
-                  variant="contained"
-                  color={check.wrp ? "secondary" : "primary"}
-                  className={classes.approvalButton}
-                  onClick={(e) => setOpen(true)}
+                <Grid
+                  item
+                  xs={12}
                 >
-                  {check.wrp ? "Approved" : "Approve Now"}
-                </Button>
-                {/* Approved by userName on Date "date" (edited)  */}
-                <div>
-                  {form.wrpApprovalDateTime !== undefined
-                    ?
-                    `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
-                    :
-                    `Approved by: ${"Mukund"} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}`
-                  }
-                </div>
+                  <JhaCommonInfo />
+                </Grid>
 
-              </Grid>
-              <Dialog
-                className={classes.projectDialog}
-                open={open}
-                onClose={handleClose}
-                PaperProps={{
-                  style: {
-                    width: "100%",
-                    maxWidth: 400,
-                  },
-                }}
-              >
-                <DialogTitle onClose={() => handleClose()}>
-                  Confirmation
-                </DialogTitle>
-                <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
-                <DialogContent>
-                  <DialogContentText>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="h2"
-                      className={classes.projectSelectionTitle}
-                    >
-                      You are approving work responsible person.
-                    </Typography>
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Tooltip title="Cancel">
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleClose()}
-                    >
-                      cancel
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Ok">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => handelWorkAndPic("work")}
-                    >
-                      Ok
-                    </Button>
-                  </Tooltip>
-                </DialogActions>
-              </Dialog>
+                <Grid
+                  item
+                  md={8}
+                  xs={12}
+                  className={classes.formBox}
+                >
+                  <Typography variant="h6" gutterBottom className={classes.labelName}>
+                    Work Responsible Person (WRP)
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color={check.wrp ? "secondary" : "primary"}
+                    className={classes.approvalButton}
+                    onClick={(e) => setOpen(true)}
+                  >
+                    {check.wrp ? "Approved" : "Approve Now"}
+                  </Button>
+                  {/* Approved by userName on Date "date" (edited)  */}
+                  {check.wrp == true ?
+                    <div>
+                      {form.wrpApprovalUser == true
+                        ?
+                        `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
+                        :
+                        `Approved by: ${JSON.parse(localStorage.getItem("userDetails"))["name"]} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}`
+                      }
+                    </div>
+                    : null}
 
-              <Grid item md={12} xs={12}>
-                <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography>
-                <Typography variant="h6" gutterBottom className={classes.labelName}>
+                </Grid>
+                <Dialog
+                  className={classes.projectDialog}
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      width: "100%",
+                      maxWidth: 400,
+                    },
+                  }}
+                >
+                  <DialogTitle onClose={() => handleClose()}>
+                    Confirmation
+                  </DialogTitle>
+                  <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
+                  <DialogContent>
+                    <DialogContentText>
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        className={classes.projectSelectionTitle}
+                      >
+                        You are approving work responsible person.
+                      </Typography>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Tooltip title="Cancel">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleClose()}
+                      >
+                        cancel
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Ok">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => handelWorkAndPic("work")}
+                      >
+                        Ok
+                      </Button>
+                    </Tooltip>
+                  </DialogActions>
+                </Dialog>
 
-                  <ActionTracker
-                    actionContext="jha:approval"
-                    enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
-                    setUpdatePage={setUpdatePage}
-                    updatePage={updatePage}
-                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                    fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
-                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                    handelShowData={handelActionTracker}
-                  />
-                </Typography>
-                <Typography className={classes.aLabelValue}>
-                  {actionData.map((value) => (
-                    <ActionShow
-                      action={{ id: value.id, number: value.actionNumber }}
-                      title={value.actionTitle}
-                      companyId={projectData.companyId}
-                      projectId={projectData.projectId}
+                <Grid item md={12} xs={12}>
+                  <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography>
+                  <Typography variant="h6" gutterBottom className={classes.labelName}>
+
+                    <ActionTracker
+                      actionContext="jha:approval"
+                      enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
+                      setUpdatePage={setUpdatePage}
                       updatePage={updatePage}
+                      fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                      fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                      handelShowData={handelActionTracker}
                     />
-                  ))}
-                </Typography>
-              </Grid>
+                  </Typography>
+                  <Typography className={classes.aLabelValue}>
+                    {actionData.map((value) => (
+                      <ActionShow
+                        action={{ id: value.id, number: value.actionNumber }}
+                        title={value.actionTitle}
+                        companyId={projectData.companyId}
+                        projectId={projectData.projectId}
+                        updatePage={updatePage}
+                      />
+                    ))}
+                  </Typography>
+                </Grid>
 
-              <Grid
-                item
-                md={6}
-                xs={11}
-              >
-                <TextField
-                  label="Comment"
-                  name="comment"
-                  id="comment"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  variant="outlined"
-                />
-              </Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={11}
+                >
+                  <TextField
+                    label="Comment"
+                    name="comment"
+                    id="comment"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    variant="outlined"
+                  />
+                </Grid>
 
-              <Grid
-                item
-                md={12}
-                xs={12}
-              >
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className={classes.custmSubmitBtn}
-                  onClick={(e) => handelSubmit()}
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
                 >
-                  Submit
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  color="secondary"
-                  className={classes.custmSubmitBtn}
-                  onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
-                >
-                  Cancel
-                </Button>
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    className={classes.custmSubmitBtn}
+                    onClick={(e) => handelSubmit()}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    color="secondary"
+                    className={classes.custmSubmitBtn}
+                    onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                  >
+                    Cancel
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </Col>
-          <Col md={3}>
-            <FormSideBar
-              deleteForm={"hideArray"}
-              listOfItems={APPROVAL_FORM}
-              selectedItem={"Approval"}
-            />
-          </Col>
-        </Row>
+            </Col>
+            <Col md={3}>
+              <FormSideBar
+                deleteForm={"hideArray"}
+                listOfItems={APPROVAL_FORM}
+                selectedItem={"Approval"}
+              />
+            </Col>
+          </Row>
+          : "Loading..."}
       </PapperBlock>
     </>
   );

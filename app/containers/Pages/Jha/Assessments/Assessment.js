@@ -23,7 +23,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
 import api from '../../../../utils/axios';
-import { handelActionData, handelCommonObject } from '../../../../utils/CheckerValue';
+import { handelActionData, handelCommonObject, handelActionDataAssessment } from '../../../../utils/CheckerValue';
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from '../../../Forms/ActionTracker';
 import FormSideBar from '../../../Forms/FormSideBar';
@@ -234,7 +234,7 @@ const Assessment = () => {
   const handelActionTracker = async () => {
     const jhaId = localStorage.getItem('fkJHAId');
     const apiData = JSON.parse(localStorage.getItem('commonObject')).jha.assessmentIds;
-    const allAction = await handelActionData(jhaId, apiData);
+    const allAction = await handelActionDataAssessment(jhaId, apiData, "all", "jha:hazard");
     setActionData(allAction);
   };
   const handelActionShow = (id) => (
