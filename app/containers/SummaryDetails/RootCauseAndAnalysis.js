@@ -225,14 +225,7 @@ const RootCauseAnalysisSummary = () => {
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Fonts.labelName} gutterBottom>
-                Evidence does not supports the incident event as described?
-              </Typography>
-              <Typography className={Fonts.labelValue} gutterBottom>
-                {causeanalysis.evidenceNotSupport}
-              </Typography>
-            </Grid>
+
           </Grid>
         </Grid>
       ) : (
