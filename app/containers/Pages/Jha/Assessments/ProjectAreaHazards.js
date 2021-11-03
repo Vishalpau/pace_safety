@@ -106,19 +106,6 @@ const useStyles = makeStyles((theme) => ({
   loader: {
     marginLeft: "20px"
   },
-  buttonProgress: {
-    // color: "green",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
-  },
-  loadingWrapper: {
-    margin: theme.spacing(1),
-    position: "relative",
-    display: "inline-flex",
-  },
 }));
 
 const ProjectAreaHazards = () => {
@@ -396,32 +383,13 @@ const ProjectAreaHazards = () => {
                 xs={12}
                 alignItems="center"
               >
-<<<<<<< HEAD
-                Previous
-              </Button>
-              <div className={classes.loadingWrapper}>
-=======
->>>>>>> 816300e1f7dde6e45f2631406fbd2bd0b1beeb5c
                 <Button
                   variant="outlined"
                   className={classes.custmSubmitBtn}
-<<<<<<< HEAD
-                  style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
-=======
                   onClick={(e) => handelNavigate("previous")}
->>>>>>> 816300e1f7dde6e45f2631406fbd2bd0b1beeb5c
                 >
                   Previous
                 </Button>
-<<<<<<< HEAD
-                {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}</div>
-=======
                 {submitLoader == false ?
                   <Button
                     variant="outlined"
@@ -438,7 +406,6 @@ const ProjectAreaHazards = () => {
                   </IconButton>
                 }
               </Grid>
->>>>>>> 816300e1f7dde6e45f2631406fbd2bd0b1beeb5c
             </Grid>
           </Col>
           <Col md={3}>

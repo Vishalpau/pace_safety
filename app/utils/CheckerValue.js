@@ -143,6 +143,7 @@ export const handelActionDataAssessment = async (incidentId, apiData, type = "al
     if (actionSelect.status === 200) {
         const allActionData = await apiAction.get(`api/v1/actions/?actionContext=${actionContext}&enitityReferenceId=${incidentId}`)
         const allAction = allActionData.data.data.results.results
+
         if (type == "all") {
             let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
             apiAllData.map((value) => {
