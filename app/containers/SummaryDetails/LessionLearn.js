@@ -171,7 +171,7 @@ const LessionLearnSummary = () => {
                       gutterBottom
                       className={Fonts.labelName}
                     >
-                      Team Or Department
+                      Cause
                     </Typography>
                     <Typography className={Fonts.labelValue}>
                       {lession.teamOrDepartment}

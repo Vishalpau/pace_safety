@@ -435,28 +435,6 @@ const RootCauseAnalysis = () => {
                   />
                 </Grid>
               ) : null}
-              <Grid>
-
-                <Grid item xs={12} >
-                  <ActionTracker
-                    actionContext="incidents:causeAnalysis"
-                    enitityReferenceId={`${fkid}:${actionData.length + 1}`}
-                    setUpdatePage={setUpdatePage}
-                    updatePage={updatePage}
-                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                    fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
-                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                    handelShowData={handelActionTracker}
-                  />
-                </Grid>
-              </Grid>
-
-              {actionData.map((value) => (
-                <Grid item xs={12}>
-                  {handelActionShow(value)}
-                </Grid>
-              ))}
 
               <Grid item xs={12}>
                 <Button

@@ -4,3 +4,11 @@ export const AHA = {
     Assessment: `/app/pages/aha/assessments/assessment/`,
     "Documents & Notifications": `/app/pages/aha/assessments/DocumentsNotifications/`
   }
+
+export const APPROVAL_FORM = {
+    "Approval": `/app/pages/aha/approvals/approvals`
+}
+
+export const LESSION_LEARNED_FORM = {
+  "Lessons Learned": `/app/pages/aha/lessons-learned/lessons-learned`
+}

@@ -23,6 +23,7 @@ import "../../styles/custom/summary.css";
 // Styles
 import api from "../../utils/axios";
 import { handelActionData } from "../../utils/CheckerValue";
+import ActionTracker from "../Forms/ActionTracker";
 import ActionShow from "../Forms/ActionShow";
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +59,7 @@ const RootCauseAnalysisSummary = () => {
     companyId: "",
   })
   const [whyAction, setWhyAction] = useState([])
-
+  const [updatePage, setUpdatePage] = useState(false)
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -140,8 +141,8 @@ const RootCauseAnalysisSummary = () => {
     let valueArray = value.replace(",", ",  ");
     return valueArray;
   };
-  const handelWhyAnalysisAction = async (incidentID) => {
-    let allAction = await handelActionData(incidentID, [], "one")
+  const handelWhyAnalysisAction = async () => {
+    let allAction = await handelActionData(fkid, [], "one")
     await setWhyAction(allAction);
   };
   const history = useHistory();
@@ -164,7 +165,7 @@ const RootCauseAnalysisSummary = () => {
     fetchCauseAnalysiseData();
     fetchPaceCausesData();
     handelActionLink()
-    handelWhyAnalysisAction(fkid)
+    handelWhyAnalysisAction()
   }, []);
 
   const classes = useStyles();
@@ -306,6 +307,19 @@ const RootCauseAnalysisSummary = () => {
                 ))}
               </Grid>
               <Grid>
+                <ActionTracker
+                  actionContext="incidents:causeAnalysis"
+                  enitityReferenceId={`${fkid}:${whyAction.length + 1}`}
+                  setUpdatePage={setUpdatePage}
+                  updatePage={updatePage}
+                  fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                  fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                  fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                  createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                  handelShowData={handelWhyAnalysisAction}
+                />
+              </Grid>
+              <Grid>
                 {whyAction.map((actionValue) => (
                   <>
                     <ActionShow
@@ -350,6 +364,19 @@ const RootCauseAnalysisSummary = () => {
                     </Typography>
                   </Grid>
                 ))}
+              </Grid>
+              <Grid item xs={12} >
+                <ActionTracker
+                  actionContext="incidents:whyAnalysis"
+                  enitityReferenceId={`${fkid}:${whyAction.length + 1}`}
+                  setUpdatePage={setUpdatePage}
+                  updatePage={updatePage}
+                  fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                  fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                  fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                  createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                  handelShowData={handelWhyAnalysisAction}
+                />
               </Grid>
               <Grid>
                 {whyAction.length > 0 && whyAction.map((actionValue) => (

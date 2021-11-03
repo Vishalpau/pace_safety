@@ -35,7 +35,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
-import { handelActionData } from "../../../utils/CheckerValue";
+import { handelActionData, handelActionWithEntity, handelActionDataAssessment } from "../../../utils/CheckerValue";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
 import { Comments } from "../../pageListAsync";
@@ -163,6 +163,8 @@ function JhaSummary() {
     companyId: "",
   })
   const [projectStructName, setProjectStructName] = useState([])
+  const [lessionAction, setLessionAction] = useState([])
+  const [approvalAction, setApprovalAction] = useState([])
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
@@ -176,7 +178,6 @@ function JhaSummary() {
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
-
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null
@@ -259,6 +260,18 @@ function JhaSummary() {
     })
     setApprovalactionData(temp !== null ? temp : [])
   };
+
+  const handelLessionActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
+    setLessionAction(allAction)
+  };
+
+  const handelApprovalActions = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
+    setApprovalAction(allAction)
+  }
 
   const handelActionLink = async () => {
     const projectId =
@@ -367,6 +380,8 @@ function JhaSummary() {
     await handelProjectStructre()
     await handelActionLink()
     await handelInputValue()
+    await handelLessionActionTracker()
+    await handelApprovalActions()
     await setLoader(false)
   }
 
@@ -1018,35 +1033,6 @@ function JhaSummary() {
 
                                   </Typography>
                                 </Grid>
-                                <Grid item xs={12} style={{ padding: '0px 12px', marginTop: '15px' }}>
-                                  <Typography className={classes.heading}>
-                                    Person in-charge
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Approved by
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.picApprovalUser)}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Approved on
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.picApprovalDateTime)).format("DD-MM-YY")}
-                                  </Typography>
-                                </Grid>
                               </Grid>
                             </Grid>
 
@@ -1059,7 +1045,7 @@ function JhaSummary() {
                               <Grid container spacing={3}>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {approvalActionData.map((value) => (
+                                    {approvalAction.map((value) => (
                                       <>
 
                                         <ActionShow
@@ -1076,42 +1062,6 @@ function JhaSummary() {
                                 </Grid>
                               </Grid>
                             </Grid>
-
-
-                            <Grid item xs={12}>
-                              <Typography className={classes.heading}>
-                                Sign-offs
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Grid container spacing={3}>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Signed-off by
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.signedUser)}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
-                                    Signed-off on
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
-                                    {checkValue(assessment.signedDateTime)}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-
                           </>
                         );
                       }
@@ -1142,6 +1092,22 @@ function JhaSummary() {
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {checkValue(assessment.lessonLearntDetails)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={8}>
+                                  <Typography className={classes.aLabelValue}>
+                                    {lessionAction.map((value) => (
+                                      <>
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={projectData.companyId}
+                                          projectId={projectData.projectId}
+                                          handelShowData={handelShowData}
+                                        />
+
+                                      </>
+                                    ))}
                                   </Typography>
                                 </Grid>
                               </Grid>

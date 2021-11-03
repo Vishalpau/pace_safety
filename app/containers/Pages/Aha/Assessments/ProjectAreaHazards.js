@@ -117,6 +117,19 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const ProjectAreaHazards = () => {
@@ -415,7 +428,7 @@ const ProjectAreaHazards = () => {
             <Grid container spacing={3} item xs={12} md={9}>
 
               {Object.entries(checkGroups).map(([key, value]) => (
-                <Grid item md={12}
+                <Grid item md={6}
                   xs={12}
                   className={classes.formBox}>
                   <FormControl component="fieldset">
@@ -533,21 +546,25 @@ const ProjectAreaHazards = () => {
                 >
                   Previous
                 </Button>
-                {submitLoader == false ?
+                <div className={classes.loadingWrapper}>
                   <Button
                     variant="contained"
                     onClick={(e) => handleSubmit()}
                     className={classes.button}
                     style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
                   >
 
                     Next
                   </Button>
-                  :
-                  <IconButton className={classes.loader} disabled>
-                    <CircularProgress color="secondary" />
-                  </IconButton>
-                }
+                  {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+                  </div>
+                  
               </Grid>
 
             </Grid>

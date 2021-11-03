@@ -1,65 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
-import brand from "dan-api/dummy/brand";
-import { PapperBlock } from "dan-components";
-import api from "../../../utils/axios";
-import { object } from "prop-types";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import AppBar from "@material-ui/core/AppBar";
+import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Print from "@material-ui/icons/Print";
-import Share from "@material-ui/icons/Share";
+import Chip from "@material-ui/core/Chip";
 import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import InputBase from "@material-ui/core/InputBase";
 import Link from "@material-ui/core/Link";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import AttachmentIcon from "@material-ui/icons/Attachment";
-import InfoIcon from "@material-ui/icons/Info";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import MUIDataTable from "mui-datatables";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import moment from "moment";
-import MomentUtils from "@date-io/moment";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
-import ListIcon from "@material-ui/icons/List";
-import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
-import MessageIcon from "@material-ui/icons/Message";
-import BuildIcon from "@material-ui/icons/Build";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import Tooltip from "@material-ui/core/Tooltip";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useHistory, useParams } from "react-router";
-
+import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
+import MessageIcon from "@material-ui/icons/Message";
+import Print from "@material-ui/icons/Print";
+import SearchIcon from "@material-ui/icons/Search";
+import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
+import Pagination from '@material-ui/lab/Pagination';
+import axios from 'axios';
+import { PapperBlock } from "dan-components";
 import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
-import { List } from "immutable";
-import axios from 'axios'
+import moment from "moment";
+import MUIDataTable from "mui-datatables";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { company, projectName, tabViewMode } from '../../../redux/actions/initialDetails';
+import api from "../../../utils/axios";
+import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
 
-import { connect } from "react-redux";
-import { tabViewMode, projectName, company } from '../../../redux/actions/initialDetails';
-import { fetchPermission } from "../../../redux/actions/authentication";
-import { useDispatch } from "react-redux";
-import { INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, API_URL,HEADER_AUTH } from "../../../utils/constants";
-import Pagination from '@material-ui/lab/Pagination';
+
 // import { handleTimeOutError } from "../../../utils/CheckerValue"
 
 // Styles
@@ -262,42 +241,42 @@ function BlankPage(props) {
           .then(function (response) {
             console.log(response)
             if (response.status === 200) {
-              let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
-              .subscriptions.filter(subs=>subs.appCode === "safety")[0]
-              .hostings[0].apiDomain
-            
+              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain
+
               console.log(hosting)
               let data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
-              axios(data1).then((res)=>{
+              axios(data1).then((res) => {
                 console.log(response)
                 localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
-                
+
                 if (compId) {
                   let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-  
+
                   let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
                   localStorage.setItem('company', JSON.stringify(companeyData))
-                  
+
                   dispatch(company(companeyData))
                 }
                 if (proId) {
                   let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
                   let project = companies[0].projects.filter(item => item.projectId == proId)
-  
+
                   localStorage.setItem("projectName", JSON.stringify(project[0]))
                   dispatch(projectName(project[0]))
                 }
                 // fetchPermissionData();
                 localStorage.removeItem("direct_loading")
               })
-            
-        
-        
-            
+
+
+
+
 
             }
           })
@@ -316,17 +295,17 @@ function BlankPage(props) {
     // const userDetails = JSON.parse(localStorage.getItem(''))
   }
   useEffect(() => {
-    
+
     let state = JSON.parse(localStorage.getItem('direct_loading'))
-    if(state!==null){
+    if (state !== null) {
       console.log("state is not null")
-      userDetails(state.comId,state.proId)
-    }else{
+      userDetails(state.comId, state.proId)
+    } else {
       fetchData();
     }
-  }, [props.projectName.breakDown,props.projectName.projectName]);
+  }, [props.projectName.breakDown, props.projectName.projectName]);
 
- 
+
 
 
   const columns = [

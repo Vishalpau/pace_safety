@@ -198,6 +198,19 @@ const useStyles = makeStyles((theme) => ({
   //   width: '97.4%',
   //   boxShadow: '1px 2px 10px #d4d4d4',
   // },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Assessment = () => {
@@ -538,7 +551,6 @@ const Assessment = () => {
                 <div>
                   {form.map((value, index) => (
                     <Accordion
-                      expanded={expanded === `panel${index}`}
                       onChange={handleTwoChange(`panel${index}`)}
                       defaultExpanded
                       className={classes.backPaper}
@@ -634,7 +646,10 @@ const Assessment = () => {
                               </Select>
                             </FormControl>
                           </Grid>
-                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: value.riskRatingColour }}>
+                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: value.riskRatingColour,marginTop: "16px" }}>
+                          <InputLabel id="demo-simple-select-label">
+                                Risk Rating
+                              </InputLabel>
                                             {value.riskRating ? `${value.riskRating} risk` : ''}
                                           </Grid>
                           
@@ -685,12 +700,12 @@ const Assessment = () => {
                               className={classes.formControl}
                             >
                               <InputLabel id="demo-simple-select-label">
-                                Approve to implement
+                              Proceed to work
                               </InputLabel>
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label="Approve to implement"
+                                label="proceed to work"
                                 value={form[index].approveToImplement ? form[index].approveToImplement : ''}
                               >
                                 {approver.map((value) => (<MenuItem value={value}
@@ -736,6 +751,7 @@ const Assessment = () => {
                             xs={12}
                             className={classes.createHazardbox}
                           >
+                          If risk label is red the action must be created by supervisor to ensure control are in place.
                             <Divider light />
                           </Grid>
 
@@ -790,10 +806,10 @@ const Assessment = () => {
 
               <Grid item md={12} xs={12} className={classes.formBox}>
                 <TextField
-                  label="Additional Remarks"
+                  label="Additional hazards/controls"
                   margin="dense"
-                  name="additionalremarks"
-                  id="additionalremarks"
+                  name="additional hazards/controls"
+                  id="additional hazards/controls"
                   multiline
                   rows={4}
                   value={
@@ -816,21 +832,25 @@ const Assessment = () => {
                 >
                   Previous
                 </Button>
-                {submitLoader == false ?
+                <div className={classes.loadingWrapper}>
+
                   <Button
                     variant="contained"
                     onClick={(e) => handleSubmit()}
                     className={classes.button}
                     style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
                   >
 
                     Next
                   </Button>
-                  :
-                  <IconButton className={classes.loader} disabled>
-                    <CircularProgress color="secondary" />
-                  </IconButton>
-                }
+                  {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
+                 
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>
