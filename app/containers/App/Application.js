@@ -135,6 +135,7 @@ import {
   Groups,
   Options,
   Aha,
+  AhaMain,
   AhaSummary,
   AssessmentsForms,
   ProjectDetails,
@@ -539,7 +540,7 @@ function Application(props) {
 
         {/* Aha Routes */}
 
-        <Route path="/app/pages/aha" exact component={Aha} />
+        <Route path="/app/pages/aha" exact component={AhaMain} />
         <Route path="/app/pages/aha/aha-summary/:id" exact component={AhaSummary} />
         <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
         <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />

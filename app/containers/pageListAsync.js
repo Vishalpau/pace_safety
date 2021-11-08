@@ -657,7 +657,7 @@ export const GeneralObservationPrints = loadable(() => import("./SampleApps/Gene
 });
 
 // Aha    
-export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
+export const AhaMain = loadable(() => import("./Pages/Aha/AhaMain"), {
   fallback: <Loading />,
 });
 
