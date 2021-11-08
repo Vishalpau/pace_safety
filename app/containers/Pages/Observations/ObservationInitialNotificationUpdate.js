@@ -1025,7 +1025,7 @@ const ObservationInitialNotificationUpdate = () => {
               {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
               <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={(e) => handleCancle()}
 >
-                Cancle
+                Cancel
               </Button>
             </div>
 
