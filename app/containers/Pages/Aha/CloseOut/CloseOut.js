@@ -26,7 +26,7 @@ import { useHistory, useParams } from "react-router";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import CloseOutValidator from "../Validator/CloseOutValidation";
-
+import { CircularProgress } from '@material-ui/core';
 import FormSideBar from "../../../Forms/FormSideBar";
 import {
     LOGIN_URL,
@@ -57,6 +57,19 @@ const useStyles = makeStyles((theme) => ({
     fullWidth: {
         width: "100%",
     },
+    buttonProgress: {
+        // color: "green",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: -12,
+        marginLeft: -12,
+      },
+      loadingWrapper: {
+        margin: theme.spacing(1),
+        position: "relative",
+        display: "inline-flex",
+      },
 }));
 
 const CloseOut = () => {
@@ -83,7 +96,7 @@ const CloseOut = () => {
             ? JSON.parse(localStorage.getItem("userDetails")).id
             : null;
 
-    const [open, setOpen] = useState(false);
+    const [submitLoader, setSubmitLoader] = useState(false);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
 
@@ -171,6 +184,7 @@ const CloseOut = () => {
         if (!isValid) {
           return "Data is not valid";
         }
+        await setSubmitLoader(true)
      
         delete  ahaListData['ahaAssessmentAttachment']
         const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,ahaListData)
@@ -237,6 +251,40 @@ const CloseOut = () => {
                                 Action item close out
                             </Typography>
                         </Grid>
+
+                        <Grid item md={12}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
+                                    // error={error.closeDate}
+                                    // helperText={
+                                    //     error.closeDate ? error.closeDate : null
+                                    // }
+                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Work completion"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    // onChange={(e) => {
+                                    //     setJhaListdata({
+                                    //         ...jhaListData,
+                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                    //     });
+                                    // }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+                        
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"
@@ -306,13 +354,23 @@ const CloseOut = () => {
 
 
                         <Grid item xs={12}>
+                        <div className={classes.loadingWrapper}>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleNext()}
-                            >
-                                Submit
-                            </Button>
+                                style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
+                >
+
+                  Submit
+                </Button>
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
                         </Grid>
                     </Grid>
                   

@@ -13,6 +13,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 import Dialog from "@material-ui/core/Dialog";
@@ -107,6 +108,19 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
   closeIcon: {
     position: 'absolute',
     top: '1rem',
@@ -119,6 +133,7 @@ const Approvals = () => {
   const [form, setForm] = useState({})
   const [check, setCheck] = useState({ wrp: false, pic: false })
   const history = useHistory()
+  const [submitLoader, setSubmitLoader] = useState(false)
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [projectData, setProjectData] = useState({
@@ -195,6 +210,7 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
+    await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
       form["wrpApprovalUser"] = ""

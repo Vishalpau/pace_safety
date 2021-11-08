@@ -17,6 +17,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import { handelJhaId } from "../Utils/checkValue";
 import { handelActionWithEntity } from "../../../../utils/CheckerValue";
 import { LESSION_LEARNED_FORM, SUMMARY_FORM } from "../Utils/constants";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 
@@ -101,12 +102,26 @@ const useStyles = makeStyles((theme) => ({
   formLablBox: {
     paddingBottom: '0px !important',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const LessonsLearned = () => {
 
   const [form, setForm] = useState({})
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
+  const [submitLoader, setSubmitLoader] = useState(false)
   const history = useHistory()
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
@@ -153,6 +168,7 @@ const LessonsLearned = () => {
   };
 
   const handelSubmit = async () => {
+    await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["anyLessonsLearnt"] == null) {
       form["anyLessonsLearnt"] = ""
@@ -313,14 +329,24 @@ const LessonsLearned = () => {
                 md={12}
                 xs={12}
               >
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className={classes.custmSubmitBtn}
-                  onClick={(e) => handelSubmit()}
-                >
-                  Submit
-                </Button>
+                <div className={classes.loadingWrapper}>
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    className={classes.custmSubmitBtn}
+                    onClick={(e) => handelSubmit()}
+                    style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
+                  >
+                    Submit
+                  </Button>
+                  {submitLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
               </Grid>
             </Grid>
           </Col>

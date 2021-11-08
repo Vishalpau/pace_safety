@@ -16,9 +16,15 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import api from "../../../../utils/axios";
 import { useParams, useHistory } from "react-router";
-
+import { Col, Row } from "react-grid-system";
 import { CircularProgress } from '@material-ui/core';
+import FormSideBar from '../../../Forms/FormSideBar';
 import IconButton from '@material-ui/core/IconButton';
+import { handelActionWithEntity } from "../../../../utils/CheckerValue";
+import { LESSION_LEARNED_FORM} from "../constants";
+import ActionShow from '../../../Forms/ActionShow';
+import ActionTracker from "../../../Forms/ActionTracker";
+
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -98,6 +104,19 @@ const useStyles = makeStyles((theme) => ({
   formLablBox: {
     paddingBottom: '0px !important',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const LessonsLearned = () => {
@@ -105,6 +124,8 @@ const LessonsLearned = () => {
   const [form, setForm] = useState({})
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
   const [submitLoader , setSubmitLoader] = useState(false);
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
 
   const history = useHistory()
   const handelJobDetails = async () => {
@@ -123,7 +144,31 @@ const LessonsLearned = () => {
     setUser({ ...user, name: user.name, badgeNumber: user.badgeNo })
   }
 
+
+  const handelActionShow = (id) => (
+    <Grid>
+      {actionData.map((val) => (
+        <>
+          {console.log(val)}
+          <ActionShow
+            action={{ id: val.id, number: val.actionNumber }}
+            title={val.actionTitle}
+            companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+            projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+            updatePage={updatePage}
+          />
+        </>
+      ))}
+    </Grid>
+  );
+
   const radioDecide = ["Yes", "No"]
+
+  const handelActionTracker = async () => {
+    let ahaId = localStorage.getItem("fkAHAId")
+    let allAction = await handelActionWithEntity(ahaId, "Aha:lessionLearned")
+    setActionData(allAction)
+  };
 
   const handelSubmit = async () => {
     delete form["ahaAssessmentAttachment"]
@@ -138,12 +183,15 @@ const LessonsLearned = () => {
   useEffect(() => {
     handelJobDetails()
     handelUserName()
+    handelActionTracker()
   }, [])
 
   const classes = useStyles();
   return (
     <>
     <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
+    <Row>
+          <Col md={9}>
         <Grid container spacing={3}>
             <Grid
             item
@@ -231,6 +279,25 @@ const LessonsLearned = () => {
                         />
                       </Grid>
 
+                      <Grid item md={6} xs={12}>
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          <ActionTracker
+                            actionContext="aha:lessionLearned"
+                            enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
+                            setUpdatePage={setUpdatePage}
+                            updatePage={updatePage}
+                            fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                            fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                            fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
+                            createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                            handelShowData={handelActionTracker}
+                          />
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} className={classes.createHazardbox}>
+                        {handelActionShow(localStorage.getItem("fkAHAId"))}
+                      </Grid>
+
                       <Grid
                         item
                         md={12}
@@ -295,23 +362,35 @@ const LessonsLearned = () => {
             md={12}
             xs={12}
             >
-                {submitLoader == false ?
+                      <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"
                   onClick={(e) => handelSubmit()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
                 >
 
-                  Next
+                  Submit
                 </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
+               
             </Grid>
         </Grid>
+        </Col>
+        <Col md={3}>
+            <FormSideBar
+              deleteForm={"hideArray"}
+              listOfItems={LESSION_LEARNED_FORM}
+              selectedItem={"Lessons Learned"}
+            />
+          </Col>
+        </Row>
     </PapperBlock>
     </>
   );

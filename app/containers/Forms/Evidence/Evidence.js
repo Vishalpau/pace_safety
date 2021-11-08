@@ -394,6 +394,7 @@ const Evidence = () => {
       }
     }
     const { error, isValid } = EvidenceValidate(form);
+    await setError(error);
     if (isValid === true) {
       setIsNext(false);
       let status = 0;

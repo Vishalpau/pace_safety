@@ -178,7 +178,6 @@ function JhaSummary() {
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
-
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
     let approvalDecider = result.wrpApprovalUser !== null

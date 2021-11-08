@@ -106,6 +106,19 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "20px"
 
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
   // });
 }));
 
@@ -892,17 +905,22 @@ const JobDetails = (props) => {
                 xs={12}
                 style={{ marginTop: '15px' }}
               >
+                                    <div className={classes.loadingWrapper}>
                 <Button
                   variant="outlined"
                   onClick={(e) => handleSubmit()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
                 >
-                  {submitLoader == false ?
-                    "Next" :
-                    <CircularProgress color="secondary" />
-                  }
+                  Next
                 </Button>
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
               </Grid>
 
             </Grid>

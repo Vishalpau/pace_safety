@@ -167,6 +167,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     color: '#06425c',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Assessment = () => {
@@ -575,24 +588,24 @@ const Assessment = () => {
                   >
                     Previous
                   </Button>
-                  {submitLoader === false
-                    ? (
+                  <div className={classes.loadingWrapper}>
+
                       <Button
                         variant="outlined"
                         onClick={(e) => handelNext()}
                         className={classes.custmSubmitBtn}
                         style={{ marginLeft: '10px' }}
+                        disabled={submitLoader}
                       >
 
                         Next
                       </Button>
-                    )
-                    : (
-                      <IconButton className={classes.loader} disabled>
-                        <CircularProgress color="secondary" />
-                      </IconButton>
-                    )
-                  }
+                      {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
                 </Grid>
               </Grid>
             </Col>
