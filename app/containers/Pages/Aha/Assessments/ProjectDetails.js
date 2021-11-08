@@ -35,13 +35,13 @@ import { CircularProgress } from '@material-ui/core';
 
 import axios from "axios";
 import api from "../../../../utils/axios";
-
+import Paper from '@material-ui/core/Paper';
 import { handelCommonObject } from "../../../../utils/CheckerValue"
 import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
-
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import { AHA } from "../constants";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
-
+import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -50,6 +50,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../../utils/constants";
+import ProjectAreaHazards from "./ProjectAreaHazards"
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -205,6 +206,7 @@ const ProjectDetails = () => {
     "createdBy": parseInt(userId),
     "fkAhaId": 0
   }]);
+  const [hazardForm , setHazardForm] = useState([])
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes', 'No']
@@ -357,6 +359,45 @@ const ProjectDetails = () => {
     setIsDateShow(false)
     return true
   }
+
+  const handelSelectOption = (hazard, checklistId) => {
+    for (let i = 0; i <= hazardForm.length; i++) {
+      if (hazardForm[i] != undefined && hazardForm[i]["hazard"] == hazard && hazardForm[i]["fkChecklistId"] == checklistId) {
+        return true
+      }
+    }
+  }
+  const handlePhysicalHazards = (e, index, value, checkListID) => {
+    let temp = [...hazardForm]
+    let tempRemove = []
+    if (e.target.checked == false) {
+      temp.map((ahaValue, index) => {
+        if (ahaValue['fkChecklistId'] === checkListID) {
+          temp.splice(index, 1);
+          fetchOption.splice(index, 1);
+        }
+      })
+    }
+    else if (e.target.checked) {
+      temp.push({
+        "fkChecklistId": checkListID,
+        "hazard": value,
+        "risk": "",
+        "severity": "",
+        "probability": "",
+        "riskRating": "",
+        "control": "",
+        "residualRisk": "",
+        "approveToImplement": "",
+        "monitor": "",
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "fkAhaId": localStorage.getItem("fkAHAId"),
+      })
+    }
+    setHazardForm(temp)
+
+  };
 
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
@@ -525,67 +566,95 @@ const ProjectDetails = () => {
   }, []);
   return (
     <>
-      <PapperBlock title="Project Details" icon="ion-md-list-box">
+        <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
+
         {isLoading ?
+
 
           <Grid container spacing={3} className={classes.observationNewSection}>
             <Grid container spacing={3} item xs={12} md={9}>
-              <Grid item md={12}>
-                <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  Project
-                </Typography>
-                <Typography className={classes.labelValue}>
-                  {project.projectName}
-
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24.961" height="30.053" viewBox="0 0 30.961 36.053">
+                    <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c"/>
+                  </svg> Project information
                 </Typography>
               </Grid>
-              {id ?
-                fetchSelectBreakDownList.map((data, key) =>
-                  <Grid item xs={3} md={3} key={key}>
-                    <FormControl
-                      error={error && error[`projectStructure${[key]}`]}
-                      variant="outlined"
-                      required
-                      className={classes.formControl}
-                    >
-                      <InputLabel id="demo-simple-select-label">
-                        {data.breakDownLabel}
-                      </InputLabel>
-                      <Select
-                        labelId="incident-type-label"
-                        id="incident-type"
-                        label="Incident type"
-                        value={data.selectValue.id || ""}
-                        disabled={data.breakDownData.length === 0}
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Paper elevation={1} className="paperSection">
+                  <Grid container spacing={3}>
+                    <Grid item md={12}>
+                      <Typography variant="h6" gutterBottom className={classes.labelName}>
+                        Project
+                      </Typography>
+                      <Typography className={classes.labelValue}>
+                        {project.projectName}
 
-                        onChange={(e) => {
-                          handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
-                        }}
-                      >
-                        {data.breakDownData.length !== 0
-                          ? data.breakDownData.map((selectvalues, index) => (
-                            <MenuItem key={index}
-                              value={selectvalues.id}>
-                              {selectvalues.structureName}
-                            </MenuItem>
-                          ))
-                          : null}
-                      </Select>
-                      {error && error[`projectStructure${[key]}`] && (
-                        <FormHelperText>
-                          {error[`projectStructure${[key]}`]}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                  </Grid>
+                      </Typography>
+                    </Grid>
+                      {id ?
+                        fetchSelectBreakDownList.map((data, key) =>
+                          <Grid item xs={3} md={3} key={key}>
+                            <FormControl
+                              error={error && error[`projectStructure${[key]}`]}
+                              variant="outlined"
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                {data.breakDownLabel}
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label="Incident type"
+                                value={data.selectValue.id || ""}
+                                disabled={data.breakDownData.length === 0}
 
-                ) : <ProjectStructureInit
-                  selectDepthAndId={selectDepthAndId}
-                  setLevelLenght={setLevelLenght}
-                  error={error}
-                  setWorkArea={setWorkArea}
-                  setSelectDepthAndId={setSelectDepthAndId} />
-              }
+                                onChange={(e) => {
+                                  handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                                }}
+                              >
+                                {data.breakDownData.length !== 0
+                                  ? data.breakDownData.map((selectvalues, index) => (
+                                    <MenuItem key={index}
+                                      value={selectvalues.id}>
+                                      {selectvalues.structureName}
+                                    </MenuItem>
+                                  ))
+                                  : null}
+                              </Select>
+                              {error && error[`projectStructure${[key]}`] && (
+                                <FormHelperText>
+                                  {error[`projectStructure${[key]}`]}
+                                </FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
+                        ) : <ProjectStructureInit
+                          selectDepthAndId={selectDepthAndId}
+                          setLevelLenght={setLevelLenght}
+                          error={error}
+                          setWorkArea={setWorkArea}
+                          setSelectDepthAndId={setSelectDepthAndId} />
+                      }
+                    </Grid>
+                  </Paper>
+                </Grid>
+
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="35.2" height="30.626" viewBox="0 0 40.2 30.626">
+                    <g id="project-work" transform="translate(0.005)">
+                      <path id="Path_5191" data-name="Path 5191" d="M37.827,11.584l.981.981a.665.665,0,0,1,0,.939l-.792.792a5.287,5.287,0,0,1,.491,1.309h1.024a.665.665,0,0,1,.664.664v1.387a.665.665,0,0,1-.664.664H38.412a5.255,5.255,0,0,1-.579,1.269l.726.723a.665.665,0,0,1,0,.939l-.981.981a.665.665,0,0,1-.939,0l-.792-.792a5.114,5.114,0,0,1-1.309.491v1.024a.665.665,0,0,1-.664.664H32.488a.665.665,0,0,1-.664-.664V21.836a5.255,5.255,0,0,1-1.269-.579l-.723.726a.665.665,0,0,1-.939,0L27.911,21a.665.665,0,0,1,0-.939l.792-.792a5.161,5.161,0,0,1-.491-1.309H27.188a.665.665,0,0,1-.664-.664V15.912a.665.665,0,0,1,.664-.664h1.119a5.255,5.255,0,0,1,.579-1.269l-.723-.723a.665.665,0,0,1,0-.939l.981-.981a.665.665,0,0,1,.939,0l.792.792a5.16,5.16,0,0,1,1.309-.491V10.612a.665.665,0,0,1,.664-.664h1.387a.665.665,0,0,1,.664.664v1.116a5.255,5.255,0,0,1,1.269.579l.723-.723a.661.661,0,0,1,.936,0ZM1.142,23a3.671,3.671,0,0,1,2.637-1.371V.991c-3.01.294-2.66,3.078-2.643,5.666,0,.347.007.53.007.615V23Zm8.4-14.3h5.78V26.3h-6.2V8.708h.415Zm1.083,14.908h1.116V24.2H10.622v-.582Zm0-1.623h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.852v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.626h1.852v.582H10.622v-.582Zm3.863-.991H9.955V25.461h4.531V9.536ZM23.057,12.5V26.177H19.229V12.5h-.016l.131-.265,1.58-3.248.16-.33.167.327,1.685,3.248.141.272h-.02v0ZM19.8,12.13h2.666l-1.06-2.041H20.8L19.8,12.13ZM4.91,3.955H33.119a.773.773,0,0,1,.556.232.784.784,0,0,1,.232.556V7.03H32.445V5.247H4.91V22.2h0a.478.478,0,0,1-.409.474c-4.3.664-4.488,5.758-.128,6.487H32.445V27.021h1.462v2.813a.784.784,0,0,1-.232.556l0,0h0a.784.784,0,0,1-.556.232H4.338a5.021,5.021,0,0,1-3.494-1.9A5.631,5.631,0,0,1,.007,25.14V6.66C-.013,3.5-.036.079,4.371,0a.317.317,0,0,1,.056,0A.483.483,0,0,1,4.91.484V3.955Zm28.448,10.1a2.728,2.728,0,1,1-2.728,2.728,2.729,2.729,0,0,1,2.728-2.728Z" fill="#06425c"/>
+                    </g>
+                  </svg> Project details
+                </Typography>
+              </Grid>
+
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Paper elevation={1} className="paperSection">
+                  <Grid container spacing={3}>
               <Grid
                 item
                 md={6}
@@ -786,12 +855,18 @@ const ProjectDetails = () => {
                   variant="contained"
                   color="primary"
                   startIcon={<AddCircleIcon />}
-                  className={classes.button}
+                  className="marginT0"
                   onClick={() => { handleAdd() }}
                 >
-                  Add
+                  Add new
                 </Button>
               </Grid>
+              </Grid>
+              
+
+              </Paper>
+              </Grid>
+              
               <Grid
                 item
                 md={12}
@@ -827,9 +902,30 @@ const ProjectDetails = () => {
                 selectedItem="Project Details"
               />
             </Grid>
-          </Grid> : <> loading...</>}
-      </PapperBlock>
+            {Object.entries(checkGroups).map(([key, value]) => (
+                <Grid item md={6}
+                  xs={12}
+                  className={classes.formBox}>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">{key}</FormLabel>
+                    <FormGroup>
+                      {value.map((option) => (
+                        <FormControlLabel
+                          control={<Checkbox name={option.inputLabel} />}
+                          label={option.inputLabel}
+                          checked={handelSelectOption(option.inputLabel, option.id)}
+                          onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel, option.id)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                </Grid>
+              ))}
+          </Grid>
+           : <> loading...</>}
+          </CustomPapperBlock>
     </>
+    
   );
 };
 

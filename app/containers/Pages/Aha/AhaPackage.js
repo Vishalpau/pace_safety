@@ -57,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
     borderRadius: '4px',
   },
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
+  },
   leftSide: {
     flexGrow: 1,
   },
@@ -384,7 +389,7 @@ function AhaPackage(props) {
   const [tableView, setTableView] = useState(false);
   const [allAHAData , setAllAHAData] = useState([])
   // const [listToggle, setListToggle] = useState(false);
-  const [searchIncident, setSeacrhIncident] = useState("");
+  const [searchIncident, setSeacrhIncident] = useState(props.search);
   // const history = useHistory();
   const [data, setData] = useState([])
   const [pageCount, setPageCount] = useState(0);
@@ -507,7 +512,7 @@ console.log("----------",res)
 };
 
 
-// console.log(allAHAData);
+console.log(props.search,"QQQQ");
 
 //   Assigning 'classes' to useStyles()
 const classes = useStyles();
@@ -515,20 +520,18 @@ const classes = useStyles();
 useEffect(() => {
   fetchAllAHAData()
   // handleProjectList()
-},[props.projectName.breakDown])
+},[props.projectName.breakDown,props.search])
 
 
   return (
     <>
       <Box>
+      {isLoading ? 
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
             
-        {allAHAData.length > 0  && Object.entries(allAHAData).filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-            item[1]["description"].toLowerCase().includes(
-                      searchIncident.toLowerCase()
-                    ) ).map((item, index) => (
+        {allAHAData.length > 0  ? Object.entries(allAHAData).map((item, index) => (
               <Card variant="outlined" className={classes.card}>
                 <CardContent>
                   <Grid container spacing={3} className={classes.cardContentSection}>
@@ -536,11 +539,11 @@ useEffect(() => {
                       className={classes.userPictureBox}
                     >
                       <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)} >
-                        <img src={paceLogoSymbol} className={classes.userImage} /> Admin
+                        <img src={paceLogoSymbol} className={classes.userImage} /> {item[1].username}
                       </Button>
                     </Grid>
                     <Link
-                      onClick={(e) => handleSummaryPush(e)}
+                      onClick={(e) => handleSummaryPush(index)}
                       className={classes.cardLinkAction}
                     >
                     <Grid item xs={12}>
@@ -552,21 +555,21 @@ useEffect(() => {
                                  className={classes.title}
                                  variant="h6"
                               >
-                                Exposure to dangerous chemicals or toxins 
+                      {item[1]["description"]}
                               </Typography>
                               <Typography
                                 display="inline"
                                 className={classes.listingLabelName}
                               >
                                 Number: <span><Link
-                                  onClick={(e) => handleSummaryPush(e)}
+                                  onClick={(e) => handleSummaryPush(index)}
                                   variant="h6"
                                   className={classes.mLeftfont}
                                 >
-                                <span className={classes.listingLabelValue}>AH-182-252-36</span>
+                                <span className={classes.listingLabelValue}>{item[1]["ahaNumber"]}</span>
                                 </Link></span>
                               </Typography>
-                              <span item xs={1} className={classes.sepHeightOne}></span>
+                              {/* <span item xs={1} className={classes.sepHeightOne}></span>
                               <Typography
                                 variant="body1"
                                 gutterBottom
@@ -575,7 +578,7 @@ useEffect(() => {
                                 className={classes.listingLabelName}
                               >
                                 Category: <span className={classes.listingLabelValue}>AHA</span>
-                              </Typography>
+                              </Typography> */}
                               <span item xs={1} className={classes.sepHeightOne}></span>
                               <Typography
                                 variant="body1"
@@ -586,9 +589,9 @@ useEffect(() => {
                               >
                                 Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
                                 <span item xs={1} className={classes.sepHeightOne}></span>
-                                Stage: <span className={classes.listingLabelValue}>In progress <img src={in_progress_small} className={classes.smallImage} /></span>
+                                Stage: <span className={classes.listingLabelValue}>{item[1].ahaStage} <img src={in_progress_small} className={classes.smallImage} /></span>
                                 <span item xs={1} className={classes.sepHeightOne}></span>
-                                Status: <span className={classes.listingLabelValue}>Completed <img src={completed_small} className={classes.smallImage} /></span>
+                                Status: <span className={classes.listingLabelValue}>{item[1].ahaStatus} <img src={completed_small} className={classes.smallImage} /></span>
                               </Typography>
                             
                             </Grid>
@@ -605,7 +608,7 @@ useEffect(() => {
                         color="textPrimary"
                         className={classes.listingLabelName}
                       >
-                        Work area:
+                        Work area: 
                       </Typography>
 
                       <Typography
@@ -613,7 +616,7 @@ useEffect(() => {
                         className={classes.listingLabelValue}
                       >
                         {/* {item[1]["incidentReportedByName"]} */}
-                        Not found
+                        {item[1].workArea}
                       </Typography>
                     </Grid>
                     <Grid item md={3} sm={6} xs={12}>
@@ -629,7 +632,7 @@ useEffect(() => {
                         
                         className={classes.listingLabelValue}
                       >
-                        New Delhi
+                      {item[1].location}
                       </Typography>
                     </Grid>
 
@@ -646,7 +649,9 @@ useEffect(() => {
                       <Typography
                         className={classes.listingLabelValue}
                       >
-                        24 Jan 2021
+                      {moment(item[1]["createdAt"]).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                )}                     
                       </Typography>
                     </Grid>
 
@@ -664,7 +669,7 @@ useEffect(() => {
                         
                         className={classes.listingLabelValue}
                       >
-                        Person
+                       {item[1]["createdByName"]}
                       </Typography>
                     </Grid>
                     </Grid>
@@ -707,7 +712,7 @@ useEffect(() => {
                           Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <Link href="#" color="secondary" className={classes.mLeftR5}>3</Link>
+                        <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1].attachmentCount}</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography
@@ -720,7 +725,7 @@ useEffect(() => {
                         Comments:
                       </Typography>
                       <Typography variant="body2" display="inline" className={classes.mLeft}>
-                        <Link href="#" color="secondary" className={classes.mLeft}>3</Link>
+                        <Link href="#" color="secondary" className={classes.mLeft}>{item[1].commentsCount}</Link>
                       </Typography>
                     </Grid>
 
@@ -749,7 +754,9 @@ useEffect(() => {
                     </Grid>
                   </Grid>
                 </CardActions>
-              </Card>))}
+              </Card>)) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                      Sorry, no matching records found
+              </Typography>}
 
               <div>
                 <Dialog
@@ -818,8 +825,12 @@ useEffect(() => {
 
             </div>
           </div>
+          <div className={classes.pagination}>
+      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
 
-        </Grid>  
+        </Grid>  :<h1>Loading...</h1>}
       </Box>
     </>
   );

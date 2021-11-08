@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -34,6 +34,10 @@ import MUIDataTable from 'mui-datatables';
 import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import moment from 'moment';
+import api from "../../../utils/axios";
+import { connect } from "react-redux";
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -120,9 +124,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function FlhaList() {
+function FlhaList(props) {
   const [incidents] = useState([]);
-  const [listToggle, setListToggle] = useState(false);
 
   const handelView = (e) => {
     setListToggle(false);
@@ -131,11 +134,17 @@ function FlhaList() {
     setListToggle(true);
   };
 
-  const [value, setValue] = React.useState(2);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const [cardView, setCardView] = useState(true);
+  const [tableView, setTableView] = useState(false);
+  const [allAHAData , setAllAHAData] = useState([])
+  const [listToggle, setListToggle] = useState(false);
+  const [searchIncident, setSeacrhIncident] = useState("");
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
+  
   
   //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
@@ -152,7 +161,7 @@ const data = [
     print: false,
     filter: false,
     search: false,
-    download: true,
+    download: false,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
     selectableRowsHeader: false,
@@ -161,28 +170,119 @@ const data = [
     selectableRows: false,
     rowsPerPage: 10,
     page: 0,
+    pagination:false
   };
 
   const classes = useStyles();
 
+  const fetchAllAHAData = async () => {
+    await setPage(1)
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          await setPageCount(pageCount)
+
+    await setIsLoading(true)
+  };
+
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+  console.log("----------",res)
+    await setAllAHAData(res.data.data.results.results);
+    await setPage(value)
+  };
+
+  useEffect(() => {
+    fetchAllAHAData()
+    // handleProjectList()
+},[props.projectName.breakDown])
+
   return (
     <>
       <Box>
+      {isLoading ?
         <TableContainer component={Paper}>
           <Grid component={Paper}>
               <MUIDataTable
                 //title="Observations List"
                 className="dataTableSectionDesign"
-                data={data}
+                data={Object.entries(allAHAData).filter(
+                      (item) => {return (
+                         
+                        item[1]["description"]
+                          .toLowerCase()
+                          .includes(searchIncident.toLowerCase()) ||
+                          item[1]["ahaNumber"].toLowerCase().includes(
+                            searchIncident.toLowerCase()
+                          
+                        )
+                      )}
+                        
+                    ).map((item) => [
+                      item[1]["ahaNumber"],
+                      item[1]["typeOfPermit"],
+                      item[1]["username"],
+                      item[1]["ahaStatus"],
+                      item[1][''],
+                      moment(item[1]["createdAt"]).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                ),
+                      item[1][""],
+                      item[1]["wrpApprovalUser"],
+                      moment(item[1]["wrpApprovalDateTime"]).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                )
+                ])}
                 columns={columns}
                 options={options}
                 //className="classes.dataTableNew"
               />
               </Grid>
-            </TableContainer>
+            </TableContainer> : <h1>Loading...</h1>}
       </Box>
     </>
   );
 }
 
-export default FlhaList;
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(FlhaList);
+

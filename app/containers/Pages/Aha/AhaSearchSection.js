@@ -371,6 +371,11 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const[searchIncident,setSeacrhIncident] = React.useState('');
+
+  const handleSearch = (e) => {
+    setSeacrhIncident(e.target.value);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -404,6 +409,7 @@ export default function SimpleTabs() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={(e) => handleSearch(e)}
             />
           </Paper> 
         </Grid>
@@ -419,7 +425,7 @@ export default function SimpleTabs() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <AhaFilter />
+			  <AhaFilter search={searchIncident} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
 			  <AhaFilter />
