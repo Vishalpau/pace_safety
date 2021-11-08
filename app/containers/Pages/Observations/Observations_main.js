@@ -269,7 +269,7 @@ export default function Observations() {
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
                 {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
-          <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />
+          {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
