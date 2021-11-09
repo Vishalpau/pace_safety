@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
@@ -15,9 +16,10 @@ import {
 import axios from "axios";
 import { PapperBlock } from "dan-components";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import "../../../../styles/custom.css";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import api from "../../../../utils/axios";
 import {
     access_token,
@@ -43,6 +45,33 @@ const useStyles = makeStyles((theme) => ({
     fullWidth: {
         width: "100%",
     },
+    loader: {
+        marginLeft: "20px"
+
+    },
+    custmSubmitBtn: {
+        color: '#ffffff',
+        backgroundColor: '#06425c',
+        lineHeight: '30px',
+        border: 'none',
+        '&:hover': {
+            backgroundColor: '#ff8533',
+            border: 'none',
+        },
+    },
+    buttonProgress: {
+        // color: "green",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: -12,
+        marginLeft: -12,
+    },
+    loadingWrapper: {
+        margin: theme.spacing(1),
+        position: "relative",
+        display: "inline-flex",
+    },
 }));
 
 const CloseOut = () => {
@@ -61,6 +90,7 @@ const CloseOut = () => {
         closeDate: new Date()
     })
     const [isDateShow, setIsDateShow] = useState(false)
+    const [submitLoader, setSubmitLoader] = useState(false)
 
     const userId =
         JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -79,21 +109,6 @@ const CloseOut = () => {
         setJhaListdata(result)
     };
     // handle close snackbar
-
-    const handleCloseDate = (e) => {
-        if (new Date(e) > new Date(form.reviewDate)) {
-            setForm({ ...form, closeDate: moment(e).toISOString() });
-            error.closeDate = ""
-            setError(error);
-        }
-        else {
-            setForm({ ...form, closeDate: null })
-            let errorMessage = "Closed date cannot be prior to reviewed date"
-            error.closeDate = errorMessage
-            setError(error);
-
-        }
-    }
 
     //   fetch user data
 
@@ -125,21 +140,29 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
+        await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
         if (res.status == 200) {
             history.push(SUMMARY_FORM["Summary"])
         }
-
+        await setSubmitLoader(false)
     }
+
+    const handelCallBack = async () => {
+        await setIsLoading(true)
+        await fetchUserList()
+        await fetchJhaData()
+        await setIsLoading(false)
+    }
+
     useEffect(() => {
-        fetchUserList();
-        fetchJhaData();
+        handelCallBack()
     }, []);
     const isDesktop = useMediaQuery("(min-width:992px)");
     return (
         <PapperBlock title="Close out" icon="ion-md-list-box">
-            {isLoading ? (
+            {isLoading === false ? (
                 <Grid container spacing={3}>
                     <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
                         <Grid item xs={12}>
@@ -248,19 +271,30 @@ const CloseOut = () => {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleNext()}
-                            >
-                                Submit
-                            </Button>
+                            <div className={classes.loadingWrapper}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleNext()}
+                                    disabled={submitLoader}
+                                >
+                                    Submit
+                                </Button>
+                                {submitLoader && (
+                                    <CircularProgress
+                                        size={24}
+                                        className={classes.buttonProgress}
+                                    />
+                                )}
+                            </div>
                         </Grid>
                     </Grid>
 
                 </Grid>
             ) : (
-                <h1>Loading...</h1>
+                <>
+                    Loading...
+                </>
             )}
         </PapperBlock>
     );

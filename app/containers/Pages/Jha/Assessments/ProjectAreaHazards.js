@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     lineHeight: '30px',
     border: 'none',
-    marginTop: '12px',
     '&:hover': {
       backgroundColor: '#ff8533',
       border: 'none',
@@ -87,6 +86,14 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
   customCheckBoxList: {
     display: 'block',
     '& .MuiFormControlLabel-root': {
@@ -102,6 +109,11 @@ const useStyles = makeStyles((theme) => ({
     '& button': {
       marginTop: '8px',
     },
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
   },
   loader: {
     marginLeft: "20px"
@@ -390,21 +402,23 @@ const ProjectAreaHazards = () => {
                 >
                   Previous
                 </Button>
-                {submitLoader == false ?
+                <div className={classes.loadingWrapper}>
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     onClick={(e) => handleSubmit()}
                     className={classes.custmSubmitBtn}
                     style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
                   >
-
                     Next
                   </Button>
-                  :
-                  <IconButton className={classes.loader} disabled>
-                    <CircularProgress color="secondary" />
-                  </IconButton>
-                }
+                  {submitLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
               </Grid>
             </Grid>
           </Col>

@@ -1407,7 +1407,7 @@ const InvestigationSummary = () => {
       </Grid>
 
       {/* Action taken */}
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Accordion
           expanded={expanded === "panel5"}
           onChange={handleExpand("panel5")}
@@ -1451,7 +1451,7 @@ const InvestigationSummary = () => {
             </Grid>
           </AccordionDetails>
         </Accordion>
-      </Grid>
+      </Grid> */}
     </Grid >
   );
 };
