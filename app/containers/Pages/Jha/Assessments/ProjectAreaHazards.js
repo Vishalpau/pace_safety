@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     lineHeight: '30px',
     border: 'none',
-    marginTop: '12px',
     '&:hover': {
       backgroundColor: '#ff8533',
       border: 'none',
@@ -87,6 +86,14 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
   customCheckBoxList: {
     display: 'block',
     '& .MuiFormControlLabel-root': {
@@ -102,6 +109,11 @@ const useStyles = makeStyles((theme) => ({
     '& button': {
       marginTop: '8px',
     },
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
   },
   loader: {
     marginLeft: "20px"
@@ -126,7 +138,7 @@ const ProjectAreaHazards = () => {
       "fkJhaId": localStorage.getItem("fkJHAId")
     }
   ])
-
+  const [loading, setLoading] = useState(false)
   const history = useHistory()
 
   const handelUpdate = async () => {
@@ -290,8 +302,10 @@ const ProjectAreaHazards = () => {
   }
 
   const handelCallback = async () => {
+    await setLoading(true)
     await handelUpdate()
     await checkList()
+    await setLoading(false)
   }
 
   useEffect(() => {
@@ -301,121 +315,123 @@ const ProjectAreaHazards = () => {
   const classes = useStyles();
   return (
     <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
-      <Row>
-        <Col md={9}>
-          <Grid container spacing={3}>
-            {/* {console.log(form)} */}
-            {Object.entries(checkGroups).map(([key, value]) => (
-              <Grid item md={12}>
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">{key}</FormLabel>
-                  <FormGroup>
-                    {value.map((option) => (
-                      <FormControlLabel
-                        control={<Checkbox name={option.inputLabel} />}
-                        label={option.inputLabel}
-                        checked={handelSelectOption(option.checkListId, option.inputLabel)}
-                        onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
-                      />
-                    ))}
-                  </FormGroup>
-                </FormControl>
-                <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-              </Grid>
-            ))}
-
-            <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
-              <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
-            </Grid>
-
-            {otherHazards.map((value, index) => (
-              <>
-                <Grid
-                  item
-                  md={6}
-                  xs={11}
-                  className={classes.createHazardbox}
-                >
-                  <TextField
-                    label="Other Hazards"
-                    margin="dense"
-                    name="otherhazards"
-                    id="otherhazards"
-                    defaultValue=""
-                    fullWidth
-                    variant="outlined"
-                    value={otherHazards[index].hazard || ""}
-                    className={classes.formControl}
-                    onChange={(e) => handleOtherHazards(e, index)}
-                  />
-
+      {loading == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              {/* {console.log(form)} */}
+              {Object.entries(checkGroups).map(([key, value]) => (
+                <Grid item md={6}>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">{key}</FormLabel>
+                    <FormGroup>
+                      {value.map((option) => (
+                        <FormControlLabel
+                          control={<Checkbox name={option.inputLabel} />}
+                          label={option.inputLabel}
+                          checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                          onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
                 </Grid>
-                {otherHazards.length > 1 ?
-                  <Grid item md={1} className={classes.createHazardbox}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => handelRemove(e, index)}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
+              ))}
+
+              <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
+                <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
+              </Grid>
+
+              {otherHazards.map((value, index) => (
+                <>
+                  <Grid
+                    item
+                    md={6}
+                    xs={11}
+                    className={classes.createHazardbox}
+                  >
+                    <TextField
+                      label="Other Hazards"
+                      margin="dense"
+                      name="otherhazards"
+                      id="otherhazards"
+                      defaultValue=""
+                      fullWidth
+                      variant="outlined"
+                      value={otherHazards[index].hazard || ""}
+                      className={classes.formControl}
+                      onChange={(e) => handleOtherHazards(e, index)}
+                    />
+
                   </Grid>
-                  : null}
-              </>
-            ))}
+                  {otherHazards.length > 1 ?
+                    <Grid item md={1} className={classes.createHazardbox}>
+                      <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => handelRemove(e, index)}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </Grid>
+                    : null}
+                </>
+              ))}
 
 
-            <Grid item md={12} className={classes.createHazardbox}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddCircleIcon />}
-                className={classes.button}
-                onClick={(e) => handleAdd()}
+              <Grid item md={12} className={classes.createHazardbox}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddCircleIcon />}
+                  className={classes.button}
+                  onClick={(e) => handleAdd()}
+                >
+                  Add
+                </Button>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                alignItems="center"
               >
-                Add
-              </Button>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              alignItems="center"
-            >
-              <Button
-                variant="outlined"
-                className={classes.custmSubmitBtn}
-                onClick={(e) => handelNavigate("previous")}
-              >
-                Previous
-              </Button>
-              {submitLoader == false ?
                 <Button
                   variant="outlined"
-                  onClick={(e) => handleSubmit()}
                   className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
+                  onClick={(e) => handelNavigate("previous")}
                 >
-
-                  Next
+                  Previous
                 </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
+                <div className={classes.loadingWrapper}>
+                  <Button
+                    variant="contained"
+                    onClick={(e) => handleSubmit()}
+                    className={classes.custmSubmitBtn}
+                    style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
+                  >
+                    Next
+                  </Button>
+                  {submitLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </Col>
-        <Col md={3}>
-          <FormSideBar
-            deleteForm={"hideArray"}
-            listOfItems={JHA_FORM}
-            selectedItem={"Project Area Hazards"}
-          />
-        </Col>
+          </Col>
+          <Col md={3}>
+            <FormSideBar
+              deleteForm={"hideArray"}
+              listOfItems={JHA_FORM}
+              selectedItem={"Project Area Hazards"}
+            />
+          </Col>
 
-      </Row>
-
+        </Row>
+        : "Loading..."}
     </PapperBlock>
   );
 };

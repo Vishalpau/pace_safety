@@ -121,6 +121,19 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const DocumentNotification = () => {
@@ -359,23 +372,23 @@ const DocumentNotification = () => {
               >
                 Previous
               </Button>
-              {submitLoader === false
-                ? (
-                  <Button
-                    variant="outlined"
-                    onClick={() => handelNext()}
-                    className={classes.custmSubmitBtn}
-                  >
+              <div className={classes.loadingWrapper}>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => handelNext()}
+                  className={classes.custmSubmitBtn}
+                  style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
+                >
 
-                    Submit
-                  </Button>
-                )
-                : (
-                  <IconButton className={classes.loader} disabled>
-                    <CircularProgress color="secondary" />
-                  </IconButton>
-                )
-              }
+                  Submit
+                </Button>
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
               <Button
                 variant="outlined"
                 size="medium"

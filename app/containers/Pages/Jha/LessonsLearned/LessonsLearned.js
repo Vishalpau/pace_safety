@@ -15,7 +15,11 @@ import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { handelJhaId } from "../Utils/checkValue";
+import { handelActionWithEntity } from "../../../../utils/CheckerValue";
 import { LESSION_LEARNED_FORM, SUMMARY_FORM } from "../Utils/constants";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import ActionShow from '../../../Forms/ActionShow';
+import ActionTracker from "../../../Forms/ActionTracker";
 
 
 
@@ -98,13 +102,30 @@ const useStyles = makeStyles((theme) => ({
   formLablBox: {
     paddingBottom: '0px !important',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const LessonsLearned = () => {
 
   const [form, setForm] = useState({})
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
+  const [submitLoader, setSubmitLoader] = useState(false)
   const history = useHistory()
+  const [updatePage, setUpdatePage] = useState(false)
+  const [actionData, setActionData] = useState([])
+
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
@@ -121,9 +142,33 @@ const LessonsLearned = () => {
     setUser({ ...user, name: user.name, badgeNumber: user.badgeNo })
   }
 
+  const handelActionShow = (id) => (
+    <Grid>
+      {actionData.map((val) => (
+        <>
+          {console.log(val)}
+          <ActionShow
+            action={{ id: val.id, number: val.actionNumber }}
+            title={val.actionTitle}
+            companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+            projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+            updatePage={updatePage}
+          />
+        </>
+      ))}
+    </Grid>
+  );
+
   const radioDecide = ["Yes", "No"]
 
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkJHAId")
+    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
+    setActionData(allAction)
+  };
+
   const handelSubmit = async () => {
+    await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["anyLessonsLearnt"] == null) {
       form["anyLessonsLearnt"] = ""
@@ -134,9 +179,14 @@ const LessonsLearned = () => {
 
   const classes = useStyles();
 
-  useEffect(() => {
+  const handelCallback = () => {
     handelJobDetails()
     handelUserName()
+    handelActionTracker()
+  }
+
+  useEffect(() => {
+    handelCallback()
   }, [])
   return (
     <>
@@ -229,6 +279,25 @@ const LessonsLearned = () => {
                         />
                       </Grid>
 
+                      <Grid item md={6} xs={12}>
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                          <ActionTracker
+                            actionContext="jha:lessionLearned"
+                            enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
+                            setUpdatePage={setUpdatePage}
+                            updatePage={updatePage}
+                            fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                            fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                            fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                            createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                            handelShowData={handelActionTracker}
+                          />
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} className={classes.createHazardbox}>
+                        {handelActionShow(localStorage.getItem("fkJHAId"))}
+                      </Grid>
+
                       <Grid
                         item
                         md={12}
@@ -260,14 +329,24 @@ const LessonsLearned = () => {
                 md={12}
                 xs={12}
               >
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  className={classes.custmSubmitBtn}
-                  onClick={(e) => handelSubmit()}
-                >
-                  Submit
-                </Button>
+                <div className={classes.loadingWrapper}>
+                  <Button
+                    variant="outlined"
+                    size="medium"
+                    className={classes.custmSubmitBtn}
+                    onClick={(e) => handelSubmit()}
+                    style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
+                  >
+                    Submit
+                  </Button>
+                  {submitLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
               </Grid>
             </Grid>
           </Col>
