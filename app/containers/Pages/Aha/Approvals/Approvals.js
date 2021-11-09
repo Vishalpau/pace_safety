@@ -24,6 +24,7 @@ import { APPROVAL_FORM } from "../constants";
 
 
 
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -117,7 +118,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const user =
     JSON.parse(localStorage.getItem("userDetails")) !== null

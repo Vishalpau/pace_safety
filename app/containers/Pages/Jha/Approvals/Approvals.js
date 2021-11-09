@@ -46,17 +46,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '600',
     color: '#063d55',
   },
-  custmSubmitBtn: {
-    color: '#ffffff',
-    backgroundColor: '#06425c',
-    lineHeight: '30px',
-    border: 'none',
-    '&:hover': {
-      backgroundColor: '#ff8533',
-      border: 'none',
-    },
-    marginLeft: "20px"
-  },
   updateLink: {
     float: 'right',
     fontSize: '0.88rem',
@@ -125,7 +114,18 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '1rem',
     right: '1rem'
-  }
+  },
+  custmSubmitBtn: {
+    color: '#ffffff',
+    backgroundColor: '#06425c',
+    lineHeight: '30px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: '#ff8533',
+      border: 'none',
+    },
+    marginLeft: "20px"
+  },
 }));
 
 const Approvals = () => {
@@ -217,6 +217,7 @@ const Approvals = () => {
     }
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     history.push(SUMMARY_FORM["Summary"])
+    setSubmitLoader(false)
   }
 
   const handelCallBack = async () => {
@@ -272,16 +273,14 @@ const Approvals = () => {
                     {check.wrp ? "Approved" : "Approve Now"}
                   </Button>
                   {/* Approved by userName on Date "date" (edited)  */}
-                  {check.wrp == true ?
-                    <div>
-                      {form.wrpApprovalUser == true
-                        ?
-                        `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
-                        :
-                        `Approved by: ${JSON.parse(localStorage.getItem("userDetails"))["name"]} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}`
-                      }
-                    </div>
-                    : null}
+                  <div>
+                    {form.wrpApprovalDateTime !== undefined && form.wrpApprovalUser !== null
+                      &&
+                      form.wrpApprovalDateTime !== `Approved by: ${form.wrpApprovalUser} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}` ?
+                      `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
+                      : null
+                    }
+                  </div>
 
                 </Grid>
                 <Dialog
@@ -357,6 +356,21 @@ const Approvals = () => {
                         companyId={projectData.companyId}
                         projectId={projectData.projectId}
                         updatePage={updatePage}
+                        fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                        fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                        fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                        createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                        handelShowData={handelActionTracker}
+                      />))}
+                  </Typography>
+                  <Typography className={classes.aLabelValue}>
+                    {actionData.map((value) => (
+                      <ActionShow
+                        action={{ id: value.id, number: value.actionNumber }}
+                        title={value.actionTitle}
+                        companyId={projectData.companyId}
+                        projectId={projectData.projectId}
+                        updatePage={updatePage}
                       />
                     ))}
                   </Typography>
@@ -377,20 +391,29 @@ const Approvals = () => {
                     variant="outlined"
                   />
                 </Grid>
-
+                {/* submitLoader */}
                 <Grid
                   item
                   md={12}
                   xs={12}
                 >
-                  <Button
-                    variant="outlined"
-                    size="medium"
-                    className={classes.custmSubmitBtn}
-                    onClick={(e) => handelSubmit()}
-                  >
-                    Submit
-                  </Button>
+                  <div className={classes.loadingWrapper}>
+                    <Button
+                      variant="outlined"
+                      size="medium"
+                      className={classes.custmSubmitBtn}
+                      onClick={(e) => handelSubmit()}
+                      disabled={submitLoader}
+                    >
+                      Submit
+                    </Button>
+                    {submitLoader && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
                   <Button
                     variant="outlined"
                     size="medium"

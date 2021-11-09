@@ -1055,7 +1055,6 @@ function JhaSummary() {
                                           projectId={projectData.projectId}
                                           handelShowData={handelShowData}
                                         />
-
                                       </>
                                     ))}
                                   </Typography>
