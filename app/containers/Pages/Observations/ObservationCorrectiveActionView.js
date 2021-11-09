@@ -226,11 +226,7 @@ const ObservationCorrectiveActionView = () => {
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Paper elevation={1} className="paperSection">
             
-
       <Grid container spacing={3} >
-    
-
-
         <Grid item md={6}>
           <Typography variant="h6" gutterBottom className={classes.labelName}>
             Are there any corrective actions to be taken?
@@ -239,12 +235,6 @@ const ObservationCorrectiveActionView = () => {
             {initialData.isCorrectiveActionTaken ? initialData.isCorrectiveActionTaken : "-"}
           </Typography>
         </Grid>
-
-        
-
-        
-
-        
 
         <Grid item md={12} sm={12} xs={12}>{actionTakenData.length > 0 ? 
           <TableContainer component={Paper}>

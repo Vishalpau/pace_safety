@@ -219,14 +219,14 @@ export default function Observations() {
 
   const handleBulkUploadfilePush = async () => {
     history.push(
-      '/app/observation-bulkuploadfile'
+      '/app/icare-bulkuploadfile'
     );
   }
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
     localStorage.removeItem("value")
 
-    history.push("/app/observation-initial-notification");
+    history.push("/app/icare-initial-notification");
   };
 
   return (
@@ -235,7 +235,7 @@ export default function Observations() {
         <Grid container spacing={3}>
           <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
             <img src={obsIcon} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Observations</Typography>
+            <Typography variant="h5"> iCare </Typography>
           </Grid>
           <Grid item sm={5} xs={12}>
 

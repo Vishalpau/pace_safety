@@ -265,7 +265,7 @@ function ObservationCorrectiveAction() {
         localStorage.setItem('updateAction', "Done")
         localStorage.setItem("action", "Done")
         history.push(
-          `/app/observation/details/${localStorage.getItem(
+          `/app/icare/details/${localStorage.getItem(
             "fkobservationId"
           )}`
         );
@@ -309,7 +309,7 @@ function ObservationCorrectiveAction() {
         localStorage.setItem('updateAction', "Done")
         localStorage.setItem("action", "Done")
         history.push(
-          `/app/observation/details/${localStorage.getItem(
+          `/app/icare/details/${localStorage.getItem(
             "fkobservationId"
           )}`
         );
@@ -318,7 +318,7 @@ function ObservationCorrectiveAction() {
   }
 
   const handleCancle = async () => {
-    history.push(`/app/observation/details/${id}`)
+    history.push(`/app/icare/details/${id}`)
     if(form.isCorrectiveActionTaken == ""){
       await localStorage.setItem("update", "Pending");
     }else{
@@ -366,15 +366,6 @@ function ObservationCorrectiveAction() {
       setActionOpen(false)
     }
 
-  }
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const handleClose = async () => {
-    history.push(`/app/observation/details/${id}`)
-    await localStorage.setItem("update", "Done");
   }
 
   const handleCloseDate = (e) => {
@@ -501,26 +492,26 @@ function ObservationCorrectiveAction() {
                     <path id="Path_5154" data-name="Path 5154" d="M34.265,116.461H24.007a.188.188,0,1,1,0-.375H34.265a.188.188,0,1,1,0,.375Z" transform="translate(-23.819 -116.086)" fill="#06425c" stroke="#06425c" stroke-width="0.5"/>
                   </g>
                 </g>
-              </svg> Observation details
+              </svg> iCare details
           </Typography>
         </Grid>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Paper elevation={1} className="paperSection">
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12}>
-                <FormLabel component="legend" className="viewLabel">Observation Title</FormLabel>
+                <FormLabel component="legend" className="viewLabel">iCare Title</FormLabel>
                 <Typography className="viewLabelValue">
                 {form.observationTitle ? form.observationTitle : "-"}
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12} xs={12}>
-                <FormLabel component="legend" className="viewLabel">Observation Type</FormLabel>
+                <FormLabel component="legend" className="viewLabel">iCare Type</FormLabel>
                 <Typography className="viewLabelValue">
                 {form.observationType ? form.observationType : "-"}
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12} xs={12}>
-                <FormLabel component="legend" className="viewLabel">Observation Description</FormLabel>
+                <FormLabel component="legend" className="viewLabel">iCare Description</FormLabel>
                 <Typography className="viewLabelValue">
                 {form.observationDetails ? form.observationDetails : "-"}
                 </Typography>

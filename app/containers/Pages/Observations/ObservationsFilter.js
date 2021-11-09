@@ -426,7 +426,7 @@ class ObservationsFilter extends React.Component {
                 color="inherit"
                 noWrap
               >
-                My Observations
+                {this.props.observation === "My Observations" ? "My iCares" : "All iCares"}
               </Typography>
 
               <Typography

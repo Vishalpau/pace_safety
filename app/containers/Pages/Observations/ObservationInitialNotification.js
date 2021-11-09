@@ -517,7 +517,7 @@ const ObservationInitialNotification = (props) => {
             if (res.status === 200 || res.status === 201) {
               const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
               history.push(
-                `/app/observation/details/${localStorage.getItem(
+                `/app/icare/details/${localStorage.getItem(
                   "fkobservationId"
                 )}`
               );
@@ -532,7 +532,7 @@ const ObservationInitialNotification = (props) => {
           const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
 
           history.push(
-            `/app/observation/details/${localStorage.getItem(
+            `/app/icare/details/${localStorage.getItem(
               "fkobservationId"
             )}`
           );
@@ -581,10 +581,7 @@ const ObservationInitialNotification = (props) => {
     setOpen(false);
   };
 
-
-  // this function when user upload the file
   const handleFile = async (e) => {
-    console.log(e)
     let TempPpeData = { ...form };
     if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
@@ -647,7 +644,6 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-
   const fetchNotificationSent = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -684,8 +680,6 @@ const ObservationInitialNotification = (props) => {
     await setTagData(sorting);
   };
 
-
-
   const fetchAttachment = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -700,7 +694,6 @@ const ObservationInitialNotification = (props) => {
       await setAttachment(ar);
     }
   };
-
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -722,7 +715,6 @@ const ObservationInitialNotification = (props) => {
     let sliceData = dataDepthAndId.slice(0, index);
     let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
     setSelectDepthAndId(newdataDepthAndId);
-    // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
@@ -734,7 +726,6 @@ const ObservationInitialNotification = (props) => {
             .then(function (response) {
               if (response.status === 200) {
                 temp[key].breakDownData = response.data.data.results;
-                //  temp[key].select=e.
                 setBreakdown1ListData(temp);
               }
             })
@@ -761,42 +752,42 @@ const ObservationInitialNotification = (props) => {
 
   return (
     <>
-        <CustomPapperBlock title="Observations" icon={obsIcon} whiteBg>
+      <CustomPapperBlock title="iCare" icon={obsIcon} whiteBg>
 
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Typography variant="h6" className="sectionHeading">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24.961" height="30.053" viewBox="0 0 30.961 36.053">
-                <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c"/>
-              </svg>  Project information
-            </Typography>
-          </Grid>
-
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} sm={12} xs={12}>
-                <Typography gutterBottom className="labelName">
-                  Project Name
-                </Typography>
-                <Typography className="labelValue">
-                  {project.projectName}
-                </Typography>
-              </Grid>
-
-                <ProjectStructureInit
-                  selectDepthAndId={selectDepthAndId}
-                  setLevelLenght={setLevelLenght}
-                  error={error}
-                  setWorkArea={setWorkArea}
-                  setSelectDepthAndId={setSelectDepthAndId}
-                  className="formControl"
-                />
-              
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Typography variant="h6" className="sectionHeading">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24.961" height="30.053" viewBox="0 0 30.961 36.053">
+                  <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c"/>
+                </svg>  Project information
+              </Typography>
             </Grid>
-          </Paper>
-        </Grid>
+
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid item md={12} sm={12} xs={12}>
+                  <Typography gutterBottom className="labelName">
+                    Project Name
+                  </Typography>
+                  <Typography className="labelValue">
+                    {project.projectName}
+                  </Typography>
+                </Grid>
+
+                  <ProjectStructureInit
+                    selectDepthAndId={selectDepthAndId}
+                    setLevelLenght={setLevelLenght}
+                    error={error}
+                    setWorkArea={setWorkArea}
+                    setSelectDepthAndId={setSelectDepthAndId}
+                    className="formControl"
+                  />
+                
+              </Grid>
+            </Paper>
+            </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -825,7 +816,6 @@ const ObservationInitialNotification = (props) => {
                     setValueReportedBy({
                       inputValue: newValue,
                     });
-
                     setForm({
                       ...form,
                       reportedByName: newValue,
@@ -833,7 +823,6 @@ const ObservationInitialNotification = (props) => {
                       reportedByBadgeId: "",
                     });
                   } else if (newValue && newValue.inputValue) {
-                    // Create a new value from the user input
                     setValueReportedBy({
                       inputValue: newValue.inputValue,
                     });
@@ -849,8 +838,6 @@ const ObservationInitialNotification = (props) => {
                 }}
                 filterOptions={(options, params) => {
                   const filtered = filter(options, params);
-
-                  // Suggest the creation of a new value
                   if (params.inputValue !== "") {
                     filtered.push({
                       inputValue: params.inputValue,
@@ -865,19 +852,15 @@ const ObservationInitialNotification = (props) => {
                 id="free-solo-with-text-demo"
                 options={reportedByDetails}
                 getOptionLabel={(option) => {
-                  // Value selected with enter, right from the input
                   if (typeof option === "string") {
                     return option;
                   }
-                  // Add "xxx" option created dynamically
                   if (option.inputValue) {
                     return option.inputValue;
                   }
-                  // Regular option
                   return option.title;
                 }}
                 renderOption={(option) => option.inputValue}
-                // style={{ width: 300 }}
                 freeSolo
                 selectOnFocus
                 clearOnBlur
@@ -933,7 +916,6 @@ const ObservationInitialNotification = (props) => {
                     });
                     setForm({ ...form, reportedByDepartment: newValue });
                   } else if (newValue && newValue.inputValue) {
-                    // Create a new value from the user input
                     setValue({
                       inputValue: newValue.inputValue,
                     });
@@ -948,14 +930,11 @@ const ObservationInitialNotification = (props) => {
                 }}
                 filterOptions={(options, params) => {
                   const filtered = filter(options, params);
-
-                  // Suggest the creation of a new value
                   if (params.inputValue !== "") {
                     filtered.push({
                       inputValue: params.inputValue,
                       inputValue: `${params.inputValue}`,
                     });
-                    // setForm({...form,reportedByDepartment:params.inputValue})
                   }
 
                   return filtered;
@@ -967,33 +946,21 @@ const ObservationInitialNotification = (props) => {
                 id="free-solo-with-text-demo"
                 options={departmentName}
                 getOptionLabel={(option) => {
-                  // Value selected with enter, right from the input
                   if (typeof option === "string") {
                     return option;
                   }
-                  // Add "xxx" option created dynamically
                   if (option.inputValue) {
                     return option.inputValue;
                   }
-                  // Regular option
                   return option.title;
                 }}
                 renderOption={(option) => option.inputValue}
-                // style={{ width: 300 }}
                 freeSolo
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label="Observer's Department"
-                    // error={error.reportedByDepartment}
-                    // helperText={
-                    //   error.reportedByDepartment
-                    //     ? error.reportedByDepartment
-                    //     : ""
-                    // }
-                    // className={classNames(classes.formControl, classes.boldHelperText)}
                     className="formControl"
-                    // onChange={(e) => setForm({...form , reportedByDepartment: e.target.value })}
                     variant="outlined"
                   />
                 )}
@@ -1024,15 +991,8 @@ const ObservationInitialNotification = (props) => {
                 value={form.supervisorName ? form.supervisorName : ""}
                 onChange={(event, newValue) => {
                   if (typeof newValue === "string") {
-                    // setValueReportedBy({
-                    //   inputValue: newValue,
-                    // });
                     setForm({ ...form, supervisorName: newValue });
                   } else if (newValue && newValue.inputValue) {
-                    // Create a new value from the user input
-                    // setValueReportedBy({
-                    //   inputValue: newValue.inputValue,
-                    // });
                     if (newValue.supervisorId) {
                       setForm({
                         ...form,
@@ -1054,15 +1014,12 @@ const ObservationInitialNotification = (props) => {
                 }}
                 filterOptions={(options, params) => {
                   const filtered = filter(options, params);
-
-                  // Suggest the creation of a new value
                   if (params.inputValue !== "") {
                     filtered.push({
                       inputValue: params.inputValue,
                       inputValue: `${params.inputValue}`,
                     });
                   }
-
                   return filtered;
                 }}
                 className="formControl"
@@ -1072,28 +1029,20 @@ const ObservationInitialNotification = (props) => {
                 id="free-solo-with-text-demo"
                 options={superVisorName}
                 getOptionLabel={(option) => {
-                  // Value selected with enter, right from the input
                   if (typeof option === "string") {
                     return option;
                   }
-                  // Add "xxx" option created dynamically
                   if (option.inputValue) {
                     return option.inputValue;
                   }
-                  // Regular option
                   return option.title;
                 }}
                 renderOption={(option) => option.inputValue}
-                // style={{ width: 300 }}
                 freeSolo
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label="Foreman's Name"
-                    // error={error.supervisorName}
-                    // helperText={
-                    //   error.supervisorName ? error.supervisorName : ""
-                    // }
                     variant="outlined"
                   />
                 )}
@@ -1245,7 +1194,7 @@ const ObservationInitialNotification = (props) => {
                     <path id="Path_5154" data-name="Path 5154" d="M34.265,116.461H24.007a.188.188,0,1,1,0-.375H34.265a.188.188,0,1,1,0,.375Z" transform="translate(-23.819 -116.086)" fill="#06425c" stroke="#06425c" stroke-width="0.5"/>
                   </g>
                 </g>
-              </svg> Observation details
+              </svg> iCare details
             </Typography>
           </Grid>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1321,12 +1270,6 @@ const ObservationInitialNotification = (props) => {
                   ))}
                 </RadioGroup>
                 <p style={{ color: "red" }}>{error.isSituationAddressed}</p>
-
-                {/* {error && error["isSituationAddressed"] && (
-                  <FormHelperText>
-                    {error["isSituationAddressed"]}
-                  </FormHelperText>
-                )} */}
               </FormControl>
             </Grid>
             {addressSituation === true ? (
@@ -1365,7 +1308,7 @@ const ObservationInitialNotification = (props) => {
                   <path id="Path_2274" data-name="Path 2274" d="M0,0H40V40H0Z" fill="none"/>
                 </g>
                 <path id="enrollment" d="M14.947,31.057a.874.874,0,0,1,0,1.743H1.981A2.008,2.008,0,0,1,0,30.771V2.029A2.008,2.008,0,0,1,1.981,0H25.64a1.96,1.96,0,0,1,1.407.591,2.056,2.056,0,0,1,.585,1.437V16.443a2.91,2.91,0,0,1-.023.382H25.919V2.029a.288.288,0,0,0-.279-.286H1.981a.286.286,0,0,0-.2.083.305.305,0,0,0-.081.2v28.74a.27.27,0,0,0,.083.2.289.289,0,0,0,.2.085Zm9.137.035-4.272,1.495.034-4.871,4.246,3.377Zm-3.039-5.008,4.609-6.406a.411.411,0,0,1,.5-.149l3.775,2.893a.374.374,0,0,1,.039.55l-4.679,6.492ZM7.593,16.774a1.778,1.778,0,0,1-.052-.9c.12-.948.36-1.124,1.215-1.367a8.85,8.85,0,0,0,2.867-.873,2.936,2.936,0,0,0,.193-.382c.1-.227.185-.472.24-.641a8.154,8.154,0,0,1-.631-.921l-.639-1.041a1.941,1.941,0,0,1-.36-.95.777.777,0,0,1,.065-.342.613.613,0,0,1,.219-.267.5.5,0,0,1,.154-.08,17.114,17.114,0,0,1-.031-1.868,2.694,2.694,0,0,1,.078-.424,2.508,2.508,0,0,1,1.079-1.4,3.35,3.35,0,0,1,.9-.411c.2-.059-.175-.723.036-.745A5.144,5.144,0,0,1,16.295,5.79a2.561,2.561,0,0,1,.623,1.6l-.039,1.7h0a.46.46,0,0,1,.326.355,1.481,1.481,0,0,1-.175.892h0v.024l-.73,1.225a6.339,6.339,0,0,1-.891,1.26l.1.144a4.478,4.478,0,0,0,.464.625.043.043,0,0,1,.016.021,10.373,10.373,0,0,0,2.813.892c.782.211,1.069.267,1.243,1.142a1.937,1.937,0,0,1-.023,1.1Zm-.641,9.356a.885.885,0,0,1,0-1.764H18.508l-.016.024h0V24.4h0v.013h0v.408h0v.035h0v.021h0v.211h0v.032H18.38l-.018.013H18.33l-.016.016h-.029l-.016.013h-.016l-.016.016h-.013l-.016.016h0l-.016.016h0l-.016.016h0v.016h0v.029h0v.016h0l-.016.016v.016h-.013v.016h0v.016h0l-.013.016h0v.016h0v.035h0v.035h0l-.013.016v.016h0v.019h0v.019h0v.019h0v.037h0V25.6Zm.331-4.847a.847.847,0,0,1-.777-.421.891.891,0,0,1,0-.9.847.847,0,0,1,.777-.421H19.754a.847.847,0,0,1,.777.421.891.891,0,0,1,0,.9.847.847,0,0,1-.777.421Z" transform="translate(5.333 4.2)" fill="#06425c"/>
-              </svg>Observation classification 
+              </svg>iCare classification 
             </Typography>
           </Grid>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1405,7 +1348,7 @@ const ObservationInitialNotification = (props) => {
                 component="fieldset"
               >
                 <FormLabel component="legend" className="checkRadioLabel" error={error && error["observationType"]}>
-                  Type of observation*
+                  Type of iCare*
                 </FormLabel>
                 <RadioGroup
                   aria-label="gender"
@@ -1684,7 +1627,7 @@ const ObservationInitialNotification = (props) => {
                 size="medium"
                 className={classes.custmCancelBtn}
                 onClick={() => {
-                  history.push("/app/observations");
+                  history.push("/app/icare");
                 }}
               >
                 CANCEL
