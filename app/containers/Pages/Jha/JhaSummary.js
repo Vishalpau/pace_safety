@@ -898,7 +898,7 @@ function JhaSummary() {
                                         </Grid>
                                         : null}
 
-                                      {assessment.humanPerformanceAspects !== undefined &&
+                                      {assessment.humanPerformanceAspects &&
                                         assessment.humanPerformanceAspects !== "" &&
                                         assessment.humanPerformanceAspects.split(",").length > 0 ?
 
