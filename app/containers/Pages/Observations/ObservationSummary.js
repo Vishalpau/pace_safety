@@ -28,10 +28,15 @@ import ObservationCorrectiveActionView from './ObservationCorrectiveActionView';
 import ObservationInitialNotificationUpdate from './ObservationInitialNotificationUpdate';
 import ObservationInitialNotificationView from './ObservationInitialNotificationView';
 
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 
+import obsIcon from 'dan-images/obsIcon.png';
+// import Paper from '@material-ui/core/Paper';
 
-
-
+import Print from '@material-ui/icons/Print';
+import History from '@material-ui/icons/History';
+import Comment from '@material-ui/icons/Comment';
+import Link from '@material-ui/core/Link';
 
 
 // import { useHistory } from "react-router";
@@ -51,11 +56,24 @@ const useStyles = makeStyles((theme) => ({
   },
   statusButton: {
     borderRadius: 4,
-    fontSize: 12,
+    fontSize: 14,
+    width: '100%',
+    textTransform: 'none',
+    fontFamily: 'Montserrat-SemiBold !important',
+    lineHeight: '18px',
+    border: '1px solid #06425c',
   },
   observationSummaryBox: {
     display: 'flex',
     gap: '1.5rem',
+  },
+  statusLabel: {
+    fontSize: '14px',
+    fontFamily: 'Montserrat-Regular',
+    '& svg': {
+      color: '#06425C',
+      //verticalAlign: 'sub',
+    },
   },
 }));
 
@@ -156,7 +174,7 @@ const ObservationSummary = () => {
   const handlePrintPush = async () => {
     //console.log("Ashutosh")
     history.push(
-      `/app/prints/${id}`
+      `/app/pages/general-observation-prints/${id}`
     );
   };
 
@@ -197,66 +215,86 @@ const ObservationSummary = () => {
   return (
     <>
       {/* {isLoading ? ( */}
-      <PapperBlock
-        title={`Observation Number: ${initialData.observationNumber}`}
-        icon="ion-md-list-box"
+      <CustomPapperBlock
+        title={`Observation Number: ${initialData.observationNumber ? initialData.observationNumber : ""}`}
+        // icon="ion-md-list-box"
         variant="h5"
+        icon={obsIcon} 
+        whiteBg
       >
-        <Box paddingBottom={1}>
-          <div className={classes.observationSummaryBox}>
-            <div className={classes.item}>
-              <Button
-                color={observationInitialNotification === true ? 'secondary' : "primary"}
-                variant="contained"
-                size="small"
-                endIcon={<CheckCircle />}
-                className={classes.statusButton}
-                onClick={(e) => {
-                  setObservationInitialNotification(true);
-                  setObservationCorrectiveAction(false);
-                  setObservationInitialNotificationUpdate(true)
-                  setComment(false)
-                  setActivity(false)
-                  history.push(`/app/observation/details/${id}`)
-                  // setObservationReview(false);
-                  // setObservationCloseOut(false);
-                }}
-              >
-                  Observation
-              </Button>
-              <Typography display="block">
-                  Done
-              </Typography>
-            </div>
 
-            <div className={classes.item}>
-              <Button
-                color={observationCorrectiveAction === true ? "secondary":"primary"}
-                variant={localStorage.getItem("action") === "Done" ? "contained" :"outlined" }
-                size="small"
-                endIcon={localStorage.getItem("action") === "Done"  ? <CheckCircle /> : <AccessTime  /> }
-                className={classes.statusButton}
-                onClick={(e) => {handleActionButtonClick(e)
-                  // setObservationInitialNotification(false);
-                  // setObservationCorrectiveAction(true);
-                  // setObservationCorrectiveActionView(true)
-                  // setObservationReview(false);
-                  // setObservationCloseOut(false);
-                }}
-              >
-                  Action Tracking
-              </Button>
-              <Typography display="block">
-                  {localStorage.getItem("action") === "Done" ? "Done" : ""}
-              </Typography>
-            </div>
-          </div>
-        </Box>
-        <Divider />
-
-        <Box marginTop={4}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={9}>
+<Grid container spacing={3}>
+          <Grid item md={9} xs={12}>
+            <Grid container spacing={3}>
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30.6" height="30.168" viewBox="0 0 39.6 30.168">
+                    <path id="workflow" d="M37.251,11.412l.967.967a.645.645,0,0,1,0,.925l-.78.78a5.208,5.208,0,0,1,.483,1.289H38.93a.645.645,0,0,1,.645.645V17.4a.645.645,0,0,1-.645.645h-1.1a5.176,5.176,0,0,1-.57,1.25l.715.712a.645.645,0,0,1,0,.925l-.967.967a.645.645,0,0,1-.928.013l-.78-.78a5.037,5.037,0,0,1-1.289.483v1.009a.645.645,0,0,1-.645.645H31.991a.645.645,0,0,1-.645-.645V21.512a5.3,5.3,0,0,1-1.26-.564l-.712.709a.645.645,0,0,1-.925,0l-.967-.967a.645.645,0,0,1,0-.925l.78-.78a5.082,5.082,0,0,1-.483-1.289H26.77a.645.645,0,0,1-.645-.645V15.676a.645.645,0,0,1,.645-.645h1.1a5.176,5.176,0,0,1,.57-1.25l-.712-.722a.645.645,0,0,1,0-.925l.967-.967a.645.645,0,0,1,.925,0l.78.78a5.082,5.082,0,0,1,1.289-.483V10.455a.645.645,0,0,1,.645-.645H33.7a.645.645,0,0,1,.645.645v1.1a5.176,5.176,0,0,1,1.25.57l.712-.712a.645.645,0,0,1,.922,0ZM14.2,17.081a.709.709,0,0,1-.645-.761.693.693,0,0,1,.645-.761h8.079a.712.712,0,0,1,.645.761.7.7,0,0,1-.645.761ZM8.864,14.825h2.72a.242.242,0,0,1,.255.255V17.8a.238.238,0,0,1-.255.245H8.864A.238.238,0,0,1,8.61,17.8V15.07a.242.242,0,0,1,.255-.255Zm0,6.719h2.72a.242.242,0,0,1,.255.255v2.72a.242.242,0,0,1-.255.255H8.864a.242.242,0,0,1-.255-.255v-2.73a.242.242,0,0,1,.255-.255ZM14.2,23.8a.709.709,0,0,1-.645-.757.693.693,0,0,1,.645-.761h5.511a.709.709,0,0,1,.645.761.693.693,0,0,1-.645.757ZM9.651,11.334a.435.435,0,0,1-.583-.074l-.061-.052-.812-.835a.461.461,0,0,1,.077-.645A.541.541,0,0,1,8.98,9.7l.432.458L10.995,8.7a.448.448,0,0,1,.645.151.509.509,0,0,1-.052.709L9.654,11.341Zm4.512-.645c-.355,0-.59-.355-.59-.761s.235-.761.59-.761h9.346a.712.712,0,0,1,.645.761.7.7,0,0,1-.645.761ZM1.11,22.662a3.617,3.617,0,0,1,2.6-1.35V.967C.746,1.257,1.088,4,1.107,6.549V22.662ZM4.817,3.9h27.79a.761.761,0,0,1,.548.229.773.773,0,0,1,.229.548V6.929H31.949V5.156H4.817V21.87h0a.471.471,0,0,1-.4.467c-4.228.654-4.431,5.669-.122,6.388H31.949v-2.1H33.39v2.772a.777.777,0,0,1-.229.548h0a.773.773,0,0,1-.548.229H4.253A4.953,4.953,0,0,1,.811,28.3a5.569,5.569,0,0,1-.828-3.535V6.562C-.017,3.445-.05.077,4.291,0h.058a.474.474,0,0,1,.467.477Zm28.038,9.962a2.688,2.688,0,1,1-2.688,2.688,2.688,2.688,0,0,1,2.688-2.688Z" transform="translate(0.026)" fill="#06425c"/>
+                  </svg> Status & stage
+                </Typography>
+              </Grid>
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Paper elevation={1} className="paperSection">
+                  <Grid container spacing={3}>
+                    {/* <div className={classes.observationSummaryBox}>
+                      <div className={classes.item}> */}
+                      <Grid item md={12} sm={12} xs={12} className={classes.item}>
+                        <ul className="SummaryTabList">
+                          <li>
+        
+                            <Button
+                              color={observationInitialNotification === true ? 'secondary' : "primary"}
+                              variant="contained"
+                              size="small"
+                              // endIcon={<CheckCircle />}
+                              className={classes.statusButton}
+                              onClick={(e) => {
+                                setObservationInitialNotification(true);
+                                setObservationCorrectiveAction(false);
+                                setObservationInitialNotificationUpdate(true)
+                                setComment(false)
+                                setActivity(false)
+                                history.push(`/app/observation/details/${id}`)
+                                // setObservationReview(false);
+                                // setObservationCloseOut(false);
+                              }}
+                            >
+                                Observation
+                            </Button>
+                            <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
+                                Done <CheckCircle />
+                            </Typography>
+                          {/* </div> */}
+                        </li>
+                        <li>
+                          {/* <div className={classes.item}> */}
+                            <Button
+                              color={observationCorrectiveAction === true ? "secondary":"primary"}
+                              variant={localStorage.getItem("action") === "Done" ? "contained" :"outlined" }
+                              size="small"
+                              className={classes.statusButton}
+                              onClick={(e) => {handleActionButtonClick(e)
+                                // setObservationInitialNotification(false);
+                                // setObservationCorrectiveAction(true);
+                                // setObservationCorrectiveActionView(true)
+                                // setObservationReview(false);
+                                // setObservationCloseOut(false);
+                              }}
+                            >
+                                Action Tracking
+                            </Button>
+                            <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
+                                {localStorage.getItem("action") === "Done" ? "Done" : "Pending"} {localStorage.getItem("action") === "Done"  ? <CheckCircle /> : <AccessTime  /> }
+                            </Typography>
+                             
+                          </li>
+                        </ul>                        
+                      </Grid>
+              </Grid>
+                </Paper>
+              </Grid>
+        {/* <Box marginTop={4}> */}
+        <Grid item xs={12} md={12}>
               {/* summary and part */}
               <>
                 {(() => {
@@ -290,16 +328,32 @@ const ObservationSummary = () => {
                   // }
                 })()}
               </>
+               </Grid>
+              </Grid>
             </Grid>
+            
+
+
+
             <Grid item xs={12} md={3}>
-              <Paper>
-                <List
-                  dense
-                  subheader={
-                    <ListSubheader component="div">Actions</ListSubheader>
-                  }
-                >
-                  <ListItemLink
+              {/* <Paper> */}
+              <div className="quickActionSection">
+              <Typography variant="h5" className="rightSectiondetail">
+                Quick Actions
+              </Typography>
+              <List component="nav" aria-label="main mailbox folders">
+              <ListItem button>
+                  <ListItemIcon>
+                    <Edit />
+                  </ListItemIcon>
+                  <Link
+                    variant="subtitle"
+                    onClick={(e) => handelObservationInitialNotificationUpdate(e)}
+                  >
+                    <ListItemText primary="Update Observation" />
+                  </Link>
+                </ListItem>
+                  {/* <ListItemLink
                     // href={`/app/pages/observation-initial-notification`}
                     //onClick={() => handlePushUpdateInitialNotification()}
                     onClick={(e) => handelObservationInitialNotificationUpdate(e)}
@@ -308,54 +362,88 @@ const ObservationSummary = () => {
                       <Edit />
                     </ListItemIcon>
                     <ListItemText primary="Update Observation" />
-                  </ListItemLink>
+                  </ListItemLink> */}
 
                     {localStorage.getItem("action") === "Done" ? (
-                  <ListItem button divider onClick={(e) => handleActionUpdate(e)}>
-                    <ListItemIcon>
-                      <Edit />
-                    </ListItemIcon>
+                      <ListItem button>
+                  <ListItemIcon>
+                    <Edit />
+                  </ListItemIcon>
+                  <Link
+                    variant="subtitle"
+                    onClick={(e) => handleActionUpdate(e)}
+                  >
                     <ListItemText primary="Update Actions" />
-                  </ListItem>):(
-                    <ListItem button divider onClick={(e) => handleActionUpdate(e)}>
-                    <ListItemIcon>
-                      <Add />
-                    </ListItemIcon>
+                  </Link>
+                </ListItem>
+                  ):(
+                    <ListItem button>
+                  <ListItemIcon>
+                  <Add />
+                  </ListItemIcon>
+                  <Link
+                    variant="subtitle"
+                    onClick={(e) => handleActionUpdate(e)}
+                  >
                     <ListItemText primary="Add Actions" />
+                  </Link>
                   </ListItem>
+                
                   )}
-
+{/* 
+                  <ListItem button>
+                  <ListItemIcon>
+                  <Comment />
+                  </ListItemIcon>
+                  <Link
+                    variant="subtitle"
+                    onClick={(e) => handleComments(e)}
+                  >
+                    <ListItemText primary="Comments" />
+                  </Link>
+                </ListItem> */}
                   {/* <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
-                      <Comment />
+                    <Comment />
                     </ListItemIcon>
                     <ListItemText primary="Comments" />
                   </ListItem> */}
 
-                  {/* <ListItem button onClick={(e) => handleActivity(e)}>
-                    <ListItemIcon>
-                      <History />
-                    </ListItemIcon>
+                  {/* <ListItem button>
+                  <ListItemIcon>
+                  <History />
+                  </ListItemIcon>
+                  <Link
+                    variant="subtitle"
+                    onClick={(e) => handleActivity(e)}
+                  >
                     <ListItemText primary="Activity History" />
-                  </ListItem> */}
-                </List>
-                <Divider />
-                {/* <List dense>
-                  <ListItem button onClick={(e) => handlePrintPush(e)}>
-                    <ListItemIcon>
-                      <Print />
-                    </ListItemIcon>
+                  </Link>
+                </ListItem> */}
+                 
+                  
+                {/* <Divider /> */}
+
+                {/* <ListItem button>
+                  <ListItemIcon>
+                  <Print />
+                  </ListItemIcon>
+                  <Link
+                    variant="subtitle"
+                    onClick={(e) => handlePrintPush(e)}
+                  >
                     <ListItemText primary="Print" />
-                  </ListItem>
-                </List> */}
-              </Paper>
+                  </Link>
+                </ListItem> */}
+                
+                  </List>
+
+              </div>
             </Grid>
-          </Grid>
-        </Box>
-      </PapperBlock>
-      {/* ) : (
-        <h1> Loading...</h1>
-      )} */}
+            </Grid>
+        
+      </CustomPapperBlock>
+      
     </>
   );
 };

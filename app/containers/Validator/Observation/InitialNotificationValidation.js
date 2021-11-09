@@ -59,10 +59,10 @@ function InitialNotificationValidator(data, projectStructure) {
     }
   }
 
-  if (data.observationTitle.length > 255) {
-    error.observationTitle = "Enter less than 255 characters";
-    isValid = false;
-  }
+  // if (data.observationTitle.length > 255) {
+  //   error.observationTitle = "Enter less than 255 characters";
+  //   isValid = false;
+  // }
 
   //  if (validator.isEmpty(data.supervisorName.toString())) {
   //   error.supervisorName = "Please select the supervisor's name";

@@ -13,7 +13,9 @@ import React, { useState } from "react";
 import "../../../styles/custom/customheader.css";
 import ObservationBookmarkFilter from './ObservationBookmarkFilter';
 import ObservationsFilter from './ObservationsFilter';
-
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -214,6 +216,10 @@ const useStyles = makeStyles((theme) => ({
   },
   mR10: {
     marginRight: '10px',
+   '& img:hover': {
+     borderRadius: '50%',
+     boxShadow: '0px 0px 2px 2px #f47607',
+   },
   },
   sepHeight: {
     borderLeft: '1px solid #cccccc',
@@ -235,7 +241,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '16px!important',
     minWidth: '19% !important',
   },
-  pLtenPRten: {padding: '0px 10px 0px 10px',},
+  pLtenPRten: {margin: '0px 10px 0px 10px',},
   buttonsNewDays: {
     padding: '6px 5px 5px 6px', 
     margin: '0px 10px',
@@ -315,6 +321,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   },
+  statusIconBox: {
+    textAlign: 'center',
+    padding: '24px 0px !important',
+    ['@media (max-width:800px)']: { 
+      padding: '0px 0px 25px 0px !important',
+    },
+    ['@media (max-width:480px)']: { 
+      padding: '12px 0px 25px 16px !important',
+      textAlign: 'left',
+    },
+  },
   }));
 
 export default function SimpleTabs(props) {
@@ -322,15 +339,16 @@ export default function SimpleTabs(props) {
   const [value, setValue] = React.useState(0);
   const [observation, setObservation] = useState("My Observations");
   const [searchIncident, setSeacrhIncident] = useState("")
+  const [status, setStatus] = useState('')
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if(newValue === 0){
       setObservation("My Observations")
-      localStorage.removeItem("value")
+      setStatus('')
     }else if(newValue === 1){
       setObservation("Big Picture")
-      localStorage.removeItem("value")
+      setStatus('')
     }
   };
   const handleSearch = (e) => {
@@ -372,13 +390,13 @@ export default function SimpleTabs(props) {
       </Paper> 
 		</Grid>
 
-      {/* <Grid item md={2} sm={12} xs={12} className={classes.floatE}>
+      <Grid item md={2} sm={12} xs={12} className={classes.statusIconBox}>
         <span className={classes.mR10}>
-          <img src={preplanning} />
-          <img src={progress} className={classes.pLtenPRten} />
-          <img src={completed} />
+          <img src={preplanning} onClick={(e) => setStatus("Open")} selected={true} />
+          <img src={progress} className={classes.pLtenPRten} onClick={(e) => setStatus("Planned")} />
+          <img src={completed} onClick={(e) => setStatus("Completed")} />
         </span>
-      </Grid> */}
+      </Grid>
 
 			
 		  </Grid>
@@ -386,13 +404,13 @@ export default function SimpleTabs(props) {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			<ObservationsFilter observation={observation} search={searchIncident}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			<ObservationsFilter observation={observation} search={searchIncident}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			<ObservationsFilter observation={observation} search={searchIncident}/>
+			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value}/>
 		  </TabPanel>
 		<TabPanel value={value} index={3}>
 			<ObservationBookmarkFilter />

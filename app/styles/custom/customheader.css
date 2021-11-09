@@ -112,3 +112,558 @@ html {
 .PapperBlock-title {
   font-family: Xolonium-Regular;
 }
+
+
+/* /////// */
+
+@font-face {
+  font-family: Montserrat-Regular;
+  src: url(../../fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
+  font-family: Montserrat-Medium;
+  src: url(../../fonts/Montserrat-Medium.ttf);
+}
+
+@font-face {
+  font-family: Xolonium-Regular;
+  src: url(../../fonts/Xolonium-Regular.ttf);
+}
+
+@font-face {
+  font-family: Montserrat-SemiBold;
+  src: url(../../fonts/Montserrat-SemiBold.ttf);
+}
+
+html {    
+	font-family: Montserrat-Regular !important;
+}
+
+.headerAppsGrid {
+  opacity: 1;
+}
+
+.headerAppsGrid .MuiMenu-list {
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  gap: 1rem;
+  font-family: 'Montserrat';
+}
+
+.headerAppsGrid .MuiMenu-list .MuiListItem-root {
+  flex-direction: column !important;
+  font-size: 13px;
+  font-family: Montserrat-Regular !important;
+}
+.MuiTab-root {
+	font-family: Montserrat-Regular !important;
+}
+.MuiTypography-h5 {
+	font-family: Xolonium-Regular !important;
+	font-weight: 500;
+  font-size: 1.3rem !important;
+}
+.MuiButton-label {
+	font-family: Montserrat-Regular !important;
+}
+.MuiTypography-body1 {
+	font-family: Montserrat-Regular !important;
+}
+.MuiTypography-body2 {
+	font-family: Montserrat-Regular !important;
+}
+.MuiButton-root  {
+	font-family: Montserrat-Regular !important;
+}
+.MuiButtonBase-root   {
+	font-family: Montserrat-Regular !important;
+}
+.PersistentDrawer-floatL-3017 {
+    font-size: 17px !important;
+    font-family: Xolonium-Regular !important;
+    font-weight: 500 !important;
+}
+/* .MuiTypography-h6 {
+	font-family: Xolonium-Regular !important;
+	font-weight: 500 !important;
+} */
+.MuiGrid-root.makeStyles-floatE-426.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-2 img {
+    height: 44px;
+}
+span.makeStyles-mR10-2491 img {
+    height: 44px;
+}
+.MuiFormLabel-root {
+    font-family: Montserrat-Regular !important;
+    color: #666666 !important;
+    font-size: 15px;
+}
+.makeStyles-fullWidth-419 {
+  width: 100%;
+  margin: .2rem 0;
+  box-shadow: inset 0px 0px 9px #dedede;
+}
+.MuiInputBase-root {
+    color: rgba(0, 0, 0, 0.87);
+    cursor: text;
+    display: inline-flex;
+    position: relative;
+    font-size: 1rem;
+    box-sizing: border-box;
+    align-items: center;
+    font-family: Open Sans,sans-serif;
+    font-weight: 400;
+    line-height: 1.1876em;
+}
+.MuiInputBase-root {
+    font-family: Montserrat-Regular !important;
+}
+.MuiOutlinedInput-notchedOutline {
+    border-color: rgba(0, 0, 0, 0.23);
+}
+
+.MuiTableCell-root {
+   font-family: Montserrat-Regular !important;
+}
+.makeStyles-search-1484 {
+  margin: 14px 2px 9px 0px !important;
+  padding: 0px 0px !important;
+  width: 100%;
+}
+.pr0 {padding-right:0px;}
+@media (min-width: 600px) {
+.search {
+    width: 98% !important;
+    margin-left: 8px;
+}
+}
+
+/*forms*/
+html .custmCancelBtn {
+  color: #06425C !important;
+  background-color: #ffffff !important;
+  margin-left: 5px;
+  border: 1px solid #06425C !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+.custmCancelBtn:hover {
+  background-color: #ff8533 !important;
+  color: #ffffff !important;
+  border: 1px solid #ff8533 !important;
+}
+.pL-10 {padding-left: 10px;}
+.MuiTypography-h6 {
+  font-size: 16px !important;
+  font-family: Montserrat-SemiBold !important;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.secionHeader {
+  position: 'relative';
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Montserrat-SemiBold';
+}
+.mb10 {
+  margin-bottom:10px;
+}
+
+.paperSection {
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #E7E7E7;
+}
+
+
+
+.sectionHeading {
+  font-size: 16px !important;
+  line-height: 19px;
+  color: #06425C;
+  font-family: Montserrat-SemiBold !important;
+  padding-bottom: 5px;
+  padding-top: 20px;
+}
+
+/* .formControl {
+  margin: .5rem 0;
+  width: 100%;
+} */
+.formControl {
+  width: 100%;
+  /* margin: .5rem 0; */
+}
+/* .spacer {
+  padding: .75rem 0;
+} */
+.spacerRight {
+  margin-right: 30px !important;
+}
+
+.labelName {
+  font-size: 16px !important;
+  color: #06425C;
+  font-family: 'Montserrat-SemiBold' !important;
+  line-height: 19px !important;
+}
+.labelValue {
+  font-size: 16px !important;
+  color: #666666;
+  font-family: 'Montserrat-SemiBold' !important;
+  line-height: 19px !important;
+}
+.formControl label {
+  font-size: 15px;
+  color: #666666 !important;
+  font-family: 'Montserrat-Regular' !important;
+}
+.formControl .MuiSelect-select, .formControl input, .formControl textarea {
+  color: #000000;
+  line-height: 19px;
+  font-family: 'Montserrat-Regular';
+  font-size: 15px;
+}
+.checkRadioLabel {
+  font-size: 16px !important;
+  color: #666666 !important;
+  font-family: 'Montserrat-SemiBold' !important;
+  line-height: 19px;
+}
+.selectLabel .MuiFormControlLabel-label {
+  font-size: 15px;
+  font-family: 'Montserrat-Medium' !important;
+  line-height: 19px;
+  color: #737373;
+}
+
+
+.buttonStyle {
+  margin-right: 15px !important;
+  font-size: 16px !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  padding: 5px 20px !important;
+}
+.buttonStyle span {
+  font-family: 'Montserrat-SemiBold' !important;
+}
+
+.quickActionSection nav {
+  background-color: #7890A4;
+}
+.rightSectiondetail {
+  background-color: #06425C;
+  font-size: 18px !important;
+  color: #ffffff;
+  line-height: 22px;
+  padding: 20px 16px;
+  border-radius: 10px 10px 0px 0px;
+}
+.quickActionSection nav {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.quickActionSection nav div a, .quickActionSection nav li a {
+  width: 100%;
+}
+.quickActionSection nav div:hover, .quickActionSection nav li:hover{
+  background-color: #ff8533;
+  box-shadow: none;
+}
+.quickActionSection nav div a:hover {
+  background-color: transparent;
+}
+.quickActionSection nav div a:hover, .quickActionSection nav li a:hover {
+  text-decoration: none;
+}
+.quickActionSection nav div a .MuiListItemText-root span, .quickActionSection nav li a .MuiListItemText-root span {
+  font-size: 14px;
+  font-family: 'Montserrat-Regular' !important;
+  line-height: 18px;
+  color: #ffffff;
+}
+.quickActionSection nav .MuiListItemIcon-root {
+  color: #ffffff;
+}
+.paddTBRemove {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.paddTRemove {
+  padding-top: 0px !important;
+}
+.paddBRemove {
+  padding-bottom: 0px !important;
+}
+.viewLabel {
+  font-size: 14px;
+  font-family: 'Montserrat-Regular' !important;
+  color: #7692A4 !important;
+  line-height: 18px;
+}
+.viewLabelValue {
+  font-size: 14px !important;
+  font-family: 'Montserrat-Medium' !important;
+  color: #666666;
+  line-height: 18px;
+}
+.viewLabelValueListTag .MuiListItemText-secondary {
+  font-size: 14px !important;
+  font-family: 'Montserrat-Medium' !important;
+  color: #666666;
+  line-height: 18px;
+}
+.viewLabelValueListTag .MuiListItemText-primary {
+  font-size: 14px;
+  font-family: 'Montserrat-Regular' !important;
+  color: #7692A4 !important;
+  line-height: 18px;
+}
+.buttonActionArea {
+  margin-top: 28px !important;
+}
+.catDrawerSection {
+  z-index: -9;
+}
+
+/* Attachment style component */
+.chooseFileDesign {
+  font-size: 15px;
+  color: #737373;
+  font-family: 'Montserrat-Medium';
+  padding-top: 15px;
+  margin-bottom: 5px;
+}
+.chooseFileDesign span {
+  margin-left: 5px;
+  padding: 6px 12px;
+  border: 1px solid #06425C;
+  border-radius: 6px;
+  color: #06425C;
+  font-size: 14px;
+  font-family: 'Montserrat-Regular';
+}
+.attachFileThumb {
+  width: 150px;
+  display: inline-block;
+}
+.attachFileStyle {
+  width: 100px;
+  border-radius: 8px;
+  height: 100px;
+}
+.attachContent {
+  padding-right: 15px;
+}
+.attachContent p {
+  font-size: 14px;
+  font-family: 'Montserrat-Regular';
+  line-height: 18px;
+  color: #666666;
+  padding-top: 5px;
+  margin-bottom: 0px;
+  text-align: left;
+}
+.attachContent button {
+  text-align: center;
+}
+
+
+.checkedUnclick {
+  pointer-events: none;
+}
+
+.MuiDialogTitle-root:after {
+  background: transparent !important;
+}
+.MuiDialogContent-root {
+  word-break: normal;
+}
+
+/* Table style component */
+.simpleTableSection, .MuiTableBody-root {
+  border: 1px solid #E7E7E7;
+}
+.tableHeadCellFirst {
+  background-color: #06425c;
+  color: #ffffff !important;
+}
+.tableHeadCellSecond {
+  background-color: #06425c;
+  color: #ffffff !important;
+}
+
+.dataTableSectionDesign table {
+  margin-top: 0px;
+}
+.dataTableSectionDesign table thead tr th {
+  background-color: #06425c;
+}
+
+.dataTableSectionDesign table thead tr th button span div div {
+  color: #ffffff !important;
+}
+.dataTableSectionDesign .MuiTableSortLabel-root.MuiTableSortLabel-active {
+  color: #ffffff;
+}
+.dataTableSectionDesign .MuiTableSortLabel-root.MuiTableSortLabel-active.MuiTableSortLabel-root.MuiTableSortLabel-active .MuiTableSortLabel-icon {
+  color: #ffffff;
+}
+
+
+/* Accodion style component */
+.accordionHeaderSection {
+  background-color: #7890A4 !important;
+  color: #ffffff !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+  margin-bottom: 15px !important;
+}
+.accordionSubHeaderSection {
+  background-color: #F1F1F1 !important;
+  color: #666666 !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+  margin-bottom: 15px !important;
+}
+.backPaperAccordian {
+  border: 0px solid #06425c;
+  border-radius: 10px !important;
+  box-shadow: 0px 0px 0px 1px #7890a4 !important;
+  margin: 0px 0px 20px 0px !important;
+}
+.backPaperSubAccordian {
+  border: 0px solid #06425c;
+  border-radius: 10px !important;
+  box-shadow: 0px 0px 0px 1px #7890a4 !important;
+  margin: 0px 0px 0px 0px !important;
+}
+.backPaperAccordian:not(.Mui-expanded) .accordionHeaderSection {
+  border-radius: 10px !important;
+}
+.backPaperSubAccordian:not(.Mui-expanded) .accordionSubHeaderSection {
+  border-radius: 10px !important;
+}
+.accordionHeaderSection:not(.Mui-expanded) {
+  margin-bottom: 0px !important;
+}
+.accordionSubHeaderSection:not(.Mui-expanded) {
+  margin-bottom: 0px !important;
+}
+.MuiAccordionSummary-root:hover:not(.Mui-disabled) {
+  cursor: pointer;
+}
+
+.accordionHeaderSection .MuiAccordionSummary-content {
+  margin: 0px 0px !important;
+}
+.accordionSubHeaderSection .MuiAccordionSummary-content {
+  margin: 0px 0px !important;
+}
+.accordionHeaderSection .MuiAccordionSummary-content ul li .MuiListItemText-root .MuiListItemText-primary {
+  font-size: 15px;
+  font-family: 'Montserrat-Regular' !important;
+}
+.accordionSubHeaderSection .MuiAccordionSummary-content ul li .MuiListItemText-root .MuiListItemText-primary {
+  font-size: 15px;
+  font-family: 'Montserrat-Regular' !important;
+}
+.accordionHeaderSection .MuiIconButton-label svg {
+  color: #ffffff;
+}
+.accordionSubHeaderSection .MuiIconButton-label svg {
+  color: #666666;
+}
+/* .formFieldBTNSection {
+  text-align: center;
+} */
+.formFieldBTNSection button {
+  margin-top: 12px;
+  background-color: #7890A4;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: 'Montserrat-SemiBold' !important;
+  text-transform: none;
+}
+.formFieldBTNSection button:hover {
+  background-color: #ff8533;
+  border-color: #ff8533;
+}
+.tableFileAttach {
+  margin: 0px;
+  width: auto !important;
+  cursor: pointer;
+}
+
+.filePathWithDelet {
+  font-size: 14px;
+  color: #7890A4;
+  font-family: 'Montserrat-Regular';
+}
+.filePathWithDelet button {
+  color: #7890A4;
+}
+
+
+
+.sectionSubHeading .subsectiontitle {
+  background-color: #ffffff;
+  padding: 25px 22px 25px 22px;
+}
+.sectionSubHeading .subsectiontitle .sectionHeading {
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+
+.SummaryTabList li{
+  display: inline-block;
+  margin-right: 15px;
+}
+.SummaryTabList li button.MuiButton-containedPrimary:hover, .SummaryTabList li button.MuiButton-containedSecondary  {
+  border-color: #ff8533 !important;
+}
+.SummaryTabList li button.MuiButton-outlinedSecondary, .SummaryTabList li button.MuiButton-outlinedSecondary:hover, .SummaryTabList li button.MuiButton-outlinedPrimary:hover {
+  color: #ff9900;
+  border: 1px solid #ff9900;
+  background-color: transparent;
+} 
+
+
+@media (max-width: 1280px) {
+  .catDrawerSection {
+    position: absolute;
+    right: 0px;
+    z-index: 0;
+  }
+  .catDrawerComplincSection{
+    position: absolute;
+    right: 0px;
+  }
+  .contentRightBox {
+    margin-right: -0px !important;
+  }
+}
+@media (max-width: 800px) {
+  .catDrawerSection {
+    top: 55px;
+  }
+  .catDrawerSection {
+    top: 55px;
+  }
+  
+}
+
+@media (max-width: 480px) {
+  .catDrawerSection {
+    top: 78px;
+  }
+  .catDrawerComplincSection {
+    top: 30px;
+  }
+  .MuiToolbar-regular {
+    min-height: 65px !important;
+  }
+}

@@ -16,7 +16,7 @@ import { Typography } from "@material-ui/core";
 import {
   INITIAL_NOTIFICATION_FORM,
   SSO_URL,
-  HEADER_AUTH,
+  HEADER_AUTH,ACCOUNT_API_URL,
 } from "../../utils/constants";
 import api from "../../utils/axios";
 import Type from "../../styles/components/Fonts.scss";
@@ -318,13 +318,13 @@ const ProjectStructure = (props) => {
       </Grid>)}
 
     {labelList.length === 1 ? labelList.map((item, index) => (
-      <Grid item xs={3}>
+      <Grid item md={3} sm={3} xs={12}>
         <FormControl
           key={index}
           variant="outlined"
           error={props.error && props.error[`projectStructure${[item.index]}`]}
           fullWidth={true}
-          className={classes.formControl}
+          className="formControl"
           required
         >
 
@@ -373,13 +373,13 @@ const ProjectStructure = (props) => {
     ))
       : labelList.length === selectBreakdown.length ?
         labelList.slice(selectBreakdown.length - 1).map((item, index) => (
-          <Grid item xs={3}>
+          <Grid item md={3} sm={3} xs={12}>
             <FormControl
               key={index}
               variant="outlined"
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
-              className={classes.formControl}
+              className="formControl"
               required
             >
 
@@ -427,13 +427,13 @@ const ProjectStructure = (props) => {
           </Grid>
         )) :
         labelList.length > 0 ? labelList.slice(selectBreakdown.length).map((item, index) => (
-          <Grid item xs={3}>
+          <Grid item md={3} sm={3} xs={12}>
             <FormControl
               key={index}
               variant="outlined"
               error={props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
-              className={classes.formControl}
+              className="formControl"
               required
             >
 

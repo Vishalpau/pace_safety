@@ -55,6 +55,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import PACE_white from 'dan-images/PACE_white.png';
 
 import Headerbox from "./headerbox";
+import "../../styles/custom/customheader.css";
 
 import { useParams } from "react-router";
 

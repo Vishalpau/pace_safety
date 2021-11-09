@@ -652,6 +652,10 @@ export const Prints = loadable(() => import("./Print/Prints"), {
   fallback: <Loading />,
 });
 
+export const GeneralObservationPrints = loadable(() => import("./SampleApps/GeneralObservationPrints"), {
+  fallback: <Loading />,
+});
+
 // Aha    
 export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
   fallback: <Loading />,

@@ -25,6 +25,10 @@ import Share from '@material-ui/icons/Share';
 import Pagination from '@material-ui/lab/Pagination';
 import in_progress_small from 'dan-images/in_progress_small.png';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import completed_small from 'dan-images/completed-small.png';
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
@@ -36,7 +40,15 @@ import { projectName,company } from '../../../redux/actions/initialDetails';
 import { useDispatch } from 'react-redux';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
+import UserDetailsView from '../../UserDetails/UserDetail';
+import StarsIcon from '@material-ui/icons/Stars';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import axios from "axios"
 
 
@@ -50,9 +62,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
-    // border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: '4px',
-    fontFamily: 'Montserrat-Medium',
   },
   leftSide: {
     flexGrow: 1,
@@ -68,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     border: '1px solid #ccc',
     borderRadius: theme.shape.borderRadius,
-    // backgroundColor: theme.palette.primary.dark,
     marginRight: theme.spacing(1),
     marginLeft: 0,
     width: '100%',
@@ -91,7 +100,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -106,11 +114,6 @@ const useStyles = makeStyles((theme) => ({
   toggleTitle: {
     marginRight: theme.spacing(1),
     fontSize: '1rem',
-  },
-  sorryTitle: {
-    flex: 1,
-    fontFamily: 'Montserrat-Medium',
-    fontWeight: '500',
   },
   chipAction: {
     textAlign: 'right',
@@ -132,23 +135,23 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-  },
-  PLR0: {
-    paddingRight: '0px',
-    minWidth: '30px',
-    paddingLeft: '0px',
+    ['@media (max-width:480px)']: { 
+      marginLeft: '3px',
+      marginRight: '3px',
+    },
   },
   pLeft5: {
     paddingLeft: '5px',
   },
-  pt15: {
-    paddingTop: '15px !important',
-  },
   mLeftfont: {
     marginLeft: '2px',
     fontSize: '14px',
-    textDecoration: 'underline',
+    textDecoration: 'none',
     color: 'rgba(0, 0, 0, 0.87) !important',
+    fontWeight: '500',
+    '&:hover':{
+      textDecoration: 'none',
+    },
   },
   spacerRight: {
     marginRight: '4px',
@@ -159,12 +162,12 @@ const useStyles = makeStyles((theme) => ({
   listingLabelName: {
     color: '#7692a4',
     fontSize: '0.88rem',
-    fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Regular',
   },
   listingLabelValue: {
     color: '#333333',
     fontSize: '0.88rem',
-    fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Regular',
     '& a': {
       paddingLeft: '5px',
       cursor: 'pointer',
@@ -178,6 +181,24 @@ const useStyles = makeStyles((theme) => ({
   dataTableNew: {
     minWidth: '1360px !important',
   },
+
+  title:  {
+    fontSize: '1.25rem',
+    fontFamily: 'Montserrat-Regular',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '500',
+    lineHeight: '1.6',
+  },
+  pt30: {
+    paddingTop: '30px',
+
+  },
+
+  mTopThirtybtten: {
+    marginTop: '0rem',
+    float: 'right',
+  },
+
   TableToolbar: {
     display: 'none',
   },
@@ -196,6 +217,9 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
+    ['@media (max-width:800px)']: { 
+      paddingTop: '55px',
+    },
   },
   searchHeaderTop: {
     border: '1px solid #f1f1f1',
@@ -228,6 +252,21 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
+    ['@media (max-width:480px)']: { 
+      margin: '10px 5px 10px 5px',
+    },
+  },
+  floatR: {
+    float: 'right',
+    textTransform: 'capitalize',
+    ['@media (max-width:480px)']: { 
+      float: 'left',
+    },
+  },
+  Chip: {
+    backgroundColor: '#eaeaea',
+    borderRadius: ' 50px',
+    paddingRight: '12px',
   },
   sepHeightOne: {
     borderLeft: '3px solid #cccccc',
@@ -243,26 +282,28 @@ const useStyles = makeStyles((theme) => ({
   iconColor: {
     color: '#a7a7a7',
   },
-  floatR: {
-    float: 'right',
-    textTransform: 'capitalize',
-  },
   iconteal: {
     color: '#06425c',
-    fontSize: '28px',
   },
   listHeadColor: { backgroundColor: '#fafafa', },
   marginTopBottom: {
     '& .MuiTypography-h6 .MuiTypography-h5': {
-      fontFamily: 'Montserrat-Medium',
+      fontFamily: 'Montserrat-Regular',
     },
   },
   textRight: {
     textAlign: 'right',
+    ['@media (max-width:480px)']: { 
+      textAlign: 'left',
+      padding: '0px 8px 15px 8px !important',
+    },
   },
   userImage: {
-    height: '56px',
-    width: '58px',
+    borderRadius: '50px',
+    width: '52px',
+    height: '50px',
+    marginRight: '0px',
+
   },
   mrFifteen: {
     marginRight: '15px',
@@ -271,13 +312,76 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 0px 2px #ccc',
     borderRadius: '10px',
     marginBottom: '30px',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      webkitBoxShadow: '0 1px 5px 2px #dcdada',
+      boxShadow: '0 1px 5px 2px #dcdada',
+    },
+    '&:hover .MuiGrid-align-items-xs-flex-start': {
+      backgroundColor: '#f0f0f0',
+    },
   },
-  title: {
-    fontSize: '20px',
-    fontFamily: 'Montserrat !important',
-    color: '#06425c',
+
+  cardLinkAction: {
+    width: '100%',
+    float: 'left',
+    padding: '14px',
+    cursor: 'pointer',
+    textDecoration: 'none !important',
+    ['@media (max-width:800px)']: { 
+      paddingTop: '85px',
+    }
   },
-  pr0: { paddingRight: '0px !important', },
+  userPictureBox: {
+    position: 'absolute',
+    right: '0px',
+    ['@media (max-width:800px)']: { 
+      right: 'auto',
+    }
+  },
+  cardContentSection: {
+    position: 'relative',
+  },
+  usrProfileListBox: {
+    '& ul': {
+      paddingTop: '0px',
+      '& li': {
+        paddingLeft: '0px',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        '& div': {
+          '& span': {
+            display: 'inline-block',
+            float: 'left',
+            paddingRight: '14px',
+            fontSize: '15px',
+            fontWeight: '600',
+          },
+          '& p': {
+            display: 'inline-block',
+            float: 'left',
+          },
+        },
+      },
+    },
+  },
+  cardBottomSection: {
+    '& p': {
+      ['@media (max-width:480px)']: { 
+        fontSize: '12px !important',
+      },
+    },
+    // '& p': {
+    //   ['@media (max-width:375px)']: { 
+    //     fontSize: '12px !important',
+    //   },
+    // },
+  },
+  cardActionBottomBox: {
+    ['@media (max-width:480px)']: { 
+      padding: '8px !important',
+    },
+  },
 }));
 
 function Actions(props) {
@@ -302,7 +406,20 @@ function Actions(props) {
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
+  const [userInfo , setUserInfo] = useState({})
   const history = useHistory();
+
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+const handleMyUserPClickOpen = (item) => {
+  setUserInfo({name : item[1].createdBy})
+  setMyUserPOpen(true);
+};
+
+const handleMyUserPClose = () => {
+  setMyUserPOpen(false);
+};
+
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -370,6 +487,7 @@ function Actions(props) {
   const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const searchIncident = props.searchIncident
+  const status = props.status;
   const fetchInitialiObservation = async () => {
     await setPage(1)
 
@@ -389,7 +507,7 @@ function Actions(props) {
       if (props.type == "All" || props.type == "Type") {
         // await setAllInitialData(result)
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(allLogInUserData.data.data.results.count)
@@ -398,7 +516,7 @@ function Actions(props) {
       await setPageCount(pageCount)
 
         } else {
-          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
           const result = res.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(res.data.data.results.count)
@@ -409,7 +527,7 @@ function Actions(props) {
       } else {  
         if (props.type == "Risk") {
           if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setTotalData(allLogInUserData.data.data.results.count)
@@ -417,7 +535,7 @@ function Actions(props) {
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
           await setPageCount(pageCount)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -428,7 +546,7 @@ function Actions(props) {
         }
         if (props.type == "Comments") {  
           if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -436,7 +554,7 @@ function Actions(props) {
             let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
             await setPageCount(pageCount)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -448,7 +566,7 @@ function Actions(props) {
         if (props.type == "Positive behavior") {
           
           if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
             await setTotalData(allLogInUserData.data.data.results.count)
@@ -456,7 +574,7 @@ function Actions(props) {
             await setPageData(allLogInUserData.data.data.results.count / 25)
             await setPageCount(pageCount)
             }else{
-              const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior`)
+              const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
               const result = allLogInUserData.data.data.results.results
               await setAllInitialData(result)
               await setTotalData(allLogInUserData.data.data.results.count)
@@ -487,12 +605,12 @@ function Actions(props) {
  
     if (props.type == "All" || props.type == "Type") {
       if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
       } else {
-        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`);
         const result = res.data.data.results.results
         await setAllInitialData(result)
         await setPage(value)
@@ -500,12 +618,12 @@ function Actions(props) {
     } else {
       if (props.type == "Risk") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -513,13 +631,13 @@ function Actions(props) {
       }
       if (props.type == "Comments") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
 
         }else{
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
@@ -527,12 +645,12 @@ function Actions(props) {
       }
       if (props.type == "Positive behavior") {
         if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}`)
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
           }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}`)
+            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
 
             const result = allLogInUserData.data.data.results.results
             await setAllInitialData(result)
@@ -551,7 +669,6 @@ function Actions(props) {
     history.push(`/app/prints/${id}`);
   };
   const userDetails = async (compId, proId) => {
-    console.log("welcome user details")
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -565,7 +682,6 @@ function Actions(props) {
 
         await api(config)
           .then(function (response) {
-            console.log(response)
             if (response.status === 200) {
               console.log(response)
               let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
@@ -613,18 +729,26 @@ function Actions(props) {
     }
   }
   const classes = useStyles();
+
+  const handleDelete = async (item) => {
+    console.log(item[1].id)
+    let data = item[1]
+    // let id = item[1].id
+    data.status="Delete"
+    delete data.attachment
+    console.log(data,"!!!!!!!!!")
+    await setIsLoading(false)
+    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))    
+  }
   useEffect(() => {
-    console.log("welcome")
     let state = JSON.parse(localStorage.getItem('direct_loading'))
-    console.log(state)
     if(state!==null){
-      console.log("state is not null")
       userDetails(state.comId,state.proId)
     }else{
       fetchInitialiObservation();
     }
     // fetchInitialiObservation();
-  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident]);
+  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident , props.status]);
   
   return (
     <>
@@ -639,7 +763,18 @@ function Actions(props) {
                       .map((item, index) => (
                         <Card variant="outlined" className={classes.card}>
                           <CardContent>
-                            <Grid container spacing={3}>
+                            <Grid container spacing={3} className={classes.cardContentSection}>
+                               <Grid item md={2} sm={4} xs={12} 
+                                  className={classes.userPictureBox}
+                                >
+                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(item)} >
+                                    <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
+                                  </Button>
+                                </Grid>
+                                  <Link
+                                  onClick={() => handleSummaryPush(index)}
+                                  className={classes.cardLinkAction}
+                                >
                               <Grid item xs={12}>
                                 <Grid container spacing={3} alignItems="flex-start">
                                   <Grid item sm={12} xs={12} className={classes.listHeadColor}>
@@ -647,6 +782,7 @@ function Actions(props) {
                                       <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
                                         <Typography
                                           className={classes.title}
+                                          variant="h6"
                                         >
                                           {item[1]["observationDetails"]}
                                         </Typography>
@@ -681,30 +817,20 @@ function Actions(props) {
                                         >
                                           Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"}  <img src={in_progress_small} className={classes.smallImage} /></span>
-                                          {/* <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}  <img src={completed_small} className={classes.smallImage} /></span> */}
+                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
+                                          <span item xs={1} className={classes.sepHeightOne}></span>
+                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"} </span>
                                         </Typography>
 
                                       </Grid>
 
 
-                                      <Grid item md={2} sm={4} xs={12}>
+                                      {/* <Grid item md={2} sm={4} xs={12}>
                                         <Button className={classes.floatR}>
                                           <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
                                         </Button>
-                                        {/* <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                              >
-                                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleClose}>My account</MenuItem>
-                                <MenuItem onClick={handleClose}>Logout</MenuItem>
-                              </Menu> */}
-                                      </Grid>
+                                     
+                                      </Grid> */}
                                     </Grid>
                                   </Grid>
                                 </Grid>
@@ -800,7 +926,9 @@ function Actions(props) {
                         29 Dec 2020
                       </Typography>
                     </Grid> */}
+                              </Link>
                             </Grid>
+                            
                           </CardContent>
                           <Divider />
                           <CardActions className={Incidents.cardActions}>
@@ -854,11 +982,13 @@ function Actions(props) {
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                                  </Typography>
+                                  </Typography> */}
                                   <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography variant="body1" display="inline">
-                                    <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
-                                  </Typography> */}
+
+                                  {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                                    <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+                                  </Typography>
                                 </div>
                               </Grid>
                             </Grid>
@@ -870,49 +1000,28 @@ function Actions(props) {
 
                 </div>
                 <div>
-                  <Dialog
-                    open={MyFavopen}
-                    onClose={handleMyFavClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                  >
-                    <DialogTitle id="alert-dialog-title">{"My Favorite Package"}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText id="alert-dialog-description">
-                        <img src={paceLogoSymbol} className={classes.userImage} /> Prakash
+                <Dialog
+                  open={myUserPOpen}
+                  onClose={handleMyUserPClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  fullWidth={true}
+                  maxWidth={'sm'}
+                >
+                  <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <UserDetailsView userId={userInfo.name}/>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
 
-                        <span className={classes.floatR}><BackspaceOutlinedIcon /></span>
-                      </DialogContentText>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography
-                          variant="subtitle1"
-                          display="inline"
-                        >
-                          <a href="#" >Sparing philosophy</a>
-                        </Typography>
-                      </DialogContentText>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography
-                          variant="body1"
-                        >
-                          Prakash
-                        </Typography>
-                      </DialogContentText>
-                      <DialogContentText id="alert-dialog-description">
-                        <Typography
-                          variant="body1"
-                        >
-                          Sparing philosophy defined
-                        </Typography>
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handleMyFavClose} color="primary" variant="contained" autoFocus>
-                        Close
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
                 <div className="gridView">
                   {Object.entries(incidents).map((item, index) => (
                     <Card variant="outlined" className={Incidents.card} key={index}>

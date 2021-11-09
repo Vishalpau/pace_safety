@@ -517,7 +517,7 @@ const LessionLearned = () => {
                           ? error[`learnings${[key]}`]
                           : null
                       }
-                      label="Team/department learnings"
+                      label="Learnings"
                       className={classes.formControl}
                       variant="outlined"
                       rows="3"
@@ -547,7 +547,7 @@ const LessionLearned = () => {
                   startIcon={<AddIcon />}
                   onClick={() => addNewTeamOrDeparment()}
                 >
-                  Add learnings from another team/department
+                  ADD LEARNINGS
                 </TextButton>
               </Grid>
               <Grid item xs={12}>

@@ -18,8 +18,11 @@ import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
 import ObservationSearchSection from './ObservationSearchSection';
 import ObservationsKanban from './ObservationsKanban';
+import ObservationsBarCharts from './ObservationsBarCharts';
 import ObservationsList from './ObservationsList';
-
+// import DashboardIcon from '@material-ui/icons/Dashboard';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -140,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
   buttonsNew: {
     borderRadius: '5px',
     backgroundColor: '#06425c',
-    padding: '3px 10px 3px 6px',
+    padding: '7px 10px 7px 10px',
     marginTop: '10px',
     float: 'right',
   },
@@ -212,6 +215,8 @@ export default function Observations() {
     setValue(newValue);
   };
 
+  console.log(value)
+
   const handleBulkUploadfilePush = async () => {
     history.push(
       '/app/observation-bulkuploadfile'
@@ -263,8 +268,8 @@ export default function Observations() {
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
-          <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
+                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
+          {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
@@ -289,23 +294,23 @@ export default function Observations() {
 				<Button size="small" className={classes.buttonsNTwo} variant="contained">
 				  <GamesOutlinedIcon /> 3D
 				</Button>
-				</span>*/}
+				</span> */}
             </div>
           </Grid>
         </Grid>
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <ObservationSearchSection />
+        <ObservationSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-        <ObservationsList />
+      <ObservationSearchSection value={value} />
       </TabPanel>
-      <TabPanel value={value} index={2} className={classes.paddLRzero}>
+      {/* <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />
-      </TabPanel>
-      {/* <TabPanel value={value} index={3} className={classes.paddLRzero}>
-        <ObservationsBarCharts />
       </TabPanel> */}
+      <TabPanel value={value} index={2} className={classes.paddLRzero}>
+        <ObservationsBarCharts />
+      </TabPanel>
     </div>
   );
 }

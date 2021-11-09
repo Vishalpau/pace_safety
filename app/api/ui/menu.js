@@ -44,35 +44,35 @@ module.exports = [
     icon: 'ion-md-eye',
     linkParent: '/app/observations',
   },
-  {
+  // {
 
-    key: 'administration',
-    name: 'Administration',
-    multilevel: true,
-    icon: 'ion-ios-cog',
-    child: [
-      {
-        key: 'pick_lists',
-        name: 'Pick Lists',
-        linkParent: '#',
-      },
-      {
-        key: 'check_lists',
-        name: 'Check Lists',
-        linkParent: '/app/pages/checklist/',
-      },
-      {
-        key: 'xflha_setting',
-        name: 'X-FLHA Setting',
-        linkParent: '/app/pages/assesments/FlhaConfig',
-      },
-      {
-        key: 'setting',
-        name: 'Setting',
-        linkParent: '/app/settings/setting',
-      },
-    ],
-  },
+  //   key: 'administration',
+  //   name: 'Administration',
+  //   multilevel: true,
+  //   icon: 'ion-ios-cog',
+  //   child: [
+  //     {
+  //       key: 'pick_lists',
+  //       name: 'Pick Lists',
+  //       linkParent: '#',
+  //     },
+  //     {
+  //       key: 'check_lists',
+  //       name: 'Check Lists',
+  //       linkParent: '/app/pages/checklist/',
+  //     },
+  //     {
+  //       key: 'xflha_setting',
+  //       name: 'X-FLHA Setting',
+  //       linkParent: '/app/pages/assesments/FlhaConfig',
+  //     },
+  //     {
+  //       key: 'setting',
+  //       name: 'Setting',
+  //       linkParent: '/app/settings/setting',
+  //     },
+  //   ],
+  // },
   // {
   //   key: "menu-level",
   //   name: "Incident",

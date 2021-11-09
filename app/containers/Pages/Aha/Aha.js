@@ -1,51 +1,50 @@
-import React, { useState , useEffect} from 'react';
-import { PapperBlock } from 'dan-components';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import AppBar from '@material-ui/core/AppBar';
+import Avatar from '@material-ui/core/Avatar';
+import Box from "@material-ui/core/Box";
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Print from '@material-ui/icons/Print';
-import Share from '@material-ui/icons/Share';
+import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
 import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AttachmentIcon from '@material-ui/icons/Attachment';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import MUIDataTable from 'mui-datatables';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
-import FormatListBulleted from '@material-ui/icons/FormatListBulleted';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import MessageIcon from '@material-ui/icons/Message';
 import BuildIcon from '@material-ui/icons/Build';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import { useHistory, useParams } from 'react-router';
+import FormatListBulleted from '@material-ui/icons/FormatListBulleted';
+import MessageIcon from '@material-ui/icons/Message';
+import Print from '@material-ui/icons/Print';
+import SearchIcon from '@material-ui/icons/Search';
+import Share from '@material-ui/icons/Share';
+import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
+import Pagination from '@material-ui/lab/Pagination';
+import { PapperBlock } from 'dan-components';
 // Local Imports
 import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from 'moment';
-import Box from "@material-ui/core/Box";
-
-import api from "../../../utils/axios";
+import MUIDataTable from 'mui-datatables';
+import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
-import Pagination from '@material-ui/lab/Pagination';
-import { handelCommonObject } from "../../../utils/CheckerValue"
+import { useHistory } from 'react-router';
+import api from "../../../utils/axios";
+import { handelCommonObject } from "../../../utils/CheckerValue";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
     border: '1px solid rgba(0, 0, 0, .13)',
     borderRadius: '4px',
-  },pagination: {
+  }, pagination: {
     padding: "1rem 0",
     display: "flex",
     justifyContent: "flex-end"
@@ -147,7 +146,7 @@ const ILink = withStyles({
 function Aha(props) {
   const [cardView, setCardView] = useState(true);
   const [tableView, setTableView] = useState(false);
-  const [allAHAData , setAllAHAData] = useState([])
+  const [allAHAData, setAllAHAData] = useState([])
   const [listToggle, setListToggle] = useState(false);
   const [searchIncident, setSeacrhIncident] = useState("");
   const history = useHistory();
@@ -155,15 +154,17 @@ function Aha(props) {
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
+  const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
 
   // Function to toggle the view mode
   const handleView = () => {
-    setCardView(true);}
+    setCardView(true);
+  }
   const handleTabelView = () => {
-    setCardView(false);}
+    setCardView(false);
+  }
   //   Data for the table view
   // const columns = ['Aha number', 'Location', 'Created by', 'Created on'];
 
@@ -193,24 +194,24 @@ function Aha(props) {
         filter: true,
       },
     },
-    
+
   ];
-  
+
 
   const options = {
-    print : false,
+    print: false,
     search: false,
     filter: false,
     viewColumns: false,
-    download :false,
+    download: false,
     pagination: false
   };
 
   const handleSummaryPush = async (index) => {
     const id = allAHAData[index].id
     const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
-      localStorage.setItem('fkAHAId', id)
-      handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
+    localStorage.setItem('fkAHAId', id)
+    handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
     //console.log("Ashutosh")
     history.push(
       `/app/pages/aha/aha-summary/${id}`
@@ -228,7 +229,7 @@ function Aha(props) {
   // const fetchAllAHAData = async () => {
   //   const res = await api.get("/api/v1/ahas/")
   //   const result = res.data.data.results.results
-    
+
   //   await setAllAHAData(result)
   //   // await handelTableView(result)
   // }
@@ -239,66 +240,66 @@ function Aha(props) {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
 
     const result = res.data.data.results.results
     await setAllAHAData(result)
     await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
+    await setPageData(res.data.data.results.count / 25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
 
     await setIsLoading(true)
   };
 
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-  console.log("----------",res)
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    console.log("----------", res)
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
   };
 
-  
+
 
   const handelTableView = (result) => {
     const temp = []
     result.filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-    item[1]["description"].toLowerCase().includes(
-              searchIncident.toLowerCase()
-            ) ).map((item, index)=> {
-      temp.push([
-        item[1]["ahaNumber"],
-        item[1]['location'],
-        item[1]['createdBy'],
-        item[1]['createdAt']
-      ])
-    })
+      item[1]["description"].toLowerCase().includes(
+        searchIncident.toLowerCase()
+      )).map((item, index) => {
+        temp.push([
+          item[1]["ahaNumber"],
+          item[1]['location'],
+          item[1]['createdBy'],
+          item[1]['createdAt']
+        ])
+      })
     setData(temp)
   }
-  
+
   console.log(allAHAData);
 
   //   Assigning 'classes' to useStyles()
@@ -307,292 +308,294 @@ function Aha(props) {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-},[props.projectName.breakDown])
+  }, [props.projectName.breakDown])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
-    <Box>
-    {isLoading ? <>
-      <div className={classes.root}>
-        <AppBar position="static" color="transparent">
-          <Toolbar>
-          
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={7} md={3}>
-                <div className={classes.search}>
-                  <Paper>
-                    <div className={classes.searchIcon}>
-                      <SearchIcon />
+      <Box>
+        {isLoading ? <>
+          <div className={classes.root}>
+            <AppBar position="static" color="transparent">
+              <Toolbar>
+
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={7} md={3}>
+                    <div className={classes.search}>
+                      <Paper>
+                        <div className={classes.searchIcon}>
+                          <SearchIcon />
+                        </div>
+                        <InputBase
+                          placeholder="Search…"
+                          classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+
+                          }}
+                          onChange={(e) => setSeacrhIncident(e.target.value)}
+
+                        />
+                      </Paper>
                     </div>
-                    <InputBase
-                      placeholder="Search…"
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                        
-                      }}
-                      onChange={(e) => setSeacrhIncident(e.target.value)}
-
-                    />
-                  </Paper>
-                </div>
-              </Grid>
-
-              <Grid item xs={3}>
-                <div className="toggleViewButtons">
-                  <IconButton
-                    className={classes.filterIcon}
-                    onClick={handleTabelView}
-                  >
-                    <FormatListBulleted />
-                  </IconButton>
-
-                  <IconButton
-                    aria-label="grid"
-                    className={classes.filterIcon}
-                    onClick={handleView}
-                  >
-                    <ViewAgendaIcon />
-                  </IconButton>
-                </div>
-              </Grid>
-              <Grid item xs={12} md={6} className={classes.newFormBTN}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  startIcon={<AddCircleIcon />}
-                  className={classes.newIncidentButton}
-                  disableElevation
-                  onClick={(e) => handleNewAhaPush(e)}
-                >
-                  New AHA
-                </Button>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-      </div>
-
-      {cardView ? (<>
-        {allAHAData.length > 0  && Object.entries(allAHAData).filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-            item[1]["description"].toLowerCase().includes(
-                      searchIncident.toLowerCase()
-                    ) ).map((item, index) => (
-        <Card variant="outlined" className={Incidents.card}>
-          <CardContent>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Grid container spacing={3} alignItems="flex-start">
-                  <Grid item xs={11}>
-                    <Typography variant="h6">
-                      {item[1]["description"]}
-                    </Typography>
                   </Grid>
 
-                  <Grid item xs={1} justifyContent="flex-end">
-                    <Chip
-                      avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
-                              label={item[1]["username"]?item[1]["username"]:"Admin"}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item xs={6} md={3}>
-                    <Typography
-                      display="inline"
-                      className={Fonts.listingLabelName}
-                    >
-                      Number:
-                      <Link
-                        onClick={(e) => handleSummaryPush(index)}
-                        variant="subtitle2"
-                        className={Fonts.listingLabelValue}
-                        style={{
-                          textDecoration: 'underline',
-                          display: 'inline-block',
-                          marginLeft: '8px',
-                        }}
+                  <Grid item xs={3}>
+                    <div className="toggleViewButtons">
+                      <IconButton
+                        className={classes.filterIcon}
+                        onClick={handleTabelView}
                       >
-                        {item[1]["ahaNumber"]}
-                      </Link>
-                    </Typography>
-                  </Grid>
+                        <FormatListBulleted />
+                      </IconButton>
 
-                  <Grid item xs={6} md={3}>
-                    <Chip
-                      variant="outlined"
-                      label="AHA"
+                      <IconButton
+                        aria-label="grid"
+                        className={classes.filterIcon}
+                        onClick={handleView}
+                      >
+                        <ViewAgendaIcon />
+                      </IconButton>
+                    </div>
+                  </Grid>
+                  <Grid item xs={12} md={6} className={classes.newFormBTN}>
+                    <Button
+                      variant="contained"
                       color="primary"
                       size="small"
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} md={3}>
-                    <Typography
-                      display="inline"
-                      className={Fonts.listingLabelName}
+                      startIcon={<AddCircleIcon />}
+                      className={classes.newIncidentButton}
+                      disableElevation
+                      onClick={(e) => handleNewAhaPush(e)}
                     >
-                      <CalendarTodayIcon fontSize="small" />
-                      <span className={Fonts.listingLabelValue}>
-                      {moment(item[1]["assessmentDate"]).format(
-            "Do MMMM YYYY"
-          )}
-                      </span>
-                    </Typography>
+                      New AHA
+                    </Button>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Toolbar>
+            </AppBar>
+          </div>
 
-              <Grid item xs={6} lg={3}>
-                <Typography className={Fonts.listingLabelName} gutterBottom>
-                  Work Area
-                </Typography>
+          {cardView ? (<>
+            {allAHAData.length > 0 && Object.entries(allAHAData).filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
+              item[1]["description"].toLowerCase().includes(
+                searchIncident.toLowerCase()
+              )).map((item, index) => (
+                <Card variant="outlined" className={Incidents.card}>
+                  <CardContent>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <Grid container spacing={3} alignItems="flex-start">
+                          <Grid item xs={11}>
+                            <Typography variant="h6">
+                              {item[1]["description"]}
+                            </Typography>
+                          </Grid>
 
-                <Typography className={Fonts.listingLabelValue}>
-                {item[1]["workArea"] ? item[1]["workArea"] :"-"}
-                </Typography>
-              </Grid>
-              <Grid item xs={6} lg={3}>
-                <Typography className={Fonts.listingLabelName} gutterBottom>
-                  Location
-                </Typography>
-                <Typography className={Fonts.listingLabelValue}>
-                {item[1]["location"] ? item[1]["location"] :"-"}
-                </Typography>
-              </Grid>
+                          <Grid item xs={1} justifyContent="flex-end">
+                            <Chip
+                              avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
+                              label={item[1]["username"] ? item[1]["username"] : "Admin"}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Grid>
 
-              <Grid item xs={6} lg={3}>
-                <Typography className={Fonts.listingLabelName} gutterBottom>
-                  Created on
-                </Typography>
+                      <Grid item xs={12}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={6} md={3}>
+                            <Typography
+                              display="inline"
+                              className={Fonts.listingLabelName}
+                            >
+                              Number:
+                              <Link
+                                onClick={(e) => handleSummaryPush(index)}
+                                variant="subtitle2"
+                                className={Fonts.listingLabelValue}
+                                style={{
+                                  textDecoration: 'underline',
+                                  display: 'inline-block',
+                                  marginLeft: '8px',
+                                }}
+                              >
+                                {item[1]["ahaNumber"]}
+                              </Link>
+                            </Typography>
+                          </Grid>
 
-                <Typography variant="body1" className={Fonts.listingLabelValue}>
-                {moment(item[1]["createdAt"]).format(
-            "Do MMMM YYYY, h:mm:ss a"
-          )}
-                </Typography>
-              </Grid>
+                          <Grid item xs={6} md={3}>
+                            <Chip
+                              variant="outlined"
+                              label="AHA"
+                              color="primary"
+                              size="small"
+                            />
+                          </Grid>
 
-              <Grid item xs={6} lg={3}>
-                <Typography className={Fonts.listingLabelName} gutterBottom>
-                  Created By
-                </Typography>
+                          <Grid item xs={12} md={3}>
+                            <Typography
+                              display="inline"
+                              className={Fonts.listingLabelName}
+                            >
+                              <CalendarTodayIcon fontSize="small" />
+                              <span className={Fonts.listingLabelValue}>
+                                {moment(item[1]["assessmentDate"]).format(
+                                  "Do MMMM YYYY"
+                                )}
+                              </span>
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
 
-                <Typography className={Fonts.listingLabelValue}>
-                {item[1]["username"]}
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-          <Divider />
-          <CardActions className={Incidents.cardActions}>
-            <Grid
-              container
-              spacing={2}
-              // justify="flex-end"
-              alignItems="center"
-            >
-              <Grid item xs={6} md={3}>
-                <Typography display="inline" className={Fonts.listingLabelName}>
-                  <MessageIcon fontSize="small" />
-                  {' '}
-                  Comments:
-                </Typography>
-                <Typography variant="body2" display="inline">
-                  <ILink href="#">{item[1].commentsCount}</ILink>
-                </Typography>
-              </Grid>
+                      <Grid item xs={6} lg={3}>
+                        <Typography className={Fonts.listingLabelName} gutterBottom>
+                          Work Area
+                        </Typography>
 
-              <Grid item xs={6} md={3}>
-                <Typography
-                  variant="body2"
-                  display="inline"
-                  className={Fonts.listingLabelName}
-                >
-                  <BuildIcon fontSize="small" />
-                  {' '}
-                  Actions:
-                </Typography>
-                <Typography variant="body2" display="inline">
-                  <ILink href="#">3</ILink>
-                </Typography>
-              </Grid>
-              <Grid item xs={6} md={3}>
-                <Typography
-                  variant="body2"
-                  display="inline"
-                  className={Fonts.listingLabelName}
-                >
-                  <AttachmentIcon fontSize="small" />
-                  {' '}
-                  Attachments:
-                </Typography>
-                <Typography variant="body2" display="inline">
-                  <ILink href="#">{item[1].attachmentCount}</ILink>
-                </Typography>
-              </Grid>
+                        <Typography className={Fonts.listingLabelValue}>
+                          {item[1]["workArea"] ? item[1]["workArea"] : "-"}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6} lg={3}>
+                        <Typography className={Fonts.listingLabelName} gutterBottom>
+                          Location
+                        </Typography>
+                        <Typography className={Fonts.listingLabelValue}>
+                          {item[1]["location"] ? item[1]["location"] : "-"}
+                        </Typography>
+                      </Grid>
 
-              <Grid item xs={6} md={3}>
-                <Button
-                  disabled
-                  size="small"
-                  color="primary"
-                  startIcon={<Print />}
-                  className={Incidents.actionButton}
-                >
-                  Print
-                </Button>
+                      <Grid item xs={6} lg={3}>
+                        <Typography className={Fonts.listingLabelName} gutterBottom>
+                          Created on
+                        </Typography>
 
-                <Button
-                  disabled
-                  size="small"
-                  color="primary"
-                  startIcon={<Share />}
-                  className={Incidents.actionButton}
-                >
-                  Share
-                </Button>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card> ))}</>)
-       : (
-        <MUIDataTable
-          title="Incidents List"
-          
+                        <Typography variant="body1" className={Fonts.listingLabelValue}>
+                          {moment(item[1]["createdAt"]).format(
+                            "Do MMMM YYYY, h:mm:ss a"
+                          )}
+                        </Typography>
+                      </Grid>
 
-                    data={Object.entries(allAHAData).filter(
-                      (item) => {return (
-                         
-                        item[1]["description"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                          item[1]["ahaNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-                          
-                        )
-                      )}
-                        
-                    ).map((item) => [
-                      item[1]["ahaNumber"],
-                      item[1]["location"],
-                      item[1]["username"],
-                      item[1]["createdAt"],
+                      <Grid item xs={6} lg={3}>
+                        <Typography className={Fonts.listingLabelName} gutterBottom>
+                          Created By
+                        </Typography>
+
+                        <Typography className={Fonts.listingLabelValue}>
+                          {item[1]["username"]}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                  <Divider />
+                  <CardActions className={Incidents.cardActions}>
+                    <Grid
+                      container
+                      spacing={2}
+                      // justify="flex-end"
+                      alignItems="center"
+                    >
+                      <Grid item xs={6} md={3}>
+                        <Typography display="inline" className={Fonts.listingLabelName}>
+                          <MessageIcon fontSize="small" />
+                          {' '}
+                          Comments:
+                        </Typography>
+                        <Typography variant="body2" display="inline">
+                          <ILink href="#">{item[1].commentsCount}</ILink>
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={6} md={3}>
+                        <Typography
+                          variant="body2"
+                          display="inline"
+                          className={Fonts.listingLabelName}
+                        >
+                          <BuildIcon fontSize="small" />
+                          {' '}
+                          Actions:
+                        </Typography>
+                        <Typography variant="body2" display="inline">
+                          <ILink href="#">3</ILink>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6} md={3}>
+                        <Typography
+                          variant="body2"
+                          display="inline"
+                          className={Fonts.listingLabelName}
+                        >
+                          <AttachmentIcon fontSize="small" />
+                          {' '}
+                          Attachments:
+                        </Typography>
+                        <Typography variant="body2" display="inline">
+                          <ILink href="#">{item[1].attachmentCount}</ILink>
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={6} md={3}>
+                        <Button
+                          disabled
+                          size="small"
+                          color="primary"
+                          startIcon={<Print />}
+                          className={Incidents.actionButton}
+                        >
+                          Print
+                        </Button>
+
+                        <Button
+                          disabled
+                          size="small"
+                          color="primary"
+                          startIcon={<Share />}
+                          className={Incidents.actionButton}
+                        >
+                          Share
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </CardActions>
+                </Card>))}</>)
+            : (
+              <MUIDataTable
+                title="Incidents List"
+
+
+                data={Object.entries(allAHAData).filter(
+                  (item) => {
+                    return (
+
+                      item[1]["description"]
+                        .toLowerCase()
+                        .includes(searchIncident.toLowerCase()) ||
+                      item[1]["ahaNumber"].toLowerCase().includes(
+                        searchIncident.toLowerCase()
+
+                      )
+                    )
+                  }
+
+                ).map((item) => [
+                  item[1]["ahaNumber"],
+                  item[1]["location"],
+                  item[1]["username"],
+                  item[1]["createdAt"],
                 ])}
-                
-          columns={columns}
-          options={options}
-        />
-      )}
-      <div className={classes.pagination}>
-      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+
+                columns={columns}
+                options={options}
+              />
+            )}
+          <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-          </>: <h1>Loading...</h1>}
-    </Box>
+        </> : <h1>Loading...</h1>}
+      </Box>
     </PapperBlock>
   );
 }
