@@ -29,13 +29,15 @@ function MainMenu(props) {
     loadTransition(false);
   };
 
+  const label = ["homeMenu", "incidentMenu", "assessmentMenu", "iCareMenu"]
+
   const { classes, openSubMenu, open, dataMenu } = props;
 
   const getMenus = (menuArray) =>
     menuArray.map((item, index) => {
       if (item.child || item.linkParent) {
         return (
-          <div key={index.toString()}>
+          <div key={index.toString()} className={label[index]}>
             <ListItem
               button
               component={LinkBtn}
@@ -49,7 +51,8 @@ function MainMenu(props) {
             >
               {item.icon && (
                 <ListItemIcon className={classes.icon}>
-                  <i className={item.icon} />
+                  {/* <i className={item.icon} /> */}
+                  <span className="leftCustomImg"> </span>
                 </ListItemIcon>
               )}
               <ListItemText

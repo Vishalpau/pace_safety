@@ -191,7 +191,6 @@ const ObservationCorrectiveActionView = () => {
     const api_action = axios.create({
       baseURL: API_URL_ACTION_TRACKER,
     });
-    let ActionToCause = {}
     const allActionTrackerData = await apiAction.get(`/api/v1/actions/?enitityReferenceId=${id}`)
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = []
@@ -251,7 +250,6 @@ const ObservationCorrectiveActionView = () => {
                 </TableCell>
               </TableRow></TableHead>
               <TableBody>
-              {console.log(actionTakenData,"!!!")}
                 {actionTakenData.map((action, index) => (<>
                   <TableRow>
                     <TableCell style={{ width: 50 }}>

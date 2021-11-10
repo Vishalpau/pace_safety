@@ -453,7 +453,7 @@ function Application(props) {
           path="/app/pages/options/"
           component={Options}
         />
-        <Route exact path="/app/:entity/comments/:id/" component={Comments} />
+        {/* <Route exact path="/app/:entity/comments/:id/" component={Comments} /> */}
 
         {/* close out */}
         <Route
@@ -515,7 +515,8 @@ function Application(props) {
         />
 
         {/* Observation Routes  */}
-  /}
+        <Route path="/app/icare/comments/:id" component={Comments} />
+
         <Route exact path="/app/icare" component={Observations} />
         <Route exact path="/icare" component={Observations} />
         <Route path="/app/icare#table" component={Observations} />

@@ -119,13 +119,16 @@ const useStyles = makeStyles((theme) => ({
   custmCancelBtn: {
     color: "#ffffff",
     backgroundColor: "#ff8533",
-    lineHeight: "30px",
+    lineHeight: "27px",
     marginLeft: "5px",
     border: "none",
     "&:hover": {
       backgroundColor: "#ff8533",
       border: "none",
     },
+    textTransform: 'capitalize !important',
+    fontSize: '0.975rem',
+
   },
   observationFormBox: {
     width: "100%",
@@ -591,15 +594,6 @@ const ObservationInitialNotification = (props) => {
       await setOpen(true);
     }
 
-  };
-
-  const handleAssignee = async (e, value) => {
-    let tempData = { ...form };
-    tempData.assigneeName = value.name;
-
-    tempData.assigneeId = value.id;
-
-    setForm(tempData);
   };
 
   const handelAddressSituationYes = async (e) => {
@@ -1630,7 +1624,7 @@ const ObservationInitialNotification = (props) => {
                   history.push("/app/icare");
                 }}
               >
-                CANCEL
+                Cancel
               </Button>
             </Grid>
 

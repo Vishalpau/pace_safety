@@ -290,7 +290,7 @@ export default function ActionTracker(props) {
                 <Select
                   id="project-name"
                   labelId="project-name-label"
-                  label="RCA recommended"
+                  label="severity"
                 >
                   {severity.map((selectValues) => (
                     <MenuItem

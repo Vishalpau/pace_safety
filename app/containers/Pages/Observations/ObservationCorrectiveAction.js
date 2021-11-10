@@ -633,7 +633,7 @@ function ObservationCorrectiveAction() {
               <Typography className={classes.increaseRowBox}>
 
                 <ActionTracker
-                  actionContext="Observation"
+                  actionContext="iCare"
                   enitityReferenceId={id}
                   setUpdatePage={setUpdatePage}
                   fkCompanyId={fkCompanyId}

@@ -124,9 +124,7 @@ const ObservationSummary = () => {
     setObservationCorrectiveAction(false);
     setComment(true)
     setActivity(false);
-    history.push(`/app/icare/details/${id}#comments`)
-
-    
+    history.push(`/app/icare/comments/${id}`)
   };
 
   
@@ -390,7 +388,7 @@ const ObservationSummary = () => {
                   </ListItem>
                 
                   )}
-{/* 
+
                   <ListItem button>
                   <ListItemIcon>
                   <Comment />
@@ -401,7 +399,7 @@ const ObservationSummary = () => {
                   >
                     <ListItemText primary="Comments" />
                   </Link>
-                </ListItem> */}
+                </ListItem>
                   {/* <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
                     <Comment />

@@ -30,9 +30,14 @@ import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
-  root: {
-    width: '100%',
-  },
+  root:{
+      '& .MuiAvatar-root.MuiAvatar-square.attachFileStyle': {
+        width: '120px !important' ,
+        height: '80px !important',
+        overflow: 'visible',
+  
+    },
+  },  
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
