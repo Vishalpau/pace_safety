@@ -18,6 +18,7 @@ import api from "../../../utils/axios";
 import { EVIDENCE_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import AdditionalDetailValidate from "../../Validator/AdditionalDetailsValidation";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 
@@ -97,24 +98,24 @@ const AdditionalDetails = () => {
   const fetchActivityList = async () => {
     let lastId = id ? id : localStorage.getItem("fkincidentId");
     const res = await api.get(`/api/v1/incidents/${lastId}/activities/`)
-    .then((res)=>{
-      const result = res.data.data.results;
-      if (result.length) {
-         setAdditionalDetailList(result);
-      }
-       setIsLoading(true);
-    })
-    
+      .then((res) => {
+        const result = res.data.data.results;
+        if (result.length) {
+          setAdditionalDetailList(result);
+        }
+        setIsLoading(true);
+      })
+
   };
 
 
   const handleNext = async () => {
     setIsNext(false)
-    if(incidentDetail.incidentStage === "Evidence"){
+    if (incidentDetail.incidentStage === "Evidence") {
       try {
         const temp = incidentDetail
         temp.updatedAt = new Date().toISOString();
-        temp.incidentStatus= "Done"
+        temp.incidentStatus = "Done"
         const res = await api.put(
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
@@ -125,44 +126,15 @@ const AdditionalDetails = () => {
     }
 
     if (id && additionalDetailList.length > 24) {
-      try{
-      const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
-      await setError(error);
-      if (!isValid) {
-        setIsNext(true)
-        return;
-      }
-      const res = await api.put(
-        `api/v1/incidents/${id}/activities/`,
-        additionalDetailList
-      );
-      if (res.status === 200) {
-        let viewMode = {
-          initialNotification: false,
-          investigation: false,
-          evidence: true,
-          rootcauseanalysis: false,
-          lessionlearn: false,
-        };
-        dispatch(tabViewMode(viewMode));
-        history.push(
-          `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
-        );
-      }
-    }catch(err){setIsNext(true)}
-    } else if (additionalDetailList.length == 25) {
-      {
-        try{
-        const { error, isValid } = AdditionalDetailValidate(additionalList);
+      try {
+        const { error, isValid } = AdditionalDetailValidate(additionalDetailList);
         await setError(error);
         if (!isValid) {
           setIsNext(true)
           return;
         }
         const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem(
-            "fkincidentId"
-          )}/activities/`,
+          `api/v1/incidents/${id}/activities/`,
           additionalDetailList
         );
         if (res.status === 200) {
@@ -178,33 +150,62 @@ const AdditionalDetails = () => {
             `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
           );
         }
-      }catch(err){setIsNext(true)}
+      } catch (err) { setIsNext(true) }
+    } else if (additionalDetailList.length == 25) {
+      {
+        try {
+          const { error, isValid } = AdditionalDetailValidate(additionalList);
+          await setError(error);
+          if (!isValid) {
+            setIsNext(true)
+            return;
+          }
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem(
+              "fkincidentId"
+            )}/activities/`,
+            additionalDetailList
+          );
+          if (res.status === 200) {
+            let viewMode = {
+              initialNotification: false,
+              investigation: false,
+              evidence: true,
+              rootcauseanalysis: false,
+              lessionlearn: false,
+            };
+            dispatch(tabViewMode(viewMode));
+            history.push(
+              `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
+            );
+          }
+        } catch (err) { setIsNext(true) }
       }
     } else {
-      try{
-      const { error, isValid } = AdditionalDetailValidate(additionalList);
-      await setError(error);
-      if (!isValid) {
-        setIsNext(true)
-        return;
-      }
+      try {
+        const { error, isValid } = AdditionalDetailValidate(additionalList);
+        await setError(error);
+        if (!isValid) {
+          setIsNext(true)
+          return;
+        }
 
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        additionalList
-      );
-      let viewMode = {
-        initialNotification: false,
-        investigation: false,
-        evidence: true,
-        rootcauseanalysis: false,
-        lessionlearn: false,
-      };
-      dispatch(tabViewMode(viewMode));
-      history.push(
-        `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
-      );
-      }catch(err){
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          additionalList
+        );
+        let viewMode = {
+          initialNotification: false,
+          investigation: false,
+          evidence: true,
+          rootcauseanalysis: false,
+          lessionlearn: false,
+        };
+        dispatch(tabViewMode(viewMode));
+        history.push(
+          `${SUMMERY_FORM["Summary"]}${localStorage.getItem("fkincidentId")}`
+        );
+      } catch (err) {
         setIsNext(true)
       }
     }
@@ -234,17 +235,15 @@ const AdditionalDetails = () => {
     setAdditionalList(TempActivity);
   };
 
-  const selectValues = [1, 2, 3, 4];
-  const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    ).then((res)=>{
+    ).then((res) => {
       const result = res.data.data.results;
-     setIncidentDetail(result);
+      setIncidentDetail(result);
     })
-    .catch(()=>{})  
+      .catch(() => { })
   };
   useEffect(() => {
     fetchIncidentDetails();
@@ -295,7 +294,7 @@ const AdditionalDetails = () => {
                             helperText={value.error ? value.error : null}
                             multiline
                             rows="4"
-                            value={value.answer||""}
+                            value={value.answer || ""}
                             onChange={(e) => {
                               handleRadioData(e, value.questionCode);
                             }}
@@ -351,7 +350,7 @@ const AdditionalDetails = () => {
                   onClick={() => handleNext()}
                   disabled={!isNext}
                 >
-                  Submit{isNext?null:<CircularProgress size={20}/>}
+                  Submit{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -368,7 +367,7 @@ const AdditionalDetails = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

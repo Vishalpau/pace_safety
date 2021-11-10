@@ -20,7 +20,6 @@ import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
 import {
-  checkValue,
   handelCommonObject,
   handelValueToLabel
 } from "../../../utils/CheckerValue";
@@ -34,6 +33,7 @@ import {
 } from "../../../utils/constants";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -472,7 +472,9 @@ const Details = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

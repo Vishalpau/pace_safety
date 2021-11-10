@@ -18,6 +18,7 @@ import { tabViewMode } from "../../../redux/actions/initialDetails";
 import api from "../../../utils/axios";
 import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 
@@ -202,7 +203,9 @@ const ActionTaken = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

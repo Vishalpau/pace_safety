@@ -20,7 +20,7 @@ import api from "../../../utils/axios";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
 import FormSideBar from "../FormSideBar";
-
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -208,29 +208,29 @@ const PersonalAndPpeDetails = () => {
   const handleNext = async () => {
     setIsNext(false)
     if (id && ppeList.length > 19) {
-      try{
-      const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/additional-details/${id}`
-        );
-      }
-      }catch(err){
+      try {
+        const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/additional-details/${id}`
+          );
+        }
+      } catch (err) {
         setIsNext(true)
       }
-      
+
     } else if (localStorage.getItem("fkincidentId") && ppeList.length > 19) {
-      try{
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        ppeList
-      );
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/additional-details/`
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          ppeList
         );
-      }
-    }catch(err){setIsNext(true)}
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/additional-details/`
+          );
+        }
+      } catch (err) { setIsNext(true) }
     } else {
       const valdation = ppeData;
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
@@ -239,18 +239,18 @@ const PersonalAndPpeDetails = () => {
         setIsNext(true)
         return "Data is not valid";
       }
-      try{
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        ppeData
-      );
-       
-          history.push(
-            "/app/incident-management/registration/evidence/additional-details/"
-          );
-        
-      
-      }catch(err){setIsNext(true)}
+      try {
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          ppeData
+        );
+
+        history.push(
+          "/app/incident-management/registration/evidence/additional-details/"
+        );
+
+
+      } catch (err) { setIsNext(true) }
     }
     // }
   };
@@ -890,7 +890,7 @@ const PersonalAndPpeDetails = () => {
                   onClick={() => handleNext()}
                   disabled={!isNext}
                 >
-                  Next{isNext?null:<CircularProgress size={20}/>}
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -906,7 +906,7 @@ const PersonalAndPpeDetails = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

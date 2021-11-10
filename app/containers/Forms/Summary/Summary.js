@@ -1,64 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
-import CheckCircle from '@material-ui/icons/CheckCircle';
-import AccessTime from '@material-ui/icons/AccessTime';
+import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { useHistory, useParams } from 'react-router';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
+import Grid from '@material-ui/core/Grid';
 // List
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
-// Icons
-import Print from '@material-ui/icons/Print';
-import Share from '@material-ui/icons/Share';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import AccessTime from '@material-ui/icons/AccessTime';
+import Add from '@material-ui/icons/Add';
+import CheckCircle from '@material-ui/icons/CheckCircle';
 import Close from '@material-ui/icons/Close';
 import Comment from '@material-ui/icons/Comment';
-import History from '@material-ui/icons/History';
 import Edit from '@material-ui/icons/Edit';
-import Add from '@material-ui/icons/Add';
-import { Col, Row } from 'react-grid-system';
+import History from '@material-ui/icons/History';
+// Icons
+import Print from '@material-ui/icons/Print';
+import MuiAlert from '@material-ui/lab/Alert';
+import { PapperBlock } from 'dan-components';
+import Fonts from 'dan-styles/Fonts.scss';
 // Styles
 import Styles from 'dan-styles/Summary.scss';
-import Type from 'dan-styles/Typography.scss';
-import Fonts from 'dan-styles/Fonts.scss';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
-
-import api from '../../../utils/axios';
-import apiAction from "../../../utils/axiosActionTracker"
-
-import IncidentDetails from '../InitialNotification/IncidentDetails';
-import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
-import InvestigationSummary from '../../SummaryDetails/Investigation';
-import EvidenceSummary from '../../SummaryDetails/Evidence';
-import RootCauseAnalysisSummary from '../../SummaryDetails/RootCauseAndAnalysis';
-import LessionLearnSummary from '../../SummaryDetails/LessionLearn';
-import {
-  InititlaNotificationStatus,
-  InvestigationStatus,
-  EvidenceStatus,
-  RootCauseAnalysisStatus,
-  LessionLearnedStatus
-} from '../../../utils/FormStatus';
-
+import { useHistory, useParams } from 'react-router';
 // redux connect
 import { tabViewMode } from '../../../redux/actions/initialDetails';
-import CloseOut from '../../SummaryDetails/CloseOut';
-import { Comments } from '../../pageListAsync';
-import ActivityHistory from '../../Activity/Activity';
+import api from '../../../utils/axios';
+import apiAction from "../../../utils/axiosActionTracker";
 import { ACCOUNT_API_URL, SELF_API } from '../../../utils/constants';
+import ActivityHistory from '../../Activity/Activity';
+import { Comments } from '../../pageListAsync';
+import CloseOut from '../../SummaryDetails/CloseOut';
+import EvidenceSummary from '../../SummaryDetails/Evidence';
+import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
+import InvestigationSummary from '../../SummaryDetails/Investigation';
+import LessionLearnSummary from '../../SummaryDetails/LessionLearn';
+import RootCauseAnalysisSummary from '../../SummaryDetails/RootCauseAndAnalysis';
+import Loader from "../Loader";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -926,7 +913,7 @@ const Summary = (props) => {
           </Box>
         </PapperBlock>
       ) : (
-        <h1> Loading...</h1>
+        <Loader />
       )}
     </>
   );

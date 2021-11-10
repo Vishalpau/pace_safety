@@ -31,8 +31,8 @@ import { RCAOPTION, ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../util
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysisValidation";
 import ActionShow from "../ActionShow";
-import ActionTracker from "../ActionTracker";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -466,7 +466,9 @@ const RootCauseAnalysis = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

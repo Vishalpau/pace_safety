@@ -18,9 +18,9 @@ import api from "../../../utils/axios";
 import { checkValue, handelActionData } from "../../../utils/CheckerValue";
 import { ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import WhyAnalysisValidate from "../../Validator/RCAValidation/WhyAnalysisValidation";
-import FormSideBar from "../FormSideBar";
 import ActionShow from "../ActionShow";
-import ActionTracker from "../ActionTracker";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -366,7 +366,9 @@ const WhyAnalysis = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };
