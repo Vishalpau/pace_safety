@@ -44,6 +44,13 @@ module.exports = [
     icon: 'ion-md-eye',
     linkParent: '/app/observations',
   },
+  {
+    key: "controltower",
+    name: "Control Tower",
+    icon: "ion-ios-body",
+    multilevel: false,
+    linkParent: "/app/pages/control-tower/controltower-icare",
+  },
   // {
 
   //   key: 'administration',

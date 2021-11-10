@@ -1,24 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuData from './menuData';
-import JhaPackage from './JhaPackage';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
 //import '../../../styles/custom/customheader.css';
 import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MenuIcon from '@material-ui/icons/Menu';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
+import JhaPackage from './JhaPackage';
+import MenuData from './menuData';
 
 
 const drawerWidth = 240;

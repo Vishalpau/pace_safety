@@ -822,3 +822,7 @@ export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), 
 // export const FlhaConfigHazard = loadable(() => import("./pages/assesments/FlhaConfigHazard"), {
 //   fallback: <Loading />,
 // });
+
+export const ControlTowerIcare = loadable(() => import('./Pages/ControlTower/ControlTowerIcare'), {
+  fallback: <Loading />,
+});

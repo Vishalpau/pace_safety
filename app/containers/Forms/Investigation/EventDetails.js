@@ -16,12 +16,13 @@ import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import api from "../../../utils/axios";
-import { INVESTIGATION_FORM ,SUMMERY_FORM} from "../../../utils/constants";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
 import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 // redux
 import { useDispatch } from "react-redux";
@@ -391,8 +392,8 @@ const EventDetails = () => {
     await handelUpdateCheck();
     await setLoading(true)
   };
-   // fetch incident data
-   const fetchIncidentsData = async () => {
+  // fetch incident data
+  const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     ).then((res) => {
@@ -962,7 +963,9 @@ const EventDetails = () => {
             )}
           </Grid>
         </>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

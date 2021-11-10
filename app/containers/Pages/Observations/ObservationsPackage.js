@@ -36,7 +36,7 @@ import React, { useEffect, useState } from "react";
 // react-redux
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
-import { projectName,company } from '../../../redux/actions/initialDetails';
+import { projectName, company } from '../../../redux/actions/initialDetails';
 import { useDispatch } from 'react-redux';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
@@ -50,7 +50,7 @@ import UserDetailsView from '../../UserDetails/UserDetail';
 import StarsIcon from '@material-ui/icons/Stars';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import axios from "axios"
-
+import Loader from "../Loader"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -135,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       marginLeft: '3px',
       marginRight: '3px',
     },
@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: 'rgba(0, 0, 0, 0.87) !important',
     fontWeight: '500',
-    '&:hover':{
+    '&:hover': {
       textDecoration: 'none',
     },
   },
@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '1360px !important',
   },
 
-  title:  {
+  title: {
     fontSize: '1.25rem',
     fontFamily: 'Montserrat-Regular',
     color: 'rgba(0, 0, 0, 0.87)',
@@ -217,7 +217,7 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       paddingTop: '55px',
     },
   },
@@ -252,14 +252,14 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       margin: '10px 5px 10px 5px',
     },
   },
   floatR: {
     float: 'right',
     textTransform: 'capitalize',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       float: 'left',
     },
   },
@@ -293,7 +293,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textRight: {
     textAlign: 'right',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       textAlign: 'left',
       padding: '0px 8px 15px 8px !important',
     },
@@ -328,14 +328,14 @@ const useStyles = makeStyles((theme) => ({
     padding: '14px',
     cursor: 'pointer',
     textDecoration: 'none !important',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       paddingTop: '85px',
     }
   },
   userPictureBox: {
     position: 'absolute',
     right: '0px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       right: 'auto',
     }
   },
@@ -367,7 +367,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardBottomSection: {
     '& p': {
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         fontSize: '12px !important',
       },
     },
@@ -378,7 +378,7 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
   cardActionBottomBox: {
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '8px !important',
     },
   },
@@ -405,20 +405,20 @@ function Actions(props) {
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
-  const [userInfo , setUserInfo] = useState({})
+  const [page, setPage] = useState(1)
+  const [userInfo, setUserInfo] = useState({})
   const history = useHistory();
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
-const handleMyUserPClickOpen = (item) => {
-  setUserInfo({name : item[1].createdBy})
-  setMyUserPOpen(true);
-};
+  const handleMyUserPClickOpen = (item) => {
+    setUserInfo({ name: item[1].createdBy })
+    setMyUserPOpen(true);
+  };
 
-const handleMyUserPClose = () => {
-  setMyUserPOpen(false);
-};
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
 
   const handelView = (e) => {
     setListToggle(false);
@@ -470,8 +470,8 @@ const handleMyUserPClose = () => {
   };
 
   const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
@@ -492,8 +492,8 @@ const handleMyUserPClose = () => {
     await setPage(1)
 
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId =  JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId ||  props.projectName.projectId 
+    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId || props.projectName.projectId
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -503,30 +503,30 @@ const handleMyUserPClose = () => {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
- 
-      if (props.type == "All" || props.type == "Type") {
-        // await setAllInitialData(result)
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
 
-        } else {
-          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
-          const result = res.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
-        }  
-      } else {  
-        if (props.type == "Risk") {
-          if (props.observation == "My Observations") {
+    if (props.type == "All" || props.type == "Type") {
+      // await setAllInitialData(result)
+      if (props.observation == "My Observations") {
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        await setTotalData(allLogInUserData.data.data.results.count)
+        await setPageData(allLogInUserData.data.data.results.count / 25)
+        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+        await setPageCount(pageCount)
+
+      } else {
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
+        const result = res.data.data.results.results
+        await setAllInitialData(result)
+        await setTotalData(res.data.data.results.count)
+        await setPageData(res.data.data.results.count / 25)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+        await setPageCount(pageCount)
+      }
+    } else {
+      if (props.type == "Risk") {
+        if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
@@ -534,61 +534,61 @@ const handleMyUserPClose = () => {
           await setPageData(allLogInUserData.data.data.results.count / 25)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
           await setPageCount(pageCount)
-          }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-            await setPageCount(pageCount)
-          }
-        }
-        if (props.type == "Comments") {  
-          if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-            await setPageCount(pageCount)
-          }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
-          }
+          await setPageCount(pageCount)
         }
-        if (props.type == "Positive behavior") {
-          
-          if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
-            await setPageCount(pageCount)
-            }else{
-              const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
-              const result = allLogInUserData.data.data.results.results
-              await setAllInitialData(result)
-              await setTotalData(allLogInUserData.data.data.results.count)
-              await setPageData(allLogInUserData.data.data.results.count / 25)
-              let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-              await setPageCount(pageCount)
-            }
-          } 
       }
+      if (props.type == "Comments") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        }
+      }
+      if (props.type == "Positive behavior") {
+
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        }
+      }
+    }
     await setIsLoading(true)
   }
 
   const handleChange = async (event, value) => {
-    
+
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -602,13 +602,13 @@ const handleMyUserPClose = () => {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
- 
+
     if (props.type == "All" || props.type == "Type") {
       if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        await setPage(value)
       } else {
         const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`);
         const result = res.data.data.results.results
@@ -622,7 +622,7 @@ const handleMyUserPClose = () => {
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
-        }else{
+        } else {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
@@ -636,7 +636,7 @@ const handleMyUserPClose = () => {
           await setAllInitialData(result)
           await setPage(value)
 
-        }else{
+        } else {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
@@ -649,18 +649,18 @@ const handleMyUserPClose = () => {
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
-          }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
 
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setPage(value)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
 
-          }
         }
+      }
 
     }
-    
+
   };
 
   const handlePrintPush = async (index) => {
@@ -672,7 +672,7 @@ const handleMyUserPClose = () => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
-       
+
         let config = {
           method: "get",
           url: `${SELF_API}`,
@@ -684,10 +684,10 @@ const handleMyUserPClose = () => {
           .then(function (response) {
             if (response.status === 200) {
               console.log(response)
-              let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
-              .subscriptions.filter(subs=>subs.appCode === "safety")[0]
-              .hostings[0].apiDomain
-            
+              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain
+
               console.log(hosting)
               let data1 = {
                 method: "get",
@@ -695,30 +695,28 @@ const handleMyUserPClose = () => {
                 headers: HEADER_AUTH,
               };
               console.log(data1)
-              axios(data1).then((res)=>
-              
-{
-  localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
-              
-  if (compId) {
-    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+              axios(data1).then((res) => {
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
 
-    let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-    localStorage.setItem('company', JSON.stringify(companeyData))
+                if (compId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
 
-    dispatch(company(companeyData))
-  }
-  if (proId) {
-    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-    let project = companies[0].projects.filter(item => item.projectId == proId)
+                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                  localStorage.setItem('company', JSON.stringify(companeyData))
 
-    localStorage.setItem("projectName", JSON.stringify(project[0]))
-    dispatch(projectName(project[0]))
-  }
-  // fetchPermissionData();
-  localStorage.removeItem("direct_loading")
-}              )
-             
+                  dispatch(company(companeyData))
+                }
+                if (proId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                  localStorage.setItem("projectName", JSON.stringify(project[0]))
+                  dispatch(projectName(project[0]))
+                }
+                // fetchPermissionData();
+                localStorage.removeItem("direct_loading")
+              })
+
 
             }
           })
@@ -734,22 +732,22 @@ const handleMyUserPClose = () => {
     console.log(item[1].id)
     let data = item[1]
     // let id = item[1].id
-    data.status="Delete"
+    data.status = "Delete"
     delete data.attachment
-    console.log(data,"!!!!!!!!!")
+    console.log(data, "!!!!!!!!!")
     await setIsLoading(false)
-    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))    
+    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
   }
   useEffect(() => {
     let state = JSON.parse(localStorage.getItem('direct_loading'))
-    if(state!==null){
-      userDetails(state.comId,state.proId)
-    }else{
+    if (state !== null) {
+      userDetails(state.comId, state.proId)
+    } else {
       fetchInitialiObservation();
     }
     // fetchInitialiObservation();
-  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident , props.status]);
-  
+  }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
+
   return (
     <>
       <Box>
@@ -764,41 +762,41 @@ const handleMyUserPClose = () => {
                         <Card variant="outlined" className={classes.card}>
                           <CardContent>
                             <Grid container spacing={3} className={classes.cardContentSection}>
-                               <Grid item md={2} sm={4} xs={12} 
-                                  className={classes.userPictureBox}
-                                >
-                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(item)} >
-                                    <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
-                                  </Button>
-                                </Grid>
-                                  <Link
-                                  onClick={() => handleSummaryPush(index)}
-                                  className={classes.cardLinkAction}
-                                >
-                              <Grid item xs={12}>
-                                <Grid container spacing={3} alignItems="flex-start">
-                                  <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                                    <Grid container spacing={3} alignItems="flex-start">
-                                      <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
-                                        <Typography
-                                          className={classes.title}
-                                          variant="h6"
-                                        >
-                                          {item[1]["observationDetails"]}
-                                        </Typography>
-                                        <Typography
-                                          display="inline"
-                                          className={classes.listingLabelName}
-                                        >
-                                          Number: <span><Link
-                                            onClick={() => handleSummaryPush(index)}
+                              <Grid item md={2} sm={4} xs={12}
+                                className={classes.userPictureBox}
+                              >
+                                <Button className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(item)} >
+                                  <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
+                                </Button>
+                              </Grid>
+                              <Link
+                                onClick={() => handleSummaryPush(index)}
+                                className={classes.cardLinkAction}
+                              >
+                                <Grid item xs={12}>
+                                  <Grid container spacing={3} alignItems="flex-start">
+                                    <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                                      <Grid container spacing={3} alignItems="flex-start">
+                                        <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
+                                          <Typography
+                                            className={classes.title}
                                             variant="h6"
-                                            className={classes.mLeftfont}
                                           >
-                                            <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
-                                          </Link></span>
-                                        </Typography>
-                                        {/* <Typography
+                                            {item[1]["observationDetails"]}
+                                          </Typography>
+                                          <Typography
+                                            display="inline"
+                                            className={classes.listingLabelName}
+                                          >
+                                            Number: <span><Link
+                                              onClick={() => handleSummaryPush(index)}
+                                              variant="h6"
+                                              className={classes.mLeftfont}
+                                            >
+                                              <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
+                                            </Link></span>
+                                          </Typography>
+                                          {/* <Typography
                                 variant="body1"
                                 gutterBottom
                                 display="inline"
@@ -807,111 +805,111 @@ const handleMyUserPClose = () => {
                               >
                                 Category: <span className={classes.listingLabelValue}>HSE incident Action</span>
                               </Typography> */}
-                                        <span item xs={1} className={classes.sepHeightOne}></span>
-                                        <Typography
-                                          variant="body1"
-                                          gutterBottom
-                                          display="inline"
-                                          color="textPrimary"
-                                          className={classes.listingLabelName}
-                                        >
-                                          Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"} </span>
-                                        </Typography>
+                                          <Typography
+                                            variant="body1"
+                                            gutterBottom
+                                            display="inline"
+                                            color="textPrimary"
+                                            className={classes.listingLabelName}
+                                          >
+                                            Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
+                                            <span item xs={1} className={classes.sepHeightOne}></span>
+                                            Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} />}{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
+                                            <span item xs={1} className={classes.sepHeightOne}></span>
+                                            Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"} </span>
+                                          </Typography>
 
-                                      </Grid>
+                                        </Grid>
 
 
-                                      {/* <Grid item md={2} sm={4} xs={12}>
+                                        {/* <Grid item md={2} sm={4} xs={12}>
                                         <Button className={classes.floatR}>
                                           <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
                                         </Button>
                                      
                                       </Grid> */}
+                                      </Grid>
                                     </Grid>
                                   </Grid>
                                 </Grid>
-                              </Grid>
-                              <Grid item sm={12} xs={12}>
-                                <Grid container spacing={3}>
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      gutterBottom
-                                      color="textPrimary"
-                                      className={classes.listingLabelName}
-                                    >
-                                      Type:
-                                    </Typography>
+                                <Grid item sm={12} xs={12}>
+                                  <Grid container spacing={3}>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        gutterBottom
+                                        color="textPrimary"
+                                        className={classes.listingLabelName}
+                                      >
+                                        Type:
+                                      </Typography>
 
-                                    <Typography
-                                      gutterBottom
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {/* {item[1]["incidentReportedByName"]} */}
-                                      {item[1]["observationType"]}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      color="textPrimary"
-                                      gutterBottom
-                                      className={classes.listingLabelName}
-                                    >
-                                      Location:
-                                    </Typography>
-                                    <Typography
+                                      <Typography
+                                        gutterBottom
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {/* {item[1]["incidentReportedByName"]} */}
+                                        {item[1]["observationType"]}
+                                      </Typography>
+                                    </Grid>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Location:
+                                      </Typography>
+                                      <Typography
 
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {item[1]["location"] ? item[1]["location"] : "-"}
-                                    </Typography>
-                                  </Grid>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {item[1]["location"] ? item[1]["location"] : "-"}
+                                      </Typography>
+                                    </Grid>
 
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      color="textPrimary"
-                                      gutterBottom
-                                      className={classes.listingLabelName}
-                                    >
-                                      Reported on:
-                                    </Typography>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Reported on:
+                                      </Typography>
 
-                                    <Typography
+                                      <Typography
 
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {moment(item[1]["createdAt"]).format(
-                                        "Do MMMM YYYY, h:mm:ss a"
-                                      )}                      </Typography>
-                                  </Grid>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {moment(item[1]["createdAt"]).format(
+                                          "Do MMMM YYYY, h:mm:ss a"
+                                        )}                      </Typography>
+                                    </Grid>
 
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      color="textPrimary"
-                                      gutterBottom
-                                      className={classes.listingLabelName}
-                                    >
-                                      Reported by:
-                                    </Typography>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Reported by:
+                                      </Typography>
 
-                                    <Typography
+                                      <Typography
 
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {item[1]["reportedByName"] ? item[1]["reportedByName"] : "Admin"}
-                                    </Typography>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {item[1]["reportedByName"] ? item[1]["reportedByName"] : "Admin"}
+                                      </Typography>
+                                    </Grid>
                                   </Grid>
                                 </Grid>
-                              </Grid>
 
-                              {/* <Grid item sm={2} xs={12}>
+                                {/* <Grid item sm={2} xs={12}>
                       <Typography
                         variant="h6"
                         color="textPrimary"
@@ -928,7 +926,7 @@ const handleMyUserPClose = () => {
                     </Grid> */}
                               </Link>
                             </Grid>
-                            
+
                           </CardContent>
                           <Divider />
                           <CardActions className={Incidents.cardActions}>
@@ -986,7 +984,7 @@ const handleMyUserPClose = () => {
                                   <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography variant="body1" display="inline">
 
-                                  {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                                    {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
                                     <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
                                   </Typography>
                                 </div>
@@ -996,31 +994,31 @@ const handleMyUserPClose = () => {
                         </Card>
                       )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
                       Sorry, no matching records found
-              </Typography>}
+                    </Typography>}
 
                 </div>
                 <div>
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={'sm'}
-                >
-                  <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <UserDetailsView userId={userInfo.name}/>
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
+                  <Dialog
+                    open={myUserPOpen}
+                    onClose={handleMyUserPClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth={true}
+                    maxWidth={'sm'}
+                  >
+                    <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        <UserDetailsView userId={userInfo.name} />
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
 
                 <div className="gridView">
                   {Object.entries(incidents).map((item, index) => (
@@ -1252,16 +1250,17 @@ const handleMyUserPClose = () => {
               </TableContainer>
             )}
           </Grid>
-          {/* <div className={classes.pagination}>
-      {totalData}
-    </div> */}
-    {totalData != 0 ? 
-          <div className={classes.pagination}>
-          
-          { Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` }
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div> : null}
-         </>) : <h1>Loading...</h1>}
+
+          {totalData != 0 ?
+            <div className={classes.pagination}>
+
+              {Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}`}
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
+            </div> : null}
+        </>)
+          :
+          <Loader />
+        }
       </Box>
     </>
   );

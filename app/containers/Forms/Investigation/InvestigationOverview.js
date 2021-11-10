@@ -16,6 +16,7 @@ import { INVESTIGATION_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -314,7 +315,7 @@ const InvestigationOverview = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

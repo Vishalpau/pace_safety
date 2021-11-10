@@ -18,6 +18,7 @@ import {
 } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -634,7 +635,7 @@ const InvestigationOverview = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )
       }
     </PapperBlock >

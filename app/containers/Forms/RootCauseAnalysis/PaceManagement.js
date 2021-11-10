@@ -24,6 +24,7 @@ import {
   ROOT_CAUSE_ANALYSIS_FORM
 } from "../../../utils/constants";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -489,7 +490,9 @@ const PaceManagementControl = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };
