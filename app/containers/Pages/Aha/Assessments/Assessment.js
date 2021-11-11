@@ -11,7 +11,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { PapperBlock } from "dan-components";
-
+import Paper from '@material-ui/core/Paper';
 import PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Chip from "@material-ui/core/Chip";
@@ -36,10 +36,11 @@ import { CircularProgress } from '@material-ui/core';
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
 import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../../utils/CheckerValue";
-
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-
+import { handelFileName } from "../../../../utils/CheckerValue";
 import axios from "axios";
 import api from "../../../../utils/axios";
 
@@ -220,7 +221,7 @@ const Assessment = () => {
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
-
+  const notification = ["Manager" , "Supervisor" ]
   const [colorId, setColorId] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [idPerColor, setIdPerColor] = useState({ 243: "yellow" });
@@ -430,16 +431,58 @@ const Assessment = () => {
   const handleSubmit = async (e) => {
     await setSubmitLoader(true);
 
+    ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
+
+    let data = new FormData()
+    
+      data.append("fkCompanyId" ,  ahaform.fkCompanyId)
+      data.append("fkProjectId" , ahaform.fkProjectId),
+      data.append("fkProjectStructureIds" , ahaform.fkProjectStructureIds) ,
+      data.append("workArea" , ahaform.workArea),
+      data.append("location" , ahaform.location),
+      data.append("assessmentDate" , ahaform.assessmentDate),
+      data.append("permitToPerahaform" ,  ahaform.permitToPerahaform),
+      data.append("permitNumber" , ahaform.permitNumber),
+      data.append("ahaNumber" , ahaform.ahaNumber)
+      if (
+        ahaform.ahaAssessmentAttachment !== null &&
+        typeof ahaform.ahaAssessmentAttachment !== "string"
+      ) {
+        data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
+      }
+      // data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
+      data.append("description" ,  ahaform.description),
+      data.append("workStopCondition" , ahaform.workStopCondition),
+      data.append("department" , ahaform.department),
+      data.append("additionalRemarks" ,  ahaform.additionalRemarks),
+      data.append("classification",ahaform.classification),
+      data.append("link",ahaform.link),
+      data.append("notifyTo",ahaform.notifyTo),
+      data.append("permitToPerform",ahaform.permitToPerform),
+      data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
+      data.append("picApprovalUser" , ahaform.picApprovalUser),
+      data.append("signedUser" , ahaform.signedUser),
+      data.append("signedDateTime" , ahaform.signedDateTime),
+      data.append("anyLessonsLearnt" ,ahaform.anyLessonsLearnt),
+      data.append("lessonLearntDetails", ahaform.lessonLearntDetails),
+      data.append("lessonLearntUserName" , ahaform.lessonLearntUserName),
+      data.append("ahaStatus" , ahaform.ahaStatus),
+      data.append("ahaStage" , ahaform.ahaStage),
+      data.append("badgeNumber" , ahaform.badgeNumber),
+      data.append("status" , ahaform.status),
+      data.append("createdBy" , ahaform.createdBy),
+      data.append("source", ahaform.source),
+      data.append("vendor" , ahaform.vendor)
+      data.append("vendorReferenceId", ahaform.vendorReferenceId)
+
     const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, form)
 
-    ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
-    delete ahaform['ahaAssessmentAttachment']
     const res1 = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
-      ahaform
+      data
     );
     if (res1.status === 200) {
-      history.push("/app/pages/aha/assessments/DocumentsNotifications/");
+      history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
     }
   };
 
@@ -461,6 +504,27 @@ const Assessment = () => {
     }
   };
 
+  const handleNotification = async (e, value) => {
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+     
+      temp.push(value)
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq)
+     
+      setAHAForm({...ahaform , notifyTo : temp.toString()});
+    } else {
+      let temp = [...notifyToList];
+      
+        let newData = temp.filter((item) => item !== value);
+      
+      setNotifyToList(newData);
+      setForm({...form , notifyTo : newData.toString()});
+
+    }
+    
+  };
+
 
   const checkList = async () => {
     const temp = {};
@@ -471,6 +535,12 @@ const Assessment = () => {
 
     setCheckListGroups(checklistGroups);
   };
+
+  const handleFile = (e) => {
+    let temp = {...ahaform}
+    temp.ahaAssessmentAttachment = e.target.files[0]
+    setAHAForm(temp)
+  }
 
   const fetchAhaData = async () => {
     const res = await api.get(
@@ -543,24 +613,45 @@ const Assessment = () => {
   return (
     <>
       {" "}
-      <PapperBlock title="Assessments" icon="ion-md-list-box">
-        {isLoading ? (
+      <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
+
+        {isLoading ? ( <>
+          
+        
           <Grid container spacing={3} className={classes.observationNewSection}>
+          
             <Grid container spacing={3} item xs={12} md={9}>
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Typography variant="h6" className="sectionHeading">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40.954" height="35.361" viewBox="0 0 40.954 41.361">
+              <g id="Group_5482" data-name="Group 5482" transform="translate(-1702.685 -224.131)">
+                <g id="Group_5481" data-name="Group 5481" transform="translate(1702.684 224.131)">
+                  <path id="market-research-analysis" d="M18.037,0a18.046,18.046,0,0,1,15.1,27.929l7.807,8.51-5.384,4.923-7.531-8.3A18.043,18.043,0,1,1,18.037,0ZM29.37,6.706a16.03,16.03,0,1,0,4.711,11.336A16.031,16.031,0,0,0,29.37,6.706Z" transform="translate(0.009 0)" fill="#06425c"/>
+                </g>
+                <g id="construction-engineer" transform="translate(1711.867 232.24)">
+                  <path id="Path_5202" data-name="Path 5202" d="M0,17.564H4.936V11.476a.509.509,0,0,1,.014-.119c-4.111.587-3.9,2.484-4.95,6.207ZM6.261,5.254V6.02l.262.359a.329.329,0,0,1,.065.18h0A3.966,3.966,0,0,0,7.571,9.24a3.625,3.625,0,0,0,2.034.868,3.277,3.277,0,0,0,2.042-1.081,4.348,4.348,0,0,0,.91-2.473.335.335,0,0,1,.048-.146h0l.233-.385,0-.8.687,0,0,.87a.342.342,0,0,1-.049.2l-.242.4a4.968,4.968,0,0,1-1.064,2.773,3.966,3.966,0,0,1-2.5,1.324.344.344,0,0,1-.112,0A4.3,4.3,0,0,1,7.09,9.734,4.535,4.535,0,0,1,5.908,6.705l-.251-.345a.347.347,0,0,1-.086-.229V5.255h.69ZM9.417,0a4.682,4.682,0,0,1,.959.1l-.059,2.761L11.323.4A4.7,4.7,0,0,1,14.05,3.917h.544v.645h-.48v.009H4.719V4.562H4.327V3.917h.456A4.7,4.7,0,0,1,7.649.345l.879,2.473L8.621.068A4.681,4.681,0,0,1,9.417,0ZM8.935,15.356H9.984V16.4H8.935V15.356Zm0-2.593H9.984v1.049H8.935V12.763Zm-3.03,4.8h7.111V11.476a.462.462,0,0,1,.049-.211l-3.6.022-3.6-.022a.483.483,0,0,1,.049.211v6.088Zm8.079,0H18.92c-1.049-3.723-.839-5.62-4.952-6.205a.5.5,0,0,1,.014.119v6.087Z" transform="translate(0 0.001)" fill="#06425c"/>
+                </g>
+              </g>
+            </svg> Area hazard analysis
+          </Typography>
+        </Grid>
+        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
               <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                 <div>
                   {form.map((value, index) => (
                     <Accordion
                       onChange={handleTwoChange(`panel${index}`)}
                       defaultExpanded
-                      className={classes.backPaper}
+                      className="backPaperSubAccordianWithMargin"
                       key={index}
                     >
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
-                        className={classes.headingColor}
+                        className="accordionSubHeaderSection"
                       >
                         <Typography className={classes.heading}>
                           <MenuOpenOutlinedIcon className={classes.headingIcon} />{" "}
@@ -823,12 +914,122 @@ const Assessment = () => {
                   }}
                 />
               </Grid>
+              </Grid>
+          </Paper>
+          </Grid>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg id="twotone-closed_caption-24px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path id="Path_5090" data-name="Path 5090" d="M0,0H24V24H0Z" fill="none"/>
+                    <path id="Path_5091" data-name="Path 5091" d="M18.5,16H7A4,4,0,0,1,7,8H19.5a2.5,2.5,0,0,1,0,5H9a1,1,0,0,1,0-2h9.5V9.5H9a2.5,2.5,0,0,0,0,5H19.5a4,4,0,0,0,0-8H7a5.5,5.5,0,0,0,0,11H18.5Z" fill="#06425c"/>
+                  </svg>  Attachment
+                </Typography>
+              </Grid>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                    <Paper elevation={1} className="paperSection">
+                      <Grid container spacing={3}>
+              
+              <Grid
+                item
+                md={8}
+                xs={12}
+                className={classes.formBox}
+              >
+                <Grid
+                  item
+                  md={12}
+                  xs={12} 
+                  className={classes.fileUploadFileDetails}
+                >
+                  {/* <DeleteIcon /> */}
+                  <Typography title={handelFileName(ahaform.jhaAssessmentAttachment)}>
+                          {ahaform.ahaAssessmentAttachment != "" &&
+                            typeof ahaform.ahaAssessmentAttachment == "string" ? (
+                            <Attachment value={ahaform.ahaAssessmentAttachment} />
+                          ) : (
+                            <p />
+                          )}
+                        </Typography>
+                        <input type="file" onChange={(e) => handleFile(e)}/>
+
+                </Grid>
+                
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                >
+                <TextField
+                    label="Link"
+                    margin="dense"
+                    name="link"
+                    id="link"
+                    value = {ahaform.link !== "null" ? ahaform.link : ""}
+                    fullWidth
+                    variant="outlined"
+                    className={classes.formControl}
+                    onChange={(e) => setAHAForm({...ahaform , link: e.target.value})}
+                />
+                </Grid>
+
+              </Grid>
+              </Paper>
+              </Grid>
+
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Typography variant="h6" className="sectionHeading">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22.84" height="27.004" viewBox="0 0 22.84 27.004">
+              <g id="Group_5468" data-name="Group 5468" transform="translate(-818 -215)">
+                <path id="lookup" d="M4.459,9.383a.634.634,0,0,1-.6-.653.623.623,0,0,1,.6-.653H14.68a.63.63,0,0,1,.6.653.62.62,0,0,1-.6.653Zm.007,3.493a.632.632,0,0,1-.6-.653.62.62,0,0,1,.6-.648H9.578a.634.634,0,0,1,.609.657.62.62,0,0,1-.6.653ZM19.16,3.968H21.3a1.537,1.537,0,0,1,1.53,1.53v7.276c-.046.479-1.22.486-1.32,0V5.5a.213.213,0,0,0-.218-.218H19.153v7.494c-.113.435-1.093.5-1.313,0V1.53a.213.213,0,0,0-.218-.218H1.523a.21.21,0,0,0-.218.218V19.72a.21.21,0,0,0,.218.218h8.515a.678.678,0,0,1,0,1.313H4.977v2.438a.213.213,0,0,0,.218.218h4.843c.479.053.634,1.144,0,1.313H5.2a1.533,1.533,0,0,1-1.53-1.53V21.25H1.53a1.5,1.5,0,0,1-1.079-.463A1.519,1.519,0,0,1,0,19.72V1.53A1.5,1.5,0,0,1,.463.463,1.516,1.516,0,0,1,1.53,0h16.1a1.507,1.507,0,0,1,1.079.463,1.514,1.514,0,0,1,.449,1.079V3.968ZM4.459,5.88a.634.634,0,0,1-.6-.653.623.623,0,0,1,.6-.653H14.68a.632.632,0,0,1,.6.653.623.623,0,0,1-.6.653Z" transform="translate(818 215)" fill="#06425c"/>
+                <path id="Path_5192" data-name="Path 5192" d="M13.485,11.646V8.259a4.128,4.128,0,0,0-3.049-4.282V3.516a1.016,1.016,0,0,0-2.032,0v.461A4.116,4.116,0,0,0,5.355,8.259v3.387L4,13v.677H14.84V13Zm-3.387,0H8.742V10.291H10.1Zm0-2.71H8.742V6.226H10.1ZM9.42,15.711a1.359,1.359,0,0,0,1.355-1.355H8.065A1.355,1.355,0,0,0,9.42,15.711Z" transform="translate(826 226.293)" fill="#06425c"/>
+              </g>
+            </svg>  Notification
+          </Typography>
+        </Grid>
+        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
+
+              <Grid
+        item
+        md={12}
+        xs={12}
+        className={classes.formBox}
+        >
+        <FormLabel className="checkRadioLabel" component="legend">Notifications to be sent to</FormLabel>
+        <FormGroup row>{notification.map((value) => (
+          <FormControlLabel
+            className={classes.labelValue}
+            control={(
+                <Checkbox
+                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                name="checkedI"
+                // onChange={handleChange}
+                // onChange={}
+                checked ={ahaform.notifyTo !== null ? ahaform.notifyTo.includes(value) : ""}
+                onChange={(e) => handleNotification(e , value)}
+                />
+            )}
+            label={value}
+            />
+
+        ))}
+            
+            
+        </FormGroup>
+        </Grid>
+        </Grid>
+        </Paper>
+        </Grid>
+              
               <Grid item md={12} xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  onClick={() => history.goBack()}
+                  onClick={() => history.push(`/app/pages/aha/assessments/project-details/${localStorage.getItem("fkAHAId")}`)}
                 >
                   Previous
                 </Button>
@@ -852,16 +1053,19 @@ const Assessment = () => {
                 )}</div>
                  
               </Grid>
+              
             </Grid>
+            
             <Grid item xs={12} md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={AHA}
-                selectedItem="Assessment"
+                selectedItem="Area hazard analysis"
               />
             </Grid>
-          </Grid>) : (<h1>Loading...</h1>)}
-      </PapperBlock>
+          </Grid>
+          </>) : (<h1>Loading...</h1>)}
+      </CustomPapperBlock>
     </>
   );
 };

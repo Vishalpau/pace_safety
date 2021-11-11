@@ -308,6 +308,11 @@ const ProjectDetails = () => {
   )
 
   const handleSubmit = async (e) => {
+    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
@@ -327,15 +332,11 @@ const ProjectDetails = () => {
       structName.push(workArea.data.data.results[0]["structureName"])
     }
     form["workArea"] = structName[structName.length - 1]
-    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
-    }
+    
     await setLoading(true);
     if (form.id) {
       delete form["ahaAssessmentAttachment"]
-      // form['updatedBy'] = form['createdBy']
+      form['updatedBy'] = userId
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
@@ -344,17 +345,9 @@ const ProjectDetails = () => {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
           if (Teamform[i].teamName !== "") {
             const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
-          }
-          if (res.status === 200) {
-            history.push("/app/pages/aha/assessments/project-area-hazards")
-          }
+          }   
         }
-
       }
-      if (res.status === 200) {
-        history.push(`/app/pages/aha/assessments/project-area-hazards/`)
-      }
-
     } else {
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
@@ -369,14 +362,19 @@ const ProjectDetails = () => {
             const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
           }
         }
-        history.push("/app/pages/aha/assessments/project-area-hazards")
       }
     }
+    for (let i = 0; i < hazardForm.length; i++){
+      hazardForm[i]["fkAhaId"] = localStorage.getItem("fkAHAId")
 
+    }
+    for (let i = 0; i < otherHazards.length; i++){
+      otherHazards[i]["fkAhaId"] = localStorage.getItem("fkAHAId")
+    }
     let hazardNew = []
     let hazardUpdate = []
     let allHazard = [hazardForm, otherHazards]
-
+    
     allHazard.map((values, index) => {
       allHazard[index].map((value) => {
         if (value["id"] == undefined) {
@@ -385,18 +383,17 @@ const ProjectDetails = () => {
           }
         } else {
           if (value["hazard"] !== "") {
+
             hazardUpdate.push(value)
           }
         }
       })
     })
 
-
-
     const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
-
+    
     const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
-
+    
     history.push("/app/pages/aha/assessments/assessment")
   }
 
@@ -655,6 +652,36 @@ const ProjectDetails = () => {
     await setTeamForm(result)
   }
 
+  const handelUpdate = async () => {
+    const temp = {}
+    // const jhaId = handelJhaId()
+    const otherNoId = []
+    const tempForm = []
+    const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`)
+    const apiData = res.data.data.results
+    apiData.map((value) => {
+      if (value.fkChecklistId !== 0) {
+        tempForm.push(value)
+      } else {
+        otherNoId.push(value)
+      }
+    })
+    setHazardForm(tempForm)
+
+    // setForm(apiData)
+    setFetchedOptions(apiData)
+    if (otherNoId.length > 0) {
+      setOtherHazards(otherNoId)
+    }
+    apiData.map((value) => {
+      if (value.hazard in temp) {
+        temp[value.hazard].push(value.risk)
+      } else {
+        temp[value.hazard] = [value.risk]
+      }
+    })
+  }
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -663,8 +690,8 @@ const ProjectDetails = () => {
     if(id){
     fetchAhaData()
     fetchTeamData()
-    checkList()
-    }
+    handelUpdate()
+      }
     
   }, []);
   return (
@@ -997,7 +1024,7 @@ const ProjectDetails = () => {
                   xs={12}
                   className={classes.formBox}>
                   <FormControl component="fieldset">
-                    <FormLabel component="legend">{key}</FormLabel>
+                    <FormLabel component="checkRadioLabel">{key}</FormLabel>
                     <FormGroup>
                       {value.map((option) => (
                         <FormControlLabel
