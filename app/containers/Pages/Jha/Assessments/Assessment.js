@@ -23,7 +23,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
 import api from '../../../../utils/axios';
-import { handelActionData, handelCommonObject } from '../../../../utils/CheckerValue';
+import { handelActionData, handelCommonObject, handelActionDataAssessment } from '../../../../utils/CheckerValue';
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from '../../../Forms/ActionTracker';
 import FormSideBar from '../../../Forms/FormSideBar';
@@ -167,6 +167,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     color: '#06425c',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Assessment = () => {
@@ -234,7 +247,7 @@ const Assessment = () => {
   const handelActionTracker = async () => {
     const jhaId = localStorage.getItem('fkJHAId');
     const apiData = JSON.parse(localStorage.getItem('commonObject')).jha.assessmentIds;
-    const allAction = await handelActionData(jhaId, apiData);
+    const allAction = await handelActionDataAssessment(jhaId, apiData, "all", "jha:hazard");
     setActionData(allAction);
   };
   const handelActionShow = (id) => (
@@ -575,24 +588,24 @@ const Assessment = () => {
                   >
                     Previous
                   </Button>
-                  {submitLoader === false
-                    ? (
+                  <div className={classes.loadingWrapper}>
+
                       <Button
                         variant="outlined"
                         onClick={(e) => handelNext()}
                         className={classes.custmSubmitBtn}
                         style={{ marginLeft: '10px' }}
+                        disabled={submitLoader}
                       >
 
                         Next
                       </Button>
-                    )
-                    : (
-                      <IconButton className={classes.loader} disabled>
-                        <CircularProgress color="secondary" />
-                      </IconButton>
-                    )
-                  }
+                      {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
                 </Grid>
               </Grid>
             </Col>

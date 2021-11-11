@@ -176,6 +176,7 @@ import {
   FlhaActivities,
   FlhaComments,
   GeneralObservationPrints,
+  ControlTowerIcare
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -619,6 +620,8 @@ function Application(props) {
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
         <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
         <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+        {/* Control Tower */}
+        <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
 
         {/* Default */}
         <Route component={NotFound} />

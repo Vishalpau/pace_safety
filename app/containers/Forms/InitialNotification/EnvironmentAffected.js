@@ -20,6 +20,7 @@ import { INITIAL_NOTIFICATION_FORM, INITIAL_NOTIFICATION_FORM_NEW } from "../../
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
 import FormSideBar from "../FormSideBar";
 import api from "../../../utils/axios";
+import Loader from "../Loader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -136,13 +137,12 @@ const EnvironmentAffected = () => {
         try {
           for (let i = 0; i < environmentListData.length; i++) {
             const res = await api.put(
-              `api/v1/incidents/${id}/environment/${
-                environmentListData[i].id
+              `api/v1/incidents/${id}/environment/${environmentListData[i].id
               }/`,
               environmentListData[i]
             );
           }
-        } catch (error) {setIsNext(true)}
+        } catch (error) { setIsNext(true) }
         const temp = incidentsListData;
         temp.updatedAt = new Date().toISOString();
         temp.enviromentalImpactComments =
@@ -155,7 +155,7 @@ const EnvironmentAffected = () => {
           history.push(
             `/incident/${id}/modify/reporting-and-notification/`
           );
-        } catch (error) {setIsNext(true)}
+        } catch (error) { setIsNext(true) }
       }
     } else {
       const { error, isValid } = EnvironmentValidate(form);
@@ -180,81 +180,81 @@ const EnvironmentAffected = () => {
             temp
           );
           if (id) {
-           
+
             history.push(
               `/incident/${id}/modify/reporting-and-notification/`
             );
           }
-        } catch (error) {setIsNext(true)}
+        } catch (error) { setIsNext(true) }
       }
     }
-  
+
   };
 
   const fetchWaterBodyAffectedValue = async () => {
-     await api.get("api/v1/lists/19/value")
-    .then((res)=>{
-      const result = res.data.data.results;
-      setWaterbodyAffectedValue(result);
-    }).catch(error=>history.push("/app/pages/error"))
-    
+    await api.get("api/v1/lists/19/value")
+      .then((res) => {
+        const result = res.data.data.results;
+        setWaterbodyAffectedValue(result);
+      }).catch(error => history.push("/app/pages/error"))
+
   };
 
   const fetchImpactOnWildLifeValue = async () => {
-     await api.get("api/v1/lists/18/value")
-     .then((res)=>{
-      const result = res.data.data.results;
-      setImpactOnWildLife(result);
-     }).catch(error=>console.log(error))
-    
+    await api.get("api/v1/lists/18/value")
+      .then((res) => {
+        const result = res.data.data.results;
+        setImpactOnWildLife(result);
+      }).catch(error => console.log(error))
+
   };
 
   const fetchAnyReleaseValue = async () => {
     await api.get("api/v1/lists/17/value")
-    .then((res)=>{
-      const result = res.data.data.results;
-      setAnyReleaseValue(result);
-    }).catch(error=>history.push("/app/pages/error"))
-   
+      .then((res) => {
+        const result = res.data.data.results;
+        setAnyReleaseValue(result);
+      }).catch(error => history.push("/app/pages/error"))
+
   };
 
   const fetchEnviornmentAffectedValue = async () => {
     await api.get("api/v1/lists/16/value")
-    .then((res)=>{
-      const result = res.data.data.results;
-      setEnvironmentAffectedValue(result);
-    }).catch(error=>history.push("/app/pages/error"))
+      .then((res) => {
+        const result = res.data.data.results;
+        setEnvironmentAffectedValue(result);
+      }).catch(error => history.push("/app/pages/error"))
   };
 
   const fetchEnviornmentListData = async () => {
     await api.get(`api/v1/incidents/${id}/environment/`)
-    .then((res)=>{
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        if (result.length > 0) {
-          let temp = [...form];
-          temp = result;
-          setForm(temp);
+      .then((res) => {
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          if (result.length > 0) {
+            let temp = [...form];
+            temp = result;
+            setForm(temp);
+          }
+          setEnvironmentListData(result);
+          setIsLoading(true);
         }
-         setEnvironmentListData(result);
-         setIsLoading(true);
-      }
-    }).catch(error=>history.push("/app/pages/error"))
-    
+      }).catch(error => history.push("/app/pages/error"))
+
   };
 
   const fetchIncidentsData = async () => {
-     await api.get(
+    await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    ).then((res)=>{
+    ).then((res) => {
       const result = res.data.data.results;
-       setIncidentsListdata(result);
-       setEnvComments(result.enviromentalImpactComments);
+      setIncidentsListdata(result);
+      setEnvComments(result.enviromentalImpactComments);
       if (!id) {
         setIsLoading(true);
       }
-    }).catch(error=>history.push("/app/pages/error"))
-    
+    }).catch(error => history.push("/app/pages/error"))
+
   };
 
   // handle go back
@@ -330,12 +330,12 @@ const EnvironmentAffected = () => {
                         >
                           {environmentAffectedValue.length !== 0
                             ? environmentAffectedValue.map((value, index) => (
-                                <FormControlLabel
-                                  value={value.inputValue}
-                                  control={<Radio />}
-                                  label={value.inputLabel}
-                                />
-                              ))
+                              <FormControlLabel
+                                value={value.inputValue}
+                                control={<Radio />}
+                                label={value.inputLabel}
+                              />
+                            ))
                             : null}
                         </RadioGroup>
                       </FormControl>
@@ -394,13 +394,13 @@ const EnvironmentAffected = () => {
                       >
                         {environmentAffectedValue.length !== 0
                           ? environmentAffectedValue.map((value, index) => (
-                              <FormControlLabel
-                                key={index}
-                                value={value.inputValue}
-                                control={<Radio />}
-                                label={value.inputLabel}
-                              />
-                            ))
+                            <FormControlLabel
+                              key={index}
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                            />
+                          ))
                           : null}
                       </RadioGroup>
                       {error && error[`envQuestionOption${[0]}`] ? (
@@ -455,13 +455,13 @@ const EnvironmentAffected = () => {
                       >
                         {anyReleaseValue.length !== 0
                           ? anyReleaseValue.map((value, index) => (
-                              <FormControlLabel
-                                key={index}
-                                value={value.inputValue}
-                                control={<Radio />}
-                                label={value.inputLabel}
-                              />
-                            ))
+                            <FormControlLabel
+                              key={index}
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                            />
+                          ))
                           : null}
                       </RadioGroup>
                       {error && error[`envQuestionOption${[1]}`] ? (
@@ -517,13 +517,13 @@ const EnvironmentAffected = () => {
                       >
                         {impactOnWildLife.length !== 0
                           ? impactOnWildLife.map((value, index) => (
-                              <FormControlLabel
-                                key={index}
-                                value={value.inputValue}
-                                control={<Radio />}
-                                label={value.inputLabel}
-                              />
-                            ))
+                            <FormControlLabel
+                              key={index}
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                            />
+                          ))
                           : null}
                       </RadioGroup>
                       {error && error[`envQuestionOption${[2]}`] ? (
@@ -578,13 +578,13 @@ const EnvironmentAffected = () => {
                       >
                         {waterbodyAffectedValue !== 0
                           ? waterbodyAffectedValue.map((value, index) => (
-                              <FormControlLabel
-                                key={index}
-                                value={value.inputValue}
-                                control={<Radio />}
-                                label={value.inputLabel}
-                              />
-                            ))
+                            <FormControlLabel
+                              key={index}
+                              value={value.inputValue}
+                              control={<Radio />}
+                              label={value.inputLabel}
+                            />
+                          ))
                           : null}
                       </RadioGroup>
 
@@ -650,7 +650,7 @@ const EnvironmentAffected = () => {
                   className={classes.button}
                   disabled={!isNext}
                 >
-                  Next{isNext?null:<CircularProgress  size={20}/>}
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -666,7 +666,7 @@ const EnvironmentAffected = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

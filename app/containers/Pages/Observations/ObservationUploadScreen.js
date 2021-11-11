@@ -86,6 +86,7 @@ function ObservationBulkupload() {
     for (let i = 0; i < fileObjects.length; i += 1) {
       data.append('images', fileObjects[i]);
     }
+    console.log(data)
   };
 
   const handleDelete = (deleted) => {
@@ -95,7 +96,7 @@ function ObservationBulkupload() {
   useEffect(() => {
     // handleClick(acceptedFiles)
   },
-  [files]);
+    [files]);
 
 
   return (

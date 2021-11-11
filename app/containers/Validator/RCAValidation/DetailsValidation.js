@@ -15,10 +15,10 @@ function DetailValidation(data) {
     isValid = false;
   }
 
-  if (validator.isEmpty(data.evidenceNotSupport)) {
-    error.evidenceNotSupport = "This field is empty";
-    isValid = false;
-  }
+  // if (validator.isEmpty(data.evidenceNotSupport)) {
+  //   error.evidenceNotSupport = "This field is empty";
+  //   isValid = false;
+  // }
 
   if (validator.isEmpty(data.rcaRecommended)) {
     error.rcaRecommended = "Please select RCA recommended";

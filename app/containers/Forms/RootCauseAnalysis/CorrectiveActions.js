@@ -1,31 +1,29 @@
-import React, { useEffect, useState, useRef } from "react";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { spacing } from "@material-ui/system";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM, MANAGEMENTCONTROL, SUMMERY_FORM, CLOSE_OUT_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
-import CorrectiveActionValidation from "../../Validator/RCAValidation/CorrectiveActionsValidation";
-import Type from "../../../styles/components/Fonts.scss";
-import { handelApiValue } from "../../../utils/CheckerValue"
-
 // redux
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
+import Type from "../../../styles/components/Fonts.scss";
+import api from "../../../utils/axios";
+import { handelApiValue } from "../../../utils/CheckerValue";
+import { MANAGEMENTCONTROL, ROOT_CAUSE_ANALYSIS_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -331,7 +329,9 @@ const CorrectiveAction = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };
