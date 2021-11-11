@@ -23,6 +23,7 @@ import { PACE_MANAGEMENT_CONTROL_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM } from "../
 import ActionShow from "../ActionShow";
 import ActionTracker from "../ActionTracker";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 
@@ -299,7 +300,9 @@ const BasicCauseAndAction = () => {
             </Grid>
           )}
         </Grid>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

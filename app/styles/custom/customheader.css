@@ -1,56 +1,75 @@
 @font-face {
+  font-family: Montserrat-Regular;
+  src: url(../../fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
   font-family: Montserrat-Medium;
   src: url(../../fonts/Montserrat-Medium.ttf);
 }
+
 @font-face {
   font-family: Xolonium-Regular;
   src: url(../../fonts/Xolonium-Regular.ttf);
 }
+
 @font-face {
-  font-family: Xolonium-Bold;
-  src: url(../../fonts/Xolonium-Bold.ttf);
+  font-family: Montserrat-SemiBold;
+  src: url(../../fonts/Montserrat-SemiBold.ttf);
 }
+
+html {    
+	font-family: Montserrat-Regular !important;
+}
+
 .headerAppsGrid {
   opacity: 1;
 }
+
 .headerAppsGrid .MuiMenu-list {
   display: grid;
   grid-template-columns: repeat(3, 90px);
   gap: 1rem;
-  font-family: Montserrat-Medium;
+  font-family: 'Montserrat';
 }
+
 .headerAppsGrid .MuiMenu-list .MuiListItem-root {
   flex-direction: column !important;
   font-size: 13px;
-  font-family: Montserrat-Medium !important;
+  font-family: Montserrat-Regular !important;
 }
 .MuiTab-root {
-	font-family: Montserrat-Medium !important;
+	font-family: Montserrat-Regular !important;
+}
+.MuiTypography-h5 {
+	font-family: Xolonium-Regular !important;
+	font-weight: 500;
+  font-size: 1.3rem !important;
 }
 .MuiButton-label {
-	font-family: Montserrat-Medium !important;
+	font-family: Montserrat-Regular !important;
 }
 .MuiTypography-body1 {
-	font-family: Montserrat-Medium !important;
+	font-family: Montserrat-Regular !important;
 }
 .MuiTypography-body2 {
-	font-family: Montserrat-Medium !important;
+	font-family: Montserrat-Regular !important;
 }
 .MuiButton-root  {
-	font-family: Montserrat-Medium !important;
+	font-family: Montserrat-Regular !important;
 }
 .MuiButtonBase-root   {
-	font-family: Montserrat-Medium !important;
+	font-family: Montserrat-Regular !important;
 }
 .PersistentDrawer-floatL-3017 {
     font-size: 17px !important;
-    font-family: Xolonium-Regular;
+    font-family: Xolonium-Regular !important;
     font-weight: 500 !important;
 }
-.MuiTypography-h5 {
-	font-family: Xolonium-Regular!important;
+/* .MuiTypography-h6 {
+	font-family: Xolonium-Regular !important;
 	font-weight: 500 !important;
-}
+} */
 .MuiGrid-root.makeStyles-floatE-426.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-2 img {
     height: 44px;
 }
@@ -58,16 +77,14 @@ span.makeStyles-mR10-2491 img {
     height: 44px;
 }
 .MuiFormLabel-root {
-    font-family: Montserrat-Medium !important;
-    color: #7692a4 !important;
+    font-family: Montserrat-Regular !important;
+    color: #666666 !important;
+    font-size: 15px;
 }
 .makeStyles-fullWidth-419 {
   width: 100%;
   margin: .2rem 0;
   box-shadow: inset 0px 0px 9px #dedede;
-}
-html {    
-	font-family: Montserrat-Medium !important;
 }
 .MuiInputBase-root {
     color: rgba(0, 0, 0, 0.87);
@@ -82,17 +99,15 @@ html {
     line-height: 1.1876em;
 }
 .MuiInputBase-root {
-    font-family: Montserrat-Medium !important;
+    font-family: Montserrat-Regular !important;
 }
 .MuiOutlinedInput-notchedOutline {
     border-color: rgba(0, 0, 0, 0.23);
 }
 
 .MuiTableCell-root {
-   font-family: Montserrat-Medium !important;
+   font-family: Montserrat-Regular !important;
 }
-
-
 .makeStyles-search-1484 {
   margin: 14px 2px 9px 0px !important;
   padding: 0px 0px !important;
@@ -106,8 +121,20 @@ html {
 }
 }
 
-.h5 {
-  font-family: Xolonium-Regular;
+/*card attachment section*/
+#long-menu .MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded {
+  top: 380px!important;
+  left: 85px!important;
+  width: 92%!important;
+} 
+/*forms*/
+html .custmCancelBtn {
+  color: #06425C !important;
+  background-color: #ffffff !important;
+  margin-left: 5px;
+  border: 1px solid #06425C !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 }
 .PapperBlock-title {
   font-family: Xolonium-Regular;
@@ -276,8 +303,6 @@ html .custmCancelBtn {
   border: 1px solid #E7E7E7;
 }
 
-
-
 .sectionHeading {
   font-size: 16px !important;
   line-height: 19px;
@@ -391,6 +416,9 @@ html .custmCancelBtn {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
 }
+.commentsShowSection  {
+  margin-top: -30px !important;
+}
 .paddTRemove {
   padding-top: 0px !important;
 }
@@ -447,12 +475,24 @@ html .custmCancelBtn {
 }
 .attachFileThumb {
   width: 150px;
+  float: left;
   display: inline-block;
+}
+.attachFileThumbEnry {
+  width: 62px;
+  float: left;
+  display: inline-block;
+  margin-right: 5px;
 }
 .attachFileStyle {
   width: 100px;
   border-radius: 8px;
   height: 100px;
+}
+.attachFileStylethum {
+  width: 60px;
+  border-radius: 8px;
+  height: 60px;
 }
 .attachContent {
   padding-right: 15px;
@@ -489,6 +529,7 @@ html .custmCancelBtn {
 .tableHeadCellFirst {
   background-color: #06425c;
   color: #ffffff !important;
+  padding: 10px 16px !important;
 }
 .tableHeadCellSecond {
   background-color: #06425c;
@@ -501,6 +542,9 @@ html .custmCancelBtn {
 .dataTableSectionDesign table thead tr th {
   background-color: #06425c;
 }
+.dataTableSectionDesign .MuiButton-text {
+  padding: 0px 8px;
+}
 
 .dataTableSectionDesign table thead tr th button span div div {
   color: #ffffff !important;
@@ -512,6 +556,10 @@ html .custmCancelBtn {
   color: #ffffff;
 }
 
+/*Kanban css*/
+.MuiTypography-subtitle2 {
+  font-family: Montserrat-Regular !important;
+}
 
 /* Accodion style component */
 .accordionHeaderSection {
@@ -535,15 +583,28 @@ html .custmCancelBtn {
   margin: 0px 0px 20px 0px !important;
 }
 .backPaperSubAccordian {
-  border: 0px solid #06425c;
+  border: 0px solid #EDEDED;
   border-radius: 10px !important;
-  box-shadow: 0px 0px 0px 1px #7890a4 !important;
+  box-shadow: 0px 0px 0px 1px #EDEDED !important;
   margin: 0px 0px 0px 0px !important;
+}
+.backPaperSubAccordianWithMargin {
+  border: 0px solid #EDEDED;
+  border-radius: 10px !important;
+  box-shadow: 0px 0px 0px 1px #EDEDED !important;
+  margin: 0px 0px 20px 0px !important;
+}
+.backPaperSubAccordian.MuiAccordion-root:before, .backPaperSubAccordianWithMargin.MuiAccordion-root:before {
+  top: 2px;
+  content: "";
 }
 .backPaperAccordian:not(.Mui-expanded) .accordionHeaderSection {
   border-radius: 10px !important;
 }
 .backPaperSubAccordian:not(.Mui-expanded) .accordionSubHeaderSection {
+  border-radius: 10px !important;
+}
+.backPaperSubAccordianWithMargin:not(.Mui-expanded) .accordionSubHeaderSection {
   border-radius: 10px !important;
 }
 .accordionHeaderSection:not(.Mui-expanded) {
@@ -591,6 +652,18 @@ html .custmCancelBtn {
   background-color: #ff8533;
   border-color: #ff8533;
 }
+.formFieldBTNSectionAdd button {
+  margin-bottom: 12px;
+  background-color: #7890A4;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: 'Montserrat-SemiBold' !important;
+  text-transform: none;
+}
+.formFieldBTNSectionAdd button:hover {
+  background-color: #ff8533;
+  border-color: #ff8533;
+}
 .tableFileAttach {
   margin: 0px;
   width: auto !important;
@@ -606,6 +679,12 @@ html .custmCancelBtn {
   color: #7890A4;
 }
 
+.MuiTableContainer-root {
+  overflow-x: inherit !important;
+}
+.MuiTableContainer-root .MuiTable-root {
+  margin: 0px;
+}
 
 
 .sectionSubHeading .subsectiontitle {
@@ -622,14 +701,111 @@ html .custmCancelBtn {
   display: inline-block;
   margin-right: 15px;
 }
-.SummaryTabList li button.MuiButton-containedPrimary:hover, .SummaryTabList li button.MuiButton-containedSecondary  {
-  border-color: #ff8533 !important;
+.SummaryTabList li button.MuiButton-containedPrimary:hover {
+  border-color: #ff8533;
 }
-.SummaryTabList li button.MuiButton-outlinedSecondary, .SummaryTabList li button.MuiButton-outlinedSecondary:hover, .SummaryTabList li button.MuiButton-outlinedPrimary:hover {
-  color: #ff9900;
-  border: 1px solid #ff9900;
+
+.jobProjecttitle span {
+  font-size: 12px;
+  line-height: 19px;
+  display: inline-block;
+  padding-top: 5px;
+}
+.tableIconalign svg {
+  margin-left: 15px;
+  color: #7890A4;
+}
+.marginT0 {
+  margin-top: 0px !important;
+}
+.marginT10 {
+  margin-top: 10px !important;
+}
+.marginT15 {
+  margin-top: 15px !important;
+}
+.marginB15 {
+  margin-bottom: 15px !important;
+}
+.marginBRemove {
+  margin-bottom: 0px !important;
+}
+.blockBGColor {
+  background-color: #06425C !important;
+}
+.reviseCount {
+  margin-top: 4px !important;
+}
+.inlineListBTN .MuiListItem-root {
+  display: inline;
+  margin-right: 10px;
+  color: #ffffff;
+  padding: 12px 15px;
+}
+.inlineListBTN .MuiListItem-button {
+  display: inline;
+  margin-right: 10px;
+  background-color: #7890A4;
+  color: #ffffff;
+  border-radius: 3px;
+}
+.inlineListBTN .MuiListItem-button:hover, .inlineListBTN .MuiListItem-button.active  {
+  background-color: #F28705;
+}
+.inlineListBTN .MuiListItemText-root {
+  display: inline-block;
+}
+.formWithBG label, .formWithBG svg  {
+  color: #ffffff !important;
+}
+.formWithBG fieldset, .formWithBG .MuiInputBase-root:hover  {
+  border-color: #ffffff !important;
+}
+.inlineListBTN .btnNoneLink {
   background-color: transparent;
-} 
+}
+.inlineListBTN .btnNoneLink:hover, .inlineListBTN .btnNoneLink:hover span {
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.attachFileBtn button {
+  text-transform: none;
+}
+
+.attactmentShowSection, .commentsShowSection {
+  margin-top: -30px !important;
+}
+.attactmentShowSection ul, .commentsShowSection ul{
+  display: inline;
+}
+.attactmentShowSection ul li, .commentsShowSection ul li {
+  display: inline;
+  padding: 0px 5px;
+}
+.attactmentShowSection ul li img, .commentsShowSection ul li img {
+  width: 120px;
+  height: 80px;
+  border-radius: 5px;
+}
+.listGapRemove li {
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+}
+
+.listingLabelValue {
+  color: #333333;
+  font-size: 0.88rem;
+  font-family: Montserrat-Regular;
+}
+.statusColor_complete {
+  color: darkgreen;
+}
+.marginB10 {
+  margin-bottom: 10px;
+}
 
 
 @media (max-width: 1280px) {
@@ -665,5 +841,8 @@ html .custmCancelBtn {
   }
   .MuiToolbar-regular {
     min-height: 65px !important;
+  }
+  .MuiTableContainer-root {
+    overflow-x: auto !important;
   }
 }

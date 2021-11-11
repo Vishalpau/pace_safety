@@ -24,6 +24,7 @@ import { useHistory, useParams } from 'react-router';
 import axios from 'axios';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import LessionLearnedValidator from '../../Validator/LessonLearn/LessonLearn';
+import Loader from "../Loader";
 
 import FormSideBar from '../FormSideBar';
 import {
@@ -213,7 +214,7 @@ const LessionLearned = () => {
                 }
               );
               status = res.status
-              
+
             } catch (err) { history.push('/app/pages/error'); }
           } else {
             try {
@@ -229,11 +230,11 @@ const LessionLearned = () => {
                 }
               );
               status = res.status
-          
+
             } catch (err) { history.push('/app/pages/error'); }
           }
         }
-        
+
         if (status === 200 || status === 201) {
           const viewMode = {
             initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: false, lessionlearn: true
@@ -611,7 +612,7 @@ const LessionLearned = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );
