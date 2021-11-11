@@ -520,7 +520,7 @@ function ObservationsList(props) {
     } else {
       localStorage.removeItem("action");
     }
-    history.push(`/app/observation/details/${id}`);
+    history.push(`/app/icare/details/${id}`);
   };
 
   const classes = useStyles();

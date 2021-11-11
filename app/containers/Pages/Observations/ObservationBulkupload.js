@@ -123,7 +123,7 @@ function ObservationBulkupload() {
   const handleBulkUploadfilePush = async (e) => {
     console.log(e);
     history.push(
-      '/app/observation-bulkuploadfile'
+      '/app/icare-bulkuploadfile'
     );
   };
 

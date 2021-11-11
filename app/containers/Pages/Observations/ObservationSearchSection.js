@@ -364,7 +364,7 @@ export default function SimpleTabs(props) {
 				<AppBar position="static" className={classes.navTabBack}>
 				  <div className={classes.floatL}>
 					<Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-					  <Tab label="My Observations" {...a11yProps(0)} />
+					  <Tab label="My iCares" {...a11yProps(0)} />
 					  {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
 					  <Tab label="Big Picture" {...a11yProps(2)} />
 					{/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}

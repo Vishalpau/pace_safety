@@ -147,11 +147,11 @@ function Observations(props) {
     : null;
   const handelView = (e) => {
     setListToggle(false);
-    history.push(`/app/observations`);
+    history.push(`/app/icare`);
   };
   const handelViewTabel = (e) => {
     setListToggle(true);
-    history.push(`/app/observations#table`);
+    history.push(`/app/icare#table`);
   };
 
   const handlePush = async () => {
@@ -168,7 +168,7 @@ function Observations(props) {
     } else {
       localStorage.removeItem("action");
     }
-    history.push(`/app/observation/details/${id}`);
+    history.push(`/app/icare/details/${id}`);
   };
 
   const handelActionTracker = async () => {
@@ -183,7 +183,7 @@ function Observations(props) {
 
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
-    history.push("/app/observation-initial-notification");
+    history.push("/app/icare-initial-notification");
   };
   const columns = [
     {
@@ -260,7 +260,6 @@ function Observations(props) {
   const handleSearch = (e) => {
     // console.log(e.target.value)
     setSeacrhIncident(e.target.value);
-    // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
   };
 
   const handleChange = async (event, value) => {
