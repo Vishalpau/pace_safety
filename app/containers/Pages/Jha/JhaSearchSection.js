@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -15,7 +16,6 @@ import completed from 'dan-images/completed.png';
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import PropTypes from 'prop-types';
-import React from 'react';
 //import ObservationsLookAhead from './ObservationsLookAhead';
 import JhaFilter from './JhaFilter';
 
@@ -356,11 +356,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function JhaSearchSection() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [search, setSearch] = useState("")
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handelSearch = (e) => {
+    setSearch(e.target.value)
+  }
 
   return (
     <div className={classes.root}>
@@ -390,6 +395,7 @@ export default function JhaSearchSection() {
                   input: classes.inputInput,
                 }}
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={(e) => handelSearch(e)}
               />
             </Paper>
           </Grid>
@@ -405,16 +411,16 @@ export default function JhaSearchSection() {
       <Grid container spacing={3}>
         <Grid item sm={12} xs={12}>
           <TabPanel value={value} index={0} className={classes.paddLRzero}>
-            <JhaFilter />
+            <JhaFilter search={search} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <JhaFilter />
+            <JhaFilter search={search} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <JhaFilter />
+            <JhaFilter search={search} />
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <JhaFilter />
+            <JhaFilter search={search} />
           </TabPanel>
         </Grid>
       </Grid>

@@ -1,63 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import classNames from 'classnames';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
-import Share from '@material-ui/icons/Share';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import TableContainer from '@material-ui/core/TableContainer';
-import { makeStyles } from '@material-ui/core/styles';
-import Incidents from 'dan-styles/IncidentsList.scss';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import MUIDataTable from 'mui-datatables';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-
-import MenuItem from '@material-ui/core/MenuItem';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import completed_small from 'dan-images/completed-small.png';
-import projectpj from 'dan-images/projectpj.png';
-import in_progress_small from 'dan-images/in_progress_small.png';
-import "../../../styles/custom/customheader.css";
-import StarsIcon from '@material-ui/icons/Stars';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-import { useHistory, useParams } from 'react-router';
-
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-
-import TextField from '@material-ui/core/TextField';
-import Menu from '@material-ui/core/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import AttachmentIcon from '@material-ui/icons/Attachment';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
+import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-
+import StarsIcon from '@material-ui/icons/Stars';
+import classNames from 'classnames';
+import in_progress_small from 'dan-images/in_progress_small.png';
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import projectpj from 'dan-images/projectpj.png';
+import Incidents from 'dan-styles/IncidentsList.scss';
 import { connect } from "react-redux";
+import { useHistory } from 'react-router';
+
+import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -479,7 +463,6 @@ function JhaPackage(props) {
   const [openAttachment, setopenAttachment] = React.useState(false);
   const [attachOpen, setAttachOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-
   const handleClickOpenAttachment = () => {
     setopenAttachment(true);
   };
@@ -505,7 +488,7 @@ function JhaPackage(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&search=${props.search}`);
     const result = res.data.data.results.results !== undefined && res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)
@@ -622,9 +605,7 @@ function JhaPackage(props) {
   };
 
   const handleSummaryPush = async (selectedJha) => {
-
     const jha = selectedJha
-
     localStorage.setItem("fkJHAId", jha.id)
     handelCommonObject("commonObject", "jha", "projectStruct", jha.fkProjectStructureIds)
     history.push(`/app/pages/jha/jha-summary/${jha.id}`);
@@ -632,7 +613,10 @@ function JhaPackage(props) {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [
+    props.search,
+    props.projectName.breakDown
+  ])
 
   return (
     <>

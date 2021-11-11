@@ -15,12 +15,12 @@ import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
+
+import JhaDetailsInit from "./JobDetails"
 import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { handelJhaId } from "../Utils/checkValue";
 import { JHA_FORM } from "../Utils/constants";
-
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -319,6 +319,7 @@ const ProjectAreaHazards = () => {
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
+              {/* <JhaDetailsInit /> */}
               {/* {console.log(form)} */}
               {Object.entries(checkGroups).map(([key, value]) => (
                 <Grid item md={6}>
