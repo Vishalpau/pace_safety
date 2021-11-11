@@ -117,13 +117,16 @@ const useStyles = makeStyles((theme) => ({
   custmCancelBtn: {
     color: "#ffffff",
     backgroundColor: "#ff8533",
-    lineHeight: "30px",
+    lineHeight: "27px",
     marginLeft: "5px",
     border: "none",
     "&:hover": {
       backgroundColor: "#ff8533",
       border: "none",
     },
+    textTransform: 'capitalize !important',
+    fontSize: '0.975rem',
+
   },
   observationFormBox: {
     width: "100%",
@@ -515,7 +518,7 @@ const ObservationInitialNotification = (props) => {
             if (res.status === 200 || res.status === 201) {
               const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
               history.push(
-                `/app/observation/details/${localStorage.getItem(
+                `/app/icare/details/${localStorage.getItem(
                   "fkobservationId"
                 )}`
               );
@@ -530,7 +533,7 @@ const ObservationInitialNotification = (props) => {
           const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
 
           history.push(
-            `/app/observation/details/${localStorage.getItem(
+            `/app/icare/details/${localStorage.getItem(
               "fkobservationId"
             )}`
           );
@@ -579,10 +582,7 @@ const ObservationInitialNotification = (props) => {
     setOpen(false);
   };
 
-
-  // this function when user upload the file
   const handleFile = async (e) => {
-    console.log(e)
     let TempPpeData = { ...form };
     if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
@@ -592,15 +592,6 @@ const ObservationInitialNotification = (props) => {
       await setOpen(true);
     }
 
-  };
-
-  const handleAssignee = async (e, value) => {
-    let tempData = { ...form };
-    tempData.assigneeName = value.name;
-
-    tempData.assigneeId = value.id;
-
-    setForm(tempData);
   };
 
   const handelAddressSituationYes = async (e) => {
@@ -645,7 +636,6 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-
   const fetchNotificationSent = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -682,8 +672,6 @@ const ObservationInitialNotification = (props) => {
     await setTagData(sorting);
   };
 
-
-
   const fetchAttachment = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -698,7 +686,6 @@ const ObservationInitialNotification = (props) => {
       await setAttachment(ar);
     }
   };
-
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -720,7 +707,6 @@ const ObservationInitialNotification = (props) => {
     let sliceData = dataDepthAndId.slice(0, index);
     let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
     setSelectDepthAndId(newdataDepthAndId);
-    // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
@@ -732,7 +718,6 @@ const ObservationInitialNotification = (props) => {
             .then(function (response) {
               if (response.status === 200) {
                 temp[key].breakDownData = response.data.data.results;
-                //  temp[key].select=e.
                 setBreakdown1ListData(temp);
               }
             })
@@ -1678,22 +1663,16 @@ const ObservationInitialNotification = (props) => {
                 )}
               </div>
 
-              <div className={classes.loadingWrapper}>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="primary"
-                  className="spacerRight buttonStyle"
-                  onClick={() => {
-                    history.push("/app/observations");
-                  }}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-              </div>
-
-
+              <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmCancelBtn}
+                onClick={() => {
+                  history.push("/app/icare");
+                }}
+              >
+                Cancel
+              </Button>
             </Grid>
 
 

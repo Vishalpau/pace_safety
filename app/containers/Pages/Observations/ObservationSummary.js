@@ -102,7 +102,7 @@ const ObservationSummary = () => {
     setObservationCorrectiveAction(false);
     setComment(false)
     setActivity(false)
-    history.push(`/app/observation/details/${id}#modify`)
+    history.push(`/app/icare/details/${id}#modify`)
 
     
   };
@@ -115,7 +115,7 @@ const ObservationSummary = () => {
     setObservationInitialNotification(false)
     setComment(false)
     setActivity(false)
-    history.push(`/app/observation/details/${id}#action-taking`)
+    history.push(`/app/icare/details/${id}#action-taking`)
   }
  
   const handleComments = (e) => {
@@ -124,9 +124,7 @@ const ObservationSummary = () => {
     setObservationCorrectiveAction(false);
     setComment(true)
     setActivity(false);
-    history.push(`/app/observation/details/${id}#comments`)
-
-    
+    history.push(`/app/icare/comments/${id}`)
   };
 
   
@@ -136,7 +134,7 @@ const ObservationSummary = () => {
     setObservationCorrectiveAction(false);
     setComment(false)
     setActivity(true)
-    history.push(`/app/observation/details/${id}#activity`)
+    history.push(`/app/icare/details/${id}#activity`)
 
     
   };
@@ -162,10 +160,10 @@ const ObservationSummary = () => {
     setObservationInitialNotificationUpdate(true)
     if(localStorage.getItem("action") === "Done"){
       setObservationCorrectiveActionView(true)
-      history.push(`/app/observation/details/${id}`)
+      history.push(`/app/icare/details/${id}`)
     }else{
       setObservationCorrectiveActionView(false)
-      history.push(`/app/observation/details/${id}#action-taking`)
+      history.push(`/app/icare/details/${id}#action-taking`)
     }
     
 
@@ -174,7 +172,7 @@ const ObservationSummary = () => {
   const handlePrintPush = async () => {
     //console.log("Ashutosh")
     history.push(
-      `/app/pages/general-observation-prints/${id}`
+      `/app/pages/general-icare-prints/${id}`
     );
   };
 
@@ -216,7 +214,7 @@ const ObservationSummary = () => {
     <>
       {/* {isLoading ? ( */}
       <CustomPapperBlock
-        title={`Observation Number: ${initialData.observationNumber ? initialData.observationNumber : ""}`}
+        title={`iCare Number: ${initialData.observationNumber ? initialData.observationNumber : ""}`}
         // icon="ion-md-list-box"
         variant="h5"
         icon={obsIcon} 
@@ -254,12 +252,12 @@ const ObservationSummary = () => {
                                 setObservationInitialNotificationUpdate(true)
                                 setComment(false)
                                 setActivity(false)
-                                history.push(`/app/observation/details/${id}`)
+                                history.push(`/app/icare/details/${id}`)
                                 // setObservationReview(false);
                                 // setObservationCloseOut(false);
                               }}
                             >
-                                Observation
+                                iCare
                             </Button>
                             <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
                                 Done <CheckCircle />
@@ -350,7 +348,7 @@ const ObservationSummary = () => {
                     variant="subtitle"
                     onClick={(e) => handelObservationInitialNotificationUpdate(e)}
                   >
-                    <ListItemText primary="Update Observation" />
+                    <ListItemText primary="Update iCare" />
                   </Link>
                 </ListItem>
                   {/* <ListItemLink
@@ -390,8 +388,8 @@ const ObservationSummary = () => {
                   </ListItem>
                 
                   )}
-{/* 
-                  <ListItem button>
+
+                  {/* <ListItem button>
                   <ListItemIcon>
                   <Comment />
                   </ListItemIcon>

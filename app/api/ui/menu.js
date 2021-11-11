@@ -39,10 +39,10 @@ module.exports = [
     ],
   },
   {
-    key: "observations",
-    name: "Observations",
+    key: "icare",
+    name: "iCare",
     icon: 'ion-md-eye',
-    linkParent: '/app/observations',
+    linkParent: '/app/icare',
   },
   {
     key: "controltower",
