@@ -209,6 +209,7 @@ const ProjectDetails = () => {
   const [hazardForm , setHazardForm] = useState([])
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
+  const [checkGroups, setCheckListGroups] = useState([])
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
   const permitType = ["Permit 1" , "Permit 2" , "Permit 3" , "Permit 4"]
@@ -246,6 +247,26 @@ const ProjectDetails = () => {
 
     };
 
+  }
+
+  const checkList = async () => {
+    const temp = {}
+    const res = await api.get("/api/v1/core/checklists/aha-hazards/1/")
+    const checklistGroups = res.data.data.results[0].checklistGroups
+    checklistGroups.map((value) => {
+      temp[value["checkListGroupName"]] = []
+      value.checkListValues.map((checkListOptions) => {
+        let checkObj = {}
+        if (checkListOptions !== undefined) {
+          checkObj["inputLabel"] = checkListOptions.inputLabel
+          checkObj["inputValue"] = checkListOptions.inputValue
+          checkObj["id"] = checkListOptions.id
+          temp[value["checkListGroupName"]].push(checkObj)
+        }
+      })
+    })
+    await setCheckListGroups(temp)
+    await setIsLoading(true)
   }
 
 
@@ -351,6 +372,32 @@ const ProjectDetails = () => {
         history.push("/app/pages/aha/assessments/project-area-hazards")
       }
     }
+
+    let hazardNew = []
+    let hazardUpdate = []
+    let allHazard = [hazardForm, otherHazards]
+
+    allHazard.map((values, index) => {
+      allHazard[index].map((value) => {
+        if (value["id"] == undefined) {
+          if (value["hazard"] !== "") {
+            hazardNew.push(value)
+          }
+        } else {
+          if (value["hazard"] !== "") {
+            hazardUpdate.push(value)
+          }
+        }
+      })
+    })
+
+
+
+    const resHazardUpdate = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardUpdate)
+
+    const resHazardNew = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`, hazardNew)
+
+    history.push("/app/pages/aha/assessments/assessment")
   }
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -398,6 +445,60 @@ const ProjectDetails = () => {
     setHazardForm(temp)
 
   };
+
+  const [otherHazards, setOtherHazards] = useState([
+    {
+      "hazard": "",
+      "risk": "",
+      "severity": "",
+      "probability": "",
+      "riskRating": "",
+      "control": "",
+      "residualRisk": "",
+      "approveToImplement": "",
+      "monitor": "",
+      "status": "Active",
+      "createdBy": parseInt(userId),
+      "fkAhaId": localStorage.getItem("fkAHAId")
+    }
+  ])
+
+  const handleOtherHazards = async (e, key) => {
+    const temp = [...otherHazards];
+    const value = e.target.value;
+    temp[key]["hazard"] = value;
+    setOtherHazards(temp);
+
+  }
+
+  const handleOtherAdd = (e) => {
+    if (Object.keys(otherHazards).length < 100) {
+      setOtherHazards([...otherHazards, {
+        "hazard": "",
+        "risk": "",
+        "severity": "",
+        "probability": "",
+        "riskRating": "",
+        "control": "",
+        "residualRisk": "",
+        "approveToImplement": "",
+        "monitor": "",
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "fkAhaId": localStorage.getItem("fkAHAId")
+      }]);
+    }
+  };
+
+  const handelOtherRemove = async (e, index) => {
+    if (otherHazards.length > 1) {
+      if (otherHazards[index].id !== undefined) {
+      }
+      let temp = otherHazards;
+      let newData = otherHazards.filter((item, key) => key !== index);
+      await setOtherHazards(newData);
+    };
+  }
 
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
@@ -555,12 +656,14 @@ const ProjectDetails = () => {
   }
 
   const classes = useStyles();
-  console.log(form)
+
   useEffect(() => {
     fetchCallBack()
+    checkList()
     if(id){
     fetchAhaData()
     fetchTeamData()
+    checkList()
     }
     
   }, []);
@@ -867,33 +970,7 @@ const ProjectDetails = () => {
               </Paper>
               </Grid>
               
-              <Grid
-                item
-                md={12}
-                xs={12}
-                style={{ marginTop: '15px' }}
-              >
-                            <div className={classes.loadingWrapper}>
-
-                  <Button
-                    variant="outlined"
-                    onClick={(e) => handleSubmit()}
-                    className={classes.custmSubmitBtn}
-                    style={{ marginLeft: "10px" }}
-                    disabled={loading}
-                  >
-
-                    Next
-                  </Button>
-                  {loading && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-                </div>
-                  
-              </Grid>
+              
             </Grid>
             <Grid item xs={12} md={3}>
               <FormSideBar
@@ -902,6 +979,19 @@ const ProjectDetails = () => {
                 selectedItem="Project Details"
               />
             </Grid>
+
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Typography variant="h6" className="sectionHeading">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32.665" height="25.557" viewBox="0 0 32.665 25.557">
+              <g id="placeholder-on-map-paper-in-perspective-svgrepo-com" transform="translate(0.001 -66.585)">
+                <path id="Path_5201" data-name="Path 5201" d="M27.557,81.046l5.03,10.332a.49.49,0,0,1-.478.764H.555a.49.49,0,0,1-.478-.764l5.03-10.332a.583.583,0,0,1,.478-.3H9.9a.6.6,0,0,1,.4.184c.293.338.591.668.888,1,.282.31.566.625.847.947H6.914a.582.582,0,0,0-.478.3L3.1,90.017H29.56l-3.332-6.845a.582.582,0,0,0-.478-.3h-5.13c.281-.322.565-.636.848-.947.3-.328.6-.658.891-1a.6.6,0,0,1,.4-.183H27.08A.582.582,0,0,1,27.557,81.046Zm-3.831-7.061c0,5.646-4.7,6.7-6.91,12.13a.528.528,0,0,1-.98,0c-1.994-4.892-6.012-6.233-6.781-10.591a7.561,7.561,0,0,1,6.551-8.9A7.4,7.4,0,0,1,23.726,73.985Zm-3.492,0a3.908,3.908,0,1,0-3.908,3.908A3.908,3.908,0,0,0,20.234,73.985Z" transform="translate(0)" fill="#06425c"/>
+              </g>
+            </svg> Area hazard
+          </Typography>
+        </Grid>
+        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+          <Paper elevation={1} className="paperSection">
+            <Grid container spacing={3}>
             {Object.entries(checkGroups).map(([key, value]) => (
                 <Grid item md={6}
                   xs={12}
@@ -921,7 +1011,90 @@ const ProjectDetails = () => {
                   </FormControl>
                 </Grid>
               ))}
+
+              {otherHazards.map((value, index) => (
+                <>
+                  <Grid
+                    item
+                    md={6}
+                    xs={11}
+                    className={classes.createHazardbox}
+                  >
+                    <TextField
+                      label="Other Hazards"
+                      margin="dense"
+                      name="otherhazards"
+                      id="otherhazards"
+                      fullWidth
+                      variant="outlined"
+                      value={otherHazards[index].hazard || ""}
+                      className={classes.formControl}
+                      onChange={(e) => handleOtherHazards(e, index)}
+                    />
+
+                  </Grid>
+                  {otherHazards.length > 1 ?
+                    <Grid item md={1} className={classes.createHazardbox}>
+                      <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => handelOtherRemove(e, index)}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </Grid>
+                    : null}
+                </>
+              ))}
+
+              <Grid item md={12} className={classes.createHazardbox}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddCircleIcon />}
+                  className={classes.button}
+                  onClick={() => { handleOtherAdd() }}
+                >
+                  Add new
+                </Button>
+              </Grid>
+              </Grid>
+              </Paper>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                style={{ marginTop: '15px' }}
+              >
+                            <div className={classes.loadingWrapper}>
+
+                  <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
+                    onClick={(e) => handleSubmit()}
+                    className="spacerRight buttonStyle"
+                    color="primary"
+                    style={{ marginLeft: "10px" }}
+                    disabled={loading}
+                  >
+
+                    Next
+                  </Button>
+                  {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+                </div>
+
+                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={(e) => history.goBack()}>
+            Cancel
+          </Button>
+                  
+              </Grid>
           </Grid>
+
+          
            : <> loading...</>}
           </CustomPapperBlock>
     </>
