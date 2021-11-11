@@ -35,10 +35,10 @@ function validate(data,projectStructure) {
   error.incidentLocation = "Please enter less than 45 charecter";
   isValid = false;
   }
-  if (validator.isEmpty(data.contractor)) {
-    error.contractor = "Please select contractor name";
-    isValid = false;
-  } 
+  // if (validator.isEmpty(data.contractor)) {
+  //   error.contractor = "Please select contractor name";
+  //   isValid = false;
+  // } 
 
 
 

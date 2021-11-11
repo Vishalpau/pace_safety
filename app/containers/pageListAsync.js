@@ -707,7 +707,7 @@ export const Comments = loadable(() => import("./Comments/Comments"), {
 
 // Jha
 
-export const Jha = loadable(() => import("./Pages/Jha/Jha"), {
+export const Jha = loadable(() => import("./Pages/Jha/JhaMain"), {
   fallback: <Loading />,
 });
 
@@ -822,3 +822,7 @@ export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), 
 // export const FlhaConfigHazard = loadable(() => import("./pages/assesments/FlhaConfigHazard"), {
 //   fallback: <Loading />,
 // });
+
+export const ControlTowerIcare = loadable(() => import('./Pages/ControlTower/ControlTowerIcare'), {
+  fallback: <Loading />,
+});

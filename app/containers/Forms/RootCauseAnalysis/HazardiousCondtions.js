@@ -24,6 +24,7 @@ import {
   TOOLS, WARNINGSYSTEM
 } from "../../../utils/constants";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -480,7 +481,9 @@ const HazardiousCondition = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };
