@@ -388,9 +388,6 @@ function AhaPackage(props) {
   const [cardView, setCardView] = useState(true);
   const [tableView, setTableView] = useState(false);
   const [allAHAData , setAllAHAData] = useState([])
-  // const [listToggle, setListToggle] = useState(false);
-  const [searchIncident, setSeacrhIncident] = useState(props.search);
-  // const history = useHistory();
   const [data, setData] = useState([])
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
@@ -473,20 +470,34 @@ const fetchAllAHAData = async () => {
   :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
     ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
+  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 let struct = "";
 for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
+  if(props.observation === "My Observations"){
+    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
 
-  const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          await setPageCount(pageCount)
+  }else{
+    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
 
-  const result = res.data.data.results.results
-  await setAllAHAData(result)
-  await setTotalData(res.data.data.results.count)
-        await setPageData(res.data.data.results.count / 25)
-        let pageCount = Math.ceil(res.data.data.results.count / 25)
-        await setPageCount(pageCount)
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          await setPageCount(pageCount)
+  }
+  
 
   await setIsLoading(true)
 };
@@ -499,20 +510,28 @@ const handleChange = async(event, value) => {
   :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
     ? JSON.parse(localStorage.getItem("selectBreakDown"))
     : null;
+  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).id
+  : null;
 let struct = "";
 
 for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
-const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-console.log("----------",res)
+if(props.observation === "My Observations"){
+  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+    await setAllAHAData(res.data.data.results.results);
+    await setPage(value)
+}else{
+  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
   await setAllAHAData(res.data.data.results.results);
   await setPage(value)
+}
+
 };
 
 
-console.log(props.search,"QQQQ");
 
 //   Assigning 'classes' to useStyles()
 const classes = useStyles();
@@ -520,7 +539,7 @@ const classes = useStyles();
 useEffect(() => {
   fetchAllAHAData()
   // handleProjectList()
-},[props.projectName.breakDown,props.search])
+},[props.projectName.breakDown,props.search,props.observation])
 
 
   return (

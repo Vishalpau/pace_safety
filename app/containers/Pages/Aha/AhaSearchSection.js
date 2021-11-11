@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -372,13 +372,22 @@ export default function SimpleTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const[searchIncident,setSeacrhIncident] = React.useState('');
-
+  const [observation, setObservation] = useState("My Observations");
+  // const [searchIncident, setSeacrhIncident] = useState("")
+  const [status, setStatus] = useState('')
   const handleSearch = (e) => {
     setSeacrhIncident(e.target.value);
   };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(newValue === 0){
+      setObservation("My Observations")
+      setStatus('')
+    }else if(newValue === 1){
+      setObservation("Big Picture")
+      setStatus('')
+    }
   };
 
   return (
@@ -390,9 +399,9 @@ export default function SimpleTabs() {
             <div className={classes.floatL}>
             <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
               <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
-              <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} />
+              {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
               <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
-              <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} />
+              {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
             </Tabs>
             </div>  
           </AppBar>
@@ -425,13 +434,13 @@ export default function SimpleTabs() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <AhaFilter search={searchIncident} />
+			  <AhaFilter search={searchIncident} observation={observation} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			  <AhaFilter />
+			  <AhaFilter search={searchIncident} observation={observation} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			  <AhaFilter />
+			  <AhaFilter search={searchIncident} observation={observation} />
 		  </TabPanel>
 		  <TabPanel value={value} index={3}>
 			  <AhaBookmarkFilter />

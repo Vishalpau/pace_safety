@@ -362,7 +362,7 @@ class AhaFilter extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <AhaPackage search={this.props.search} />
+            <AhaPackage search={this.props.search} observation={this.props.observation} />
           </main>
           {after}
         </div>
