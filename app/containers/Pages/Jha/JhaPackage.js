@@ -37,6 +37,7 @@ import projectpj from 'dan-images/projectpj.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import { connect } from "react-redux";
 import { useHistory } from 'react-router';
+import Pagination from '@material-ui/lab/Pagination';
 
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
@@ -445,6 +446,11 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
     },
+  },
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
 }));
 
@@ -1080,9 +1086,13 @@ function JhaPackage(props) {
                   </Button>
                 </DialogActions> */}
             </Dialog>
+
           </Grid>
         ))}
-
+        <div className={classes.pagination}>
+          {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+          <Pagination count={pageCount} page={page} onChange={handleChange} />
+        </div>
       </Box>
     </>
   );

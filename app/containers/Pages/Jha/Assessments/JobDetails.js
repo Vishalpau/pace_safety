@@ -22,6 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { connect } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
+
 import api from "../../../../utils/axios";
 import { handelCommonObject } from '../../../../utils/CheckerValue';
 import { access_token, ACCOUNT_API_URL, HEADER_AUTH, SSO_URL } from "../../../../utils/constants";
@@ -30,6 +31,7 @@ import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId
 import { handelJhaId } from "../Utils/checkValue";
 import { JHA_FORM } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
+import ProjectAreaHazards from "./ProjectAreaHazards"
 
 
 const useStyles = makeStyles((theme) => ({
