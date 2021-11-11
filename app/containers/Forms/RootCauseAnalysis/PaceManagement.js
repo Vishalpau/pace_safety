@@ -350,7 +350,7 @@ const PaceManagementControl = () => {
   const classes = useStyles();
   return (
     <PapperBlock
-      title="Basic cause - Pace Management System Controls Impacted "
+      title="Basic cause - PACE Management System Controls Impacted "
       icon="ion-md-list-box"
     >
       {loading == false ?
