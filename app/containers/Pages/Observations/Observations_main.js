@@ -240,7 +240,7 @@ export default function Observations() {
           <Grid item sm={5} xs={12}>
 
 
-            <Button
+            {false && <Button
               variant="contained"
               // color="primary"
               size="small"
@@ -253,9 +253,11 @@ export default function Observations() {
             >
               Upload
             </Button>
+            }
             <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
               <AddIcon className={classes.floatR} /> Add new
             </Button>
+
 
           </Grid>
 
@@ -269,7 +271,7 @@ export default function Observations() {
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
                 {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
-          {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
+                {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
@@ -303,7 +305,7 @@ export default function Observations() {
         <ObservationSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-      <ObservationSearchSection value={value} />
+        <ObservationSearchSection value={value} />
       </TabPanel>
       {/* <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />
