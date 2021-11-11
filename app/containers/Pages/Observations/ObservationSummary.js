@@ -389,7 +389,7 @@ const ObservationSummary = () => {
                 
                   )}
 
-                  <ListItem button>
+                  {/* <ListItem button>
                   <ListItemIcon>
                   <Comment />
                   </ListItemIcon>
@@ -399,7 +399,7 @@ const ObservationSummary = () => {
                   >
                     <ListItemText primary="Comments" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                   {/* <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
                     <Comment />

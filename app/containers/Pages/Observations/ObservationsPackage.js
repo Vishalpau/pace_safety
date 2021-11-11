@@ -1046,9 +1046,12 @@ const handleCommentsClose = () => {
                                   Attachments:
                                 </Typography>
                                 <Typography variant="body2" display="inline">
-                                  <Link color="secondary" className={classes.mLeftR5} onClick={() => handleVisibility(index)}>{item[1]['attachmentCount']}</Link>
+                                  <Link color="secondary" className={classes.mLeftR5} 
+                                  // onClick={() => handleVisibility(index)}
+                                  >
+                                  {item[1]['attachmentCount']}</Link>
                                 </Typography>
-                                <span item xs={1} className={classes.sepHeightTen}></span>
+                                {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
                                   variant="body1"
                                   display="inline"
@@ -1060,7 +1063,7 @@ const handleCommentsClose = () => {
                                 </Typography>
                                 <Typography variant="body2" display="inline" className={classes.mLeft}>
                                   <Link color="secondary" className={classes.mLeft} onClick={() => handleVisibilityComments(item[1].id)}>{item[1]['commentsCount']}</Link>
-                                </Typography>
+                                </Typography> */}
                               </Grid>
 
                               <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>

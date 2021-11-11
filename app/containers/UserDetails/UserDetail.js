@@ -408,7 +408,7 @@ const UserDetailsView = (props) => {
                       <h3>Basic Information</h3>
                         <List>
                           <ListItem>
-                            <ListItemText primary="Full Name:" secondary={data.name} />
+                            <ListItemText primary="Full Name:" secondary={props.userName} />
                           </ListItem>
                           <ListItem>
                             <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
