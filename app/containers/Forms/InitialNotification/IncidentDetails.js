@@ -36,7 +36,7 @@ import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Loader from "../Loader";
 
 // redux
 import { connect } from 'react-redux'
@@ -381,7 +381,7 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       await setIncidentTypeValue(result);
     } catch (error) {
-history.push("/app/pages/error")
+      history.push("/app/pages/error")
     }
   };
 
@@ -395,8 +395,8 @@ history.push("/app/pages/error")
     } catch (error) {
       setIsNext(true);
 
-      
-history.push("/app/pages/error")
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -786,7 +786,7 @@ history.push("/app/pages/error")
                     }}
                     onClick={(e) => setIsDateShow(true)}
                     open={isDateShow}
-                    onClose={(e) => {setIsDateShow(false)}}
+                    onClose={(e) => { setIsDateShow(false) }}
                     InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
@@ -1163,7 +1163,7 @@ history.push("/app/pages/error")
                   onClick={(e) => handelNext(e)}
                   disabled={!isNext}
                 >
-                  Next{isNext?null:<CircularProgress size={20}/>}
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -1181,7 +1181,7 @@ history.push("/app/pages/error")
           )}
         </Row>
       ) : (
-        <div> Loading...</div>
+        <Loader />
       )}
     </PapperBlock>
   );

@@ -1,39 +1,34 @@
-import React, { useEffect, useState, useRef, lazy } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
 import ListItem from "@material-ui/core/ListItem";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router";
-import TableContainer from "@material-ui/core/TableContainer";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
-import Divider from "@material-ui/core/Divider";
-import axios from "axios";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
-
-import api from "../../../utils/axios";
-import apiAction from "../../../utils/axiosActionTracker"
-import FormSideBar from "../FormSideBar";
-import { ROOT_CAUSE_ANALYSIS_FORM } from "../../../utils/constants";
-import {
-  HAZARDIOUS_ACTS_SUB_TYPES,
-  HAZARDIOUS_CONDITION_SUB_TYPES,
-} from "../../../utils/constants";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
 import "../../../styles/custom.css";
-import { handelConvert } from "../../../utils/CheckerValue";
+import api from "../../../utils/axios";
+import { handelActionData, handelConvert, handelIncidentId } from "../../../utils/CheckerValue";
+import {
+  HAZARDIOUS_ACTS_SUB_TYPES,
+  HAZARDIOUS_CONDITION_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM
+} from "../../../utils/constants";
+import ActionShow from "../ActionShow";
 import ActionTracker from "../ActionTracker";
-import ActionTrack from "../ActionTrack";
-import ActionShow from "../ActionShow"
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
-import { handelIncidentId, checkValue, handelActionData } from "../../../utils/CheckerValue";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -84,19 +79,19 @@ const BasicCauseAndAction = () => {
     let subTypes = HAZARDIOUS_ACTS_SUB_TYPES.concat(
       HAZARDIOUS_CONDITION_SUB_TYPES
     );
-   
+
     putId.current = handelIncidentId();
     let previousData = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/pacecauses/`
     )
-    
+
     let allApiData = previousData.data.data.results;
     allApiData.map((value, index) => {
       if (subTypes.includes(value.rcaSubType)) {
         tempApiData.push(allApiData[index]);
       }
     });
-    
+
     tempApiData.map((value) => {
       if (value["action"] == undefined) {
         value["action"] = [{}]
@@ -151,7 +146,7 @@ const BasicCauseAndAction = () => {
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
     );
     const result = res.data.data.results;
-    
+
     await setIncidentDetail(result);
   };
 
@@ -302,7 +297,9 @@ const BasicCauseAndAction = () => {
           )}
         </Grid>
 
-        : "Lodaing ...."}
+        :
+        <Loader />
+      }
     </PapperBlock >
   );
 };

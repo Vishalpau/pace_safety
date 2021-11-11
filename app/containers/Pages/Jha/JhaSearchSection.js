@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 //import ObservationsLookAhead from './ObservationsLookAhead';
 import JhaFilter from './JhaFilter';
 
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 

@@ -55,6 +55,7 @@ import { handelCommonObject } from '../../../utils/CheckerValue';
 
 // Redux
 import { tabViewMode } from '../../../redux/actions/initialDetails';
+import Loader from "../Loader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -810,37 +811,37 @@ const ReportingAndNotification = () => {
                 </Grid>
               ) : null}
               {notificationSentValue.length > 0
-              && (
-                <Grid item xs={12}>
-                  <FormControl
-                    error={error && error.notifyTo}
-                    required
-                    component="fieldset"
-                  >
-                    <FormLabel component="legend">
-                    Notification to be sent?
-                    </FormLabel>
-                    <FormGroup>
-                      {notificationSentValue.map((value, index) => (
-                        <FormControlLabel
-                          id={index}
-                          key={index}
-                          value={value.id}
-                          control={<Checkbox />}
-                          checked={notifyToList.includes(value.id.toString())}
-                          label={value.roleName}
-                          onChange={(e) => {
-                            handelNotifyTo(e, index);
-                          }}
-                        />
-                      ))}
-                    </FormGroup>
-                    {error && error.notifyTo && (
-                      <FormHelperText>{error.notifyTo}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-              )
+                && (
+                  <Grid item xs={12}>
+                    <FormControl
+                      error={error && error.notifyTo}
+                      required
+                      component="fieldset"
+                    >
+                      <FormLabel component="legend">
+                        Notification to be sent?
+                      </FormLabel>
+                      <FormGroup>
+                        {notificationSentValue.map((value, index) => (
+                          <FormControlLabel
+                            id={index}
+                            key={index}
+                            value={value.id}
+                            control={<Checkbox />}
+                            checked={notifyToList.includes(value.id.toString())}
+                            label={value.roleName}
+                            onChange={(e) => {
+                              handelNotifyTo(e, index);
+                            }}
+                          />
+                        ))}
+                      </FormGroup>
+                      {error && error.notifyTo && (
+                        <FormHelperText>{error.notifyTo}</FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+                )
               }
               <Grid item xs={12}>
                 <Box marginTop={3} marginBottom={4}>
@@ -1157,12 +1158,10 @@ const ReportingAndNotification = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );
 };
 
 export default ReportingAndNotification;
-// http://us-safety-api.paceos.io/api/v1/incidents/?companyId=2&projectId=9&projectStructureIds=
-// https://us-safety-api.paceos.io/api/v1/incidents/?companyId=2&projectId=9&projectStructureIds=

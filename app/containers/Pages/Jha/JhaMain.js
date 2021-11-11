@@ -289,18 +289,6 @@ export default function JhaMain() {
                   <PermIdentityIcon /> GIS
                 </Button>
               </span>
-
-              {/* <span className={classes.pLTen}>
-              <Button size="small" className={classes.buttonsNTwo} variant="contained">
-                <DateRangeOutlinedIcon />iPlanner
-              </Button>
-            </span>
-				
-			  <span className={classes.pLTen}>
-				<Button size="small" className={classes.buttonsNTwo} variant="contained">
-				  <GamesOutlinedIcon /> 3D
-				</Button>
-				</span>*/}
             </div>
           </Grid>
         </Grid>

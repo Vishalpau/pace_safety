@@ -426,7 +426,7 @@ class ObservationsFilter extends React.Component {
                 color="inherit"
                 noWrap
               >
-                My Observations
+                {this.props.observation === "My Observations" ? "My iCares" : "All iCares"}
               </Typography>
 
               <Typography
@@ -445,7 +445,7 @@ class ObservationsFilter extends React.Component {
                 }}
               >
                 {!this.state.open && (
-                  <Typography variant="h6">
+                  <Typography variant="h5">
                     {this.state.type ? this.state.type : "Type"}
                   </Typography>
                 )}

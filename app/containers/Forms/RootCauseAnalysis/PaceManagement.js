@@ -24,6 +24,7 @@ import {
   ROOT_CAUSE_ANALYSIS_FORM
 } from "../../../utils/constants";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -349,7 +350,7 @@ const PaceManagementControl = () => {
   const classes = useStyles();
   return (
     <PapperBlock
-      title="Basic cause - Pace Management System Controls Impacted "
+      title="Basic cause - PACE Management System Controls Impacted "
       icon="ion-md-list-box"
     >
       {loading == false ?
@@ -489,7 +490,9 @@ const PaceManagementControl = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };
