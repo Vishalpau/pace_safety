@@ -146,28 +146,30 @@ const ProjectAreaHazards = () => {
     const otherNoId = []
     const tempForm = []
     const jhaId = handelJhaId()
-    const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-    const apiData = res.data.data.results
-    apiData.map((value) => {
-      if (value.fkChecklistId !== 0) {
-        tempForm.push(value)
-      } else {
-        otherNoId.push(value)
+    if (jhaId !== null) {
+      const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+      const apiData = res.data.data.results
+      apiData.map((value) => {
+        if (value.fkChecklistId !== 0) {
+          tempForm.push(value)
+        } else {
+          otherNoId.push(value)
+        }
+      })
+      setForm(tempForm)
+      if (otherNoId.length > 0) {
+        setOtherHazards(otherNoId)
       }
-    })
-    setForm(tempForm)
-    if (otherNoId.length > 0) {
-      setOtherHazards(otherNoId)
+      setFetchedOptions(apiData)
+      apiData.map((value) => {
+        if (value.hazard in temp) {
+          temp[value.hazard].push(value.risk)
+        } else {
+          temp[value.hazard] = [value.risk]
+        }
+      })
+      setSelectedOption(temp)
     }
-    setFetchedOptions(apiData)
-    apiData.map((value) => {
-      if (value.hazard in temp) {
-        temp[value.hazard].push(value.risk)
-      } else {
-        temp[value.hazard] = [value.risk]
-      }
-    })
-    setSelectedOption(temp)
   }
 
   const checkList = async () => {
@@ -262,14 +264,6 @@ const ProjectAreaHazards = () => {
     }
   }
 
-  const handelCheckPost = (checklistId, hazard) => {
-    for (let i = 0; i <= fetchOption.length; i++) {
-      if (fetchOption[i] != undefined && fetchOption[i]["hazard"] == hazard && fetchOption[i]["fkChecklistId"] == checklistId) {
-        return true
-      }
-    }
-  }
-
   const handelApiError = () => {
     setSubmitLoader(false)
     history.push("/app/pages/error")
@@ -314,126 +308,87 @@ const ProjectAreaHazards = () => {
 
   const classes = useStyles();
   return (
-    <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
-      {loading == false ?
-        <Row>
-          <Col md={9}>
-            <Grid container spacing={3}>
-              {/* <JhaDetailsInit /> */}
-              {/* {console.log(form)} */}
-              {Object.entries(checkGroups).map(([key, value]) => (
-                <Grid item md={6}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">{key}</FormLabel>
-                    <FormGroup>
-                      {value.map((option) => (
-                        <FormControlLabel
-                          control={<Checkbox name={option.inputLabel} />}
-                          label={option.inputLabel}
-                          checked={handelSelectOption(option.checkListId, option.inputLabel)}
-                          onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                </Grid>
+    // <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
+    // {loading == false ?
+
+
+    <Grid container spacing={3}>
+      {/* <JhaDetailsInit /> */}
+      {/* {console.log(form)} */}
+      {Object.entries(checkGroups).map(([key, value]) => (
+        <Grid item md={6}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">{key}</FormLabel>
+            <FormGroup>
+              {value.map((option) => (
+                <FormControlLabel
+                  control={<Checkbox name={option.inputLabel} />}
+                  label={option.inputLabel}
+                  checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                  onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
+                />
               ))}
+            </FormGroup>
+          </FormControl>
+        </Grid>
+      ))}
 
-              <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
-                <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
-              </Grid>
+      <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
+        <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
+      </Grid>
 
-              {otherHazards.map((value, index) => (
-                <>
-                  <Grid
-                    item
-                    md={6}
-                    xs={11}
-                    className={classes.createHazardbox}
-                  >
-                    <TextField
-                      label="Other Hazards"
-                      margin="dense"
-                      name="otherhazards"
-                      id="otherhazards"
-                      defaultValue=""
-                      fullWidth
-                      variant="outlined"
-                      value={otherHazards[index].hazard || ""}
-                      className={classes.formControl}
-                      onChange={(e) => handleOtherHazards(e, index)}
-                    />
-
-                  </Grid>
-                  {otherHazards.length > 1 ?
-                    <Grid item md={1} className={classes.createHazardbox}>
-                      <IconButton
-                        variant="contained"
-                        color="primary"
-                        onClick={(e) => handelRemove(e, index)}
-                      >
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </Grid>
-                    : null}
-                </>
-              ))}
-
-
-              <Grid item md={12} className={classes.createHazardbox}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddCircleIcon />}
-                  className={classes.button}
-                  onClick={(e) => handleAdd()}
-                >
-                  Add
-                </Button>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                alignItems="center"
-              >
-                <Button
-                  variant="outlined"
-                  className={classes.custmSubmitBtn}
-                  onClick={(e) => handelNavigate("previous")}
-                >
-                  Previous
-                </Button>
-                <div className={classes.loadingWrapper}>
-                  <Button
-                    variant="contained"
-                    onClick={(e) => handleSubmit()}
-                    className={classes.custmSubmitBtn}
-                    style={{ marginLeft: "10px" }}
-                    disabled={submitLoader}
-                  >
-                    Next
-                  </Button>
-                  {submitLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </div>
-              </Grid>
-            </Grid>
-          </Col>
-          <Col md={3}>
-            <FormSideBar
-              deleteForm={"hideArray"}
-              listOfItems={JHA_FORM}
-              selectedItem={"Project Area Hazards"}
+      {otherHazards.map((value, index) => (
+        <>
+          <Grid
+            item
+            md={6}
+            xs={11}
+            className={classes.createHazardbox}
+          >
+            <TextField
+              label="Other Hazards"
+              margin="dense"
+              name="otherhazards"
+              id="otherhazards"
+              defaultValue=""
+              fullWidth
+              variant="outlined"
+              value={otherHazards[index].hazard || ""}
+              className={classes.formControl}
+              onChange={(e) => handleOtherHazards(e, index)}
             />
-          </Col>
 
-        </Row>
-        : "Loading..."}
-    </PapperBlock>
+          </Grid>
+          {otherHazards.length > 1 ?
+            <Grid item md={1} className={classes.createHazardbox}>
+              <IconButton
+                variant="contained"
+                color="primary"
+                onClick={(e) => handelRemove(e, index)}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Grid>
+            : null}
+        </>
+      ))}
+
+
+      <Grid item md={12} className={classes.createHazardbox}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddCircleIcon />}
+          className={classes.button}
+          onClick={(e) => handleAdd()}
+        >
+          Add
+        </Button>
+      </Grid>
+
+    </Grid>
+    // : "Loading..."}
+    // </PapperBlock>
   );
 };
 

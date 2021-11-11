@@ -902,6 +902,9 @@ const JobDetails = (props) => {
               </Grid>
 
 
+              <ProjectAreaHazards />
+
+
               <Grid
                 item
                 md={12}
