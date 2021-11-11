@@ -1,49 +1,44 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Select } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-} from "@material-ui/pickers";
-import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
-import { FormHelperText, FormLabel } from "@material-ui/core";
-import RadioGroup from "@material-ui/core/RadioGroup";
+import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import { useHistory, useParams } from "react-router";
-import ImageIcon from "@material-ui/icons/Image";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import InputLabel from "@material-ui/core/InputLabel";
+import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import { spacing } from "@material-ui/system";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MuiAlert from "@material-ui/lab/Alert";
+import {
+  KeyboardDatePicker,
+  KeyboardTimePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import { PapperBlock } from "dan-components";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
+import { useHistory } from "react-router";
+import Attachment from "../../../containers/Attachment/Attachment";
+import api from "../../../utils/axios";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
-import { object } from "prop-types";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-import Attachment from "../../../containers/Attachment/Attachment";
-import { handelFileName } from "../../../utils/CheckerValue";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -1599,7 +1594,7 @@ const WorkerDetails = () => {
           </Row>
         </form>
       ) : (
-        "Loading..."
+        <Loader />
       )}
     </PapperBlock>
   );

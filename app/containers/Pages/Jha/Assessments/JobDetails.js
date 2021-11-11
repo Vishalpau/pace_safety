@@ -159,6 +159,7 @@ const JobDetails = (props) => {
       "location": "",
       "jhaAssessmentDate": new Date().toISOString().split('T')[0],
       "permitToPerform": "",
+      "typeOfPermit": "",
       "permitNumber": "",
       "jobTitle": "",
       "description": "",
@@ -678,8 +679,8 @@ const JobDetails = (props) => {
                     id="typeOfPermit"
                     select
                     fullWidth
-                    // value={form.department ? form.department : ""}
-                    // onChange={(e) => setForm({ ...form, department: e.target.value })}
+                    value={form.typeOfPermit ? form.typeOfPermit : ""}
+                    onChange={(e) => setForm({ ...form, typeOfPermit: e.target.value })}
                     variant="outlined"
                   >
                     {typeOfPremit.map((option) => (
@@ -905,22 +906,23 @@ const JobDetails = (props) => {
                 xs={12}
                 style={{ marginTop: '15px' }}
               >
-                                    <div className={classes.loadingWrapper}>
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
-                >
-                  Next
-                </Button>
-                {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}</div>
+                <div className={classes.loadingWrapper}>
+                  <Button
+                    variant="outlined"
+                    onClick={(e) => handleSubmit()}
+                    className={classes.custmSubmitBtn}
+                    style={{ marginLeft: "10px" }}
+                    disabled={submitLoader}
+                  >
+                    Next
+                  </Button>
+                  {submitLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
               </Grid>
 
             </Grid>

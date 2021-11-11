@@ -177,6 +177,7 @@ import {
   FlhaActivities,
   FlhaComments,
   GeneralObservationPrints,
+  ControlTowerIcare
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -454,7 +455,7 @@ function Application(props) {
           path="/app/pages/options/"
           component={Options}
         />
-        <Route exact path="/app/:entity/comments/:id/" component={Comments} />
+        {/* <Route exact path="/app/:entity/comments/:id/" component={Comments} /> */}
 
         {/* close out */}
         <Route
@@ -516,27 +517,25 @@ function Application(props) {
         />
 
         {/* Observation Routes  */}
-        {/* <Route path="/app/pages/summary" component={Summary} /> */}
-        {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
-        <Route exact path="/app/observations" component={Observations} />
-        <Route exact path="/observations" component={Observations} />
-        {/* <Route exact path="/:observations" component={Observations} /> */}
-        {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
-        <Route path="/app/observations#table" component={Observations} />
-        <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
-        <Route exact path="/app/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/observation/details/:id" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#comments" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#activity" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#modify" component={ObservationSummary} />
-        <Route exact path="/app/observation-initial-notification" component={ObservationInitialNotification} />
-        <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
-        <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />
+        <Route path="/app/icare/comments/:id" component={Comments} />
+
+        <Route exact path="/app/icare" component={Observations} />
+        <Route exact path="/icare" component={Observations} />
+        <Route path="/app/icare#table" component={Observations} />
+        <Route exact path="/app/icare-corrective-action" component={ObservationCorrectiveAction} />
+        <Route exact path="/app/icare-corrective-action/:id" component={ObservationCorrectiveAction} />
+        <Route path="/app/icare/details/:id" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#action-taking" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#comments" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#activity" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#modify" component={ObservationSummary} />
+        <Route exact path="/app/icare-initial-notification" component={ObservationInitialNotification} />
+        <Route exact path="/app/icare-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
+        <Route path="/app/icare-view" component={ObservationInitialNotificationView} />
         <Route path="/app/prints/:id" component={Prints} />
-        <Route path="/app/pages/general-observation-prints/:id" component={GeneralObservationPrints} />
-        <Route path="/app/observation-bulkupload" component={ObservationBulkupload} />
-        <Route path="/app/observation-bulkuploadfile" component={ObservationUploadScreen} />
+        <Route path="/app/pages/general-icare-prints/:id" component={GeneralObservationPrints} />
+        <Route path="/app/icare-bulkupload" component={ObservationBulkupload} />
+        <Route path="/app/icare-bulkuploadfile" component={ObservationUploadScreen} />
 
         {/* Aha Routes */}
 
@@ -622,6 +621,8 @@ function Application(props) {
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
         <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
         <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+        {/* Control Tower */}
+        <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
 
         {/* Default */}
         <Route component={NotFound} />

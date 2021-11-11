@@ -6,6 +6,15 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from "axios";
 import {
     INITIAL_NOTIFICATION_FORM,
@@ -343,77 +352,96 @@ const useStyles = makeStyles((theme) => ({
         padding: '8px !important',
       },
     },
+    formControlOwnership: {
+      width: '100%',
+      marginBottom: '30px',
+      },
+      userImage: {
+        borderRadius: '50px',
+        width: '50px',
+        height: '50px',
+        marginRight: '10px',
+      },
   }));
 
 const UserDetailsView = (props) => {
     console.log(props,"QQQQQQ")
     const [data, setData] = useState({})
+    const user = ['Self', 'Prakash' , 'Ashutosh','Saddam', 'Sunil']
+
+    const handleChangeOne = (e) => {
+      let temp = {...data}
+      temp.name = e.target.value
+      setData(temp)
+    }
     const classes = useStyles();
-    const UserDetails =() => {
-    const config = {
-        method: "get",
-        url: `${ACCOUNT_API_URL}api/v1/user/${props.userId}/`,
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      };
-      axios(config)
-        .then((response) => {
-          if (response.status === 200) {
-            let userData = response.data.data.results;
-            setData(userData)
-          }
-        })
-        .catch((error) => {
-        });}
-        useEffect(() => {
-            UserDetails()
-        },[])
+  
+        // useEffect(() => {
+        //     UserDetails()
+        // },[])
     
     return (<>
-      <Grid
-                          item md={12} sm={12} xs={12}
-                          className={classes.usrProfileListBox}
-                        >
-                          <h3>Basic Information</h3>
-                          <List>
-                            <ListItem>
-                              {/* <ListItemAvatar>
-                                <Avatar>
-                                  <ImageIcon />
-                                </Avatar>
-                              </ListItemAvatar> */}
-                              <ListItemText primary="Full Name:" secondary={data.name} />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Organization Role:" secondary="N/A" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Role Title:" secondary="N/A" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                            </ListItem>
-                          </List>
-                        </Grid>
-  
-                        <Grid
-                          item md={12} sm={12} xs={12}
-                          className={classes.usrProfileListBox}
-                        >
-                          <h3>Company Information</h3>
-                          <List>
-                            <ListItem>
-                              <ListItemText primary="Company Name:" secondary="JWIL" />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary="Location:" secondary="Italy" />
-                            </ListItem>
-                          </List>
-                        </Grid></>
+              <DialogTitle id="alert-dialog-title" ><img src={props.userIcon} className={classes.userImage} />{props.userName}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">                    
+                    <Grid item md={12} sm={12} xs={12}  className={classes.usrProfileListBox}>
+                      <h6>Change ownership</h6>
+                      <FormControl variant="outlined" className={classes.formControlOwnership}>
+                        <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          // value={value}
+                          onChange={(e) => handleChangeOne(e)}
+                          label="Ownership"
+                        >{user.map((value) => ( 
+                          <MenuItem value={value}>{value}</MenuItem>))}
+                          {/* <MenuItem value={2}>Prakash</MenuItem>
+                          <MenuItem value={3}>Ashutosh</MenuItem>
+                          <MenuItem value={4}>Saddam</MenuItem>
+                          <MenuItem value={5}>Sunil</MenuItem> */}
+                        </Select>
+                      </FormControl>
+                    </Grid> 
+
+                    <Grid item md={12} sm={12} xs={12}  className={classes.usrProfileListBox}>
+                      <h3>Basic Information</h3>
+                        <List>
+                          <ListItem>
+                            <ListItemText primary="Full Name:" secondary={props.userName} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Organization Role:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Role Title:" secondary="N/A" />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                          </ListItem>
+                        </List>
+                    </Grid>
+                    
+                    <Grid
+                      item md={12} sm={12} xs={12}
+                      className={classes.usrProfileListBox}
+                    >
+                      <h3>Company Information</h3>
+                      <List>
+                        <ListItem>
+                          <ListItemText primary="Company Name:" secondary="JWIL" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary="Location:" secondary="Italy" />
+                        </ListItem>
+                      </List>
+                    </Grid>
+                  </DialogContentText>
+              </DialogContent>
+            </>
     )
   }
 

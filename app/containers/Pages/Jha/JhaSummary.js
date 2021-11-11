@@ -878,6 +878,7 @@ function JhaSummary() {
 
                                       {assessment.workStopCondition !== undefined &&
                                         assessment.workStopCondition !== "" &&
+                                        assessment.workStopCondition !== null &&
                                         assessment.workStopCondition.split(",").length > 0 ?
                                         <Grid item xs={12} md={12}>
                                           {console.log(assessment.workStopCondition.split(","))}
@@ -897,7 +898,7 @@ function JhaSummary() {
                                         </Grid>
                                         : null}
 
-                                      {assessment.humanPerformanceAspects !== undefined &&
+                                      {assessment.humanPerformanceAspects &&
                                         assessment.humanPerformanceAspects !== "" &&
                                         assessment.humanPerformanceAspects.split(",").length > 0 ?
 
@@ -1055,7 +1056,6 @@ function JhaSummary() {
                                           projectId={projectData.projectId}
                                           handelShowData={handelShowData}
                                         />
-
                                       </>
                                     ))}
                                   </Typography>

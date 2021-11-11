@@ -36,7 +36,7 @@ import React, { useEffect, useState } from "react";
 // react-redux
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
-import { projectName,company } from '../../../redux/actions/initialDetails';
+import { projectName, company } from '../../../redux/actions/initialDetails';
 import { useDispatch } from 'react-redux';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
@@ -50,14 +50,27 @@ import UserDetailsView from '../../UserDetails/UserDetail';
 import StarsIcon from '@material-ui/icons/Stars';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import axios from "axios"
-
+import TextField from '@material-ui/core/TextField';
+import Menu from '@material-ui/core/Menu';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
+import projectpj from 'dan-images/projectpj.png';
+import Loader from "../Loader"
 
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
-    padding: "1rem 0",
+    padding: "0px 0px 20px 0px",
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    marginTop : '-10px',
   },
   root: {
     flexGrow: 1,
@@ -135,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       marginLeft: '3px',
       marginRight: '3px',
     },
@@ -149,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: 'rgba(0, 0, 0, 0.87) !important',
     fontWeight: '500',
-    '&:hover':{
+    '&:hover': {
       textDecoration: 'none',
     },
   },
@@ -182,7 +195,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '1360px !important',
   },
 
-  title:  {
+  title: {
     fontSize: '1.25rem',
     fontFamily: 'Montserrat-Regular',
     color: 'rgba(0, 0, 0, 0.87)',
@@ -217,7 +230,7 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       paddingTop: '55px',
     },
   },
@@ -252,14 +265,14 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       margin: '10px 5px 10px 5px',
     },
   },
   floatR: {
     float: 'right',
     textTransform: 'capitalize',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       float: 'left',
     },
   },
@@ -293,17 +306,16 @@ const useStyles = makeStyles((theme) => ({
   },
   textRight: {
     textAlign: 'right',
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       textAlign: 'left',
       padding: '0px 8px 15px 8px !important',
     },
   },
   userImage: {
     borderRadius: '50px',
-    width: '52px',
+    width: '50px',
     height: '50px',
-    marginRight: '0px',
-
+    marginRight: '10px',
   },
   mrFifteen: {
     marginRight: '15px',
@@ -312,14 +324,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 0px 2px #ccc',
     borderRadius: '10px',
     marginBottom: '30px',
-    '&:hover': {
-      backgroundColor: '#f0f0f0',
-      webkitBoxShadow: '0 1px 5px 2px #dcdada',
-      boxShadow: '0 1px 5px 2px #dcdada',
-    },
-    '&:hover .MuiGrid-align-items-xs-flex-start': {
-      backgroundColor: '#f0f0f0',
-    },
   },
 
   cardLinkAction: {
@@ -328,19 +332,27 @@ const useStyles = makeStyles((theme) => ({
     padding: '14px',
     cursor: 'pointer',
     textDecoration: 'none !important',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       paddingTop: '85px',
     }
   },
   userPictureBox: {
     position: 'absolute',
     right: '0px',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       right: 'auto',
     }
   },
   cardContentSection: {
     position: 'relative',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      webkitBoxShadow: '0 1px 5px 2px #f0f0f0',
+      boxShadow: '0 1px 5px 2px #f0f0f0',
+    },
+    '&:hover .MuiGrid-align-items-xs-flex-start': {
+      backgroundColor: '#f0f0f0',
+    },
   },
   usrProfileListBox: {
     '& ul': {
@@ -367,7 +379,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardBottomSection: {
     '& p': {
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         fontSize: '12px !important',
       },
     },
@@ -378,9 +390,42 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
   cardActionBottomBox: {
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '8px !important',
     },
+  },
+  smallImage:{
+    height: '30px',
+    width: '30px',
+  },
+  viewAttachmentDialog: {
+    '& .MuiDialogContent-root': {
+      overflowY: 'hidden !important',
+      height: '90px !important',
+  
+  },
+  },
+  imageSectionHeight: {
+    '& .MuiDialogContent-root':  {
+      height: '90px !important',
+      minHeight: '90px !important',
+  },
+  },
+  viewattch1: {
+    padding: '12px 30px',
+    backgroundColor: '#8a9299',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
+  },
+  viewattch2: {
+    padding: '12px 8px',
+    backgroundColor: '#06425c',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
   },
 }));
 
@@ -405,20 +450,20 @@ function Actions(props) {
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
-  const [userInfo , setUserInfo] = useState({})
+  const [page, setPage] = useState(1)
+  const [userInfo, setUserInfo] = useState({})
   const history = useHistory();
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
 const handleMyUserPClickOpen = (item) => {
-  setUserInfo({name : item[1].createdBy})
+  setUserInfo({name : item[1].createdByName,userIcon : item[1].avatar})
   setMyUserPOpen(true);
 };
 
-const handleMyUserPClose = () => {
-  setMyUserPOpen(false);
-};
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
 
   const handelView = (e) => {
     setListToggle(false);
@@ -470,8 +515,8 @@ const handleMyUserPClose = () => {
   };
 
   const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
@@ -481,7 +526,7 @@ const handleMyUserPClose = () => {
     } else {
       localStorage.removeItem("action");
     }
-    history.push(`/app/observation/details/${id}`);
+    history.push(`/app/icare/details/${id}`);
   };
 
   const [allInitialData, setAllInitialData] = useState([]);
@@ -492,8 +537,8 @@ const handleMyUserPClose = () => {
     await setPage(1)
 
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId =  JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId ||  props.projectName.projectId 
+    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId || props.projectName.projectId
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -503,30 +548,30 @@ const handleMyUserPClose = () => {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
- 
-      if (props.type == "All" || props.type == "Type") {
-        // await setAllInitialData(result)
-        if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(allLogInUserData.data.data.results.count)
-          await setPageData(allLogInUserData.data.data.results.count / 25)
-          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
 
-        } else {
-          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
-          const result = res.data.data.results.results
-          await setAllInitialData(result)
-          await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
-        }  
-      } else {  
-        if (props.type == "Risk") {
-          if (props.observation == "My Observations") {
+    if (props.type == "All" || props.type == "Type") {
+      // await setAllInitialData(result)
+      if (props.observation == "My Observations") {
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        await setTotalData(allLogInUserData.data.data.results.count)
+        await setPageData(allLogInUserData.data.data.results.count / 25)
+        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+        await setPageCount(pageCount)
+
+      } else {
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
+        const result = res.data.data.results.results
+        await setAllInitialData(result)
+        await setTotalData(res.data.data.results.count)
+        await setPageData(res.data.data.results.count / 25)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+        await setPageCount(pageCount)
+      }
+    } else {
+      if (props.type == "Risk") {
+        if (props.observation == "My Observations") {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
@@ -534,61 +579,61 @@ const handleMyUserPClose = () => {
           await setPageData(allLogInUserData.data.data.results.count / 25)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
           await setPageCount(pageCount)
-          }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-            await setPageCount(pageCount)
-          }
-        }
-        if (props.type == "Comments") {  
-          if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-            await setPageCount(pageCount)
-          }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
           let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-      await setPageCount(pageCount)
-          }
+          await setPageCount(pageCount)
         }
-        if (props.type == "Positive behavior") {
-          
-          if (props.observation == "My Observations") {
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setTotalData(allLogInUserData.data.data.results.count)
-            let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-            await setPageData(allLogInUserData.data.data.results.count / 25)
-            await setPageCount(pageCount)
-            }else{
-              const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
-              const result = allLogInUserData.data.data.results.results
-              await setAllInitialData(result)
-              await setTotalData(allLogInUserData.data.data.results.count)
-              await setPageData(allLogInUserData.data.data.results.count / 25)
-              let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-              await setPageCount(pageCount)
-            }
-          } 
       }
+      if (props.type == "Comments") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        }
+      }
+      if (props.type == "Positive behavior") {
+
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        }
+      }
+    }
     await setIsLoading(true)
   }
 
   const handleChange = async (event, value) => {
-    
+
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -602,13 +647,13 @@ const handleMyUserPClose = () => {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
- 
+
     if (props.type == "All" || props.type == "Type") {
       if (props.observation == "My Observations") {
-          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
-          const result = allLogInUserData.data.data.results.results
-          await setAllInitialData(result)
-          await setPage(value)
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        await setPage(value)
       } else {
         const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`);
         const result = res.data.data.results.results
@@ -622,7 +667,7 @@ const handleMyUserPClose = () => {
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
-        }else{
+        } else {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
@@ -636,7 +681,7 @@ const handleMyUserPClose = () => {
           await setAllInitialData(result)
           await setPage(value)
 
-        }else{
+        } else {
           const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`)
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
@@ -649,19 +694,73 @@ const handleMyUserPClose = () => {
           const result = allLogInUserData.data.data.results.results
           await setAllInitialData(result)
           await setPage(value)
-          }else{
-            const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
 
-            const result = allLogInUserData.data.data.results.results
-            await setAllInitialData(result)
-            await setPage(value)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
 
-          }
         }
+      }
 
     }
-    
+
   };
+
+  const [openAttachment, setopenAttachment] = React.useState(false);
+
+  const handleClickOpenAttachment = () => {
+    setopenAttachment(true);
+  };
+
+  const handleCloseAttachment = () => {
+    setopenAttachment(false);
+  };
+
+  
+const [attachOpen, setAttachOpen] = useState(false);
+const [attachIndex , setAttachIndex] = useState("");
+const [hidden, setHidden] = useState(false);
+
+const handleVisibility = (index) => {
+  console.log(index,"LLLL");
+  setAttachIndex(index);
+  setAttachOpen(true);
+  setHidden(!hidden);
+};
+const handleAttachClick = () => {
+  setAttachOpen(!open);
+};
+const handleAttachOpen = () => {
+  if (!hidden) {
+    setAttachOpen(true);
+  }
+};
+const handleAttachClose = () => {
+  setAttachOpen(false);
+};
+
+//view comments
+const [commentsOpen, setCommentsOpen] = useState(false);
+const [hiddenn, setHiddenn] = useState(false);
+
+const handleVisibilityComments = (id) => {
+  setCommentsOpen(true);
+  setHiddenn(!hiddenn);
+  history.push(`/app/icare/comments/${id}`);
+};
+const handleCommentsClick = () => {
+  setCommentsOpen(!open);
+};
+const handleCommentsOpen = () => {
+  if (!hiddenn) {
+    setCommentsOpen(true);
+  }
+};
+const handleCommentsClose = () => {
+  setCommentsOpen(false);
+};
 
   const handlePrintPush = async (index) => {
     const id = allInitialData[index].id;
@@ -672,7 +771,7 @@ const handleMyUserPClose = () => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
-       
+
         let config = {
           method: "get",
           url: `${SELF_API}`,
@@ -684,10 +783,10 @@ const handleMyUserPClose = () => {
           .then(function (response) {
             if (response.status === 200) {
               console.log(response)
-              let hosting = response.data.data.results.data.companies.filter(company=>company.companyId == compId)[0]
-              .subscriptions.filter(subs=>subs.appCode === "safety")[0]
-              .hostings[0].apiDomain
-            
+              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain
+
               console.log(hosting)
               let data1 = {
                 method: "get",
@@ -695,30 +794,28 @@ const handleMyUserPClose = () => {
                 headers: HEADER_AUTH,
               };
               console.log(data1)
-              axios(data1).then((res)=>
-              
-{
-  localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
-              
-  if (compId) {
-    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+              axios(data1).then((res) => {
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
 
-    let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-    localStorage.setItem('company', JSON.stringify(companeyData))
+                if (compId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
 
-    dispatch(company(companeyData))
-  }
-  if (proId) {
-    let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-    let project = companies[0].projects.filter(item => item.projectId == proId)
+                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                  localStorage.setItem('company', JSON.stringify(companeyData))
 
-    localStorage.setItem("projectName", JSON.stringify(project[0]))
-    dispatch(projectName(project[0]))
-  }
-  // fetchPermissionData();
-  localStorage.removeItem("direct_loading")
-}              )
-             
+                  dispatch(company(companeyData))
+                }
+                if (proId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                  localStorage.setItem("projectName", JSON.stringify(project[0]))
+                  dispatch(projectName(project[0]))
+                }
+                // fetchPermissionData();
+                localStorage.removeItem("direct_loading")
+              })
+
 
             }
           })
@@ -734,22 +831,22 @@ const handleMyUserPClose = () => {
     console.log(item[1].id)
     let data = item[1]
     // let id = item[1].id
-    data.status="Delete"
+    data.status = "Delete"
     delete data.attachment
-    console.log(data,"!!!!!!!!!")
+    console.log(data, "!!!!!!!!!")
     await setIsLoading(false)
-    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))    
+    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
   }
   useEffect(() => {
     let state = JSON.parse(localStorage.getItem('direct_loading'))
-    if(state!==null){
-      userDetails(state.comId,state.proId)
-    }else{
+    if (state !== null) {
+      userDetails(state.comId, state.proId)
+    } else {
       fetchInitialiObservation();
     }
     // fetchInitialiObservation();
-  }, [props.projectName.breakDown,props.projectName.projectName, props.type, searchIncident , props.status]);
-  
+  }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
+
   return (
     <>
       <Box>
@@ -760,7 +857,7 @@ const handleMyUserPClose = () => {
                 <div className="gridView">
                   {Object.keys(allInitialData).length > 0 ?
                     Object.entries(allInitialData)
-                      .map((item, index) => (
+                      .map((item, index) => ( <>
                         <Card variant="outlined" className={classes.card}>
                           <CardContent>
                             <Grid container spacing={3} className={classes.cardContentSection}>
@@ -775,7 +872,7 @@ const handleMyUserPClose = () => {
                                   onClick={() => handleSummaryPush(index)}
                                   className={classes.cardLinkAction}
                                 >
-                              <Grid item xs={12}>
+                              <Grid item xs={12} >
                                 <Grid container spacing={3} alignItems="flex-start">
                                   <Grid item sm={12} xs={12} className={classes.listHeadColor}>
                                     <Grid container spacing={3} alignItems="flex-start">
@@ -792,13 +889,13 @@ const handleMyUserPClose = () => {
                                         >
                                           Number: <span><Link
                                             onClick={() => handleSummaryPush(index)}
-                                            variant="h6"
-                                            className={classes.mLeftfont}
-                                          >
-                                            <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
-                                          </Link></span>
-                                        </Typography>
-                                        {/* <Typography
+                                              variant="h6"
+                                              className={classes.mLeftfont}
+                                            >
+                                              <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
+                                            </Link></span>
+                                          </Typography>
+                                          {/* <Typography
                                 variant="body1"
                                 gutterBottom
                                 display="inline"
@@ -807,8 +904,8 @@ const handleMyUserPClose = () => {
                               >
                                 Category: <span className={classes.listingLabelValue}>HSE incident Action</span>
                               </Typography> */}
-                                        <span item xs={1} className={classes.sepHeightOne}></span>
-                                        <Typography
+                                          <span item xs={1} className={classes.sepHeightOne}></span>
+                                          <Typography
                                           variant="body1"
                                           gutterBottom
                                           display="inline"
@@ -819,99 +916,99 @@ const handleMyUserPClose = () => {
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"} </span>
+                                          Status: <span className="listingLabelValue statusColor_complete">{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
                                         </Typography>
 
-                                      </Grid>
+                                        </Grid>
 
 
-                                      {/* <Grid item md={2} sm={4} xs={12}>
+                                        {/* <Grid item md={2} sm={4} xs={12}>
                                         <Button className={classes.floatR}>
                                           <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
                                         </Button>
                                      
                                       </Grid> */}
+                                      </Grid>
                                     </Grid>
                                   </Grid>
                                 </Grid>
-                              </Grid>
-                              <Grid item sm={12} xs={12}>
-                                <Grid container spacing={3}>
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      gutterBottom
-                                      color="textPrimary"
-                                      className={classes.listingLabelName}
-                                    >
-                                      Type:
-                                    </Typography>
+                                <Grid item sm={12} xs={12}>
+                                  <Grid container spacing={3}>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        gutterBottom
+                                        color="textPrimary"
+                                        className={classes.listingLabelName}
+                                      >
+                                        Type:
+                                      </Typography>
 
-                                    <Typography
-                                      gutterBottom
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {/* {item[1]["incidentReportedByName"]} */}
-                                      {item[1]["observationType"]}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      color="textPrimary"
-                                      gutterBottom
-                                      className={classes.listingLabelName}
-                                    >
-                                      Location:
-                                    </Typography>
-                                    <Typography
+                                      <Typography
+                                        gutterBottom
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {/* {item[1]["incidentReportedByName"]} */}
+                                        {item[1]["observationType"]}
+                                      </Typography>
+                                    </Grid>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Location:
+                                      </Typography>
+                                      <Typography
 
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {item[1]["location"] ? item[1]["location"] : "-"}
-                                    </Typography>
-                                  </Grid>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {item[1]["location"] ? item[1]["location"] : "-"}
+                                      </Typography>
+                                    </Grid>
 
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      color="textPrimary"
-                                      gutterBottom
-                                      className={classes.listingLabelName}
-                                    >
-                                      Reported on:
-                                    </Typography>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Reported on:
+                                      </Typography>
 
-                                    <Typography
+                                      <Typography
 
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {moment(item[1]["createdAt"]).format(
-                                        "Do MMMM YYYY, h:mm:ss a"
-                                      )}                      </Typography>
-                                  </Grid>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {moment(item[1]["createdAt"]).format(
+                                          "Do MMMM YYYY, h:mm:ss a"
+                                        )}                      </Typography>
+                                    </Grid>
 
-                                  <Grid item md={3} sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      color="textPrimary"
-                                      gutterBottom
-                                      className={classes.listingLabelName}
-                                    >
-                                      Reported by:
-                                    </Typography>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Reported by:
+                                      </Typography>
 
-                                    <Typography
+                                      <Typography
 
-                                      className={classes.listingLabelValue}
-                                    >
-                                      {item[1]["reportedByName"] ? item[1]["reportedByName"] : "Admin"}
-                                    </Typography>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {item[1]["reportedByName"] ? item[1]["reportedByName"] : "Admin"}
+                                      </Typography>
+                                    </Grid>
                                   </Grid>
                                 </Grid>
-                              </Grid>
 
-                              {/* <Grid item sm={2} xs={12}>
+                                {/* <Grid item sm={2} xs={12}>
                       <Typography
                         variant="h6"
                         color="textPrimary"
@@ -928,7 +1025,7 @@ const handleMyUserPClose = () => {
                     </Grid> */}
                               </Link>
                             </Grid>
-                            
+
                           </CardContent>
                           <Divider />
                           <CardActions className={Incidents.cardActions}>
@@ -949,7 +1046,10 @@ const handleMyUserPClose = () => {
                                   Attachments:
                                 </Typography>
                                 <Typography variant="body2" display="inline">
-                                  <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1]['attachmentCount']}</Link>
+                                  <Link color="secondary" className={classes.mLeftR5} 
+                                  // onClick={() => handleVisibility(index)}
+                                  >
+                                  {item[1]['attachmentCount']}</Link>
                                 </Typography>
                                 {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
@@ -962,7 +1062,7 @@ const handleMyUserPClose = () => {
                                   Comments:
                                 </Typography>
                                 <Typography variant="body2" display="inline" className={classes.mLeft}>
-                                  <Link href="#" color="secondary" className={classes.mLeft}>{item[1]['commentsCount']}</Link>
+                                  <Link color="secondary" className={classes.mLeft} onClick={() => handleVisibilityComments(item[1].id)}>{item[1]['commentsCount']}</Link>
                                 </Typography> */}
                               </Grid>
 
@@ -986,7 +1086,7 @@ const handleMyUserPClose = () => {
                                   <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography variant="body1" display="inline">
 
-                                  {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                                    {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
                                     <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
                                   </Typography>
                                 </div>
@@ -994,11 +1094,133 @@ const handleMyUserPClose = () => {
                             </Grid>
                           </CardActions>
                         </Card>
-                      )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                        {attachIndex === index  && item[1]['attachmentCount'] !== 0 ?  
+                        <Grid
+                          item
+                          md={12}
+                          sm={12}
+                          xs={12}
+                          hidden={!hidden}
+                          onBlur={handleAttachClose}
+                          onClick={handleAttachClick}
+                          onClose={handleAttachClose}
+                          onFocus={handleAttachOpen}
+                          onMouseEnter={handleAttachOpen}
+                          onMouseLeave={handleAttachClose}
+                          open={attachOpen}
+                          className="paddTBRemove attactmentShowSection"
+                        >
+                          <Paper elevation={1} className="paperSection">
+                            <Grid container spacing={3}>
+                              <Grid item md={12} sm={12} xs={12}>
+                                <List>
+                                  <ListItem>
+                                  <img src={allInitialData[index].attachment}  onClick={handleClickOpenAttachment}  className="hoverIcon" />                          
+                                  </ListItem>
+                                </List>
+                              </Grid>
+                            </Grid>
+                          </Paper>
+                        </Grid> : null}
+                        
+                    </>  )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
                       Sorry, no matching records found
-              </Typography>}
+                    </Typography>}
 
                 </div>
+                <div>
+            <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                hidden={!hiddenn}
+                onBlur={handleCommentsClose}
+                onClick={handleCommentsClick}
+                onClose={handleCommentsClose}
+                onFocus={handleCommentsOpen}
+                onMouseEnter={handleCommentsOpen}
+                onMouseLeave={handleCommentsClose}
+                open={commentsOpen}
+                className="commentsShowSection"
+              >
+                <Paper elevation={1} className="paperSection">
+                  <Grid container spacing={3}>
+                    <Grid item md={12} xs={12}>
+                      <Box padding={3}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <TextField
+                                  multiline
+                                  variant="outlined"
+                                  rows="1"
+                                  id="JobTitle"
+                                  label="Add your comments here"
+                                  className="formControl"
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                              <input type="file" />
+                            </Grid>
+                            <Grid item xs={9}>
+                              <AddCircleOutlineIcon className={classes.plusIcon} /> 
+                              <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                            </Grid>
+                            <Grid item xs={12}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              className="spacerRight buttonStyle"
+                              disableElevation
+                              
+                            >
+                              Respond
+                            </Button> 
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="custmCancelBtn buttonStyle"
+                              disableElevation
+                              
+                            >
+                              Cancel
+                            </Button>
+                            </Grid>
+                        </Grid>
+                      </Box>              
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+             </div>
+             <div>
+            <Dialog
+                open={openAttachment}
+                onClose={handleCloseAttachment}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                classNames={classes.viewAttachmentDialog}
+              >
+                <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+                <DialogContent classNames={classes.imageSectionHeight}>
+                <Grid container spacing={3} classNames={classes.viewImageSection}>                                  
+                  <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
+                    <ul classNames={classes.viewImageSection}>
+                      <li className={classes.viewattch1}>View Attachment</li>
+                      <li className={classes.viewattch2}>Download Attachment</li>
+                    </ul>  
+                  </Grid>
+                </Grid>  
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
                 <div>
                 <Dialog
                   open={myUserPOpen}
@@ -1008,12 +1230,9 @@ const handleMyUserPClose = () => {
                   fullWidth={true}
                   maxWidth={'sm'}
                 >
-                  <DialogTitle id="alert-dialog-title">{"Admin "}</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <UserDetailsView userId={userInfo.name}/>
-                    </DialogContentText>
-                  </DialogContent>
+                  
+                      <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon}/>
+                    
                   <DialogActions>
                     <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
                       Close
@@ -1022,219 +1241,7 @@ const handleMyUserPClose = () => {
                 </Dialog>
               </div>
 
-                <div className="gridView">
-                  {Object.entries(incidents).map((item, index) => (
-                    <Card variant="outlined" className={Incidents.card} key={index}>
-                      <CardContent>
-                        <Grid container spacing={3}>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3} alignItems="flex-start">
-                              <Grid item xs={9} className={classes.chipAction}>
-                                <Chip
-                                  avatar={<Avatar src="/images/pp_boy.svg" />}
-                                  label="Admin"
-                                />
-                              </Grid>
-                              <Grid item xs={3}>
-                                <Typography
-                                >
-                                  Work fell down in site
-                                  {/* {item[index]["incidentTitle"]} */}
-                                </Typography>
-                              </Grid>
-
-
-                            </Grid>
-                          </Grid>
-
-                          <Grid item xs={12}>
-                            <div className={Incidents.statusRow}>
-                              <Typography
-
-                                display="inline"
-                                className={classes.listingLabelName}
-                              >
-                                Number
-                                {''}
-                                <Link
-                                  href="/app/ActionSummary"
-                                  variant="subtitle"
-                                  className={Incidents.incidentNumber}
-                                  style={{ textDecoration: 'underline' }}
-                                >
-                                  252-525-256
-                                </Link>
-                              </Typography>
-
-                              <Chip
-                                variant="outlined"
-                                label="Initial Action"
-                                color="primary"
-                                size="small"
-                              />
-
-                              <Typography
-                                variant="body1"
-                                // color="textPrimary"
-                                display="inline"
-                              >
-
-                                <i className="ion-ios-calendar-outline" />
-                                <span className={Incidents.dateValue}>
-                                  24 june 2021
-                                </span>
-                              </Typography>
-                            </div>
-                          </Grid>
-
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Type
-                            </Typography>
-
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              className={classes.listingLabelValue}
-                            >
-                              {/* {item[1]["incidentReportedByName"]} */}
-                              Not found
-                            </Typography>
-                          </Grid>
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Location
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              className={classes.listingLabelValue}
-                            >
-                              Delhi
-                            </Typography>
-                          </Grid>
-
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Reported on
-                            </Typography>
-
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              className={classes.listingLabelValue}
-                            >
-                              24 june 2021
-                            </Typography>
-                          </Grid>
-
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-
-                              gutterBottom
-                              className={classes.listingLabelName}
-                            >
-                              Reported By
-                            </Typography>
-
-                            <Typography
-                              variant="body1"
-                              color="textPrimary"
-                              className={classes.listingLabelValue}
-                            >
-                              Person
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                      <Divider />
-                      <CardActions className={Incidents.cardActions}>
-                        <Grid
-                          container
-                          spacing={2}
-                          justify="flex-end"
-                          alignItems="center"
-                        >
-                          <Grid item xs={6} md={3}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Incidents.actionsLabel}
-                            >
-                              <AttachmentIcon />
-                              {' '}
-                              Comments:
-                            </Typography>
-                            <Typography variant="body2" display="inline">
-                              <Link href="#" className={classes.mLeft}>3</Link>
-                            </Typography>
-                          </Grid>
-
-                          <Grid item xs={6} md={3}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Incidents.actionsLabel}
-                            >
-                              <AttachmentIcon />
-                              {' '}
-                              Actions:
-                            </Typography>
-                            <Typography variant="body2" display="inline">
-                              <Link href="#" className={classes.mLeft}>3</Link>
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6} md={3}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Incidents.actionsLabel}
-                            >
-                              <AttachmentIcon />
-                              {' '}
-                              Evidences:
-                            </Typography>
-                            <Typography variant="body2" display="inline">
-                              <Link href="#" className={classes.mLeft}>3</Link>
-                            </Typography>
-                          </Grid>
-
-                          <Grid item xs={6} md={3} alignItems="right">
-                            <Button
-                              size="small"
-                              color="secondary"
-                              startIcon={<Print />}
-                              className={Incidents.actionButton}
-                            >
-                              Print
-                            </Button>
-                            <Button
-                              size="small"
-                              color="secondary"
-                              startIcon={<Share />}
-                              className={Incidents.actionButton}
-                            >
-                              Share
-                            </Button>
-                          </Grid>
-
-                        </Grid>
-                      </CardActions>
-                    </Card>
-                  ))}
-                </div>
+                
               </div>
               // listview end
 
@@ -1252,16 +1259,17 @@ const handleMyUserPClose = () => {
               </TableContainer>
             )}
           </Grid>
-          {/* <div className={classes.pagination}>
-      {totalData}
-    </div> */}
-    {totalData != 0 ? 
-          <div className={classes.pagination}>
-          
-          { Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` }
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div> : null}
-         </>) : <h1>Loading...</h1>}
+
+          {totalData != 0 ?
+            <div className={classes.pagination}>
+
+              {Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}`}
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
+            </div> : null}
+        </>)
+          :
+          <Loader />
+        }
       </Box>
     </>
   );

@@ -16,13 +16,17 @@ import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import api from "../../../utils/axios";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
 import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
+// redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -67,9 +71,11 @@ const EventDetails = () => {
   const weatherId = useRef([]);
   const overAllCostId = useRef([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const CheckPost = useRef();
   const radioYesNo = ["Yes", "No"];
   const [overAllCostShow, setOverAllCostShow] = useState("");
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
   const [weather, setWeather] = useState([
     {
@@ -92,8 +98,8 @@ const EventDetails = () => {
   const [error, setError] = useState({});
   const [errorWeather, setErrorWeather] = useState({});
   const [errorCost, setErrorCost] = useState({});
-  const [loading, setLoading] = useState(false)
-  const [buttonLoading, setButtonLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   // check upadte 
   const handelUpdateCheck = async (e) => {
@@ -234,6 +240,19 @@ const EventDetails = () => {
     await setErrorWeather(errorWeather);
     await setErrorCost(errorCost)
     setButtonLoading(true)
+    const temp = incidentsListData
+    temp.updatedAt = new Date().toISOString();
+    if (incidentsListData.incidentStage === "Investigation") {
+      temp.incidentStatus = "Done"
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        history.push("/app/pages/error")
+      }
+    }
     // event api call
     if (
       Object.keys(error).length == 0 &&
@@ -277,9 +296,12 @@ const EventDetails = () => {
               }
             }
           }
-          await history.push(
-            `/app/incident-management/registration/investigation/action-taken/`
-          );
+          let viewMode = {
+            initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+          }
+          localStorage.setItem("viewMode", JSON.stringify(viewMode))
+          dispatch(tabViewMode(viewMode));
+          history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
         }
         // put
       } else if (eventId.current !== "") {
@@ -348,10 +370,12 @@ const EventDetails = () => {
             }
           }
         }
-        await history.push(
-          `/app/incident-management/registration/investigation/action-taken/${putId.current
-          }`
-        );
+        let viewMode = {
+          initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
+        history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
       }
     }
     setButtonLoading(false)
@@ -368,9 +392,21 @@ const EventDetails = () => {
     await handelUpdateCheck();
     await setLoading(true)
   };
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentsListdata(result);
+    })
+      .catch((err) => history.push("/app/pages/error"))
+
+  };
 
   useEffect(() => {
     PickListCall();
+    fetchIncidentsData();
   }, []);
 
   const classes = useStyles();
@@ -927,7 +963,9 @@ const EventDetails = () => {
             )}
           </Grid>
         </>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

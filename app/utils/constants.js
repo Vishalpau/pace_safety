@@ -165,8 +165,7 @@ export const INVESTIGATION_FORM = {
     `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem('fkincidentId')}`,
   'Event details':
     '/app/incident-management/registration/investigation/event-details/',
-  'Action taken':
-    '/app/incident-management/registration/investigation/action-taken/'
+  
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {

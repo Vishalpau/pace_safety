@@ -1,51 +1,36 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import { PapperBlock } from 'dan-components';
-import TextField from '@material-ui/core/TextField';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import IconButton from '@material-ui/core/IconButton';
-import moment from 'moment';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
-} from '@material-ui/pickers';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-import { useHistory, useParams } from 'react-router';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import TextButton from '../../CommonComponents/TextButton';
-
-
-import LessionLearnedValidator from '../../Validator/LessonLearn/LessonLearn';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Snackbar from '@material-ui/core/Snackbar';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import MuiAlert from '@material-ui/lab/Alert';
 import {
-  LESSION_LEARNED_FORM,
-  LOGIN_URL,
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  CLOSE_OUT_FORM,
-  SUMMERY_FORM
-} from '../../../utils/constants';
-
-import FormSideBar from '../FormSideBar';
-
-import api from '../../../utils/axios';
+  KeyboardDateTimePicker, MuiPickersUtilsProvider
+} from '@material-ui/pickers';
+import { PapperBlock } from 'dan-components';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router';
+import { tabViewMode } from '../../../redux/actions/initialDetails';
 import Type from '../../../styles/components/Fonts.scss';
 import '../../../styles/custom.css';
+import api from '../../../utils/axios';
+import {
+  ACCOUNT_API_URL, CLOSE_OUT_FORM,
+  SUMMERY_FORM
+} from '../../../utils/constants';
+import FormSideBar from '../FormSideBar';
+import Loader from "../Loader";
 
-import { useDispatch } from 'react-redux';
-import { tabViewMode } from '../../../redux/actions/initialDetails';
+
 
 
 function Alert(props) {
@@ -321,7 +306,7 @@ const CloseOut = () => {
                 >
                   {userList.map((selectValues, index) => (
                     <MenuItem
-                      value={selectValues.id }
+                      value={selectValues.id}
                       key={index}
                       onClick={() => setReviewByName(selectValues.name)}
                     >
@@ -392,7 +377,7 @@ const CloseOut = () => {
                     <MenuItem
                       value={selectValues.id}
                       key={index}
-                      onClick={()=>setCloseByName(selectValues.name)}
+                      onClick={() => setCloseByName(selectValues.name)}
                     >
                       {selectValues.name}
                     </MenuItem>
@@ -454,7 +439,7 @@ const CloseOut = () => {
           )}
         </Grid>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );
