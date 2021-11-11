@@ -185,7 +185,6 @@ class SimpleTabs extends React.Component {
   }
 
   getPreventiveControls = async (value=undefined) => {
-    alert(234567)
     const flhaId = this.props.match.params.id;
     // this.props.match.params.id
     if(value != undefined){
