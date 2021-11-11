@@ -982,6 +982,13 @@ html .custmCancelBtn {
 .homeMenu a.active:hover .MuiListItemText-root span,
 .homeMenu a.active .MuiListItemText-root span,
 
+.incidentMenu a.active .MuiListItemIcon-root,
+.incidentMenu a.active:hover .MuiListItemIcon-root,
+.incidentMenu a:hover .MuiListItemIcon-root,
+.incidentMenu a:hover .MuiListItemText-root span,
+.incidentMenu a.active:hover .MuiListItemText-root span,
+.incidentMenu a.active .MuiListItemText-root span,
+
 .assessmentMenu a.active .MuiListItemIcon-root,
 .assessmentMenu a.active:hover .MuiListItemIcon-root,
 .assessmentMenu a:hover .MuiListItemIcon-root,
