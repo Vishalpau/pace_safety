@@ -332,6 +332,12 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'left',
     },
   },
+  hoverB: {
+    '&:hover': {
+      backgroundColor: '#f47607 !important',
+      opacity: '0.9',
+    },
+  },
 }));
 
 export default function SimpleTabs(props) {
@@ -364,9 +370,9 @@ export default function SimpleTabs(props) {
             <AppBar position="static" className={classes.navTabBack}>
               <div className={classes.floatL}>
                 <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                  <Tab label="My Observations" {...a11yProps(0)} />
+                  <Tab label="My Observations" {...a11yProps(0)} className={classes.hoverB} />
                   {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
-                  <Tab label="Big Picture" {...a11yProps(2)} />
+                  <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
                   {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
                 </Tabs>
               </div>

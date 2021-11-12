@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
   navTabBack: {
     backgroundColor: 'transparent',
     color: 'black',
-    marginTop: '3px',
     '& .MuiTab-root': {
       minWidth: '80px',
       minHeight: '40px',
@@ -71,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'inline',
       textAlign: 'left',
       fontWeight: '600',
+      '&:hover': {
+        color: '#f47607 !important',
+       },
     },
     '& .MuiTab-textColorInherit.Mui-selected': {
       color: '#f47607',
@@ -81,9 +83,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   pLtenPRten: { padding: '0px 10px 0px 10px', },
-  pLTen: {
-    marginRight: '5px',
-  },
+  // pLTen: {
+  //   marginRight: '5px',
+  // },
   mTtop20: {
     marginTop: '20px',
   },
@@ -139,6 +141,11 @@ const useStyles = makeStyles((theme) => ({
   },
   activeTab: {
     color: 'orange',
+  },
+  listViewTab: {
+    ['@media (max-width:480px)']: { 
+      padding: '12px 12px 0px 12px !important',
+    },
   },
   buttonsNew: {
     borderRadius: '5px',
@@ -264,11 +271,11 @@ export default function Observations() {
         </Grid>
       </Grid>
       <Grid container spacing={3}>
-        <Grid item sm={8} xs={12}>
+        <Grid item sm={8} xs={12} className={classes.listViewTab}>
           <AppBar position="static" className={classes.navTabBack}>
             <div className={classes.floatL}>
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
+                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
                 {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
                 {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
