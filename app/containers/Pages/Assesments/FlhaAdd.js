@@ -405,7 +405,7 @@ const FlhaDetails = (props) => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  const [value, setValue] = React.useState('female');
+  const [value, setValue] = React.useState('N/A');
   const [error, setError] = React.useState({});
   const handleChange = (event) => {
     // setValue(event.target.value);
@@ -511,18 +511,18 @@ bytes
   const [jobConfirmation, setJobConfirmation] = React.useState([
     {
       'visualConfirmationType': 'See Pictures',
-      'status': '',
-      'attachment': ''
+      'visualConfirmationStatus': 'N/A',
+      'visualConfirmationAttachment': ''
     },
     {
       'visualConfirmationType': 'Team Pictures',
-      'status': '',
-      'attachment': ''
+      'visualConfirmationStatus': 'N/A',
+      'visualConfirmationAttachment': ''
     },
     {
       'visualConfirmationType': 'Tools and tackles',
-      'status': '',
-      'attachment': ''
+      'visualConfirmationStatus': 'N/A',
+      'visualConfirmationAttachment': ''
     }
   ])
   const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
@@ -545,11 +545,19 @@ bytes
   };
 
   const handleJobConfirmationFormChange = async (e, fieldname, index) => {
-    const {value} = e.target
-    const temp = { ...jobConfirmation }
+    // alert(fieldname)
+    if(fieldname=='visualConfirmationAttachment'){
+      // alert(fieldname)
+      // console.log({'file': e.target})
+      var fieldvalue = e.target.files[0]
+    }else{
+      var fieldvalue = e.target.value
+    }
+    
+    const temp = [ ...jobConfirmation ]
     console.log({temp: temp})
     console.log({tempindex: temp[index]})
-    temp[index].fieldname = value
+    temp[index][fieldname] = fieldvalue
     await setJobConfirmation(temp)
   }
 
@@ -703,6 +711,30 @@ bytes
   };
 
   const createVisualConfirmation = async (flha) => {
+    console.log({"visualConf": jobConfirmation})
+    console.log({"visualConf": jobConfirmation[0]})
+    const confData = jobConfirmation.map((jobConfirmationData, index) => {
+      console.log({ flha: jobConfirmationData });
+      jobConfirmation[index]['fkFlhaId'] = flha;
+      jobConfirmation[index]['createdBy'] = fkUserId;
+      
+      
+    });
+    for(let i = 0; i < 3; i++){
+      // e.preventDefault();
+      let formData = new FormData();
+  
+      for (const key in jobConfirmation[i]) {
+        formData.append(key, jobConfirmation[i][key]);
+      }
+      console.log({formdata: formData})
+    const res = await api.post(
+      `/api/v1/flhas/${flha}/visualconfirmations/`,
+      formData
+    );
+    }
+    console.log({ updatedJobData: jobConfirmation });
+    
     //cerate job confirmation
     history.push('/app/pages/assesments/xflha/');
     // alert(flha)
@@ -1175,15 +1207,17 @@ console.log(taskForm,"!@#")
                                     *Hazards
                                             </InputLabel>
                                             <TextField
+
                                               multiline
                                               variant="outlined"
                                               rows="3"
                                               id="hazards"
-                                              // label="*Hazards"
+                                              label="*Hazards"
                                               className={classes.fullWidth}
                                               value={item.hazard}
                                               onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazards')
                                               }
+                                              InputLabelProps={{ shrink: true }}
                                             />
                                           </FormControl>
                                           <div className={classes.spacer}>
@@ -1346,25 +1380,25 @@ console.log(taskForm,"!@#")
                             <TableCell align="left">
                             <div className={classes.spacer}>
                               <FormControl component="fieldset">
-                              <RadioGroup row aria-label="status" name="status" value={jobConfirmation.status} onChange={(e) => handleJobConfirmationFormChange(e, 'status', 0)}>
-                          <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="no" control={<Radio />} label="No" />
-                          <FormControlLabel value="na" control={<Radio />} label="NA" />
+                              <RadioGroup row aria-label="status" name="visualConfirmationStatus" value={jobConfirmation.visualConfirmationStatus} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationStatus', 0)}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                          <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
                         </RadioGroup>
                               </FormControl>
                             </div>                               
                             </TableCell>
                             <TableCell align="left">
-                              <input accept="image/*" className="tableFileAttach" id="icon-button-file" name="avatar" type="file" />
+                              <input accept="image/*" value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 0)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
                               {/* <label htmlFor="icon-button-file">
                                 <IconButton color="primary" aria-label="upload picture" component="span">
                                   <AttachmentIcon />
                                 </IconButton>
                               </label>
                               <img src={projectpj} className={classes.attachImg} alt="decoration" height={40} /> */}
-                              <IconButton aria-label="delete" align="right">
+                              {/* <IconButton aria-label="delete" align="right">
                                 <DeleteIcon />
-                              </IconButton>
+                              </IconButton> */}
                             </TableCell>
                             </TableRow>
                             <TableRow className={classes.cellHeight}>
@@ -1372,25 +1406,25 @@ console.log(taskForm,"!@#")
                             <TableCell align="left">
                             <div className={classes.spacer}>
                               <FormControl component="fieldset">
-                              <RadioGroup row aria-label="status" name="status" value={jobConfirmation.status} onChange={(e) => handleJobConfirmationFormChange(e, 'status', 1)}>
-                          <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="no" control={<Radio />} label="No" />
-                          <FormControlLabel value="na" control={<Radio />} label="NA" />
+                              <RadioGroup row aria-label="status" name="visualConfirmationStatus" value={jobConfirmation.visualConfirmationStatus} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationStatus', 1)}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                          <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
                         </RadioGroup>
                               </FormControl>
                             </div>                               
                             </TableCell>
                             <TableCell align="left">
-                              <input accept="image/*" className="tableFileAttach" id="icon-button-file" name="avatar" type="file" />
+                            <input accept="image/*" value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 1)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
                               {/* <label htmlFor="icon-button-file">
                                 <IconButton color="primary" aria-label="upload picture" component="span">
                                   <AttachmentIcon />
                                 </IconButton>
                               </label>
                               <img src={projectpj} className={classes.attachImg} alt="decoration" height={40} /> */}
-                              <IconButton aria-label="delete" align="right">
+                              {/* <IconButton aria-label="delete" align="right">
                                 <DeleteIcon />
-                              </IconButton>
+                              </IconButton> */}
                             </TableCell>
                             </TableRow>
                             <TableRow className={classes.cellHeight}>
@@ -1398,25 +1432,25 @@ console.log(taskForm,"!@#")
                             <TableCell align="left">
                             <div className={classes.spacer}>
                               <FormControl component="fieldset">
-                              <RadioGroup row aria-label="status" name="status" value={jobConfirmation.status} onChange={(e) => handleJobConfirmationFormChange(e, 'status', 2)}>
-                          <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="no" control={<Radio />} label="No" />
-                          <FormControlLabel value="na" control={<Radio />} label="NA" />
+                              <RadioGroup row aria-label="status" name="visualConfirmationStatus" value={jobConfirmation.visualConfirmationStatus} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationStatus', 2)}>
+                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                          <FormControlLabel value="No" control={<Radio />} label="No" />
+                          <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
                         </RadioGroup>
                               </FormControl>
                             </div>                               
                             </TableCell>
                             <TableCell align="left">
-                              <input accept="image/*" className="tableFileAttach" id="icon-button-file" name="avatar" type="file" />
+                            <input accept="image/*"  type="file"  value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 2)} onChangeclassName="tableFileAttach" id="icon-button-file"/>
                               {/* <label htmlFor="icon-button-file">
                                 <IconButton color="primary" aria-label="upload picture" component="span">
                                   <AttachmentIcon />
                                 </IconButton>
                               </label>
                               <img src={projectpj} className={classes.attachImg} alt="decoration" height={40} /> */}
-                              <IconButton aria-label="delete" align="right">
+                              {/* <IconButton aria-label="delete" align="right">
                                 <DeleteIcon />
-                              </IconButton>
+                              </IconButton> */}
                             </TableCell>
                             </TableRow>
                           </TableBody>

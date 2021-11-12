@@ -711,7 +711,7 @@ Create XFLHA
               <Grid item md={2} sm={4} xs={12} 
                 className={classes.userPictureBox}
               >
-                <Button  className={classNames(classes.floatR )} onClick={(e) => handleMyUserPClickOpen(e)} >
+                <Button  className={classNames(classes.floatR )}  >
                   <img src={item[1].avatar} className={classes.userImage} /> {item[1].username}
                 </Button>
               </Grid>
@@ -874,13 +874,15 @@ Create XFLHA
                 </Typography>
                 <Typography variant="body2" display="inline">
                 <span>
-                  <Link href="#"
+                  {/* <Link href="#"
                    onClick={handleVisibility}
                    color="secondary"
                    aria-haspopup="true" 
-                   className={classes.mLeftR5}>
-                     {item[1].attachmentCount}
-                   </Link>
+                   className={classes.mLeftR5}
+                   disable={true}
+                   > */}
+                     {" "+item[1].attachmentCount}
+                   {/* </Link> */}
                 </span>
                 </Typography>
                 <span item xs={1} className={classes.sepHeightTen}></span>
@@ -891,11 +893,11 @@ Create XFLHA
                   className={classes.mLeft}
                 >
                   <InsertCommentOutlinedIcon className={classes.mright5} />
-                  <Link href="#"
+                  {/* <Link href="#"
                    onClick={handleVisibilityComments}
-                   aria-haspopup="true">
+                   aria-haspopup="true"> */}
                      Comments:
-                   </Link>
+                   {/* </Link> */}
                 
                 </Typography>
                 <Typography variant="body2" display="inline" className={classes.mLeft}>

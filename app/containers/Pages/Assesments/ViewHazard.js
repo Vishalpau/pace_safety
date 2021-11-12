@@ -602,8 +602,12 @@ Job visual confirmation
                                   </div>
                                 </TableCell>
                                 <TableCell align="left">
-
-                                  <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
+                                  {
+                                    (visualConf.visualConfirmationAttachment) ? 
+                                    <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
+                                    : "NA"
+                                  }
+                                  {/* <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} /> */}
                                 </TableCell>
                               </TableRow>
                             ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}

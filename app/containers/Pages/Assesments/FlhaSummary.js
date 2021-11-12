@@ -165,7 +165,7 @@ class SimpleTabs extends React.Component {
   };
 
   handleChangeTab = (event, value) => {
-    alert(value)
+    // alert(value)
     this.setState({ value });
     this.getPreventiveControls(value)
   };
@@ -251,7 +251,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={6}>
                   <FormLabel component="legend">Reference</FormLabel>
                   <Typography>
-                    {flha.referenceGroup + '|' + flha.referenceNumber}
+                    {flha.referenceNumber}
 
                   </Typography>
                 </Grid>
@@ -305,7 +305,7 @@ class SimpleTabs extends React.Component {
                 <TabContainer />
               )} */}
             </div>
-            <Grid container spacing={1}>
+            {/* <Grid container spacing={1}>
               <Grid item xs={6}>
                 <Typography>
 				Has the energy control being completed?
@@ -331,7 +331,8 @@ class SimpleTabs extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item xs={12} className={classes.mttopThirty}>
+             */}
+            {/* <Grid item xs={12} className={classes.mttopThirty}>
               <FormLabel component="legend">Actions</FormLabel>
 
               <Grid item xs={12}>
@@ -373,6 +374,8 @@ class SimpleTabs extends React.Component {
                 </Breadcrumbs>
               </Grid>
             </Grid>
+
+             */}
           </Grid>
 
           <Grid item md={3} xs={12}>
@@ -400,12 +403,14 @@ class SimpleTabs extends React.Component {
                     </ListItem>
                     <Divider />
                     <ListItem
+                      disbaled={true}
                       button
                     >
                       <ListItemIcon>
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
+                      disabled={true}
                         href="/app/pages/assesments/AuditCheck"
                         variant="subtitle"
                       >
@@ -413,12 +418,14 @@ class SimpleTabs extends React.Component {
                       </Link>
                     </ListItem>
                     <ListItem
+                      disabled={true}
                       button
                     >
                       <ListItemIcon>
                         <CommentIcon />
                       </ListItemIcon>
                       <Link
+                        disabled={true}
                         href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/comments"}
                         // href="/app/pages/actions/comments"
                         variant="subtitle"
@@ -429,6 +436,7 @@ class SimpleTabs extends React.Component {
                     </ListItem>
                     <Divider />
                     <ListItem
+                    disabled={true}
                       button
                     >
                       <ListItemIcon>
@@ -470,7 +478,7 @@ class SimpleTabs extends React.Component {
 				</Link>
 				</ListItem>
 				<Divider /> */}
-                    <ListItem>
+                    <ListItem disabled={true}>
                       <ListItemIcon>
                         <CloseIcon />
                       </ListItemIcon>
@@ -483,6 +491,7 @@ class SimpleTabs extends React.Component {
                       </Link>
                     </ListItem>
                     <ListItem
+                      disabled={true}
                       button
                     >
                       <ListItemIcon>
@@ -496,6 +505,7 @@ class SimpleTabs extends React.Component {
                       </Link>
                     </ListItem>
                     <ListItem
+                      disabled={true}
                       button
                     >
                       <ListItemIcon>
