@@ -432,6 +432,10 @@ const Assessment = () => {
     await setSubmitLoader(true);
 
     ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
+    if(ahaform["ahaStage"] === "Open"){
+      ahaform["ahaStage"] = "Assessment"
+      ahaform["ahaStatus"] = "Done"
+    }
 
     let data = new FormData()
     
@@ -1043,7 +1047,7 @@ const Assessment = () => {
                     disabled={submitLoader}
                   >
 
-                    Next
+                    Submit
                   </Button>
                   {submitLoader && (
                   <CircularProgress

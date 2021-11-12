@@ -212,7 +212,7 @@ const ProjectDetails = () => {
   const [checkGroups, setCheckListGroups] = useState([])
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
-  const permitType = useRef()
+  const permitType = useRef([])
 
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -349,6 +349,8 @@ const ProjectDetails = () => {
         }
       }
     } else {
+      form['ahaStage'] = "Assessment"
+      form['ahaStatus'] = "Pending"
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
@@ -684,8 +686,9 @@ const ProjectDetails = () => {
 
   const pickListValue = async () => {
     permitType.current = await PickListData(81)
-   
   }
+
+  console.log(permitType.current,"!@#!@#")
 
   const classes = useStyles();
 
@@ -705,9 +708,8 @@ const ProjectDetails = () => {
         <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
 
         {isLoading ?
-
-
           <Grid container spacing={3} className={classes.observationNewSection}>
+
             <Grid container spacing={3} item xs={12} md={9}>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Typography variant="h6" className="sectionHeading">
@@ -743,7 +745,7 @@ const ProjectDetails = () => {
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label="Incident type"
+                                label={data.breakDownLabel}
                                 value={data.selectValue.id || ""}
                                 disabled={data.breakDownData.length === 0}
 
@@ -778,315 +780,312 @@ const ProjectDetails = () => {
                   </Paper>
                 </Grid>
 
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                <Typography variant="h6" className="sectionHeading">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="35.2" height="30.626" viewBox="0 0 40.2 30.626">
-                    <g id="project-work" transform="translate(0.005)">
-                      <path id="Path_5191" data-name="Path 5191" d="M37.827,11.584l.981.981a.665.665,0,0,1,0,.939l-.792.792a5.287,5.287,0,0,1,.491,1.309h1.024a.665.665,0,0,1,.664.664v1.387a.665.665,0,0,1-.664.664H38.412a5.255,5.255,0,0,1-.579,1.269l.726.723a.665.665,0,0,1,0,.939l-.981.981a.665.665,0,0,1-.939,0l-.792-.792a5.114,5.114,0,0,1-1.309.491v1.024a.665.665,0,0,1-.664.664H32.488a.665.665,0,0,1-.664-.664V21.836a5.255,5.255,0,0,1-1.269-.579l-.723.726a.665.665,0,0,1-.939,0L27.911,21a.665.665,0,0,1,0-.939l.792-.792a5.161,5.161,0,0,1-.491-1.309H27.188a.665.665,0,0,1-.664-.664V15.912a.665.665,0,0,1,.664-.664h1.119a5.255,5.255,0,0,1,.579-1.269l-.723-.723a.665.665,0,0,1,0-.939l.981-.981a.665.665,0,0,1,.939,0l.792.792a5.16,5.16,0,0,1,1.309-.491V10.612a.665.665,0,0,1,.664-.664h1.387a.665.665,0,0,1,.664.664v1.116a5.255,5.255,0,0,1,1.269.579l.723-.723a.661.661,0,0,1,.936,0ZM1.142,23a3.671,3.671,0,0,1,2.637-1.371V.991c-3.01.294-2.66,3.078-2.643,5.666,0,.347.007.53.007.615V23Zm8.4-14.3h5.78V26.3h-6.2V8.708h.415Zm1.083,14.908h1.116V24.2H10.622v-.582Zm0-1.623h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.852v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.626h1.852v.582H10.622v-.582Zm3.863-.991H9.955V25.461h4.531V9.536ZM23.057,12.5V26.177H19.229V12.5h-.016l.131-.265,1.58-3.248.16-.33.167.327,1.685,3.248.141.272h-.02v0ZM19.8,12.13h2.666l-1.06-2.041H20.8L19.8,12.13ZM4.91,3.955H33.119a.773.773,0,0,1,.556.232.784.784,0,0,1,.232.556V7.03H32.445V5.247H4.91V22.2h0a.478.478,0,0,1-.409.474c-4.3.664-4.488,5.758-.128,6.487H32.445V27.021h1.462v2.813a.784.784,0,0,1-.232.556l0,0h0a.784.784,0,0,1-.556.232H4.338a5.021,5.021,0,0,1-3.494-1.9A5.631,5.631,0,0,1,.007,25.14V6.66C-.013,3.5-.036.079,4.371,0a.317.317,0,0,1,.056,0A.483.483,0,0,1,4.91.484V3.955Zm28.448,10.1a2.728,2.728,0,1,1-2.728,2.728,2.729,2.729,0,0,1,2.728-2.728Z" fill="#06425c"/>
-                    </g>
-                  </svg> Project details
-                </Typography>
-              </Grid>
-
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-              <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <TextField
-                  label="Work Location*"
-                  // margin="dense"
-                  name="worklocation"
-                  id="worklocation"
-                  value={form.location ? form.location : ""}
-                  error={error.location}
-                  helperText={error.location ? error.location : ""}
-                  fullWidth
-                  onChange={(e) => setForm({ ...form, location: e.target.value })}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
-              <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDateTimePicker
-                    className={classes.formControl}
-                    // margin="dense"
-                    fullWidth
-                    label="Date & Time*"
-                    value={selectedDate}
-                    // onChange={handleDateChange}
-                    value={form.assessmentDate || null}
-                    error={error.assessmentDate}
-                    helperText={error.assessmentDate ? error.assessmentDate : null}
-                    inputVariant="outlined"
-                    disableFuture="true"
-                    onClick={(e) => setIsDateShow(true)}
-                    open={isDateShow}
-                    onClose={(e) => handelClose()}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        assessmentDate: moment(e).format("YYYY-MM-DD"),
-                      });
-                      // console.log(e.target.value)
-                    }}
-                    InputProps={{ readOnly: true }}
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
-              >
-                <FormControl component="fieldset" error={
-                  error && error["permitToPerform"]
-                }>
-                  <FormLabel component="legend" className={classes.labelName} >Confirm if AHA required for permit?*</FormLabel>
-                  <RadioGroup row aria-label="gender" name="gender1"
-                    onChange={(e) => {
-                      { setForm({ ...form, permitToPerform: e.target.value }) };
-                    }}
-                    value={form.permitToPerform ? form.permitToPerform : ""}>
-                    {radioDecide.map((value) => (
-                      <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
-                    ))}
-                  </RadioGroup>
-                  {error && error["permitToPerform"] && (
-                    <FormHelperText>
-                      {error["permitToPerform"]}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>{form.permitToPerform === "Yes" || form.permitToPerform === "" ? 
-              <Grid item md={6} sm={12} xs={12}>
-                            <FormControl
-                              variant="outlined"
-                              requirement
-                              className={classes.formControl}
-                            >
-                              <InputLabel id="demo-simple-select-label">
-                                Type of permit
-                              </InputLabel>
-                              <Select
-                                label="Type of permit"
-                                value={form.typeOfPermit ? form.typeOfPermit : ""}
-                              >
-                                {permitType.current.map(
-                                  (value) => (
-                                    <MenuItem
-                                      value={value.label}
-                                      onClick={(e) => {setForm({...form,typeOfPermit:value.labelValue})}}
-                                    >
-                                      {value.label}
-                                    </MenuItem>
-                                  )
-                                )}
-                              </Select>
-                            </FormControl>
-                          </Grid>: null}
-              <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <TextField
-                  label="Permit Reference"
-                  // margin="dense"
-                  name="reference"
-                  id="reference"
-                  multiline
-                  value={form.permitNumber ? form.permitNumber : ""}
-                  fullWidth
-                  onChange={(e) => {
-                    { setForm({ ...form, permitNumber: e.target.value }) };
-                  }}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
-              >
-                <TextField
-                  label="Description*"
-                  // margin="dense"
-                  name="description"
-                  id="description"
-                  multiline
-                  error={error.description}
-                  helperText={error.description ? error.description : ""}
-                  rows={4}
-                  value={form.description ? form.description : ""}
-                  fullWidth
-                  onChange={(e) => {
-                    { setForm({ ...form, description: e.target.value }) };
-                  }}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.createHazardbox}
-                style={{ marginTop: '12px' }}
-              >
-                <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
-              </Grid>
-              {Teamform.map((value, index) => (<>
-                <Grid
-                  item
-                  md={6}
-                  xs={11}
-                  className={classes.createHazardbox}
-                >
-
-                  <TextField
-                    label="Team Name"
-                    // margin="dense"
-                    name="arename"
-                    id="arename"
-                    multiline
-                    value={Teamform[index].teamName || ""}
-                    fullWidth
-                    variant="outlined"
-                    className={classes.formControl}
-                    onChange={(e) => { handleTeamName(e, index) }
-                    }
-                  />
-
-
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Typography variant="h6" className="sectionHeading">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35.2" height="30.626" viewBox="0 0 40.2 30.626">
+                      <g id="project-work" transform="translate(0.005)">
+                        <path id="Path_5191" data-name="Path 5191" d="M37.827,11.584l.981.981a.665.665,0,0,1,0,.939l-.792.792a5.287,5.287,0,0,1,.491,1.309h1.024a.665.665,0,0,1,.664.664v1.387a.665.665,0,0,1-.664.664H38.412a5.255,5.255,0,0,1-.579,1.269l.726.723a.665.665,0,0,1,0,.939l-.981.981a.665.665,0,0,1-.939,0l-.792-.792a5.114,5.114,0,0,1-1.309.491v1.024a.665.665,0,0,1-.664.664H32.488a.665.665,0,0,1-.664-.664V21.836a5.255,5.255,0,0,1-1.269-.579l-.723.726a.665.665,0,0,1-.939,0L27.911,21a.665.665,0,0,1,0-.939l.792-.792a5.161,5.161,0,0,1-.491-1.309H27.188a.665.665,0,0,1-.664-.664V15.912a.665.665,0,0,1,.664-.664h1.119a5.255,5.255,0,0,1,.579-1.269l-.723-.723a.665.665,0,0,1,0-.939l.981-.981a.665.665,0,0,1,.939,0l.792.792a5.16,5.16,0,0,1,1.309-.491V10.612a.665.665,0,0,1,.664-.664h1.387a.665.665,0,0,1,.664.664v1.116a5.255,5.255,0,0,1,1.269.579l.723-.723a.661.661,0,0,1,.936,0ZM1.142,23a3.671,3.671,0,0,1,2.637-1.371V.991c-3.01.294-2.66,3.078-2.643,5.666,0,.347.007.53.007.615V23Zm8.4-14.3h5.78V26.3h-6.2V8.708h.415Zm1.083,14.908h1.116V24.2H10.622v-.582Zm0-1.623h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.852v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.626h1.852v.582H10.622v-.582Zm3.863-.991H9.955V25.461h4.531V9.536ZM23.057,12.5V26.177H19.229V12.5h-.016l.131-.265,1.58-3.248.16-.33.167.327,1.685,3.248.141.272h-.02v0ZM19.8,12.13h2.666l-1.06-2.041H20.8L19.8,12.13ZM4.91,3.955H33.119a.773.773,0,0,1,.556.232.784.784,0,0,1,.232.556V7.03H32.445V5.247H4.91V22.2h0a.478.478,0,0,1-.409.474c-4.3.664-4.488,5.758-.128,6.487H32.445V27.021h1.462v2.813a.784.784,0,0,1-.232.556l0,0h0a.784.784,0,0,1-.556.232H4.338a5.021,5.021,0,0,1-3.494-1.9A5.631,5.631,0,0,1,.007,25.14V6.66C-.013,3.5-.036.079,4.371,0a.317.317,0,0,1,.056,0A.483.483,0,0,1,4.91.484V3.955Zm28.448,10.1a2.728,2.728,0,1,1-2.728,2.728,2.729,2.729,0,0,1,2.728-2.728Z" fill="#06425c"/>
+                      </g>
+                    </svg> Project details
+                  </Typography>
                 </Grid>
-                {Teamform.length > 1 ?
-                  (<Grid item md={1} className={classes.createHazardbox}>
-                    <IconButton
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => { handelRemove(e, index) }}
-                    >
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </Grid>) : null}
 
-              </>))}
-              <Grid item md={12} className={classes.createHazardbox}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddCircleIcon />}
-                  className="marginT0"
-                  onClick={() => { handleAdd() }}
-                >
-                  Add new
-                </Button>
-              </Grid>
-              </Grid>
-              
-
-              </Paper>
-              </Grid>
-
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Typography variant="h6" className="sectionHeading">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32.665" height="25.557" viewBox="0 0 32.665 25.557">
-              <g id="placeholder-on-map-paper-in-perspective-svgrepo-com" transform="translate(0.001 -66.585)">
-                <path id="Path_5201" data-name="Path 5201" d="M27.557,81.046l5.03,10.332a.49.49,0,0,1-.478.764H.555a.49.49,0,0,1-.478-.764l5.03-10.332a.583.583,0,0,1,.478-.3H9.9a.6.6,0,0,1,.4.184c.293.338.591.668.888,1,.282.31.566.625.847.947H6.914a.582.582,0,0,0-.478.3L3.1,90.017H29.56l-3.332-6.845a.582.582,0,0,0-.478-.3h-5.13c.281-.322.565-.636.848-.947.3-.328.6-.658.891-1a.6.6,0,0,1,.4-.183H27.08A.582.582,0,0,1,27.557,81.046Zm-3.831-7.061c0,5.646-4.7,6.7-6.91,12.13a.528.528,0,0,1-.98,0c-1.994-4.892-6.012-6.233-6.781-10.591a7.561,7.561,0,0,1,6.551-8.9A7.4,7.4,0,0,1,23.726,73.985Zm-3.492,0a3.908,3.908,0,1,0-3.908,3.908A3.908,3.908,0,0,0,20.234,73.985Z" transform="translate(0)" fill="#06425c"/>
-              </g>
-            </svg> Area hazard
-          </Typography>
-        </Grid>
-        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-            {Object.entries(checkGroups).map(([key, value]) => (
-                <Grid item md={6}
-                  xs={12}
-                  className={classes.formBox}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="checkRadioLabel">{key}</FormLabel>
-                    <FormGroup>
-                      {value.map((option) => (
-                        <FormControlLabel
-                          control={<Checkbox name={option.inputLabel} />}
-                          label={option.inputLabel}
-                          checked={handelSelectOption(option.inputLabel, option.id)}
-                          onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel, option.id)}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                </Grid>
-              ))}
-
-              {otherHazards.map((value, index) => (
-                <>
-                  <Grid
-                    item
-                    md={6}
-                    xs={11}
-                    className={classes.createHazardbox}
-                  >
-                    <TextField
-                      label="Other Hazards"
-                      margin="dense"
-                      name="otherhazards"
-                      id="otherhazards"
-                      fullWidth
-                      variant="outlined"
-                      value={otherHazards[index].hazard || ""}
-                      className={classes.formControl}
-                      onChange={(e) => handleOtherHazards(e, index)}
-                    />
-
-                  </Grid>
-                  {otherHazards.length > 1 ?
-                    <Grid item md={1} className={classes.createHazardbox}>
-                      <IconButton
-                        variant="contained"
-                        color="primary"
-                        onClick={(e) => handelOtherRemove(e, index)}
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                      <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className={classes.formBox}
                       >
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </Grid>
-                    : null}
-                </>
-              ))}
+                        <TextField
+                          label="Work Location*"
+                          // margin="dense"
+                          name="worklocation"
+                          id="worklocation"
+                          value={form.location ? form.location : ""}
+                          error={error.location}
+                          helperText={error.location ? error.location : ""}
+                          fullWidth
+                          onChange={(e) => setForm({ ...form, location: e.target.value })}
+                          variant="outlined"
+                          className={classes.formControl}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className={classes.formBox}
+                      >
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                          <KeyboardDateTimePicker
+                            className={classes.formControl}
+                            // margin="dense"
+                            fullWidth
+                            label="Date & Time*"
+                            value={selectedDate}
+                            // onChange={handleDateChange}
+                            value={form.assessmentDate ? form.assessmentDate :null}
+                            error={error.assessmentDate}
+                            helperText={error.assessmentDate ? error.assessmentDate : null}
+                            inputVariant="outlined"
+                            disableFuture="true"
+                            onClick={(e) => setIsDateShow(true)}
+                            open={isDateShow}
+                            onClose={(e) => handelClose()}
+                            onChange={(e) => {
+                              setForm({
+                                ...form,
+                                assessmentDate: moment(e).format("YYYY-MM-DD hh:mm a"),
+                              });
+                              // console.log(e.target.value)
+                            }}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </MuiPickersUtilsProvider>
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                        className={classes.formBox}
+                      >
+                        <FormControl component="fieldset" error={
+                          error && error["permitToPerform"]
+                        }>
+                          <FormLabel component="legend" className={classes.labelName} >Confirm if AHA required for permit?*</FormLabel>
+                          <RadioGroup row aria-label="gender" name="gender1"
+                            onChange={(e) => {
+                              { setForm({ ...form, permitToPerform: e.target.value }) };
+                            }}
+                            value={form.permitToPerform ? form.permitToPerform : ""}>
+                            {radioDecide.map((value) => (
+                              <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
+                            ))}
+                          </RadioGroup>
+                          {error && error["permitToPerform"] && (
+                            <FormHelperText>
+                              {error["permitToPerform"]}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                      </Grid>
+                      <Grid item md={6} sm={12} xs={12}>
+                        <FormControl
+                          variant="outlined"
+                          requirement
+                          className={classes.formControl}
+                        >
+                          <InputLabel id="demo-simple-select-label">
+                            Type of permit
+                          </InputLabel>
+                          <Select
+                            label="Type of permit"
+                            value={form.typeOfPermit ? form.typeOfPermit : ""}
+                          >
+                            {permitType.current.map(
+                              (value) => (
+                                <MenuItem
+                                  value={value.label}
+                                  onClick={(e) => {setForm({...form,typeOfPermit:value.label})}}
+                                >
+                                  {value.label}
+                                </MenuItem>
+                              )
+                            )}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className={classes.formBox}
+                      >
+                        <TextField
+                          label="Permit Reference"
+                          // margin="dense"
+                          name="reference"
+                          id="reference"
+                          multiline
+                          value={form.permitNumber ? form.permitNumber : ""}
+                          fullWidth
+                          onChange={(e) => {
+                            { setForm({ ...form, permitNumber: e.target.value }) };
+                          }}
+                          variant="outlined"
+                          className={classes.formControl}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                        className={classes.formBox}
+                      >
+                        <TextField
+                          label="Description*"
+                          // margin="dense"
+                          name="description"
+                          id="description"
+                          multiline
+                          error={error.description}
+                          helperText={error.description ? error.description : ""}
+                          rows={4}
+                          value={form.description ? form.description : ""}
+                          fullWidth
+                          onChange={(e) => {
+                            { setForm({ ...form, description: e.target.value }) };
+                          }}
+                          variant="outlined"
+                          className={classes.formControl}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        md={12}
+                        xs={12}
+                        className={classes.createHazardbox}
+                        style={{ marginTop: '12px' }}
+                      >
+                        <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
+                      </Grid>
+                      {Teamform.map((value, index) => (<>
+                        <Grid
+                          item
+                          md={6}
+                          xs={11}
+                          className={classes.createHazardbox}
+                        >
 
-              <Grid item md={12} className={classes.createHazardbox}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<AddCircleIcon />}
-                  className={classes.button}
-                  onClick={() => { handleOtherAdd() }}
-                >
-                  Add new
-                </Button>
-              </Grid>
-              </Grid>
-              </Paper>
-              </Grid>
-              
-              
+                          <TextField
+                            label="Team Name"
+                            // margin="dense"
+                            name="arename"
+                            id="arename"
+                            multiline
+                            value={Teamform[index].teamName || ""}
+                            fullWidth
+                            variant="outlined"
+                            className={classes.formControl}
+                            onChange={(e) => { handleTeamName(e, index) }
+                            }
+                          />
+
+
+                        </Grid>
+                        {Teamform.length > 1 ?
+                          (<Grid item md={1} className={classes.createHazardbox}>
+                            <IconButton
+                              variant="contained"
+                              color="primary"
+                              onClick={(e) => { handelRemove(e, index) }}
+                            >
+                              <DeleteForeverIcon />
+                            </IconButton>
+                          </Grid>) : null}
+
+                      </>))}
+                      <Grid item md={12} className={classes.createHazardbox}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          startIcon={<AddCircleIcon />}
+                          className="marginT0"
+                          onClick={() => { handleAdd() }}
+                        >
+                          Add new
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Typography variant="h6" className="sectionHeading">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32.665" height="25.557" viewBox="0 0 32.665 25.557">
+                      <g id="placeholder-on-map-paper-in-perspective-svgrepo-com" transform="translate(0.001 -66.585)">
+                        <path id="Path_5201" data-name="Path 5201" d="M27.557,81.046l5.03,10.332a.49.49,0,0,1-.478.764H.555a.49.49,0,0,1-.478-.764l5.03-10.332a.583.583,0,0,1,.478-.3H9.9a.6.6,0,0,1,.4.184c.293.338.591.668.888,1,.282.31.566.625.847.947H6.914a.582.582,0,0,0-.478.3L3.1,90.017H29.56l-3.332-6.845a.582.582,0,0,0-.478-.3h-5.13c.281-.322.565-.636.848-.947.3-.328.6-.658.891-1a.6.6,0,0,1,.4-.183H27.08A.582.582,0,0,1,27.557,81.046Zm-3.831-7.061c0,5.646-4.7,6.7-6.91,12.13a.528.528,0,0,1-.98,0c-1.994-4.892-6.012-6.233-6.781-10.591a7.561,7.561,0,0,1,6.551-8.9A7.4,7.4,0,0,1,23.726,73.985Zm-3.492,0a3.908,3.908,0,1,0-3.908,3.908A3.908,3.908,0,0,0,20.234,73.985Z" transform="translate(0)" fill="#06425c"/>
+                      </g>
+                    </svg> Area hazard
+                  </Typography>
+                </Grid>
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                    {Object.entries(checkGroups).map(([key, value]) => (
+                        <Grid item md={6}
+                          xs={12}
+                          className={classes.formBox}>
+                          <FormControl component="fieldset">
+                            <FormLabel component="checkRadioLabel">{key}</FormLabel>
+                            <FormGroup>
+                              {value.map((option) => (
+                                <FormControlLabel
+                                  control={<Checkbox name={option.inputLabel} />}
+                                  label={option.inputLabel}
+                                  checked={handelSelectOption(option.inputLabel, option.id)}
+                                  onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel, option.id)}
+                                />
+                              ))}
+                            </FormGroup>
+                          </FormControl>
+                        </Grid>
+                      ))}
+
+                      {otherHazards.map((value, index) => (
+                        <>
+                          <Grid
+                            item
+                            md={6}
+                            xs={11}
+                            className={classes.createHazardbox}
+                          >
+                            <TextField
+                              label="Other Hazards"
+                              margin="dense"
+                              name="otherhazards"
+                              id="otherhazards"
+                              fullWidth
+                              variant="outlined"
+                              value={otherHazards[index].hazard || ""}
+                              className={classes.formControl}
+                              onChange={(e) => handleOtherHazards(e, index)}
+                            />
+
+                          </Grid>
+                          {otherHazards.length > 1 ?
+                            <Grid item md={1} className={classes.createHazardbox}>
+                              <IconButton
+                                variant="contained"
+                                color="primary"
+                                onClick={(e) => handelOtherRemove(e, index)}
+                              >
+                                <DeleteForeverIcon />
+                              </IconButton>
+                            </Grid>
+                            : null}
+                        </>
+                      ))}
+
+                      <Grid item md={12} className={classes.createHazardbox}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          startIcon={<AddCircleIcon />}
+                          className={classes.button}
+                          onClick={() => { handleOtherAdd() }}
+                        >
+                          Add new
+                        </Button>
+                      </Grid>
+                      </Grid>
+                      </Paper>
+                </Grid>
             </Grid>
+
             <Grid item xs={12} md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}
@@ -1095,41 +1094,41 @@ const ProjectDetails = () => {
               />
             </Grid>
 
-            
-              <Grid
-                item
-                md={12}
-                xs={12}
-                style={{ marginTop: '15px' }}
-              >
-                            <div className={classes.loadingWrapper}>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              style={{ marginTop: '15px' }}
+            >
+              <div className={classes.loadingWrapper}>
+                <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
+                  onClick={(e) => handleSubmit()}
+                  className="spacerRight buttonStyle"
+                  color="primary"
+                  style={{ marginLeft: "10px" }}
+                  disabled={loading}
+                >
+                  Next
+                </Button>
+                {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+              </div>
+              <Button 
+                size="medium"  
+                variant="contained"
+                color="secondary" 
+                className="buttonStyle custmCancelBtn" 
+                onClick={(e) => history.goBack()}
+                >
+                Cancel
+              </Button> 
+            </Grid>
 
-                  <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
-                    onClick={(e) => handleSubmit()}
-                    className="spacerRight buttonStyle"
-                    color="primary"
-                    style={{ marginLeft: "10px" }}
-                    disabled={loading}
-                  >
-
-                    Next
-                  </Button>
-                  {loading && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-                </div>
-
-                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={(e) => history.goBack()}>
-            Cancel
-          </Button>
-                  
-              </Grid>
           </Grid>
-
-          
            : <> loading...</>}
           </CustomPapperBlock>
     </>
