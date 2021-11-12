@@ -404,6 +404,12 @@ const EqiptmentAffected = () => {
                           onChange={(e) =>
                             handleForm(e, key, "equipmentOtherType")
                           }
+                          error={error && error[`equipmentOtherType${[key]}`]}
+                          helperText={
+                            error && error[`equipmentOtherType${[key]}`]
+                              ? error[`equipmentOtherType${[key]}`]
+                              : null
+                          }
                         />
                       </Grid>
 

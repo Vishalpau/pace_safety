@@ -868,7 +868,7 @@ const Summary = (props) => {
                         <ListItemText primary="Close Out" />
                       </ListItem>
 
-                      <ListItem
+                      {/* <ListItem
                         href="/#comment"
                         onClick={(e) => handleComments()}
                         button
@@ -877,17 +877,17 @@ const Summary = (props) => {
                           <Comment />
                         </ListItemIcon>
                         <ListItemText primary="Comments" />
-                      </ListItem>
+                      </ListItem> */}
 
-                      <ListItem href="/#activity" button onClick={() => handleActivityHistory()}>
+                      {/* <ListItem href="/#activity" button onClick={() => handleActivityHistory()}>
                         <ListItemIcon>
                           <History />
                         </ListItemIcon>
                         <ListItemText primary="Activity History" />
-                      </ListItem>
+                      </ListItem> */}
                     </List>
-                    <Divider />
-                    <List dense>
+                    {/* <Divider /> */}
+                    {/* <List dense>
                       <ListItem button>
                         <ListItemIcon>
                           <Print />
@@ -895,7 +895,7 @@ const Summary = (props) => {
                         <ListItemText primary="Print" />
                       </ListItem>
 
-                    </List>
+                    </List> */}
                   </Paper>
                 </Grid>
               )}
