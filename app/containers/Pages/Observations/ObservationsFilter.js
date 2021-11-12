@@ -241,7 +241,7 @@ class ObservationsFilter extends React.Component {
     button: true,
     type: "Type",
   };
-  componentDidMount() {}
+  componentDidMount() { }
   // props = {
   //   observations: props.observations,
   // }
@@ -281,83 +281,83 @@ class ObservationsFilter extends React.Component {
     const drawer = (
       <div className="catDrawerSection">
 
-      <Drawer
-        variant="persistent"
-        anchor={anchor}
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton
-            onClick={this.handleDrawerClose}
-            classNames={classes.floatR}
-          >
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-          <Typography variant="h5" classNames={classes.floatL}>
-            {this.state.type ? this.state.type : "All"}
-          </Typography>
-        </div>
-        <Divider />
-        {/* <List className={classes.drawerList}>{MenuData}</List> */}
-        <List
-          component="nav"
-          aria-labelledby="nested-list-subheader"
-          className={classes.root_type}
+        <Drawer
+          variant="persistent"
+          anchor={anchor}
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
         >
-          <ListItem
-            button
-            className={
-              this.state.type === "All" || this.state.type === "Type"
-                ? classes.selected
-                : classes.nested
-            }
-            onClick={(e) => this.handleType("All")}
+          <div className={classes.drawerHeader}>
+            <IconButton
+              onClick={this.handleDrawerClose}
+              classNames={classes.floatR}
+            >
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+            <Typography variant="h5" classNames={classes.floatL}>
+              {this.state.type ? this.state.type : "All"}
+            </Typography>
+          </div>
+          <Divider />
+          {/* <List className={classes.drawerList}>{MenuData}</List> */}
+          <List
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+            className={classes.root_type}
           >
-            <ListItemText primary="All" />
-          </ListItem>
-          <ListItem
-            button
-            className={
-              this.state.type === "Risk" ? classes.selected : classes.nested
-            }
-            onClick={(e) => this.handleType("Risk")}
-          >
-            <ListItemText primary="Risk" />
-          </ListItem>
-          <ListItem
-            button
-            className={
-              this.state.type === "Comments" ? classes.selected : classes.nested
-            }
-            onClick={(e) => this.handleType("Comments")}
-          >
-            <ListItemText primary="Comments" />
-          </ListItem>
-          <ListItem
-            button
-            className={
-              this.state.type === "Positive behavior"
-                ? classes.selected
-                : classes.nested
-            }
-            onClick={(e) => this.handleType("Positive behaviour")}
-          >
-            <ListItemText primary="Positive behaviour" />
-          </ListItem>
-          {/* <ListItem button className={classes.nested}>
+            <ListItem
+              button
+              className={
+                this.state.type === "All" || this.state.type === "Type"
+                  ? classes.selected
+                  : classes.nested
+              }
+              onClick={(e) => this.handleType("All")}
+            >
+              <ListItemText primary="All" />
+            </ListItem>
+            <ListItem
+              button
+              className={
+                this.state.type === "Risk" ? classes.selected : classes.nested
+              }
+              onClick={(e) => this.handleType("Risk")}
+            >
+              <ListItemText primary="Risk" />
+            </ListItem>
+            <ListItem
+              button
+              className={
+                this.state.type === "Comments" ? classes.selected : classes.nested
+              }
+              onClick={(e) => this.handleType("Comments")}
+            >
+              <ListItemText primary="Comments" />
+            </ListItem>
+            <ListItem
+              button
+              className={
+                this.state.type === "Positive behavior"
+                  ? classes.selected
+                  : classes.nested
+              }
+              onClick={(e) => this.handleType("Positive behaviour")}
+            >
+              <ListItemText primary="Positive behaviour" />
+            </ListItem>
+            {/* <ListItem button className={classes.nested}>
         <ListItemText primary="Staff Commission" />
       </ListItem>
       <ListItem button className={classes.nested}>
         <ListItemText primary="Staff Commission" />
       </ListItem> */}
-          {/* <ListItem button onClick={handleClick}  className={classes.selected}>
+            {/* <ListItem button onClick={handleClick}  className={classes.selected}>
         <ListItemText primary="Staff Commission" />
         {open ? <RemoveIcon /> : <AddIcon />}
       </ListItem>
@@ -378,10 +378,10 @@ class ObservationsFilter extends React.Component {
           </ListItem>
         </List>
       </Collapse> */}
-        </List>
-        {/* <MenuData /> */}
-      </Drawer>
-      </div> 
+          </List>
+          {/* <MenuData /> */}
+        </Drawer>
+      </div>
     );
 
     const menuBtn = (
@@ -410,94 +410,94 @@ class ObservationsFilter extends React.Component {
 
     return (
       <div className={classes.root}>
-      {this.props.value === 0 && 
-        <div className={classes.appFrame}>
-          <AppBar
-            className={classNames(classes.appBar, classes.MuiAppBarColor, {
-              [classes.appBarShift]: open,
-              [classes[`appBarShift-${anchor}`]]: open,
-            })}
-          >
-            <Toolbar disableGutters className={classes.MuiAppBarColor}>
-              {beforeBtn}
-              <Typography
-                className={classes.title}
-                variant="h5"
-                color="inherit"
-                noWrap
-              >
-                {this.props.observation === "My Observations" ? "My iCares" : "All iCares"}
-              </Typography>
-
-              <Typography
-                className={classes.textRight}
-                variant="h6"
-                color="inherit"
-                noWrap
-              />
-
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.catButton}
-                onClick={() => {
-                  this.handleClickButton();
-                }}
-              >
-                {!this.state.open && (
-                  <Typography variant="h5">
-                    {this.state.type ? this.state.type : "Type"}
-                  </Typography>
-                )}
-                {afterBtn}
-              </Button>
-            </Toolbar>
-          </AppBar>
-          {before}
-          <main
-            className={classNames(
-              classes.content,
-              classes.padd0,
-              classes[`content-${anchor}`],
-              {
-                [classes.contentShift]: open,
-                [classes[`contentShift-${anchor}`]]: open,
-              }
-            )}
-          >
-            <div className={classes.drawerHeader} />
-            <ObservationsPackage
-              type={this.state.type}
-              observation={this.props.observation}
-              searchIncident={this.props.search}
-              status={this.props.status}
-            />
-          </main>
-          {after}
-        </div> }
-        {this.props.value === 1 && 
+        {this.props.value === 0 &&
           <div className={classes.appFrame}>
-          
-          <main
-            className={classNames(
-              classes.content,
-              classes.padd0,
-              classes[`content-${anchor}`],
-              {
-                [classes.contentShift]: open,
-                [classes[`contentShift-${anchor}`]]: open,
-              }
-            )}
-          >
-            <ObservationsList 
-              observation={this.props.observation}
-              searchIncident={this.props.search}
-              status={this.props.status}
-            />
-          </main>
-          {after}
-        </div>
-          
+            <AppBar
+              className={classNames(classes.appBar, classes.MuiAppBarColor, {
+                [classes.appBarShift]: open,
+                [classes[`appBarShift-${anchor}`]]: open,
+              })}
+            >
+              <Toolbar disableGutters className={classes.MuiAppBarColor}>
+                {beforeBtn}
+                <Typography
+                  className={classes.title}
+                  variant="h5"
+                  color="inherit"
+                  noWrap
+                >
+                  {this.props.observation === "My Observations" ? "My Observations" : "All Observations"}
+                </Typography>
+
+                <Typography
+                  className={classes.textRight}
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                />
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.catButton}
+                  onClick={() => {
+                    this.handleClickButton();
+                  }}
+                >
+                  {!this.state.open && (
+                    <Typography variant="h5">
+                      {this.state.type ? this.state.type : "Type"}
+                    </Typography>
+                  )}
+                  {afterBtn}
+                </Button>
+              </Toolbar>
+            </AppBar>
+            {before}
+            <main
+              className={classNames(
+                classes.content,
+                classes.padd0,
+                classes[`content-${anchor}`],
+                {
+                  [classes.contentShift]: open,
+                  [classes[`contentShift-${anchor}`]]: open,
+                }
+              )}
+            >
+              <div className={classes.drawerHeader} />
+              <ObservationsPackage
+                type={this.state.type}
+                observation={this.props.observation}
+                searchIncident={this.props.search}
+                status={this.props.status}
+              />
+            </main>
+            {after}
+          </div>}
+        {this.props.value === 1 &&
+          <div className={classes.appFrame}>
+
+            <main
+              className={classNames(
+                classes.content,
+                classes.padd0,
+                classes[`content-${anchor}`],
+                {
+                  [classes.contentShift]: open,
+                  [classes[`contentShift-${anchor}`]]: open,
+                }
+              )}
+            >
+              <ObservationsList
+                observation={this.props.observation}
+                searchIncident={this.props.search}
+                status={this.props.status}
+              />
+            </main>
+            {after}
+          </div>
+
         }
       </div>
     );

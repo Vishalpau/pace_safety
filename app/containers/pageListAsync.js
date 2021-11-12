@@ -707,7 +707,7 @@ export const Comments = loadable(() => import("./Comments/Comments"), {
 
 // Jha
 
-export const Jha = loadable(() => import("./Pages/Jha/JhaMain"), {
+export const Jha = loadable(() => import("./Pages/Jha/Jha"), {
   fallback: <Loading />,
 });
 
