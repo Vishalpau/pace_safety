@@ -478,7 +478,7 @@ for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
-  if(props.observation === "My Observations"){
+  if(props.assessments === "My Assessments"){
     const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
 
     const result = res.data.data.results.results
@@ -519,7 +519,7 @@ for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
-if(props.observation === "My Observations"){
+if(props.observation === "My Assessments"){
   const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
@@ -539,7 +539,7 @@ const classes = useStyles();
 useEffect(() => {
   fetchAllAHAData()
   // handleProjectList()
-},[props.projectName.breakDown,props.search,props.observation])
+},[props.projectName.breakDown,props.search,props.assessments])
 
 
   return (
@@ -588,7 +588,7 @@ useEffect(() => {
                                 <span className={classes.listingLabelValue}>{item[1]["ahaNumber"]}</span>
                                 </Link></span>
                               </Typography>
-                              {/* <span item xs={1} className={classes.sepHeightOne}></span>
+                              <span item xs={1} className={classes.sepHeightOne}></span>
                               <Typography
                                 variant="body1"
                                 gutterBottom
@@ -597,7 +597,7 @@ useEffect(() => {
                                 className={classes.listingLabelName}
                               >
                                 Category: <span className={classes.listingLabelValue}>AHA</span>
-                              </Typography> */}
+                              </Typography>
                               <span item xs={1} className={classes.sepHeightOne}></span>
                               <Typography
                                 variant="body1"

@@ -372,7 +372,7 @@ export default function SimpleTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const[searchIncident,setSeacrhIncident] = React.useState('');
-  const [observation, setObservation] = useState("My Observations");
+  const [assessments, setAssessments] = useState("My Assessments");
   // const [searchIncident, setSeacrhIncident] = useState("")
   const [status, setStatus] = useState('')
   const handleSearch = (e) => {
@@ -382,10 +382,10 @@ export default function SimpleTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if(newValue === 0){
-      setObservation("My Observations")
+      setAssessments("My Assessments")
       setStatus('')
     }else if(newValue === 1){
-      setObservation("Big Picture")
+      setAssessments("Big Picture")
       setStatus('')
     }
   };
@@ -434,13 +434,13 @@ export default function SimpleTabs() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <AhaFilter search={searchIncident} observation={observation} />
+			  <AhaFilter search={searchIncident} assessments={assessments} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			  <AhaFilter search={searchIncident} observation={observation} />
+			  <AhaFilter search={searchIncident} assessments={assessments} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			  <AhaFilter search={searchIncident} observation={observation} />
+			  <AhaFilter search={searchIncident} assessments={assessments} />
 		  </TabPanel>
 		  <TabPanel value={value} index={3}>
 			  <AhaBookmarkFilter />

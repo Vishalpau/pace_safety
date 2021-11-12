@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, Component , useRef} from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
@@ -32,7 +32,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
-
+import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import axios from "axios";
 import api from "../../../../utils/axios";
 import Paper from '@material-ui/core/Paper';
@@ -212,7 +212,7 @@ const ProjectDetails = () => {
   const [checkGroups, setCheckListGroups] = useState([])
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
-  const permitType = ["Permit 1" , "Permit 2" , "Permit 3" , "Permit 4"]
+  const permitType = useRef()
 
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -682,11 +682,17 @@ const ProjectDetails = () => {
     })
   }
 
+  const pickListValue = async () => {
+    permitType.current = await PickListData(81)
+   
+  }
+
   const classes = useStyles();
 
   useEffect(() => {
     fetchCallBack()
     checkList()
+    pickListValue()
     if(id){
     fetchAhaData()
     fetchTeamData()
@@ -877,13 +883,13 @@ const ProjectDetails = () => {
                                 label="Type of permit"
                                 value={form.typeOfPermit ? form.typeOfPermit : ""}
                               >
-                                {permitType.map(
+                                {permitType.current.map(
                                   (value) => (
                                     <MenuItem
-                                      value={value}
-                                      onClick={(e) => {setForm({...form,typeOfPermit:value})}}
+                                      value={value.label}
+                                      onClick={(e) => {setForm({...form,typeOfPermit:value.labelValue})}}
                                     >
-                                      {value}
+                                      {value.label}
                                     </MenuItem>
                                   )
                                 )}
@@ -996,18 +1002,8 @@ const ProjectDetails = () => {
 
               </Paper>
               </Grid>
-              
-              
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormSideBar
-                deleteForm={[1, 2, 3]}
-                listOfItems={AHA}
-                selectedItem="Project Details"
-              />
-            </Grid>
 
-            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
             <svg xmlns="http://www.w3.org/2000/svg" width="32.665" height="25.557" viewBox="0 0 32.665 25.557">
               <g id="placeholder-on-map-paper-in-perspective-svgrepo-com" transform="translate(0.001 -66.585)">
@@ -1088,6 +1084,18 @@ const ProjectDetails = () => {
               </Grid>
               </Paper>
               </Grid>
+              
+              
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={AHA}
+                selectedItem="Project Details"
+              />
+            </Grid>
+
+            
               <Grid
                 item
                 md={12}

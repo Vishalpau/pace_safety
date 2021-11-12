@@ -332,7 +332,7 @@ class AhaFilter extends React.Component {
               <Grid container spacing={3}>
               <Grid item md={8} sm={12} xs={12} className={classes.packageTitleBox}>
                 <Typography className={classes.title} variant="h5" color="inherit" noWrap>
-                  My Assessments
+                {this.props.assessments === "My Assessments" ? "My Assessments" : "All Assessments"}
                 </Typography>
               </Grid>
 
@@ -362,7 +362,7 @@ class AhaFilter extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <AhaPackage search={this.props.search} observation={this.props.observation} />
+            <AhaPackage search={this.props.search} assessments={this.props.assessments} />
           </main>
           {after}
         </div>
