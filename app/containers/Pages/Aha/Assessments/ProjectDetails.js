@@ -51,6 +51,7 @@ import {
   SSO_URL,
 } from "../../../../utils/constants";
 import ProjectAreaHazards from "./ProjectAreaHazards"
+import Loader from "../../Loader"
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -522,7 +523,6 @@ const ProjectDetails = () => {
                 selectValue: ""
               },
             ]);
-            setIsLoading(true);
           })
           .catch(function (error) {
             console.log(error);
@@ -1129,7 +1129,7 @@ const ProjectDetails = () => {
             </Grid>
 
           </Grid>
-           : <> loading...</>}
+           : <Loader/>}
           </CustomPapperBlock>
     </>
     

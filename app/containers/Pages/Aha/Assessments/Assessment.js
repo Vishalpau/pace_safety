@@ -46,6 +46,7 @@ import api from "../../../../utils/axios";
 
 import { AHA } from "../constants";
 import { keySeq } from "draft-js/lib/DefaultDraftBlockRenderMap";
+import Loader from "../../Loader"
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -1068,7 +1069,7 @@ const Assessment = () => {
               />
             </Grid>
           </Grid>
-          </>) : (<h1>Loading...</h1>)}
+          </>) : (<Loader/>)}
       </CustomPapperBlock>
     </>
   );
