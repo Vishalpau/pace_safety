@@ -1,4 +1,4 @@
-import React, { lazy,Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import NotFound from "containers/Pages/Standalone/NotFoundDedicated";
 import Auth from "./Auth";
@@ -69,7 +69,7 @@ function App() {
   }, [status])
   const getToken = async () => {
     const url = window.location
-    
+
 
     let comId = 0
     let proId = 0
@@ -85,16 +85,16 @@ function App() {
       if (state) {
         jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
         let newArr = (0, eval)('(' + jsonCode + ')')
-        
+
         state = newArr;
-        
+
         comId = state.companyId;
         proId = state.projectId;
         redback = state.redirect_back;
         tarPage = state.targetPage.trim();
         tarId = state.targetId;
-        if(comId!==""){
-        localStorage.setItem("direct_loading",JSON.stringify({comId:comId,proId:proId,tarPage:tarPage}))
+        if (comId !== "") {
+          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage }))
         }
       }
     }
@@ -104,7 +104,7 @@ function App() {
     // const targetId = searchParams.get("targetId");
     const companyId = searchParams.get("companyId") || comId;
     const projectId = searchParams.get('projectId') || proId
-    
+
     let data = {}
     if (code) {
       if (window.location.hostname === 'localhost') {
@@ -168,26 +168,26 @@ function App() {
 
   }, []);
 
-    return (<Suspense fallback={<Loading/>}>
-      <ThemeWrapper>
-        <Online>
-          {localStorage.getItem("access_token") !== null ? (
-            <Switch>
-              <Route path="/app" exact component={LandingCorporate} />
-              <Route path="/landing-creative" exact component={LandingCreative} />
-              <Route path="/" component={Application} />
-              
-              <Route path="/blog" component={ArticleNews} />
-              <Route component={Auth} />
-              <Route component={NotFound} />
-            </Switch>
-          ) : <Loading/>}
-        </Online>
-        <Offline>Turn on internet</Offline> 
-      </ThemeWrapper>
-      </Suspense>
-    ); 
-  
+  return (<Suspense fallback={<Loading />}>
+    <ThemeWrapper>
+      {/* <Online> */}
+      {localStorage.getItem("access_token") !== null ? (
+        <Switch>
+          <Route path="/app" exact component={LandingCorporate} />
+          <Route path="/landing-creative" exact component={LandingCreative} />
+          <Route path="/" component={Application} />
+
+          <Route path="/blog" component={ArticleNews} />
+          <Route component={Auth} />
+          <Route component={NotFound} />
+        </Switch>
+      ) : <Loading />}
+      {/* </Online>
+        <Offline>Turn on internet</Offline>  */}
+    </ThemeWrapper>
+  </Suspense>
+  );
+
 
 }
 

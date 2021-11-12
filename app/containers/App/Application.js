@@ -520,6 +520,7 @@ function Application(props) {
         <Route path="/app/icare/comments/:id" component={Comments} />
 
         <Route exact path="/app/icare" component={Observations} />
+        <Route exact path="/app/observations" component={Observations} />
         <Route exact path="/icare" component={Observations} />
         <Route path="/app/icare#table" component={Observations} />
         <Route exact path="/app/icare-corrective-action" component={ObservationCorrectiveAction} />
