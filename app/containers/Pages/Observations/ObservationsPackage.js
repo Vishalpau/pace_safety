@@ -916,7 +916,7 @@ const handleCommentsClose = () => {
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
                                           <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className="listingLabelValue statusColor_complete">{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
+                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
                                         </Typography>
 
                                         </Grid>
