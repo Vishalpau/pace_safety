@@ -149,6 +149,7 @@ import {
   Jha,
   JhaSummary,
   JhaJobDetails,
+  JhaJobDetailHazard,
   JhaProjectAreaHazards,
   JhaAssessment,
   JhaDocumentNotification,
@@ -560,6 +561,7 @@ function Application(props) {
         <Route path="/app/pages/jha/all_jha" component={Jha} />
         <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
         <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
+        <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
         <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
         <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
         <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />

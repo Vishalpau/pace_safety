@@ -723,6 +723,11 @@ export const JhaProjectAreaHazards = loadable(() => import("./Pages/Jha/Assessme
   fallback: <Loading />,
 });
 
+export const JhaJobDetailHazard = loadable(() => import("./Pages/Jha/Assessments/JobDetailHazard"), {
+  fallback: <Loading />,
+});
+
+
 export const JhaAssessment = loadable(() => import("./Pages/Jha/Assessments/Assessment"), {
   fallback: <Loading />,
 });

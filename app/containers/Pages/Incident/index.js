@@ -743,8 +743,6 @@ function BlankPage(props) {
             ])}
             columns={columns}
             options={options}
-
-
           />
         </div>
       )}

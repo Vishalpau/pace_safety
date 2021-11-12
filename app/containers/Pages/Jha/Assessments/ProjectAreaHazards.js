@@ -15,12 +15,12 @@ import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
-
-import JhaDetailsInit from "./JobDetails"
 import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { handelJhaId } from "../Utils/checkValue";
 import { JHA_FORM } from "../Utils/constants";
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -122,11 +122,11 @@ const useStyles = makeStyles((theme) => ({
 
 const ProjectAreaHazards = () => {
 
-  const [form, setForm] = useState([])
+  const [formHazard, setFormHazard] = useState([])
   const [checkGroups, setCheckListGroups] = useState([])
   const [selectedOptions, setSelectedOption] = useState({})
-  const [fetchOption, setFetchedOptions] = useState([])
-  const [submitLoader, setSubmitLoader] = useState(false)
+  const [fetchOptionHazard, setFetchedOptionsHazard] = useState([])
+  const [submitLoaderHazard, setSubmitLoaderHazard] = useState(false)
   const [otherHazards, setOtherHazards] = useState([
     {
       "hazard": "",
@@ -138,38 +138,36 @@ const ProjectAreaHazards = () => {
       "fkJhaId": localStorage.getItem("fkJHAId")
     }
   ])
-  const [loading, setLoading] = useState(false)
-  const history = useHistory()
+  const [loadingHazard, setLoadingHazard] = useState(false)
+  // const history = useHistory()
 
-  const handelUpdate = async () => {
+  const handelUpdateHazard = async () => {
     const temp = {}
     const otherNoId = []
     const tempForm = []
     const jhaId = handelJhaId()
-    if (jhaId !== null) {
-      const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-      const apiData = res.data.data.results
-      apiData.map((value) => {
-        if (value.fkChecklistId !== 0) {
-          tempForm.push(value)
-        } else {
-          otherNoId.push(value)
-        }
-      })
-      setForm(tempForm)
-      if (otherNoId.length > 0) {
-        setOtherHazards(otherNoId)
+    const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+    const apiData = res.data.data.results
+    apiData.map((value) => {
+      if (value.fkChecklistId !== 0) {
+        tempForm.push(value)
+      } else {
+        otherNoId.push(value)
       }
-      setFetchedOptions(apiData)
-      apiData.map((value) => {
-        if (value.hazard in temp) {
-          temp[value.hazard].push(value.risk)
-        } else {
-          temp[value.hazard] = [value.risk]
-        }
-      })
-      setSelectedOption(temp)
+    })
+    setFormHazard(tempForm)
+    if (otherNoId.length > 0) {
+      setOtherHazards(otherNoId)
     }
+    setFetchedOptionsHazard(apiData)
+    apiData.map((value) => {
+      if (value.hazard in temp) {
+        temp[value.hazard].push(value.risk)
+      } else {
+        temp[value.hazard] = [value.risk]
+      }
+    })
+    setSelectedOption(temp)
   }
 
   const checkList = async () => {
@@ -193,7 +191,7 @@ const ProjectAreaHazards = () => {
     setCheckListGroups(temp)
   }
 
-  const handleAdd = (e) => {
+  const handleAddHazard = (e) => {
     if (Object.keys(otherHazards).length < 100) {
       setOtherHazards([...otherHazards, {
         "hazard": "",
@@ -207,7 +205,7 @@ const ProjectAreaHazards = () => {
     }
   };
 
-  const handelRemove = async (e, index) => {
+  const handelRemoveHazard = async (e, index) => {
     if (otherHazards.length > 1) {
       let temp = otherHazards;
       let newData = otherHazards.filter((item, key) => key !== index);
@@ -223,12 +221,12 @@ const ProjectAreaHazards = () => {
   };
 
   const handlePhysicalHazards = async (e, checkListId, hazard_value) => {
-    let temp = [...form]
+    let temp = [...formHazard]
     if (e.target.checked == false) {
       temp.map((jhaValue, index) => {
         if (jhaValue['fkChecklistId'] === checkListId) {
           temp.splice(index, 1);
-          fetchOption.splice(index, 1);
+          fetchOptionHazard.splice(index, 1);
 
         }
       })
@@ -245,18 +243,18 @@ const ProjectAreaHazards = () => {
         "fkJhaId": localStorage.getItem("fkJHAId"),
       })
     }
-    await setForm(temp)
+    await setFormHazard(temp)
   };
 
   const handelSelectOption = (checklistId, hazard) => {
-    for (let i = 0; i <= form.length; i++) {
-      if (form[i] != undefined && form[i]["hazard"] == hazard && form[i]["fkChecklistId"] == checklistId) {
+    for (let i = 0; i <= formHazard.length; i++) {
+      if (formHazard[i] != undefined && formHazard[i]["hazard"] == hazard && formHazard[i]["fkChecklistId"] == checklistId) {
         return true
       }
     }
   }
 
-  const handelNavigate = (navigateType) => {
+  const handelNavigateHazard = (navigateType) => {
     if (navigateType == "next") {
       history.push("/app/pages/Jha/assessments/assessment/")
     } else if (navigateType == "previous") {
@@ -264,17 +262,25 @@ const ProjectAreaHazards = () => {
     }
   }
 
-  const handelApiError = () => {
-    setSubmitLoader(false)
+  const handelCheckPost = (checklistId, hazard) => {
+    for (let i = 0; i <= fetchOptionHazard.length; i++) {
+      if (fetchOptionHazard[i] != undefined && fetchOptionHazard[i]["hazard"] == hazard && fetchOptionHazard[i]["fkChecklistId"] == checklistId) {
+        return true
+      }
+    }
+  }
+
+  const handelApiErrorHazard = () => {
+    setSubmitLoaderHazard(false)
     history.push("/app/pages/error")
   }
 
-  const handleSubmit = async (e) => {
-    setSubmitLoader(true)
+  const handleSubmitHazard = async (e) => {
+    setSubmitLoaderHazard(true)
 
     let hazardNew = []
     let hazardUpdate = []
-    let allHazard = [form, otherHazards]
+    let allHazard = [formHazard, otherHazards]
 
     allHazard.map((values, index) => {
       allHazard[index].map((value) => {
@@ -289,106 +295,144 @@ const ProjectAreaHazards = () => {
         }
       })
     })
-    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate).catch(() => handelApiError())
-    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew).catch(() => handelApiError())
-    handelNavigate("next")
-    setSubmitLoader(false)
+    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
+    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
+    handelNavigateHazard("next")
+    setSubmitLoaderHazard(false)
   }
 
-  const handelCallback = async () => {
-    await setLoading(true)
-    await handelUpdate()
+  const handelCallbackHazard = async () => {
+    await setLoadingHazard(true)
+    await handelUpdateHazard()
     await checkList()
-    await setLoading(false)
+    await setLoadingHazard(false)
   }
 
   useEffect(() => {
-    handelCallback()
+    handelCallbackHazard()
   }, [])
 
   const classes = useStyles();
   return (
-    // <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
-    // {loading == false ?
-
-
-    <Grid container spacing={3}>
-      {/* <JhaDetailsInit /> */}
-      {/* {console.log(form)} */}
-      {Object.entries(checkGroups).map(([key, value]) => (
-        <Grid item md={6}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">{key}</FormLabel>
-            <FormGroup>
-              {value.map((option) => (
-                <FormControlLabel
-                  control={<Checkbox name={option.inputLabel} />}
-                  label={option.inputLabel}
-                  checked={handelSelectOption(option.checkListId, option.inputLabel)}
-                  onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
-                />
+    <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
+      {loadingHazard == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              {/* {console.log(form)} */}
+              {Object.entries(checkGroups).map(([key, value]) => (
+                <Grid item md={6}>
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">{key}</FormLabel>
+                    <FormGroup>
+                      {value.map((option) => (
+                        <FormControlLabel
+                          control={<Checkbox name={option.inputLabel} />}
+                          label={option.inputLabel}
+                          checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                          onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                </Grid>
               ))}
-            </FormGroup>
-          </FormControl>
-        </Grid>
-      ))}
 
-      <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
-      </Grid>
+              <Grid item md={12} xs={12} className={classes.createHazardbox} style={{ marginTop: '12px' }}>
+                <Typography variant="h6" gutterBottom className={classes.labelName}>Other Hazards</Typography>
+              </Grid>
 
-      {otherHazards.map((value, index) => (
-        <>
-          <Grid
-            item
-            md={6}
-            xs={11}
-            className={classes.createHazardbox}
-          >
-            <TextField
-              label="Other Hazards"
-              margin="dense"
-              name="otherhazards"
-              id="otherhazards"
-              defaultValue=""
-              fullWidth
-              variant="outlined"
-              value={otherHazards[index].hazard || ""}
-              className={classes.formControl}
-              onChange={(e) => handleOtherHazards(e, index)}
-            />
+              {otherHazards.map((value, index) => (
+                <>
+                  <Grid
+                    item
+                    md={6}
+                    xs={11}
+                    className={classes.createHazardbox}
+                  >
+                    <TextField
+                      label="Other Hazards"
+                      margin="dense"
+                      name="otherhazards"
+                      id="otherhazards"
+                      defaultValue=""
+                      fullWidth
+                      variant="outlined"
+                      value={otherHazards[index].hazard || ""}
+                      className={classes.formControl}
+                      onChange={(e) => handleOtherHazards(e, index)}
+                    />
 
-          </Grid>
-          {otherHazards.length > 1 ?
-            <Grid item md={1} className={classes.createHazardbox}>
-              <IconButton
-                variant="contained"
-                color="primary"
-                onClick={(e) => handelRemove(e, index)}
+                  </Grid>
+                  {otherHazards.length > 1 ?
+                    <Grid item md={1} className={classes.createHazardbox}>
+                      <IconButton
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => handelRemoveHazard(e, index)}
+                      >
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </Grid>
+                    : null}
+                </>
+              ))}
+
+
+              <Grid item md={12} className={classes.createHazardbox}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddCircleIcon />}
+                  className={classes.button}
+                  onClick={(e) => handleAddHazard()}
+                >
+                  Add
+                </Button>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                alignItems="center"
               >
-                <DeleteForeverIcon />
-              </IconButton>
+                <Button
+                  variant="outlined"
+                  className={classes.custmSubmitBtn}
+                  onClick={(e) => handelNavigateHazard("previous")}
+                >
+                  Previous
+                </Button>
+                <div className={classes.loadingWrapper}>
+                  <Button
+                    variant="contained"
+                    onClick={(e) => handleSubmitHazard()}
+                    className={classes.custmSubmitBtn}
+                    style={{ marginLeft: "10px" }}
+                    disabled={submitLoaderHazard}
+                  >
+                    Next
+                  </Button>
+                  {submitLoaderHazard && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+              </Grid>
             </Grid>
-            : null}
-        </>
-      ))}
+          </Col>
+          <Col md={3}>
+            <FormSideBar
+              deleteForm={"hideArray"}
+              listOfItems={JHA_FORM}
+              selectedItem={"Project Area Hazards"}
+            />
+          </Col>
 
-
-      <Grid item md={12} className={classes.createHazardbox}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddCircleIcon />}
-          className={classes.button}
-          onClick={(e) => handleAdd()}
-        >
-          Add
-        </Button>
-      </Grid>
-
-    </Grid>
-    // : "Loading..."}
-    // </PapperBlock>
+        </Row>
+        : "Loading..."}
+    </PapperBlock>
   );
 };
 
