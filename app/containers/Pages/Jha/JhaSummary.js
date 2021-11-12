@@ -214,7 +214,7 @@ function JhaSummary() {
 
   const handleNewJhaPush = async () => {
     history.push(
-      "/app/pages/Jha/assessments/project-details/"
+      "/app/pages/jha/assessments/Job-hazards"
     );
   };
   const handleJhaApprovalsPush = async () => {

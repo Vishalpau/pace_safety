@@ -33,6 +33,9 @@ import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId
 import { handelJhaId } from "../Utils/checkValue";
 import { JHA_FORM_COMBINE } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
+
 
 
 
@@ -451,13 +454,13 @@ const JobDetails = (props) => {
         form["workArea"] = Array.isArray(workArea) ? workArea[0] : workArea
     }
 
-    const handelTeam = async () => {
+    const handelTeam = async (CreatedJhaId) => {
         for (let i = 0; i < Teamform.length; i++) {
-            let apiEndPoint = `/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams`
+            let apiEndPoint = `/api/v1/jhas/${CreatedJhaId}/teams`
             if (Teamform[i].id) {
                 const res = await api.put(`${apiEndPoint}/${Teamform[i].id}/`, Teamform[i]).then().catch(() => handelApiError())
             } else {
-                Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
+                Teamform[i]["fkJhaId"] = CreatedJhaId;
                 const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError())
                 if (res.status === 200) {
                     handelNavigate()
@@ -467,34 +470,35 @@ const JobDetails = (props) => {
     }
 
     const handleSubmit = async (e) => {
+        let newJhaId = ""
         const { error, isValid } = await JobDetailsValidate(form, selectDepthAndId);
         await setError(error);
         if (!isValid) {
             return "Data is not valid";
         }
         await setSubmitLoader(true)
+        setSubmitLoaderHazard(true)
         await handelProjectData()
         delete form["jhaAssessmentAttachment"]
         if (form.id != null && form.id != undefined) {
             const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-                .then(res => handelTeam())
-                .catch(() => handelApiError())
+            let CreateJhaId = res.data.data.results.id
+            newJhaId = CreateJhaId
+            handelTeam(CreateJhaId)
         } else {
             const res = await api.post("/api/v1/jhas/", form)
-                .then(res => handelTeam())
-                .catch(() => handelApiError())
-            await handelApiError()
+            let CreateJhaId = res.data.data.results.id
+            newJhaId = CreateJhaId
+            localStorage.setItem("fkJHAId", CreateJhaId)
+            handelTeam(CreateJhaId)
         }
         await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
         await setSubmitLoader(false)
+        await handleSubmitHazard(newJhaId)
     }
     const typeOfPremit = ["Type1", "Type2", "Type3", "Type4", "Type5"]
 
     const classes = useStyles();
-
-
-    //--------------------------------------------
-
 
     const handelUpdateHazard = async () => {
         const temp = {}
@@ -613,7 +617,7 @@ const JobDetails = (props) => {
 
     const handelNavigateHazard = (navigateType) => {
         if (navigateType == "next") {
-            history.push("/app/pages/Jha/assessments/assessment/")
+            history.push("/app/pages/jha/assessments/Assessment-Document")
         } else if (navigateType == "previous") {
             history.push("/app/pages/Jha/assessments/project-details/")
         }
@@ -624,9 +628,7 @@ const JobDetails = (props) => {
         history.push("/app/pages/error")
     }
 
-    const handleSubmitHazard = async (e) => {
-        setSubmitLoaderHazard(true)
-
+    const handleSubmitHazard = async (newJhaId) => {
         let hazardNew = []
         let hazardUpdate = []
         let allHazard = [formHazard, otherHazards]
@@ -635,6 +637,7 @@ const JobDetails = (props) => {
             allHazard[index].map((value) => {
                 if (value["id"] == undefined) {
                     if (value["hazard"] !== "") {
+                        value["fkJhaId"] = newJhaId
                         hazardNew.push(value)
                     }
                 } else {
@@ -644,15 +647,11 @@ const JobDetails = (props) => {
                 }
             })
         })
-        const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
-        const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
+        console.log(hazardNew, hazardNew)
+        const resUpdate = await api.put(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
+        const resNew = await api.post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
         handelNavigateHazard("next")
         setSubmitLoaderHazard(false)
-    }
-
-    const handelJobHazardSumbit = async () => {
-        await handleSubmit()
-        await handleSubmitHazard()
     }
 
     const handelCallBack = async () => {
@@ -669,9 +668,8 @@ const JobDetails = (props) => {
         handelCallBack()
     }, []);
 
-    //--------------------------------------------
     return (
-        <PapperBlock title="Job Details" icon="ion-md-list-box">
+        <CustomPapperBlock title="Assessments" icon={jhaLogoSymbol} whiteBg>
             {/* {console.log(departmentName)} */}
             {loading == false ?
                 <Row>
@@ -1148,9 +1146,6 @@ const JobDetails = (props) => {
                                 Add
                             </Button>
 
-                            {/* --------------------------------------------------- */}
-
-
                             <Grid
                                 item
                                 md={12}
@@ -1160,14 +1155,14 @@ const JobDetails = (props) => {
                                 <div className={classes.loadingWrapper}>
                                     <Button
                                         variant="outlined"
-                                        onClick={(e) => handelJobHazardSumbit()}
+                                        onClick={(e) => handleSubmit()}
                                         className={classes.custmSubmitBtn}
                                         style={{ marginLeft: "10px" }}
-                                        disabled={submitLoader}
+                                        disabled={submitLoaderHazard}
                                     >
                                         Next
                                     </Button>
-                                    {submitLoader && (
+                                    {submitLoaderHazard && (
                                         <CircularProgress
                                             size={24}
                                             className={classes.buttonProgress}
@@ -1189,7 +1184,7 @@ const JobDetails = (props) => {
 
                 </Row>
                 : "Loading"}
-        </PapperBlock >
+        </CustomPapperBlock >
     );
 };
 

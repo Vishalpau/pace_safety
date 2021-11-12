@@ -736,6 +736,10 @@ export const JhaDocumentNotification = loadable(() => import("./Pages/Jha/Assess
   fallback: <Loading />,
 });
 
+export const JhaAssessmentAndDocument = loadable(() => import("./Pages/Jha/Assessments/AssessmentAndDocument"), {
+  fallback: <Loading />,
+});
+
 export const JhaApprovals = loadable(() => import("./Pages/Jha/Approvals/Approvals"), {
   fallback: <Loading />,
 });

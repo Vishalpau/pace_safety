@@ -137,22 +137,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DocumentNotification = () => {
-  const [form, setForm] = useState({});
+  const [formDocument, setFormDocument] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
-  const history = useHistory();
+  // const history = useHistory();
 
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('');
-  const [submitLoader, setSubmitLoader] = useState(false);
+  const [submitLoaderDocument, setsubmitLoaderDocumentDocument] = useState(false);
   const ref = useRef();
 
-  const handelJobDetails = async () => {
+  const handelJobDetailsDocument = async () => {
     const jhaId = handelJhaId();
     const res = await api.get(`/api/v1/jhas/${jhaId}/`);
     const apiData = res.data.data.results;
     apiData.notifyTo == null ? apiData.notifyTo = '' : apiData.notifyTo = apiData.notifyTo.split(',');
-    setForm(apiData);
+    setFormDocument(apiData);
     handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
 
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
@@ -190,10 +190,10 @@ const DocumentNotification = () => {
       acceptFileTypes.includes(file[file.length - 1])
       && e.target.files[0].size < 25670647
     ) {
-      const temp = { ...form };
+      const temp = { ...formDocument };
       const filesAll = e.target.files[0];
       temp.jhaAssessmentAttachment = filesAll;
-      await setForm(temp);
+      await setFormDocument(temp);
     } else {
       ref.current.value = '';
       !acceptFileTypes.includes(file[file.length - 1])
@@ -215,7 +215,7 @@ const DocumentNotification = () => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-  const handelNavigate = (navigateType) => {
+  const handelNavigateDocument = (navigateType) => {
     if (navigateType === 'next') {
       history.push('/app/pages/jha/jha-summary');
     } else if (navigateType === 'previous') {
@@ -225,53 +225,53 @@ const DocumentNotification = () => {
 
   const handelNotifyTo = async (e, value) => {
     if (e.target.checked === false) {
-      const newData = form.notifyTo.filter((item) => item !== value);
-      setForm({
-        ...form,
+      const newData = formDocument.notifyTo.filter((item) => item !== value);
+      setFormDocument({
+        ...formDocument,
         notifyTo: newData
       });
     } else {
-      setForm({
-        ...form,
-        notifyTo: [...form.notifyTo, value]
+      setFormDocument({
+        ...formDocument,
+        notifyTo: [...formDocument.notifyTo, value]
       });
     }
   };
 
-  const handelApiError = () => {
-    setSubmitLoader(false);
+  const handelApiErrorDocument = () => {
+    setsubmitLoaderDocumentDocument(false);
     history.push('/app/pages/error');
   };
 
-  const handelNext = async () => {
-    setSubmitLoader(true);
-    if (typeof form.jhaAssessmentAttachment === 'object' && form.jhaAssessmentAttachment != null) {
+  const handelNextDocument = async () => {
+    setsubmitLoaderDocumentDocument(true);
+    if (typeof formDocument.jhaAssessmentAttachment === 'object' && formDocument.jhaAssessmentAttachment != null) {
       const data = new FormData();
-      data.append('fkCompanyId', form.fkCompanyId);
-      data.append('fkProjectId', form.fkProjectId);
-      data.append('location', form.location);
-      data.append('jhaAssessmentDate', form.jhaAssessmentDate);
-      data.append('permitToPerform', form.permitToPerform);
-      data.append('jobTitle', form.jobTitle);
-      data.append('description', form.description);
-      data.append('classification', form.classification);
-      data.append('workHours', form.workHours);
-      data.append('notifyTo', form.notifyTo.toString());
-      data.append('link', form.link);
-      data.append('jhaAssessmentAttachment', form.jhaAssessmentAttachment);
-      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiError());
+      data.append('fkCompanyId', formDocument.fkCompanyId);
+      data.append('fkProjectId', formDocument.fkProjectId);
+      data.append('location', formDocument.location);
+      data.append('jhaAssessmentDate', formDocument.jhaAssessmentDate);
+      data.append('permitToPerform', formDocument.permitToPerform);
+      data.append('jobTitle', formDocument.jobTitle);
+      data.append('description', formDocument.description);
+      data.append('classification', formDocument.classification);
+      data.append('workHours', formDocument.workHours);
+      data.append('notifyTo', formDocument.notifyTo.toString());
+      data.append('link', formDocument.link);
+      data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
+      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
     } else {
-      delete form.jhaAssessmentAttachment;
-      form.notifyTo = form.notifyTo.toString();
-      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, form).catch(() => handelApiError());
+      delete formDocument.jhaAssessmentAttachment;
+      formDocument.notifyTo = formDocument.notifyTo.toString();
+      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
     }
     history.push(SUMMARY_FORM.Summary);
     localStorage.setItem('Jha Status', JSON.stringify({ assessment: 'done' }));
-    setSubmitLoader(false);
+    setsubmitLoaderDocumentDocument(false);
   };
 
   useEffect(() => {
-    handelJobDetails();
+    handelJobDetailsDocument();
   }, []);
 
   const classes = useStyles();
@@ -307,13 +307,13 @@ const DocumentNotification = () => {
                     handleFile(e);
                   }}
                 />
-                <Typography title={handelFileName(form.jhaAssessmentAttachment)}>
-                  {form.jhaAssessmentAttachment !== ''
-                    && typeof form.jhaAssessmentAttachment === 'string' ? (
-                      <Attachment value={form.jhaAssessmentAttachment} />
-                    ) : (
-                      <p />
-                    )}
+                <Typography title={handelFileName(formDocument.jhaAssessmentAttachment)}>
+                  {formDocument.jhaAssessmentAttachment !== ''
+                    && typeof formDocument.jhaAssessmentAttachment === 'string' ? (
+                    <Attachment value={formDocument.jhaAssessmentAttachment} />
+                  ) : (
+                    <p />
+                  )}
                 </Typography>
               </Grid>
             </Grid>
@@ -327,12 +327,12 @@ const DocumentNotification = () => {
                 label="Link"
                 name="link"
                 id="link"
-                value={form.link != null ? form.link : ''}
+                value={formDocument.link != null ? formDocument.link : ''}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
-                onChange={(e) => setForm({
-                  ...form,
+                onChange={(e) => setFormDocument({
+                  ...formDocument,
                   link: e.target.value
                 })}
               />
@@ -348,7 +348,7 @@ const DocumentNotification = () => {
                         <FormControlLabel
                           control={<Checkbox name={value.roleName} />}
                           label={value.roleName}
-                          checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
+                          checked={formDocument.notifyTo && formDocument.notifyTo !== null && formDocument.notifyTo.includes(value.id.toString())}
                           onChange={async (e) => handelNotifyTo(e, value.id.toString())}
                         />
                       ))}
@@ -368,7 +368,7 @@ const DocumentNotification = () => {
                 variant="outlined"
                 size="medium"
                 className={classes.custmSubmitBtn}
-                onClick={() => handelNavigate('previous')}
+                onClick={() => handelNavigateDocument('previous')}
               >
                 Previous
               </Button>
@@ -378,12 +378,12 @@ const DocumentNotification = () => {
                   onClick={(e) => handelNext()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
+                  disabled={submitLoaderDocument}
                 >
 
                   Submit
                 </Button>
-                {submitLoader && (
+                {submitLoaderDocument && (
                   <CircularProgress
                     size={24}
                     className={classes.buttonProgress}

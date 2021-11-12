@@ -154,6 +154,7 @@ import {
   JhaAssessment,
   JhaDocumentNotification,
   JhaLessonsLearned,
+  JhaAssessmentAndDocument,
   JhaApprovals,
   Comments,
   JhaCloseOut,
@@ -563,6 +564,7 @@ function Application(props) {
         <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
         <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
+        <Route path="/app/pages/jha/assessments/Assessment-Document" component={JhaAssessmentAndDocument} />
         <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
         <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
         <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
