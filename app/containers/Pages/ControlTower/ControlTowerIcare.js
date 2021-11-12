@@ -656,7 +656,7 @@ const ControlTowerIcare = () => {
                       <iframe
                         width="1600"
                         height="1000"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
                         frameborder="0"
                         allowFullScreen="true"
                       >

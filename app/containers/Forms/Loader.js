@@ -22,7 +22,7 @@ const Loader = () => {
 
     return (
         <Box m={50} pt={3} className={classes.loaderAlingment}>
-            <CircularProgress className={classes.loaderIcon} />
+            <CircularProgress color="secondary" className={classes.loaderIcon} />
         </Box>
 
     )
