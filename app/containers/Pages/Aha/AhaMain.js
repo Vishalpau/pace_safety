@@ -277,8 +277,8 @@ export default function AhaMain() {
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
               <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon  className={classNames(classes.pL0)} />} />
               <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />}  classNames={classes.pLTen} />
-              <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
-              <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />
+              {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+              <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
             </Tabs>
           </div>  
         </AppBar>
@@ -286,11 +286,11 @@ export default function AhaMain() {
       <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
         <Grid className={classes.Lheight}>
           <div className={classes.floatR}>				
-            <span className={classes.pLTen}>
+            {/* <span className={classes.pLTen}>
               <Button size="small" className={classes.buttonsNTwo} variant="contained">
                 <PermIdentityIcon /> GIS
               </Button>
-            </span>
+            </span> */}
             
             {/* <span className={classes.pLTen}>
               <Button size="small" className={classes.buttonsNTwo} variant="contained">
@@ -308,10 +308,10 @@ export default function AhaMain() {
         </Grid>
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <AhaSearchSection />
+        <AhaSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-		    <AhaList />      
+      <AhaSearchSection value={value} />
       </TabPanel>
 	    <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <AhaKanban />

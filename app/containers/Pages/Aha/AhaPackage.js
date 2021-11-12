@@ -50,6 +50,7 @@ import api from "../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from '@material-ui/lab/Pagination';
 import { handelCommonObject } from "../../../utils/CheckerValue"
+import Loader from "../Loader"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,18 +58,21 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
     borderRadius: '4px',
   },
-  pagination: {
-    padding: "1rem 0",
-    display: "flex",
-    justifyContent: "flex-end"
-  },
   leftSide: {
     flexGrow: 1,
+  },
+  viewImageSection: {
+    textAlign: 'center',
+  '& MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-1': {
+    textAlign: 'center',
+    minHeight: '100px',
+  },
   },
   rightSide: {
     flexGrow: 8,
     textAlign: 'right',
   },
+  mb10: {marginBottom: '10px !important'},
   newIncidentButton: {
     backgroundColor: theme.palette.primary.dark,
   },
@@ -133,7 +137,6 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-    textTransform: 'none',
     ['@media (max-width:480px)']: { 
       marginLeft: '3px',
       marginRight: '3px',
@@ -163,6 +166,17 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.88rem',
     fontFamily: 'Montserrat-Regular',
   },
+  statusCompleted: {
+    color: '#024c9a',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Regular',
+    '& a': {
+      paddingLeft: '5px',
+      cursor: 'pointer',
+      color: 'rgba(0, 0, 0, 0.87)',
+      fontWeight: '600',
+    },
+  },
   listingLabelValue: {
     color: '#333333',
     fontSize: '0.88rem',
@@ -180,7 +194,7 @@ const useStyles = makeStyles((theme) => ({
   dataTableNew: {
     minWidth: '1360px !important',
   },
-
+  
   title:  {
     fontSize: '1.25rem',
     fontFamily: 'Montserrat-Regular',
@@ -190,14 +204,14 @@ const useStyles = makeStyles((theme) => ({
   },
   pt30: {
     paddingTop: '30px',
-
+  
   },
-
+  
   mTopThirtybtten: {
     marginTop: '0rem',
     float: 'right',
   },
-
+  
   TableToolbar: {
     display: 'none',
   },
@@ -262,6 +276,10 @@ const useStyles = makeStyles((theme) => ({
       float: 'left',
     },
   },
+  newIncidentButton: {
+    marginTop: '20px',
+    marginLeft: '5px',
+  },
   Chip: {
     backgroundColor: '#eaeaea',
     borderRadius: ' 50px',
@@ -310,16 +328,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 0px 2px #ccc',
     borderRadius: '10px',
     marginBottom: '30px',
-    '&:hover': {
-      backgroundColor: '#f0f0f0',
-      webkitBoxShadow: '0 1px 5px 2px #dcdada',
-      boxShadow: '0 1px 5px 2px #dcdada',
-    },
-    '&:hover .MuiGrid-align-items-xs-flex-start': {
-      backgroundColor: '#f0f0f0',
-    },
   },
-
+  
   cardLinkAction: {
     width: '100%',
     float: 'left',
@@ -335,10 +345,44 @@ const useStyles = makeStyles((theme) => ({
     right: '0px',
     ['@media (max-width:800px)']: { 
       right: 'auto',
-    }
+    },
   },
   cardContentSection: {
     position: 'relative',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      webkitBoxShadow: '0 1px 5px 2px #f0f0f0',
+      boxShadow: '0 1px 5px 2px #f0f0f0',
+    },
+    '&:hover .MuiGrid-align-items-xs-flex-start': {
+      backgroundColor: '#f0f0f0',
+    },
+  },
+  cardBottomSection: {
+    '& p': {
+      ['@media (max-width:480px)']: { 
+        fontSize: '12px !important',
+      },
+    },
+    // '& p': {
+    //   ['@media (max-width:375px)']: { 
+    //     fontSize: '12px !important',
+    //   },
+    // },
+  },
+  formControlOwnership: {
+  width: '100%',
+  marginBottom: '30px',
+  },
+  cardActionBottomBox: {
+    ['@media (max-width:480px)']: { 
+      padding: '8px !important',
+    },
+  },
+  
+  fullWidth: {
+    width: '100%',
+    margin: '.5rem 0',
   },
   usrProfileListBox: {
     '& ul': {
@@ -358,27 +402,63 @@ const useStyles = makeStyles((theme) => ({
           '& p': {
             display: 'inline-block',
             float: 'left',
+            fontSize: '15px',
           },
         },
       },
     },
   },
-  cardBottomSection: {
-    '& p': {
-      ['@media (max-width:480px)']: { 
-        fontSize: '12px !important',
-      },
-    },
-    // '& p': {
-    //   ['@media (max-width:375px)']: { 
-    //     fontSize: '12px !important',
-    //   },
-    // },
+  
+  viewAttachmentDialog: {
+    '& .MuiDialogContent-root': {
+      overflowY: 'hidden !important',
+      height: '90px !important',
+  
   },
-  cardActionBottomBox: {
-    ['@media (max-width:480px)']: { 
-      padding: '8px !important',
-    },
+  },
+  imageSectionHeight: {
+    '& .MuiDialogContent-root':  {
+      height: '90px !important',
+      minHeight: '90px !important',
+  },
+  },
+  viewattch1: {
+    padding: '12px 30px',
+    backgroundColor: '#8a9299',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
+  },
+  viewattch2: {
+    padding: '12px 8px',
+    backgroundColor: '#06425c',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
+  },
+  plusIcon: {
+    fontSize: '32px',
+    marginRight: '10px',
+    color: '#06425c',
+  },
+  minusIcon: {
+    fontSize: '32px',
+    color: '#06425c',
+  },
+  popUpButton: {
+    paddingRight: "5px",
+    marginLeft: "12px",
+    '& .MuiDialogActions-root, img':{
+      justifyContent: 'flex-start',
+    },    
+  },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '-10px',
   },
 }));
 
@@ -849,7 +929,10 @@ useEffect(() => {
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
 
-        </Grid>  :<h1>Loading...</h1>}
+        </Grid>  
+        : 
+        <Loader/>
+        }
       </Box>
     </>
   );

@@ -19,7 +19,7 @@ import AhaPackage from './AhaPackage';
 import Button from '@material-ui/core/Button';
 import '../../../styles/custom/customheader.css';
 import Grid from '@material-ui/core/Grid';
-
+import AhaList from "./AhaList";
 
 const drawerWidth = 240;
 
@@ -319,7 +319,9 @@ class AhaFilter extends React.Component {
     }
 
     return (
-      <div className={classes.root}>        
+      <div className={classes.root}>
+              {this.props.value === 0 &&
+        
         <div className={classes.appFrame}>
           <AppBar
             className={classNames(classes.appBar, classes.MuiAppBarColor, {
@@ -365,7 +367,31 @@ class AhaFilter extends React.Component {
             <AhaPackage search={this.props.search} assessments={this.props.assessments} />
           </main>
           {after}
-        </div>
+        </div>}
+        {this.props.value === 1 &&
+          <div className={classes.appFrame}>
+
+            <main
+              className={classNames(
+                classes.content,
+                classes.padd0,
+                classes[`content-${anchor}`],
+                {
+                  [classes.contentShift]: open,
+                  [classes[`contentShift-${anchor}`]]: open,
+                }
+              )}
+            >
+              <AhaList
+                assessments={this.props.assessments}
+                search={this.props.search}
+                // status={this.props.status}
+              />
+            </main>
+            {after}
+          </div>
+
+        }
       </div>
     );
   }

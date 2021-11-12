@@ -368,7 +368,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const[searchIncident,setSeacrhIncident] = React.useState('');
@@ -434,10 +434,10 @@ export default function SimpleTabs() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <AhaFilter search={searchIncident} assessments={assessments} />
+			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			  <AhaFilter search={searchIncident} assessments={assessments} />
+			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
 			  <AhaFilter search={searchIncident} assessments={assessments} />

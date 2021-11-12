@@ -38,6 +38,7 @@ import moment from 'moment';
 import api from "../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from '@material-ui/lab/Pagination';
+import Loader from "../Loader"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,9 +123,16 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     color: 'rgba(0, 0, 0, 0.87) !important',
   },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '10px',
+  },
 }));
 
 function FlhaList(props) {
+  console.log(props)
   const [incidents] = useState([]);
 
   const handelView = (e) => {
@@ -184,21 +192,36 @@ const data = [
     :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
       : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
   let struct = "";
   for (const i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-
-    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-
-    const result = res.data.data.results.results
-    await setAllAHAData(result)
-    await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
-
+  console.log(props.assessments)
+    if(props.assessments === "My Assessments"){
+      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+  
+      const result = res.data.data.results.results
+      await setAllAHAData(result)
+      await setTotalData(res.data.data.results.count)
+            await setPageData(res.data.data.results.count / 25)
+            let pageCount = Math.ceil(res.data.data.results.count / 25)
+            await setPageCount(pageCount)
+    }else{
+      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+  
+      const result = res.data.data.results.results
+      await setAllAHAData(result)
+      await setTotalData(res.data.data.results.count)
+            await setPageData(res.data.data.results.count / 25)
+            let pageCount = Math.ceil(res.data.data.results.count / 25)
+            await setPageCount(pageCount)
+    }
+    
+  
     await setIsLoading(true)
   };
 
@@ -210,27 +233,35 @@ const data = [
     :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
       : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
   let struct = "";
   
   for (const i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-  console.log("----------",res)
+  if(props.assessments === "My Assessments"){
+    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+      await setAllAHAData(res.data.data.results.results);
+      await setPage(value)
+  }else{
+    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
+  }
   };
 
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-},[props.projectName.breakDown])
+},[props.projectName.breakDown,props.search,props.assessments])
 
   return (
     <>
       <Box>
-      {isLoading ?
+      {isLoading ? <>
         <TableContainer component={Paper}>
           <Grid component={Paper}>
               <MUIDataTable
@@ -253,11 +284,11 @@ const data = [
                       item[1]["typeOfPermit"],
                       item[1]["username"],
                       item[1]["ahaStatus"],
-                      item[1][''],
+                      item[1]['createdByName'],
                       moment(item[1]["createdAt"]).format(
                                   "Do MMMM YYYY, h:mm:ss a"
                                 ),
-                      item[1][""],
+                      item[1]["-"],
                       item[1]["wrpApprovalUser"],
                       moment(item[1]["wrpApprovalDateTime"]).format(
                                   "Do MMMM YYYY, h:mm:ss a"
@@ -268,7 +299,11 @@ const data = [
                 //className="classes.dataTableNew"
               />
               </Grid>
-            </TableContainer> : <h1>Loading...</h1>}
+            </TableContainer>
+            <div className={classes.pagination}>
+      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div> </> : <h1>Loading...</h1>}
       </Box>
     </>
   );
