@@ -317,7 +317,7 @@ const ObservationInitialNotificationUpdate = () => {
     let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
     const res = await api.get(`/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`);
-    const result = res.data.data.results.results;
+    const result = res.data.data.results;
     let temp = []
     result.map((value) => {
       if (value.status === "Active") {
@@ -627,12 +627,12 @@ const ObservationInitialNotificationUpdate = () => {
                     <FormGroup className={classes.customCheckBoxList}>
                       {tagData.map((value, index) => (
                         <FormControlLabel
-                          className={classes.labelValue}
                           control={
                             <Checkbox
                               icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                               checkedIcon={<CheckBoxIcon fontSize="small" />}
                               name={value}
+                              className="selectLabel"
                               // checked={catagoryName.includes(value.tagName)}
                               checked={handelSelectOption(value.tagName)}
                               // checked={catagory[index] !== undefined ? catagory[index]['observationTag'] == value.tagName ? true : false : false }

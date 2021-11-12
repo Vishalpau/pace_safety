@@ -661,7 +661,7 @@ const ObservationInitialNotification = (props) => {
     const res = await api.get(
       `/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`
     );
-    const result = res.data.data.results.results;
+    const result = res.data.data.results;
     let temp = [];
     result.map((value) => {
       if (value.status === "Active") {
@@ -1469,12 +1469,12 @@ const ObservationInitialNotification = (props) => {
                       <FormGroup className={classes.customCheckBoxList}>
                         {tagData.map((value, index) => (
                           <FormControlLabel
-                            className="selectLabel"
                             control={
                               <Checkbox
                                 icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                                 checkedIcon={<CheckBoxIcon fontSize="small" />}
                                 name={value}
+                                className="selectLabel"
                                 onChange={(e) => handleChange(e, index, value)}
                               />
                             }
