@@ -864,7 +864,9 @@ const handleCommentsClose = () => {
                                <Grid item md={2} sm={4} xs={12} 
                                   className={classes.userPictureBox}
                                 >
-                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(item)} >
+                                  <Button  className={classes.floatR} 
+                                  // onClick={(e) => handleMyUserPClickOpen(item)} 
+                                  >
                                     <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
                                   </Button>
                                 </Grid>
