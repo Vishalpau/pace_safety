@@ -30,13 +30,13 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams , useHistory } from 'react-router';
+import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
 
-import Axios from "axios";
+import axios from "axios";
 import api from "../../../../utils/axios";
 
-
+import { handelCommonObject } from "../../../../utils/CheckerValue"
 import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
 
 import { AHA } from "../constants";
@@ -52,7 +52,7 @@ import {
 } from "../../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -122,18 +122,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   createHazardbox: {
-    paddingTop: '0px !important',
+    paddingTop: '20px !important',
     paddingBottom: '0px !important',
     '& button': {
-        marginTop: '8px',
+      marginTop: '8px',
     },
   },
-// });
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
+  // });
 }));
 
 const ProjectDetails = () => {
-// class ObservationInitialNotification extends Component {
-  const {id} = useParams();
+  // class ObservationInitialNotification extends Component {
+  const { id } = useParams();
   const history = useHistory();
 
   const fkCompanyId =
@@ -141,17 +154,17 @@ const ProjectDetails = () => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
   const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-    var struct = "";
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  var struct = "";
   for (var i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
@@ -176,28 +189,17 @@ const ProjectDetails = () => {
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0)
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
--
-      {file.size}
-      {' '}
-bytes
-    </li>
-  ));
-
-
   const [positiveObservation, setPositiveObservation] = useState(true);
   const [riskObservation, setRiskObservation] = useState(true);
   const [addressSituation, setAddressSituation] = useState(true);
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
-  const [isLoading , setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [workArea, setWorkArea] = useState("")
-   const [Teamform, setTeamForm] = useState([{
+  const [projectBreakout, setProjectBreakout] = useState('')
+  const [isDateShow, setIsDateShow] = useState(false)
+  const [Teamform, setTeamForm] = useState([{
     "teamName": "",
     "status": "Active",
     "createdBy": parseInt(userId),
@@ -205,10 +207,10 @@ bytes
   }]);
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [selectBreakDown, setSelectBreakDown] = useState([]);
-  const radioDecide = ['Yes' , 'No' ]
+  const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
+  const permitType = ["Permit 1" , "Permit 2" , "Permit 3" , "Permit 4"]
 
-  
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
     const value = e.target.value;
@@ -218,13 +220,14 @@ bytes
 
   const handleAdd = (e) => {
     if (Object.keys(Teamform).length < 100) {
-      setTeamForm([...Teamform, { "teamName": "" ,
-      "status": "Active",
-      "createdBy": parseInt(userId),
-      "fkAhaId": 0 }]);
+      setTeamForm([...Teamform, {
+        "teamName": "",
+        "status": "Active",
+        "createdBy": parseInt(userId),
+        "fkAhaId": 0
+      }]);
     }
   };
-
   const handelRemove = async (e, index) => {
 
     if (Teamform.length > 1) {
@@ -236,23 +239,22 @@ bytes
 
       let temp = Teamform;
       let newData = Teamform.filter((item, key) => key !== index);
-      
+
       await setTeamForm(newData);
-    
-  };
+
+    };
 
   }
-  console.log(workArea,"6666666")
 
 
-  const [form , setForm] = useState(
+  const [form, setForm] = useState(
     {
       "fkCompanyId": parseInt(fkCompanyId),
       "fkProjectId": parseInt(project.projectId),
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
-      "workArea": workArea,
+      "workArea": "",
       "location": "",
-      "assessmentDate": null,
+      "assessmentDate": new Date().toISOString().split('T')[0],
       "permitToPerform": "",
       "permitNumber": "",
       "ahaNumber": "",
@@ -272,6 +274,7 @@ bytes
       "lessonLearntUserName": "",
       "ahaStatus": "",
       "ahaStage": "",
+      "typeOfPermit" : "",
       "badgeNumber": "",
       "status": "Active",
       "createdBy": parseInt(userId),
@@ -281,168 +284,80 @@ bytes
     }
   )
 
-
   const handleSubmit = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
-    form["workArea"] = workArea
-    
-    const { error, isValid } = ProjectDetailsValidator(form,selectDepthAndId);
+
+    let structName = []
+    let projectStructId = fkProjectStructureId.split(":")
+
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${project.projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    form["workArea"] = structName[structName.length - 1]
+    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
     await setError(error);
     if (!isValid) {
       return "Data is not valid";
     }
-    await setSubmitLoader(true);
-    if(form.id){
+    await setLoading(true);
+    if (form.id) {
       delete form["ahaAssessmentAttachment"]
-      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,form)
+      // form['updatedBy'] = form['createdBy']
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
-        if(Teamform[i].id){
-          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`,Teamform[i]);
-        }else{
+        if (Teamform[i].id) {
+          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
+        } else {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
-          if(res.status === 200){
+          if (Teamform[i].teamName !== "") {
+            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+          }
+          if (res.status === 200) {
             history.push("/app/pages/aha/assessments/project-area-hazards")
           }
         }
-        
+
       }
-      if(res.status === 200){
+      if (res.status === 200) {
         history.push(`/app/pages/aha/assessments/project-area-hazards/`)
       }
-     
 
-    }else{
-      const res = await api.post("/api/v1/ahas/",form)
-      if(res.status === 201){
+    } else {
+      const res = await api.post("/api/v1/ahas/", form)
+      if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
-        localStorage.setItem("fkAHAId",fkAHAId)
+        let fkProjectStructureIds = res.data.data.results.fkProjectStructureIds
+        localStorage.setItem("fkAHAId", fkAHAId)
+        handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
 
         for (let i = 0; i < Teamform.length; i++) {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`,Teamform[i]);
+          if (Teamform[i].teamName !== "") {
+            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+          }
         }
-
         history.push("/app/pages/aha/assessments/project-area-hazards")
+      }
     }
-    }
-    
-   
   }
-
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
-  const fetchBreakdown = async (e, index) => {
-    const value = e.target.value;
-    let temp = [...breakdown1ListData]
-    temp[index - 1][`selectValue`] = value;
-    setBreakdown1ListData(temp)
-    if (selectBreakDown.filter(filterItem => filterItem.depth === `${index}L`).length > 0) {
-      const removeSelectBreakDown = selectBreakDown.slice(0, index - 1)
-      const removeBreakDownList = breakdown1ListData.slice(0, index + 1)
-      removeBreakDownList[index][`selectValue`] = "";
-
-      await setBreakdown1ListData(removeBreakDownList)
-
-      let name = breakdown1ListData[index - 1].breakdownValue.map(
-        async (item) => {
-          if (item.id === value) {
-            setSelectBreakDown([
-              ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]);
-            dispatch(breakDownDetails([
-              ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name },
-              ])
-            );
-            return;
-          }
-
-        }
-      );
-    } else {
-      let name = breakdown1ListData[index - 1].breakdownValue.map(
-        async (item) => {
-          if (item.id === value) {
-            await setSelectBreakDown([
-              ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]);
-            dispatch(breakDownDetails([
-              ...selectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name },
-            ]))
-            localStorage.setItem(
-              "selectBreakDown",
-              JSON.stringify([
-                ...selectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name },
-              ])
-            );
-            return;
-          }
-
-        }
-      );
-    }
-
-
-    for (var key in projectData.projectName.breakdown) {
-      if (key == index) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${value}`,
-          headers: HEADER_AUTH,
-        };
-        await Axios(config)
-          .then(function (response) {
-            if (response.status === 200) {
-
-              if (
-                breakdown1ListData.filter(
-                  (item) =>
-                    item.breakdownLabel ===
-                    projectData.projectName.breakdown[index].structure[0].name
-                ).length > 0
-              ) {
-                return;
-              } else {
-                setBreakdown1ListData([
-                  ...breakdown1ListData,
-                  {
-                    breakdownLabel:
-                      projectData.projectName.breakdown[index].structure[0]
-                        .name,
-                    breakdownValue: response.data.data.results,
-                    selectValue: ""
-                  },
-                ]);
-              }
-            }
-          })
-          .catch(function (error) {
-
-          });
-      }
-    }
-  };
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
   const fetchCallBack = async () => {
@@ -456,9 +371,8 @@ bytes
             }`,
           headers: HEADER_AUTH,
         };
-        await Axios(config)
-          .then(async(response)=> {
-              
+        await axios(config)
+          .then(async (response) => {
             await setBreakdown1ListData([
               {
                 breakdownLabel:
@@ -467,7 +381,6 @@ bytes
                 selectValue: ""
               },
             ]);
-
             setIsLoading(true);
           })
           .catch(function (error) {
@@ -476,62 +389,53 @@ bytes
       }
     }
   };
-  console.log(form)
 
   const fetchAhaData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
     const result = res.data.data.results;
     await setForm(result)
     await fetchBreakDownData(result.fkProjectStructureIds)
+  }
 
-   }
-
-   const handleBreakdown = async (e, index, label, selectvalue) => {
+  const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-    
+
     const value = e.target.value;
-    
+
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
-    // let removeTemp = temp.slice(0, index)
-    for(var i in temp){
-      if(i>index){
-        temp[i].breakDownData=[]
-        temp[i].selectValue.id=""
+    for (var i in temp) {
+      if (i > index) {
+        temp[i].breakDownData = []
+        temp[i].selectValue.id = ""
       }
-      
+
     }
     let tempDepthAndId = selectDepthAndId;
-    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index+1}L`)
-    let sliceData = dataDepthAndId.slice(0,index)
-    let newdataDepthAndId = [...sliceData,`${index+1}L${value}`]
+    let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
+    let sliceData = dataDepthAndId.slice(0, index)
+    let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
     setSelectDepthAndId(newdataDepthAndId)
     // await setFetchSelectBreakDownList(removeTemp)
-    if (projectData.projectName.breakdown.length !== index+1) {
+    if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
-        if (key == index+1) {
-         
-          
+        if (key == index + 1) {
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-          }${value}`,)
+            }${value}`)
             .then(function (response) {
               if (response.status === 200) {
-
-               temp[key].breakDownData =response.data.data.results
-              //  temp[key].select=e.
-              setBreakdown1ListData(temp)
+                temp[key].breakDownData = response.data.data.results
+                setBreakdown1ListData(temp)
               }
             })
             .catch(function (error) {
-
             });
         }
       }
-    } 
+    }
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
     setLevelLenght(breakdownLength)
@@ -553,16 +457,13 @@ bytes
             await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown, {
                     breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
                     selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
                     breakDownData: result
                   }
-
                 ];
-
               }
             });
             setFetchSelectBreakDownList(selectBreakDown)
@@ -586,7 +487,6 @@ bytes
 
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
-
                 selectBreakDown = [
                   ...selectBreakDown,
                   {
@@ -595,11 +495,9 @@ bytes
                     breakDownData: result
                   }
                 ];
-
               }
             });
             setFetchSelectBreakDownList(selectBreakDown)
-
           })
           .catch((error) => {
             console.log(error)
@@ -609,417 +507,328 @@ bytes
     }
   };
 
-  const handleDepthAndId = (depth, id) => {
-    let newData = [...selectDepthAndId, `${depth}${id}`]
-    setSelectDepthAndId([... new Set(newData)])
-  }
   const fetchTeamData = async () => {
     const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`)
-    const result =  res.data.data.results
+    const result = res.data.data.results
     await setTeamForm(result)
-    console.log(result)
   }
-  const classes = useStyles();
 
+  const classes = useStyles();
+  console.log(form)
   useEffect(() => {
-    // fetchBreakdown()
     fetchCallBack()
-    
-      fetchAhaData()
-      fetchTeamData()
-    
+    if(id){
+    fetchAhaData()
+    fetchTeamData()
+    }
     
   }, []);
   return (
     <>
-        <PapperBlock title="Project Details" icon="ion-md-list-box">
-        {isLoading ? 
+      <PapperBlock title="Project Details" icon="ion-md-list-box">
+        {isLoading ?
 
-    <Grid container spacing={3} className={classes.observationNewSection}>
-    <Grid container spacing={3} item xs={12} md={9}>
-        {/* <Grid item xs={12} className={classes.coponentTitleBox}>
-            <Typography variant="h5">Initial Notification</Typography>
-        </Grid> */}
+          <Grid container spacing={3} className={classes.observationNewSection}>
+            <Grid container spacing={3} item xs={12} md={9}>
+              <Grid item md={12}>
+                <Typography variant="h6" gutterBottom className={classes.labelName}>
+                  Project
+                </Typography>
+                <Typography className={classes.labelValue}>
+                  {project.projectName}
 
-        <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Project
-        </Typography>
-        <Typography className={classes.labelValue}>
-        {project.projectName}
-
-        </Typography>
-        </Grid>
-        {id ? 
-              fetchSelectBreakDownList.map((data, key) => 
-              <Grid item xs={3} md={3} key={key}>
-                <FormControl
-                  error={error && error[`projectStructure${[key]}`]}
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    {data.breakDownLabel}
-                  </InputLabel>
-                  <Select
-                    labelId="incident-type-label"
-                    id="incident-type"
-                    label="Incident type"
-                    value={data.selectValue.id || ""}
-                    disabled={data.breakDownData.length===0}
-                    
-                    onChange={(e) => {
-                      handleBreakdown(e, key , data.breakDownLabel, data.selectValue);
-                    }}
-                  >
-                    {data.breakDownData.length !== 0
-                      ? data.breakDownData.map((selectvalues, index) => (
-                        <MenuItem key={index} 
-                        // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                        value={selectvalues.id}>
-                          {selectvalues.structureName}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error[`projectStructure${[key]}`] && (
-                              <FormHelperText>
-                                {error[`projectStructure${[key]}`]}
-                              </FormHelperText>
-                            )}
-                </FormControl>
+                </Typography>
               </Grid>
+              {id ?
+                fetchSelectBreakDownList.map((data, key) =>
+                  <Grid item xs={3} md={3} key={key}>
+                    <FormControl
+                      error={error && error[`projectStructure${[key]}`]}
+                      variant="outlined"
+                      required
+                      className={classes.formControl}
+                    >
+                      <InputLabel id="demo-simple-select-label">
+                        {data.breakDownLabel}
+                      </InputLabel>
+                      <Select
+                        labelId="incident-type-label"
+                        id="incident-type"
+                        label="Incident type"
+                        value={data.selectValue.id || ""}
+                        disabled={data.breakDownData.length === 0}
 
-              ) : <ProjectStructureInit 
-              selectDepthAndId={selectDepthAndId} 
-              setLevelLenght={setLevelLenght}
-              error= {error}
-              setWorkArea={setWorkArea}
-              setSelectDepthAndId={setSelectDepthAndId} />
-              }
-        {/* <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Work Area"
-            margin="dense"
-            name="workarea"
-            id="workarea"
-            value={form.workArea ? form.workArea : ""}
-            select
-            fullWidth
-            onChange={(e) => setForm({...form,workArea:e.target.value})}
-            variant="outlined"
-        >
-            {areaName.map((option) => (
-            <MenuItem key={option} value={option}>
-                {option}
-            </MenuItem>
-            ))}
-        </TextField>
-        </Grid> */}
-        <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Work Location*"
-            // margin="dense"
-            name="worklocation"
-            id="worklocation"
-            value={form.location ? form.location : ""}
-            error={error.location}
-            helperText={error.location ? error.location : ""}
-            fullWidth
-            onChange={(e) => setForm({...form,location:e.target.value})}
-            variant="outlined"
-            className={classes.formControl}
-        />
-        </Grid>
-        <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDateTimePicker
-                className={classes.formControl}
-                // margin="dense"
-                fullWidth
-                label="Date & Time*"
-                value={selectedDate}
-                onChange={handleDateChange}
-                value={form.assessmentDate || null}
-                error={error.assessmentDate}
-                  helperText={error.assessmentDate ? error.assessmentDate : null}
-                inputVariant="outlined"
-                disableFuture="true"
-                onChange={(e) => {
-                    setForm({
-                      ...form,
-                      assessmentDate: moment(e).format("YYYY-MM-DD"),
-                    });
-                    // console.log(e.target.value)
-                  }}
-              />
-            </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormControl component="fieldset" error={
-                                  error && error["permitToPerform"]
-                                }>
-            <FormLabel component="legend" className={classes.labelName} >Do you have a permit to perform the AHA?*</FormLabel>
-            <RadioGroup row aria-label="gender" name="gender1"
-            onChange={(e) => {
-                                    {setForm({...form,permitToPerform:e.target.value})};
-                                  }}
-                                  value={form.permitToPerform ? form.permitToPerform : ""}>
-            {radioDecide.map((value) => (
-              <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
-             ) )}
-            {/* <FormControlLabel value="yes" className={classes.labelValue} control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" className={classes.labelValue} control={<Radio />} label="No" /> */}
-            </RadioGroup>
-            {error && error["permitToPerform"] && (
-                                  <FormHelperText>
-                                    {error["permitToPerform"]}
-                                  </FormHelperText>
-                                )}
-        </FormControl>
-        </Grid>
-        <Grid
-        item
-        md={6}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Permit Reference"
-            // margin="dense"
-            name="reference"
-            id="reference"
-            multiline
-            value={form.permitNumber ? form.permitNumber : ""}         
-            fullWidth
-            onChange={(e) => {
-                                    {setForm({...form,permitNumber:e.target.value})};
-                                  }}
-            variant="outlined"
-            className={classes.formControl}
-        />
-        </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <TextField
-            label="Description*"
-            // margin="dense"
-            name="description"
-            id="description"
-            multiline
-            error={error.description}
-            helperText={error.description ? error.description : ""}
-            rows={4}
-            value={form.description ? form.description : ""}         
-            fullWidth
-            onChange={(e) => {
-                                    {setForm({...form,description:e.target.value})};
-                                  }}
-            variant="outlined"
-            className={classes.formControl}
-        />
-        </Grid>
-        <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.createHazardbox}
-        style={{marginTop: '12px'}}
-        >
-        <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
-        </Grid>
-        {Teamform.map((value,index) => (<>
-        <Grid
-        item
-        md={6}
-        xs={11}
-        className={classes.createHazardbox}
-        >
-       
-          <TextField
-            label="Team Name"
-            // margin="dense"
-            name="arename"
-            id="arename"
-            multiline
-            value={Teamform[index].teamName || ""}
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-            onChange={(e) => {handleTeamName(e, index)}
-            }
-        />
-        
-        
-        </Grid>
-        {Teamform.length > 1 ?
-        (<Grid item md={1} className={classes.createHazardbox}>
-            <IconButton
-                variant="contained"
-                color="primary"
-                onClick={(e) => {handelRemove(e, index)}}
-            >
-                <DeleteForeverIcon />
-            </IconButton>
-        </Grid>):null }
-        
-       </> ))}
-
-        {/* {Teamform.map((item, index) => (<>
-              
-                  <Grid item xs={11} md={6}>
-                    <TextField
-                      label="Team Name"
-            margin="dense"
-            name="arename"
-            id="arename"
-            multiline
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-            onClick={() => {handleTeamName(e, index)}}
-                    />
+                        onChange={(e) => {
+                          handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                        }}
+                      >
+                        {data.breakDownData.length !== 0
+                          ? data.breakDownData.map((selectvalues, index) => (
+                            <MenuItem key={index}
+                              value={selectvalues.id}>
+                              {selectvalues.structureName}
+                            </MenuItem>
+                          ))
+                          : null}
+                      </Select>
+                      {error && error[`projectStructure${[key]}`] && (
+                        <FormHelperText>
+                          {error[`projectStructure${[key]}`]}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
                   </Grid>
-                  {Teamform.length > 1 ? (
-                    <Grid item  md={1} justify="center">
-                      <IconButton variant="contained"
-                color="primary" onClick={(e) => handelRemove(e, index)}>
-                      <DeleteForeverIcon />
-                      </IconButton>
-                    </Grid>
-                    
-                  ) : null}
-                  </>
-            ))} */}
-        
-        <Grid item md={12} className={classes.createHazardbox}>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddCircleIcon />}
-                className={classes.button}
-                onClick={() => {handleAdd()}}
-            >
-                Add
-            </Button>
-        </Grid>
-        {/* <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormLabel className={classes.labelName} component="legend">Discuss and document conditions when the work must be Stopped</FormLabel>
-        <FormGroup className={classes.customCheckBoxList}>
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 1"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 2"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 3"
-            />
-            <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                onChange={handleChange}
-                />
-            )}
-            label="Option 4"
-            />
-        </FormGroup>
-        </Grid> */}
-        
-        <Grid
-        item
-        md={12}
-        xs={12}
-        style={{marginTop: '15px'}}
-        >
-        {submitLoader == false ?
-                <Button
+
+                ) : <ProjectStructureInit
+                  selectDepthAndId={selectDepthAndId}
+                  setLevelLenght={setLevelLenght}
+                  error={error}
+                  setWorkArea={setWorkArea}
+                  setSelectDepthAndId={setSelectDepthAndId} />
+              }
+              <Grid
+                item
+                md={6}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Work Location*"
+                  // margin="dense"
+                  name="worklocation"
+                  id="worklocation"
+                  value={form.location ? form.location : ""}
+                  error={error.location}
+                  helperText={error.location ? error.location : ""}
+                  fullWidth
+                  onChange={(e) => setForm({ ...form, location: e.target.value })}
                   variant="outlined"
-                  onClick={(e) => handleSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                className={classes.formBox}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDateTimePicker
+                    className={classes.formControl}
+                    // margin="dense"
+                    fullWidth
+                    label="Date & Time*"
+                    value={selectedDate}
+                    // onChange={handleDateChange}
+                    value={form.assessmentDate || null}
+                    error={error.assessmentDate}
+                    helperText={error.assessmentDate ? error.assessmentDate : null}
+                    inputVariant="outlined"
+                    disableFuture="true"
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => handelClose()}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        assessmentDate: moment(e).format("YYYY-MM-DD"),
+                      });
+                      // console.log(e.target.value)
+                    }}
+                    InputProps={{ readOnly: true }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+              >
+                <FormControl component="fieldset" error={
+                  error && error["permitToPerform"]
+                }>
+                  <FormLabel component="legend" className={classes.labelName} >Confirm if AHA required for permit?*</FormLabel>
+                  <RadioGroup row aria-label="gender" name="gender1"
+                    onChange={(e) => {
+                      { setForm({ ...form, permitToPerform: e.target.value }) };
+                    }}
+                    value={form.permitToPerform ? form.permitToPerform : ""}>
+                    {radioDecide.map((value) => (
+                      <FormControlLabel value={value} className={classes.labelValue} control={<Radio />} label={value} />
+                    ))}
+                  </RadioGroup>
+                  {error && error["permitToPerform"] && (
+                    <FormHelperText>
+                      {error["permitToPerform"]}
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>{form.permitToPerform === "Yes" || form.permitToPerform === "" ? 
+              <Grid item md={6} sm={12} xs={12}>
+                            <FormControl
+                              variant="outlined"
+                              requirement
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                Type of permit
+                              </InputLabel>
+                              <Select
+                                label="Type of permit"
+                                value={form.typeOfPermit ? form.typeOfPermit : ""}
+                              >
+                                {permitType.map(
+                                  (value) => (
+                                    <MenuItem
+                                      value={value}
+                                      onClick={(e) => {setForm({...form,typeOfPermit:value})}}
+                                    >
+                                      {value}
+                                    </MenuItem>
+                                  )
+                                )}
+                              </Select>
+                            </FormControl>
+                          </Grid>: null}
+              <Grid
+                item
+                md={6}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Permit Reference"
+                  // margin="dense"
+                  name="reference"
+                  id="reference"
+                  multiline
+                  value={form.permitNumber ? form.permitNumber : ""}
+                  fullWidth
+                  onChange={(e) => {
+                    { setForm({ ...form, permitNumber: e.target.value }) };
+                  }}
+                  variant="outlined"
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Description*"
+                  // margin="dense"
+                  name="description"
+                  id="description"
+                  multiline
+                  error={error.description}
+                  helperText={error.description ? error.description : ""}
+                  rows={4}
+                  value={form.description ? form.description : ""}
+                  fullWidth
+                  onChange={(e) => {
+                    { setForm({ ...form, description: e.target.value }) };
+                  }}
+                  variant="outlined"
+                  className={classes.formControl}
+                />
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.createHazardbox}
+                style={{ marginTop: '12px' }}
+              >
+                <Typography variant="h6" gutterBottom className={classes.labelName}>Risk Assessment Team</Typography>
+              </Grid>
+              {Teamform.map((value, index) => (<>
+                <Grid
+                  item
+                  md={6}
+                  xs={11}
+                  className={classes.createHazardbox}
                 >
 
-                  Next
+                  <TextField
+                    label="Team Name"
+                    // margin="dense"
+                    name="arename"
+                    id="arename"
+                    multiline
+                    value={Teamform[index].teamName || ""}
+                    fullWidth
+                    variant="outlined"
+                    className={classes.formControl}
+                    onChange={(e) => { handleTeamName(e, index) }
+                    }
+                  />
+
+
+                </Grid>
+                {Teamform.length > 1 ?
+                  (<Grid item md={1} className={classes.createHazardbox}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => { handelRemove(e, index) }}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>) : null}
+
+              </>))}
+              <Grid item md={12} className={classes.createHazardbox}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<AddCircleIcon />}
+                  className={classes.button}
+                  onClick={() => { handleAdd() }}
+                >
+                  Add
                 </Button>
-                :
-                <IconButton className={classes.loader} disabled>
-                  <CircularProgress color="secondary" />
-                </IconButton>
-              }
-        </Grid>
-        </Grid>
-        <Grid item xs={12} md={3}>
-        <FormSideBar
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                style={{ marginTop: '15px' }}
+              >
+                            <div className={classes.loadingWrapper}>
+
+                  <Button
+                    variant="outlined"
+                    onClick={(e) => handleSubmit()}
+                    className={classes.custmSubmitBtn}
+                    style={{ marginLeft: "10px" }}
+                    disabled={loading}
+                  >
+
+                    Next
+                  </Button>
+                  {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+                </div>
+                  
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <FormSideBar
                 deleteForm={[1, 2, 3]}
                 listOfItems={AHA}
                 selectedItem="Project Details"
               />
-</Grid>
-    </Grid> :<> loading...</>}
-    </PapperBlock>
+            </Grid>
+          </Grid> : <> loading...</>}
+      </PapperBlock>
     </>
   );
 };

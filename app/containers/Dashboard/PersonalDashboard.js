@@ -1,43 +1,19 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import brand from "dan-api/dummy/brand";
-import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet";
 import { withStyles } from "@material-ui/core/styles";
-import Hidden from "@material-ui/core/Hidden";
-import {
-  SliderWidget,
-  CounterIconsWidget,
-  PerformanceChartWidget,
-  DateWidget,
-  TaskWidget,
-  WeatherWidget,
-  ContactWidget,
-  TimelineWidget,
-  FilesWidget,
-} from "dan-components";
 import styles from "./dashboard-jss";
-import Container from "@material-ui/core/Container";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
 import { PapperBlock } from "dan-components";
 
+import Loading from 'dan-components/Loading';
 import "../../styles/custom/hexagon.css";
-import icons from "dan-api/images/icons";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import Modal from "@material-ui/core/Modal";
-import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -58,13 +34,13 @@ import cTower from "dan-images/projectImages/cTower.png";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CardActions from "@material-ui/core/CardActions";
 import Divider from "@material-ui/core/Divider";
-import EditIcon from "@material-ui/icons/Edit";
+// import EditIcon from "@material-ui/icons/Edit";
 
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 
 import axios from "axios";
 import api from "../../utils/axios";
@@ -225,38 +201,45 @@ function PersonalDashboard(props) {
   const [applications, setApplications] = useState([]);
   const [modules, setModules] = useState([]);
   const [codes, setCode] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const getSubscriptions = async (compId) => {
 
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
-    try {
-      let data = await api.get(`${SELF_API}${companyId}/`)
-        .then(function (res) {
+    if (companyId) {
+
+      try {
+        let data = await api.get(`${SELF_API}${companyId}/`)
+          .then(function (res) {
 
 
-          return res.data.data.results.data.companies[0].subscriptions;
+            return res.data.data.results.data.companies[0].subscriptions;
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+
+        await setSubscriptions(data)
+
+
+        const apps = data.map(app => app.appId)
+
+        let app = data.filter(app => app.appCode === "safety")
+
+        let module = app[0].modules.map(item => {
+          if (item.subscriptionStatus == "active") {
+
+            return item.moduleCode
+          }
         })
-        .catch(function (error) {
-          console.log(error);
-        });
 
-      await setSubscriptions(data)
+        setCode(module)
+        getModules(apps)
+      } catch (error) { }
+    }
 
-      
-      const apps = data.map(app => app.appId)
-      console.log(data)
-      let app = data.filter(app=> app.appId === 1)
-      console.log(app)
-      let module = app[0].modules.map(item=>{
-        if(item.subscriptionStatus =="active"){
-          console.log(item.moduleCode)
-          return item.moduleCode
-        }
-      })
-    
-      setCode(module)
-      getModules(apps)
-    } catch (error) { }
   }
 
   const getModules = async (apps) => {
@@ -269,10 +252,10 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-    let data1 = apps.filter(item=>item.appId===1)
-    console.log(data1)
+    let data1 = apps.filter(item => item.appId === 1)
+
     const codes = data.map(module => module.subscriptionStatus)
-    console.log(apps)
+
     // setCode(codes)
 
 
@@ -280,15 +263,38 @@ function PersonalDashboard(props) {
   }
 
   const handleClick = (appCode) => {
-    if(appCode === "observations"){
-      history.push('/app/observations')
+    let fkAppId = ""
+
+    let fkApp = modules.map(module => {
+      if (module.moduleCode === appCode) {
+        fkAppId = module.fkAppId
+        return module.fkAppId && module.fkAppId;
+      }
+    })
+
+    let targetPage = modules.map(module => {
+      if (module.moduleCode == appCode) {
+        return module.targetPage;
+      }
+    }).join(' ')
+    // console.log({targetPage:apps.appId})
+
+    let clientId = ''
+    let hostings = subscriptions.map(apps => {
+
+      if (fkAppId === apps.appId) {
+        clientId = apps.hostings[0].clientId
+        return apps.hostings;
+      }
+    })[0];
+
+
+    if (clientId) {
+
+      window.location.href = ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId
 
     }
-    else if(appCode === "incidents"){
-      history.push('/incidents/')
 
-    }else if(appCode === "assessments")
-      history.push('/app/pages/assesments/xflha')
   }
 
   const handleDisableModule = (appcode) => {
@@ -309,10 +315,28 @@ function PersonalDashboard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  // multi tenant architecture, fetch company
+  const fetchCompany = async (url) => {
+    let config = {
+      method: 'get',
+      url: url,
+      headers: HEADER_AUTH,
+    }
+    await (config)
+  }
 
   // compney name get
   const handleCompanyName = async (e, key, name) => {
-
+    let hosting = companyListData.filter(company => company.companyId === e)[0]
+      .subscriptions
+      .filter(subscription => subscription.appCode == "safety")[0]
+      .hostings[0].apiDomain
+    let config = {
+      method: "get",
+      url: `${hosting}/api/v1/core/companies/select/${e}/`,
+      headers: HEADER_AUTH,
+    };
+    axios(config)
     let companeyDetails = {};
     companeyDetails.fkCompanyId = e;
     await getSubscriptions(e)
@@ -337,7 +361,7 @@ function PersonalDashboard(props) {
     else {
       await setOpen(false);
     }
-   
+
   };
 
   //Project selections
@@ -357,7 +381,7 @@ function PersonalDashboard(props) {
   };
 
   // fetch user data
-  const userDetails = async () => {
+  const userDetails = async (comId = 0, proId = 0, redback = '', tarPage = '', tarId) => {
     let config = {
       method: "get",
       url: `${SELF_API}`,
@@ -367,6 +391,10 @@ function PersonalDashboard(props) {
       .then(function (response) {
 
         if (response.status === 200) {
+          if (comId != 0) {
+            response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
+          }
+
           if (response.data.data.results.data.companies.length > 1) {
             const companey = JSON.parse(localStorage.getItem("company"));
             if (companey === null) {
@@ -375,9 +403,21 @@ function PersonalDashboard(props) {
             }
           }
           if (response.data.data.results.data.companies.length === 1) {
+            let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
+              .subscriptions
+              .filter(subscription => subscription.appCode == "safety")[0]
+              .hostings[0].apiDomain
+            let config = {
+              method: "get",
+              url: `${hosting}/api/v1/core/companies/select/${response.data.data.results.data.companies[0].companyId}/`,
+              headers: HEADER_AUTH,
+            };
+            axios(config)
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
+            console.log({ userDetails: response.data.data.results.data.companies })
+            // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
             companeyDetails.fkCompanyName =
@@ -386,6 +426,9 @@ function PersonalDashboard(props) {
             dispatch(company(companeyDetails))
             let newData = response.data.data.results.data.companies[0];
             if (newData) {
+              if (proId != 0) {
+                newData.projects = newData.projects.filter(proj => proj.projectId == proId)
+              }
               if (newData.projects.length === 1) {
                 dispatch(projectName(newData.projects[0]));
                 localStorage.setItem(
@@ -394,8 +437,11 @@ function PersonalDashboard(props) {
                 );
               }
               if (newData.projects.length > 1) {
-                setProjectListData(newData.projects);
-                setProjectOpen(true);
+                if (JSON.parse(localStorage.getItem('projectName') === null)) {
+                  setProjectListData(newData.projects);
+                  setProjectOpen(true);
+                }
+
                 // setOpen(true);
               }
             }
@@ -404,308 +450,326 @@ function PersonalDashboard(props) {
         }
       })
       .catch(function (error) {
-        // localStorage.removeItem("access_token");
-        // localStorage.clear();
-        // window.location.href = `${LOGOUT_URL}`;
+
       });
   };
 
   useEffect(() => {
-    userDetails();
-   
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    let comId = 0
+    let proId = 0
+    let redback = ''
+    let tarPage = ''
+    let tarId = 0
+    if (state !== null) {
+      setIsLoading(false)
+    }
+    userDetails(comId, proId, redback, tarPage, tarId);
 
-  }, [props.initialValues.companyDataList]);
+    getSubscriptions();
 
-  return (
-    <PapperBlock title="Home" icon="ion-md-list-box">
-      <div className="seven_hexagon_row">
-        <div className="honeycomb">
-          <div className="ibws-fix hexagon_row1">
+  }, [props.initialValues.companyListData]);
+  if (isLoading) {
+    return (
+      <PapperBlock title="Home" icon="ion-md-list-box">
+        {isLoading && <>
+          <div className="seven_hexagon_row">
+            <div className="honeycomb">
+              <div className="ibws-fix hexagon_row1">
 
-            <div className="hexagon hide_responsiv">
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_health_safety_environment_mgmt_new"
+                      onClick={() => handleClick('HSE')}
+                    >
+                      <p>HSE Management</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className={!(codes.includes('compliance')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_compliance_protocols" onClick={() => handleClick('compliance')}>
+                      <p>Compliance Protocols</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box" >
+                    <a
+                      className="hse_incident_reporting_management"
+                      onClick={() => handleClick('incidents')}
+                    >
+                      <p >Incident Management</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+              </div>
+
+              {/* Action Tracker
+  
+            Permit Management */}
+
+              <div className="ibws-fix hexagon_row2">
+                <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
+                      <p>Project Information Hub </p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
+                      <p>Assessments</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_observations" onClick={() => handleClick('observations')}>
+                      <p>iCare</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className={!(codes.includes('intelligent_permit_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_intelligent_permit_management_new"
+                      onClick={() => handleClick('intelligent_permit_management')}
+                    >
+                      <p>Permit Management</p>
+                    </a>
+                  </div>
+                </div>
+
+                {/* <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
-            </div>
+            </div> */}
 
-            <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a
-                  className="hse_health_safety_environment_mgmt_new"
-                  onClick={() => handleClick('HSE')}
-                >
-                  <p>HSE Management</p>
-                </a>
+                <div className={!(codes.includes('env_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_environment_development"
+                      onClick={() => handleClick('env_management')}
+                    >
+                      <p>Environment Management</p>
+                    </a>
+                  </div>
+                </div>
+                <div className={!(codes.includes('collaboration')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_rapid_knowledge_collaboration"
+                      onClick={() => handleClick('collaboration')}
+                    >
+                      <p>Rapid Knowledge & Collaboration</p>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
+              <div className="ibws-fix hexagon_row1">
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
 
-            <div className={!(codes.includes('compliance')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_compliance_protocols" onClick={() => handleClick('compliance')}>
-                  <p>Compliance Protocols</p>
-                </a>
-              </div>
-            </div>
+                <div className="hexagon bghide_in_view hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
 
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
+                <div className="hexagon hide_responsiv hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
 
-            <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box" >
-                <a
-                  className="hse_incident_reporting_management"
-                  onClick={() => handleClick('incidents')}
-                >
-                  <p >Incident Management</p>
-                </a>
-              </div>
-            </div>
+                <div className="hexagon bghide_in_view hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
 
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-          </div> 
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
 
-          {/* Action Tracker
+                <div className="hexagon bghide_in_view hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
 
-          Permit Management */}
-
-          <div className="ibws-fix hexagon_row2">
-            <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
-                  <p>Project Information Hub </p>
-                </a>
-              </div>
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
-                  <p>Assessments</p>
-                </a>
-              </div>
-            </div>
-
-            <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_environment_development" onClick={() => handleClick('observations')}>
-                  <p>Observations</p>
-                </a>
-              </div>
-            </div>
-
-            <div className={!(codes.includes('intelligent_permit_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a
-                  className="hse_intelligent_permit_management_new"
-                  onClick={() => handleClick('intelligent_permit_management')}
-                >
-                  <p>Permit Management</p>
-                </a>
-              </div>
-            </div>
-
-            {/* <div className="hexagon hide_responsiv">
-            <div className="hexagontent hexagon_content_box" />
-          </div> */}
-
-            <div className={!(codes.includes('env_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a
-                  onClick={() => handleClick('env_management')}
-                >
-                  <p>Environment Management</p>
-                </a>
-              </div>
-            </div>
-            <div className={!(codes.includes('collaboration')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a
-                  onClick={() => handleClick('collaboration')}
-                >
-                  <p>Rapid Knowledge & Collaboration</p>
-                </a>
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="ibws-fix hexagon_row1">
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
 
-            <div className="hexagon bghide_in_view hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
 
-            <div className="hexagon hide_responsiv hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon bghide_in_view hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon bghide_in_view hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* <Hexagon companyId={companyId}/> */}
-      {/* Company */}
-
-      <Dialog
-        className={classes.projectDialog}
-        open={open}
-        onClose={(event, reason) => {
-          if (reason !== 'backdropClick') {
-            handleClose(event, reason);
-          }
-        }}
-        PaperProps={{
-          style: {
-            width: 400,
-          },
-        }}
-      >
-        <DialogTitle onClose={handleClose}>
-          Select Company
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <List>
-                  {companyListData.length > 0
-                    ? companyListData.map((selectValues, key) => (
-                      <ListItem
-                        button
+          <Dialog
+            className={classes.projectDialog}
+            open={open}
+            onClose={(event, reason) => {
+              if (reason !== 'backdropClick') {
+                handleClose(event, reason);
+              }
+            }}
+            PaperProps={{
+              style: {
+                width: 400,
+              },
+            }}
+          >
+            <DialogTitle onClose={handleClose}>
+              Select Company
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <List>
+                      {companyListData.length > 0
+                        ? companyListData.map((selectValues, key) => (
+                          <ListItem
+                            button
+                            key={key}
+                            onClick={() =>
+                              handleCompanyName(
+                                selectValues.companyId,
+                                key,
+                                selectValues.companyName
+                              )
+                            }
+                          >
+                            <ListItemAvatar>
+                              <Avatar variant="rounded">
+                                <ImageIcon />
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              className={classes.companyNameList}
+                              primary={selectValues.companyName}
+                            />
+                          </ListItem>
+                        ))
+                        : null}
+                    </List>
+                  </Grid>
+                </Grid>
+              </DialogContentText>
+            </DialogContent>
+          </Dialog>
+          {/* Project  */}
+          <Dialog
+            className={classes.projectDialog}
+            fullScreen
+            scroll="paper"
+            open={projectOpen}
+            onClose={handleProjectClose}
+          >
+            <DialogTitle onClose={handleProjectClose}>
+              Select a Project
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <Grid container spacing={4}>
+                  {projectListData.length > 0
+                    ? projectListData.map((selectValues, key) => (
+                      <Grid
+                        item
+                        md={4}
+                        sm={6}
+                        xs={12}
+                        className={classesm.cardContentBox}
                         key={key}
-                        onClick={() =>
-                          handleCompanyName(
-                            selectValues.companyId,
-                            key,
-                            selectValues.companyName
-                          )
-                        }
                       >
-                        <ListItemAvatar>
-                          <Avatar variant="rounded">
-                            <ImageIcon />
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          className={classes.companyNameList}
-                          primary={selectValues.companyName}
-                        />
-                      </ListItem>
+                        <Card
+
+
+                          onClick={() => handleProjectName(key)}
+                        >
+                          <CardActionArea className={classesm.cardActionAreaBox}>
+                            <div className={classesm.cardMediaBox}>
+                              <CardMedia
+                                className={classesm.media}
+                                image={ProjectImg}
+                              //title=""
+                              />
+                            </div>
+                            <CardContent>
+                              <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="h2"
+                                className={classesm.projectSelectionTitle}
+                              >
+                                {selectValues.projectName}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                component="p"
+                                className={classesm.projectSelectionCode}
+                              >
+                                Code: {selectValues.projectCode}
+                              </Typography>
+                            </CardContent>
+                          </CardActionArea>
+                          <Divider />
+                          <CardActions className={classesm.actionBttmArea}>
+                            <Tooltip title="Control Tower">
+                              <IconButton aria-label="control tower">
+                                <Avatar
+                                  className={classesm.cTowerIcon}
+                                  src={cTower}
+                                />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="GIS Location">
+                              <IconButton aria-label="GIS location">
+                                <LocationOnIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </CardActions>
+                        </Card>
+                      </Grid>
                     ))
                     : null}
-                </List>
-              </Grid>
-            </Grid>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
-      {/* Project  */}
-      <Dialog
-        className={classes.projectDialog}
-        fullScreen
-        scroll="paper"
-        open={projectOpen}
-        onClose={handleProjectClose}
-      >
-        <DialogTitle onClose={handleProjectClose}>
-          Switch to a Different Project
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <Grid container spacing={4}>
-              {projectListData.length > 0
-                ? projectListData.map((selectValues, key) => (
-                  <Grid
-                    item
-                    md={4}
-                    sm={6}
-                    xs={12}
-                    className={classesm.cardContentBox}
-                  >
-                    <Card
-                      key={key}
-                      key={key}
-                      onClick={() => handleProjectName(key)}
-                    >
-                      <CardActionArea className={classesm.cardActionAreaBox}>
-                        <div className={classesm.cardMediaBox}>
-                          <CardMedia
-                            className={classesm.media}
-                            image={ProjectImg}
-                          //title=""
-                          />
-                        </div>
-                        <CardContent>
-                          <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="h2"
-                            className={classesm.projectSelectionTitle}
-                          >
-                            {selectValues.projectName}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                            className={classesm.projectSelectionCode}
-                          >
-                            Code: {selectValues.projectCode}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                      <Divider />
-                      <CardActions className={classesm.actionBttmArea}>
-                        <Tooltip title="Control Tower">
-                          <IconButton aria-label="control tower">
-                            <Avatar
-                              className={classesm.cTowerIcon}
-                              src={cTower}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="GIS Location">
-                          <IconButton aria-label="GIS location">
-                            <LocationOnIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))
-                : null}
-            </Grid>
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
-    </PapperBlock>
-  );
+                </Grid>
+              </DialogContentText>
+            </DialogContent>
+          </Dialog>
+        </>}
+      </PapperBlock>
+    );
+  } else {
+    return (
+      <Loading />
+    )
+  }
+
 }
 
 PersonalDashboard.propTypes = {

@@ -32,6 +32,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import apiAction from "../../../utils/axiosActionTracker"
 
 import {
   access_token,
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
       border: 'none',
     },
   },
-  dialogContent:{
+  dialogContent: {
     overflow: 'hidden',
   }
 }));
@@ -76,17 +77,17 @@ export default function ActionTracker(props) {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
   const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
   const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName
-    : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
   const selectBreakdown =
-  JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-    var struct = "";
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  var struct = "";
   for (var i in selectBreakdown) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
@@ -133,50 +134,47 @@ export default function ActionTracker(props) {
     vendor: "string",
     vendorReferenceId: "string",
   });
-  let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  const api = axios.create({
-    baseURL: API_URL_ACTION_TRACKER,
-  });
+
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
   const [actionTakenData, setActionTakenData] = useState([])
-  const [isLoading , setIsLoading] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  console.log(props)
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, actionTitle: ""  , plannedEndDate: null })
+    await setForm({ ...form, actionTitle: "", plannedEndDate: null })
     await setOpen(false);
   };
   const handelSubmit = async () => {
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
-      
+
     } else {
-      if(form.actionTitle.length > 255){
+      if (form.actionTitle.length > 255) {
         setError({ actionTitle: "Please enter less than 255 character" });
 
       }
-      else{
-      let res = await api.post(`api/v1/actions/`, form);
-      if (res.status == 201) {
-        let actionId = res.data.data.results.actionNumber
-        localStorage.setItem("actionId" , actionId)
-        await setError({ actionTitle: "" });
-        await setForm({ ...form,actionTitle : "",assignTo : "",severity : "", plannedEndDate: null })
-        await setOpen(false);
-        await props.setUpdatePage(!props.updatePage)
+      else {
+        let res = await apiAction.post(`api/v1/actions/`, form);
+        if (res.status == 201) {
+          let actionId = res.data.data.results.actionNumber
+          localStorage.setItem("actionId", actionId)
+          await setError({ actionTitle: "" });
+          await setForm({ ...form, actionTitle: "", assignTo: "", severity: "", plannedEndDate: null })
+          await setOpen(false);
+          await props.setUpdatePage(!props.updatePage)
 
+        }
       }
-    }
-  };
+    };
   }
   let actionId = props.actionId;
   let actionDetail = props.actionData
   let severity = ["Normal", "Critical", "Blocker"];
-  const [reportedByName , setReportedByName] = useState([]);
+  const [reportedByName, setReportedByName] = useState([]);
   let filterReportedByName = []
   const classes = useStyles();
 
@@ -204,153 +202,150 @@ export default function ActionTracker(props) {
       });
   };
 
-  const fetchactionTrackerData = async () =>{
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+  const fetchactionTrackerData = async () => {
+
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 
-      
-      )
-      let sorting = newData.sort((a, b) => a.id - b.id)
+      (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId")
+
+    )
+    let sorting = newData.sort((a, b) => a.id - b.id)
     await setActionTakenData(sorting)
     await setIsLoading(true);
 
   }
 
   useEffect(() => {
-      fetchReportedBy()
-      fetchactionTrackerData();
-    
-    
-  },[])
+    fetchReportedBy()
+    fetchactionTrackerData();
+
+
+  }, [])
 
   return (
     <>
       {isLoading ? (<>
         {/* {actionTakenData[0] ? <Link onClick={handleClickOpen}>{actionDetail.actionNumber}</Link>  : */}
-      <button
-        size="small"
-        variant="outlined"
-        color="primary"
-        onClick={handleClickOpen}
-      >
-        <FlashOnIcon />
-      </button> 
-      {/* } */}
-      <Dialog
-        fullWidth={true}
-        maxWidth="sm"
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
-        <IconButton
-          className={classes.dialogCloseButton}
-          onClick={(e) => {
-            setOpen(false);
-            setError({ actionTitle: "" });
-          }}
+        <button
+          size="small"
+          variant="outlined"
+          color="primary"
+          onClick={handleClickOpen}
         >
-          <CloseIcon onClick={handleClose}/>
-        </IconButton>
-        <DialogContent className={classes.dialogContent}>
-          {/* action title */}
-          <Grid container spacing={3}>
-          <Grid item md={12}>
-            <TextField
-              className={classes.formControl}
-              id="filled-basic"
-              label="Action title"
-              variant="outlined"
-              autoComplete="off"
-              required
-              rows={1}
-              // defaultValue={actionDetail.actionTitle}
-              error={error.actionTitle}
-              helperText={error ? error.actionTitle : ""}
-              onChange={(e) =>
-                setForm({ ...form, actionTitle: e.target.value })
-              }
-            />
-          </Grid>
+          <FlashOnIcon />
+        </button>
+        {/* } */}
+        <Dialog
+          fullWidth={true}
+          maxWidth="sm"
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
+          <IconButton
+            className={classes.dialogCloseButton}
+            onClick={(e) => {
+              setOpen(false);
+              setError({ actionTitle: "" });
+            }}
+          >
+            <CloseIcon onClick={handleClose} />
+          </IconButton>
+          <DialogContent className={classes.dialogContent}>
+            {/* action title */}
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <TextField
+                  className={classes.formControl}
+                  id="filled-basic"
+                  label="Action title"
+                  variant="outlined"
+                  autoComplete="off"
+                  required
+                  rows={1}
+                  // defaultValue={actionDetail.actionTitle}
+                  error={error.actionTitle}
+                  helperText={error ? error.actionTitle : ""}
+                  onChange={(e) =>
+                    setForm({ ...form, actionTitle: e.target.value })
+                  }
+                />
+              </Grid>
 
-          {/* assigen */}
-          <Grid item md={12}>
-              <Autocomplete
-                id="combo-box-demo"
-                options={reportedByName}
-                className={classes.mT30}
-                getOptionLabel={(option) => option.name}
-                onChange={(e,option) => 
-                  setForm({
-                    ...form,
-                    assignTo: option.id,
-                  })
-                }
-                renderInput={(params) => <TextField {...params}
-                //  margin="dense"
-                  label="Assignee"  variant="outlined" />}
-            />
-            {/* </FormControl> */}
-          </Grid>
+              {/* assigen */}
+              <Grid item md={12}>
+                <Autocomplete
+                  id="combo-box-demo"
+                  options={reportedByName}
+                  className={classes.mT30}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(e, option) =>
+                    setForm({
+                      ...form,
+                      assignTo: option.id,
+                    })
+                  }
+                  renderInput={(params) => <TextField {...params}
+                    //  margin="dense"
+                    label="Assignee" variant="outlined" />}
+                />
+                {/* </FormControl> */}
+              </Grid>
 
-          {/* due date */}
-          <Grid item md={12}>
-            <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
-              <KeyboardDatePicker
-                className={classes.formControl}
-                label="Due date"
-                format="dd/MM/yyyy"
-                inputVariant="outlined"
-                value={form.plannedEndDate}
-                disablePast={true}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    plannedEndDate: moment(e).toISOString(),
-                  });
-                }}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
+              {/* due date */}
+              <Grid item md={12}>
+                <MuiPickersUtilsProvider variant="outlined" utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    className={classes.formControl}
+                    label="Due date"
+                    format="dd/MM/yyyy"
+                    inputVariant="outlined"
+                    value={form.plannedEndDate}
+                    disablePast={true}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        plannedEndDate: moment(e).toISOString(),
+                      });
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
 
-          {/* severity */}
+              {/* severity */}
 
-          <Grid item md={12}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="project-name-label">Severity</InputLabel>
-              <Select
-                id="project-name"
-                labelId="project-name-label"
-                label="RCA recommended"
-              >
-                {severity.map((selectValues) => (
-                  <MenuItem
-                    value={selectValues}
-                    onClick={(e) =>
-                      setForm({ ...form, severity: selectValues })
-                    }
+              <Grid item md={12}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="project-name-label">Severity</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="RCA recommended"
                   >
-                    {selectValues}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={(e) => handelSubmit()} variant="outlined" size="medium" className={classes.custmSubmitBtn}>
-            Create action
-          </Button>
-        </DialogActions>
-      </Dialog></>) : <h1></h1>}
-    </> 
+                    {severity.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) =>
+                          setForm({ ...form, severity: selectValues })
+                        }
+                      >
+                        {selectValues}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={(e) => handelSubmit()} variant="outlined" size="medium" className={classes.custmSubmitBtn}>
+              Create action
+            </Button>
+          </DialogActions>
+        </Dialog></>) : <h1></h1>}
+    </>
   );
 }

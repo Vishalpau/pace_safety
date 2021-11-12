@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
+import { FormHelperText } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import Grid from "@material-ui/core/Grid";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
-import { FormHelperText } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-grid-system";
 import { useHistory, useParams } from "react-router";
-import moment from "moment";
-import api from "../../../utils/axios";
-
-import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
-
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
 import Type from "../../../styles/components/Fonts.scss";
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import PersonalAndPpeDetailValidate from "../../Validator/PersonalAndPpeDetailValidation";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -49,6 +47,7 @@ const PersonalAndPpeDetails = () => {
   const [ppeList, setPpeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [incidentDetail, setIncidentDetail] = useState({});
+  const [isNext, setIsNext] = useState(true)
   const [ppeData, setPpeData] = useState([
     {
       questionCode: "PPE-08",
@@ -207,39 +206,51 @@ const PersonalAndPpeDetails = () => {
   ]);
 
   const handleNext = async () => {
+    setIsNext(false)
     if (id && ppeList.length > 19) {
-      const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/additional-details/${id}`
-        );
+      try {
+        const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/additional-details/${id}`
+          );
+        }
+      } catch (err) {
+        setIsNext(true)
       }
+
     } else if (localStorage.getItem("fkincidentId") && ppeList.length > 19) {
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        ppeList
-      );
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/additional-details/`
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          ppeList
         );
-      }
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/additional-details/`
+          );
+        }
+      } catch (err) { setIsNext(true) }
     } else {
       const valdation = ppeData;
       const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
       await setError(error);
       if (!isValid) {
+        setIsNext(true)
         return "Data is not valid";
       }
+      try {
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          ppeData
+        );
 
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        ppeData
-      );
+        history.push(
+          "/app/incident-management/registration/evidence/additional-details/"
+        );
 
-      history.push(
-        "/app/incident-management/registration/evidence/additional-details/"
-      );
+
+      } catch (err) { setIsNext(true) }
     }
     // }
   };
@@ -877,8 +888,9 @@ const PersonalAndPpeDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
+                  disabled={!isNext}
                 >
-                  Next
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -894,7 +906,7 @@ const PersonalAndPpeDetails = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

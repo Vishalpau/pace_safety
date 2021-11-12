@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'dan-api/palette/themePalette';
 import {
   BarChart,
@@ -17,7 +17,7 @@ import green from '@material-ui/core/colors/green';
 import { data2 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.blueTheme);
+const theme = createTheme(ThemePallete.blueTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,

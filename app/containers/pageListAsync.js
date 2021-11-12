@@ -624,6 +624,14 @@ export const ObservationInitialNotificationUpdate = loadable(() => import("./Pag
   fallback: <Loading />,
 });
 
+export const ObservationBulkupload = loadable(() => import("./Pages/Observations/ObservationBulkupload"), {
+  fallback: <Loading />,
+});
+
+export const ObservationUploadScreen = loadable(() => import("./Pages/Observations/ObservationUploadScreen"), {
+  fallback: <Loading />,
+});
+
 // checklist
 
 export const CheckList = loadable(() =>
@@ -641,6 +649,10 @@ export const Options = loadable(() =>
   fallback: <Loading />,
 });
 export const Prints = loadable(() => import("./Print/Prints"), {
+  fallback: <Loading />,
+});
+
+export const GeneralObservationPrints = loadable(() => import("./SampleApps/GeneralObservationPrints"), {
   fallback: <Loading />,
 });
 
@@ -810,3 +822,7 @@ export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), 
 // export const FlhaConfigHazard = loadable(() => import("./pages/assesments/FlhaConfigHazard"), {
 //   fallback: <Loading />,
 // });
+
+export const ControlTowerIcare = loadable(() => import('./Pages/ControlTower/ControlTowerIcare'), {
+  fallback: <Loading />,
+});

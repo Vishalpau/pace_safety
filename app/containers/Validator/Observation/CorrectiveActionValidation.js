@@ -1,45 +1,43 @@
 import validator from "validator";
 
-function CorrectiveActionValidator(data) {
+function CorrectiveActionValidator(data ,action,button) {
   
-
+console.log(action.length);
   const error = {};
   let isValid = true;
-  if (data.reviewedByName === null) {
-    error.reviewedByName = "Please select the reviewedBy";
-    isValid = false;
-  }
+  if(button === "submit"){
+    if (data.reviewedByName === null) {
+      error.reviewedByName = "Select the reviewedBy";
+      isValid = false;
+    }
+    
+    if(data.reviewedOn > new Date()){
+      error.reviewedOn = "Select correct time";
+      isValid = false;
+    }
 
+    if (data.reviewedOn === null) {
+      error.reviewedOn = "Select date and time";
+      isValid = false;
+    }
+
+  }
+  
   if (data.isCorrectiveActionTaken === null) {
-    error.isCorrectiveActionTaken = "Please select any one";
+    error.isCorrectiveActionTaken = "Select any one";
     isValid = false;
   }
 
-//   if (validator.isEmpty(data.location.toString())) {
-//     error.location = "Please enter the location";
-//     isValid = false;
-//   }
 
-  if (data.reviewedOn === null) {
-    error.reviewedOn = "Please select date and time";
+  
+  if (data.isCorrectiveActionTaken === "Yes") {
+
+  if(action.length == 0){
+    error.action = "create atleast one action";
     isValid = false;
   }
-
-  if(data.reviewedOn > new Date()){
-    error.reviewedOn = "Please select correct  time";
-    isValid = false;
-  }
-//   if (isNaN(data.supervisorByBadgeId)) {
-//     error.supervisorByBadgeId = "Only numbers allowed in supervisor's badge number";
-//     isValid = false;
-//  }
-
-//  if (validator.isEmpty(data.supervisorName.toString())) {
-//   error.supervisorName = "Please select the supervisor's name";
-//   isValid = false;
-// }
-
-
+}
+  console.log(error)
 return { error, isValid };
 }
 

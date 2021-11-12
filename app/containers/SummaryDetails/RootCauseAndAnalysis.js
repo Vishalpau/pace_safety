@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 // Table
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -18,19 +12,21 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TablePagination from "@material-ui/core/TablePagination";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import { useHistory, useParams } from "react-router";
-import Link from '@material-ui/core/Link';
-import axios from "axios";
-
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import EditIcon from "@material-ui/icons/Edit";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Fonts from "dan-styles/Fonts.scss";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import "../../styles/custom/summary.css";
 // Styles
 import api from "../../utils/axios";
-import "../../styles/custom/summary.css";
-import Fonts from "dan-styles/Fonts.scss";
+import { handelActionData } from "../../utils/CheckerValue";
+import ActionTracker from "../Forms/ActionTracker";
+import ActionShow from "../Forms/ActionShow";
+import Loader from "../Forms/Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,19 +60,17 @@ const RootCauseAnalysisSummary = () => {
     projectId: "",
     companyId: "",
   })
-
+  const [whyAction, setWhyAction] = useState([])
+  const [updatePage, setUpdatePage] = useState(false)
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  const [isLoading, setIsLoading] = useState(false)
 
   const fkid = localStorage.getItem("fkincidentId");
 
   const setRemark = (value) => {
     let remark = value.includes(",") ? value.split(",") : [value];
-    if (remark.includes("No option selected") && remark.length > 0) {
-      let removeItemIndex = remark.indexOf("No option selected");
-      remark.splice(removeItemIndex, 1);
-    }
     return remark;
   };
   const fetchRootCauseData = async () => {
@@ -112,35 +106,15 @@ const RootCauseAnalysisSummary = () => {
   };
 
   const handelActionTracker = async (apiData) => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+
     let incidentID = localStorage.getItem("fkincidentId")
-    for (let key in apiData) {
-      const allActionTrackerData = await api_action.get(
-        `api/v1/actions/?enitityReferenceId__startswith=${incidentID}%3A${apiData[key]["id"]
-        }`
-      );
-      if (allActionTrackerData.data.data.results.results.length > 0) {
-        let actionTracker = allActionTrackerData.data.data.results.results;
-        const temp = [];
-        actionTracker.map((value) => {
-          const tempAction = {}
-          let actionTrackerId = value.id;
-          let actionTrackerNumber = value.actionNumber
-          tempAction["number"] = actionTrackerNumber
-          tempAction["id"] = actionTrackerId
-          temp.push(tempAction);
-        });
-        apiData[key]["action"] = temp;
-      } else {
-        apiData[key]["action"] = [];
-      }
-    }
-    await setPaceCauses(apiData);
+    let allAction = await handelActionData(incidentID, apiData)
+    await setPaceCauses(allAction);
   };
 
+  const handelShowData = () => {
+
+  }
   const handelActionLink = () => {
     const projectId =
       JSON.parse(localStorage.getItem("projectName")) !== null
@@ -170,6 +144,10 @@ const RootCauseAnalysisSummary = () => {
     let valueArray = value.replace(",", ",  ");
     return valueArray;
   };
+  const handelWhyAnalysisAction = async () => {
+    let allAction = await handelActionData(fkid, [], "one")
+    await setWhyAction(allAction);
+  };
   const history = useHistory();
 
   const handelRootCauseAnalysis = (e, value) => {
@@ -184,12 +162,19 @@ const RootCauseAnalysisSummary = () => {
     }
   };
 
+  const handelCallBack = async () => {
+    await setIsLoading(true)
+    await fetchRootCauseData();
+    await fetchFiveWhyData();
+    await fetchCauseAnalysiseData();
+    await fetchPaceCausesData();
+    await handelActionLink()
+    await handelWhyAnalysisAction()
+    await setIsLoading(false)
+  }
+
   useEffect(() => {
-    fetchRootCauseData();
-    fetchFiveWhyData();
-    fetchCauseAnalysiseData();
-    fetchPaceCausesData();
-    handelActionLink()
+    handelCallBack()
   }, []);
 
   const classes = useStyles();
@@ -219,242 +204,293 @@ const RootCauseAnalysisSummary = () => {
           )}
         </Grid>
       )}
-      {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
-        <Grid item xs={12}>
-          <Grid container spacing={3}>
+      {isLoading == false ?
+        <>
+          {typeof causeanalysis !== "undefined" && causeanalysis.length !== 0 ? (
             <Grid item xs={12}>
-              <Typography variant="h6" className={Fonts.labelName} gutterBottom>
-                RCA recommended
-              </Typography>
-              <Typography className={Fonts.labelValue} gutterBottom>
-                {causeanalysis.rcaRecommended}
-              </Typography>
-            </Grid>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography variant="h6" className={Fonts.labelName} gutterBottom>
+                    RCA recommended
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.rcaRecommended}
+                  </Typography>
+                </Grid>
 
+                <Grid item xs={12}>
+                  <Typography variant="h6" className={Fonts.labelName} gutterBottom>
+                    Evidence collected supports the incident event took place?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceSupport}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Typography variant="h6" className={Fonts.labelName} gutterBottom>
+                    Contradictions between evidence and the description of incident?
+                  </Typography>
+                  <Typography className={Fonts.labelValue} gutterBottom>
+                    {causeanalysis.evidenceContradiction}
+                  </Typography>
+                </Grid>
+
+
+              </Grid>
+            </Grid>
+          ) : (
             <Grid item xs={12}>
-              <Typography variant="h6" className={Fonts.labelName} gutterBottom>
-                Evidence collected supports the incident event took place?
-              </Typography>
-              <Typography className={Fonts.labelValue} gutterBottom>
-                {causeanalysis.evidenceSupport}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Fonts.labelName} gutterBottom>
-                Contradictions between evidence and the description of incident?
-              </Typography>
-              <Typography className={Fonts.labelValue} gutterBottom>
-                {causeanalysis.evidenceContradiction}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="h6" className={Fonts.labelName} gutterBottom>
-                Evidence does not supports the incident event as described?
-              </Typography>
-              <Typography className={Fonts.labelValue} gutterBottom>
-                {causeanalysis.evidenceNotSupport}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid item xs={12}>
-          <Typography className={classes.heading}>
-            Root cause is pending
-          </Typography>
-        </Grid>
-      )}
-
-      {rootCause.length !== 0 ? (
-        <Grid item xs={12}>
-          <Accordion
-            expanded={expanded === "panel2"}
-            onChange={handleExpand("panel2")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>
-                Cause analysis
+                Root cause is pending
               </Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{ root: "details-wrapper" }}>
-              <Grid container spacing={5}>
-                {rootCause.map((root, key) => (
-                  <>
-                    <Grid item md={12}>
-                      {/* cause of incident */}
-                      <Typography
-                        variant="h6"
-                        className={Fonts.labelName}
-                        gutterBottom
-                      >
-                        Cause on incident
-                      </Typography>
-                      <Typography className={Fonts.labelValue}>
-                        {root.causeOfIncident}
-                      </Typography>
-                    </Grid>
+            </Grid>
+          )}
 
-                    <Grid item md={12}>
-                      {/* corrective action */}
-                      <Typography
-                        variant="h6"
-                        className={Fonts.labelName}
-                        gutterBottom
-                      >
-                        Corrective solution
-                      </Typography>
-                      <Typography className={Fonts.labelValue}>
-                        {root.correctiveAction}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={12}>
-                      {/* recommended solution */}
-                      {root.recommendSolution !== "" ? (
-                        <>
+          {rootCause.length !== 0 ? (
+            <Grid item xs={12}>
+              <Accordion
+                expanded={expanded === "panel2"}
+                onChange={handleExpand("panel2")}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography className={classes.heading}>
+                    Cause analysis
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails classes={{ root: "details-wrapper" }}>
+                  <Grid container spacing={5}>
+                    {rootCause.map((root, key) => (
+                      <>
+                        <Grid item md={12}>
+                          {/* cause of incident */}
                           <Typography
                             variant="h6"
                             className={Fonts.labelName}
                             gutterBottom
                           >
-                            Recommended solution
+                            Cause on incident
                           </Typography>
                           <Typography className={Fonts.labelValue}>
-                            {root.recommendSolution}
+                            {root.causeOfIncident}
                           </Typography>
-                        </>
-                      ) : null}
-                    </Grid>
-                  </>
-                ))}
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      ) : null}
+                        </Grid>
 
-      {/* five why analysis   */}
-      {fiveWhy.length !== 0 ? (
-        <Grid item xs={12}>
-          <Accordion
-            expanded={expanded === "panel2"}
-            onChange={handleExpand("panel2")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>
-                Five why analysis
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{ root: "details-wrapper" }}>
-              <Grid container spacing={3}>
-                {fiveWhy.map((fw, key) => (
-                  <Grid item md={12}>
-                    <Typography
-                      variant="h6"
-                      className={Fonts.labelName}
-                      gutterBottom
-                    >
-                      Why {fw.whyCount + 1}
-                    </Typography>
-                    <Typography className={Fonts.labelValue}>
-                      {fw.why}
-                    </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      ) : null}
+                        <Grid item md={12}>
+                          {/* corrective action */}
+                          <Typography
+                            variant="h6"
+                            className={Fonts.labelName}
+                            gutterBottom
+                          >
+                            Corrective solution
+                          </Typography>
+                          <Typography className={Fonts.labelValue}>
+                            {root.correctiveAction}
+                          </Typography>
+                        </Grid>
 
-      {pacecauses.length !== 0 ? (
-        <Grid item xs={12}>
-          <Accordion
-            expanded={expanded === "panel4"}
-            onChange={handleExpand("panel4")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>
-                PACE cause analysis
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <TableContainer component={Paper}>
-
-                <Table className={classes.table} style={{ border: '1px solid black' }} size="small">
-                  <TableHead>
-                    <TableRow >
-                      <TableCell className={classes.tabelBorder}>Type</TableCell>
-                      <TableCell className={classes.tabelBorder}>Category</TableCell>
-                      <TableCell className={classes.tabelBorder}>Cause</TableCell>
-                      <TableCell className={classes.tabelBorder}>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {pacecauses.map((pc, key) =>
-                      pc.rcaRemark !== "No option selected" &&
-                        !additionalRcaSubType.includes(pc.rcaSubType) ? (
-                        <TableRow key={key}>
-                          <TableCell className={classes.tabelBorder}>{pc.rcaType}</TableCell>
-                          <TableCell className={classes.tabelBorder}>{handelConvert(pc.rcaSubType)}</TableCell>
-                          <TableCell className={classes.tabelBorder}>
-                            {handelStringToArray(pc.rcaRemark)}
-                          </TableCell>
-                          <TableCell className={classes.tabelBorder}>
-                            {pc.action != undefined && pc.action.map((actionId) => (
-                              <Link display="block"
-                                href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${projectData.companyId}&projectId=${projectData.projectId}&targetPage=/app/pages/Action-Summary/&targetId=${actionId.id}`}
+                        <Grid item md={12}>
+                          {/* recommended solution */}
+                          {root.recommendSolution !== "" ? (
+                            <>
+                              <Typography
+                                variant="h6"
+                                className={Fonts.labelName}
+                                gutterBottom
                               >
-                                {actionId.number}
-                              </Link>
-                            ))}
-                          </TableCell>
-                        </TableRow>
-                      ) : null
-                    )}
-                  </TableBody>
-                </Table>
-
-              </TableContainer>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      ) : null}
-
-      {additionalDetails.length !== 0 ? (
-        <Grid item xs={12}>
-          <Accordion
-            expanded={expanded === "panel5"}
-            onChange={handleExpand("panel5")}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>
-                Additional details
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid item xs={12}>
-                {additionalDetails.map((value) => (
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Typography className={Fonts.labelName}>
-                        {handelConvert(value.rcaSubType)}
-                      </Typography>
-                      {setRemark(value.rcaRemark).map((rcaValue) => (
-                        <Typography className={Fonts.labelValue}>
-                          {rcaValue}
-                        </Typography>
-                      ))}
-                    </Grid>
+                                Recommended solution
+                              </Typography>
+                              <Typography className={Fonts.labelValue}>
+                                {root.recommendSolution}
+                              </Typography>
+                            </>
+                          ) : null}
+                        </Grid>
+                      </>
+                    ))}
                   </Grid>
-                ))}
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      ) : null}
+                  <Grid>
+                    <ActionTracker
+                      actionContext="incidents:causeAnalysis"
+                      enitityReferenceId={`${fkid}:${whyAction.length + 1}`}
+                      setUpdatePage={setUpdatePage}
+                      updatePage={updatePage}
+                      fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                      fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                      handelShowData={handelWhyAnalysisAction}
+                    />
+                  </Grid>
+                  <Grid>
+                    {whyAction.map((actionValue) => (
+                      <>
+                        <ActionShow
+                          action={{ id: actionValue.id, number: actionValue.actionNumber }}
+                          title={actionValue.actionTitle}
+                          companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                          projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                        />
+                      </>
+                    ))}
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ) : null}
+
+          {/* five why analysis   */}
+          {fiveWhy.length !== 0 ? (
+            <Grid item xs={12}>
+              <Accordion
+                expanded={expanded === "panel2"}
+                onChange={handleExpand("panel2")}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography className={classes.heading}>
+                    Five why analysis
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails classes={{ root: "details-wrapper" }}>
+                  <Grid container spacing={3}>
+                    {fiveWhy.map((fw, key) => (
+                      <Grid item md={12}>
+                        <Typography
+                          variant="h6"
+                          className={Fonts.labelName}
+                          gutterBottom
+                        >
+                          Why {fw.whyCount + 1}
+                        </Typography>
+                        <Typography className={Fonts.labelValue}>
+                          {fw.why}
+                        </Typography>
+                      </Grid>
+                    ))}
+                  </Grid>
+                  <Grid item xs={12} >
+                    <ActionTracker
+                      actionContext="incidents:whyAnalysis"
+                      enitityReferenceId={`${fkid}:${whyAction.length + 1}`}
+                      setUpdatePage={setUpdatePage}
+                      updatePage={updatePage}
+                      fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                      fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["incident"]["projectStruct"]}
+                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                      handelShowData={handelWhyAnalysisAction}
+                    />
+                  </Grid>
+                  <Grid>
+                    {whyAction.length > 0 && whyAction.map((actionValue) => (
+                      <>
+                        <ActionShow
+                          action={{ id: actionValue.id, number: actionValue.actionNumber }}
+                          title={actionValue.actionTitle}
+                          companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                          projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                        />
+                      </>
+                    ))}
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ) : null}
+
+          {pacecauses.length !== 0 ? (
+            <Grid item xs={12}>
+              <Accordion
+                expanded={expanded === "panel4"}
+                onChange={handleExpand("panel4")}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography className={classes.heading}>
+                    PACE cause analysis
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TableContainer component={Paper}>
+
+                    <Table className={classes.table} style={{ border: '1px solid black' }} size="small">
+                      <TableHead>
+                        <TableRow >
+                          <TableCell className={classes.tabelBorder}>Type</TableCell>
+                          <TableCell className={classes.tabelBorder}>Category</TableCell>
+                          <TableCell className={classes.tabelBorder}>Cause</TableCell>
+                          <TableCell className={classes.tabelBorder}>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {pacecauses.map((pc, key) =>
+                          pc.rcaRemark !== "No option selected" &&
+                            !additionalRcaSubType.includes(pc.rcaSubType) ? (
+                            <TableRow key={key}>
+                              <TableCell className={classes.tabelBorder}>{pc.rcaType}</TableCell>
+                              <TableCell className={classes.tabelBorder}>{handelConvert(pc.rcaSubType)}</TableCell>
+                              <TableCell className={classes.tabelBorder}>
+                                {handelStringToArray(pc.rcaRemark)}
+                              </TableCell>
+                              <TableCell className={classes.tabelBorder}>
+                                {pc.action != undefined && pc.action.map((actionId) => (
+                                  <ActionShow
+                                    action={actionId}
+                                    companyId={projectData.companyId}
+                                    projectId={projectData.projectId}
+                                    handelShowData={handelShowData}
+                                    index={key}
+                                  />
+                                ))}
+                              </TableCell>
+                            </TableRow>
+                          ) : null
+                        )}
+                      </TableBody>
+                    </Table>
+
+                  </TableContainer>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ) : null}
+
+          {additionalDetails.length !== 0 ? (
+            <Grid item xs={12}>
+              <Accordion
+                expanded={expanded === "panel5"}
+                onChange={handleExpand("panel5")}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography className={classes.heading}>
+                    Additional details
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Grid item xs={12}>
+                    {additionalDetails.map((value) => (
+                      <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                          <Typography className={Fonts.labelName}>
+                            {handelConvert(value.rcaSubType)}
+                          </Typography>
+                          {setRemark(value.rcaRemark).map((rcaValue) => (
+                            <Typography className={Fonts.labelValue}>
+                              {rcaValue}
+                            </Typography>
+                          ))}
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ) : null}
+        </>
+        :
+        <Loader />
+      }
     </Grid>
   );
 };

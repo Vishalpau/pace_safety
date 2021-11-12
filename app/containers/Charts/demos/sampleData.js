@@ -1,7 +1,7 @@
 export const data1 = [
   {
     name: 'Jan 2020',
-    PlannedStartDate: 3000,
+    PlannedStartDate: 4000,
     PlannedFinishDate: 2400,
     amt: 2400
   },
@@ -38,7 +38,7 @@ export const data1 = [
   {
     name: 'July 2020',
     PlannedStartDate: 4000,
-    PlannedFinishDate: 2400,
+    PlannedFinishDate: 2500,
     amt: 2100
   },
 ];

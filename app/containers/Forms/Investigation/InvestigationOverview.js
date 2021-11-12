@@ -1,23 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
 import { Button, Grid, Select } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
-import FormSideBar from "../FormSideBar";
+import { useHistory } from "react-router";
+import api from "../../../utils/axios";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import api from "../../../utils/axios";
+import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -35,6 +35,8 @@ const InvestigationOverview = () => {
   const history = useHistory();
   const investigationId = useRef("");
   const severityValues = useRef([]);
+  const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [buttonLoading, setButtonLoading] = useState(false)
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -48,7 +50,7 @@ const InvestigationOverview = () => {
       `api/v1/incidents/${incidentId}/investigations/`
     );
     let allApiData = previousData.data.data.results[0];
-    console.log(incidentId);
+
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       await setForm(allApiData);
       investigationId.current = allApiData.id;
@@ -69,22 +71,50 @@ const InvestigationOverview = () => {
   });
 
   const handleNext = async () => {
-    console.log(putId.current);
     const { error, isValid } = InvestigationOverviewValidate(form);
     setError(error);
-
+    setButtonLoading(true)
     if (Object.keys(error).length == 0) {
       if (putId.current == "") {
         const res = await api.post(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/investigations/`, form);
-        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${localStorage.getItem("fkincidentId")}`);
+
+        try {
+          const temp = incidentsListData
+          temp.updatedAt = new Date().toISOString();
+
+          temp.incidentStage = "Investigation"
+          temp.incidentStatus = "pending"
+          const res = await api.put(
+            `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+            temp
+          );
+        } catch (error) {
+          history.push("/app/pages/error")
+        }
+        await history.push(`${INVESTIGATION_FORM["Severity consequences"]}${localStorage.getItem("fkincidentId")}`);
+
       } else if (putId.current !== "") {
+
         form["updatedBy"] = "0";
         const res = await api.put(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`, form);
-        await history.push(`/app/incident-management/registration/investigation/severity-consequences/${putId.current}`
+        await history.push(`${INVESTIGATION_FORM["Severity consequences"]}${putId.current}`
         );
       }
       localStorage.setItem("WorkerDataFetched", "");
     }
+    setButtonLoading(false)
+  };
+
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentsListdata(result);
+    })
+      .catch((err) => history.push("/app/pages/error"))
+
   };
 
   const classes = useStyles();
@@ -98,6 +128,7 @@ const InvestigationOverview = () => {
   useEffect(() => {
     handelUpdateCheck();
     callback();
+    fetchIncidentsData()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -266,6 +297,7 @@ const InvestigationOverview = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleNext()}
+                  disabled={buttonLoading}
                 >
                   Next
                 </Button>
@@ -283,7 +315,7 @@ const InvestigationOverview = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

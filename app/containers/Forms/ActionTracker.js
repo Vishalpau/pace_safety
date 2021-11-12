@@ -1,33 +1,31 @@
-import React, { useEffect, useState, useRef } from "react";
+import DateFnsUtils from "@date-io/date-fns";
+import { Button, Grid } from "@material-ui/core";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Button, Grid } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import moment from "moment";
-import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from "@material-ui/icons/FlashOn";
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import axios from "axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import apiAction from "../../utils/axiosActionTracker";
 import {
   access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  ACCOUNT_API_URL
 } from "../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,58 +51,61 @@ export default function ActionTracker(props) {
     actionContext: props.actionContext,
     enitityReferenceId: props.enitityReferenceId,
     actionTitle: "",
-    actionDetail: "string",
-    actionCategory: "string",
-    actionShedule: "string",
-    priority: "string",
+    actionDetail: "",
+    actionCategory: "",
+    actionShedule: "Planned",
+    priority: "",
     severity: "",
-    approver: 0,
+    approver: props.createdBy,
+    approverName: JSON.parse(localStorage.getItem('userDetails'))["name"],
     assignTo: 0,
+    assignToName: "",
     deligateTo: 0,
-    plannedStartDate: "2021-07-21T17:05:39.604Z",
-    actualStartDate: "2021-07-21T17:05:39.604Z",
+    plannedStartDate: new Date(),
+    actualStartDate: null,
     plannedEndDate: null,
-    actualEndDate: "2021-07-21T17:05:39.604Z",
-    forecaststartDate: "2021-07-21T17:05:39.604Z",
-    forecastEndDate: "2021-07-21T17:05:39.604Z",
-    location: "string",
+    actualEndDate: null,
+    forecaststartDate: null,
+    forecastEndDate: null,
+    location: null,
     latitude: 0,
     longitude: 0,
     supervisorId: 0,
     contractor: 0,
-    contractorName: "string",
-    contractorCompany: "string",
-    actionStatus: "string",
-    actionStage: "string",
+    contractorName: null,
+    contractorCompany: null,
+    actionStatus: null,
+    actionStage: null,
     status: "Active",
     createdBy: props.createdBy,
     reviewedBy: 0,
-    reviewDate: "2021-07-21T17:05:39.605Z",
+    reviewDate: null,
     closedBy: 0,
-    closeDate: "2021-07-21T17:05:39.605Z",
+    closeDate: null,
     source: "Web",
-    vendor: "string",
-    vendorReferenceId: "string",
+    vendor: null,
+    vendorReferenceId: null,
   });
   const [reportedByName, setReportedByName] = useState([]);
-
-
-  let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-  const api = axios.create({
-    baseURL: API_URL_ACTION_TRACKER,
-  });
+  const [isLoading, setLoading] = useState(false)
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
-      const res = await api.get(`/api/v1/actions/${props.actionID}/`)
-      console.log(res.data.data.results)
+      const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`)
     }
+  }
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
   }
 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
 
   const fetchReportedBy = () => {
+    let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
     let filterReportedByName = []
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -112,7 +113,7 @@ export default function ActionTracker(props) {
         : null;
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/application/${appId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -120,12 +121,12 @@ export default function ActionTracker(props) {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results[0].users;
+          const result = response.data.data.results;
 
           let user = [];
           user = result;
-          for (var i in result) {
-            filterReportedByName.push(result[i]);
+          for (var i in result[0].users) {
+            filterReportedByName.push(result[0].users[i]);
           }
           setReportedByName(filterReportedByName);
         }
@@ -134,13 +135,17 @@ export default function ActionTracker(props) {
       });
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const select = async () => {
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
+  }
+
+  const handleClickOpen = async () => {
+    await setOpen(true);
   };
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
+    await setForm({ ...form, plannedEndDate: null, actionTitle: "" , severity:""});
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
   };
@@ -149,13 +154,21 @@ export default function ActionTracker(props) {
     if (form.actionTitle == "") {
       setError({ actionTitle: "Please enter action title" });
     } else {
-      let res = await api.post("api/v1/actions/", form);
+      setLoading(true)
+      await select()
+      if (form["severity"] === "") {
+        form["severity"] = "Normal"
+      }
+      form["plannedEndDate"] = form["plannedStartDate"]
+      let res = await apiAction.post("api/v1/actions/", form);
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null, actionTitle: "" });
+        await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
+        await props.handelShowData()
       }
+      setLoading(false)
     }
   };
 
@@ -163,22 +176,38 @@ export default function ActionTracker(props) {
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
 
+
+
+  const handelCallBack = async () => {
+    await handelUpdate()
+    await fetchReportedBy()
+  }
+
   useEffect(() => {
-    handelUpdate()
-    fetchReportedBy()
+    handelCallBack()
   }, [])
 
   return (
     <>
 
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleClickOpen}
-      >
-        Actions<FlashOnIcon />
-      </Button>
+      {props.isCorrectiveActionTaken === null ?
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClickOpen}
+          disabled={props.isCorrectiveActionTaken === null ? true : false}
+        >
+          Actions<FlashOnIcon />
+        </Button>
+        :
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleClickOpen}
+        >
+          Actions<FlashOnIcon />
+        </Button>
+      }
       {/* {console.log(reportedByName)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
@@ -202,7 +231,7 @@ export default function ActionTracker(props) {
                 error={error.actionTitle}
                 helperText={error ? error.actionTitle : null}
                 onChange={(e) =>
-                  setForm({ ...form, actionTitle: e.target.value })
+                  setForm({ ...form, actionTitle: e.target.value, actionDetail: e.target.value })
                 }
               />
             </Grid>
@@ -218,6 +247,7 @@ export default function ActionTracker(props) {
                   setForm({
                     ...form,
                     assignTo: option.id,
+                    assignToName: option.name
                   })
                 }
                 renderInput={(params) => <TextField {...params}
@@ -235,6 +265,9 @@ export default function ActionTracker(props) {
                   inputVariant="outlined"
                   value={form.plannedEndDate}
                   disablePast={true}
+                  open={isDateShow}
+                  onClose={(e) => handelClose()}
+                  onClick={(e) => setIsDateShow(true)}
                   onChange={(e) => {
                     setForm({
                       ...form,
@@ -252,7 +285,7 @@ export default function ActionTracker(props) {
                 <Select
                   id="project-name"
                   labelId="project-name-label"
-                  label="RCA recommended"
+                  label="severity"
                 >
                   {severity.map((selectValues) => (
                     <MenuItem
@@ -271,7 +304,7 @@ export default function ActionTracker(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={(e) => handelSubmit()} color="primary">
-            Create action
+            {isLoading ? <CircularProgress /> : "Create action"}
           </Button>
         </DialogActions>
       </Dialog>

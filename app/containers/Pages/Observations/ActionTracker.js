@@ -1,47 +1,33 @@
-import React, { useEffect, useState, useRef } from "react";
+import DateFnsUtils from "@date-io/date-fns";
+import { Button, Grid } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Button, Grid, FormHelperText } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Paper from "@material-ui/core/Paper";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Box from "@material-ui/core/Box";
-import Link from '@material-ui/core/Link';
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import {
-  DatePicker,
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-import moment from "moment";
-import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
 import FlashOnIcon from '@material-ui/icons/FlashOn';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import ActionTrackerValidator from "./ActionTrackerValidation";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import axios from "axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import "../../../styles/custom/customheader.css";
+import apiAction from "../../../utils/axiosActionTracker";
 import {
   access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  ACCOUNT_API_URL
 } from "../../../utils/constants";
-import "../../../styles/custom/customheader.css";
+import ActionTrackerValidator from "./ActionTrackerValidation";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -160,7 +146,7 @@ export default function ActionTracker(props) {
       return "Data is not valid";
     }
     console.log(form,"66666")
-      let res = await api.post(`api/v1/actions/`, form);
+      let res = await apiAction.post(`api/v1/actions/`, form);
       if (res.status == 201) {
         let actionId = res.data.data.results.actionNumber
         await setError({ actionTitle: "",assignTo : "" });
@@ -204,12 +190,12 @@ export default function ActionTracker(props) {
   };
 
   const fetchactionTrackerData = async () =>{
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
+    // let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
+    // const api_action = axios.create({
+    //   baseURL: API_URL_ACTION_TRACKER,
+    // });
     let ActionToCause = {}
-    const allActionTrackerData = await api_action.get("/api/v1/actions/")
+    const allActionTrackerData = await apiAction.get("/api/v1/actions/")
     const allActionTracker = allActionTrackerData.data.data.results.results
     const newData = allActionTracker.filter(
       (item) => item.enitityReferenceId === localStorage.getItem("fkobservationId") 

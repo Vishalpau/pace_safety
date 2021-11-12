@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles, MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -83,7 +83,7 @@ const styles = theme => ({
   },
 });
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: green,
   },
@@ -233,14 +233,14 @@ function CustomButtons(props) { // eslint-disable-line
               multiple
               type="file"
             />
-            { /* eslint-disable-next-line */ }
+            { /* eslint-disable-next-line */}
             <label htmlFor="raised-button-file">
               <Button variant="contained" component="span" id="raised-button-file" className={classes.button}>
                 Upload
               </Button>
             </label>
             <input accept="image/*" className={classes.inputUpload} id="icon-button-file" type="file" />
-            { /* eslint-disable-next-line */ }
+            { /* eslint-disable-next-line */}
             <label htmlFor="icon-button-file">
               <IconButton color="primary" id="uploadBtnIcon" className={classes.button} component="span">
                 <FileUpload />

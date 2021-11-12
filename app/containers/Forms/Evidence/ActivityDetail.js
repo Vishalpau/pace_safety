@@ -1,26 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
-import Grid from "@material-ui/core/Grid";
+import React, { useEffect, useState } from "react";
+import { FormHelperText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import Grid from "@material-ui/core/Grid";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { spacing } from "@material-ui/system";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import FormLabel from "@material-ui/core/FormLabel";
-import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router-dom";
-import api from "../../../utils/axios";
-import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
-import { FormHelperText } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Row, Col } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import FormHeader from "../FormHeader";
+import { PapperBlock } from "dan-components";
+import { Col, Row } from "react-grid-system";
+import { useHistory, useParams } from "react-router-dom";
 import Type from "../../../styles/components/Fonts.scss";
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM } from "../../../utils/constants";
+import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -47,6 +47,7 @@ const ActivityDetails = () => {
   const { id } = useParams();
   const history = useHistory();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isNext, setIsNext] = useState(true)
   const [incidentDetail, setIncidentDetail] = useState({});
   const [activtyList, setActvityList] = useState([
     {
@@ -129,68 +130,80 @@ const ActivityDetails = () => {
   ]);
 
   const fetchActivityList = async () => {
-    const res = await api.get(`/api/v1/incidents/${id}/activities/`);
-    const result = res.data.data.results;
-    if (result.length) {
-      await setActvityList(result);
-    }
-    await setIsLoading(true);
+    await api.get(`/api/v1/incidents/${id}/activities/`)
+      .then((res) => {
+        const result = res.data.data.results;
+        if (result.length) {
+          setActvityList(result);
+        }
+        setIsLoading(true);
+      })
+      .catch(() => { history.push("/app/pages/error") })
   };
 
   const fetchActivityData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-    );
-    const result = res.data.data.results;
-    if (result.length) {
-      let temp = [...activtyList];
-      temp = result;
-      await setActvityList(temp);
-    }
-    if (!id) {
-      setIsLoading(true);
-    }
+    ).then((res) => {
+      const result = res.data.data.results;
+      if (result.length) {
+        let temp = [...activtyList];
+        temp = result;
+        setActvityList(temp);
+      }
+      if (!id) {
+        setIsLoading(true);
+      }
+    }).catch(() => { history.push("/app/pages/error") })
+
   };
 
   const handleNext = async () => {
-
+    await setIsNext(false)
     if (id && activtyList.length > 0 && activtyList[0].id) {
-      const res = await api.put(
-        `api/v1/incidents/${id}/activities/`,
-        activtyList
-      );
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${id}/activities/`,
+          activtyList
         );
-      }
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
+          );
+        }
+      } catch (err) { setIsNext(true) }
     } else if (
       localStorage.getItem("fkincidentId") &&
       activtyList.length > 6 &&
       activtyList[0].id
     ) {
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        activtyList
-      );
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/personal-and-ppedetails/`
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          activtyList
         );
-      }
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/personal-and-ppedetails/`
+          );
+        }
+      } catch (err) { setIsNext(true) }
     } else {
-      const { error, isValid } = ActivityDetailValidate(activtyList);
-      await setError(error);
-      if (!isValid) {
-        return;
-      }
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        activtyList
-      );
-      history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
-      );
+      try {
+        const { error, isValid } = ActivityDetailValidate(activtyList);
+        await setError(error);
+        if (!isValid) {
+          setIsNext(true)
+          return;
+        }
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          activtyList
+        );
+        history.push(
+          "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+        );
+      } catch (err) { setIsNext(true) }
     }
   };
 
@@ -207,11 +220,13 @@ const ActivityDetails = () => {
   };
 
   const fetchIncidentDetails = async () => {
-    const res = await api.get(
+    await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentDetail(result);
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentDetail(result);
+    }).catch(err => history.push("/app/pages/error"))
+
   };
 
   useEffect(() => {
@@ -262,7 +277,7 @@ const ActivityDetails = () => {
                             onChange={(e) => {
                               handleRadioData(e, value.questionCode);
                             }}
-                            // defaultValue={value.answer}
+                          // defaultValue={value.answer}
                           >
                             {radioDecide.map((value) => (
                               <FormControlLabel
@@ -272,7 +287,7 @@ const ActivityDetails = () => {
                               />
                             ))}
                           </RadioGroup>
-                          ​
+
                           {value.error ? (
                             <FormHelperText>{value.error}</FormHelperText>
                           ) : null}
@@ -293,7 +308,7 @@ const ActivityDetails = () => {
                       )}`
                     );
                   }}
-                  // href="/app/incident-management/registration/evidence/evidence/"
+                // href="/app/incident-management/registration/evidence/evidence/"
                 >
                   Previous
                 </Button>
@@ -302,9 +317,10 @@ const ActivityDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={() => handleNext()}
-                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                  disabled={!isNext}
+                // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
                 >
-                  Next
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -320,7 +336,7 @@ const ActivityDetails = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

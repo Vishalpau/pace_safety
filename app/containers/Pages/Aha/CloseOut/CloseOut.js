@@ -26,7 +26,7 @@ import { useHistory, useParams } from "react-router";
 import axios from "axios";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import CloseOutValidator from "../Validator/CloseOutValidation";
-
+import { CircularProgress } from '@material-ui/core';
 import FormSideBar from "../../../Forms/FormSideBar";
 import {
     LOGIN_URL,
@@ -57,6 +57,19 @@ const useStyles = makeStyles((theme) => ({
     fullWidth: {
         width: "100%",
     },
+    buttonProgress: {
+        // color: "green",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: -12,
+        marginLeft: -12,
+      },
+      loadingWrapper: {
+        margin: theme.spacing(1),
+        position: "relative",
+        display: "inline-flex",
+      },
 }));
 
 const CloseOut = () => {
@@ -64,7 +77,7 @@ const CloseOut = () => {
     const history = useHistory();
     const { id } = useParams();
     // const dispatch = useDispatch();
-    const [jhaListData, setJhaListdata] = useState({});
+    const [ahaListData, setAhaListdata] = useState({});
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState({})
@@ -74,40 +87,42 @@ const CloseOut = () => {
         closedBy: 0,
         closeDate: null
     })
+    const [isDateShow, setIsDateShow] = useState(false)
+    let filterUserListName = []
+
 
     const userId =
         JSON.parse(localStorage.getItem("userDetails")) !== null
             ? JSON.parse(localStorage.getItem("userDetails")).id
             : null;
 
-    const [open, setOpen] = useState(false);
+    const [submitLoader, setSubmitLoader] = useState(false);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
 
     // fetch incident data
-    const fetchJhaData = async () => {
+    const fetchAhaData = async () => {
         // const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
         const result = res.data.data.results;
-       await  setJhaListdata(result)
+       await  setAhaListdata(result)
 
     };
     // handle close snackbar
-    const handleClose = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpen(false);
-    };
+    const handelClose = () => {
+        setIsDateShow(false)
+        return true
+      }
+
 
     const handleCloseDate = (e) => {
         if (new Date(e) < new Date()) {
-            setJhaListdata({ ...jhaListData, closedDate: moment(e).toISOString() });
+            setAhaListdata({ ...ahaListData, closedDate: moment(e).toISOString() });
             error.closedDate = ""
             setError(error);
         }
         else {
-            setJhaListdata({ ...jhaListData, closeDate: null })
+            setAhaListdata({ ...ahaListData, closeDate: null })
             let errorMessage = "Closed time should not be ahead of current time"
             error.closedDate = errorMessage
             setError(error);
@@ -131,9 +146,10 @@ const CloseOut = () => {
     //   fetch user data
 
     const fetchUserList = async () => {
+        let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
         var config = {
             method: 'get',
-            url: `${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,
+            url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -143,8 +159,17 @@ const CloseOut = () => {
             .then(function (response) {
 
                 if (response.status === 200) {
-                    const result = response.data.data.results[0].users
-                    setUserList(result)
+                    const result = response.data.data.results;
+                    let user = [];
+                    // user = result;
+                    let data = result.filter((item) =>
+                      item['companyId'] == fkCompanyId
+                    )
+                    
+                    for (var i in data[0].users) {
+                        filterUserListName.push(data[0].users[i]);
+                    }
+                    setUserList(filterUserListName);
                 }
             })
             .catch(function (error) {
@@ -154,21 +179,22 @@ const CloseOut = () => {
 
     const handleNext = async () => {
         
-        const { error, isValid } = CloseOutValidator(jhaListData);
+        const { error, isValid } = CloseOutValidator(ahaListData);
         await setError(error);
         if (!isValid) {
           return "Data is not valid";
         }
+        await setSubmitLoader(true)
      
-        delete  jhaListData['ahaAssessmentAttachment']
-        const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,jhaListData)
+        delete  ahaListData['ahaAssessmentAttachment']
+        const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,ahaListData)
         if(res.status === 200) {
             history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
           }
     }
     useEffect(() => {
         fetchUserList();
-        fetchJhaData();
+        fetchAhaData();
     }, []);
     const isDesktop = useMediaQuery("(min-width:992px)");
     return (
@@ -183,7 +209,7 @@ const CloseOut = () => {
                             </Typography>
 
                             <Typography varint="body1" className={Type.labelValue}>
-                                {jhaListData.ahaNumber}
+                                {ahaListData.ahaNumber}
                             </Typography>
                         </Grid>
 
@@ -193,7 +219,7 @@ const CloseOut = () => {
                                 Aha assessment data
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {moment(jhaListData.ahaAssessmentDate).format(
+                                {moment(ahaListData.ahaAssessmentDate).format(
                                     "Do MMMM YYYY"
                                 )}
                             </Typography>
@@ -206,7 +232,7 @@ const CloseOut = () => {
                                 Aha description
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {jhaListData.description}
+                                {ahaListData.description}
                             </Typography>
                         </Grid>
 
@@ -215,7 +241,7 @@ const CloseOut = () => {
                                 Aha location
                             </Typography>
                             <Typography className={Type.labelValue}>
-                                {jhaListData.location}
+                                {ahaListData.location}
                             </Typography>
                         </Grid>
 
@@ -225,6 +251,40 @@ const CloseOut = () => {
                                 Action item close out
                             </Typography>
                         </Grid>
+
+                        <Grid item md={12}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
+                                    // error={error.closeDate}
+                                    // helperText={
+                                    //     error.closeDate ? error.closeDate : null
+                                    // }
+                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Work completion"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    // onChange={(e) => {
+                                    //     setJhaListdata({
+                                    //         ...jhaListData,
+                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                    //     });
+                                    // }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+                        
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"
@@ -241,7 +301,7 @@ const CloseOut = () => {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Closed by"
-                                    value={jhaListData.closedByName ? jhaListData.closedByName : ""}
+                                    value={ahaListData.closedByName ? ahaListData.closedByName : ""}
                                     
 
                                 >
@@ -249,7 +309,7 @@ const CloseOut = () => {
                                         <MenuItem
                                             value={selectValues.name}
                                             key={index}
-                                            onClick={(e) => setJhaListdata({ ...jhaListData, closedByName: selectValues.name , closedById: selectValues.id})}
+                                            onClick={(e) => setAhaListdata({ ...ahaListData, closedByName: selectValues.name , closedById: selectValues.id})}
 
                                         >
                                             {selectValues.name}
@@ -267,7 +327,7 @@ const CloseOut = () => {
                                     helperText={
                                         error.closedDate ? error.closedDate : null
                                     }
-                                    value={jhaListData.closedDate ? jhaListData.closedDate : null}
+                                    value={ahaListData.closedDate ? ahaListData.closedDate : null}
                                     onChange={(e) => handleCloseDate(e)}
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
@@ -276,12 +336,15 @@ const CloseOut = () => {
                                     inputVariant="outlined"
                                     label="Closed on*"
                                     autoComplete = "off"
+                                    onClick={(e) => setIsDateShow(true)}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
                                     
                     // console.log(e.target.value)
-                  
+                    InputProps={{ readOnly: true }}
                                     disableFuture
                                 />
                             </MuiPickersUtilsProvider>
@@ -291,13 +354,23 @@ const CloseOut = () => {
 
 
                         <Grid item xs={12}>
+                        <div className={classes.loadingWrapper}>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => handleNext()}
-                            >
-                                Submit
-                            </Button>
+                                style={{ marginLeft: "10px" }}
+                  disabled={submitLoader}
+                >
+
+                  Submit
+                </Button>
+                {submitLoader && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}</div>
                         </Grid>
                     </Grid>
                   

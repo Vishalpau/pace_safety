@@ -194,7 +194,7 @@ useEffect(()=>{
     return (
         <>
             {fetchSelectBreakDownList.map((data, key) => 
-                <Grid item xs={3} md={3} key={key}>
+                <Grid item xs={12} md={12} key={key}>
                     <FormControl
                         error={error.incidentType}
                         variant="outlined"

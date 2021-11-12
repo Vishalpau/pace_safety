@@ -35,7 +35,8 @@ import validate from "../../Validator/validation";
 import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Loader from "../Loader";
 
 // redux
 import { connect } from 'react-redux'
@@ -91,6 +92,7 @@ const IncidentDetails = (props) => {
   const [hideAffect, setHideAffect] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [workArea, setWorkArea] = useState([])
+  const [isDateShow, setIsDateShow] = useState(false)
 
   const [nextPath, setNextPath] = useState({
     personAffect: "",
@@ -216,8 +218,8 @@ const IncidentDetails = (props) => {
           vendorReferenceId: "string",
           contractor: form.contractor,
           subContractor: form.subContractor,
-          incidentStage: "",
-          incidentStatus: ""
+          incidentStage: incidentsListData.incidentStage,
+          incidentStatus: incidentsListData.incidentStatus
         };
         const { error, isValid } = validate(form, selectDepthAndId, levelLenght);
         await setError(error);
@@ -251,7 +253,7 @@ const IncidentDetails = (props) => {
                 );
               } else if (nextPath.environmentAffect === "Yes") {
                 history.push(
-                  `/incident/${id}/modify/peoples-afftected/`
+                  `/incident/${id}/modify/environment-affected/`
                 );
               } else {
                 history.push(
@@ -322,8 +324,9 @@ const IncidentDetails = (props) => {
               vendorReferenceId: "string",
               contractor: form.contractor,
               subContractor: form.subContractor,
-              incidentStage: "",
-              incidentStatus: ""
+              incidentStage: "Initial notification",
+              incidentStatus: "Pending",
+
             };
             // sent post api
             try {
@@ -349,7 +352,7 @@ const IncidentDetails = (props) => {
                   );
                 } else if (nextPath.environmentAffect === "Yes") {
                   history.push(
-                    `/incident/${res.data.data.results.id}/modify/peoples-afftected/`
+                    `/incident/${res.data.data.results.id}/modify/environment-affected/`
                   );
                 } else {
                   history.push(
@@ -378,38 +381,36 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       await setIncidentTypeValue(result);
     } catch (error) {
-      setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
   // get data contractor value for dropdown
   const fetchContractorValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/2/value");
+      const res = await api.get("api/v1/lists/2/value")
+        .catch(error => setMessage(error.message))
       const result = res.data.data.results;
       await setContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+
+
+      history.push("/app/pages/error")
     }
   };
 
   // get data sub-contractor value for dropdown
   const fetchSubContractorValue = async () => {
     try {
-      const res = await api.get("api/v1/lists/3/value");
+      const res = await api.get("api/v1/lists/3/value")
+        .catch(error => setMessage(error.message))
       const result = res.data.data.results;
       await setSubContractorValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -421,9 +422,8 @@ const IncidentDetails = (props) => {
       await setPersonAffectedValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -434,9 +434,9 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       await setPropertiesAffectValue(result);
     } catch (error) {
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      setIsNext(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -448,9 +448,8 @@ const IncidentDetails = (props) => {
       await setEquipmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -462,9 +461,7 @@ const IncidentDetails = (props) => {
       await setEnvironmentAffectValue(result);
     } catch (error) {
       setIsNext(true);
-      setMessage("Something went worng!");
-      setMessageType("error");
-      setOpen(true);
+      history.push("/app/pages/error")
     }
   };
 
@@ -503,9 +500,8 @@ const IncidentDetails = (props) => {
 
       } catch (error) {
         setIsNext(true);
-        setMessage("Something went worng!");
-        setMessageType("error");
-        setOpen(true);
+
+        history.push("/app/pages/error")
       }
     }
   };
@@ -548,7 +544,7 @@ const IncidentDetails = (props) => {
               }
             })
             .catch(function (error) {
-
+              history.push("/app/pages/error")
             });
         }
       }
@@ -692,13 +688,13 @@ const IncidentDetails = (props) => {
                       required
                       className={classes.formControl}
                     >
-                      <InputLabel id="demo-simple-select-label">
+                      <InputLabel id={data.breakDownLabel}>
                         {data.breakDownLabel}
                       </InputLabel>
                       <Select
-                        labelId="incident-type-label"
-                        id="incident-type"
-                        label="Incident type"
+                        labelId={data.breakDownLabel}
+                        id={data.breakDownLabel}
+                        label={data.breakDownLabel}
                         value={data.selectValue.id || ""}
                         disabled={data.breakDownData.length === 0}
 
@@ -788,6 +784,9 @@ const IncidentDetails = (props) => {
                         incidentOccuredOn: moment(e).toISOString(),
                       });
                     }}
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => { setIsDateShow(false) }}
                     InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
@@ -882,7 +881,6 @@ const IncidentDetails = (props) => {
                 <FormControl
                   variant="outlined"
                   error={error.contractor}
-                  required
                   className={classes.formControl}
                 >
                   <InputLabel id="demo-simple-select-label">
@@ -892,7 +890,7 @@ const IncidentDetails = (props) => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor"
-                    value={form.contractor || ""}
+                    value={form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -902,7 +900,7 @@ const IncidentDetails = (props) => {
                   >
                     {contractorValue.length !== 0
                       ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
+                        <MenuItem key={index} value={selectValues.inputValue.trim()}>
                           {selectValues.inputLabel}
                         </MenuItem>
                       ))
@@ -1151,6 +1149,8 @@ const IncidentDetails = (props) => {
                     </FormHelperText>
                   )}
                 </FormControl>
+                {/* Alert Message */}
+                {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
               </Grid>
 
               {/* Go to next button */}
@@ -1161,8 +1161,9 @@ const IncidentDetails = (props) => {
                   variant="contained"
                   color="primary"
                   onClick={(e) => handelNext(e)}
+                  disabled={!isNext}
                 >
-                  Next
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -1180,7 +1181,7 @@ const IncidentDetails = (props) => {
           )}
         </Row>
       ) : (
-        <div> Loading...</div>
+        <Loader />
       )}
     </PapperBlock>
   );

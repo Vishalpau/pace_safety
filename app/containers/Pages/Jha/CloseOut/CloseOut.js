@@ -1,42 +1,34 @@
-import React, { useEffect, useState, useRef } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
-import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
-import { PapperBlock } from "dan-components";
-import TextField from "@material-ui/core/TextField";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import IconButton from "@material-ui/core/IconButton";
-import moment from "moment";
-import TextButton from "../../../CommonComponents/TextButton";
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDateTimePicker,
-} from "@material-ui/pickers";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-import { useHistory, useParams } from "react-router";
-import axios from "axios";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MuiAlert from "@material-ui/lab/Alert";
+import {
+    KeyboardDateTimePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import axios from "axios";
+import { PapperBlock } from "dan-components";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
+import "../../../../styles/custom.css";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import FormSideBar from "../../../Forms/FormSideBar";
+import api from "../../../../utils/axios";
 import {
     access_token,
-    ACCOUNT_API_URL,
+    ACCOUNT_API_URL
 } from "../../../../utils/constants";
-import api from "../../../../utils/axios";
-import Type from "../../../../styles/components/Fonts.scss";
-import "../../../../styles/custom.css";
-import { handelJhaId, checkValue } from "../Utils/checkValue"
-import { CLOSE_OUT_FORM } from "../Utils/constants"
-import { SUMMARY_FORM } from "../Utils/constants"
+import JhaCommonInfo from "../JhaCommonInfo";
+import { handelJhaId } from "../Utils/checkValue";
+import { SUMMARY_FORM } from "../Utils/constants";
+
 
 
 function Alert(props) {
@@ -53,6 +45,33 @@ const useStyles = makeStyles((theme) => ({
     fullWidth: {
         width: "100%",
     },
+    loader: {
+        marginLeft: "20px"
+
+    },
+    custmSubmitBtn: {
+        color: '#ffffff',
+        backgroundColor: '#06425c',
+        lineHeight: '30px',
+        border: 'none',
+        '&:hover': {
+            backgroundColor: '#ff8533',
+            border: 'none',
+        },
+    },
+    buttonProgress: {
+        // color: "green",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: -12,
+        marginLeft: -12,
+    },
+    loadingWrapper: {
+        margin: theme.spacing(1),
+        position: "relative",
+        display: "inline-flex",
+    },
 }));
 
 const CloseOut = () => {
@@ -68,8 +87,10 @@ const CloseOut = () => {
         reviewedBy: 0,
         reviewDate: null,
         closedBy: 0,
-        closeDate: null
+        closeDate: new Date()
     })
+    const [isDateShow, setIsDateShow] = useState(false)
+    const [submitLoader, setSubmitLoader] = useState(false)
 
     const userId =
         JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -82,24 +103,12 @@ const CloseOut = () => {
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
         console.log(result)
+        if (result.closedDate == null) {
+            result["closedDate"] = new Date()
+        }
         setJhaListdata(result)
     };
     // handle close snackbar
-
-    const handleCloseDate = (e) => {
-        if (new Date(e) > new Date(form.reviewDate)) {
-            setForm({ ...form, closeDate: moment(e).toISOString() });
-            error.closeDate = ""
-            setError(error);
-        }
-        else {
-            setForm({ ...form, closeDate: null })
-            let errorMessage = "Closed date cannot be prior to reviewed date"
-            error.closeDate = errorMessage
-            setError(error);
-
-        }
-    }
 
     //   fetch user data
 
@@ -125,69 +134,81 @@ const CloseOut = () => {
             });
     }
 
+    const handelClose = () => {
+        setIsDateShow(false)
+        return true
+    }
+
     const handleNext = async () => {
+        await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
         if (res.status == 200) {
             history.push(SUMMARY_FORM["Summary"])
         }
-
+        await setSubmitLoader(false)
     }
+
+    const handelCallBack = async () => {
+        await setIsLoading(true)
+        await fetchUserList()
+        await fetchJhaData()
+        await setIsLoading(false)
+    }
+
     useEffect(() => {
-        fetchUserList();
-        fetchJhaData();
+        handelCallBack()
     }, []);
     const isDesktop = useMediaQuery("(min-width:992px)");
     return (
         <PapperBlock title="Close out" icon="ion-md-list-box">
-            {isLoading ? (
+            {isLoading === false ? (
                 <Grid container spacing={3}>
                     <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
-
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha number
-                            </Typography>
-
-                            <Typography varint="body1" className={Type.labelValue}>
-                                {jhaListData.jhaNumber}
-                            </Typography>
+                        <Grid item xs={12}>
+                            <JhaCommonInfo />
                         </Grid>
 
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Aha assessment data
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {moment(jhaListData.jhaAssessmentDate).format(
-                                    "Do MMMM YYYY"
-                                )}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha description
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {jhaListData.description}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" className={Type.labelName} gutterBottom>
-                                Jha location
-                            </Typography>
-                            <Typography className={Type.labelValue}>
-                                {jhaListData.location}
-                            </Typography>
-                        </Grid>
 
                         <Grid item xs={12}>
                             <Typography variant="h6" gutterBottom>
                                 Action item close out
                             </Typography>
                         </Grid>
+
+                        <Grid item md={12}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
+                                    // error={error.closeDate}
+                                    // helperText={
+                                    //     error.closeDate ? error.closeDate : null
+                                    // }
+                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Work completion"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    // onChange={(e) => {
+                                    //     setJhaListdata({
+                                    //         ...jhaListData,
+                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                    //     });
+                                    // }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"
@@ -220,6 +241,7 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
                                     error={error.closeDate}
                                     helperText={
                                         error.closeDate ? error.closeDate : null
@@ -241,27 +263,38 @@ const CloseOut = () => {
                                         });
                                     }}
                                     disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
 
-
-
-
                         <Grid item xs={12}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleNext()}
-                            >
-                                Submit
-                            </Button>
+                            <div className={classes.loadingWrapper}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleNext()}
+                                    disabled={submitLoader}
+                                >
+                                    Submit
+                                </Button>
+                                {submitLoader && (
+                                    <CircularProgress
+                                        size={24}
+                                        className={classes.buttonProgress}
+                                    />
+                                )}
+                            </div>
                         </Grid>
                     </Grid>
 
                 </Grid>
             ) : (
-                <h1>Loading...</h1>
+                <>
+                    Loading...
+                </>
             )}
         </PapperBlock>
     );

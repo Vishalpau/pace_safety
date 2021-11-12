@@ -1,6 +1,4 @@
 
-
-
 export const JHA_FORM = {
     "Project Details": `/app/pages/Jha/assessments/project-details/`,
     "Project Area Hazards": `/app/pages/Jha/assessments/project-area-hazards/`,

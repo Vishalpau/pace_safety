@@ -1,30 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button, FormLabel, Grid, Select } from "@material-ui/core";
-import { FormHelperText } from "@material-ui/core";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
+import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { PapperBlock } from "dan-components";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import IconButton from "@material-ui/core/IconButton";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-
-import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
 import api from "../../../utils/axios";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
 import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
-import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
+// redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -69,9 +71,11 @@ const EventDetails = () => {
   const weatherId = useRef([]);
   const overAllCostId = useRef([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const CheckPost = useRef();
   const radioYesNo = ["Yes", "No"];
   const [overAllCostShow, setOverAllCostShow] = useState("");
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
   const [weather, setWeather] = useState([
     {
@@ -94,8 +98,10 @@ const EventDetails = () => {
   const [error, setError] = useState({});
   const [errorWeather, setErrorWeather] = useState({});
   const [errorCost, setErrorCost] = useState({});
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
+  // check upadte 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -140,7 +146,7 @@ const EventDetails = () => {
         }
         const cost = await api.get(`api/v1/incidents/${putId.current}/investigations/${investigationId.current}/events/${eventId.current}/cost/`)
         const costData = cost.data.data.results
-        console.log(costData)
+
         if (costData.length !== 0) {
           setOverAllCost(costData)
           costData.map((value) => {
@@ -185,7 +191,7 @@ const EventDetails = () => {
   const handelRemove = async (e, index) => {
     if (weather.length > 1) {
       if (weather[index].id !== undefined) {
-        console.log("here");
+
         const res = await api.delete(
           `api/v1/incidents/${putId.current}/investigations/${investigationId.current
           }/events/${eventId.current}/weatherconditions/${weather[index].id}/`
@@ -233,7 +239,20 @@ const EventDetails = () => {
     await setError(error);
     await setErrorWeather(errorWeather);
     await setErrorCost(errorCost)
-
+    setButtonLoading(true)
+    const temp = incidentsListData
+    temp.updatedAt = new Date().toISOString();
+    if (incidentsListData.incidentStage === "Investigation") {
+      temp.incidentStatus = "Done"
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        history.push("/app/pages/error")
+      }
+    }
     // event api call
     if (
       Object.keys(error).length == 0 &&
@@ -277,9 +296,12 @@ const EventDetails = () => {
               }
             }
           }
-          await history.push(
-            `/app/incident-management/registration/investigation/action-taken/`
-          );
+          let viewMode = {
+            initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+          }
+          localStorage.setItem("viewMode", JSON.stringify(viewMode))
+          dispatch(tabViewMode(viewMode));
+          history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
         }
         // put
       } else if (eventId.current !== "") {
@@ -348,12 +370,15 @@ const EventDetails = () => {
             }
           }
         }
-        await history.push(
-          `/app/incident-management/registration/investigation/action-taken/${putId.current
-          }`
-        );
+        let viewMode = {
+          initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
+        history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
       }
     }
+    setButtonLoading(false)
   };
 
   const PickListCall = async () => {
@@ -367,18 +392,30 @@ const EventDetails = () => {
     await handelUpdateCheck();
     await setLoading(true)
   };
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentsListdata(result);
+    })
+      .catch((err) => history.push("/app/pages/error"))
+
+  };
 
   useEffect(() => {
     PickListCall();
+    fetchIncidentsData();
   }, []);
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Events Details" icon="ion-md-list-box">
-      <Grid container spacing={3}>
-        {loading ?
-          <>
+      {loading ?
+        <>
+          <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
               {/* activity */}
               <Grid item xs={12} md={6}>
@@ -909,30 +946,27 @@ const EventDetails = () => {
                   color="primary"
                   className={classes.button}
                   onClick={(e) => handelNext(e)}
+                  disabled={buttonLoading}
                 >
                   Next
                 </Button>
               </Grid>
             </Grid>
-
-          </>
-          : <Grid container item xs={12} md={9} spacing={3}>
-            <Typography variant="h6">
-              Loading ...
-            </Typography>
-          </Grid>}
-        {isDesktop && (
-          <Grid item md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Event details"
-            />
+            {isDesktop && (
+              <Grid item md={3}>
+                <FormSideBar
+                  deleteForm={[1, 2, 3]}
+                  listOfItems={INVESTIGATION_FORM}
+                  selectedItem="Event details"
+                />
+              </Grid>
+            )}
           </Grid>
-        )}
-      </Grid>
+        </>
+        :
+        <Loader />
+      }
     </PapperBlock>
-
   );
 };
 

@@ -1,49 +1,44 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Grid, Select } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { PapperBlock } from "dan-components";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-  KeyboardTimePicker,
-} from "@material-ui/pickers";
-import moment from "moment";
 import DateFnsUtils from "@date-io/date-fns";
-import { FormHelperText, FormLabel } from "@material-ui/core";
-import RadioGroup from "@material-ui/core/RadioGroup";
+import { Button, FormHelperText, FormLabel, Grid, Select } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import { useHistory, useParams } from "react-router";
-import ImageIcon from "@material-ui/icons/Image";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import InputLabel from "@material-ui/core/InputLabel";
+import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Snackbar from "@material-ui/core/Snackbar";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
-import { spacing } from "@material-ui/system";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MuiAlert from "@material-ui/lab/Alert";
+import {
+  KeyboardDatePicker,
+  KeyboardTimePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import { PapperBlock } from "dan-components";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
-
-import FormSideBar from "../FormSideBar";
+import { useHistory } from "react-router";
+import Attachment from "../../../containers/Attachment/Attachment";
+import api from "../../../utils/axios";
 import { INVESTIGATION_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import api from "../../../utils/axios";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
-import { object } from "prop-types";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
-import Attachment from "../../../containers/Attachment/Attachment";
-import { handelFileName } from "../../../utils/CheckerValue";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -74,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WorkerDetails = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [testTaken, setTesttaken] = useState(false);
   const [error, setError] = useState({});
   const workerType = useRef([]);
@@ -114,6 +108,13 @@ const WorkerDetails = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const fileRef = useRef("");
+  const [isDateShow, setIsDateShow] = useState(false)
+  const [isTimeShow, setIsTimeShow] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false)
+  const TextFieldComponent = (props) => {
+    return <TextField {...props} inputProps={{ readOnly: true }} />
+  }
 
   let [workerData, setworkerData] = useState({
     name: "",
@@ -193,7 +194,6 @@ const WorkerDetails = () => {
     if (typeof allApiData !== "undefined" && !isNaN(allApiData.id)) {
       investigationId.current = allApiData.id;
     }
-    await setIsLoading(true);
   };
 
   const handelTestTaken = async (e) => {
@@ -208,11 +208,13 @@ const WorkerDetails = () => {
       setTesttaken(false);
     }
   };
+
   let fileTypeError =
     "Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!";
+
   let fielSizeError = "Size less than 25Mb allowed";
   const handleFile = async (e) => {
-    console.log("here")
+
     let acceptFileTypes = [
       "pdf",
       "png",
@@ -230,7 +232,7 @@ const WorkerDetails = () => {
       acceptFileTypes.includes(file[file.length - 1]) &&
       e.target.files[0].size < 25670647
     ) {
-      console.log("here");
+
       const temp = { ...form };
       temp.attachments = e.target.files[0];
       await setForm(temp);
@@ -259,6 +261,7 @@ const WorkerDetails = () => {
   const handleNext = async () => {
     const { error, isValid } = WorkerDetailValidator(form);
     await setError(error);
+    setButtonLoading(true)
     if (Object.keys(error).length === 0) {
       let data = new FormData();
       data.append("name", form.name);
@@ -372,6 +375,7 @@ const WorkerDetails = () => {
       await handelUpdateCheck();
     }
     document.getElementById("workerForm").reset();
+    setButtonLoading(false)
   };
 
   const handelAddNew = async () => {
@@ -453,7 +457,8 @@ const WorkerDetails = () => {
     await handelUpdateCheck();
   };
 
-  const PickList = async () => {
+  const handelCallBack = async () => {
+    await setIsLoading(true);
     await handelUpdateCheck();
     workerType.current = await PickListData(71);
     setDepartmentName(await PickListData(10));
@@ -474,17 +479,11 @@ const WorkerDetails = () => {
     setSupervisorTimeInIndustry(await PickListData(54));
     setSupervisorTimeOnProject(await PickListData(55));
     setSupervisorTimeInCompany(await PickListData(56));
-    await setIsLoading(true);
-  };
-
-  const imageNameFromUrl = (url) => {
-    let imageArray = url.split("/");
-    let image_name = imageArray[imageArray.length - 1];
-    return image_name;
+    await setIsLoading(false);
   };
 
   useEffect(() => {
-    PickList();
+    handelCallBack();
   }, []);
 
   const classes = useStyles();
@@ -492,7 +491,7 @@ const WorkerDetails = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Worker details" icon="ion-md-list-box">
-      {isLoading ? (
+      {isLoading == false ? (
         <form id="workerForm">
           <Row>
             <Col md={9}>
@@ -634,6 +633,11 @@ const WorkerDetails = () => {
                       format="HH:mm"
                       inputVariant="outlined"
                       disableFuture="true"
+                      TextFieldComponent={TextFieldComponent}
+                      onClick={(e) => setIsTimeShow(true)}
+                      open={isTimeShow}
+                      onClose={(e) => setIsTimeShow(false)}
+                      InputProps={{ readOnly: true }}
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -1013,6 +1017,10 @@ const WorkerDetails = () => {
                       format="yyyy/MM/dd"
                       inputVariant="outlined"
                       disableFuture="true"
+                      InputProps={{ readOnly: true }}
+                      onClick={(e) => setIsDateShow(true)}
+                      open={isDateShow}
+                      onClose={(e) => setIsDateShow(false)}
                     />
                   </MuiPickersUtilsProvider>
                 </Grid>
@@ -1290,6 +1298,9 @@ const WorkerDetails = () => {
                           format="yyyy/MM/dd"
                           inputVariant="outlined"
                           disableFuture="true"
+                          onClick={(e) => setIsDateShow(true)}
+                          open={isDateShow}
+                          onClose={(e) => setIsDateShow(false)}
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
@@ -1520,6 +1531,7 @@ const WorkerDetails = () => {
                     color="primary"
                     className={classes.button}
                     onClick={() => handleNext()}
+                    disabled={buttonLoading}
                   >
                     Next
                   </Button>
@@ -1582,7 +1594,7 @@ const WorkerDetails = () => {
           </Row>
         </form>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

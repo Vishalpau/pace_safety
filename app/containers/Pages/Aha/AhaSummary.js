@@ -54,6 +54,9 @@ import moment from "moment";
 import Attachment from "../../Attachment/Attachment";
 import axios from "axios";
 import { Comments } from "../../pageListAsync";
+import ActionShow from '../../Forms/ActionShow';
+import { handelActionData } from "../../../utils/CheckerValue"
+
 // import AhaSummary from "../../../containers/Activity/Activity" ;
 
 import {
@@ -151,15 +154,13 @@ function AhaSummary() {
   const [comments, setComments] = useState(false);
   const [activity, setActivity] = useState(false);
   //const [summary, setSummary] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const history = useHistory();
-  const [expanded, setExpanded] = React.useState("panel1");
+  const [expanded, setExpanded] = useState(false);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel5"
   );
-console.log(assessments)
-console.log(approvals)
-console.log(lessonsLearned)
-console.log(closeOut)
+
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
@@ -170,6 +171,11 @@ console.log(closeOut)
   const [Teamform, setTeamForm] = useState([]);
   const [projectSturcturedData, setProjectSturcturedData] = useState([]);
   const [actionTakenData, setActionTakenData] = useState([]);
+  const [selectDepthAndId, setSelectDepthAndId] = useState([])
+  const [isNext, setIsNext] = useState(false)
+  const [approvalActionData, setApprovalactionData] = useState([])
+
+
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
@@ -189,9 +195,9 @@ console.log(closeOut)
   const handleAhaLessonLearnPush = async () => {
     history.push("/app/pages/aha/lessons-learned/lessons-learned");
   };
-  
+
   const handleCloseOutPush = async () => {
-  
+
     history.push("/app/pages/aha/close-out");
   };
 
@@ -207,8 +213,8 @@ console.log(closeOut)
       setApprovals(false);
       setCloseOut(false);
       setLessonsLearned(false);
-       setComments(false);
-    setActivity(false);
+      setComments(false);
+      setActivity(false);
     } else if (viewName == "approval") {
       setAssessments(false);
       if (ahaData.wrpApprovalUser !== "") {
@@ -216,21 +222,21 @@ console.log(closeOut)
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
       }
-      setCloseOutView(false);
-      setLessonsLearnedView(false);
+      setCloseOut(false);
+      setLessonsLearned(false);
       setComments(false);
-    setActivity(false);
+      setActivity(false);
     } else if (viewName == "lession") {
       setAssessments(false);
       setApprovals(false);
       setCloseOut(false);
-      if (ahaData.anyLessonsLearnt !== "" ) {
+      if (ahaData.anyLessonsLearnt !== "") {
         setLessonsLearned(true);
       } else {
         history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
       }
       setComments(false);
-    setActivity(false);
+      setActivity(false);
     } else if (viewName = "closeOut") {
       setAssessments(false);
       setApprovals(false);
@@ -241,7 +247,7 @@ console.log(closeOut)
       }
       setLessonsLearned(false);
       setComments(false);
-    setActivity(false);
+      setActivity(false);
     }
   }
 
@@ -275,13 +281,43 @@ console.log(closeOut)
     // const lastName = fileName.split("-");
     return lastNameArray;
   };
-
+  const [projectStructName, setProjectStructName] = useState([])
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
-    await fetchBreakDownData(result.fkProjectStructureIds);
     await setAHAData(result);
+    await handelWorkArea(result)
+    await fetchBreakDownData(result.fkProjectStructureIds);
+
   };
+  const handelWorkArea = async (assessment) => {
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    let structName = []
+    let projectStructId = assessment.fkProjectStructureIds.split(":")
+    console.log(projectStructId, "PPPPP")
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      console.log(workArea, "!@#$")
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    console.log(structName, "@@@@@@")
+    setProjectStructName(structName)
+  }
+
+  console.log(projectStructName, "LLL")
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -292,9 +328,10 @@ console.log(closeOut)
   };
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-
+    let breakdownLength = projectData.projectName.breakdown.length
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
     for (var key in breakDown) {
       if (breakDown[key].slice(0, 2) === '1L') {
         var config = {
@@ -307,17 +344,22 @@ console.log(closeOut)
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            console.log(result)
-
+            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
+
                 selectBreakDown = [
-                  ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+
                 ];
-                // setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
+            setProjectSturcturedData(selectBreakDown)
           })
           .catch((error) => {
 
@@ -327,7 +369,7 @@ console.log(closeOut)
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-            }${breakDown[key - 1].slice(-1)}`,
+            }${breakDown[key - 1].substring(2)}`,
           headers: HEADER_AUTH,
         };
 
@@ -335,43 +377,83 @@ console.log(closeOut)
           .then(async (response) => {
 
             const result = response.data.data.results;
-            // console.log({ fetchSelectBreakDownList: result })
+
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
 
                 selectBreakDown = [
                   ...selectBreakDown,
-                  { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
                 ];
-                console.log(selectBreakDown)
-                // setFetchSelectBreakDownList(selectBreakDown)
+
               }
             });
 
+            setProjectSturcturedData(selectBreakDown)
 
           })
           .catch((error) => {
-            console.log(error)
             setIsNext(true);
           });
       }
-      await setProjectSturcturedData(selectBreakDown);
     }
   };
-  
 
-  
-  console.log(projectSturcturedData)
+
+
+  // console.log(projectSturcturedData,"lkklklklkl")
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
-    console.log("555555",res)
     const result = res.data.data.results;
-    console.log("llllll",result)
-    await setForm(result);
+
+    let zzz = [...result]
+
+    for (var i = 0; i < result.length; i++) {
+      if (result[i].riskRating !== "") {
+        if (result[i].riskRating === "25%") {
+          zzz[i].riskRatingColour = '#1EBD10'
+        } else if (result[i].riskRating === "50%") {
+          zzz[i].riskRatingColour = '#FFEB13'
+
+        } else if (result[i].riskRating === "75%") {
+          zzz[i].riskRatingColour = '#F3C539'
+
+        } else {
+          zzz[i].riskRatingColour = '#FF0000'
+
+        }
+      }
+    }
+    await setForm(zzz);
+    await handelActionTracker(result)
   };
+
+  const handelActionTracker = async (resultHazard) => {
+    let ahaId = localStorage.getItem("fkAHAId")
+
+    let actionData = await handelActionData(ahaId, resultHazard)
+    await setForm(actionData);
+
+    let allAction = await handelActionData(ahaId, [], "title")
+    let temp = []
+    allAction.map((value) => {
+      if (value.enitityReferenceId.split(":")[1] == "00") {
+        temp.push(value)
+      }
+    })
+    setApprovalactionData(temp !== null ? temp : [])
+  };
+  const handelShowData = () => {
+
+  }
+
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -394,13 +476,13 @@ console.log(closeOut)
     await setActionTakenData(sorting);
     // await setIsLoading(true);
   };
-  console.log(actionTakenData);
+
   useEffect(() => {
     if (id) {
       fetchAHASummary();
       fetchTeamData();
       fetchHzardsData();
-      fetchactionTrackerData();
+      // fetchactionTrackerData();
     }
   }, []);
 
@@ -411,26 +493,26 @@ console.log(closeOut)
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber}`}
+      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
       icon="ion-md-list-box"
-    >
+    >{isLoading ? <>
       <Box paddingBottom={1}>
         <div className={Styles.incidents}>
           <div className={Styles.item}>
             <Button
               color={assessments == true ? "secondary" : "primary"}
-              variant="contained" 
+              variant="contained"
               size="small"
               endIcon={ahaData.notifyTo !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
-              onClick={(e) => 
+              onClick={(e) =>
                 viewSwitch("assessment")
               }
             >
               Assessments
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.notifyTo !== "" ? "Done" : "Pending"}
+              {ahaData.notifyTo !== "" ? "Done" : "Pending"}
             </Typography>
           </div>
 
@@ -447,13 +529,13 @@ console.log(closeOut)
               Approvals
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
+              {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
             </Typography>
           </div>
 
           <div className={Styles.item}>
             <Button
-                          color={closeOut == true ? "secondary" : "primary"}
+              color={closeOut == true ? "secondary" : "primary"}
 
               size="small"
               variant={ahaData.closedByName !== null ? "contained" : "outlined"}
@@ -465,7 +547,7 @@ console.log(closeOut)
               Close Out
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.closedByName !== null ? "Done" : "Pending"}
+              {ahaData.closedByName !== null ? "Done" : "Pending"}
 
             </Typography>
           </div>
@@ -483,11 +565,11 @@ console.log(closeOut)
               Lessons Learned
             </Button>
             <Typography variant="caption" display="block">
-            {ahaData.anyLessonsLearnt !== "" ? "Done" : "Pending"}
+              {ahaData.anyLessonsLearnt !== "" ? "Done" : "Pending"}
 
             </Typography>
           </div>
-          
+
         </div>
         <Divider />
       </Box>
@@ -496,7 +578,7 @@ console.log(closeOut)
         <Grid container spacing={3}>
           <Grid item xs={12} md={9}>
             <Grid container spacing={3}>
-              
+
 
               {/* summary and part */}
               <>
@@ -529,18 +611,8 @@ console.log(closeOut)
                                       Project structure
                                     </Typography>
                                     <Typography className={Fonts.labelValue}>
-                                      {project.projectName} -{" "}
-                                      {projectSturcturedData[0]
-                                        ? projectSturcturedData[0].name
-                                        : null}{" "}
-                                      -{" "}
-                                      {projectSturcturedData[1]
-                                        ? projectSturcturedData[1].name
-                                        : null}{" "}
-                                      -{" "}
-                                      {projectSturcturedData[2]
-                                        ? projectSturcturedData[2].name
-                                        : null}
+                                      {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
+
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -555,7 +627,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.workArea}
+                                      {ahaData.workArea ? ahaData.workArea : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -570,7 +642,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.location}
+                                      {ahaData.location ? ahaData.location : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -585,7 +657,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.username}
+                                      {ahaData.username ? ahaData.username : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -617,7 +689,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.permitToPerform}
+                                      {ahaData.permitToPerform ? ahaData.permitToPerform : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -632,7 +704,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.permitNumber}
+                                      {ahaData.permitNumber ? ahaData.permitNumber : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -647,7 +719,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.description}
+                                      {ahaData.description ? ahaData.description : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -688,16 +760,16 @@ console.log(closeOut)
                               <Grid container item xs={12} spacing={3}>
                                 <>
                                   <Grid item xs={12} md={6}>
-                                    {form.map((item, index) => (
+                                    {form.length > 0 ? form.map((item, index) => (
                                       <>
                                         <ul
                                           className={Fonts.labelValue}
                                           key={index}
                                         >
-                                          {<li>{item.hazard}</li>}
+                                          {<li>{item.hazard ? item.hazard : "-"}</li>}
                                         </ul>
                                       </>
-                                    ))}
+                                    )) : "-"}
                                     {/* <Typography variant="body" className={Fonts.labelValue}>
                                         {item.risk}
                                       </Typography> */}
@@ -751,7 +823,7 @@ console.log(closeOut)
                                                       Fonts.headingIcon
                                                     }
                                                   />
-                                                  {item.hazard}
+                                                  {item.hazard ? item.hazard : "-"}
                                                 </Typography>
                                               </AccordionSummary>
                                               <AccordionDetails>
@@ -845,8 +917,11 @@ console.log(closeOut)
                                                       className={
                                                         classes.ratioColororange
                                                       }
+                                                      style={{ backgroundColor: item.riskRatingColour }}
                                                     >
-                                                      50% Risk
+                                                      {item.riskRating
+                                                        ? `${item.riskRating} risk`
+                                                        : "-"}
                                                     </div>
                                                   </Grid>
 
@@ -966,6 +1041,18 @@ console.log(closeOut)
                                                     <Divider light />
                                                   </Grid>
                                                 </Grid>
+                                                <Grid>
+                                                  {item.action !== undefined && item.action.map((valueAction) => (
+                                                    <ActionShow
+                                                      action={valueAction}
+                                                      companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                                      projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                                      handelShowData={handelShowData}
+                                                    />
+                                                  ))}
+
+                                                </Grid>
+
                                               </AccordionDetails>
                                             </Accordion>
                                           </>
@@ -973,18 +1060,7 @@ console.log(closeOut)
                                       </div>
                                     </Grid>
                                   </Grid>
-                                  {/* <Grid item xs={12} md={6}>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Energy Hazard
-                                      </Typography>
-                                      <Typography variant="body" className={Fonts.labelValue}>
-                                        NA
-                                      </Typography>
-                                    </Grid> */}
+
                                   <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
@@ -997,7 +1073,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.workStopCondition}
+                                      {ahaData.workStopCondition ? ahaData.workStopCondition : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1012,7 +1088,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.additionalRemarks}
+                                      {ahaData.additionalRemarks ? ahaData.additionalRemarks : "-"}
                                     </Typography>
                                   </Grid>
                                 </>
@@ -1044,14 +1120,14 @@ console.log(closeOut)
                                     {ahaData.ahaAssessmentAttachment ? (
                                       <Typography
                                         className={classes.labelValue}
-                                        // title={handelFileName(
-                                        //   ahaData.ahaAssessmentAttachment
-                                        // )}
+                                      // title={handelFileName(
+                                      //   ahaData.ahaAssessmentAttachment
+                                      // )}
                                       >
                                         {/* <Attachment value={initialData.attachment}/> */}
                                         {ahaData.ahaAssessmentAttachment ===
-                                        null ? null : typeof ahaData.ahaAssessmentAttachment ===
-                                          "string" ? (
+                                          null ? null : typeof ahaData.ahaAssessmentAttachment ===
+                                            "string" ? (
                                           <Attachment
                                             value={
                                               ahaData.ahaAssessmentAttachment
@@ -1075,7 +1151,7 @@ console.log(closeOut)
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.link}
+                                      {ahaData.link ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1091,7 +1167,7 @@ console.log(closeOut)
                                       display="block"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.notifyTo}
+                                      {ahaData.notifyTo ? ahaData.notifyTo : "-"}
                                     </Typography>
                                     {/* <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography> */}
                                   </Grid>
@@ -1125,7 +1201,7 @@ console.log(closeOut)
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.username}
+                                {ahaData.username ? ahaData.username : "-"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1145,164 +1221,71 @@ console.log(closeOut)
                                 ) : "-"}
                               </Typography>
                             </Grid>
-                            <Grid
-                              item
-                              xs={12}
-                              style={{ padding: "0px 12px", marginTop: "15px" }}
-                            >
-                              <Typography className={classes.heading}>
-                                Person in-charge
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Approved by
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {ahaData.username}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Approved on
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {ahaData.picApprovalDateTime ? moment(ahaData["picApprovalDateTime"]).format(
-                                  "Do MMMM YYYY"
-                                ):"-"}
-                              </Typography>
-                            </Grid>
+
                           </Grid>
                         </Grid>
-
-                        <Grid item xs={12}>
-                          <Typography className={Fonts.heading}>
-                            Actions
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Grid container spacing={3}>
-                            <Grid item xs={12} md={8}>
-                              {actionTakenData.map((action, key) => (
+                        <Grid item md={12}>
+                          <Grid item md={6}>
+                            <Typography className={Fonts.heading}>
+                              Actions
+                            </Typography>
+                            <Typography>
+                              {approvalActionData.map((value) => (
                                 <>
-                                  <Typography className={classes.aLabelValue}>
-                                    <span
-                                      key={key}
-                                      className={classes.updateLink}
-                                    >
-                                      <a target="_blank" 
-                                        href={`http://dev-actions.pace-os.com/app/pages/Action-Summary/${
-                                          action.id
-                                        }`}
-                                        // href={`https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=OM6yGoy2rZX5q6dEvVSUczRHloWnJ5MeusAQmPfq&response_type=code&companyId=${action.fkCompanyId}&projectId=${action.fkProjectId}&targetPage=/app/pages/Action-Summary/&targetId=${action.id}`}
-                                      >
-                                        {action.actionNumber}
-                                      </a>
-                                    </span>
-                                    <div className={classes.actionTitleLable}>
-                                      {action.actionTitle}
-                                    </div>
-                                  </Typography>
+                                  <ActionShow
+                                    action={{ id: value.actionId, number: value.actionNumber }}
+                                    title={value.actionTitle}
+                                    companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                    projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    handelShowData={handelShowData}
+                                  />
+
                                 </>
                               ))}
-                              {/* <Typography className={classes.aLabelValue}>
-                                  <span className={classes.updateLink}><Link to="">AL-nnnnn</Link></span>
-                                  <div className={classes.actionTitleLable}>Action title</div>
-                                </Typography> */}
-                            </Grid>
+                            </Typography>
                           </Grid>
-                        </Grid>
 
-                        <Grid item xs={12}>
-                          <Typography className={classes.heading}>
-                            Sign-offs
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Signed-off by
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                NA
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Signed-off on
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                NA
-                              </Typography>
-                            </Grid>
-                          </Grid>
+
+
+
                         </Grid>
                       </>
                     );
                   }
-                  if(closeOut == true) {
-                    return(<>
+                  if (closeOut == true) {
+                    return (<>
                       <Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Closed by
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                                {ahaData.closedByName}
-                              </Typography>
-                            </Grid><Grid item xs={12} md={6}>
-                              <Typography
-                                variant="h6"
-                                gutterBottom
-                                className={Fonts.labelName}
-                              >
-                                Closed on
-                              </Typography>
-                              <Typography
-                                variant="body"
-                                className={Fonts.labelValue}
-                              >
-                              {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                                  "Do MMMM YYYY"
-                                ):"-"}
-                                
-                              </Typography>
-                            </Grid>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Closed by
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ahaData.closedByName ? ahaData.closedByName : "-"}
+                        </Typography>
+                      </Grid><Grid item xs={12} md={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          Closed on
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
+                            "Do MMMM YYYY"
+                          ) : "-"}
+
+                        </Typography>
+                      </Grid>
                     </>)
                   }
                   if (lessonsLearned == true) {
@@ -1345,12 +1328,12 @@ console.log(closeOut)
                       </>
                     );
                   }
-                  if(comments == true){
+                  if (comments == true) {
                     return (<div>
                       <Comments
-                              commentContext="Aha"
-                              id={localStorage.getItem("fkAHAId")}
-                            />
+                        commentContext="Aha"
+                        id={localStorage.getItem("fkAHAId")}
+                      />
                     </div>)
                   }
                   // if (summary == true) {
@@ -1371,61 +1354,61 @@ console.log(closeOut)
                   <ListSubheader component="div">Actions</ListSubheader>
                 }
               >{ahaData.notifyTo !== "" ? (
-                <ListItemLink                 disabled = {ahaData.closedByName !== null} 
-onClick={(e) => handleNewAhaPush(e)}>
+                <ListItemLink disabled={ahaData.closedByName !== null}
+                  onClick={(e) => handleNewAhaPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Assessments" />
-                </ListItemLink>) :(
-                <ListItemLink                 disabled = {ahaData.closedByName !== null} 
-onClick={(e) => handleNewAhaPush(e)}>
+                </ListItemLink>) : (
+                <ListItemLink disabled={ahaData.closedByName !== null}
+                  onClick={(e) => handleNewAhaPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Assessments" />
-                </ListItemLink> )}
-                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink 
-                                disabled = {ahaData.closedByName !== null} 
-onClick={(e) => handleAhaApprovalsPush(e)}>
+                </ListItemLink>)}
+                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink
+                  disabled={ahaData.closedByName !== null}
+                  onClick={(e) => handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Approvals" />
-                </ListItemLink>) :(<ListItemLink 
-                                disabled = {ahaData.closedByName !== null} 
+                </ListItemLink>) : (<ListItemLink
+                  disabled={ahaData.closedByName !== null}
 
-                onClick={(e) =>
-                 handleAhaApprovalsPush(e)}>
+                  onClick={(e) =>
+                    handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
                     <Add />
                   </ListItemIcon>
                   <ListItemText primary="Add Approvals" />
-                </ListItemLink>) }
+                </ListItemLink>)}
 
-                {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink 
-                                disabled = {ahaData.closedByName !== null} 
+                {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink
+                  disabled={ahaData.closedByName !== null}
                   onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Edit />
                   </ListItemIcon>
                   <ListItemText primary="Update Lessons Learned" />
                 </ListItemLink>) :
-                (<ListItemLink
-                disabled = {ahaData.closedByName !== null} 
-                onClick={(e) => handleAhaLessonLearnPush(e)}>
-                  <ListItemIcon>
-                    <Add />
-                  </ListItemIcon>
-                  <ListItemText primary="Add Lessons Learned" />
-                </ListItemLink>) }
+                  (<ListItemLink
+                    disabled={ahaData.closedByName !== null}
+                    onClick={(e) => handleAhaLessonLearnPush(e)}>
+                    <ListItemIcon>
+                      <Add />
+                    </ListItemIcon>
+                    <ListItemText primary="Add Lessons Learned" />
+                  </ListItemLink>)}
                 <ListItemLink onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
                   <ListItemText primary=" Close Out" />
                 </ListItemLink>
-   
+
 
                 <ListItem button onClick={(e) => handleCommentsPush(e)}>
                   <ListItemIcon>
@@ -1460,6 +1443,7 @@ onClick={(e) => handleAhaApprovalsPush(e)}>
           </Grid>
         </Grid>
       </Box>
+    </> : <h1>Loading...</h1>}
     </PapperBlock>
   );
 }

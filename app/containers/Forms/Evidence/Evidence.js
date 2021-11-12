@@ -1,35 +1,36 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
+import { FormHelperText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { PapperBlock } from "dan-components";
+import Snackbar from "@material-ui/core/Snackbar";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { FormHelperText, withStyles } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
+import MuiAlert from "@material-ui/lab/Alert";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-grid-system";
 import { useHistory, useParams } from "react-router";
-import { result } from "lodash";
-import api from "../../../utils/axios";
-import FormSideBar from "../FormSideBar";
-import { EVIDENCE_FORM } from "../../../utils/constants";
-import EvidenceValidate from "../../Validator/EvidenceValidation";
 import Type from "../../../styles/components/Fonts.scss";
-
+import api from "../../../utils/axios";
+import { EVIDENCE_FORM } from "../../../utils/constants";
 import Attachment from "../../Attachment/Attachment";
+import EvidenceValidate from "../../Validator/EvidenceValidation";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -219,63 +220,72 @@ const Evidence = () => {
 
   const fetchEvidenceList = async () => {
     const lastItem = id || localStorage.getItem("fkincidentId");
-    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`);
-    const result = res.data.data.results;
-    const newData = result.filter(
-      (item) =>
-        item.evidenceCategory !== "Lessons Learned" &&
-        item.evidenceCategory !== "Initial Evidence"
-    );
+    const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`)
+      .then((res) => {
+        const result = res.data.data.results;
+        const newData = result.filter(
+          (item) =>
+            item.evidenceCategory !== "Lessons Learned" &&
+            item.evidenceCategory !== "Initial Evidence"
+        );
+        const tempData = [];
+        if (newData.length > 0) {
+          for (let i = 0; i < newData.length; i++) {
+            if (newData[i].evidenceCheck !== "Yes") {
+              tempData.push({
+                evidenceCategory: newData[i].evidenceCategory,
+                evidenceCheck: newData[i].evidenceCheck,
+                evidenceRemark: newData[i].evidenceRemark,
+                evidenceDocument: null,
+                status: "Active",
+                createdBy: 0,
+                updatedBy: 0,
+                fkIncidentId: id || localStorage.getItem("fkincidentId"),
+                pk: newData[i].id,
+              });
+            } else {
+              tempData.push({
+                evidenceCategory: newData[i].evidenceCategory,
+                evidenceCheck: newData[i].evidenceCheck,
+                evidenceRemark: newData[i].evidenceRemark,
+                evidenceDocument: newData[i].evidenceDocument,
+                status: "Active",
+                createdBy: 0,
+                updatedBy: 0,
+                fkIncidentId: id || localStorage.getItem("fkincidentId"),
+                pk: newData[i].id,
+              });
+            }
+          }
 
-    const tempData = [];
-    if (newData.length > 0) {
-      for (let i = 0; i < newData.length; i++) {
-        if (newData[i].evidenceCheck !== "Yes") {
-          tempData.push({
-            evidenceCategory: newData[i].evidenceCategory,
-            evidenceCheck: newData[i].evidenceCheck,
-            evidenceRemark: newData[i].evidenceRemark,
-            evidenceDocument: null,
-            status: "Active",
-            createdBy: 0,
-            updatedBy: 0,
-            fkIncidentId: id || localStorage.getItem("fkincidentId"),
-            pk: newData[i].id,
-          });
-        } else {
-          tempData.push({
-            evidenceCategory: newData[i].evidenceCategory,
-            evidenceCheck: newData[i].evidenceCheck,
-            evidenceRemark: newData[i].evidenceRemark,
-            evidenceDocument: newData[i].evidenceDocument,
-            status: "Active",
-            createdBy: 0,
-            updatedBy: 0,
-            fkIncidentId: id || localStorage.getItem("fkincidentId"),
-            pk: newData[i].id,
-          });
+          setForm(tempData);
+          setEvideceData(tempData);
         }
-      }
+        setIsLoading(true);
+      })
+      .catch(() => { })
 
-      await setForm(tempData);
-      await setEvideceData(tempData);
-    }
-    await setIsLoading(true);
+
   };
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
-    );
-    const result = res.data.data.results;
-    await setIncidentDetail(result);
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentDetail(result);
+    })
+      .catch(() => history.push("/app/pages/error"))
+
   };
 
   // On the next button click function call.
 
   const handleNext = async () => {
     const { error, isValid } = EvidenceValidate(form);
+    if (evideceData.length > 0) {
 
+    }
     await setError(error);
 
     if (!isValid) {
@@ -343,6 +353,9 @@ const Evidence = () => {
           );
         }
       } else {
+
+
+
         data.append("createdAt", form[i].createdAt);
         data.append("createdBy", form[i].createdBy);
         data.append("updatedAt", form[i].updatedAt);
@@ -367,10 +380,27 @@ const Evidence = () => {
   };
 
   const handleSubmit = async () => {
-    if (isNext === true) {
+    const temp = incidentDetail;
+    if (incidentDetail.incidentStage == "Investigation") {
+      try {
+        temp.updatedAt = new Date().toISOString();
+        temp.incidentStage = "Evidence"
+        temp.incidentStatus = "pending"
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        alert("something went wrong")
+      }
+    }
+    const { error, isValid } = EvidenceValidate(form);
+    await setError(error);
+    if (isValid === true) {
       setIsNext(false);
       let status = 0;
       if (evideceData.length > 0) {
+
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -411,6 +441,7 @@ const Evidence = () => {
           }
         }
       } else {
+
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -449,7 +480,7 @@ const Evidence = () => {
           )}`
         );
       }
-    }
+    } else { setIsNext(true) }
   };
 
   const handleClose = (event, reason) => {
@@ -534,7 +565,7 @@ const Evidence = () => {
 
   useEffect(() => {
     fetchIncidentDetails();
-    if (id) {
+    if (localStorage.getItem("fkincidentId")) {
       fetchEvidenceList();
     } else {
       setIsLoading(true);
@@ -659,8 +690,8 @@ const Evidence = () => {
                               />
 
                               {value.evidenceDocument ===
-                              null ? null : typeof value.evidenceDocument ===
-                                "string" ? (
+                                null ? null : typeof value.evidenceDocument ===
+                                  "string" ? (
                                 <Attachment value={value.evidenceDocument} />
                               ) : null}
                             </TableCell>
@@ -697,8 +728,9 @@ const Evidence = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => handleSubmit()}
+                  disabled={!isNext}
                 >
-                  Next
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -714,7 +746,7 @@ const Evidence = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

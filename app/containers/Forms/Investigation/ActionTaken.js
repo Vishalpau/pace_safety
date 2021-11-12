@@ -1,28 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { spacing } from "@material-ui/system";
-import { makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Col, Row } from "react-grid-system";
 import DateFnsUtils from "@date-io/date-fns";
-import moment from "moment";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
-  TimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
+  KeyboardDatePicker, MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import { PapperBlock } from "dan-components";
-import { useHistory, useParams } from "react-router";
-
-import FormSideBar from "../FormSideBar";
-import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
-import api from "../../../utils/axios";
-
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
+import { Col, Row } from "react-grid-system";
 // Redux
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { tabViewMode } from "../../../redux/actions/initialDetails";
+import api from "../../../utils/axios";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -39,7 +37,11 @@ const ActionTaken = () => {
   const putId = useRef("");
   const investigationId = useRef("");
   const dispatch = useDispatch();
-
+  const [incidentsListData, setIncidentsListdata] = useState([]);
+  const [isDateShow, setIsDateShow] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false)
+  // handle update check
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
     const lastItem = parseInt(
@@ -50,42 +52,75 @@ const ActionTaken = () => {
       : localStorage.getItem("fkincidentId");
     putId.current = incidentId;
 
-    let previousData = await api.get(
+    await api.get(
       `api/v1/incidents/${incidentId}/investigations/`
-    );
-    let allApiData = previousData.data.data.results[0];
-    if (!isNaN(allApiData.id)) {
-      await setForm(allApiData);
-      investigationId.current = allApiData.id;
-    }
+    ).then((previousData) => {
+      let allApiData = previousData.data.data.results[0];
+      if (!isNaN(allApiData.id)) {
+        setForm(allApiData);
+        investigationId.current = allApiData.id;
+      }
+    }).catch(error => history.push("/app/pages/error"))
   };
 
-  const [error, setError] = useState({});
-
   const handleNext = async (e) => {
+    setButtonLoading(true)
+    const temp = incidentsListData
+    temp.updatedAt = new Date().toISOString();
+    if (incidentsListData.incidentStage === "Investigation") {
+      temp.incidentStatus = "Done"
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        history.push("/app/pages/error")
+      }
+    }
+
     form.preEventMitigations === null
       ? (form["preEventMitigations"] = "")
       : null;
-    console.log(form.preEventMitigations);
+
     form["endDate"] = new Date()
     const res = await api.put(
       `api/v1/incidents/${putId.current}/investigations/${investigationId.current}/`,
       form
-    );
-    if (res.status === 200) {
-      let viewMode = {
-        initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+    ).then((res) => {
+      if (res.status === 200) {
+        let viewMode = {
+          initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
+        history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
 
       }
-      localStorage.setItem("viewMode", JSON.stringify(viewMode))
-      dispatch(tabViewMode(viewMode));
-      history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
-      
-    }
+    }).catch(() => { history.push("/app/pages/error") });
+    setButtonLoading(false)
+  };
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentsListdata(result);
+    })
+      .catch((err) => history.push("/app/pages/error"))
+
   };
 
+  const handelCallBack = async () => {
+    await setLoading(true)
+    await handelUpdateCheck();
+    await fetchIncidentsData();
+    await setLoading(false)
+  }
+
   useEffect(() => {
-    handelUpdateCheck();
+    handelCallBack()
   }, []);
 
   const radioDecide = ["Yes", "No"];
@@ -93,79 +128,84 @@ const ActionTaken = () => {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <PapperBlock title="Action Taken" icon="ion-md-list-box">
-      <Row>
-        <Col md={9}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <TextField
-                variant="outlined"
-                id="filled-basic"
-                label="Pre-event mitigation"
-                value={form.preEventMitigations != undefined ? form.preEventMitigations : ""}
-                // placeholder="Pre-event mitigation"
-                // InputLabelProps={{
-                //   shrink: true,
-                // }}
-                onChange={(e) => {
-                  setForm({
-                    ...form,
-                    preEventMitigations: e.target.value,
-                  });
-                }}
-                className={classes.formControl}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  className={classes.formControl}
-                  id="date-picker-dialog"
-                  value={form.correctionActionClosedAt}
-                  disableFuture={true}
+      {loading == false ?
+        <Row>
+          <Col md={9}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  variant="outlined"
+                  id="filled-basic"
+                  label="Pre-event mitigation"
+                  value={form.preEventMitigations != undefined ? form.preEventMitigations : ""}
                   onChange={(e) => {
                     setForm({
                       ...form,
-                      correctionActionClosedAt: moment(e).toISOString(),
+                      preEventMitigations: e.target.value,
                     });
                   }}
-                  format="yyyy/MM/dd"
-                  inputVariant="outlined"
-                  label="Correction action date completed"
+                  className={classes.formControl}
                 />
-              </MuiPickersUtilsProvider>
-            </Grid>
+              </Grid>
 
-            <Grid item md={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => history.goBack()}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={(e) => handleNext(e)}
-              >
-                Submit
-              </Button>
+              <Grid item xs={12} md={6}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    className={classes.formControl}
+                    id="date-picker-dialog"
+                    value={form.correctionActionClosedAt}
+                    disableFuture={true}
+                    onChange={(e) => {
+                      setForm({
+                        ...form,
+                        correctionActionClosedAt: moment(e).toISOString(),
+                      });
+                    }}
+                    format="yyyy/MM/dd"
+                    inputVariant="outlined"
+                    label="Correction action date completed"
+                    InputProps={{ readOnly: true }}
+                    onClick={(e) => setIsDateShow(true)}
+                    open={isDateShow}
+                    onClose={(e) => setIsDateShow(false)}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+
+              <Grid item md={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => history.goBack()}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={(e) => handleNext(e)}
+                  disabled={buttonLoading}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </Col>
-        {isDesktop && (
-          <Col md={3}>
-            <FormSideBar
-              deleteForm={[1, 2, 3]}
-              listOfItems={INVESTIGATION_FORM}
-              selectedItem="Action taken"
-            />
           </Col>
-        )}
-      </Row>
+          {isDesktop && (
+            <Col md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={INVESTIGATION_FORM}
+                selectedItem="Action taken"
+              />
+            </Col>
+          )}
+        </Row>
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

@@ -55,6 +55,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import PACE_white from 'dan-images/PACE_white.png';
 
 import Headerbox from "./headerbox";
+import "../../styles/custom/customheader.css";
 
 import { useParams } from "react-router";
 
@@ -453,7 +454,7 @@ function Header(props) {
               }
             })
             .catch(function (error) {
-
+                console.log(error)
             });
         }
       }
@@ -465,38 +466,35 @@ function Header(props) {
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
-    let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
-    for (var key in projectData.projectName.breakdown) {
-      if (key == 0) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
-        const res = await Axios(config)
-        if (res.status === 200) {
-          labellist[0].breakdownValue = res.data.data.results
-          setLabelList(labellist)
-          setIsLoading(true)
+    try{
+      let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
+      for (var key in projectData.projectName.breakdown) {
+        if (key == 0) {
+          var config = {
+            method: "get",
+            url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+              }`,
+            headers: HEADER_AUTH,
+          };
+          const res = await Axios(config)
+          .then((res)=>{
+            if (res.status === 200) {
+              labellist[0].breakdownValue = res.data.data.results
+              setLabelList(labellist)
+              setIsLoading(true)
+            }
+          })
+          .catch(err=>console.log(err.message))       
         }
       }
+    }catch(err){
+      console.log(err.message)
     }
-
 
   };
-  const fetchIncidentData = async () => {
 
-    const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
-    const result = res.data.data.results;
-
-  }
   useEffect(() => {
     fetchCallBack();
-    if (fkid) {
-      fetchIncidentData();
-    }
-
   }, [props.initialValues.projectName]);
 
   useEffect(() => {
@@ -606,7 +604,7 @@ function Header(props) {
               onClose={handleProjectClose}
             >
               <DialogTitle onClose={handleProjectClose}>
-                Switch to a Different Project
+              Select a Project
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
@@ -723,11 +721,11 @@ function Header(props) {
                             className={classes.filterSelect}
                           >
 
-                            <InputLabel id="filter3-label">
+                            <InputLabel id={item.breakdownLabel}>
                               {item.breakdownLabel}
                             </InputLabel>
                             <Select
-                              labelId="filter3-label"
+                              labelId={item.breakdownLabel}
                               id="filter3"
                               value={item.selectValue}
                               disabled={item.breakdownValue.length === 0}
@@ -735,7 +733,7 @@ function Header(props) {
                                 handleBreakdown(e, index, item.breakdownLabel);
 
                               }}
-                              label="Phases"
+                              label={item.breakdownLabel}
                               style={{ width: "100%" }}
                             >
                               {item.breakdownValue.length > 0

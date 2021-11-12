@@ -1,68 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
-import brand from "dan-api/dummy/brand";
-import { PapperBlock } from "dan-components";
-// import api from "../../../utils/axios";
-// import api from "../../../"
-import { object } from "prop-types";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import AppBar from "@material-ui/core/AppBar";
+import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Print from "@material-ui/icons/Print";
-import Share from "@material-ui/icons/Share";
+import Chip from "@material-ui/core/Chip";
 import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import InputBase from "@material-ui/core/InputBase";
 import Link from "@material-ui/core/Link";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import AttachmentIcon from "@material-ui/icons/Attachment";
-import InfoIcon from "@material-ui/icons/Info";
-import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import MUIDataTable from "mui-datatables";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import moment from "moment";
-import MomentUtils from "@date-io/moment";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
-import ListIcon from "@material-ui/icons/List";
-import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
-import MessageIcon from "@material-ui/icons/Message";
 import BuildIcon from "@material-ui/icons/Build";
 import CalendarTodayOutlinedIcon from "@material-ui/icons/CalendarTodayOutlined";
-import api from "../../../utils/axios";
-import axios from "axios";
+import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
+import MessageIcon from "@material-ui/icons/Message";
+import Print from "@material-ui/icons/Print";
+import SearchIcon from "@material-ui/icons/Search";
+import Share from "@material-ui/icons/Share";
+import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
 import Pagination from '@material-ui/lab/Pagination';
-
+import axios from "axios";
+import { PapperBlock } from "dan-components";
 // import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
-import { List } from "immutable";
-import { useHistory, useParams } from "react-router";
-import Tooltip from "@material-ui/core/Tooltip";
-
+import moment from "moment";
+import MUIDataTable from "mui-datatables";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { useHistory } from "react-router";
+import api from "../../../utils/axios";
+
+
 
 const useStyles = makeStyles((theme) => ({
-  pagination:{
-    padding:"1rem 0",
-    display:"flex",
-    justifyContent:"flex-end"
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
   },
   root: {
     flexGrow: 1,
@@ -162,15 +143,15 @@ function Observations(props) {
   const [pageCount, setPageCount] = useState(0);
 
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).name
-  : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).name
+    : null;
   const handelView = (e) => {
     setListToggle(false);
-    history.push(`/app/observations`);
+    history.push(`/app/icare`);
   };
   const handelViewTabel = (e) => {
     setListToggle(true);
-    history.push(`/app/observations#table`);
+    history.push(`/app/icare#table`);
   };
 
   const handlePush = async () => {
@@ -187,7 +168,7 @@ function Observations(props) {
     } else {
       localStorage.removeItem("action");
     }
-    history.push(`/app/observation/details/${id}`);
+    history.push(`/app/icare/details/${id}`);
   };
 
   const handelActionTracker = async () => {
@@ -202,7 +183,7 @@ function Observations(props) {
 
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
-    history.push("/app/observation-initial-notification");
+    history.push("/app/icare-initial-notification");
   };
   const columns = [
     {
@@ -238,11 +219,11 @@ function Observations(props) {
   ];
 
   const options = {
-    print : false,
+    print: false,
     search: false,
     filter: false,
     viewColumns: false,
-    download :false,
+    download: false,
     pagination: false,
   };
 
@@ -258,20 +239,20 @@ function Observations(props) {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
     const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results
     await setAllInitialData(result)
-    let pageCount  = Math.ceil(res.data.data.results.count/25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
     await setPageCount(pageCount)
 
     await setIsLoading(true)
@@ -279,24 +260,23 @@ function Observations(props) {
   const handleSearch = (e) => {
     // console.log(e.target.value)
     setSeacrhIncident(e.target.value);
-    // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
   };
 
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/observations/?fkCompanyId=${fkCompanyId}&fkProjectId=${fkProjectId}&fkProjectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllInitialData(res.data.data.results.results);
   };
   const classes = useStyles();
@@ -350,7 +330,16 @@ function Observations(props) {
                     </div>
                   </div>
                 </div>
-
+                {/* /// */}
+                <div>
+                  {allInitialData.length < 2 ? <div>{Objects.entries(allInitialData).map((key, value) => (
+                    <>
+                      <p>{key}</p>
+                      <p>{value}</p>
+                    </>
+                  ))}</div> : ""}
+                </div>
+                {/* ///// */}
                 <Button
                   variant="contained"
                   // color="primary"
@@ -373,17 +362,19 @@ function Observations(props) {
                 {
                   Object.entries(allInitialData)
                     .filter(
-                      (item) => {return (
-                         
-                        item[1]["observationDetails"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
+                      (item) => {
+                        return (
+
+                          item[1]["observationDetails"]
+                            .toLowerCase()
+                            .includes(searchIncident.toLowerCase()) ||
                           item[1]["observationNumber"].toLowerCase().includes(
                             searchIncident.toLowerCase()
-                          
+
+                          )
                         )
-                      )}
-                        
+                      }
+
                     )
                     .map((item, index) => (
                       <Card variant="outlined" className={Incidents.card}>
@@ -408,9 +399,9 @@ function Observations(props) {
                                   justify="flex-end"
                                 >
                                   <Chip
-                              avatar={<Avatar src={item[1]["avatar"]?item[1]["avatar"]:"/images/pp_boy.svg"}/>}
-                              label={item[1]["username"]?item[1]["username"]:"Admin"}
-                            />
+                                    avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
+                                    label={item[1]["username"] ? item[1]["username"] : "Admin"}
+                                  />
                                 </Grid>
                               </Grid>
                             </Grid>
@@ -517,7 +508,7 @@ function Observations(props) {
 
                               <Typography className={classes.listingLabelValue}>
                                 {/* {item[1]} */}
-                                {item[1]["username"]?item[1]["username"]:"Admin"}
+                                {item[1]["username"] ? item[1]["username"] : "Admin"}
                               </Typography>
                             </Grid>
                           </Grid>
@@ -598,7 +589,7 @@ function Observations(props) {
 
                 ))} */}
               </div>
-             
+
 
               {/* ))} */}
             </>
@@ -607,19 +598,7 @@ function Observations(props) {
 
             <div className="listView">
               <MUIDataTable
-                data={Object.entries(allInitialData).filter(
-                      (item) => {return (
-                         
-                        item[1]["observationDetails"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                          item[1]["observationNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-                          
-                        )
-                      )}
-                        
-                    ).map((item) => [
+                data={Object.entries(allInitialData).map((item) => [
                   item[1]["observationNumber"],
                   item[1]["observationType"],
                   item[1]["location"],
@@ -634,12 +613,12 @@ function Observations(props) {
             </div>
           )}
           <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div>
-         
+            <Pagination count={pageCount} onChange={handleChange} />
+          </div>
+
         </Box>
-        
-        
+
+
       ) : (
         <h1>Loading...</h1>
       )}
@@ -655,4 +634,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(Observations);
+export default connect(mapStateToProps, null)(Observations);

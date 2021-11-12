@@ -1,61 +1,81 @@
-import React, { useState, useEffect } from "react";
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import TableContainer from '@material-ui/core/TableContainer';
 import Typography from '@material-ui/core/Typography';
+import AttachmentIcon from '@material-ui/icons/Attachment';
+import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
+import Print from '@material-ui/icons/Print';
 import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
 import Share from '@material-ui/icons/Share';
-import Divider from '@material-ui/core/Divider';
-import Link from '@material-ui/core/Link';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import Box from '@material-ui/core/Box';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import TableContainer from '@material-ui/core/TableContainer';
-import { makeStyles } from '@material-ui/core/styles';
-import Incidents from 'dan-styles/IncidentsList.scss';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import MUIDataTable from 'mui-datatables';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import completed_small from 'dan-images/completed_small.png';
+import Pagination from '@material-ui/lab/Pagination';
 import in_progress_small from 'dan-images/in_progress_small.png';
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import completed_small from 'dan-images/completed-small.png';
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
+import Incidents from 'dan-styles/IncidentsList.scss';
+import moment from "moment";
+import MUIDataTable from 'mui-datatables';
+import React, { useEffect, useState } from "react";
+// react-redux
+import { connect } from "react-redux";
+import { useHistory } from "react-router";
+import { projectName, company } from '../../../redux/actions/initialDetails';
+import { useDispatch } from 'react-redux';
 import "../../../styles/custom/customheader.css";
+import api from "../../../utils/axios";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
+import UserDetailsView from '../../UserDetails/UserDetail';
 import StarsIcon from '@material-ui/icons/Stars';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-import api from "../../../utils/axios";
-import axios from "axios";
-import { connect } from "react-redux";
-import moment from "moment";
-import Pagination from '@material-ui/lab/Pagination';
-import { useHistory, useParams } from "react-router";
-import SimpleTabs from "./ObservationSearchSection"
+import axios from "axios"
+import TextField from '@material-ui/core/TextField';
+import Menu from '@material-ui/core/Menu';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
+import projectpj from 'dan-images/projectpj.png';
+import Loader from "../Loader"
 
 
 const useStyles = makeStyles((theme) => ({
-  pagination:{
-    padding:"1rem 0",
-    display:"flex",
-    justifyContent:"flex-end"
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '-10px',
   },
   root: {
     flexGrow: 1,
     marginBottom: theme.spacing(4),
-    // border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: '4px',
-    fontFamily: 'Montserrat-Medium',
   },
   leftSide: {
     flexGrow: 1,
@@ -71,7 +91,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     border: '1px solid #ccc',
     borderRadius: theme.shape.borderRadius,
-    // backgroundColor: theme.palette.primary.dark,
     marginRight: theme.spacing(1),
     marginLeft: 0,
     width: '100%',
@@ -94,7 +113,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -130,23 +148,23 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-  },
-  PLR0: {
-    paddingRight: '0px',
-    minWidth: '30px',
-    paddingLeft: '0px',
+    ['@media (max-width:480px)']: {
+      marginLeft: '3px',
+      marginRight: '3px',
+    },
   },
   pLeft5: {
     paddingLeft: '5px',
   },
-  pt15: {
-    paddingTop: '15px !important',
-  },
   mLeftfont: {
     marginLeft: '2px',
     fontSize: '14px',
-    textDecoration: 'underline',
+    textDecoration: 'none',
     color: 'rgba(0, 0, 0, 0.87) !important',
+    fontWeight: '500',
+    '&:hover': {
+      textDecoration: 'none',
+    },
   },
   spacerRight: {
     marginRight: '4px',
@@ -157,12 +175,12 @@ const useStyles = makeStyles((theme) => ({
   listingLabelName: {
     color: '#7692a4',
     fontSize: '0.88rem',
-	fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Regular',
   },
   listingLabelValue: {
     color: '#333333',
     fontSize: '0.88rem',
-	fontFamily: 'Montserrat-Medium',
+    fontFamily: 'Montserrat-Regular',
     '& a': {
       paddingLeft: '5px',
       cursor: 'pointer',
@@ -172,28 +190,49 @@ const useStyles = makeStyles((theme) => ({
   },
   textPrimary: {
     color: '#06425c',
-  }, 
+  },
   dataTableNew: {
     minWidth: '1360px !important',
   },
-  TableToolbar : {
+
+  title: {
+    fontSize: '1.25rem',
+    fontFamily: 'Montserrat-Regular',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '500',
+    lineHeight: '1.6',
+  },
+  pt30: {
+    paddingTop: '30px',
+
+  },
+
+  mTopThirtybtten: {
+    marginTop: '0rem',
+    float: 'right',
+  },
+
+  TableToolbar: {
     display: 'none',
   },
-  pLTen : {
+  pLTen: {
     marginLeft: '5px',
   },
-  mTtop15 : {
+  mTtop15: {
     marginTop: '15px',
-  },  
-  mTtop20 : {
+  },
+  mTtop20: {
     marginTop: '20px',
-  },  
-  mTtop30 : {
+  },
+  mTtop30: {
     marginTop: '30px',
   },
-  marginTopBottom : {
+  marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
+    ['@media (max-width:800px)']: {
+      paddingTop: '55px',
+    },
   },
   searchHeaderTop: {
     border: '1px solid #f1f1f1',
@@ -211,71 +250,183 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #e4e4e4',
     padding: '0px 16px 0px 10px',
     borderRadius: '8px',
-},
-buttonsNewChild: {
-  borderRadius: '5px',
-  backgroundColor: '#23343e',
-  color: '#ffffff',
-},
-padd10:  {
-  padding: '10px 10px 10px 10px',
-},
-sepHeightTen: {
-  borderLeft: '3px solid #cccccc',
-  height: '8px',
-  verticalAlign:'middle',
-  margin: '15px 15px 15px 8px',
-  fontSize: '10px',
-},
-sepHeightOne: {
-  borderLeft: '3px solid #cccccc',
-  height: '8px',
-  verticalAlign:'middle',
-  margin: '15px',
-  fontSize: '10px',
-},
-mright5: {
-  marginRight: '5px',
-  color: '#a7a7a7',
-},
-iconColor: {
-  color: '#a7a7a7',
-},
-floatR: {
-  float: 'right',
-  textTransform: 'capitalize',
-},
-iconteal: {
-  color: '#06425c',
-  fontSize: '28px',
-},
-listHeadColor: {backgroundColor: '#fafafa',},
-marginTopBottom: {
-	'& .MuiTypography-h6 .MuiTypography-h5': {
-		fontFamily: 'Montserrat-Medium',
-	},
-},
-textRight:{
-  textAlign: 'right',
-},
-userImage: {
-  height: '56px',
-  width: '58px',
-},
-mrFifteen: {
-  marginRight: '15px',
-},
-card: {
-  boxShadow: '0px 0px 2px #ccc',
-  borderRadius: '10px',
-  marginBottom: '30px',
-},
-title:  {
-  fontSize: '20px',
-  fontFamily: 'Montserrat !important',
-  color: '#06425c',
-},
-pr0: {paddingRight:'0px !important',},
+  },
+  buttonsNewChild: {
+    borderRadius: '5px',
+    backgroundColor: '#23343e',
+    color: '#ffffff',
+  },
+  padd10: {
+    padding: '10px 10px 10px 10px',
+  },
+  sepHeightTen: {
+    borderLeft: '3px solid #cccccc',
+    height: '8px',
+    verticalAlign: 'middle',
+    margin: '15px 15px 15px 8px',
+    fontSize: '10px',
+    ['@media (max-width:480px)']: {
+      margin: '10px 5px 10px 5px',
+    },
+  },
+  floatR: {
+    float: 'right',
+    textTransform: 'capitalize',
+    ['@media (max-width:480px)']: {
+      float: 'left',
+    },
+  },
+  Chip: {
+    backgroundColor: '#eaeaea',
+    borderRadius: ' 50px',
+    paddingRight: '12px',
+  },
+  sepHeightOne: {
+    borderLeft: '3px solid #cccccc',
+    height: '8px',
+    verticalAlign: 'middle',
+    margin: '15px',
+    fontSize: '10px',
+  },
+  mright5: {
+    marginRight: '5px',
+    color: '#a7a7a7',
+  },
+  iconColor: {
+    color: '#a7a7a7',
+  },
+  iconteal: {
+    color: '#06425c',
+  },
+  listHeadColor: { backgroundColor: '#fafafa', },
+  marginTopBottom: {
+    '& .MuiTypography-h6 .MuiTypography-h5': {
+      fontFamily: 'Montserrat-Regular',
+    },
+  },
+  textRight: {
+    textAlign: 'right',
+    ['@media (max-width:480px)']: {
+      textAlign: 'left',
+      padding: '0px 8px 15px 8px !important',
+    },
+  },
+  userImage: {
+    borderRadius: '50px',
+    width: '50px',
+    height: '50px',
+    marginRight: '10px',
+  },
+  mrFifteen: {
+    marginRight: '15px',
+  },
+  card: {
+    boxShadow: '0px 0px 2px #ccc',
+    borderRadius: '10px',
+    marginBottom: '30px',
+  },
+
+  cardLinkAction: {
+    width: '100%',
+    float: 'left',
+    padding: '14px',
+    cursor: 'pointer',
+    textDecoration: 'none !important',
+    ['@media (max-width:800px)']: {
+      paddingTop: '85px',
+    }
+  },
+  userPictureBox: {
+    position: 'absolute',
+    right: '0px',
+    ['@media (max-width:800px)']: {
+      right: 'auto',
+    }
+  },
+  cardContentSection: {
+    position: 'relative',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+      webkitBoxShadow: '0 1px 5px 2px #f0f0f0',
+      boxShadow: '0 1px 5px 2px #f0f0f0',
+    },
+    '&:hover .MuiGrid-align-items-xs-flex-start': {
+      backgroundColor: '#f0f0f0',
+    },
+  },
+  usrProfileListBox: {
+    '& ul': {
+      paddingTop: '0px',
+      '& li': {
+        paddingLeft: '0px',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        '& div': {
+          '& span': {
+            display: 'inline-block',
+            float: 'left',
+            paddingRight: '14px',
+            fontSize: '15px',
+            fontWeight: '600',
+          },
+          '& p': {
+            display: 'inline-block',
+            float: 'left',
+          },
+        },
+      },
+    },
+  },
+  cardBottomSection: {
+    '& p': {
+      ['@media (max-width:480px)']: {
+        fontSize: '12px !important',
+      },
+    },
+    // '& p': {
+    //   ['@media (max-width:375px)']: { 
+    //     fontSize: '12px !important',
+    //   },
+    // },
+  },
+  cardActionBottomBox: {
+    ['@media (max-width:480px)']: {
+      padding: '8px !important',
+    },
+  },
+  smallImage:{
+    height: '30px',
+    width: '30px',
+  },
+  viewAttachmentDialog: {
+    '& .MuiDialogContent-root': {
+      overflowY: 'hidden !important',
+      height: '90px !important',
+  
+  },
+  },
+  imageSectionHeight: {
+    '& .MuiDialogContent-root':  {
+      height: '90px !important',
+      minHeight: '90px !important',
+  },
+  },
+  viewattch1: {
+    padding: '12px 30px',
+    backgroundColor: '#8a9299',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
+  },
+  viewattch2: {
+    padding: '12px 8px',
+    backgroundColor: '#06425c',
+    color: '#fff',
+    borderRadius: '2px',
+    border: '1px solid #fff',
+    display: 'inline',
+  },
 }));
 
 function Actions(props) {
@@ -291,13 +442,29 @@ function Actions(props) {
   const type = localStorage.getItem("type")
 
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).name
-  : null;
-
+    ? JSON.parse(localStorage.getItem('userDetails')).name
+    : null;
+  const dispatch = useDispatch();
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page, setPage] = useState(1)
+  const [userInfo, setUserInfo] = useState({})
   const history = useHistory();
+
+  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+
+const handleMyUserPClickOpen = (item) => {
+  setUserInfo({name : item[1].createdByName,userIcon : item[1].avatar})
+  setMyUserPOpen(true);
+};
+
+  const handleMyUserPClose = () => {
+    setMyUserPOpen(false);
+  };
+
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -310,7 +477,7 @@ function Actions(props) {
   // const handleChange = (event, newValue) => {
   //   setValue(newValue);
   // };
-  
+
   //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Date submitted', 'Date approved', 'Approved by'];
 
@@ -336,399 +503,401 @@ function Actions(props) {
     rowsPerPage: 10,
     page: 0,
   };
-//dialog
-const [MyFavopen, setMyFavOpen] = React.useState(false);
+  //dialog
+  const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-const handleMyFavClickOpen = () => {
-  setMyFavOpen(true);
-};
+  const handleMyFavClickOpen = () => {
+    setMyFavOpen(true);
+  };
 
-const handleMyFavClose = () => {
-  setMyFavOpen(false);
-};  
+  const handleMyFavClose = () => {
+    setMyFavOpen(false);
+  };
 
-const handleSummaryPush = async (index) => {
-  const id = allInitialData[index].id;
-  localStorage.setItem("fkobservationId", id);
-  if (allInitialData[index].isCorrectiveActionTaken !== null) {
-    localStorage.setItem("action", "Done");
-  } else {
-    localStorage.removeItem("action");
-  }
-  history.push(`/app/observation/details/${id}`);
-};
+  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 
-const [allInitialData, setAllInitialData] = useState([]);
+  const handleSummaryPush = async (index) => {
+    const id = allInitialData[index].id;
+    localStorage.setItem("fkobservationId", id);
+    if (allInitialData[index].isCorrectiveActionTaken !== null) {
+      localStorage.setItem("action", "Done");
+    } else {
+      localStorage.removeItem("action");
+    }
+    history.push(`/app/icare/details/${id}`);
+  };
+
+  const [allInitialData, setAllInitialData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const searchIncident = props.searchIncident
+  const status = props.status;
+  const fetchInitialiObservation = async () => {
+    await setPage(1)
 
-const fetchInitialiObservation = async () => {
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-  let value = localStorage.getItem("value")
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId || props.projectName.projectId
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
-if(value){
-  const resPage = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-  const resultPage = resPage.data.data.results.results
-    let tempData1 = []
-    let tempUser1 = []
-      // let temp = []
-    if(props.type == "All" || props.type == "Type"   ){
-      await setAllInitialData(resultPage)
-      if(props.observation == "My Observations"){
-        resultPage.map((value,i) => {
-          if(value.username == userName ){
-            tempData1.push(resultPage[i])
-          }
-        })
-        await setAllInitialData(tempData1)
-      }else{
-        await setAllInitialData(resultPage)
+    if (props.type == "All" || props.type == "Type") {
+      // await setAllInitialData(result)
+      if (props.observation == "My Observations") {
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        await setTotalData(allLogInUserData.data.data.results.count)
+        await setPageData(allLogInUserData.data.data.results.count / 25)
+        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+        await setPageCount(pageCount)
+
+      } else {
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
+        const result = res.data.data.results.results
+        await setAllInitialData(result)
+        await setTotalData(res.data.data.results.count)
+        await setPageData(res.data.data.results.count / 25)
+        let pageCount = Math.ceil(res.data.data.results.count / 25)
+        await setPageCount(pageCount)
       }
-  
-  
-    }else{
-      let tempData = []
-  let tempUser = []
-  let tempRisk = []
-  let tempComment = []
-  let tempPB = []
-      resultPage.map((value,i) => {
-        // console.log(value.observationType,"formtype")
-        if(value.observationType == "Risk"  ){
-          tempRisk.push(resultPage[i])
-          // await setAllInitialData(tempRisk)
-        }
-        if(value.observationType == "Comments"){
-          tempComment.push(resultPage[i])
-        }
-        // }else{
-        //   tempRisk.push(resultPage[i])
-        // }
-        if(value.observationType == "Positive behavior" || value.observationType == "Positive Behaviour"){
-        tempPB.push(resultPage[i])
-  
-        }
-        
-      }
-      
-      )
-      // if(props.type == "Risk"){
-        
-      // }
-      // if(props.type == "Comments"){
-       
-      // }
-      // if(props.type == "Positive behavior"){
-        
-      // }
-      
-      if(props.type == "Risk"){
-        if(tempRisk.length > 0 ){
-          await setAllInitialData(tempRisk)
-        }
-  
-        if(props.observation == "My Observations"){
-  
-        tempRisk.map((value,i) => {
-          if(value.username == userName ){
-            tempUser.push(tempRisk[i])
-          }
-        })
-        await setAllInitialData(tempUser)
-      }
-      }
-      if(props.type == "Comments"){
-        if( tempComment.length > 0  || props.type == "Comments"  ){
-          await setAllInitialData(tempComment)
-    
-        }
-        if(props.observation == "My Observations"){
-    
-          tempComment.map((value,i) => {
-            if(value.username == userName ){
-              tempUser.push(tempComment[i])
-            }
-          })
-          await setAllInitialData(tempUser)
+    } else {
+      if (props.type == "Risk") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
         }
       }
-      if(props.type == "Positive behavior"){
-        if(tempPB.length > 0 || props.type == "Positive behavior" ){
-          await  setAllInitialData(tempPB)
-    
+      if (props.type == "Comments") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
         }
-        if(props.observation == "My Observations"){
-    
-          tempPB.map((value,i) => {
-            if(value.username == userName ){
-              tempUser.push(tempPB[i])
-            }
-          })
-          await setAllInitialData(tempUser)
+      }
+      if (props.type == "Positive behavior") {
+
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
         }
       }
     }
-    let pageCount1  = Math.ceil(resPage.data.data.results.count/25)
-    await setPageCount(pageCount1)
-}else{
-  const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-  const result = res.data.data.results.results
-  let tempData = []
-  let tempUser = []
-  let tempRisk = []
-  let tempComment = []
-  let tempPB = []
-    let temp = []
-  if(props.type == "All" || props.type == "Type"   ){
-    await setAllInitialData(result)
-    if(props.observation == "My Observations"){
-      result.map((value,i) => {
-        if(value.username == userName ){
-          tempData.push(result[i])
-        }
-      })
-      await setAllInitialData(tempData)
-    }else{
-      await setAllInitialData(result)
-    }
-
-
-  }else{
-    result.map((value,i) => {
-      // console.log(value.observationType,"formtype")
-      if(value.observationType == "Risk"  ){
-        tempRisk.push(result[i])
-        // await setAllInitialData(tempRisk)
-      }
-      if(value.observationType == "Comments"){
-        tempComment.push(result[i])
-      }
-      // }else{
-      //   tempRisk.push(resultPage[i])
-      // }
-      if(value.observationType == "Positive behavior" || value.observationType == "Positive Behaviour"){
-      tempPB.push(result[i])
-
-      }
-      
-    }
-    
-    )
-    if(props.type == "Risk"){
-      if(tempRisk.length > 0 ){
-        await setAllInitialData(tempRisk)
-      }
-
-      if(props.observation == "My Observations"){
-
-      tempRisk.map((value,i) => {
-        if(value.username == userName ){
-          tempUser.push(tempRisk[i])
-        }
-      })
-      await setAllInitialData(tempUser)
-    }
-    }
-    if(props.type == "Comments"){
-      if( tempComment.length > 0  || props.type == "Comments"  ){
-        await setAllInitialData(tempComment)
-  
-      }
-      if(props.observation == "My Observations"){
-  
-        tempComment.map((value,i) => {
-          if(value.username == userName ){
-            tempUser.push(tempComment[i])
-          }
-        })
-        await setAllInitialData(tempUser)
-      }
-    }
-    if(props.type == "Positive behavior"){
-      if(tempPB.length > 0 || props.type == "Positive behavior" ){
-        await  setAllInitialData(tempPB)
-  
-      }
-      if(props.observation == "My Observations"){
-  
-        tempPB.map((value,i) => {
-          if(value.username == userName ){
-            tempUser.push(tempPB[i])
-          }
-        })
-        await setAllInitialData(tempUser)
-      }
-    }
+    await setIsLoading(true)
   }
-  let pageCount  = Math.ceil(res.data.data.results.count/25)
-  await setPageCount(pageCount)
-}
+
+  const handleChange = async (event, value) => {
+
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+
+    if (props.type == "All" || props.type == "Type") {
+      if (props.observation == "My Observations") {
+        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}&observationStage=${status}`)
+        const result = allLogInUserData.data.data.results.results
+        await setAllInitialData(result)
+        await setPage(value)
+      } else {
+        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}&observationStage=${status}`);
+        const result = res.data.data.results.results
+        await setAllInitialData(result)
+        await setPage(value)
+      }
+    } else {
+      if (props.type == "Risk") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Risk&page=${value}&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Risk&page=${value}&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+        }
+      }
+      if (props.type == "Comments") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Comments&page=${value}&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Comments&page=${value}&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+        }
+      }
+      if (props.type == "Positive behavior") {
+        if (props.observation == "My Observations") {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+        } else {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationType=Positive behavior&page=${value}&observationStage=${status}`)
+
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setPage(value)
+
+        }
+      }
+
+    }
+
+  };
+
+  const [openAttachment, setopenAttachment] = React.useState(false);
+
+  const handleClickOpenAttachment = () => {
+    setopenAttachment(true);
+  };
+
+  const handleCloseAttachment = () => {
+    setopenAttachment(false);
+  };
 
   
+const [attachOpen, setAttachOpen] = useState(false);
+const [attachIndex , setAttachIndex] = useState("");
+const [hidden, setHidden] = useState(false);
 
-  // if(props.observation == "My Observations"){
-
-  //   result.map((value,i) => {
-  //     if(value.username == userName ){
-  //       tempData.push(result[i])
-  //     }
-  //   })
-  //   await setAllInitialData(tempData)
-  // }else{
-  //   await setAllInitialData(result)
-  // }
-  
-//   console.log(value)
-//   if (value){
-
-  
-//   
-//   // await handleChange(0,value)
-//   // localStorage.removeItem("value")
-
-//   }
-  await setIsLoading(true)
-
-}
-  // localStorage.removeItem("value")
-
-const handleSearch = (e) => {
-  // console.log(e.target.value)
-  setSeacrhIncident(e.target.value);
-  // history.push(`/app/observationsearch/#{search-${e.target.value}}`)
+const handleVisibility = (index) => {
+  console.log(index,"LLLL");
+  setAttachIndex(index);
+  setAttachOpen(true);
+  setHidden(!hidden);
+};
+const handleAttachClick = () => {
+  setAttachOpen(!open);
+};
+const handleAttachOpen = () => {
+  if (!hidden) {
+    setAttachOpen(true);
+  }
+};
+const handleAttachClose = () => {
+  setAttachOpen(false);
 };
 
-const handleChange = async(event , value) => {
+//view comments
+const [commentsOpen, setCommentsOpen] = useState(false);
+const [hiddenn, setHiddenn] = useState(false);
 
-    let paginationValue = localStorage.setItem("value", value);
-  
-
-  // let valueNumber =  value !== undefined ? value : paginationValue;
-  const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-  const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-    .projectName.projectId;
- const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-  :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-    ? JSON.parse(localStorage.getItem("selectBreakDown"))
-    : null;
-let struct = "";
-
-for (const i in selectBreakdown) {
-  struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-}
-const fkProjectStructureIds = struct.slice(0, -1);
-const res = await api.get(`api/v1/observations/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-const result = res.data.data.results.results
-await setAllInitialData(result)
-  let tempData = []
-  let tempUser = []
-    let temp = []
-  if(props.type == "All" || props.type == "Type"   ){
-    await setAllInitialData(result)
-    if(props.observation == "My Observations"){
-      result.map((value,i) => {
-        if(value.username == userName ){
-          tempData.push(result[i])
-        }
-      })
-      await setAllInitialData(tempData)
-    }else{
-      await setAllInitialData(result)
-    }
-
-
-  }else{
-    result.map((value,i) => {
-      // console.log(value.observationType,"formtype")
-      if(value.observationType == props.type ){
-        tempData.push(result[i])
-      }
-    })
-    await setAllInitialData(tempData)
-    if(props.observation == "My Observations"){
-      tempData.map((value,i) => {
-        if(value.username == userName ){
-          tempUser.push(tempData[i])
-        }
-      })
-      await setAllInitialData(tempUser)
-    }
-
-  }
-  let pageCount  = Math.ceil(res.data.data.results.count/25)
-  await setPageCount(pageCount)
-  // await setAllInitialData(res.data.data.results.results);
+const handleVisibilityComments = (id) => {
+  setCommentsOpen(true);
+  setHiddenn(!hiddenn);
+  history.push(`/app/icare/comments/${id}`);
 };
-console.log(allInitialData,"Alllllllll")
+const handleCommentsClick = () => {
+  setCommentsOpen(!open);
+};
+const handleCommentsOpen = () => {
+  if (!hiddenn) {
+    setCommentsOpen(true);
+  }
+};
+const handleCommentsClose = () => {
+  setCommentsOpen(false);
+};
+
+  const handlePrintPush = async (index) => {
+    const id = allInitialData[index].id;
+    localStorage.setItem("fkobservationId", id);
+    history.push(`/app/prints/${id}`);
+  };
+  const userDetails = async (compId, proId) => {
+    // window.location.href = `/${tagetPage}`
+    try {
+      if (compId) {
+
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
+
+        await api(config)
+          .then(function (response) {
+            if (response.status === 200) {
+              console.log(response)
+              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain
+
+              console.log(hosting)
+              let data1 = {
+                method: "get",
+                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+                headers: HEADER_AUTH,
+              };
+              console.log(data1)
+              axios(data1).then((res) => {
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+
+                if (compId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+
+                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                  localStorage.setItem('company', JSON.stringify(companeyData))
+
+                  dispatch(company(companeyData))
+                }
+                if (proId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                  localStorage.setItem("projectName", JSON.stringify(project[0]))
+                  dispatch(projectName(project[0]))
+                }
+                // fetchPermissionData();
+                localStorage.removeItem("direct_loading")
+              })
+
+
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    } catch (error) {
+    }
+  }
   const classes = useStyles();
+
+  const handleDelete = async (item) => {
+    console.log(item[1].id)
+    let data = item[1]
+    // let id = item[1].id
+    data.status = "Delete"
+    delete data.attachment
+    console.log(data, "!!!!!!!!!")
+    await setIsLoading(false)
+    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
+  }
   useEffect(() => {
-    fetchInitialiObservation();
-    // handleProjectList();
-  }, [props.projectName,props.type,searchIncident]);
-  // useEffect(() => {
-    
-  // })
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    if (state !== null) {
+      userDetails(state.comId, state.proId)
+    } else {
+      fetchInitialiObservation();
+    }
+    // fetchInitialiObservation();
+  }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
+
   return (
     <>
       <Box>
         {isLoading ? (<>
-        <Grid className={classes.marginTopBottom}>
-        {listToggle == false ? (
-          <div>
-            <div className="gridView">
-            {
-                  Object.entries(allInitialData)
-                    .filter(
-                      (item) => {return (
-                         
-                        item[1]["observationDetails"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                          item[1]["observationNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-                          
-                        )
-                      )}
-                        
-                    )
-                    .map((item, index) => (
-              <Card variant="outlined" className={classes.card}>
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                          <Grid container spacing={3} alignItems="flex-start">
-                            <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
-                              <Typography
-                                 className={classes.title}
-                              >
-                                    {item[1]["observationDetails"]}
-                              </Typography>
-                              <Typography
-                                display="inline"
-                                className={classes.listingLabelName}
-                              >
-                                Number: <span><Link
-                                      onClick={() => handleSummaryPush(index)}
-                                  variant="h6"
-                                  className={classes.mLeftfont}
+          <Grid className={classes.marginTopBottom}>
+            {listToggle == false ? (
+              <div>
+                <div className="gridView">
+                  {Object.keys(allInitialData).length > 0 ?
+                    Object.entries(allInitialData)
+                      .map((item, index) => ( <>
+                        <Card variant="outlined" className={classes.card}>
+                          <CardContent>
+                            <Grid container spacing={3} className={classes.cardContentSection}>
+                               <Grid item md={2} sm={4} xs={12} 
+                                  className={classes.userPictureBox}
                                 >
-                                <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
-                                </Link></span>
-                              </Typography>
-                              {/* <Typography
+                                  <Button  className={classes.floatR} 
+                                  // onClick={(e) => handleMyUserPClickOpen(item)} 
+                                  >
+                                    <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
+                                  </Button>
+                                </Grid>
+                                  <Link
+                                  onClick={() => handleSummaryPush(index)}
+                                  className={classes.cardLinkAction}
+                                >
+                              <Grid item xs={12} >
+                                <Grid container spacing={3} alignItems="flex-start">
+                                  <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                                    <Grid container spacing={3} alignItems="flex-start">
+                                      <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
+                                        <Typography
+                                          className={classes.title}
+                                          variant="h6"
+                                        >
+                                          {item[1]["observationDetails"]}
+                                        </Typography>
+                                        <Typography
+                                          display="inline"
+                                          className={classes.listingLabelName}
+                                        >
+                                          Number: <span><Link
+                                            onClick={() => handleSummaryPush(index)}
+                                              variant="h6"
+                                              className={classes.mLeftfont}
+                                            >
+                                              <span className={classes.listingLabelValue}>{item[1]["observationNumber"]}</span>
+                                            </Link></span>
+                                          </Typography>
+                                          {/* <Typography
                                 variant="body1"
                                 gutterBottom
                                 display="inline"
@@ -737,121 +906,111 @@ console.log(allInitialData,"Alllllllll")
                               >
                                 Category: <span className={classes.listingLabelValue}>HSE incident Action</span>
                               </Typography> */}
-                              <span item xs={1} className={classes.sepHeightOne}></span>
-                              <Typography
-                                variant="body1"
-                                gutterBottom
-                                display="inline"
-                                color="textPrimary"
-                                className={classes.listingLabelName}
-                              >
-                                Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
-                                Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-" }  <img src={in_progress_small} className={classes.smallImage} /></span>
-								<span item xs={1} className={classes.sepHeightOne}></span>
-								Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-" }  <img src={completed_small} className={classes.smallImage} /></span>
-                              </Typography>
-                              
-                            </Grid>
-                            
+                                          <span item xs={1} className={classes.sepHeightOne}></span>
+                                          <Typography
+                                          variant="body1"
+                                          gutterBottom
+                                          display="inline"
+                                          color="textPrimary"
+                                          className={classes.listingLabelName}
+                                        >
+                                          Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
+                                          <span item xs={1} className={classes.sepHeightOne}></span>
+                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
+                                          <span item xs={1} className={classes.sepHeightOne}></span>
+                                          Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
+                                        </Typography>
 
-                            <Grid item md={2} sm={4} xs={12}>
-                            <Button  className={classes.floatR}>
-                              <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-" }
-                            </Button>
-                              {/* <Menu
-                                id="simple-menu"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                              >
-                                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleClose}>My account</MenuItem>
-                                <MenuItem onClick={handleClose}>Logout</MenuItem>
-                              </Menu> */}
-                            </Grid>
-                            </Grid>
-                          </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item sm={12} xs={12}>
-                    <Grid container spacing={3}>  
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        gutterBottom
-                        color="textPrimary"
-                        className={classes.listingLabelName}
-                      >
-                        Type:
-                      </Typography>
+                                        </Grid>
 
-                      <Typography
-                        gutterBottom
-                        className={classes.listingLabelValue}
-                      >
-                        {/* {item[1]["incidentReportedByName"]} */}
-                        {item[1]["observationType"]}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Location:
-                      </Typography>
-                      <Typography
-                        
-                        className={classes.listingLabelValue}
-                      >
-                                {item[1]["location"]}
-                      </Typography>
-                    </Grid>
 
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Reported on:
-                      </Typography>
+                                        {/* <Grid item md={2} sm={4} xs={12}>
+                                        <Button className={classes.floatR}>
+                                          <img src={paceLogoSymbol} className={classes.userImage} /> {item[1]["username"] ? item[1]["username"] : "-"}
+                                        </Button>
+                                     
+                                      </Grid> */}
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                                <Grid item sm={12} xs={12}>
+                                  <Grid container spacing={3}>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        gutterBottom
+                                        color="textPrimary"
+                                        className={classes.listingLabelName}
+                                      >
+                                        Type:
+                                      </Typography>
 
-                      <Typography
-                        
-                        className={classes.listingLabelValue}
-                      >
-{moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )}                      </Typography>
-                    </Grid>
+                                      <Typography
+                                        gutterBottom
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {/* {item[1]["incidentReportedByName"]} */}
+                                        {item[1]["observationType"]}
+                                      </Typography>
+                                    </Grid>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Location:
+                                      </Typography>
+                                      <Typography
 
-                    <Grid item md={3} sm={6} xs={12}>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        gutterBottom
-                        className={classes.listingLabelName}
-                      >
-                        Reported by:
-                      </Typography>
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {item[1]["location"] ? item[1]["location"] : "-"}
+                                      </Typography>
+                                    </Grid>
 
-                      <Typography
-                        
-                        className={classes.listingLabelValue}
-                      >
-                                {item[1]["reportedByName"]?item[1]["reportedByName"]:"Admin"}
-                      </Typography>
-                    </Grid>
-                    </Grid>
-                    </Grid>
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Reported on:
+                                      </Typography>
 
-                    {/* <Grid item sm={2} xs={12}>
+                                      <Typography
+
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {moment(item[1]["createdAt"]).format(
+                                          "Do MMMM YYYY, h:mm:ss a"
+                                        )}                      </Typography>
+                                    </Grid>
+
+                                    <Grid item md={3} sm={6} xs={12}>
+                                      <Typography
+                                        variant="body1"
+                                        color="textPrimary"
+                                        gutterBottom
+                                        className={classes.listingLabelName}
+                                      >
+                                        Reported by:
+                                      </Typography>
+
+                                      <Typography
+
+                                        className={classes.listingLabelValue}
+                                      >
+                                        {item[1]["reportedByName"] ? item[1]["reportedByName"] : "Admin"}
+                                      </Typography>
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+
+                                {/* <Grid item sm={2} xs={12}>
                       <Typography
                         variant="h6"
                         color="textPrimary"
@@ -866,356 +1025,253 @@ console.log(allInitialData,"Alllllllll")
                         29 Dec 2020
                       </Typography>
                     </Grid> */}
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="flex-end"
-                    alignItems="left"
-                  >
-                    <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                    <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
+                              </Link>
+                            </Grid>
 
-                      >
-                        <AttachmentIcon className={classes.mright5} />
-                        Attachments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1]['attachmentCount']}</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography
-                        variant="body1"
-                        display="inline"
-                        color="textPrimary"
-                        className={classes.mLeft}
-                      >
-                        <InsertCommentOutlinedIcon className={classes.mright5} />
-                      Comments:
-                      </Typography>
-                      <Typography variant="body2" display="inline" className={classes.mLeft}>
-                        <Link href="#" color="secondary" className={classes.mLeft}>{item[1]['commentsCount']}</Link>
-                      </Typography>
-                    </Grid>
+                          </CardContent>
+                          <Divider />
+                          <CardActions className={Incidents.cardActions}>
+                            <Grid
+                              container
+                              spacing={2}
+                              justify="flex-end"
+                              alignItems="left"
+                            >
+                              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                                <Typography
+                                  variant="body1"
+                                  display="inline"
+                                  color="textPrimary"
 
-                    <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                      <div className={classes.floatR}>
-                      {/* <Typography variant="body1" display="inline">
+                                >
+                                  <AttachmentIcon className={classes.mright5} />
+                                  Attachments:
+                                </Typography>
+                                <Typography variant="body2" display="inline">
+                                  <Link color="secondary" className={classes.mLeftR5} 
+                                  // onClick={() => handleVisibility(index)}
+                                  >
+                                  {item[1]['attachmentCount']}</Link>
+                                </Typography>
+                                {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                                <Typography
+                                  variant="body1"
+                                  display="inline"
+                                  color="textPrimary"
+                                  className={classes.mLeft}
+                                >
+                                  <InsertCommentOutlinedIcon className={classes.mright5} />
+                                  Comments:
+                                </Typography>
+                                <Typography variant="body2" display="inline" className={classes.mLeft}>
+                                  <Link color="secondary" className={classes.mLeft} onClick={() => handleVisibilityComments(item[1].id)}>{item[1]['commentsCount']}</Link>
+                                </Typography> */}
+                              </Grid>
+
+                              <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                                <div className={classes.floatR}>
+                                  {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                      <Typography variant="body1" display="inline">
-                        <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      {/* <Typography variant="body1" display="inline">
+                                  {/* <Typography variant="body1" display="inline">
+                                   <Button onClick={() => handlePrintPush(index)} > <PrintOutlinedIcon  className={classes.iconColor} /></Button>  <Button onClick={() => handlePrintPush(index)} className={classes.mLeftR5}>Print</Button>
+                                  </Typography> */}
+                                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
+                                  {/* <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
-                      </Typography>
-                      </div>
+                                  {/* <Typography variant="body1" display="inline">
+                                    <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
+                                  </Typography> */}
+                                  <span item xs={1} className={classes.sepHeightTen}></span>
+                                  <Typography variant="body1" display="inline">
+
+                                    {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
+                                    <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+                                  </Typography>
+                                </div>
+                              </Grid>
+                            </Grid>
+                          </CardActions>
+                        </Card>
+                        {attachIndex === index  && item[1]['attachmentCount'] !== 0 ?  
+                        <Grid
+                          item
+                          md={12}
+                          sm={12}
+                          xs={12}
+                          hidden={!hidden}
+                          onBlur={handleAttachClose}
+                          onClick={handleAttachClick}
+                          onClose={handleAttachClose}
+                          onFocus={handleAttachOpen}
+                          onMouseEnter={handleAttachOpen}
+                          onMouseLeave={handleAttachClose}
+                          open={attachOpen}
+                          className="paddTBRemove attactmentShowSection"
+                        >
+                          <Paper elevation={1} className="paperSection">
+                            <Grid container spacing={3}>
+                              <Grid item md={12} sm={12} xs={12}>
+                                <List>
+                                  <ListItem>
+                                  <img src={allInitialData[index].attachment}  onClick={handleClickOpenAttachment}  className="hoverIcon" />                          
+                                  </ListItem>
+                                </List>
+                              </Grid>
+                            </Grid>
+                          </Paper>
+                        </Grid> : null}
+                        
+                    </>  )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                      Sorry, no matching records found
+                    </Typography>}
+
+                </div>
+                <div>
+            <Grid
+                item
+                md={12}
+                sm={12}
+                xs={12}
+                hidden={!hiddenn}
+                onBlur={handleCommentsClose}
+                onClick={handleCommentsClick}
+                onClose={handleCommentsClose}
+                onFocus={handleCommentsOpen}
+                onMouseEnter={handleCommentsOpen}
+                onMouseLeave={handleCommentsClose}
+                open={commentsOpen}
+                className="commentsShowSection"
+              >
+                <Paper elevation={1} className="paperSection">
+                  <Grid container spacing={3}>
+                    <Grid item md={12} xs={12}>
+                      <Box padding={3}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <TextField
+                                  multiline
+                                  variant="outlined"
+                                  rows="1"
+                                  id="JobTitle"
+                                  label="Add your comments here"
+                                  className="formControl"
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                              <input type="file" />
+                            </Grid>
+                            <Grid item xs={9}>
+                              <AddCircleOutlineIcon className={classes.plusIcon} /> 
+                              <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                            </Grid>
+                            <Grid item xs={12}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              size="small"
+                              className="spacerRight buttonStyle"
+                              disableElevation
+                              
+                            >
+                              Respond
+                            </Button> 
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              size="small"
+                              className="custmCancelBtn buttonStyle"
+                              disableElevation
+                              
+                            >
+                              Cancel
+                            </Button>
+                            </Grid>
+                        </Grid>
+                      </Box>              
                     </Grid>
                   </Grid>
-                </CardActions>
-              </Card>
-              ))}
-
-            </div>
-            <div>
-                    <Dialog
-                        open={MyFavopen}
-                        onClose={handleMyFavClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">{"My Favorite Package"}</DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            <img src={paceLogoSymbol} className={classes.userImage} /> Prakash
-                            
-                            <span className={classes.floatR}><BackspaceOutlinedIcon /></span>
-                          </DialogContentText>
-                          <DialogContentText id="alert-dialog-description">
-                            <Typography
-                              variant="subtitle1"
-                              display="inline"
-                            >
-                                <a href="#" >Sparing philosophy</a>
-                            </Typography>  
-                          </DialogContentText>
-                          <DialogContentText id="alert-dialog-description">
-                            <Typography
-                              variant="body1"
-                            >
-                                Prakash
-                            </Typography>  
-                          </DialogContentText>
-                          <DialogContentText id="alert-dialog-description">
-                            <Typography
-                              variant="body1"
-                            >
-                                Sparing philosophy defined
-                            </Typography>  
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleMyFavClose}  color="primary" variant="contained" autoFocus>
-                            Close
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </div>
-            <div className="gridView">
-              {Object.entries(incidents).map((item, index) => (
-                <Card variant="outlined" className={Incidents.card} key={index}>
-                  {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
-                  <CardContent>
-                    {/* {console.log(item[index].incidentTitle)} */}
-                    <Grid container spacing={3}>
-                      <Grid item xs={12}>
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid item xs={9} className={classes.chipAction}>
-                            <Chip
-                              avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label="Admin"
-                            />
-                          </Grid>
-                          <Grid item xs={3}>
-                            <Typography
-                              
-                            // display="inline"
-                            // color="textPrimary"
-                            // className={classes.listingLabelValue}
-                            >
-                            Work fell down in site
-                              {/* {item[index]["incidentTitle"]} */}
-                            </Typography>
-                          </Grid>
-
-
-                        </Grid>
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <div className={Incidents.statusRow}>
-                          <Typography
-                            
-                            display="inline"
-                            className={classes.listingLabelName}
-                          >
-                          Number
-                            {''}
-                            <Link
-                              href="/app/ActionSummary"
-                              variant="subtitle"
-                              className={Incidents.incidentNumber}
-                              style={{ textDecoration: 'underline' }}
-                            >
-                            252-525-256
-                            </Link>
-                          </Typography>
-
-                          <Chip
-                            variant="outlined"
-                            label="Initial Action"
-                            color="primary"
-                            size="small"
-                          />
-
-                          <Typography
-                            variant="body1"
-                            // color="textPrimary"
-                            display="inline"
-                          >
-
-                            <i className="ion-ios-calendar-outline" />
-                            <span className={Incidents.dateValue}>
-                            24 june 2021
-                            </span>
-                          </Typography>
-                        </div>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                        Type
-                        </Typography>
-
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          className={classes.listingLabelValue}
-                        >
-                          {/* {item[1]["incidentReportedByName"]} */}
-                        Not found
-                        </Typography>
-                      </Grid>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                        Location
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          className={classes.listingLabelValue}
-                        >
-                        Delhi
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                        Reported on
-                        </Typography>
-
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          className={classes.listingLabelValue}
-                        >
-                        24 june 2021
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                        Reported By
-                        </Typography>
-
-                        <Typography
-                          variant="body1"
-                          color="textPrimary"
-                          className={classes.listingLabelValue}
-                        >
-                        Person
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                  <Divider />
-                  <CardActions className={Incidents.cardActions}>
-                    <Grid
-                      container
-                      spacing={2}
-                      justify="flex-end"
-                      alignItems="center"
-                    >
-                      <Grid item xs={6} md={3}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Incidents.actionsLabel}
-                        >
-                          <AttachmentIcon />
-                          {' '}
-                          Comments:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <Link href="#" className={classes.mLeft}>3</Link>
-                        </Typography>
-                      </Grid>
-
-                      <Grid item xs={6} md={3}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Incidents.actionsLabel}
-                        >
-                          <AttachmentIcon />
-                          {' '}
-                          Actions:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <Link href="#" className={classes.mLeft}>3</Link>
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Incidents.actionsLabel}
-                        >
-                          <AttachmentIcon />
-                          {' '}
-                        Evidences:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <Link href="#" className={classes.mLeft}>3</Link>
-                        </Typography>
-                      </Grid>
-                      
-                      <Grid item xs={6} md={3} alignItems="right">
-                        <Button
-                          size="small"
-                          color="secondary"
-                          startIcon={<Print />}
-                          className={Incidents.actionButton}
-                        >
-                        Print
-                        </Button>
-                        <Button
-                          size="small"
-                          color="secondary"
-                          startIcon={<Share />}
-                          className={Incidents.actionButton}
-                        >
-                        Share
-                        </Button>
-                      </Grid>
-
-                    </Grid>
-                  </CardActions>
-                </Card>
-              ))}
-            </div>
-          </div>
-          // listview end
-
-        ) : (
-          <TableContainer component={Paper}>
-          <Grid component={Paper}>
-              <MUIDataTable
-                title="Actions List"
-                data={data}
-                columns={columns}
-                options={options}
-                className="classes.dataTableNew"
-              />
+                </Paper>
               </Grid>
-            </TableContainer>
-          )}
-        </Grid>  
-        <div className={classes.pagination}>
-      <Pagination count={pageCount} onChange={handleChange}/>
-    </div></> ): "Loading..."}
+             </div>
+             <div>
+            <Dialog
+                open={openAttachment}
+                onClose={handleCloseAttachment}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                classNames={classes.viewAttachmentDialog}
+              >
+                <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+                <DialogContent classNames={classes.imageSectionHeight}>
+                <Grid container spacing={3} classNames={classes.viewImageSection}>                                  
+                  <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
+                    <ul classNames={classes.viewImageSection}>
+                      <li className={classes.viewattch1}>View Attachment</li>
+                      <li className={classes.viewattch2}>Download Attachment</li>
+                    </ul>  
+                  </Grid>
+                </Grid>  
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseAttachment} color="primary" autoFocus>
+                    Close
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+                <div>
+                <Dialog
+                  open={myUserPOpen}
+                  onClose={handleMyUserPClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  fullWidth={true}
+                  maxWidth={'sm'}
+                >
+                  
+                      <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon}/>
+                    
+                  <DialogActions>
+                    <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+
+                
+              </div>
+              // listview end
+
+            ) : (
+              <TableContainer component={Paper}>
+                <Grid component={Paper}>
+                  <MUIDataTable
+                    title="Actions List"
+                    data={data}
+                    columns={columns}
+                    options={options}
+                    className="classes.dataTableNew"
+                  />
+                </Grid>
+              </TableContainer>
+            )}
+          </Grid>
+
+          {totalData != 0 ?
+            <div className={classes.pagination}>
+
+              {Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}`}
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
+            </div> : null}
+        </>)
+          :
+          <Loader />
+        }
       </Box>
     </>
   );
@@ -1230,4 +1286,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps,null)(Actions);
+export default connect(mapStateToProps, null)(Actions);
