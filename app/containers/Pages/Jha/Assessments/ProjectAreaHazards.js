@@ -139,7 +139,7 @@ const ProjectAreaHazards = () => {
     }
   ])
   const [loadingHazard, setLoadingHazard] = useState(false)
-  // const history = useHistory()
+  const history = useHistory()
 
   const handelUpdateHazard = async () => {
     const temp = {}

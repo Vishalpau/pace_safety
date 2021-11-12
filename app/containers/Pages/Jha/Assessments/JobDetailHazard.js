@@ -31,7 +31,7 @@ import { access_token, ACCOUNT_API_URL, HEADER_AUTH, SSO_URL } from "../../../..
 import FormSideBar from '../../../Forms/FormSideBar';
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 import { handelJhaId } from "../Utils/checkValue";
-import { JHA_FORM } from "../Utils/constants";
+import { JHA_FORM_COMBINE } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 
 
@@ -208,6 +208,24 @@ const JobDetails = (props) => {
     const [workArea, setWorkArea] = useState("")
     const [departmentName, setDepartmentName] = useState([])
     const [isDateShow, setIsDateShow] = useState(false)
+    const [formHazard, setFormHazard] = useState([])
+    const [checkGroups, setCheckListGroups] = useState([])
+    const [selectedOptions, setSelectedOption] = useState({})
+    const [fetchOptionHazard, setFetchedOptionsHazard] = useState([])
+    const [submitLoaderHazard, setSubmitLoaderHazard] = useState(false)
+    const [otherHazards, setOtherHazards] = useState([
+        {
+            "hazard": "",
+            "risk": "",
+            "control": "",
+            "humanPerformanceAspects": "string",
+            "status": "Active",
+            "createdBy": 0,
+            "fkJhaId": localStorage.getItem("fkJHAId")
+        }
+    ])
+    const [loadingHazard, setLoadingHazard] = useState(false)
+    // const history = useHistory()
 
     // fecth jha data
     const fetchJhaData = async () => {
@@ -418,19 +436,9 @@ const JobDetails = (props) => {
         history.push(`${JHA_FORM["Project Area Hazards"]}`)
     }
 
-    const handelApiError = (res) => {
-        if (res.status == 200) {
-            handelTeam()
-            handelNavigate()
-        } else if (res.status == 201) {
-            let fkJHAId = res.data.data.results.id
-            localStorage.setItem("fkJHAId", fkJHAId)
-            handelTeam()
-            handelNavigate()
-        } else {
-            setSubmitLoader(false)
-            history.push("/app/pages/error")
-        }
+    const handelApiError = () => {
+        setSubmitLoader(false)
+        history.push("/app/pages/error")
     }
 
     const handelProjectData = () => {
@@ -447,10 +455,10 @@ const JobDetails = (props) => {
         for (let i = 0; i < Teamform.length; i++) {
             let apiEndPoint = `/api/v1/jhas/${localStorage.getItem("fkJHAId")}/teams`
             if (Teamform[i].id) {
-                const res = await api.put(`${apiEndPoint}/${Teamform[i].id}/`, Teamform[i]).catch(() => handelApiError(""))
+                const res = await api.put(`${apiEndPoint}/${Teamform[i].id}/`, Teamform[i]).then().catch(() => handelApiError())
             } else {
                 Teamform[i]["fkJhaId"] = localStorage.getItem("fkJHAId");
-                const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError(""))
+                const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError())
                 if (res.status === 200) {
                     handelNavigate()
                 }
@@ -469,13 +477,13 @@ const JobDetails = (props) => {
         delete form["jhaAssessmentAttachment"]
         if (form.id != null && form.id != undefined) {
             const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-                .then(res => handelApiError(res))
-                .catch(() => handelApiError(res))
+                .then(res => handelTeam())
+                .catch(() => handelApiError())
         } else {
             const res = await api.post("/api/v1/jhas/", form)
-                .then(res => handelApiError(res))
-                .catch(() => handelApiError(res))
-            await handelApiError(res)
+                .then(res => handelTeam())
+                .catch(() => handelApiError())
+            await handelApiError()
         }
         await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
         await setSubmitLoader(false)
@@ -484,64 +492,39 @@ const JobDetails = (props) => {
 
     const classes = useStyles();
 
-    const handelCallBack = async () => {
-        await setLoading(true)
-        await fetchJhaData()
-        await fetchTeamData()
-        await fetchDepartment()
-        await setLoading(false)
-    }
 
-    useEffect(() => {
-        handelCallBack()
-    }, []);
     //--------------------------------------------
-    const [formHazard, setFormHazard] = useState([])
-    const [checkGroups, setCheckListGroups] = useState([])
-    const [selectedOptions, setSelectedOption] = useState({})
-    const [fetchOptionHazard, setFetchedOptionsHazard] = useState([])
-    const [submitLoaderHazard, setSubmitLoaderHazard] = useState(false)
-    const [otherHazards, setOtherHazards] = useState([
-        {
-            "hazard": "",
-            "risk": "",
-            "control": "",
-            "humanPerformanceAspects": "string",
-            "status": "Active",
-            "createdBy": 0,
-            "fkJhaId": localStorage.getItem("fkJHAId")
-        }
-    ])
-    const [loadingHazard, setLoadingHazard] = useState(false)
-    // const history = useHistory()
+
 
     const handelUpdateHazard = async () => {
         const temp = {}
         const otherNoId = []
         const tempForm = []
         const jhaId = handelJhaId()
-        const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
-        const apiData = res.data.data.results
-        apiData.map((value) => {
-            if (value.fkChecklistId !== 0) {
-                tempForm.push(value)
-            } else {
-                otherNoId.push(value)
+        if (jhaId !== null) {
+            const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
+            const apiData = res.data.data.results
+            apiData.map((value) => {
+                if (value.fkChecklistId !== 0) {
+                    tempForm.push(value)
+                } else {
+                    otherNoId.push(value)
+                }
+            })
+            setFormHazard(tempForm)
+            if (otherNoId.length > 0) {
+                setOtherHazards(otherNoId)
             }
-        })
-        setFormHazard(tempForm)
-        if (otherNoId.length > 0) {
-            setOtherHazards(otherNoId)
+            setFetchedOptionsHazard(apiData)
+            apiData.map((value) => {
+                if (value.hazard in temp) {
+                    temp[value.hazard].push(value.risk)
+                } else {
+                    temp[value.hazard] = [value.risk]
+                }
+            })
+            setSelectedOption(temp)
         }
-        setFetchedOptionsHazard(apiData)
-        apiData.map((value) => {
-            if (value.hazard in temp) {
-                temp[value.hazard].push(value.risk)
-            } else {
-                temp[value.hazard] = [value.risk]
-            }
-        })
-        setSelectedOption(temp)
     }
 
     const checkList = async () => {
@@ -636,14 +619,6 @@ const JobDetails = (props) => {
         }
     }
 
-    const handelCheckPost = (checklistId, hazard) => {
-        for (let i = 0; i <= fetchOptionHazard.length; i++) {
-            if (fetchOptionHazard[i] != undefined && fetchOptionHazard[i]["hazard"] == hazard && fetchOptionHazard[i]["fkChecklistId"] == checklistId) {
-                return true
-            }
-        }
-    }
-
     const handelApiErrorHazard = () => {
         setSubmitLoaderHazard(false)
         history.push("/app/pages/error")
@@ -675,16 +650,25 @@ const JobDetails = (props) => {
         setSubmitLoaderHazard(false)
     }
 
-    const handelCallbackHazard = async () => {
-        await setLoadingHazard(true)
+    const handelJobHazardSumbit = async () => {
+        await handleSubmit()
+        await handleSubmitHazard()
+    }
+
+    const handelCallBack = async () => {
+        await setLoading(true)
+        await fetchJhaData()
+        await fetchTeamData()
+        await fetchDepartment()
         await handelUpdateHazard()
         await checkList()
-        await setLoadingHazard(false)
+        await setLoading(false)
     }
 
     useEffect(() => {
-        handelCallbackHazard()
-    }, [])
+        handelCallBack()
+    }, []);
+
     //--------------------------------------------
     return (
         <PapperBlock title="Job Details" icon="ion-md-list-box">
@@ -1154,6 +1138,16 @@ const JobDetails = (props) => {
                                 </>
                             ))}
 
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddCircleIcon />}
+                                className={classes.button}
+                                onClick={(e) => handleAddHazard()}
+                            >
+                                Add
+                            </Button>
+
                             {/* --------------------------------------------------- */}
 
 
@@ -1166,7 +1160,7 @@ const JobDetails = (props) => {
                                 <div className={classes.loadingWrapper}>
                                     <Button
                                         variant="outlined"
-                                        onClick={(e) => handleSubmit()}
+                                        onClick={(e) => handelJobHazardSumbit()}
                                         className={classes.custmSubmitBtn}
                                         style={{ marginLeft: "10px" }}
                                         disabled={submitLoader}
@@ -1188,8 +1182,8 @@ const JobDetails = (props) => {
                     <Col md={3}>
                         <FormSideBar
                             deleteForm={"hideArray"}
-                            listOfItems={JHA_FORM}
-                            selectedItem={"Project Details"}
+                            listOfItems={JHA_FORM_COMBINE}
+                            selectedItem={"Job details"}
                         />
                     </Col>
 
