@@ -219,14 +219,14 @@ export default function Observations() {
 
   const handleBulkUploadfilePush = async () => {
     history.push(
-      '/app/observation-bulkuploadfile'
+      '/app/icare-bulkuploadfile'
     );
   }
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
     localStorage.removeItem("value")
 
-    history.push("/app/observation-initial-notification");
+    history.push("/app/icare-initial-notification");
   };
 
   return (
@@ -235,12 +235,12 @@ export default function Observations() {
         <Grid container spacing={3}>
           <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
             <img src={obsIcon} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Observations</Typography>
+            <Typography variant="h5"> iCare </Typography>
           </Grid>
           <Grid item sm={5} xs={12}>
 
 
-            <Button
+            {false && <Button
               variant="contained"
               // color="primary"
               size="small"
@@ -253,9 +253,11 @@ export default function Observations() {
             >
               Upload
             </Button>
+            }
             <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
               <AddIcon className={classes.floatR} /> Add new
             </Button>
+
 
           </Grid>
 
@@ -269,7 +271,7 @@ export default function Observations() {
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
                 {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
-          {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
+                {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
@@ -303,7 +305,7 @@ export default function Observations() {
         <ObservationSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-      <ObservationSearchSection value={value} />
+        <ObservationSearchSection value={value} />
       </TabPanel>
       {/* <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsKanban />

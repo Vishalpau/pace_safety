@@ -52,103 +52,103 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-      flexGrow: 1,
-      fontFamily: 'Montserrat-Medium',
-    },
-    leftSide: {
-      flexGrow: 1,
-    },
-    rightSide: {
-      flexGrow: 8,
-      textAlign: 'right',
-    },
-    newIncidentButton: {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    search: {
-      position: 'relative',
-      border: '1px solid #ccc',
-      borderRadius: theme.shape.borderRadius,
-      marginRight: theme.spacing(1),
-      marginLeft: 0,
-      width: '97% !important',
-      margin: '14px 2px 9px 0px',
-      padding: '0px 0px',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: '100%',
-      },
-      '& .MuiInputBase-root': {
-        width: '100%',
-      },
-    },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'orange',
-      fontSize: '18px',
-      float: 'right',
-    },
-    inputRoot: {
-      color: 'inherit',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
+    flexGrow: 1,
+    fontFamily: 'Montserrat-Medium',
+  },
+  leftSide: {
+    flexGrow: 1,
+  },
+  rightSide: {
+    flexGrow: 8,
+    textAlign: 'right',
+  },
+  newIncidentButton: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  search: {
+    position: 'relative',
+    border: '1px solid #ccc',
+    borderRadius: theme.shape.borderRadius,
+    marginRight: theme.spacing(1),
+    marginLeft: 0,
+    width: '97% !important',
+    margin: '14px 2px 9px 0px',
+    padding: '0px 0px',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
       width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
     },
-    mLeftfont: {
-      marginLeft: '2px',
-      fontSize: '14px',
-      textDecoration: 'underline',
-      color: 'rgba(0, 0, 0, 0.87) !important',
+    '& .MuiInputBase-root': {
+      width: '100%',
     },
-    spacerRight: {
-      marginRight: '4px',
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'orange',
+    fontSize: '18px',
+    float: 'right',
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
     },
-    paddZero: {
-      padding: '0px',
-    },
-    pLTen : {
-      marginLeft: '5px',
-    },
-    mTtop20 : {
-      marginTop: '20px',
-    },
-    marginTopBottom : {
-      marginBottom: '16px',
-      backgroundColor: '#f3f3f3',
-      padding: '16px',
-      borderRadius: '8px',
-    },
-    searchHeaderTop: {
-      border: '1px solid #f1f1f1',
-      backgroundColor: '#ffffff',
-      padding: '0px 16px',
-      borderRadius: '5px',
-      marginTop: '20px',
-    },
-    greyBg: {
-      backgroundColor: '#f3f3f3',
-    },
-    AppBarHeader: {
-      color: 'inherit',
-      backgroundColor: '#ffffff',
-      border: '1px solid #e4e4e4',
-      padding: '0px 5px 0px 5px',
-      borderRadius: '3px',
-      marginBottom: '30px',
-      boxShadow: '1px 1px 13px #e6e6e6',
+  },
+  mLeftfont: {
+    marginLeft: '2px',
+    fontSize: '14px',
+    textDecoration: 'underline',
+    color: 'rgba(0, 0, 0, 0.87) !important',
+  },
+  spacerRight: {
+    marginRight: '4px',
+  },
+  paddZero: {
+    padding: '0px',
+  },
+  pLTen: {
+    marginLeft: '5px',
+  },
+  mTtop20: {
+    marginTop: '20px',
+  },
+  marginTopBottom: {
+    marginBottom: '16px',
+    backgroundColor: '#f3f3f3',
+    padding: '16px',
+    borderRadius: '8px',
+  },
+  searchHeaderTop: {
+    border: '1px solid #f1f1f1',
+    backgroundColor: '#ffffff',
+    padding: '0px 16px',
+    borderRadius: '5px',
+    marginTop: '20px',
+  },
+  greyBg: {
+    backgroundColor: '#f3f3f3',
+  },
+  AppBarHeader: {
+    color: 'inherit',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e4e4e4',
+    padding: '0px 5px 0px 5px',
+    borderRadius: '3px',
+    marginBottom: '30px',
+    boxShadow: '1px 1px 13px #e6e6e6',
   },
   buttonsNewChild: {
     borderRadius: '5px 5px 5px 5px',
@@ -205,10 +205,10 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#f47607',
       borderRadius: '5px',
       color: '#fff',
-  },
-  pR0: {
-    paddingRight: '0px',
-  },
+    },
+    pR0: {
+      paddingRight: '0px',
+    },
   },
   floatE: {
     textAlign: 'center',
@@ -216,10 +216,10 @@ const useStyles = makeStyles((theme) => ({
   },
   mR10: {
     marginRight: '10px',
-   '& img:hover': {
-     borderRadius: '50%',
-     boxShadow: '0px 0px 2px 2px #f47607',
-   },
+    '& img:hover': {
+      borderRadius: '50%',
+      boxShadow: '0px 0px 2px 2px #f47607',
+    },
   },
   sepHeight: {
     borderLeft: '1px solid #cccccc',
@@ -228,7 +228,7 @@ const useStyles = makeStyles((theme) => ({
   sepHeightTen: {
     borderLeft: '1px solid #cccccc',
     height: '10px',
-    verticalAlign:'middle',
+    verticalAlign: 'middle',
   },
   textCenter: {
     textAlign: 'right',
@@ -241,9 +241,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '16px!important',
     minWidth: '19% !important',
   },
-  pLtenPRten: {margin: '0px 10px 0px 10px',},
+  pLtenPRten: { margin: '0px 10px 0px 10px', },
   buttonsNewDays: {
-    padding: '6px 5px 5px 6px', 
+    padding: '6px 5px 5px 6px',
     margin: '0px 10px',
     minWidth: '38px',
     backgroundColor: '#ffffff',
@@ -309,30 +309,30 @@ const useStyles = makeStyles((theme) => ({
     '& svg:not(:root)': {
       overflow: 'hidden',
       marginRight: '5px',
-  },
-  iconSize: {height: '40px'},
-  pLTen: {
-    paddingLeft: '10px',
-  },
-  paddLRzero: {
-    padding: '0px 0px 24px 0px',
-    '& .MuiBox-root': {
-      padding: '0px',
     },
-  },
+    iconSize: { height: '40px' },
+    pLTen: {
+      paddingLeft: '10px',
+    },
+    paddLRzero: {
+      padding: '0px 0px 24px 0px',
+      '& .MuiBox-root': {
+        padding: '0px',
+      },
+    },
   },
   statusIconBox: {
     textAlign: 'center',
     padding: '24px 0px !important',
-    ['@media (max-width:800px)']: { 
+    ['@media (max-width:800px)']: {
       padding: '0px 0px 25px 0px !important',
     },
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '12px 0px 25px 16px !important',
       textAlign: 'left',
     },
   },
-  }));
+}));
 
 export default function SimpleTabs(props) {
   const classes = useStyles();
@@ -343,10 +343,10 @@ export default function SimpleTabs(props) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    if(newValue === 0){
+    if (newValue === 0) {
       setObservation("My Observations")
       setStatus('')
-    }else if(newValue === 1){
+    } else if (newValue === 1) {
       setObservation("Big Picture")
       setStatus('')
     }
@@ -357,66 +357,66 @@ export default function SimpleTabs(props) {
 
   return (
     <div className={classes.root}>
-	  <Grid item md={12} className={classes.AppBarHeader}>
-		  <Grid container spacing={3}>
-			
-			<Grid item md={7} sm={12} xs={12}>
-				<AppBar position="static" className={classes.navTabBack}>
-				  <div className={classes.floatL}>
-					<Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-					  <Tab label="My Observations" {...a11yProps(0)} />
-					  {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
-					  <Tab label="Big Picture" {...a11yProps(2)} />
-					{/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
-					</Tabs>
-				  </div>  
-			  </AppBar>
-			</Grid>
-		<Grid item md={3} sm={12} xs={12} className={classes.pR0}>
-		  <Paper elevation={1} className={classes.search}>
-        <div className={classes.searchIcon}>
-        <SearchIcon />
-        </div>
-        <InputBase
-          placeholder="Search…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          inputProps={{ 'aria-label': 'search' }}
-          onChange={(e) => handleSearch(e)}
+      <Grid item md={12} className={classes.AppBarHeader}>
+        <Grid container spacing={3}>
 
-        />
-      </Paper> 
-		</Grid>
+          <Grid item md={7} sm={12} xs={12}>
+            <AppBar position="static" className={classes.navTabBack}>
+              <div className={classes.floatL}>
+                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                  <Tab label="My Observations" {...a11yProps(0)} />
+                  {/* <Tab label="Team's Observations" {...a11yProps(1)} /> */}
+                  <Tab label="Big Picture" {...a11yProps(2)} />
+                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classes.minWd55} /> */}
+                </Tabs>
+              </div>
+            </AppBar>
+          </Grid>
+          <Grid item md={3} sm={12} xs={12} className={classes.pR0}>
+            <Paper elevation={1} className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ 'aria-label': 'search' }}
+                onChange={(e) => handleSearch(e)}
 
-      <Grid item md={2} sm={12} xs={12} className={classes.statusIconBox}>
-        <span className={classes.mR10}>
-          <img src={preplanning} onClick={(e) => setStatus("Open")} selected={true} />
-          <img src={progress} className={classes.pLtenPRten} onClick={(e) => setStatus("Planned")} />
-          <img src={completed} onClick={(e) => setStatus("Completed")} />
-        </span>
+              />
+            </Paper>
+          </Grid>
+
+          <Grid item md={2} sm={12} xs={12} className={classes.statusIconBox}>
+            <span className={classes.mR10}>
+              <img src={preplanning} onClick={(e) => setStatus("Open")} selected={true} />
+              <img src={progress} className={classes.pLtenPRten} onClick={(e) => setStatus("Planned")} />
+              <img src={completed} onClick={(e) => setStatus("Completed")} />
+            </span>
+          </Grid>
+
+
+        </Grid>
       </Grid>
-
-			
-		  </Grid>
-	  </Grid>
-	  <Grid container spacing={3}>
-		<Grid item sm={12} xs={12}>
-		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
-		  </TabPanel>
-		  <TabPanel value={value} index={1}>
-			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value}/>
-		  </TabPanel>
-		  <TabPanel value={value} index={2}>
-			<ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value}/>
-		  </TabPanel>
-		<TabPanel value={value} index={3}>
-			<ObservationBookmarkFilter />
-		  </TabPanel>
-		</Grid>
-	</Grid>
-	</div>
+      <Grid container spacing={3}>
+        <Grid item sm={12} xs={12}>
+          <TabPanel value={value} index={0} className={classes.paddLRzero}>
+            <ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <ObservationsFilter observation={observation} search={searchIncident} status={status} value={props.value} />
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <ObservationBookmarkFilter />
+          </TabPanel>
+        </Grid>
+      </Grid>
+    </div>
   );
 }

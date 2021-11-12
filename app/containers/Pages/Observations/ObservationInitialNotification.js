@@ -117,13 +117,16 @@ const useStyles = makeStyles((theme) => ({
   custmCancelBtn: {
     color: "#ffffff",
     backgroundColor: "#ff8533",
-    lineHeight: "30px",
+    lineHeight: "27px",
     marginLeft: "5px",
     border: "none",
     "&:hover": {
       backgroundColor: "#ff8533",
       border: "none",
     },
+    textTransform: 'capitalize !important',
+    fontSize: '0.975rem',
+
   },
   observationFormBox: {
     width: "100%",
@@ -515,7 +518,7 @@ const ObservationInitialNotification = (props) => {
             if (res.status === 200 || res.status === 201) {
               const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
               history.push(
-                `/app/observation/details/${localStorage.getItem(
+                `/app/icare/details/${localStorage.getItem(
                   "fkobservationId"
                 )}`
               );
@@ -530,7 +533,7 @@ const ObservationInitialNotification = (props) => {
           const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
 
           history.push(
-            `/app/observation/details/${localStorage.getItem(
+            `/app/icare/details/${localStorage.getItem(
               "fkobservationId"
             )}`
           );
@@ -579,10 +582,7 @@ const ObservationInitialNotification = (props) => {
     setOpen(false);
   };
 
-
-  // this function when user upload the file
   const handleFile = async (e) => {
-    console.log(e)
     let TempPpeData = { ...form };
     if ((TempPpeData.attachment = e.target.files[0].size <= 1024 * 1024 * 25)) {
       TempPpeData.attachment = e.target.files[0];
@@ -592,15 +592,6 @@ const ObservationInitialNotification = (props) => {
       await setOpen(true);
     }
 
-  };
-
-  const handleAssignee = async (e, value) => {
-    let tempData = { ...form };
-    tempData.assigneeName = value.name;
-
-    tempData.assigneeId = value.id;
-
-    setForm(tempData);
   };
 
   const handelAddressSituationYes = async (e) => {
@@ -645,7 +636,6 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-
   const fetchNotificationSent = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -682,8 +672,6 @@ const ObservationInitialNotification = (props) => {
     await setTagData(sorting);
   };
 
-
-
   const fetchAttachment = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -698,7 +686,6 @@ const ObservationInitialNotification = (props) => {
       await setAttachment(ar);
     }
   };
-
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -720,7 +707,6 @@ const ObservationInitialNotification = (props) => {
     let sliceData = dataDepthAndId.slice(0, index);
     let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
     setSelectDepthAndId(newdataDepthAndId);
-    // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
@@ -732,7 +718,6 @@ const ObservationInitialNotification = (props) => {
             .then(function (response) {
               if (response.status === 200) {
                 temp[key].breakDownData = response.data.data.results;
-                //  temp[key].select=e.
                 setBreakdown1ListData(temp);
               }
             })
@@ -759,7 +744,7 @@ const ObservationInitialNotification = (props) => {
 
   return (
     <>
-      <CustomPapperBlock title="Observations" icon={obsIcon} whiteBg>
+      <CustomPapperBlock title="iCare" icon={obsIcon} whiteBg>
 
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
@@ -1243,7 +1228,7 @@ const ObservationInitialNotification = (props) => {
                       <path id="Path_5154" data-name="Path 5154" d="M34.265,116.461H24.007a.188.188,0,1,1,0-.375H34.265a.188.188,0,1,1,0,.375Z" transform="translate(-23.819 -116.086)" fill="#06425c" stroke="#06425c" stroke-width="0.5" />
                     </g>
                   </g>
-                </svg> Observation details
+                </svg> iCare details
               </Typography>
             </Grid>
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1320,11 +1305,7 @@ const ObservationInitialNotification = (props) => {
                       </RadioGroup>
                       <p style={{ color: "red" }}>{error.isSituationAddressed}</p>
 
-                      {/* {error && error["isSituationAddressed"] && (
-                  <FormHelperText>
-                    {error["isSituationAddressed"]}
-                  </FormHelperText>
-                )} */}
+
                     </FormControl>
                   </Grid>
                   {addressSituation === true ? (
@@ -1363,7 +1344,7 @@ const ObservationInitialNotification = (props) => {
                     <path id="Path_2274" data-name="Path 2274" d="M0,0H40V40H0Z" fill="none" />
                   </g>
                   <path id="enrollment" d="M14.947,31.057a.874.874,0,0,1,0,1.743H1.981A2.008,2.008,0,0,1,0,30.771V2.029A2.008,2.008,0,0,1,1.981,0H25.64a1.96,1.96,0,0,1,1.407.591,2.056,2.056,0,0,1,.585,1.437V16.443a2.91,2.91,0,0,1-.023.382H25.919V2.029a.288.288,0,0,0-.279-.286H1.981a.286.286,0,0,0-.2.083.305.305,0,0,0-.081.2v28.74a.27.27,0,0,0,.083.2.289.289,0,0,0,.2.085Zm9.137.035-4.272,1.495.034-4.871,4.246,3.377Zm-3.039-5.008,4.609-6.406a.411.411,0,0,1,.5-.149l3.775,2.893a.374.374,0,0,1,.039.55l-4.679,6.492ZM7.593,16.774a1.778,1.778,0,0,1-.052-.9c.12-.948.36-1.124,1.215-1.367a8.85,8.85,0,0,0,2.867-.873,2.936,2.936,0,0,0,.193-.382c.1-.227.185-.472.24-.641a8.154,8.154,0,0,1-.631-.921l-.639-1.041a1.941,1.941,0,0,1-.36-.95.777.777,0,0,1,.065-.342.613.613,0,0,1,.219-.267.5.5,0,0,1,.154-.08,17.114,17.114,0,0,1-.031-1.868,2.694,2.694,0,0,1,.078-.424,2.508,2.508,0,0,1,1.079-1.4,3.35,3.35,0,0,1,.9-.411c.2-.059-.175-.723.036-.745A5.144,5.144,0,0,1,16.295,5.79a2.561,2.561,0,0,1,.623,1.6l-.039,1.7h0a.46.46,0,0,1,.326.355,1.481,1.481,0,0,1-.175.892h0v.024l-.73,1.225a6.339,6.339,0,0,1-.891,1.26l.1.144a4.478,4.478,0,0,0,.464.625.043.043,0,0,1,.016.021,10.373,10.373,0,0,0,2.813.892c.782.211,1.069.267,1.243,1.142a1.937,1.937,0,0,1-.023,1.1Zm-.641,9.356a.885.885,0,0,1,0-1.764H18.508l-.016.024h0V24.4h0v.013h0v.408h0v.035h0v.021h0v.211h0v.032H18.38l-.018.013H18.33l-.016.016h-.029l-.016.013h-.016l-.016.016h-.013l-.016.016h0l-.016.016h0l-.016.016h0v.016h0v.029h0v.016h0l-.016.016v.016h-.013v.016h0v.016h0l-.013.016h0v.016h0v.035h0v.035h0l-.013.016v.016h0v.019h0v.019h0v.019h0v.037h0V25.6Zm.331-4.847a.847.847,0,0,1-.777-.421.891.891,0,0,1,0-.9.847.847,0,0,1,.777-.421H19.754a.847.847,0,0,1,.777.421.891.891,0,0,1,0,.9.847.847,0,0,1-.777.421Z" transform="translate(5.333 4.2)" fill="#06425c" />
-                </svg>Observation classification
+                </svg>iCare classification
               </Typography>
             </Grid>
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1403,7 +1384,7 @@ const ObservationInitialNotification = (props) => {
                       component="fieldset"
                     >
                       <FormLabel component="legend" className="checkRadioLabel" error={error && error["observationType"]}>
-                        Type of observation*
+                        Type of iCare*
                       </FormLabel>
                       <RadioGroup
                         aria-label="gender"
@@ -1678,22 +1659,16 @@ const ObservationInitialNotification = (props) => {
                 )}
               </div>
 
-              <div className={classes.loadingWrapper}>
-                <Button
-                  size="medium"
-                  variant="contained"
-                  color="primary"
-                  className="spacerRight buttonStyle"
-                  onClick={() => {
-                    history.push("/app/observations");
-                  }}
-                  disabled={loading}
-                >
-                  Cancel
-                </Button>
-              </div>
-
-
+              <Button
+                variant="outlined"
+                size="medium"
+                className={classes.custmCancelBtn}
+                onClick={() => {
+                  history.push("/app/icare");
+                }}
+              >
+                Cancel
+              </Button>
             </Grid>
 
 

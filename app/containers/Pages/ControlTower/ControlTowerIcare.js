@@ -639,7 +639,7 @@ const ControlTowerIcare = () => {
                   <Tab className="customTabLebl" square label="Summary" {...a11yProps(0)} />
                   <Tab className="customTabLebl" square label="iCare" {...a11yProps(1)} />
                   <Tab className="customTabLebl" square label="Compliance" {...a11yProps(2)} />
-                  <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} />
+                  {/* <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} /> */}
                 </Tabs>
               </AppBar>
             </Grid>
@@ -656,7 +656,7 @@ const ControlTowerIcare = () => {
                       <iframe
                         width="1600"
                         height="1000"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
                         frameborder="0"
                         allowFullScreen="true"
                       >
@@ -711,7 +711,7 @@ const ControlTowerIcare = () => {
                   </Grid>
                 </TabPanel>
 
-                <TabPanel className="tabContentArea" value={value} index={3}>
+                {/* <TabPanel className="tabContentArea" value={value} index={3}>
                   <Grid container spacing={1}>
                     <Grid item md={12} sm={12} xs={12}>
                       <iframe
@@ -724,7 +724,7 @@ const ControlTowerIcare = () => {
                       </iframe>
                     </Grid>
                   </Grid>
-                </TabPanel>
+                </TabPanel> */}
 
               </Grid>
             </Grid>

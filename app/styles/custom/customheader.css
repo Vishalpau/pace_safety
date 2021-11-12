@@ -18,6 +18,7 @@
   src: url(../../fonts/Montserrat-SemiBold.ttf);
 }
 
+
 html {    
 	font-family: Montserrat-Regular !important;
 }
@@ -127,145 +128,6 @@ span.makeStyles-mR10-2491 img {
   left: 85px!important;
   width: 92%!important;
 } 
-/*forms*/
-html .custmCancelBtn {
-  color: #06425C !important;
-  background-color: #ffffff !important;
-  margin-left: 5px;
-  border: 1px solid #06425C !important;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-}
-.PapperBlock-title {
-  font-family: Xolonium-Regular;
-}
-
-
-/* /////// */
-
-@font-face {
-  font-family: Montserrat-Regular;
-  src: url(../../fonts/Montserrat-Regular.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-Medium;
-  src: url(../../fonts/Montserrat-Medium.ttf);
-}
-
-@font-face {
-  font-family: Xolonium-Regular;
-  src: url(../../fonts/Xolonium-Regular.ttf);
-}
-
-@font-face {
-  font-family: Montserrat-SemiBold;
-  src: url(../../fonts/Montserrat-SemiBold.ttf);
-}
-
-html {    
-	font-family: Montserrat-Regular !important;
-}
-
-.headerAppsGrid {
-  opacity: 1;
-}
-
-.headerAppsGrid .MuiMenu-list {
-  display: grid;
-  grid-template-columns: repeat(3, 90px);
-  gap: 1rem;
-  font-family: 'Montserrat';
-}
-
-.headerAppsGrid .MuiMenu-list .MuiListItem-root {
-  flex-direction: column !important;
-  font-size: 13px;
-  font-family: Montserrat-Regular !important;
-}
-.MuiTab-root {
-	font-family: Montserrat-Regular !important;
-}
-.MuiTypography-h5 {
-	font-family: Xolonium-Regular !important;
-	font-weight: 500;
-  font-size: 1.3rem !important;
-}
-.MuiButton-label {
-	font-family: Montserrat-Regular !important;
-}
-.MuiTypography-body1 {
-	font-family: Montserrat-Regular !important;
-}
-.MuiTypography-body2 {
-	font-family: Montserrat-Regular !important;
-}
-.MuiButton-root  {
-	font-family: Montserrat-Regular !important;
-}
-.MuiButtonBase-root   {
-	font-family: Montserrat-Regular !important;
-}
-.PersistentDrawer-floatL-3017 {
-    font-size: 17px !important;
-    font-family: Xolonium-Regular !important;
-    font-weight: 500 !important;
-}
-/* .MuiTypography-h6 {
-	font-family: Xolonium-Regular !important;
-	font-weight: 500 !important;
-} */
-.MuiGrid-root.makeStyles-floatE-426.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-md-2 img {
-    height: 44px;
-}
-span.makeStyles-mR10-2491 img {
-    height: 44px;
-}
-.MuiFormLabel-root {
-    font-family: Montserrat-Regular !important;
-    color: #666666 !important;
-    font-size: 15px;
-}
-.makeStyles-fullWidth-419 {
-  width: 100%;
-  margin: .2rem 0;
-  box-shadow: inset 0px 0px 9px #dedede;
-}
-.MuiInputBase-root {
-    color: rgba(0, 0, 0, 0.87);
-    cursor: text;
-    display: inline-flex;
-    position: relative;
-    font-size: 1rem;
-    box-sizing: border-box;
-    align-items: center;
-    font-family: Open Sans,sans-serif;
-    font-weight: 400;
-    line-height: 1.1876em;
-}
-.MuiInputBase-root {
-    font-family: Montserrat-Regular !important;
-}
-.MuiOutlinedInput-notchedOutline {
-    border-color: rgba(0, 0, 0, 0.23);
-}
-
-.MuiTableCell-root {
-   font-family: Montserrat-Regular !important;
-}
-.makeStyles-search-1484 {
-  margin: 14px 2px 9px 0px !important;
-  padding: 0px 0px !important;
-  width: 100%;
-}
-.pr0 {padding-right:0px;}
-@media (min-width: 600px) {
-.search {
-    width: 98% !important;
-    margin-left: 8px;
-}
-}
-
 /*forms*/
 html .custmCancelBtn {
   color: #06425C !important;
@@ -388,7 +250,8 @@ html .custmCancelBtn {
 }
 .quickActionSection nav {
   padding-top: 0px;
-  padding-bottom: 0px;
+  padding-bottom: 5px;
+  border-radius: 0px 0px 6px 6px;
 }
 .quickActionSection nav div a, .quickActionSection nav li a {
   width: 100%;
@@ -456,6 +319,10 @@ html .custmCancelBtn {
   z-index: -9;
 }
 
+.containerPositionL {
+  float: right;
+}
+
 /* Attachment style component */
 .chooseFileDesign {
   font-size: 15px;
@@ -477,6 +344,7 @@ html .custmCancelBtn {
   width: 150px;
   float: left;
   display: inline-block;
+  margin-right: 5px;
 }
 .attachFileThumbEnry {
   width: 62px;
@@ -724,6 +592,9 @@ html .custmCancelBtn {
 .marginT15 {
   margin-top: 15px !important;
 }
+.marginT20 {
+  margin-top: 20px !important;
+}
 .marginB15 {
   margin-bottom: 15px !important;
 }
@@ -768,6 +639,9 @@ html .custmCancelBtn {
   background-color: transparent;
   text-decoration: underline;
 }
+.rangeLableBox {
+
+}
 
 .attachFileBtn button {
   text-transform: none;
@@ -807,6 +681,360 @@ html .custmCancelBtn {
   margin-bottom: 10px;
 }
 
+/* Comment section */
+.commentUserTitle {
+  color: #666666;
+  font-family: 'Montserrat-SemiBold';
+  font-size: 16px;
+  line-height: 19px;
+}
+.commentTimeDateTitle  {
+  font-size: 14px !important;
+  font-family: 'Montserrat-Regular' !important;
+  color: #666666;
+  line-height: 26px !important;
+  font-weight: 400 !important;
+}
+.commentText {
+  font-size: 14px;
+  color: #666666;
+  font-family: 'Montserrat-Medium' !important;
+}
+.commentActionBox {
+  padding-top: 10px;
+}
+.commentActionBox a {
+  color: #06425C;
+  font-family: 'Montserrat-Medium';
+  font-size: 14px;
+  line-height: 18px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.verticalSepareterLine {
+  height: 8px;
+  margin: 15px 10px 15px 10px;
+  font-size: 15px;
+  border-left: 2px solid #cccccc;
+  vertical-align: middle;
+}
+.commentMoreLinkTitle a {
+  font-size: 14px !important;
+  font-family: 'Montserrat-Medium' !important;
+  color: #06425C;
+  line-height: 26px !important;
+  text-decoration: underline;
+}
+.commentThanksRightSection {
+  vertical-align: text-top;
+  float: right;
+}
+.commentThanksRightSection span {
+  font-size: 14px;
+  font-family: 'Montserrat-Regular';
+  color: #666666;
+}
+
+
+
+
+/* Activity */
+.filterTitle {
+  font-size: 16px !important;
+  font-family: 'Montserrat-SemiBold' !important;
+  color: #666666;
+  padding-top: 15px;
+  text-align: right;
+}
+.AccordionTransparent {
+  border: none;
+  box-shadow: 0px 0px 0px 0px #06425c !important;
+}
+.AccordionTransparentTitle {
+  padding: 0px !important;
+}
+.AccordionTransparentTitle .MuiIconButton-label {
+  border: 1px solid #06425C;
+}
+.AccordionTransparentTitle .MuiIconButton-label svg {
+  color: #06425C;
+}
+.ActivityHistorySection, .ActivityHistorySection ul {
+  padding: 0px !important;
+}
+.ActivityHistorySection .MuiTimelineItem-missingOppositeContent:before {
+  display: none;
+}
+.ActivityHistorySection ul li .MuiTimelineContent-root {
+  padding-right: 0px;
+  margin-bottom: 15px;
+}  
+.ActivityHistorySection .MuiTimelineItem-missingOppositeContent .MuiTimelineSeparator-root {
+  min-width: 60px;
+}
+.ActivityHistorySection .MuiTimelineItem-missingOppositeContent .MuiTimelineSeparator-root span {
+  font-size: 14px;
+  color: #666666;
+  font-family: 'Montserrat-Regular';
+  line-height: 18px;
+}
+.ActivityHistorySection ul li .ActivityUserDetails, .ActivityHistorySection ul li .ActivityUserDesignation {
+  text-align: left;
+}
+.ActivityHistorySection ul li .ActivityUserDetails {
+  color: #666666;
+  font-size: 16px;
+  font-family: 'Montserrat-SemiBold' !important;
+  line-height: 22px;
+}
+.ActivityHistorySection ul li .ActivityUserDetails  {
+  color: #666666;
+  font-size: 16px;
+  font-family: 'Montserrat-SemiBold' !important;
+  line-height: 22px;
+}
+.ActivityHistorySection ul li .ActivityUserDetails span {
+  color: #666666;
+  font-size: 14px;
+  font-family: 'Montserrat-Regular' !important;
+  line-height: 22px;
+}
+.ActivityHistorySection ul li .ActivityUserDetails span b {
+  color: #06425C;
+  font-size: 14px;
+  font-family: 'Montserrat-SemiBold' !important;
+  line-height: 22px;
+  padding-left: 8px
+}
+.ActivityHistorySection ul li .ActivityUserDesignation {
+  color: #666666;
+  font-size: 14px;
+  font-family: 'Montserrat-Regular' !important;
+}
+.AccordionTransparentTitle .MuiAccordionSummary-content, .AccordionTransparentTitle .MuiAccordionSummary-content {
+  margin: 0px 0 0px 0px;
+}
+.activityAccodTitle {
+  font-size: 16px !important;
+  line-height: 19px;
+  color: #06425C;
+  font-family: Montserrat-SemiBold !important;
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.paginationListSection {
+  text-align: right;
+}
+.paginationListSection ul {
+  display: inline-block;
+  width: 100%;
+}
+.paginationListSection ul li {
+  display: inline-block;
+}
+.paginationListSection ul li a {
+  padding: 3px 5px;
+  color: #666666;
+  font-size: 14px;
+  font-family: 'Montserrat-Regular';
+  line-height: 18px;
+  cursor: pointer;
+}
+.paginationListSection ul li.newerNav a, .paginationListSection ul li.olderNav a{
+  padding: 3px 5px;
+  color: #06425C;
+  font-size: 14px;
+  font-family: 'Montserrat-Medium';
+  line-height: 18px;
+  cursor: pointer;
+}
+.paginationListSection ul li.newerNav a {
+  margin-right: 5px;
+}
+.paginationListSection ul li.olderNav a {
+  margin-left: 5px;
+}
+.paginationListSection ul li.newerNav a svg, .paginationListSection ul li.olderNav a svg{
+  padding: 0px 1px;
+  color: #06425C;
+  font-size: 14px;
+  font-family: 'Montserrat-Medium';
+  line-height: 18px;
+  cursor: pointer;
+}
+
+
+/* Control Tower */
+.controlTowerFilter  {
+  margin-top: 5px!important;
+}
+.controlTowerFilter .inlineListBTN .btnNoneLink {
+  background-color: transparent !important;
+  color: #06425C !important;
+  padding: 12px 5px;
+  margin: 0px;
+}
+.controlTowerFilter .inlineListBTN .btnNoneLink .MuiTypography-body1 {
+  font-size: 11px;
+  font-family: 'Montserrat-Medium' !important;
+  text-decoration: underline;
+  line-height: 20px;
+}
+.controlTowerFilter .inlineListBTN .btnNoneLink .rangeLabelTitle span {
+  font-size: 11px;
+  font-family: 'Montserrat-Medium' !important;
+  text-decoration: none;
+  line-height: 18px;
+}
+.controlTowerFilter .inlineListBTN .MuiListItem-button {
+  display: inline;
+  background-color: #7890A4;
+  margin-right: 0px;
+  font-family: 'Montserrat-SemiBold' !important;
+  text-transform: none;
+  border-radius: 20px;
+}
+.controlTowerFilter .inlineListBTN .MuiListItem-button:hover {
+  background-color: #ff8533;
+  border-color: #ff8533;
+}
+.controlTowerFilter .inlineListBTN .MuiListItem-button .MuiTypography-body1 {
+  font-size: 13px;
+  font-family: 'Montserrat-Medium' !important;
+  line-height: 18px;
+}
+.preferrlist li {
+  padding: 0px;
+}
+.preferrlist li a {
+  cursor: pointer;
+}
+
+.customTabLebl {
+  color: #ffffff !important;
+  background-color: #7890A4 !important;
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+  border-radius: 4px !important;
+}
+.customTabLebl.Mui-selected {
+  background-color: #ff8533 !important;
+  border-color: #ff8533;
+}
+.MuiTabs-indicator {
+  display: none;
+}
+.tabContentArea {
+  /* margin-left: 5px;
+  margin-right: 5px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc; */
+}
+
+.dateRangeSection {
+  position: absolute;
+  right: 0px;
+  margin-top: 15px;
+}
+
+.tabContentArea .MuiBox-root {
+  padding: 0px;
+}
+.multiSelectChek .formControl .MuiInputLabel-shrink {
+  background-color: #ffffff;
+  padding-right: 5px;
+  padding-left: 3px;
+}
+
+
+/* Left menu custom style */
+.homeMenu,.incident-managementMenu,  .assessmentsMenu,.icareMenu{
+  border-radius: 0 0px 0px 0 !important;
+  padding-left: 20px !important;
+}
+
+.homeMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/homeMenuIcon.png) no-repeat 10% -4%;
+  margin-right: 5px;
+}
+.incident-managementMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/observationMenuIcon.png) no-repeat 10% -4%;
+  margin-right: 5px;
+}
+.assessmentsMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/assessmentMenuIcon.png) no-repeat 10% -4%;
+  margin-right: 5px;
+}
+.icareMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/observationMenuIcon.png) no-repeat 10% -4%;
+  margin-right: 5px;
+}
+/* .controlTowerMenu a .MuiListItemIcon-root {
+  background: url(../../../public/images/controlTowerMenuIcon.png) no-repeat 10% 0%;
+  margin-right: 5px;
+} */
+
+.homeMenu.active .MuiListItemIcon-root,
+.homeMenu.active:hover .MuiListItemIcon-root,
+.homeMenu:hover .MuiListItemIcon-root,
+.homeMenu:hover .MuiListItemText-root span,
+.homeMenu.active:hover .MuiListItemText-root span,
+.homeMenu.active .MuiListItemText-root span,
+
+.incident-managementMenu.active .MuiListItemIcon-root,
+.incident-managementMenu.active:hover .MuiListItemIcon-root,
+.incident-managementMenu:hover .MuiListItemIcon-root,
+.incident-managementMenu:hover .MuiListItemText-root span,
+.incident-managementMenu.active:hover .MuiListItemText-root span,
+.incident-managementMenu.active .MuiListItemText-root span,
+
+.assessmentsMenu.active .MuiListItemIcon-root,
+.assessmentsMenu.active:hover .MuiListItemIcon-root,
+.assessmentsMenu:hover .MuiListItemIcon-root,
+.assessmentsMenu:hover .MuiListItemText-root span,
+.assessmentsMenu.active:hover .MuiListItemText-root span,
+.assessmentsMenu.active .MuiListItemText-root span {
+  background-position-y: 102%;
+  color: #ff8533;
+  font-weight: 700;
+}
+.icareMenu.active .MuiListItemIcon-root,
+.icareMenu.active:hover .MuiListItemIcon-root,
+.icareMenu:hover .MuiListItemIcon-root,
+.icareMenu:hover .MuiListItemText-root span,
+.icareMenu.active:hover .MuiListItemText-root span,
+.icareMenu.active .MuiListItemText-root span,
+
+.controlTowerMenu a.active .MuiListItemIcon-root,
+.controlTowerMenu a.active:hover .MuiListItemIcon-root,
+.controlTowerMenu a:hover .MuiListItemIcon-root,
+.controlTowerMenu a:hover .MuiListItemText-root span,
+.controlTowerMenu a.active:hover .MuiListItemText-root span,
+.controlTowerMenu a.active .MuiListItemText-root span {
+  background-position-y: 100%;
+  color: #ff8533;
+  font-weight: 700;
+}
+.leftCustomImg {
+  padding: 16px;
+}
+.highcharts-credits {
+  display: none;
+}
+
+.assessmentSelectionBox .MuiDialog-paper {
+  min-width: 320px;
+}
+.assessmentSelectionBox .MuiDialogTitle-root {
+  margin: 0px;
+  padding-bottom: 5px;
+}
+
+.loginLogoHead {
+  margin-bottom: 30px;
+}
 
 @media (max-width: 1280px) {
   .catDrawerSection {
@@ -845,4 +1073,39 @@ html .custmCancelBtn {
   .MuiTableContainer-root {
     overflow-x: auto !important;
   }
+
+  .containerPositionL {
+    float: left;
+  }
+  .filterTitle  {
+    text-align: left;
+  }
+  .commentUserDetail {
+    margin-top: 15px !important;
+  }
+  .commentContentSetion {
+    padding-top: 0px !important;
+  }
+  .commentUserTitle, .commentTimeDateTitle {
+    text-align: left !important;
+  }
+}
+.paddTBRemove .MuiAvatar-root.MuiAvatar-square.attachFileStyle {
+  width: 100px;
+  overflow: visible;
+  height: 80px;
+}
+
+.paddTBRemove .MuiAvatar-root.MuiAvatar-square {
+  overflow: visible;
+  height: 80px;
+  width: 120px;
+}
+
+.MuiAvatar-root.MuiAvatar-square.attachFileStyle .MuiAvatar-img {
+  border-radius: 10px;
+}
+
+.MuiAvatar-root.MuiAvatar-square .MuiAvatar-img {
+  border-radius: 10px;
 }
