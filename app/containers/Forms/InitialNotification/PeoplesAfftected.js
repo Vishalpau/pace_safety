@@ -242,6 +242,8 @@ const PeoplesAffected = () => {
             `/incident/${id}/modify/reporting-and-notification/`
           );
         }
+      }else{
+        setIsNext(false)
       }
 
       // Case when form has No option selected.
