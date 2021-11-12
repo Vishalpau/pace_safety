@@ -19,7 +19,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import PropTypes from 'prop-types';
-
+import Loader from "../Loader"
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
@@ -533,10 +533,10 @@ function ObservationsList(props) {
     <>
       <Box>
           {/* <ObservationSearchSection/> */}
-         
+          {isLoading ? <>
           <TableContainer component={Paper}>
           
-    {isLoading ? <>
+    
 
             <Grid component={Paper}>
             
@@ -560,12 +560,11 @@ function ObservationsList(props) {
             {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-            </> : <h1>Loading...</h1>}
-
           </TableContainer>
-
-
-          
+          </> 
+          :
+          <Loader/>
+          } 
       </Box>
     </>
   );
