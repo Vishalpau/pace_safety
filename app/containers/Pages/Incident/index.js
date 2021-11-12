@@ -354,27 +354,29 @@ function BlankPage(props) {
 
   const options = {
     data: incidents,
-    onRowsDelete: (rowsDeleted) => {
+    // onRowsDelete: (rowsDeleted) => {
 
-      const idsToDelete = rowsDeleted.data.map(
-        (d) => incidents[d.dataIndex].id
-      );
+    //   const idsToDelete = rowsDeleted.data.map(
+    //     (d) => incidents[d.dataIndex].id
+    //   );
       
-      for (var i = 0; i < idsToDelete.length; i++) {
-        const res = api.delete(`api/v1/incidents/${idsToDelete[i]}/`)
-        .then((res)=>{
-          if(res.data.data.results.message === "Deleted Successfully!"){
+    //   for (var i = 0; i < idsToDelete.length; i++) {
+    //     const res = api.put(`api/v1/incidents/${idsToDelete[i]}/`,{
+    //       status:""
+    //     })
+    //     .then((res)=>{
+    //       if(res.data.data.results.message === "Deleted Successfully!"){
           
-            fetchData();
+    //         fetchData();
             
-          }
-        })
+    //       }
+    //     })
         
        
-      }
-    },
-    filter: true,
-    selectableRows: true,
+    //   }
+    // },
+    // filter: true,
+    selectableRows: false,
     filterType: "dropdown",
     responsive: "stacked",
     rowsPerPage: 100,
