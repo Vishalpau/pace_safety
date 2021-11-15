@@ -371,8 +371,6 @@ function BlankPage(props) {
             
     //       }
     //     })
-        
-       
     //   }
     // },
     // filter: true,

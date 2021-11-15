@@ -219,7 +219,7 @@ class SimpleTabs extends React.Component {
     console.log({versionscon: versions})
 
     return (
-      <PapperBlock title={'FLHA Number: ' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
+      <PapperBlock title={'FLHA Number:' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
         <Grid container spacing={1}>
           <Grid item md={9} xs={12}>
             <Paper elevation={0} className={classes.pTopandRight}>

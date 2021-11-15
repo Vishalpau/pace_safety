@@ -524,9 +524,7 @@ function PersonalDashboard(props) {
                 </div>
               </div>
 
-              {/* Action Tracker
-  
-            Permit Management */}
+             
 
               <div className="ibws-fix hexagon_row2">
                 <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
@@ -568,9 +566,7 @@ function PersonalDashboard(props) {
                   </div>
                 </div>
 
-                {/* <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div> */}
+              
 
                 <div className={!(codes.includes('env_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
@@ -626,7 +622,7 @@ function PersonalDashboard(props) {
             </div>
           </div>
 
-
+          
 
           <Dialog
             className={classes.projectDialog}
@@ -704,7 +700,7 @@ function PersonalDashboard(props) {
                         xs={12}
                         className={classesm.cardContentBox}
                         key={key}
-                      >
+                      >{console.log(selectValues)}
                         <Card
 
 
@@ -714,7 +710,7 @@ function PersonalDashboard(props) {
                             <div className={classesm.cardMediaBox}>
                               <CardMedia
                                 className={classesm.media}
-                                image={ProjectImg}
+                                image={selectValues.projectImage === null ? ProjectImg : selectValues.projectImage}
                               //title=""
                               />
                             </div>

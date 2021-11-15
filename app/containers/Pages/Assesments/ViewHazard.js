@@ -498,7 +498,7 @@ Task#1 -
                             </AccordionSummary>
                             <AccordionDetails>
                               <Grid item sm={12} xs={12}>
-                                <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
+                                <FormLabel component="legend" className={classes.mttoptenn}>Task Name</FormLabel>
                                 <Typography>
                                   {task.taskIdentification}
                                 </Typography>
@@ -529,21 +529,21 @@ Task#1 -
                                         <Grid item sm={11} xs={8}>
                                           <FormLabel component="legend" className={classes.mttoptenn}>Control</FormLabel>
                                           <Typography>
-                                            {hazard.control}
+                                            {hazard.control?hazard.control:"-"}
                                           </Typography>
                                         </Grid>
                                         <Grid item sm={1} xs={4}>
                                           {(hazard.hazardImage) ? <img src={hazard.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
                                           
                                         </Grid>
-                                        <Grid container spacing={2}>
+                                        {/* <Grid container spacing={2}>
                                           <Grid item sm={12} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
                                             <Typography>
                                               {task.taskIdentification}
                                             </Typography>
                                           </Grid>
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid container spacing={1}>
                                           <Grid item md={4} sm={4} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
