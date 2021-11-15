@@ -478,7 +478,7 @@ const IncidentDetailsSummary = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography className={classes.heading}>
-                    Property affected
+                    Property/Material affected
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -491,7 +491,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            {key + 1}: Details of property
+                            {key + 1}: Details of property/material
                           </Typography>
                         </Grid>
 
@@ -501,7 +501,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            Property type
+                            Property/Material type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
                             {propertydata.propertyType
@@ -516,7 +516,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            Property other type
+                            Property/Material other type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
                             {propertydata.propertyOtherType

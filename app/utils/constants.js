@@ -128,10 +128,13 @@ export const APPCODE = "safety"
 export const adminUser_Dev = "Manager"
 export const adminUser_Prod = "Safety Admin"
 
+// comment constant
+export const COMMENT = "Comments"
+
 export const INITIAL_NOTIFICATION_FORM = {
   'Incident details': `/incident/${localStorage.getItem('fkincidentId')}/modify/`,
   'People affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/peoples-afftected/`,
-  'Property affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/property-affected/`,
+  'Property/Material affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/property-affected/`,
   'Equipment affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/equipment-affected/`,
   'Environment impact': `/incident/${localStorage.getItem('fkincidentId')}/modify/environment-affected/`,
   'Reporting and notification': `/incident/${localStorage.getItem('fkincidentId')}/modify/reporting-and-notification/`,

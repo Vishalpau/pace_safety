@@ -76,7 +76,7 @@ if (localStorage.getItem('userDetails') != null && localStorage.getItem('company
   [0].subscriptions.filter(subscription => subscription.appCode == APPCODE)
   [0].roles[0].name
   console.log(currentUserRole)
-  if (currentUserRole == adminUser_Dev || currentUserRole == adminUser_Prod) {
+  if (currentUserRole == adminUser_Dev || currentUserRole == adminUser_Prod || currentUserRole == "Supervisor") {
     menu.push(
       {
         key: 'administration',
