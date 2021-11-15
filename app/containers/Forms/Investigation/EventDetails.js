@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
@@ -948,7 +949,7 @@ const EventDetails = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

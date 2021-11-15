@@ -54,6 +54,7 @@ import moment from "moment";
 import Attachment from "../../Attachment/Attachment";
 import axios from "axios";
 import { Comments } from "../../pageListAsync";
+import Loader from "../Loader";
 import ActionShow from '../../Forms/ActionShow';
 import { handelActionData } from "../../../utils/CheckerValue"
 
@@ -1442,8 +1443,10 @@ function AhaSummary() {
             </Paper>
           </Grid>
         </Grid>
+       
       </Box>
     </> : <h1>Loading...</h1>}
+    <Loader />
     </PapperBlock>
   );
 }

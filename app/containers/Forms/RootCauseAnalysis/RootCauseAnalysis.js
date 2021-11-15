@@ -33,6 +33,8 @@ import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysis
 import ActionShow from "../ActionShow";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -452,7 +454,7 @@ const RootCauseAnalysis = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Submit
+                  Submit{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

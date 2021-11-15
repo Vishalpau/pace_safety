@@ -24,9 +24,12 @@ import {
   HAZARDIOUS_CONDITION_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM
 } from "../../../utils/constants";
 import ActionShow from "../ActionShow";
+//import CircularProgress from '@material-ui/core/CircularProgress';
+
 import ActionTracker from "../ActionTracker";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 
@@ -282,7 +285,7 @@ const BasicCauseAndAction = () => {
                 className={classes.button}
                 onClick={(e) => handelNavigate("next")}
               >
-                Next
+                Next{buttonLoading && <CircularProgress size={20} />}
               </Button>
             </Grid>
           </Grid>

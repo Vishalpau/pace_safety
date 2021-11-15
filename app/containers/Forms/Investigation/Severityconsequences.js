@@ -19,7 +19,7 @@ import {
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -619,7 +619,7 @@ const InvestigationOverview = () => {
                   onClick={() => handleNext()}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

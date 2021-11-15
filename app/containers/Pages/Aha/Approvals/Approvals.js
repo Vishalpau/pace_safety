@@ -20,6 +20,7 @@ import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { APPROVAL_FORM } from "../constants";
+import Loader from "../../../Forms/Loader";
 
 
 
@@ -385,6 +386,7 @@ const Approvals = () => {
               />
             </Col>
           </Row> </> : <h1>Loading...</h1>}
+          <Loader />
       </PapperBlock>
     </>
   );

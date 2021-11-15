@@ -128,7 +128,7 @@ const EqiptmentAffected = () => {
   // hit next button for next page
   const handleNext = async () => {
     // close out 
-
+      setIsNext(false);
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     //  cheack condition equipment is already filled or new creation
     if (detailsOfEquipmentAffect === "Yes") {
