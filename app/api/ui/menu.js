@@ -1,6 +1,7 @@
 let module_icon = require('../../../public/images/module_icon.png');
+import { APPCODE, adminUser_Dev, adminUser_Prod } from "../../utils/constants"
 
-module.exports = [
+var menu = [
   {
     key: 'home',
     name: 'Home',
@@ -51,35 +52,7 @@ module.exports = [
     multilevel: false,
     linkParent: "/app/pages/control-tower/controltower-icare",
   },
-  // {
 
-  //   key: 'administration',
-  //   name: 'Administration',
-  //   multilevel: true,
-  //   icon: 'ion-ios-cog',
-  //   child: [
-  //     {
-  //       key: 'pick_lists',
-  //       name: 'Pick Lists',
-  //       linkParent: '#',
-  //     },
-  //     {
-  //       key: 'check_lists',
-  //       name: 'Check Lists',
-  //       linkParent: '/app/pages/checklist/',
-  //     },
-  //     {
-  //       key: 'xflha_setting',
-  //       name: 'X-FLHA Setting',
-  //       linkParent: '/app/pages/assesments/FlhaConfig',
-  //     },
-  //     {
-  //       key: 'setting',
-  //       name: 'Setting',
-  //       linkParent: '/app/settings/setting',
-  //     },
-  //   ],
-  // },
   // {
   //   key: "menu-level",
   //   name: "Incident",
@@ -95,3 +68,46 @@ module.exports = [
   //   linkParent: "/app/pages/Incident/",
   // },
 ];
+
+
+if (localStorage.getItem('userDetails') != null && localStorage.getItem('company') != null) {
+  let currentUserRole = JSON.parse(localStorage.getItem('userDetails'))
+    .companies.filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)
+  [0].subscriptions.filter(subscription => subscription.appCode == APPCODE)
+  [0].roles[0].name
+  console.log(currentUserRole)
+  if (currentUserRole == adminUser_Dev || currentUserRole == adminUser_Prod) {
+    menu.push(
+      {
+        key: 'administration',
+        name: 'Administration',
+        multilevel: true,
+        icon: 'ion-ios-cog',
+        child: [
+          {
+            key: 'pick_lists',
+            name: 'Pick Lists',
+            linkParent: '/app/pages/picklist',
+          },
+          {
+            key: 'check_lists',
+            name: 'Check Lists',
+            linkParent: '/app/pages/checklist/',
+          },
+          // {
+          //   key: 'xflha_setting',
+          //   name: 'X-FLHA Setting',
+          //   linkParent: '/app/pages/assesments/FlhaConfig',
+          // },
+          // {
+          //   key: 'setting',
+          //   name: 'Setting',
+          //   linkParent: '/app/settings/setting',
+          // },
+        ],
+      },
+    )
+  }
+}
+
+export default menu;

@@ -68,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     lineHeight: '30px',
     border: 'none',
-    marginTop: '12px',
     '&:hover': {
       backgroundColor: '#ff8533',
       border: 'none',
@@ -590,22 +589,22 @@ const Assessment = () => {
                   </Button>
                   <div className={classes.loadingWrapper}>
 
-                      <Button
-                        variant="outlined"
-                        onClick={(e) => handelNext()}
-                        className={classes.custmSubmitBtn}
-                        style={{ marginLeft: '10px' }}
-                        disabled={submitLoader}
-                      >
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => handelNext()}
+                      className={classes.custmSubmitBtn}
+                      style={{ marginLeft: '10px' }}
+                      disabled={submitLoader}
+                    >
 
-                        Next
-                      </Button>
-                      {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}</div>
+                      Next
+                    </Button>
+                    {submitLoader && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}</div>
                 </Grid>
               </Grid>
             </Col>

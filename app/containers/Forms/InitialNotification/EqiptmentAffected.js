@@ -26,6 +26,7 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import EquipmentValidate from "../../Validator/EquipmentValidation";
@@ -466,7 +467,7 @@ const EqiptmentAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Describe any equipment affect"
+                    label={COMMENT}
                     className={classes.fullWidth}
                     value={equipmentDamagedComments || ""}
                     onChange={(e) =>

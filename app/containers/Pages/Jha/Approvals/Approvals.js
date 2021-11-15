@@ -262,7 +262,7 @@ const Approvals = () => {
                   className={classes.formBox}
                 >
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                    Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"
@@ -283,6 +283,38 @@ const Approvals = () => {
                   </div>
 
                 </Grid>
+
+                {false &&
+                  <Grid
+                    item
+                    md={8}
+                    xs={12}
+                    className={classes.formBox}
+                  >
+                    <Typography variant="h6" gutterBottom className={classes.labelName}>
+                      Senior Authorized Person (SAP)
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color={check.wrp ? "secondary" : "primary"}
+                      className={classes.approvalButton}
+                      onClick={(e) => setOpen(true)}
+                    >
+                      {check.wrp ? "Approved" : "Approve Now"}
+                    </Button>
+                    {/* Approved by userName on Date "date" (edited)  */}
+                    <div>
+                      {form.wrpApprovalDateTime !== undefined && form.wrpApprovalUser !== null
+                        &&
+                        form.wrpApprovalDateTime !== `Approved by: ${form.wrpApprovalUser} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}` ?
+                        `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
+                        : null
+                      }
+                    </div>
+
+                  </Grid>
+                }
+
                 <Dialog
                   className={classes.projectDialog}
                   open={open}
@@ -363,17 +395,7 @@ const Approvals = () => {
                         handelShowData={handelActionTracker}
                       />))}
                   </Typography>
-                  <Typography className={classes.aLabelValue}>
-                    {actionData.map((value) => (
-                      <ActionShow
-                        action={{ id: value.id, number: value.actionNumber }}
-                        title={value.actionTitle}
-                        companyId={projectData.companyId}
-                        projectId={projectData.projectId}
-                        updatePage={updatePage}
-                      />
-                    ))}
-                  </Typography>
+
                 </Grid>
 
                 <Grid

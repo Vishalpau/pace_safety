@@ -104,7 +104,7 @@ const IncidentDetails = (props) => {
   // Initial forms.
   const [form, setForm] = useState({
     incidentType: "",
-    incidentOccuredOn: null,
+    incidentOccuredOn: new Date(),
     incidentTitle: "",
     incidentDetails: "",
     immediateActionsTaken: "",
@@ -884,12 +884,12 @@ const IncidentDetails = (props) => {
                   className={classes.formControl}
                 >
                   <InputLabel id="demo-simple-select-label">
-                    Contractor
+                    Contractor/Agency name
                   </InputLabel>
                   <Select
                     labelId="contractor-type-label"
                     id="contractor"
-                    label="Contractor"
+                    label="Contractor/Agency name"
                     value={form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
@@ -1009,7 +1009,7 @@ const IncidentDetails = (props) => {
                   error={error && error.isPropertyDamaged}
                 >
                   <FormLabel component="legend">
-                    Was any property damaged during incident?
+                    Was any property/material damaged during incident?
                   </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
