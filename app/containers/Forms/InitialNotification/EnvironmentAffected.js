@@ -156,7 +156,7 @@ const EnvironmentAffected = () => {
             `/incident/${id}/modify/reporting-and-notification/`
           );
         } catch (error) { setIsNext(true) }
-      }
+      }else{ setIsNext(true) }
     } else {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
@@ -186,7 +186,7 @@ const EnvironmentAffected = () => {
             );
           }
         } catch (error) { setIsNext(true) }
-      }
+      }else{ setIsNext(true) }
     }
 
   };

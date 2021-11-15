@@ -39,6 +39,7 @@ import { company, projectName, tabViewMode } from '../../../redux/actions/initia
 import api from "../../../utils/axios";
 import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, SUMMERY_FORM } from "../../../utils/constants";
 import Loader from "../../Forms/Loader"
+import { AlertTitle } from "@material-ui/lab";
 
 
 // import { handleTimeOutError } from "../../../utils/CheckerValue"
@@ -353,17 +354,29 @@ function BlankPage(props) {
 
   const options = {
     data: incidents,
-    onRowsDelete: (rowsDeleted) => {
+    // onRowsDelete: (rowsDeleted) => {
 
-      const idsToDelete = rowsDeleted.data.map(
-        (d) => incidents[d.dataIndex].id
-      );
-      for (var i = 0; i < idsToDelete.length; i++) {
-        const res = api.delete(`api/v1/incidents/${idsToDelete[i]}/`);
-      }
-    },
-    filter: true,
-    selectableRows: true,
+    //   const idsToDelete = rowsDeleted.data.map(
+    //     (d) => incidents[d.dataIndex].id
+    //   );
+      
+    //   for (var i = 0; i < idsToDelete.length; i++) {
+    //     const res = api.put(`api/v1/incidents/${idsToDelete[i]}/`,{
+    //       status:""
+    //     })
+    //     .then((res)=>{
+    //       if(res.data.data.results.message === "Deleted Successfully!"){
+          
+    //         fetchData();
+            
+    //       }
+    //     })
+        
+       
+    //   }
+    // },
+    // filter: true,
+    selectableRows: false,
     filterType: "dropdown",
     responsive: "stacked",
     rowsPerPage: 100,
@@ -686,7 +699,7 @@ function BlankPage(props) {
                             variant="body2"
                             display="inline"
                             className={Fonts.listingLabelName}
-                            onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                            // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                           >
                             <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
                           </Typography>
@@ -703,12 +716,14 @@ function BlankPage(props) {
                             <AttachmentIcon fontSize="small" /> Attachments:
                           </Typography>
                           <Typography variant="body2" display="inline">
-                            <ILink href="#">{item[1]["attachmentCount"]}</ILink>
+                            {/* <ILink href="#"> */}
+                              {item[1]["attachmentCount"]}
+                              {/* </ILink> */}
                           </Typography>
                         </Grid>
 
                         <Grid item xs={6} md={3}>
-                          <Button
+                          {/* <Button
                             // disabled
                             size="small"
                             color="primary"
@@ -716,7 +731,7 @@ function BlankPage(props) {
                             className={Incidents.actionButton}
                           >
                             Print
-                          </Button>
+                          </Button> */}
                         </Grid>
                       </Grid>
                     </CardActions>
