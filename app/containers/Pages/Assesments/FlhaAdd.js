@@ -1761,7 +1761,7 @@ const FlhaDetails = (props) => {
                   xs={12}
                 >
                   <FormControl component="fieldset">
-                    <FormLabel component="legend" className="checkRadioLabel">*Has the JHA been reviewed?</FormLabel>
+                    <FormLabel component="legend" className="checkRadioLabel">*Has the JSA been reviewed?</FormLabel>
                     <RadioGroup row aria-label="jhaReviewed" name="jhaReviewed" value={jobForm.jhaReviewed} onChange={(e) => handleJobFormChange(e, 'jhaReviewed')}>
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
