@@ -832,13 +832,14 @@ const ProjectDetails = () => {
                             helperText={error.assessmentDate ? error.assessmentDate : null}
                             inputVariant="outlined"
                             disableFuture="true"
+                            format="MM/dd/yyyy"
                             onClick={(e) => setIsDateShow(true)}
                             open={isDateShow}
                             onClose={(e) => handelClose()}
                             onChange={(e) => {
                               setForm({
                                 ...form,
-                                assessmentDate: moment(e).format("YYYY-MM-DD hh:mm a"),
+                                assessmentDate: moment(e).format("YYYY-MM-DD"),
                               });
                               // console.log(e.target.value)
                             }}
@@ -1020,7 +1021,7 @@ const ProjectDetails = () => {
                           xs={12}
                           className={classes.formBox}>
                           <FormControl component="fieldset">
-                            <FormLabel component="checkRadioLabel">{key}</FormLabel>
+                          <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel>
                             <FormGroup>
                               {value.map((option) => (
                                 <FormControlLabel
