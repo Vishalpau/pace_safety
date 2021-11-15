@@ -123,6 +123,11 @@ export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 // Header authenticatuon
 export const HEADER_AUTH_ACTION = { Authorization: `Bearer ${access_token_action}` };
 
+// Menu file constants
+export const APPCODE = "safety"
+export const adminUser_Dev = "Manager"
+export const adminUser_Prod = "Safety Admin"
+
 export const INITIAL_NOTIFICATION_FORM = {
   'Incident details': `/incident/${localStorage.getItem('fkincidentId')}/modify/`,
   'People affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/peoples-afftected/`,
@@ -165,7 +170,7 @@ export const INVESTIGATION_FORM = {
     `/app/incident-management/registration/investigation/worker-details/0/${localStorage.getItem('fkincidentId')}`,
   'Event details':
     '/app/incident-management/registration/investigation/event-details/',
-  
+
 };
 
 export const ROOT_CAUSE_ANALYSIS_FORM = {
