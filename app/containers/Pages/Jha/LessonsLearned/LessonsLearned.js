@@ -280,6 +280,7 @@ const LessonsLearned = () => {
                       </Grid>
 
                       <Grid item md={6} xs={12}>
+                        <p><small>Create an action to share lesson learnt</small></p>
                         <Typography variant="h6" gutterBottom className={classes.labelName}>
                           <ActionTracker
                             actionContext="jha:lessionLearned"
@@ -305,7 +306,7 @@ const LessonsLearned = () => {
                         margin="dense"
                         className={classes.formLablBox}
                       >
-                        <Typography variant="h6" className={classes.fildTitle}>Work Responsible Person (WRP)</Typography>
+                        <Typography variant="h6" className={classes.fildTitle}>Competent Person  (CP)</Typography>
                       </Grid>
 
                       <Grid

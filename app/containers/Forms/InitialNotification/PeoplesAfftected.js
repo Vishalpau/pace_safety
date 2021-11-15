@@ -26,6 +26,7 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
@@ -242,7 +243,7 @@ const PeoplesAffected = () => {
             `/incident/${id}/modify/reporting-and-notification/`
           );
         }
-      }else{
+      } else {
         setIsNext(false)
       }
 
@@ -721,7 +722,7 @@ const PeoplesAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Details of people affected"
+                    label={COMMENT}
                     className={classes.fullWidth}
                     onChange={(e) => setPersonAffectedComments(e.target.value)}
                     value={personAffectedComments || ""}

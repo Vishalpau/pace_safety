@@ -199,19 +199,26 @@ const InvestigationOverview = () => {
   };
 
   const handelClassification = async (value) => {
-    if (value == classificationValues.current[0].value || value == classificationValues.current[1].value) {
+    if (value == classificationValues.current[0].value ||
+      value == classificationValues.current[1].value ||
+      value == classificationValues.current[3].value ||
+      value == classificationValues.current[5].value
+    ) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "PACE cause analysis",
       });
-    } else if (value == classificationValues.current[2].value) {
+    } else if (value == classificationValues.current[2].value ||
+      value == classificationValues.current[4].value ||
+      value == classificationValues.current[6].value
+    ) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "Cause analysis",
       });
-    } else if (value == classificationValues.current[3].value) {
+    } else if (value == classificationValues.current[7].value) {
       await setForm({
         ...form,
         classification: value,

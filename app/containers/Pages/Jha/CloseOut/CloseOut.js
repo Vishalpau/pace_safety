@@ -113,9 +113,10 @@ const CloseOut = () => {
     //   fetch user data
 
     const fetchUserList = async () => {
+        let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
         var config = {
             method: 'get',
-            url: `${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,
+            url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/users/`,
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -123,7 +124,6 @@ const CloseOut = () => {
 
         axios(config)
             .then(function (response) {
-
                 if (response.status === 200) {
                     const result = response.data.data.results[0].users
                     setUserList(result)

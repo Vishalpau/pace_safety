@@ -421,13 +421,13 @@ const EventDetails = () => {
               <Grid item xs={12} md={6}>
                 <FormControl
                   error={
-                    error && error.activity
+                    error && error.jobTask
                   }
                   variant="outlined"
                   required
                   className={classes.formControl}
                 >
-                  <InputLabel id="project-name-label">Activity</InputLabel>
+                  <InputLabel id="project-name-label">Job task</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -449,9 +449,9 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {error && error.activity && (
+                {error && error.jobTask && (
                   <FormHelperText style={{ color: "red" }}>
-                    {error.activity}
+                    {error.jobTask}
                   </FormHelperText>
                 )}
               </Grid>
@@ -459,14 +459,15 @@ const EventDetails = () => {
               {/* job task */}
               <Grid item xs={12} md={6}>
                 <FormControl
+
                   error={
-                    error && error.jobTask
+                    error && error.activity
                   }
                   variant="outlined"
                   required
                   className={classes.formControl}
                 >
-                  <InputLabel id="project-name-label">Job task</InputLabel>
+                  <InputLabel id="project-name-label">Activity</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -488,9 +489,10 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {error && error.jobTask && (
+
+                {error && error.activity && (
                   <FormHelperText style={{ color: "red" }}>
-                    {error.jobTask}
+                    {error.activity}
                   </FormHelperText>
                 )}
               </Grid>
