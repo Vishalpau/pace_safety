@@ -28,14 +28,14 @@ var menu = [
         linkParent: "/app/pages/assesments/xflha",
       },
       {
+        key: 'jha',
+        name: 'JSA',
+        linkParent: "/app/pages/jha/all_jha",
+      },
+      {
         key: 'aha',
         name: 'AHA',
         linkParent: '/app/pages/aha',
-      },
-      {
-        key: 'jha',
-        name: 'JHA',
-        linkParent: "/app/pages/jha/all_jha",
       },
     ],
   },

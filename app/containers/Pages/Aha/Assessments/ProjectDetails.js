@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, Component, useRef } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
@@ -41,7 +41,6 @@ import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
 
 import { AHA } from "../constants";
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
-
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -211,8 +210,7 @@ const ProjectDetails = () => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
-  const permitType = ["Permit 1", "Permit 2", "Permit 3", "Permit 4"]
-  const [pertmiTypes, setPermitTypes] = useState([])
+  const permitType = useRef([])
 
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -253,7 +251,7 @@ const ProjectDetails = () => {
       "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
       "workArea": "",
       "location": "",
-      "assessmentDate": new Date(),
+      "assessmentDate": new Date().toISOString().split('T')[0],
       "permitToPerform": "",
       "permitNumber": "",
       "ahaNumber": "",
@@ -360,7 +358,7 @@ const ProjectDetails = () => {
 
   const fetchCallBack = async () => {
     let fetchPermit = await PickListData(81)
-    setPermitTypes(fetchPermit)
+    // setPermitTypes(fetchPermit)
     setSelectBreakDown([])
     for (var key in projectData.projectName.breakdown) {
 
@@ -513,10 +511,15 @@ const ProjectDetails = () => {
     await setTeamForm(result)
   }
 
+  const pickListValue = async () => {
+    permitType.current = await PickListData(81)
+  }
+
   const classes = useStyles();
 
   useEffect(() => {
     fetchCallBack()
+    pickListValue()
     if (id) {
       fetchAhaData()
       fetchTeamData()
@@ -625,6 +628,7 @@ const ProjectDetails = () => {
                     helperText={error.assessmentDate ? error.assessmentDate : null}
                     inputVariant="outlined"
                     disableFuture="true"
+                    format="MM/dd/yyyy"
                     onClick={(e) => setIsDateShow(true)}
                     open={isDateShow}
                     onClose={(e) => handelClose()}
@@ -664,7 +668,8 @@ const ProjectDetails = () => {
                     </FormHelperText>
                   )}
                 </FormControl>
-              </Grid>{form.permitToPerform === "Yes" || form.permitToPerform === "" ?
+              </Grid>
+              {form.permitToPerform === "Yes" || form.permitToPerform === "" ? <>
                 <Grid item md={6} sm={12} xs={12}>
                   <FormControl
                     variant="outlined"
@@ -678,41 +683,40 @@ const ProjectDetails = () => {
                       label="Type of permit"
                       value={form.typeOfPermit ? form.typeOfPermit : ""}
                     >
-
-                      {pertmiTypes.map((selectValues) => (
-                        <MenuItem
-                          value={selectValues.value}
-                          onClick={(e) => setForm({ ...form, typeOfPermit: selectValues.value })}
-                        >
-                          {selectValues.label}
-                        </MenuItem>
-                      ))}
+                      {permitType.current.map(
+                        (value) => (
+                          <MenuItem
+                            value={value.label}
+                            onClick={(e) => { setForm({ ...form, typeOfPermit: value.label }) }}
+                          >
+                            {value.label}
+                          </MenuItem>
+                        )
+                      )}
                     </Select>
                   </FormControl>
-                </Grid> : null}
-
-              <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <TextField
-                  label="Permit Reference"
-                  // margin="dense"
-                  name="reference"
-                  id="reference"
-                  multiline
-                  value={form.permitNumber ? form.permitNumber : ""}
-                  fullWidth
-                  onChange={(e) => {
-                    { setForm({ ...form, permitNumber: e.target.value }) };
-                  }}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
-
+                </Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={12}
+                  className={classes.formBox}
+                >
+                  <TextField
+                    label="Permit Reference"
+                    // margin="dense"
+                    name="reference"
+                    id="reference"
+                    multiline
+                    value={form.permitNumber ? form.permitNumber : ""}
+                    fullWidth
+                    onChange={(e) => {
+                      { setForm({ ...form, permitNumber: e.target.value }) };
+                    }}
+                    variant="outlined"
+                    className={classes.formControl}
+                  />
+                </Grid> </> : null}
               <Grid
                 item
                 md={12}
@@ -720,7 +724,7 @@ const ProjectDetails = () => {
                 className={classes.formBox}
               >
                 <TextField
-                  label="Description*"
+                  label="Description of area*"
                   // margin="dense"
                   name="description"
                   id="description"
@@ -756,7 +760,7 @@ const ProjectDetails = () => {
                 >
 
                   <TextField
-                    label="Team Name"
+                    label={`Name ${index + 1}`}
                     // margin="dense"
                     name="arename"
                     id="arename"
@@ -829,7 +833,11 @@ const ProjectDetails = () => {
                 selectedItem="Project Details"
               />
             </Grid>
-          </Grid> : <> loading...</>}
+          </Grid> :
+          <>
+            Loading...
+          </>
+        }
       </PapperBlock>
     </>
   );

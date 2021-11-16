@@ -1218,36 +1218,45 @@ function JhaSummary() {
                       <ListItemText primary="Close Out" />
                     </ListItem>
 
-                    <ListItemLink onClick={(e) => viewSwitch("comments")}>
-                      <ListItemIcon>
-                        <Comment />
-                      </ListItemIcon>
-                      <ListItemText primary="Comments" />
-                    </ListItemLink>
+                    {false &&
+                      <>
+                        <ListItemLink onClick={(e) => viewSwitch("comments")}>
+                          <ListItemIcon>
+                            <Comment />
+                          </ListItemIcon>
+                          <ListItemText primary="Comments" />
+                        </ListItemLink>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <History />
-                      </ListItemIcon>
-                      <ListItemText primary="Activity History" />
-                    </ListItem>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <History />
+                          </ListItemIcon>
+                          <ListItemText primary="Activity History" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                   <Divider />
                   <List dense>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Print />
-                      </ListItemIcon>
-                      <ListItemText primary="Print" />
-                    </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Share />
-                      </ListItemIcon>
-                      <ListItemText primary="Share" />
-                    </ListItem>
+                    {false &&
+                      <>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Print />
+                          </ListItemIcon>
+                          <ListItemText primary="Print" />
+                        </ListItem>
+
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Share />
+                          </ListItemIcon>
+                          <ListItemText primary="Share" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                 </Paper>

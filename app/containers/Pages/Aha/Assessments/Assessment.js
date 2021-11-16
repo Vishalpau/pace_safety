@@ -241,11 +241,11 @@ const Assessment = () => {
     workStopCondition: [],
   })
   const severity = [
-     "Negligible",
+    "Negligible",
     "Minor",
     "Moderate",
-     "Major/ Critical",
-     "Catastrophic",
+    "Major/ Critical",
+    "Catastrophic",
   ];
 
   const probability = {
@@ -279,29 +279,29 @@ const Assessment = () => {
     handelCommonObject("commonObject", "aha", "assessmentIds", temp)
     await handelActionTracker(result)
 
-  //   const severity = [
-  //     "Negligible",
-  //    "Minor",
-  //    "Moderate",
-  //     "Major/ Critical",
-  //     "Catastrophic",
-  //  ];
+    //   const severity = [
+    //     "Negligible",
+    //    "Minor",
+    //    "Moderate",
+    //     "Major/ Critical",
+    //     "Catastrophic",
+    //  ];
 
-   let sagar = [...result]
-    for (var i = 0; i <result.length; i++) {
-      if (result[i].severity !== ""){
-        if(result[i].severity === "Negligible") {
+    let sagar = [...result]
+    for (var i = 0; i < result.length; i++) {
+      if (result[i].severity !== "") {
+        if (result[i].severity === "Negligible") {
           sagar[i].riskSeverityValue = 1
-        }else if(result[i].severity === "Minor"){
+        } else if (result[i].severity === "Minor") {
           sagar[i].riskSeverityValue = 2
-  
-        }else if(result[i].severity === "Moderate"){
+
+        } else if (result[i].severity === "Moderate") {
           sagar[i].riskSeverityValue = 3
-  
-        }else if(result[i].severity === "Major/ Critical"){
+
+        } else if (result[i].severity === "Major/ Critical") {
           sagar[i].riskSeverityValue = 4
-  
-        }else{
+
+        } else {
           sagar[i].riskSeverityValue = 5
         }
       }
@@ -309,20 +309,20 @@ const Assessment = () => {
 
 
     let abc = [...sagar]
-    for (var i = 0; i <sagar.length; i++) {
-      if (sagar[i].probability !== ""){
-        if(sagar[i].probability === "Improbable") {
+    for (var i = 0; i < sagar.length; i++) {
+      if (sagar[i].probability !== "") {
+        if (sagar[i].probability === "Improbable") {
           abc[i].riskProbabilityValue = 1
-        }else if(sagar[i].probability === "Remote"){
+        } else if (sagar[i].probability === "Remote") {
           abc[i].riskProbabilityValue = 2
-  
-        }else if(sagar[i].probability === "Occasional"){
+
+        } else if (sagar[i].probability === "Occasional") {
           abc[i].riskProbabilityValue = 3
-  
-        }else if(sagar[i].probability === "Probable"){
+
+        } else if (sagar[i].probability === "Probable") {
           abc[i].riskProbabilityValue = 4
-  
-        }else{
+
+        } else {
           abc[i].riskProbabilityValue = 5
         }
       }
@@ -330,17 +330,17 @@ const Assessment = () => {
 
     let zzz = [...abc]
 
-    for (var i = 0; i <abc.length; i++) {
-      if (abc[i].riskRating !== ""){
-        if(abc[i].riskRating === "25%") {
+    for (var i = 0; i < abc.length; i++) {
+      if (abc[i].riskRating !== "") {
+        if (abc[i].riskRating === "25%") {
           zzz[i].riskRatingColour = '#1EBD10'
-        }else if(abc[i].riskRating === "50%"){
+        } else if (abc[i].riskRating === "50%") {
           zzz[i].riskRatingColour = '#FFEB13'
-  
-        }else if(abc[i].riskRating === "75%"){
+
+        } else if (abc[i].riskRating === "75%") {
           zzz[i].riskRatingColour = '#F3C539'
-  
-        }else {
+
+        } else {
           zzz[i].riskRatingColour = '#FF0000'
         }
       }
@@ -424,7 +424,7 @@ const Assessment = () => {
     setForm(temp)
   }
 
- 
+
   const [checkGroups, setCheckListGroups] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -492,13 +492,13 @@ const Assessment = () => {
 
 
   const handleRiskChange = (e, key, fieldname) => {
- 
+
     const temp = [...form];
     const txt = e.nativeEvent.target.innerText;
     temp[key][fieldname] = e.target.value;
     const riskSeverity = ((temp[key].riskSeverityValue == undefined || temp[key].riskSeverityValue == '' || isNaN(temp[key].riskSeverityValue)) ? 1 : temp[key].riskSeverityValue);
     const riskProbability = ((temp[key].riskProbabilityValue == undefined || temp[key].riskProbabilityValue == '' || isNaN(temp[key].riskProbabilityValue)) ? 1 : temp[key].riskProbabilityValue);
-    
+
     const riskRating = riskSeverity * riskProbability;
 
     if (fieldname == 'riskSeverityValue') {
@@ -523,7 +523,7 @@ const Assessment = () => {
     setForm(temp);
   };
 
-    
+
   const handelCallBack = async () => {
 
     await fetchHzardsData();
@@ -614,11 +614,11 @@ const Assessment = () => {
                                 value={value.riskSeverityValue}
                                 onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue')}
                               >
-                                  <MenuItem value={1}>Negligible</MenuItem>
-                                  <MenuItem value={2}>Minor</MenuItem>
-                                  <MenuItem value={3}>Moderate</MenuItem>
-                                  <MenuItem value={4}>Major/ Critical</MenuItem>
-                                  <MenuItem value={5}>Catastrophic</MenuItem>
+                                <MenuItem value={1}>Negligible</MenuItem>
+                                <MenuItem value={2}>Minor</MenuItem>
+                                <MenuItem value={3}>Moderate</MenuItem>
+                                <MenuItem value={4}>Major/ Critical</MenuItem>
+                                <MenuItem value={5}>Catastrophic</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -646,13 +646,13 @@ const Assessment = () => {
                               </Select>
                             </FormControl>
                           </Grid>
-                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: value.riskRatingColour,marginTop: "16px" }}>
-                          <InputLabel id="demo-simple-select-label">
-                                Risk Rating
-                              </InputLabel>
-                                            {value.riskRating ? `${value.riskRating} risk` : ''}
-                                          </Grid>
-                          
+                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: value.riskRatingColour, marginTop: "16px" }}>
+                            <InputLabel id="demo-simple-select-label">
+                              Risk Rating
+                            </InputLabel>
+                            {value.riskRating ? `${value.riskRating} risk` : ''}
+                          </Grid>
+
                           <Grid item md={12} sm={12} xs={12}>
                             <TextField
                               variant="outlined"
@@ -700,7 +700,7 @@ const Assessment = () => {
                               className={classes.formControl}
                             >
                               <InputLabel id="demo-simple-select-label">
-                              Proceed to work
+                                Proceed to work
                               </InputLabel>
                               <Select
                                 labelId="incident-type-label"
@@ -751,7 +751,7 @@ const Assessment = () => {
                             xs={12}
                             className={classes.createHazardbox}
                           >
-                          If risk label is red the action must be created by supervisor to ensure control are in place.
+                            If risk label is red the action must be created by supervisor to ensure control are in place.
                             <Divider light />
                           </Grid>
 
@@ -845,12 +845,12 @@ const Assessment = () => {
                     Next
                   </Button>
                   {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}</div>
-                 
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}</div>
+
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -860,7 +860,12 @@ const Assessment = () => {
                 selectedItem="Assessment"
               />
             </Grid>
-          </Grid>) : (<h1>Loading...</h1>)}
+          </Grid>) : (
+          <>
+            Loading...
+          </>
+        )
+        }
       </PapperBlock>
     </>
   );
