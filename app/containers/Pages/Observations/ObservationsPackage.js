@@ -1025,7 +1025,7 @@ function Actions(props) {
                                 </Typography>
                                 <Typography variant="body2" display="inline">
                                   <Link color="secondary" className={classes.mLeftR5}
-                                    onClick={() => handleVisibility(index)}
+                                    // onClick={() => handleVisibility(index)}
                                   >
                                     {item[1]['attachmentCount']}</Link>
                                 </Typography>

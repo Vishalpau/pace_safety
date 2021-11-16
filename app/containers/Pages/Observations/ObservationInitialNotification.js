@@ -29,6 +29,7 @@ import obsIcon from 'dan-images/obsIcon.png';
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import Avatar from '@material-ui/core/Avatar';
 import { useHistory, useParams } from "react-router";
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
@@ -677,12 +678,12 @@ const ObservationInitialNotification = (props) => {
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
     const attachment = await api.get(
-      `/api/v1/corepatterns/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
+      `/api/v1/settings/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
     if (result !== undefined) {
       let ar = result.attachment;
-
+      console.log(ar,"QQQQQQ");
       await setAttachment(ar);
     }
   };
@@ -740,6 +741,7 @@ const ObservationInitialNotification = (props) => {
     fetchSuperVisorName();
     fetchReportedBy();
     PickList();
+    fetchAttachment()
   }, [props.initialValues.breakDown]);
 
   return (
@@ -1628,6 +1630,15 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
+
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBBanner}
+          >
+            <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
+          </Grid>
 
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
