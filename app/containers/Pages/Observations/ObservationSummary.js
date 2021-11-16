@@ -124,7 +124,7 @@ const ObservationSummary = () => {
     setObservationCorrectiveAction(false);
     setComment(true)
     setActivity(false);
-    history.push(`/app/icare/comments/${id}`)
+    // history.push(`/app/icare/comments/${id}`)
   };
 
   
@@ -282,7 +282,7 @@ const ObservationSummary = () => {
                                 Action Tracking
                             </Button>
                             <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                                {localStorage.getItem("action") === "Done" ? "Done" : "Pending"} {localStorage.getItem("action") === "Done"  ? <CheckCircle /> : <AccessTime  /> }
+                                {localStorage.getItem("action") === "Done" ? "Done" : "-"} {localStorage.getItem("action") === "Done"  ? <CheckCircle /> : <AccessTime  /> }
                             </Typography>
                              
                           </li>
@@ -298,7 +298,7 @@ const ObservationSummary = () => {
                 {(() => {
                   if(comment === true) {
                     return (<Comments
-                              commentContext="observations"
+                              commentContext="iCare"
                               id={localStorage.getItem("fkobservationId")}
                             />)
                   }
@@ -400,12 +400,12 @@ const ObservationSummary = () => {
                     <ListItemText primary="Comments" />
                   </Link>
                 </ListItem> */}
-                  {/* <ListItem button onClick={(e) => handleComments(e)}>
+                  <ListItem button onClick={(e) => handleComments(e)}>
                     <ListItemIcon>
                     <Comment />
                     </ListItemIcon>
                     <ListItemText primary="Comments" />
-                  </ListItem> */}
+                  </ListItem>
 
                   {/* <ListItem button>
                   <ListItemIcon>
