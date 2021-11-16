@@ -291,6 +291,7 @@ function JhaSummary() {
   }
 
   const handelWorkArea = async (assessment) => {
+    console.log("here")
     let structName = {}
     let projectStructId = assessment.fkProjectStructureIds.split(":")
 
@@ -306,6 +307,7 @@ function JhaSummary() {
       structName[result["structure_name"]] = result["structureName"]
     }
     setProjectStructName(structName)
+    console.log(structName)
   }
 
   const handelInputValue = async () => {
@@ -314,10 +316,8 @@ function JhaSummary() {
     const baseUrl = localStorage.getItem("apiBaseUrl")
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
-    console.log(apiDataPerformance)
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
-    console.log(apiCondition)
   }
 
   let errorMessage = "Please fill"
@@ -535,7 +535,7 @@ function JhaSummary() {
                                           Work Area
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructName["Work Area(s)"])}
+                                          {checkValue(projectStructName["Work Area"])}
                                         </Typography>
                                       </Grid>
 
@@ -1218,36 +1218,45 @@ function JhaSummary() {
                       <ListItemText primary="Close Out" />
                     </ListItem>
 
-                    <ListItemLink onClick={(e) => viewSwitch("comments")}>
-                      <ListItemIcon>
-                        <Comment />
-                      </ListItemIcon>
-                      <ListItemText primary="Comments" />
-                    </ListItemLink>
+                    {false &&
+                      <>
+                        <ListItemLink onClick={(e) => viewSwitch("comments")}>
+                          <ListItemIcon>
+                            <Comment />
+                          </ListItemIcon>
+                          <ListItemText primary="Comments" />
+                        </ListItemLink>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <History />
-                      </ListItemIcon>
-                      <ListItemText primary="Activity History" />
-                    </ListItem>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <History />
+                          </ListItemIcon>
+                          <ListItemText primary="Activity History" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                   <Divider />
                   <List dense>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Print />
-                      </ListItemIcon>
-                      <ListItemText primary="Print" />
-                    </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Share />
-                      </ListItemIcon>
-                      <ListItemText primary="Share" />
-                    </ListItem>
+                    {false &&
+                      <>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Print />
+                          </ListItemIcon>
+                          <ListItemText primary="Print" />
+                        </ListItem>
+
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Share />
+                          </ListItemIcon>
+                          <ListItemText primary="Share" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                 </Paper>

@@ -1154,7 +1154,7 @@ function AhaSummary() {
                                       {ahaData.link ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={12} md={12}>
+                                  {/* <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
                                       gutterBottom
@@ -1169,8 +1169,7 @@ function AhaSummary() {
                                     >
                                       {ahaData.notifyTo ? ahaData.notifyTo : "-"}
                                     </Typography>
-                                    {/* <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography> */}
-                                  </Grid>
+                                  </Grid> */}
                                 </>
                               </Grid>
                             </AccordionDetails>
@@ -1387,7 +1386,7 @@ function AhaSummary() {
                 </ListItemLink>)}
 
                 {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink
-                  disabled={ahaData.closedByName !== null}
+                  // disabled={ahaData.closedByName !== null}
                   onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Edit />
@@ -1395,7 +1394,7 @@ function AhaSummary() {
                   <ListItemText primary="Update Lessons Learned" />
                 </ListItemLink>) :
                   (<ListItemLink
-                    disabled={ahaData.closedByName !== null}
+                    // disabled={ahaData.closedByName !== null}
                     onClick={(e) => handleAhaLessonLearnPush(e)}>
                     <ListItemIcon>
                       <Add />
@@ -1410,40 +1409,52 @@ function AhaSummary() {
                 </ListItemLink>
 
 
-                <ListItem button onClick={(e) => handleCommentsPush(e)}>
-                  <ListItemIcon>
-                    <Comment />
-                  </ListItemIcon>
-                  <ListItemText primary="Comments" />
-                </ListItem>
+                {false &&
+                  <>
+                    <ListItem button onClick={(e) => handleCommentsPush(e)}>
+                      <ListItemIcon>
+                        <Comment />
+                      </ListItemIcon>
+                      <ListItemText primary="Comments" />
+                    </ListItem>
 
-                <ListItem button onClick={(e) => handleActivityPush(e)}>
-                  <ListItemIcon>
-                    <History />
-                  </ListItemIcon>
-                  <ListItemText primary="Activity History" />
-                </ListItem>
+                    <ListItem button onClick={(e) => handleActivityPush(e)}>
+                      <ListItemIcon>
+                        <History />
+                      </ListItemIcon>
+                      <ListItemText primary="Activity History" />
+                    </ListItem>
+                  </>
+                }
+
               </List>
               <Divider />
               <List dense>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  <ListItemText primary="Print" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Share />
-                  </ListItemIcon>
-                  <ListItemText primary="Share" />
-                </ListItem>
+                {false && <>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Print />
+                    </ListItemIcon>
+                    <ListItemText primary="Print" />
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Share />
+                    </ListItemIcon>
+                    <ListItemText primary="Share" />
+                  </ListItem>
+                </>
+                }
               </List>
             </Paper>
           </Grid>
         </Grid>
       </Box>
-    </> : <h1>Loading...</h1>}
+    </> :
+      <>
+        Loading...
+      </>
+      }
     </PapperBlock>
   );
 }

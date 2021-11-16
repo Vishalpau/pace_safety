@@ -265,7 +265,7 @@ function Jha(props) {
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
   return (
-    <PapperBlock title="JHA" icon="ion-md-list-box">
+    <PapperBlock title="JSA" icon="ion-md-list-box">
       {isLoading ? <>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -317,7 +317,7 @@ function Jha(props) {
                     disableElevation
                     onClick={(e) => handleNewJhaPush(e)}
                   >
-                    New JHA
+                    New JSA
                   </Button>
                 </Grid>
               </Grid>
@@ -524,7 +524,11 @@ function Jha(props) {
           {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
           <Pagination count={pageCount} page={page} onChange={handleChange} />
         </div>
-      </> : <h1>Loading...</h1>}
+      </> :
+        <>
+          Loading...
+        </>
+      }
     </PapperBlock>
   );
 }

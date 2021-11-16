@@ -1,69 +1,42 @@
-import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Chip from '@material-ui/core/Chip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AttachmentIcon from '@material-ui/icons/Attachment';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-import Print from '@material-ui/icons/Print';
-import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
-import Share from '@material-ui/icons/Share';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Pagination from '@material-ui/lab/Pagination';
-import in_progress_small from 'dan-images/in_progress_small.png';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import axios from "axios";
 import completed_small from 'dan-images/completed-small.png';
+import in_progress_small from 'dan-images/in_progress_small.png';
 import preplanning from 'dan-images/preplanning.png';
-import progress from 'dan-images/progress.png';
-import completed from 'dan-images/completed.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
 import React, { useEffect, useState } from "react";
 // react-redux
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { projectName, company } from '../../../redux/actions/initialDetails';
-import { useDispatch } from 'react-redux';
+import { company, projectName } from '../../../redux/actions/initialDetails';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
+import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import UserDetailsView from '../../UserDetails/UserDetail';
-import StarsIcon from '@material-ui/icons/Stars';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import axios from "axios"
-import TextField from '@material-ui/core/TextField';
-import Menu from '@material-ui/core/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import projectpj from 'dan-images/projectpj.png';
-import Loader from "../Loader"
-import Attachment from "../../Attachment/Attachment";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -1202,7 +1175,7 @@ function Actions(props) {
                 </div>
                 <div>
 
-                  {openAtt !== "" && <Attachment value={openAtt} />}
+                  {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
 
                   {/* <Dialog
                 open={openAttachment}
