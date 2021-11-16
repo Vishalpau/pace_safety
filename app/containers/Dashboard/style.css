@@ -224,6 +224,11 @@ background-position-y: 1%;
 	display: block;
 	background-size: 85px;
 }
+.hexagon_fullcontnt .hse_action_tracker {
+	background: url(../../../public//images/hexagon/10.png) no-repeat 50% 116%;
+	display: block;
+	background-size: 85px;
+}
 .hexagon_fullcontnt:hover .hse_observations {
 	background-position-y: 1%;
 }
