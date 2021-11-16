@@ -608,7 +608,7 @@ const ObservationInitialNotificationUpdate = () => {
       > */}
       {isLoading ?
         <Grid container spacing={3} className={classes.observationNewSection}>
-
+        {tagData.length > 0 ? (<>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg xmlns="http://www.w3.org/2000/svg" width="30.334" height="24.972" viewBox="0 0 34.334 30.972">
@@ -621,7 +621,7 @@ const ObservationInitialNotificationUpdate = () => {
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
 
-                {tagData.length > 0 ? (
+                
                   <Grid item md={12} xs={12} className={classes.formBox}>
 
                     <FormGroup className={classes.customCheckBoxList}>
@@ -644,10 +644,10 @@ const ObservationInitialNotificationUpdate = () => {
                       ))}
                     </FormGroup>
 
-                  </Grid>) : null}
+                  </Grid>
               </Grid>
             </Paper>
-          </Grid>
+          </Grid></>) : null}
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">

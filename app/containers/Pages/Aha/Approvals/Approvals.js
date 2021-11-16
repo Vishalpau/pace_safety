@@ -253,7 +253,7 @@ const Approvals = () => {
                 <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                    Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"

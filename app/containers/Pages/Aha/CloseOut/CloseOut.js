@@ -64,12 +64,12 @@ const useStyles = makeStyles((theme) => ({
         left: "50%",
         marginTop: -12,
         marginLeft: -12,
-      },
-      loadingWrapper: {
+    },
+    loadingWrapper: {
         margin: theme.spacing(1),
         position: "relative",
         display: "inline-flex",
-      },
+    },
 }));
 
 const CloseOut = () => {
@@ -79,7 +79,7 @@ const CloseOut = () => {
     // const dispatch = useDispatch();
     const [ahaListData, setAhaListdata] = useState({});
     const [userList, setUserList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({})
     const [form, setForm] = useState({
         reviewedBy: 0,
@@ -105,14 +105,17 @@ const CloseOut = () => {
         // const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`)
         const result = res.data.data.results;
-       await  setAhaListdata(result)
-
+        if (result["closedDate"] === null) {
+            result["closedDate"] = new Date()
+        }
+        await setAhaListdata(result)
+        await setIsLoading(true)
     };
     // handle close snackbar
     const handelClose = () => {
         setIsDateShow(false)
         return true
-      }
+    }
 
 
     const handleCloseDate = (e) => {
@@ -163,9 +166,9 @@ const CloseOut = () => {
                     let user = [];
                     // user = result;
                     let data = result.filter((item) =>
-                      item['companyId'] == fkCompanyId
+                        item['companyId'] == fkCompanyId
                     )
-                    
+
                     for (var i in data[0].users) {
                         filterUserListName.push(data[0].users[i]);
                     }
@@ -178,19 +181,19 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
-        
+
         const { error, isValid } = CloseOutValidator(ahaListData);
         await setError(error);
         if (!isValid) {
-          return "Data is not valid";
+            return "Data is not valid";
         }
         await setSubmitLoader(true)
-     
-        delete  ahaListData['ahaAssessmentAttachment']
-        const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,ahaListData)
-        if(res.status === 200) {
+
+        delete ahaListData['ahaAssessmentAttachment']
+        const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, ahaListData)
+        if (res.status === 200) {
             history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
-          }
+        }
     }
     useEffect(() => {
         fetchUserList();
@@ -225,7 +228,7 @@ const CloseOut = () => {
                             </Typography>
                         </Grid>
 
-                       
+
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" className={Type.labelName} gutterBottom>
@@ -245,7 +248,7 @@ const CloseOut = () => {
                             </Typography>
                         </Grid>
 
-                        
+
                         <Grid item xs={12}>
                             <Typography variant="h6" gutterBottom>
                                 Action item close out
@@ -284,13 +287,13 @@ const CloseOut = () => {
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
-                        
+
                         <Grid item xs={12} md={6}>
                             <FormControl
                                 variant="outlined"
 
                                 className={classes.formControl}
-                                error= {error.closedByName}
+                                error={error.closedByName}
 
 
                             >
@@ -302,21 +305,21 @@ const CloseOut = () => {
                                     id="demo-simple-select"
                                     label="Closed by"
                                     value={ahaListData.closedByName ? ahaListData.closedByName : ""}
-                                    
+
 
                                 >
                                     {userList.map((selectValues, index) => (
                                         <MenuItem
                                             value={selectValues.name}
                                             key={index}
-                                            onClick={(e) => setAhaListdata({ ...ahaListData, closedByName: selectValues.name , closedById: selectValues.id})}
+                                            onClick={(e) => setAhaListdata({ ...ahaListData, closedByName: selectValues.name, closedById: selectValues.id })}
 
                                         >
                                             {selectValues.name}
                                         </MenuItem>
                                     ))}
                                 </Select>
-                                        {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> :""}
+                                {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6}>
@@ -335,48 +338,43 @@ const CloseOut = () => {
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     label="Closed on*"
-                                    autoComplete = "off"
+                                    autoComplete="off"
                                     onClick={(e) => setIsDateShow(true)}
                                     open={isDateShow}
                                     onClose={(e) => handelClose()}
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-                                    
-                    // console.log(e.target.value)
-                    InputProps={{ readOnly: true }}
+                                    InputProps={{ readOnly: true }}
                                     disableFuture
                                 />
                             </MuiPickersUtilsProvider>
                         </Grid>
 
-
-
-
                         <Grid item xs={12}>
-                        <div className={classes.loadingWrapper}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleNext()}
-                                style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
-                >
+                            <div className={classes.loadingWrapper}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleNext()}
+                                    style={{ marginLeft: "10px" }}
+                                    disabled={submitLoader}
+                                >
 
-                  Submit
-                </Button>
-                {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}</div>
+                                    Submit
+                                </Button>
+                                {submitLoader && (
+                                    <CircularProgress
+                                        size={24}
+                                        className={classes.buttonProgress}
+                                    />
+                                )}</div>
                         </Grid>
                     </Grid>
-                  
+
                 </Grid>
             ) : (
-                <h1>Loading...</h1>
+                <>Loading...</>
             )}
         </PapperBlock>
     );

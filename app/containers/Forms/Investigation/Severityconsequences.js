@@ -193,7 +193,7 @@ const InvestigationOverview = () => {
     regulationValues.current = await PickListData(44);
     reputaionValues.current = await PickListData(45);
     financialValues.current = await PickListData(46);
-    highestImpactReceptor.current = await PickListData(77);
+    highestImpactReceptor.current = await PickListData(72);
 
     await setIsLoading(true);
   };
