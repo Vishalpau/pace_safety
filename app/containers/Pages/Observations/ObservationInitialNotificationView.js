@@ -608,26 +608,19 @@ const ObservationInitialNotificationView = () => {
                 {initialData.attachment ? (
                   <Typography className="viewLabelValue">
 
-
-                    {/* <Attachment value={initialData.attachment}/> */}
                     {initialData.attachment ===
                       null ? null : typeof initialData.attachment ===
                         "string" ? (
                       <Attachment value={initialData.attachment} />
                     ) : null}
-
-                    {/* <Avatar variant="rounded" className={classes.rounded} value={initialData.attachment} title={initialData.attachment}
-            onClick={() =>
-                                      handleOpen(initialData.attachment)
-                                    }>
-            <ImageIcon />
-          </Avatar> */}
                   </Typography>) : ("-")}
               </Grid>
             </Grid>
           </Paper>
         </Grid>
 
+        
+        {initialData['assigneeName'] && <>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
             <svg xmlns="http://www.w3.org/2000/svg" width="30.217" height="24.92" viewBox="0 0 37.217 27.92">
@@ -652,7 +645,7 @@ const ObservationInitialNotificationView = () => {
               </Grid>
             </Grid>
           </Paper>
-        </Grid>
+        </Grid> </>}
 
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
@@ -725,7 +718,7 @@ const ObservationInitialNotificationView = () => {
                     href={`${documentUrl}`}
                     target="_blank"
                   >
-                    View Attachment
+                    View Attachment 111111
                   </Button>
                 </Grid>
                 <Grid item xs={12} md={6}>

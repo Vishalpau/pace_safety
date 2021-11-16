@@ -337,6 +337,7 @@ function ObservationCorrectiveAction() {
     if (result.isCorrectiveActionTaken === "Yes") {
       await setActionOpen(true);
     }
+    result['reviewedOn'] = new Date()
     await setForm(result);
     await handelActionTracker();
 
