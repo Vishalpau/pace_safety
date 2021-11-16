@@ -748,7 +748,7 @@ const WorkerDetails = () => {
                     </Select>
                   </FormControl>
                   {error && error.noOfDaysIntoShift && (
-                    <FormHelperText>{error.noOfDaysIntoShift}</FormHelperText>
+                    <FormHelperText style={{ color: "red" }}>{error.noOfDaysIntoShift}</FormHelperText>
                   )}
                 </Grid>
 
