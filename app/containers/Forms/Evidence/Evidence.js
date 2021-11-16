@@ -138,7 +138,7 @@ const Evidence = () => {
       error: "",
     },
     {
-      evidenceCategory: "Scope of work, JHA/ FLHA",
+      evidenceCategory: "Scope of work, JSA/ FLHA",
       evidenceCheck: "",
       evidenceRemark: "",
       evidenceDocument: null,

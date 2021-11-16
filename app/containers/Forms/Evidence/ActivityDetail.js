@@ -85,7 +85,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-04",
-      question: "Was JHA executed for the task?",
+      question: "Was JSA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",

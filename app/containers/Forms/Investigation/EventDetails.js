@@ -417,11 +417,12 @@ const EventDetails = () => {
         <>
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
-              {/* activity */}
+
+              {/* job task */}
               <Grid item xs={12} md={6}>
                 <FormControl
                   error={
-                    error && error.jobTask
+                    error && error.activity
                   }
                   variant="outlined"
                   required
@@ -449,19 +450,18 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {error && error.jobTask && (
+                {error && error.activity && (
                   <FormHelperText style={{ color: "red" }}>
-                    {error.jobTask}
+                    {error.activity}
                   </FormHelperText>
                 )}
               </Grid>
 
-              {/* job task */}
+              {/* activity */}
               <Grid item xs={12} md={6}>
                 <FormControl
-
                   error={
-                    error && error.activity
+                    error && error.jobTask
                   }
                   variant="outlined"
                   required
@@ -490,9 +490,9 @@ const EventDetails = () => {
                   </Select>
                 </FormControl>
 
-                {error && error.activity && (
+                {error && error.jobTask && (
                   <FormHelperText style={{ color: "red" }}>
-                    {error.activity}
+                    {error.jobTask}
                   </FormHelperText>
                 )}
               </Grid>
@@ -950,7 +950,7 @@ const EventDetails = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Submit
                 </Button>
               </Grid>
             </Grid>
