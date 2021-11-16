@@ -265,7 +265,7 @@ function Jha(props) {
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
   return (
-    <PapperBlock title="JHA" icon="ion-md-list-box">
+    <PapperBlock title="JSA" icon="ion-md-list-box">
       {isLoading ? <>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -317,7 +317,7 @@ function Jha(props) {
                     disableElevation
                     onClick={(e) => handleNewJhaPush(e)}
                   >
-                    New JHA
+                    New JSA
                   </Button>
                 </Grid>
               </Grid>
