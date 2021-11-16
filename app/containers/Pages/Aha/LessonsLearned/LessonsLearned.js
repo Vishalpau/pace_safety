@@ -305,7 +305,7 @@ const LessonsLearned = () => {
                         margin="dense"
                         className={classes.formLablBox}
                       >
-                        <Typography variant="h6" className={classes.fildTitle}>Work Responsible Person (WRP)</Typography>
+                        <Typography variant="h6" className={classes.fildTitle}>Competent Person (CP)</Typography>
                       </Grid>
 
                       <Grid

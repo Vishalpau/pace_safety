@@ -125,6 +125,7 @@ const LessonsLearned = () => {
   const history = useHistory()
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -179,10 +180,11 @@ const LessonsLearned = () => {
 
   const classes = useStyles();
 
-  const handelCallback = () => {
-    handelJobDetails()
-    handelUserName()
-    handelActionTracker()
+  const handelCallback = async () => {
+    await handelJobDetails()
+    await handelUserName()
+    await handelActionTracker()
+    await setIsLoading(true)
   }
 
   useEffect(() => {
@@ -191,174 +193,178 @@ const LessonsLearned = () => {
   return (
     <>
       <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
-        <Row>
-          <Col md={9}>
-            <Grid container spacing={3}>
-              <Grid
-                item
-                md={8}
-                xs={12}
-              >
-                <Grid container spacing={3}>
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                    className={classes.formBox}
-                  >
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend" className={classes.labelName}>Are there any lessons learned?</FormLabel>
-                      <RadioGroup row aria-label="gender" name="gender1">
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            className={classes.labelValue}
-                            control={<Radio />}
-                            label={value}
-                            checked={form.anyLessonsLearnt == value}
-                            onChange={(e) =>
-                              setForm({ ...form, anyLessonsLearnt: e.target.value })
-                            }
+        {isLoading ?
+          <Row>
+            <Col md={9}>
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={8}
+                  xs={12}
+                >
+                  <Grid container spacing={3}>
+                    <Grid
+                      item
+                      md={12}
+                      xs={12}
+                      className={classes.formBox}
+                    >
+                      <FormControl component="fieldset">
+                        <FormLabel component="legend" className={classes.labelName}>Are there any lessons learned?</FormLabel>
+                        <RadioGroup row aria-label="gender" name="gender1">
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              className={classes.labelValue}
+                              control={<Radio />}
+                              label={value}
+                              checked={form.anyLessonsLearnt == value}
+                              onChange={(e) =>
+                                setForm({ ...form, anyLessonsLearnt: e.target.value })
+                              }
+                            />
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                    </Grid>
+                    {form.anyLessonsLearnt == "Yes" ?
+                      <>
+                        <Grid
+                          item
+                          md={12}
+                          xs={12}
+                          className={classes.formBox}
+                        >
+                          <Typography variant="h6" className={classes.fildTitle}>
+                            Work Completion and Lessons Learned Discussion
+                          </Typography>
+
+                          <List margin="dense">
+                            <ListItem>
+                              <ListItemText
+                                primary="1. What, where and when?"
+                                className={classes.fildLableTitle}
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText
+                                primary="2. How could the job have been improved?"
+                                className={classes.fildLableTitle}
+                              />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText
+                                primary="3. Lessons Learned"
+                                className={classes.fildLableTitle}
+                              />
+                            </ListItem>
+                          </List>
+                        </Grid>
+
+                        <Grid
+                          item
+                          md={12}
+                          xs={12}
+                          className={classes.formBox}
+                        >
+                          <TextField
+                            label="Lessons Learned"
+                            margin="dense"
+                            name="lessonslearned"
+                            id="lessonslearned"
+                            multiline
+                            rows={4}
+                            defaultValue={form.lessonLearntDetails || ""}
+                            fullWidth
+                            variant="outlined"
+                            className={classes.formControl}
+                            onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
                           />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                  {form.anyLessonsLearnt == "Yes" ?
-                    <>
-                      <Grid
-                        item
-                        md={12}
-                        xs={12}
-                        className={classes.formBox}
-                      >
-                        <Typography variant="h6" className={classes.fildTitle}>
-                          Work Completion and Lessons Learned Discussion
-                        </Typography>
+                        </Grid>
 
-                        <List margin="dense">
-                          <ListItem>
-                            <ListItemText
-                              primary="1. What, where and when?"
-                              className={classes.fildLableTitle}
+                        <Grid item md={6} xs={12}>
+                          <p><small>Create an action to share lesson learnt</small></p>
+                          <Typography variant="h6" gutterBottom className={classes.labelName}>
+                            <ActionTracker
+                              actionContext="jha:lessionLearned"
+                              enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
+                              setUpdatePage={setUpdatePage}
+                              updatePage={updatePage}
+                              fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                              fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                              fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
+                              createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                              handelShowData={handelActionTracker}
                             />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="2. How could the job have been improved?"
-                              className={classes.fildLableTitle}
-                            />
-                          </ListItem>
-                          <ListItem>
-                            <ListItemText
-                              primary="3. Lessons Learned"
-                              className={classes.fildLableTitle}
-                            />
-                          </ListItem>
-                        </List>
-                      </Grid>
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} className={classes.createHazardbox}>
+                          {handelActionShow(localStorage.getItem("fkJHAId"))}
+                        </Grid>
 
-                      <Grid
-                        item
-                        md={12}
-                        xs={12}
-                        className={classes.formBox}
-                      >
-                        <TextField
-                          label="Lessons Learned"
+                        <Grid
+                          item
+                          md={12}
+                          xs={12}
                           margin="dense"
-                          name="lessonslearned"
-                          id="lessonslearned"
-                          multiline
-                          rows={4}
-                          defaultValue={form.lessonLearntDetails || ""}
-                          fullWidth
-                          variant="outlined"
-                          className={classes.formControl}
-                          onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
-                        />
-                      </Grid>
+                          className={classes.formLablBox}
+                        >
+                          <Typography variant="h6" className={classes.fildTitle}>Competent Person  (CP)</Typography>
+                        </Grid>
 
-                      <Grid item md={6} xs={12}>
-                        <p><small>Create an action to share lesson learnt</small></p>
-                        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                          <ActionTracker
-                            actionContext="jha:lessionLearned"
-                            enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
-                            setUpdatePage={setUpdatePage}
-                            updatePage={updatePage}
-                            fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                            fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                            fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
-                            createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                            handelShowData={handelActionTracker}
-                          />
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} className={classes.createHazardbox}>
-                        {handelActionShow(localStorage.getItem("fkJHAId"))}
-                      </Grid>
+                        <Grid
+                          item
+                          md={12}
+                          xs={12}
+                          className={classes.formBox}
+                          margin="dense"
+                        >
+                          <Typography className={classes.labelValue}>
+                            {user.name} {user.badgeNumber}
+                          </Typography>
+                        </Grid>
+                      </>
+                      : null}
+                  </Grid>
+                </Grid>
 
-                      <Grid
-                        item
-                        md={12}
-                        xs={12}
-                        margin="dense"
-                        className={classes.formLablBox}
-                      >
-                        <Typography variant="h6" className={classes.fildTitle}>Competent Person  (CP)</Typography>
-                      </Grid>
-
-                      <Grid
-                        item
-                        md={12}
-                        xs={12}
-                        className={classes.formBox}
-                        margin="dense"
-                      >
-                        <Typography className={classes.labelValue}>
-                          {user.name} {user.badgeNumber}
-                        </Typography>
-                      </Grid>
-                    </>
-                    : null}
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <div className={classes.loadingWrapper}>
+                    <Button
+                      variant="outlined"
+                      size="medium"
+                      className={classes.custmSubmitBtn}
+                      onClick={(e) => handelSubmit()}
+                      style={{ marginLeft: "10px" }}
+                      disabled={submitLoader}
+                    >
+                      Submit
+                    </Button>
+                    {submitLoader && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
                 </Grid>
               </Grid>
-
-              <Grid
-                item
-                md={12}
-                xs={12}
-              >
-                <div className={classes.loadingWrapper}>
-                  <Button
-                    variant="outlined"
-                    size="medium"
-                    className={classes.custmSubmitBtn}
-                    onClick={(e) => handelSubmit()}
-                    style={{ marginLeft: "10px" }}
-                    disabled={submitLoader}
-                  >
-                    Submit
-                  </Button>
-                  {submitLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </div>
-              </Grid>
-            </Grid>
-          </Col>
-          <Col md={3}>
-            <FormSideBar
-              deleteForm={"hideArray"}
-              listOfItems={LESSION_LEARNED_FORM}
-              selectedItem={"Lession Learned"}
-            />
-          </Col>
-        </Row>
+            </Col>
+            <Col md={3}>
+              <FormSideBar
+                deleteForm={"hideArray"}
+                listOfItems={LESSION_LEARNED_FORM}
+                selectedItem={"Lession Learned"}
+              />
+            </Col>
+          </Row>
+          :
+          "Loading..."
+        }
       </PapperBlock>
     </>
   );

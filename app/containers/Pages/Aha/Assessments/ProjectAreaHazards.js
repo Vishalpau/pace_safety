@@ -558,13 +558,13 @@ const ProjectAreaHazards = () => {
                     Next
                   </Button>
                   {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-                  </div>
-                  
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+
               </Grid>
 
             </Grid>
@@ -575,7 +575,12 @@ const ProjectAreaHazards = () => {
                 selectedItem="Project Area Hazards"
               />
             </Grid>
-          </Grid>) : (<h1>Loading...</h1>)}
+          </Grid>) : (
+          <>
+            Loading...
+          </>
+        )
+        }
       </PapperBlock>
 
     </>
