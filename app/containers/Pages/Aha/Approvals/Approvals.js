@@ -410,8 +410,8 @@ const Approvals = () => {
                 selectedItem={"Approval"}
               />
             </Col>
-          </Row> </> : <h1>Loading...</h1>}
-          <Loader />
+          </Row> </> : <Loader />}
+          
       </PapperBlock>
     </>
   );
