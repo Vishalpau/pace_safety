@@ -391,7 +391,10 @@ const IncidentDetails = (props) => {
       const res = await api.get("api/v1/lists/2/value")
         .catch(error => setMessage(error.message))
       const result = res.data.data.results;
-      await setContractorValue(result);
+      let data = [];
+      data = result
+
+      await setContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
     } catch (error) {
       setIsNext(true);
 

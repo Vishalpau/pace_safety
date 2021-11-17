@@ -223,24 +223,45 @@ function PersonalDashboard(props) {
 
         await setSubscriptions(data)
 
-
-        const apps = data.map(app => app.appId)
-
-        let app = data.filter(app => app.appCode === "safety")
-
-        let module = app[0].modules.map(item => {
-          if (item.subscriptionStatus == "active") {
-
-            return item.moduleCode
+        const modules = data.map(subscription => subscription.modules)
+        var modulesState = []
+        var temp=[]
+        modules.map(module =>
+          // console.log({code_in:module})
+          {
+            console.log(module)
+            modulesState = [...modulesState]
+            temp=[...temp]
+            if(module.length>0){
+            module.map(mod=>
+              
+              // console.log({code_in:mod})
+              {
+                modulesState.push(mod)
+                // this.setState({modules: module})
+                if(mod.subscriptionStatus=='active'){
+    console.log(mod.moduleWebName)
+                temp.push(mod.moduleCode)
+                // this.setState({ codes: temp })
+                return temp
+              }}
+              )
+    
+              // this.setState({ codes: codes })
+    
           }
         })
-
-        setCode(module)
+        console.log({modulestate: modulesState})
+        console.log({modules: temp})
+        setCode(temp)
         getModules(apps)
       } catch (error) { }
     }
 
   }
+  
+
+ 
 
   const getModules = async (apps) => {
     let data = await api
@@ -533,9 +554,7 @@ function PersonalDashboard(props) {
               </div>
             </div>
 
-            {/* <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div> */}
+            
 
             <div className={!(codes.includes('environments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box">
