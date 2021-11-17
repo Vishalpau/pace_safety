@@ -490,12 +490,12 @@ function Aha(props) {
                   </CardContent>
                   <Divider />
                   <CardActions className={Incidents.cardActions}>
-                    <Grid
+                   <Grid
                       container
                       spacing={2}
                       // justify="flex-end"
                       alignItems="center"
-                    >
+                    >{ false && <>
                       <Grid item xs={6} md={3}>
                         <Typography display="inline" className={Fonts.listingLabelName}>
                           <MessageIcon fontSize="small" />
@@ -520,7 +520,7 @@ function Aha(props) {
                         <Typography variant="body2" display="inline">
                           <ILink href="#">3</ILink>
                         </Typography>
-                      </Grid>
+                      </Grid> </>}
                       <Grid item xs={6} md={3}>
                         <Typography
                           variant="body2"
@@ -536,7 +536,7 @@ function Aha(props) {
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={6} md={3}>
+                      {false && <Grid item xs={6} md={3}>
                         <Button
                           disabled
                           size="small"
@@ -556,7 +556,7 @@ function Aha(props) {
                         >
                           Share
                         </Button>
-                      </Grid>
+                      </Grid>}
                     </Grid>
                   </CardActions>
                 </Card>))}</>)

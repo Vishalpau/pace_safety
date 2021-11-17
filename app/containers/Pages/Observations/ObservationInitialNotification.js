@@ -220,6 +220,7 @@ const ObservationInitialNotification = (props) => {
   const [attachment, setAttachment] = useState();
   const [departmentName, setDepartmentName] = useState([]);
   const [shiftType, setShiftType] = useState([]);
+  const [classification, setClassification] = useState([]);
   const [superVisorId, setSuperVisorId] = useState("");
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [notifyToList, setNotifyToList] = useState([]);
@@ -683,7 +684,6 @@ const ObservationInitialNotification = (props) => {
     const result = attachment.data.data.results[0];
     if (result !== undefined) {
       let ar = result.attachment;
-      console.log(ar,"QQQQQQ");
       await setAttachment(ar);
     }
   };
@@ -732,8 +732,10 @@ const ObservationInitialNotification = (props) => {
 
   const PickList = async () => {
     setShiftType(await PickListData(47));
+    setClassification(await PickListData(82));
     await setIsLoading(true);
   };
+  
   useEffect(() => {
     fetchTags();
     fetchDepartment();
@@ -1369,12 +1371,12 @@ const ObservationInitialNotification = (props) => {
                         }} className={classNames(classes.formControl, classes.boldHelperText)}
 
                       >
-                        {radioClassification.map((value) => (
+                        {classification.map((value) => (
                           <FormControlLabel
-                            value={value}
+                            value={value.value}
                             className="selectLabel"
                             control={<Radio />}
-                            label={value}
+                            label={value.value}
                           />
                         ))}
                       </RadioGroup>

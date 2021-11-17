@@ -1200,7 +1200,7 @@ function AhaSummary() {
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.username ? ahaData.username : "-"}
+                                {ahaData.wrpApprovalUser ? ahaData.wrpApprovalUser : "-"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1222,8 +1222,49 @@ function AhaSummary() {
                             </Grid>
 
                           </Grid>
+                        </Grid><Grid item xs={12} style={{ padding: "0px 12px" }}>
+                          <Typography className={classes.heading}>
+                            Senior Authorized Person
+                          </Typography>
                         </Grid>
-                        <Grid item md={12}>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved by
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {ahaData.sapApprovalUser ? ahaData.sapApprovalUser : "-"}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved on
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
+                                  "Do MMMM YYYY"
+                                ) : "-"}
+                              </Typography>
+                            </Grid>
+
+                          </Grid>
+                        </Grid>
+                        <Grid item md={12}>{approvalActionData.length > 0 &&
                           <Grid item md={6}>
                             <Typography className={Fonts.heading}>
                               Actions
@@ -1242,11 +1283,7 @@ function AhaSummary() {
                                 </>
                               ))}
                             </Typography>
-                          </Grid>
-
-
-
-
+                          </Grid>}
                         </Grid>
                       </>
                     );
