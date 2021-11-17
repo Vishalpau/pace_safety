@@ -12,6 +12,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 // redux
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
@@ -315,7 +317,7 @@ const CorrectiveAction = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Submit
+                  Submit{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

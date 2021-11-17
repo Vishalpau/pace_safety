@@ -150,10 +150,11 @@ const IncidentDetailsSummary = () => {
       let projectId = JSON.parse(localStorage.getItem("projectName"))
         .projectName.projectId;
 
-      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,)
+      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom`)
         .then((res) => {
           if (res.status === 200) {
             const result = res.data.data.results;
+            console.log(result)
             data = []
             const newData = result.map(item => {
 

@@ -11,7 +11,6 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -23,7 +22,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
 import api from '../../../../utils/axios';
-import { handelActionData, handelCommonObject, handelActionDataAssessment } from '../../../../utils/CheckerValue';
+import { handelActionDataAssessment, handelCommonObject } from '../../../../utils/CheckerValue';
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from '../../../Forms/ActionTracker';
 import FormSideBar from '../../../Forms/FormSideBar';
@@ -249,8 +248,9 @@ const Assessment = () => {
     const allAction = await handelActionDataAssessment(jhaId, apiData, "all", "jha:hazard");
     setActionData(allAction);
   };
+
   const handelActionShow = (id) => (
-    <Grid>
+    <>
       {actionData.map((val) => (
         <>
           {val.id === id
@@ -273,7 +273,7 @@ const Assessment = () => {
             : null}
         </>
       ))}
-    </Grid>
+    </>
   );
 
   const handelJobDetails = async () => {
@@ -468,23 +468,24 @@ const Assessment = () => {
                               />
                             </Grid>
 
-                            <Grid item md={2} sm={2} xs={2}>
-                              <Grid item xs={12} className={classes.createHazardbox}>
-                                <ActionTracker
-                                  actionContext="jha:hazard"
-                                  enitityReferenceId={`${localStorage.getItem('fkJHAId')}:${value.id}`}
-                                  setUpdatePage={setUpdatePage}
-                                  fkCompanyId={projectData.companyId}
-                                  fkProjectId={projectData.projectId}
-                                  fkProjectStructureIds={projectData.projectStructId}
-                                  createdBy={projectData.createdBy}
-                                  updatePage={updatePage}
-                                  handelShowData={handelActionTracker}
-                                />
-                              </Grid>
-                              <Grid item xs={12} className={classes.createHazardbox}>
+                            <Grid item md={2} sm={5} xs={5}>
+                              <ActionTracker
+                                actionContext="jha:hazard"
+                                enitityReferenceId={`${localStorage.getItem('fkJHAId')}:${value.id}`}
+                                setUpdatePage={setUpdatePage}
+                                fkCompanyId={projectData.companyId}
+                                fkProjectId={projectData.projectId}
+                                fkProjectStructureIds={projectData.projectStructId}
+                                createdBy={projectData.createdBy}
+                                updatePage={updatePage}
+                                handelShowData={handelActionTracker}
+                              />
+                            </Grid>
+
+                            <Grid container item sm={12}>
+                              <>
                                 {handelActionShow(value.id)}
-                              </Grid>
+                              </>
                             </Grid>
 
                           </Grid>

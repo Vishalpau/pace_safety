@@ -24,9 +24,12 @@ import {
   HAZARDIOUS_CONDITION_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM
 } from "../../../utils/constants";
 import ActionShow from "../ActionShow";
+//import CircularProgress from '@material-ui/core/CircularProgress';
+
 import ActionTracker from "../ActionTracker";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 
@@ -131,6 +134,7 @@ const BasicCauseAndAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
+    
       history.push(
         `${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`
       );
@@ -283,6 +287,7 @@ const BasicCauseAndAction = () => {
                 onClick={(e) => handelNavigate("next")}
               >
                 Next
+                {/* {buttonLoading && <CircularProgress size={20} />} */}
               </Button>
             </Grid>
           </Grid>

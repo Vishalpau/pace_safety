@@ -15,6 +15,8 @@ import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
 import { checkValue, handelApiValue } from "../../../utils/CheckerValue";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import {
   ASSESSMENTS,
   BASIC_CAUSE_SUB_TYPES, COMPILANCE,
@@ -476,7 +478,7 @@ const PaceManagementControl = () => {
                   disabled={nextButton == true}
                   onClick={(e) => handelNext(e)}
                 >
-                  Next
+                  Next{nextButton && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

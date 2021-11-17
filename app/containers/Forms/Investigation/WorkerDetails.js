@@ -38,6 +38,7 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -748,7 +749,7 @@ const WorkerDetails = () => {
                     </Select>
                   </FormControl>
                   {error && error.noOfDaysIntoShift && (
-                    <FormHelperText>{error.noOfDaysIntoShift}</FormHelperText>
+                    <FormHelperText style={{ color: "red" }}>{error.noOfDaysIntoShift}</FormHelperText>
                   )}
                 </Grid>
 
@@ -1537,7 +1538,7 @@ const WorkerDetails = () => {
                     onClick={() => handleNext()}
                     disabled={buttonLoading}
                   >
-                    Next
+                    Next{buttonLoading && <CircularProgress size={20} />}
                   </Button>
                 </Grid>
               </Grid>

@@ -19,7 +19,7 @@ import {
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -193,7 +193,7 @@ const InvestigationOverview = () => {
     regulationValues.current = await PickListData(44);
     reputaionValues.current = await PickListData(45);
     financialValues.current = await PickListData(46);
-    highestImpactReceptor.current = await PickListData(77);
+    highestImpactReceptor.current = await PickListData(72);
 
     await setIsLoading(true);
   };
@@ -626,7 +626,7 @@ const InvestigationOverview = () => {
                   onClick={() => handleNext()}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
