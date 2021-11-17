@@ -1,4 +1,4 @@
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, TextField, Typography, FormHelperText } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -126,6 +126,7 @@ const LessonsLearned = () => {
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState({})
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -169,13 +170,17 @@ const LessonsLearned = () => {
   };
 
   const handelSubmit = async () => {
-    await setSubmitLoader(true)
-    delete form["jhaAssessmentAttachment"]
-    if (form["anyLessonsLearnt"] == null) {
-      form["anyLessonsLearnt"] = ""
+    if (form.anyLessonsLearnt == "Yes") {
+      await setSubmitLoader(true)
+      delete form["jhaAssessmentAttachment"]
+      if (form["anyLessonsLearnt"] == null) {
+        form["anyLessonsLearnt"] = ""
+      }
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      history.push(SUMMARY_FORM["Summary"])
+    } else {
+      setError({ LessonDecide: "Please select any one." })
     }
-    const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-    history.push(SUMMARY_FORM["Summary"])
   }
 
   const classes = useStyles();
@@ -210,7 +215,14 @@ const LessonsLearned = () => {
                       className={classes.formBox}
                     >
                       <FormControl component="fieldset">
-                        <FormLabel component="legend" className={classes.labelName}>Are there any lessons learned?</FormLabel>
+                        <FormLabel
+                          component="legend"
+                          className={classes.labelName}
+                          error={error.LessonDecide}
+                          required
+                        >
+                          Are there any lessons learned?
+                        </FormLabel>
                         <RadioGroup row aria-label="gender" name="gender1">
                           {radioDecide.map((value) => (
                             <FormControlLabel
@@ -226,6 +238,9 @@ const LessonsLearned = () => {
                           ))}
                         </RadioGroup>
                       </FormControl>
+                      {error && error.LessonDecide && (
+                        <FormHelperText style={{ color: "red" }}>{error.LessonDecide}</FormHelperText>
+                      )}
                     </Grid>
                     {form.anyLessonsLearnt == "Yes" ?
                       <>
