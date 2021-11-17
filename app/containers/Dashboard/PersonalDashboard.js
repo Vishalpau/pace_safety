@@ -15,7 +15,6 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -29,7 +28,6 @@ import Avatar from "@material-ui/core/Avatar";
 import ImageIcon from "@material-ui/icons/Image";
 
 import ProjectImg from "dan-images/projectImages/projectimg.jpg";
-import ProjectImgOne from "dan-images/projectImages/projectimgone.jpg";
 import cTower from "dan-images/projectImages/cTower.png";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CardActions from "@material-ui/core/CardActions";
@@ -47,10 +45,8 @@ import api from "../../utils/axios";
 import {
   ACCOUNT_API_URL,
   HEADER_AUTH,
-  LOCAL_LOGIN_URL,
   API_VERSION,
-  SELF_API,
-  LOGOUT_URL,
+  SELF_API
 } from "../../utils/constants";
 
 // Styles
@@ -63,7 +59,7 @@ import { async } from "fast-glob";
 import { useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { projectName, company } from "../../redux/actions/initialDetails";
-import Hexagon from "./Hexagon";
+// import Hexagon from "./Hexagon";
 import './style.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -227,20 +223,16 @@ function PersonalDashboard(props) {
         var modulesState = []
         var temp=[]
         modules.map(module =>
-          // console.log({code_in:module})
           {
-            console.log(module)
             modulesState = [...modulesState]
             temp=[...temp]
             if(module.length>0){
             module.map(mod=>
               
-              // console.log({code_in:mod})
               {
                 modulesState.push(mod)
                 // this.setState({modules: module})
                 if(mod.subscriptionStatus=='active'){
-    console.log(mod.moduleWebName)
                 temp.push(mod.moduleCode)
                 // this.setState({ codes: temp })
                 return temp
@@ -251,8 +243,6 @@ function PersonalDashboard(props) {
     
           }
         })
-        console.log({modulestate: modulesState})
-        console.log({modules: temp})
         setCode(temp)
         getModules(apps)
       } catch (error) { }
@@ -260,9 +250,6 @@ function PersonalDashboard(props) {
 
   }
   
-
- 
-
   const getModules = async (apps) => {
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
@@ -273,53 +260,42 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-    let data1 = apps.filter(item => item.appId === 1)
+    // let data1 = apps.filter(item => item.appId === 1)
 
-    const codes = data.map(module => module.subscriptionStatus)
+    const codes = data.map(module => module.moduleCode)
 
-    // setCode(codes)
-
-
-
+    await setCode(codes)
   }
 
-  const handleClick = (appCode) => {
-    let fkAppId = ""
+  const handleClick = async(appCode) => {
 
-    let fkApp = modules.map(module => {
-      if (module.moduleCode === appCode) {
-        fkAppId = module.fkAppId
-        return module.fkAppId && module.fkAppId;
-      }
+    const companyId =  JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const projectId =  JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+   
+    let data = await api
+    .get(ACCOUNT_API_URL + API_VERSION + 'applications/modules/'+ appCode + '/' +companyId + '/')
+    .then(function (res) {
+      
+      return res.data.data.results;
     })
-
-    let targetPage = modules.map(module => {
-      if (module.moduleCode == appCode) {
-        return module.targetPage;
-      }
-    }).join(' ')
-    // console.log({targetPage:apps.appId})
-
-    let clientId = ''
-    let hostings = subscriptions.map(apps => {
-
-      if (fkAppId === apps.appId) {
-        clientId = apps.hostings[0].clientId
-        return apps.hostings;
-      }
-    })[0];
-
-
-    if (clientId) {
-
-      window.location.href = ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId
-
-    }
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+    if (data.hostings != undefined) {
+          const targetPage = (data.modules ? data.modules.targetPage : "")
+          // alert(localStorage.getItem('companyId'))
+          const clientId = data.hostings.clientId
+          
+            window.open(ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + companyId + '&projectId=' + projectId,
+            ) // <- This is what makes it open in a new window.
+          
+        }
 
   }
 
   const handleDisableModule = (appcode) => {
-    alert(appcode)
+    
     let moduleDisable = modules.map(module => {
       if (module.moduleCode == appCode) {
         return false;
@@ -437,7 +413,7 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
-            console.log({ userDetails: response.data.data.results.data.companies })
+          
             // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
@@ -608,21 +584,6 @@ function PersonalDashboard(props) {
                 </a>
               </div>
             </div>
-
-            {/* <div className="hexagon hide_responsiv">
-            <div className="hexagontent hexagon_content_box" />
-          </div> */}
-
-            {/* <div className={!(codes.includes('environments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_environment_development"
-                  onClick={() => handleClick('environments')}
-                >
-                  <p>Environment Management</p>
-                </a>
-              </div>
-            </div> */}
-
           </div>
 
 
@@ -738,7 +699,7 @@ function PersonalDashboard(props) {
                         xs={12}
                         className={classesm.cardContentBox}
                         key={key}
-                      >{console.log(selectValues)}
+                      >
                         <Card
 
 

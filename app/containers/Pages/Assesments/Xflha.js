@@ -55,6 +55,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import FormControl from '@material-ui/core/FormControl';
+import Loader from "../Loader";
 
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -1511,6 +1512,7 @@ Create XFLHA
 )}
 
 </Box>
+<Loader />
 </PapperBlock>
 
 
