@@ -131,6 +131,21 @@ export const adminUser_Prod = "Safety Admin"
 // comment constant
 export const COMMENT = "Comments"
 
+// user details
+export const projectId =
+  JSON.parse(localStorage.getItem("projectName")) !== null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null;
+
+export const CompanyId =
+  JSON.parse(localStorage.getItem("company")) !== null
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
+
+export const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).id
+  : null;
+
 export const INITIAL_NOTIFICATION_FORM = {
   'Incident details': `/incident/${localStorage.getItem('fkincidentId')}/modify/`,
   'People affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/peoples-afftected/`,

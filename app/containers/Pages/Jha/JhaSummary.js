@@ -180,7 +180,7 @@ function JhaSummary() {
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
-    let approvalDecider = result.wrpApprovalUser !== null
+    let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
     await setFormStatus({
@@ -290,8 +290,7 @@ function JhaSummary() {
 
   }
 
-  const [performanceValues, setPerformanceValues] = useState({})
-  const [documentValues, setDocumentValues] = useState([])
+  const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const assessmentDataValues = async () => {
     const project = JSON.parse(localStorage.getItem("projectName"))
@@ -305,22 +304,14 @@ function JhaSummary() {
     const apiCondition = documentCondition.data.data.results[0].checklistValues;
 
     apiDataPerformance.map((value) => {
-      const checkList = [];
       value.checkListValues.map((checkValue) => {
-        const checkObj = {};
-        checkObj.inputLabel = checkValue.inputLabel;
-        checkObj.inputValue = checkValue.inputValue;
-        checkObj.checkListId = checkValue.id;
-        checkList.push(checkObj);
-        return checkObj;
+        tempPerformance[checkValue.inputValue] = checkValue.inputLabel
       });
-      tempPerformance[value.checkListGroupName] = checkList;
-      return tempPerformance;
     });
-    await setPerformanceValues(tempPerformance);
-    await setDocumentValues(apiCondition);
-    console.log(tempPerformance)
-    console.log(apiCondition)
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })
+    setCheckListAssessment(tempPerformance)
   }
 
   const handelWorkArea = async (assessment) => {
@@ -802,7 +793,7 @@ function JhaSummary() {
                                 <AccordionDetails>
                                   <Grid container item xs={12} spacing={3}>
                                     <>
-                                      <Grid item xs={12} md={6}>
+                                      <Grid item xs={12} md={12}>
                                         {false &&
                                           <Typography
                                             variant="h6"
@@ -812,15 +803,15 @@ function JhaSummary() {
                                             Hazards Group
                                           </Typography>
                                         }
-                                        {hazard !== undefined && hazard.map((value) => (
-                                          <div>
-
-                                            <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "10px" }}>
-                                              {checkValue(value.hazard)}
-                                            </Typography>
-                                          </div>
-                                        ))}
-
+                                        {
+                                          hazard !== undefined && hazard.map((value, index) => (
+                                            <div>
+                                              <Typography variant="body" style={{ marginLeft: "10px" }}>
+                                                {checkValue(value.hazard)}
+                                              </Typography>
+                                            </div>
+                                          ))
+                                        }
                                       </Grid>
                                     </>
                                   </Grid>
@@ -933,7 +924,7 @@ function JhaSummary() {
 
                                           {checkValue(assessment.workStopCondition).split(",").map((value) => (
                                             <p>
-                                              {value.replace("-", " ")}
+                                              {checkListAssessment[value]}
                                             </p>
                                           ))}
                                         </Grid>
@@ -954,7 +945,7 @@ function JhaSummary() {
                                           <Typography variant="body" className={Fonts.labelValue}>
                                             {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
                                               <p>
-                                                {value.replace("-", " ")}
+                                                {checkListAssessment[value]}
                                               </p>
                                             ))}
                                           </Typography>
@@ -1045,7 +1036,7 @@ function JhaSummary() {
                           <>
                             <Grid item xs={12} style={{ padding: '0px 12px' }}>
                               <Typography className={classes.heading}>
-                                Work Responsible Person
+                                Competent Person
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -1071,8 +1062,51 @@ function JhaSummary() {
                                     Approved on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
+                                    {assessment.wrpApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
+                                      </>
+                                      : "-"
+                                    }
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
 
+                            <Grid item xs={12} style={{ padding: '0px 12px' }}>
+                              <Typography className={classes.heading}>
+                                Senior authorized Person
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved by
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.sapApprovalUser)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved on
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {assessment.sapApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("DD-MM-YY")}
+                                      </>
+                                      : "-"
+                                    }
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -1117,10 +1151,10 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Work Responsible Person
+                                    Competent person
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {user.name} {user.badgeNumber}
+                                    {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
@@ -1129,7 +1163,7 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Lessons learnt
+                                    Lessons learned
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {checkValue(assessment.lessonLearntDetails)}
@@ -1181,10 +1215,10 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Closed Data
+                                    Closed on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.closedDate)).format("DD-MM-YY")}
+                                    {moment(checkValue(assessment.closedDate)).format("DD-Mo-YYYY")}
 
                                   </Typography>
                                 </Grid>

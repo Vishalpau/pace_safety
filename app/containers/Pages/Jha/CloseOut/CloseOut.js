@@ -102,7 +102,6 @@ const CloseOut = () => {
         const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
-        console.log(result)
         if (result.closedDate == null) {
             result["closedDate"] = new Date()
         }
@@ -126,7 +125,7 @@ const CloseOut = () => {
         axios(config)
             .then(function (response) {
                 if (response.status === 200) {
-                    const result = response.data.data.results[0].users
+                    const result = response.data.data.results.users
                     setUserList(result)
                 }
             })
