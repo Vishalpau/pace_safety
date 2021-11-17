@@ -38,6 +38,7 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -1537,7 +1538,7 @@ const WorkerDetails = () => {
                     onClick={() => handleNext()}
                     disabled={buttonLoading}
                   >
-                    Next
+                    Next{buttonLoading && <CircularProgress size={20} />}
                   </Button>
                 </Grid>
               </Grid>

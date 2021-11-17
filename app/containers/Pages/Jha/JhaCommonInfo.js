@@ -44,7 +44,6 @@ const JhaCommonInfo = () => {
         const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
-        console.log(result)
         setJhaListdata(result)
     };
 

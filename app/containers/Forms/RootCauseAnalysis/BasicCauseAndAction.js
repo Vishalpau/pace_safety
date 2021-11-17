@@ -283,10 +283,12 @@ const BasicCauseAndAction = () => {
               <Button
                 variant="contained"
                 color="primary"
+                // disable={buttonLoading}
                 className={classes.button}
                 onClick={(e) => handelNavigate("next")}
               >
                 Next
+                {/* {buttonLoading && <CircularProgress size={20} />} */}
               </Button>
             </Grid>
           </Grid>

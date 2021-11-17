@@ -57,6 +57,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import ViewHazard from './ViewHazard';
 import api from '../../../utils/axios';
+//import Loader from "../Loader";
+
 
 function TabContainer(props) {
   const { children } = props;
@@ -524,6 +526,7 @@ class SimpleTabs extends React.Component {
             </Paper>
           </Grid>
         </Grid>
+        
       </PapperBlock>
     );
   }
