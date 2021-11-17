@@ -609,6 +609,7 @@ function Application(props) {
         {/* Xflha Routes  */}
         <Route path="/app/pages/summary" component={Summary} />
         <Route path="/app/pages/sample" component={SamplePage} />
+        <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
         <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
         <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />

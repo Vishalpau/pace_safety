@@ -129,7 +129,7 @@ const EqiptmentAffected = () => {
   // hit next button for next page
   const handleNext = async () => {
     // close out 
-
+      setIsNext(false);
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     //  cheack condition equipment is already filled or new creation
     if (detailsOfEquipmentAffect === "Yes") {
@@ -275,6 +275,8 @@ const EqiptmentAffected = () => {
     const res = await api.get("api/v1/lists/15/value")
       .then((res) => {
         const result = res.data.data.results;
+        result.push({inputLabel:"Other",inputValue:"Other"});
+        result.push({inputLabel:"NA",inputValue:"NA"});
         setEquipmentTypeValue(result);
       })
       .catch(() => history.push("/app/pages/error"))

@@ -348,10 +348,14 @@ const PeoplesAffected = () => {
     try {
       await api.get("api/v1/lists/71/value")
         .then((res) => {
-          const result = res.data.data.results;
+          let data=[];
+          data = res.data.data.results;
+          let result = [...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]
+          console.log(result)
           setPersonTypeValue(result);
         }).catch(error => {
-          history.push("/app/pages/error")
+          console.log(error)
+          // history.push("/app/pages/error")
         })
 
     } catch (error) {
@@ -364,7 +368,10 @@ const PeoplesAffected = () => {
     try {
       const res = await api.get("api/v1/lists/10/value")
         .then((res) => {
-          const result = res.data.data.results;
+          let data=[];
+          data = res.data.data.results;
+          const result = [...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]
+          
           setDepartmentValue(result);
         }).catch(error => {
           history.push("/app/pages/error")

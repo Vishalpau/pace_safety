@@ -280,6 +280,7 @@ const PropertyAffected = () => {
       .then((res) => {
         const result = res.data.data.results;
         result.push({ inputValue: "Other", inputLabel: "Other" });
+        result.push({ inputValue: "NA", inputLabel: "NA" });
         setPropertyTypeValue(result);
       })
       .catch((err) => history.push("/app/pages/error"))

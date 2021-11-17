@@ -32,6 +32,7 @@ import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from 'moment';
 import MUIDataTable from 'mui-datatables';
+import Loader from "../Loader";
 import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import { useHistory } from 'react-router';
@@ -596,6 +597,7 @@ function Aha(props) {
           </div>
         </> : <h1>Loading...</h1>}
       </Box>
+      <Loader />
     </PapperBlock>
   );
 }

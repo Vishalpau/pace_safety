@@ -5,6 +5,7 @@ import FormControl from "@material-ui/core/FormControl";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
+import Loader from "../Loader";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -148,6 +149,7 @@ const NotificationSent = () => {
                   )}
                 </FormControl>
               </Grid>
+              <Loader />
               </>
     );
 };

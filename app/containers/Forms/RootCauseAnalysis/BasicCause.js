@@ -24,6 +24,8 @@ import {
 } from "../../../utils/constants";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -562,7 +564,7 @@ const BasicCause = () => {
                   className={classes.button}
                   onClick={(e) => handelNext(e)}
                 >
-                  Next
+                  Next{nextButton && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
