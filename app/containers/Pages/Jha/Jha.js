@@ -516,7 +516,7 @@ function Jha(props) {
               </Card>))}</>)
           : (
             <MUIDataTable
-              title="Incidents List"
+              title="JSA List"
               data={data}
               columns={columns}
               options={options}

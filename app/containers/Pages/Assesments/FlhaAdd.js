@@ -1590,7 +1590,8 @@ const FlhaDetails = (props) => {
                           format="dd/MM/yyyy"
                           value={selectedDate}
                           onChange={(e) => {
-                            handleJobFormChange(e.toISOString().split('T')[0], 'dateTimeFlha')}}
+                            handleJobFormChange(e.toISOString().split('T')[0], 'dateTimeFlha')
+                          }}
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
