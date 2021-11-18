@@ -57,6 +57,7 @@ import { Comments } from "../../pageListAsync";
 import ActionShow from '../../Forms/ActionShow';
 import { handelActionData , handelActionWithEntity } from "../../../utils/CheckerValue"
 import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
+import Loader from "../../Forms/Loader";
 
 // import AhaSummary from "../../../containers/Activity/Activity" ;
 
@@ -490,9 +491,7 @@ function AhaSummary() {
    
     apiCondition.map((value) => {
       tempPerformance[value.inputValue] = value.inputLabel
-    })
-    console.log(tempPerformance,"?????")
-    
+    })    
     setCheckListAssessment(tempPerformance)
   }
 
@@ -1534,7 +1533,7 @@ function AhaSummary() {
       </Box>
     </> :
       <>
-        Loading...
+        <Loader/>
       </>
       }
     </PapperBlock>

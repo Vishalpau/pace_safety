@@ -32,6 +32,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
+import Loader from "../../../Forms/Loader";
 
 import axios from "axios";
 import api from "../../../../utils/axios";
@@ -334,9 +335,6 @@ const ProjectDetails = () => {
         form['typeOfPermit']  = ""
         form['permitNumber'] = ""
       }
-      // console.log(form.assessmentDate)
-      // form["assessmentDate"] = form['assessmentDate']
-      // console.log(form.assessmentDate)
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
@@ -842,7 +840,7 @@ const ProjectDetails = () => {
             </Grid>
           </Grid> :
           <>
-            Loading...
+            <Loader/>
           </>
         }
       </PapperBlock>

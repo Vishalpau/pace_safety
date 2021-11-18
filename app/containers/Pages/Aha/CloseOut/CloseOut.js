@@ -38,6 +38,8 @@ import {
 import api from "../../../../utils/axios";
 import Type from "../../../../styles/components/Fonts.scss";
 import "../../../../styles/custom.css";
+import Loader from "../../../Forms/Loader";
+
 // import { handelJhaId, checkValue } from "../Utils/checkValue"
 
 // import { CLOSE_OUT_FORM } from "../Utils/constants"
@@ -355,7 +357,7 @@ const CloseOut = () => {
 
                 </Grid>
             ) : (
-                <>Loading...</>
+                <><Loader/></>
             )}
         </PapperBlock>
     );

@@ -32,6 +32,7 @@ import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
 import ActionTracker from "../../../Forms/ActionTracker";
 import { CircularProgress } from '@material-ui/core';
+import Loader from "../../../Forms/Loader";
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
@@ -868,7 +869,7 @@ const Assessment = () => {
             </Grid>
           </Grid>) : (
           <>
-            Loading...
+            <Loader/>
           </>
         )
         }
