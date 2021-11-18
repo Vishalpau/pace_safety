@@ -721,7 +721,6 @@ const FlhaDetails = (props) => {
     formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
     formDataPost.append('attachment', jobForm.attachment);
     formDataPost.append('flhaStage', jobForm.flhaStage);
-
     // console.log({ jobformUpdated: data });
 
     // const formData = new FormData();
