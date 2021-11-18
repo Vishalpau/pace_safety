@@ -701,31 +701,43 @@ const FlhaDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
-    const data = { ...jobForm };
-    console.log({ jobform: data });
+    const formDataPost = new FormData();
+    // const data = { ...jobForm };
+    // console.log({ jobform: data });
+    // data.fkCompanyId = fkCompanyId;
+    // data.fkProjectId = fkProjectId;
+    // data.fkProjectStructureIds = fkProjectStructureId;
+    // data.createdBy = fkUserId;
+    // data.attachment = (acceptedFiles) ? acceptedFiles[0] : null;
+    // data.attachment = jobForm.attachment
+    formDataPost.append('fkCompanyId', fkCompanyId);
+    formDataPost.append('fkProjectId', fkProjectId);
+    formDataPost.append('jobTitle', jobForm.jobTitle);
+    formDataPost.append('jobDetails', jobForm.jobDetails);
+    formDataPost.append('fkProjectStructureIds', fkProjectStructureId);
+    formDataPost.append('createdBy', fkUserId);
+    formDataPost.append('location', jobForm.location);
+    formDataPost.append('permitToWork', jobForm.permitToWork);
+    formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
+    formDataPost.append('attachment', jobForm.attachment);
+    formDataPost.append('flhaStage', jobForm.flhaStage);
 
-    data.fkCompanyId = fkCompanyId;
-    data.fkProjectId = fkProjectId;
-    data.fkProjectStructureIds = fkProjectStructureId;
-    data.createdBy = fkUserId;
-    data.attachment = (acceptedFiles) ? acceptedFiles[0] : null;
+    // console.log({ jobformUpdated: data });
 
-    console.log({ jobformUpdated: data });
+    // const formData = new FormData();
+    // // formData.append(data)
+    // console.log({ formData });
 
-    const formData = new FormData();
-    // formData.append(data)
-    console.log({ formData });
-
-    for (const key in data) {
-      formData.append(key, data[key]);
-    }
-    console.log({ formData1111: formData });
+    // for (const key in data) {
+    //   formData.append(key, data[key]);
+    // }
+    // console.log({ formData1111: formData });
     // return;
     // return;
     await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
-      data
+      formDataPost, { headers: { 'content-type': 'multipart/form-data' }}
     );
 
     console.log(res.data.data.results.id);
@@ -850,7 +862,8 @@ const FlhaDetails = (props) => {
     setContractors(res.data.data.results);
   };
   const getJobTitles = async (id) => {
-    const res = await api.get('api/v1/configflhas/department/' + id + '/jobtitles/');
+    const res = await api.get(`api/v1/configflhas/department/${id}/jobtitles/?companyId=${fkCompanyId}&projectId=${fkProjectId}`
+    );
     console.log({ jobtitles: res.data.data.results });
     await setjobTitles(res.data.data.results);
   };
@@ -956,7 +969,9 @@ const FlhaDetails = (props) => {
   console.log(taskForm, "!@#")
   const handleFileUpload = (e) => {
     // alert('changing file');
-    console.log(e.target.file);
+    console.log(e.target.files[0],'filssss');
+    setJobForm({ ...jobForm, attachment: e.target.files[0] })
+    // setFileName(e.target.files[0].name)
   };
 
   return (
@@ -1650,7 +1665,7 @@ const FlhaDetails = (props) => {
                 <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                   <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
                   <Typography className="viewLabelValue">
-                    <div {...getRootProps({ className: 'dropzone' })} onDrop={(e) => handleFileUpload(e)}>
+                    {/* <div {...getRootProps({ className: 'dropzone' })} onDrop={(e) => handleFileUpload(e)}>
                       <input onDrop={(e) => handleFileUpload(e)} {...getInputProps()} />
                       <span align="center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
@@ -1671,9 +1686,16 @@ const FlhaDetails = (props) => {
                       <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
                     </div>
                     <aside>
-                      {/* <h4>Files</h4> */}
+                      <h4>Files</h4>
                       <ul>{files}</ul>
-                    </aside>
+                    </aside> */}
+                      <input
+                      type="file"
+                      id="attachment"
+                      accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                      onChange={(e) => {
+                        handleFileUpload(e);
+                      }}/>
                   </Typography>
                 </Grid>
               </Grid>

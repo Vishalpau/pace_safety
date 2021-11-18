@@ -18,6 +18,7 @@ import {
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { CircularProgress } from "@material-ui/core";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -163,6 +164,19 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
     },
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
   },
   spacerRight: {
     marginRight: '.75rem',
@@ -387,6 +401,7 @@ const FlhaEdit = (props) => {
   };
   const [value, setValue] = React.useState('female');
   const [hazardtype, setHazardType] = React.useState([])
+  const [loading, setLoading] = React.useState(false);
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -526,7 +541,7 @@ const FlhaEdit = (props) => {
       // alert("serious")
       temp[taskIndex].hazards[key].riskRating = '60';
       temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
-    }  else if (riskRating > 17 && riskRating <= 24) {
+    } else if (riskRating > 17 && riskRating <= 24) {
       // alert("serious")
       temp[taskIndex].hazards[key].riskRating = '80';
       temp[taskIndex].hazards[key].riskRatingColour = '#800000';
@@ -634,6 +649,7 @@ const FlhaEdit = (props) => {
       console.log({ updatedData: data });
     });
     console.log({ data });
+    await setLoading(true)
     const res = await api.post(
       `/api/v1/flhas/${flha}/criticaltasks/`,
       taskForm
@@ -1007,9 +1023,17 @@ const FlhaEdit = (props) => {
                   <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
                     Save
                   </Button>
-                  <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={handleJobFormSubmit}>
-                    Submit
-                  </Button>
+                  <div className={classes.loadingWrapper}>
+                    <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={handleJobFormSubmit} disabled={loading}>
+                      Submit
+                    </Button>
+                    {loading && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
                   <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => { history.push("/app/pages/assesments/xflha"); }}>
                     Cancel
                   </Button>
