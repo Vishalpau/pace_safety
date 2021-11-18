@@ -864,7 +864,12 @@ const Assessment = () => {
                 selectedItem="Assessment"
               />
             </Grid>
-          </Grid>) : (<h1>Loading...</h1>)}
+          </Grid>) : (
+          <>
+            Loading...
+          </>
+        )
+        }
       </PapperBlock>
     </>
   );

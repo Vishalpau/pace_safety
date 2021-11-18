@@ -15,6 +15,8 @@ import Highcharts from 'highcharts';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styles from "../../../components/Header/header-jss";
+import Loader from "../Loader";
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -729,6 +731,7 @@ const ControlTowerIcare = () => {
               </Grid>
             </Grid>
           </Paper>
+          <Loader />
         </Grid>
 
 

@@ -26,6 +26,7 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import EquipmentValidate from "../../Validator/EquipmentValidation";
@@ -128,7 +129,7 @@ const EqiptmentAffected = () => {
   // hit next button for next page
   const handleNext = async () => {
     // close out 
-
+      setIsNext(false);
     const nextPath = JSON.parse(localStorage.getItem("nextPath"));
     //  cheack condition equipment is already filled or new creation
     if (detailsOfEquipmentAffect === "Yes") {
@@ -274,6 +275,8 @@ const EqiptmentAffected = () => {
     const res = await api.get("api/v1/lists/15/value")
       .then((res) => {
         const result = res.data.data.results;
+        result.push({inputLabel:"Other",inputValue:"Other"});
+        result.push({inputLabel:"NA",inputValue:"NA"});
         setEquipmentTypeValue(result);
       })
       .catch(() => history.push("/app/pages/error"))
@@ -466,7 +469,7 @@ const EqiptmentAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Describe any equipment affect"
+                    label={COMMENT}
                     className={classes.fullWidth}
                     value={equipmentDamagedComments || ""}
                     onChange={(e) =>

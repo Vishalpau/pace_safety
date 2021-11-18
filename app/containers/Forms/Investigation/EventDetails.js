@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
@@ -417,7 +418,8 @@ const EventDetails = () => {
         <>
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
-              {/* activity */}
+
+              {/* job task */}
               <Grid item xs={12} md={6}>
                 <FormControl
                   error={
@@ -427,7 +429,7 @@ const EventDetails = () => {
                   required
                   className={classes.formControl}
                 >
-                  <InputLabel id="project-name-label">Activity</InputLabel>
+                  <InputLabel id="project-name-label">Job task</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -456,7 +458,7 @@ const EventDetails = () => {
                 )}
               </Grid>
 
-              {/* job task */}
+              {/* activity */}
               <Grid item xs={12} md={6}>
                 <FormControl
                   error={
@@ -466,7 +468,7 @@ const EventDetails = () => {
                   required
                   className={classes.formControl}
                 >
-                  <InputLabel id="project-name-label">Job task</InputLabel>
+                  <InputLabel id="project-name-label">Activity</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -488,6 +490,7 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
+
                 {error && error.jobTask && (
                   <FormHelperText style={{ color: "red" }}>
                     {error.jobTask}
@@ -948,7 +951,7 @@ const EventDetails = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

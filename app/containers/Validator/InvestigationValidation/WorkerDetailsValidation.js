@@ -20,6 +20,11 @@ function WorkerDetailValidator(data) {
     isValid = false;
   }
 
+  if (validator.isEmpty(data.noOfDaysIntoShift.toString())) {
+    error.noOfDaysIntoShift = "please select number of days in shift";
+    isValid = false;
+  }
+
   if (data.injuryObject.length !== 0 && data.injuryObject.length > 255) {
     error.injuryObject = "please enter less than 255 characters in injury object";
   }

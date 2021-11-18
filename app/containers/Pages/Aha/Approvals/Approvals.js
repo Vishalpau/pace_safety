@@ -20,6 +20,7 @@ import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { APPROVAL_FORM } from "../constants";
+import Loader from "../../../Forms/Loader";
 
 
 
@@ -112,6 +113,7 @@ const Approvals = () => {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [person, setPerson] = useState("")
   const [projectData, setProjectData] = useState({
     companyId: "",
     projectId: "",
@@ -168,21 +170,23 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
-    if (type == "work") {
+    if (type == "competent person") {
       setForm({
         ...form,
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
       setOpen(false)
-    } else if (type == "pic") {
+    } else if (type == "senior authorized person") {
       setForm({
         ...form,
-        picApprovalUser: name,
-        picApprovalDateTime: new Date(),
+        sapApprovalUser: name,
+        sapApprovalDateTime: new Date(),
       });
+      setOpen(false)
     }
   };
+
   const handleClose = () => {
     setOpen(false)
   }
@@ -253,13 +257,13 @@ const Approvals = () => {
                 <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                    Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className={classes.approvalButton}
-                    onClick={(e) => setOpen(true)}
+                    onClick={(e) => {setOpen(true),setPerson("competent person")}}
                   >
                     {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
                   </Button>
@@ -268,6 +272,28 @@ const Approvals = () => {
                       &&
                       form.wrpApprovalDateTime !== null ?
                       `Approved By: ${form.wrpApprovalUser} on Date: ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
+                      : null
+                    }
+                  </div>
+                </Grid>
+                <Grid item md={8} xs={12} className={classes.formBox}>
+
+                  <Typography variant="h6" gutterBottom className={classes.labelName}>
+                  Senior Authorized Person (SAP)
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color={form.sapApprovalUser === null ? "primary" : "secondary"}
+                    className={classes.approvalButton}
+                    onClick={(e) => {setOpen(true),setPerson("senior authorized person")}}
+                  >
+                    {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
+                  </Button>
+                  <div>
+                    {form.sapApprovalUser !== undefined
+                      &&
+                      form.sapApprovalDateTime !== null ?
+                      `Approved By: ${form.sapApprovalUser} on Date: ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
                       : null
                     }
                   </div>
@@ -296,7 +322,7 @@ const Approvals = () => {
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving work responsible person.
+                        You are approving {person}.
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
@@ -314,7 +340,7 @@ const Approvals = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={(e) => handelWorkAndPic("work")}
+                        onClick={(e) => handelWorkAndPic(person)}
                       >
                         Ok
                       </Button>
@@ -384,7 +410,8 @@ const Approvals = () => {
                 selectedItem={"Approval"}
               />
             </Col>
-          </Row> </> : <h1>Loading...</h1>}
+          </Row> </> : <Loader />}
+          
       </PapperBlock>
     </>
   );
