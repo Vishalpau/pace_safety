@@ -5,24 +5,6 @@ function validate(data) {
   let isValid = true;
   const error = {};
 
-  console.log(data);
-  const selectBreakdown =
-    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : [];
-  let struct = "";
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-
-  const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
-  for (let i = 0; i < breakdownValue.length; i++) {
-    var element = selectBreakdown[i]
-    if (selectBreakdown[i] === undefined && !atID ) {
-      error[`selectBreakdown${[i]}`] = `Select ${breakdownValue[i].structure[0].name}`;
-      isValid = false;
-    }
-  }
 
   if (data.jobTitle == '') {
     error.jobTitle = 'Please enter job title';
