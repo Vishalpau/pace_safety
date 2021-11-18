@@ -32,6 +32,7 @@ import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
 import ActionTracker from "../../../Forms/ActionTracker";
 import { CircularProgress } from '@material-ui/core';
+import Loader from "../../../Forms/Loader";
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
@@ -468,8 +469,10 @@ const Assessment = () => {
 
   const checkList = async () => {
     const temp = {};
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const res = await api.get(
-      "/api/v1/core/checklists/aha-document-conditions/1/"
+      `/api/v1/core/checklists/aha-document-conditions/${projectId}/`
     );
     const checklistGroups = res.data.data.results[0].checklistValues;
 
@@ -866,7 +869,7 @@ const Assessment = () => {
             </Grid>
           </Grid>) : (
           <>
-            Loading...
+            <Loader/>
           </>
         )
         }
