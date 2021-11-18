@@ -1,4 +1,5 @@
 import { API_URL } from './constants';
+import api from './axios'
 
 export const setToken = (token) => localStorage.setItem('token', token);
 
@@ -21,6 +22,11 @@ export const formatPlanNames = (name, delimiter, join) => {
   });
   return formattedName.join(join);
 };
+
+
+export const getPicklistvalues = (id, cb) => api.get(`api/v1/lists/${id}/value`)
+                                              .then(response => response.data.data.results)
+                                              .then(response => cb(response))
 
 export const currancyFormatter = (number) => parseFloat(number)
   .toFixed(1)

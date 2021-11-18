@@ -33,7 +33,7 @@ module.exports = [
       },
       {
         key: 'jha',
-        name: 'JHA',
+        name: 'JSA',
         linkParent: "/app/pages/jha/all_jha",
       },
     ],
