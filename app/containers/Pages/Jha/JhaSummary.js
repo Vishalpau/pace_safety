@@ -1064,7 +1064,7 @@ function JhaSummary() {
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {assessment.wrpApprovalDateTime !== null ?
                                       <>
-                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMMM YYYY")}
                                       </>
                                       : "-"
                                     }
@@ -1103,7 +1103,7 @@ function JhaSummary() {
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {assessment.sapApprovalDateTime !== null ?
                                       <>
-                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("DD-MM-YY")}
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMMM YYYY")}
                                       </>
                                       : "-"
                                     }
