@@ -423,7 +423,6 @@ const FlhaDetails = (props) => {
                             renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                           />
                           : 'Auditor Name: ' + auditName}
-
                       </Grid>
                       <Grid item xs={12}>
                         <TableContainer>
