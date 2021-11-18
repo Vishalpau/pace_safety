@@ -182,15 +182,15 @@ const FlhaDetails = (props) => {
   };
   const [value, setValue] = React.useState('female');
 
-  const [step1, setStep1] = React.useState('No')
-  const [step2, setStep2] = React.useState('No')
-  const [step3, setStep3] = React.useState('No')
-  const [step4, setStep4] = React.useState('No')
-  const [step5, setStep5] = React.useState('No')
-  const [step6, setStep6] = React.useState('No')
-  const [step7, setStep7] = React.useState('No')
-  const [step8, setStep8] = React.useState('No')
-  const [step9, setStep9] = React.useState('No')
+  const [step1, setStep1] = React.useState('')
+  const [step2, setStep2] = React.useState('')
+  const [step3, setStep3] = React.useState('')
+  const [step4, setStep4] = React.useState('')
+  const [step5, setStep5] = React.useState('')
+  const [step6, setStep6] = React.useState('')
+  const [step7, setStep7] = React.useState('')
+  const [step8, setStep8] = React.useState('')
+  const [step9, setStep9] = React.useState('')
 
   const [remark1, setRemark1] = React.useState('')
   const [remark2, setRemark2] = React.useState('')
@@ -204,6 +204,7 @@ const FlhaDetails = (props) => {
 
   const [auditName, setAuditName] = React.useState('')
 
+  const [isLock, setIsLock] = React.useState(false)
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -283,29 +284,31 @@ const FlhaDetails = (props) => {
     let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
     const res = api.get(`/api/v1/flhas/${last_part}/auditchecks/`)
       .then(response => {
-        console.log(response.data.data.results, 'data')
-        setStep1(response.data.data.results)
-        setStep2(response.data.data.results)
-        setStep3(response.data.data.results)
-        setStep4(response.data.data.results)
-        setStep5(response.data.data.results)
-        setStep6(response.data.data.results)
-        setStep7(response.data.data.results)
-        setStep8(response.data.data.results)
-        setStep9(response.data.data.results)
+        
+        if (response.data.data.results.length){
+        setStep1(response.data.data.results.filter(data=>data.auditType=='Identification information complete')[0].auditCheck)
+        setStep2(response.data.data.results.filter(data=>data.auditType=='Job described accuratly')[0].auditCheck)
+        setStep3(response.data.data.results.filter(data=>data.auditType=='Critical tasks identified')[0].auditCheck)
+        setStep4(response.data.data.results.filter(data=>data.auditType=='Applicable hazards identified')[0].auditCheck)
+        setStep5(response.data.data.results.filter(data=>data.auditType=='Controlled developed for hazards identified')[0].auditCheck)
+        setStep6(response.data.data.results.filter(data=>data.auditType=='All present earnings identified at the job site')[0].auditCheck)
+        setStep7(response.data.data.results.filter(data=>data.auditType=='Energies isolated or controlled')[0].auditCheck)
+        setStep8(response.data.data.results.filter(data=>data.auditType=='Re-assesment of hazards completed after pause and resart')[0].auditCheck)
+        setStep9(response.data.data.results.filter(data=>data.auditType=='Agreement signed')[0].auditCheck)
 
-        setRemark1(response.data.data.results)
-        setRemark2(response.data.data.results)
-        setRemark3(response.data.data.results)
-        setRemark4(response.data.data.results)
-        setRemark5(response.data.data.results)
-        setRemark6(response.data.data.results)
-        setRemark7(response.data.data.results)
-        setRemark8(response.data.data.results)
-        setRemark9(response.data.data.results)
+        setRemark1(response.data.data.results.filter(data=>data.auditType=='Identification information complete')[0].auditRemarks)
+        setRemark2(response.data.data.results.filter(data=>data.auditType=='Job described accuratly')[0].auditRemarks)
+        setRemark3(response.data.data.results.filter(data=>data.auditType=='Critical tasks identified')[0].auditRemarks)
+        setRemark4(response.data.data.results.filter(data=>data.auditType=='Applicable hazards identified')[0].auditRemarks)
+        setRemark5(response.data.data.results.filter(data=>data.auditType=='Controlled developed for hazards identified')[0].auditRemarks)
+        setRemark6(response.data.data.results.filter(data=>data.auditType=='All present earnings identified at the job site')[0].auditRemarks)
+        setRemark7(response.data.data.results.filter(data=>data.auditType=='Energies isolated or controlled')[0].auditRemarks)
+        setRemark8(response.data.data.results.filter(data=>data.auditType=='Re-assesment of hazards completed after pause and resart')[0].auditRemarks)
+        setRemark9(response.data.data.results.filter(data=>data.auditType=='Agreement signed')[0].auditRemarks)
 
-        setAuditName(response.data.data.results)
-      })
+        setAuditName(response.data.data.results.filter(data=>data.auditType=='Agreement signed')[0].auditor)
+        setIsLock(true)
+      }})
   };
 
 
@@ -325,14 +328,19 @@ const FlhaDetails = (props) => {
                   <Grid item xs={12}>
                     <Grid container spacing={3}>
                       <Grid item md={6} sm={6} xs={12}>
+                        {auditName=='' ?
                         <Autocomplete
                           id="combo-box-demo"
                           className={classes.mtTen}
+                          // value={auditName}
                           options={users}
+                          // defaultValue={auditName}
                           getOptionLabel={(option) => option.title}
                           onChange={(e) => setAuditName(e.currentTarget.innerHTML)}
                           renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                         />
+                        :'Auditor Name: ' +auditName}
+                        
                       </Grid>
                       <Grid item xs={12}>
                         <TableContainer>
@@ -354,10 +362,10 @@ const FlhaDetails = (props) => {
                                   Identification information complete
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep1(step1 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1=='Yes' ? true : false} onClick={() => setStep1('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1=='No' ? true : false} onClick={() => setStep1('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -378,10 +386,10 @@ const FlhaDetails = (props) => {
                                   Job described accuratly
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep2(step2 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2=='Yes' ? true : false} onClick={() => setStep2('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2=='No' ? true : false} onClick={() => setStep2('No')} />
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell>
                                 <TableCell align="left">
@@ -402,10 +410,10 @@ const FlhaDetails = (props) => {
                                   Critical tasks identified
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep3(step3 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3=='Yes' ? true : false} onClick={() => setStep3('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3=='No' ? true : false} onClick={() => setStep3('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -426,10 +434,10 @@ const FlhaDetails = (props) => {
                                   Applicable hazards identified
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep4(step4 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4=='Yes' ? true : false} onClick={() => setStep4('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4=='No' ? true : false} onClick={() => setStep4('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -450,10 +458,10 @@ const FlhaDetails = (props) => {
                                   Controlled developed for hazards identified
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep5(step5 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5=='Yes' ? true : false} onClick={() => setStep5('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5=='No' ? true : false} onClick={() => setStep5('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -474,10 +482,10 @@ const FlhaDetails = (props) => {
                                   All present earnings identified at the job site
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep6(step6 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6=='Yes' ? true : false} onClick={() => setStep6('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6=='No' ? true : false} onClick={() => setStep6('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -498,10 +506,10 @@ const FlhaDetails = (props) => {
                                   Energies isolated or controlled
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep7(step7 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7=='Yes' ? true : false} onClick={() => setStep7('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7=='No' ? true : false} onClick={() => setStep7('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -522,10 +530,10 @@ const FlhaDetails = (props) => {
                                   Re-assesment of hazards completed after pause and resart
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep8(step8 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step8=='Yes' ? true : false} onClick={() => setStep8('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }}checked={step8=='No' ? true : false} onClick={() => setStep8('No')} />
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -546,10 +554,10 @@ const FlhaDetails = (props) => {
                                   Agreement signed
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} value={auditForm.auditCheck} onClick={() => setStep9(step9 == 'Yes' ? 'No' : 'Yes')} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9=='Yes' ? true : false} onClick={() => setStep9('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9=='No' ? true : false} onClick={() => setStep9('No')} />
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
@@ -559,6 +567,7 @@ const FlhaDetails = (props) => {
                                     multiline
                                     rows="1"
                                     label=""
+                                    value={remark9}
                                     onChange={(e) => setRemark9(e.currentTarget.value)}
                                     className={classes.fullWidth}
                                   />
@@ -570,9 +579,9 @@ const FlhaDetails = (props) => {
                       </Grid>
                       <Grid item md={12} xs={12}>
                         <Box marginTop={1}>
-                          <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={() => AuditCheckSubmit()}>
+                          {isLock ? '' :<Button size="medium" variant="contained" color="primary" className={classes.spacerRight}  onClick={() => AuditCheckSubmit()}>
                             Submit
-                          </Button>
+                          </Button>}
                         </Box>
                       </Grid>
                     </Grid>
