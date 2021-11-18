@@ -404,23 +404,25 @@ function AhaSummary() {
     const result = res.data.data.results;
 
     let zzz = [...result]
-
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
-        if (result[i].riskRating === "25%") {
-          zzz[i].riskRatingColour = '#1EBD10'
-        } else if (result[i].riskRating === "50%") {
-          zzz[i].riskRatingColour = '#FFEB13'
+        if (result[i].riskRating === "20%") {
+          zzz[i].riskRatingColour = '#006400'
+        } else if (result[i].riskRating === "40%") {
+          zzz[i].riskRatingColour = '#6AA121'
 
-        } else if (result[i].riskRating === "75%") {
+        } else if (result[i].riskRating === "60%") {
           zzz[i].riskRatingColour = '#F3C539'
 
-        } else {
+        } else if (result[i].riskRating === "80%") {
+          zzz[i].riskRatingColour = '#800000'
+        }
+        else {
           zzz[i].riskRatingColour = '#FF0000'
-
         }
       }
     }
+
     await setForm(zzz);
     await handelActionTracker(result)
   };

@@ -82,6 +82,11 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Avatar from '@material-ui/core/Avatar';
 import FormObservationbanner from 'dan-images/addFormObservationbanner.jpg';
 import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
+import { CircularProgress } from "@material-ui/core";
+import {getPicklistvalues} from '../../../utils/helper';
+import {appapi,setApiUrl  } from '../../../utils/axios';
+import { appendFileSync } from 'fs';
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: '.5rem 0',
@@ -333,6 +338,19 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0px 0px 10px 1px #e0e0e0 !important',
     marginBottom: '20px',
   },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
   childBackPaper: {
     backgroundColor: '#ffffff',
     boxShadow: '0px 0px 10px 1px #e0e0e0 !important',
@@ -418,6 +436,9 @@ const FlhaDetails = (props) => {
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [workArea, setWorkArea] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0)
+  const [loading, setLoading] = useState(false);
+  const [hazardtype, setHazardType] = React.useState([])
+
 
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -457,47 +478,28 @@ const FlhaDetails = (props) => {
     fkProjectStructureIds: "",
     preUseInspection: "",
     warningRibbon: "Yes",
-
     workerWorking: "Yes",
-
     workerRemarks: "",
-
     permitClosedOut: "",
-
     hazardsRemaining: "",
-
     endOfJob: "",
-
     anyIncidents: "",
-
     jobCompletionRemarks: "",
-
     creatingIncident: "",
-
     fkIncidentNumber: "",
-
     attachment: null,
-
     link: null,
-
     notifyTo: null,
-
     flhaStage: "Open",
-
     flhaStatus: "Unassigned",
-
     status: "Active",
-
     createdBy: 6,
-
     updatedBy: null,
-
     source: "Web",
-
     vendor: "",
-
     vendorReferenceId: ""
   });
+
   const [contractors, setContractors] = React.useState([]);
   const [supervisors, setSupervisors] = React.useState([]);
   const [hazardForm, setHazardForm] = React.useState([
@@ -683,7 +685,9 @@ const FlhaDetails = (props) => {
       await createFlha();
     } else {
       await setError(error);
+
     }
+
   };
 
 
@@ -718,14 +722,17 @@ const FlhaDetails = (props) => {
     console.log({ formData1111: formData });
     // return;
     // return;
+    await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
       data
     );
+
     console.log(res.data.data.results.id);
     await setFlha(res.data.data.results.id);
 
     await createCriticalTask(res.data.data.results.id);
+
   };
 
   const createCriticalTask = async (flha) => {
@@ -799,10 +806,15 @@ const FlhaDetails = (props) => {
   };
 
   const descriptionElementRef = React.useRef(null);
+
+  console.log(hazardtype,'hazardtype')
   React.useEffect(() => {
     getSupervisors();
     getFieldContractors();
     getDepartments();
+    // PickList()
+    getPicklistvalues(83,setHazardType)
+
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -917,21 +929,26 @@ const FlhaDetails = (props) => {
 
     if (riskRating >= 1 && riskRating <= 4) {
       // alert("low")
-      temp[taskIndex].hazards[key].riskRatingLevel = 'Low';
-      temp[taskIndex].hazards[key].riskRatingColour = '#1EBD10';
-    } else if (riskRating > 4 && riskRating <= 9) {
+      temp[taskIndex].hazards[key].riskRatingLevel = '20';
+      temp[taskIndex].hazards[key].riskRatingColour = '#006400';
+    } else if (riskRating > 5 && riskRating <= 8) {
       // alert("medium")
-      temp[taskIndex].hazards[key].riskRatingLevel = 'Medium';
-      temp[taskIndex].hazards[key].riskRatingColour = '#FFEB13';
-    } else if (riskRating > 9 && riskRating <= 14) {
+      temp[taskIndex].hazards[key].riskRatingLevel = '40';
+      temp[taskIndex].hazards[key].riskRatingColour = '#6AA121';
+    } else if (riskRating > 9 && riskRating <= 16) {
       // alert("serious")
-      temp[taskIndex].hazards[key].riskRatingLevel = 'Serious';
+      temp[taskIndex].hazards[key].riskRatingLevel = '60';
       temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
-    } else {
+    } else if (riskRating > 17 && riskRating <= 24) {
+      // alert("serious")
+      temp[taskIndex].hazards[key].riskRatingLevel = '80';
+      temp[taskIndex].hazards[key].riskRatingColour = '#800000';
+    }else {
       // alert("high")
-      temp[taskIndex].hazards[key].riskRatingLevel = 'High';
+      temp[taskIndex].hazards[key].riskRatingLevel = '100';
       temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
     }
+    
 
     console.log({ updated: temp });
     setTaskForm(temp);
@@ -1104,7 +1121,9 @@ const FlhaDetails = (props) => {
                       >
                         <Grid container spacing={3}>
                           {(jobTitles.length > 0) ? jobTitles.map((jobTitle) => (
-                            <Grid item xs={3} onClick={() => handleJobSelection(jobTitle.id)}><Tooltip title={jobTitle.jobTitle} placement="bottom"><img src={jobTitle.jobTitleImage} alt="decoration" /></Tooltip></Grid>
+                            <Grid item xs={3} onClick={() => handleJobSelection(jobTitle.id)}><Tooltip title={jobTitle.jobTitle} placement="bottom"><img src={jobTitle.jobTitleImage} alt="decoration" /></Tooltip>
+                              {jobTitle.jobTitle}
+                            </Grid>
                           )) : ''}
                         </Grid>
                       </DialogContentText>
@@ -1129,15 +1148,13 @@ const FlhaDetails = (props) => {
                   </Dialog>
                 </div>
 
-
-
                 <Grid
                   item
                   md={12}
                   xs={12}
                 >
                   <TextField
-                    label="Job description"
+                    label="*Job description"
                     error={error.jobDetails}
                     //margin="dense"
                     name="jobdescription"
@@ -1215,7 +1232,7 @@ const FlhaDetails = (props) => {
                             variant="outlined"
                             rows="1"
                             id="taskIdentification"
-                            label="*Task Name"
+                            label="Task Name"
                             className={classes.fullWidth}
                             value={(taskValue.taskIdentification != undefined) ? taskValue.taskIdentification : ''}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
@@ -1247,29 +1264,38 @@ const FlhaDetails = (props) => {
                               </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                              <Grid container spacing={0}>
-                                <Grid item sm={11} xs={8}>
+                              <Grid container spacing={2}>
+                                <Grid item sm={12} xs={12}>
                                   <FormControl
                                     variant="outlined"
                                     requirement
                                     className={classes.formControl}
                                   >
-                                    {/* <InputLabel id="demo-simple-select-label">
-                                    *Hazards
-                                            </InputLabel> */}
-                                    <TextField
-
+                                    <InputLabel id="demo-simple-select-label">
+                                      Hazards
+                                      {' '}
+                                    </InputLabel>
+                                    <Select
                                       multiline
                                       variant="outlined"
                                       rows="3"
                                       id="hazards"
-                                      label="*Hazards"
+                                      // label="*Hazards"
                                       className={classes.fullWidth}
                                       value={item.hazard}
                                       onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazards')
                                       }
                                     // InputLabelProps={{ shrink: true }}
-                                    />
+                                    >
+                                      {hazardtype.map((value)=><MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
+                                      {/* <MenuItem value={2}>Physical</MenuItem>
+                                      <MenuItem value={4}>Chemical</MenuItem>
+                                      <MenuItem value={6}>Vehicle</MenuItem>
+                                      <MenuItem value={8}>Biological</MenuItem>
+                                      <MenuItem value={8}>Electrical</MenuItem>
+                                      <MenuItem value={8}>Scaffolding Hazards</MenuItem>
+                                      <MenuItem value={8}>Ladder Hazards</MenuItem> */}
+                                    </Select>
                                   </FormControl>
                                   <div className={classes.spacer}>
                                     <FormControl component="fieldset">
@@ -1293,7 +1319,7 @@ const FlhaDetails = (props) => {
                                       variant="outlined"
                                       rows="3"
                                       id="description"
-                                      label="*Control"
+                                      label="Control"
                                       className={classes.fullWidth}
                                       value={item.control}
                                       onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
@@ -1332,12 +1358,16 @@ const FlhaDetails = (props) => {
                                         onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskSeverityValue')
                                         }
                                       >
+                                        <MenuItem value={2}>Sightly harmful</MenuItem>
+                                        <MenuItem value={4}>Harmful</MenuItem>
+                                        <MenuItem value={6}>Very harmful</MenuItem>
+                                        <MenuItem value={8}>Extremely harmful</MenuItem>
 
-                                        <MenuItem value={1}>Negligible</MenuItem>
+                                        {/* <MenuItem value={1}>Negligible</MenuItem>
                                         <MenuItem value={2}>Minor</MenuItem>
                                         <MenuItem value={3}>Moderate</MenuItem>
                                         <MenuItem value={4}>Major/ Critical</MenuItem>
-                                        <MenuItem value={5}>Catastrophic</MenuItem>
+                                        <MenuItem value={5}>Catastrophic</MenuItem> */}
                                       </Select>
                                     </FormControl>
                                   </Grid>
@@ -1358,11 +1388,15 @@ const FlhaDetails = (props) => {
                                         onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskProbabilityValue')
                                         }
                                       >
-                                        <MenuItem value={1} selected={item.riskProbability == 1}>Improbable</MenuItem>
+                                        <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
+                                        <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
+                                        <MenuItem value={3} selected={item.riskProbability == 3}>Likely</MenuItem>
+                                        <MenuItem value={4} selected={item.riskProbability == 4}>Very likely</MenuItem>
+                                        {/* <MenuItem value={1} selected={item.riskProbability == 1}>Improbable</MenuItem>
                                         <MenuItem value={2} selected={item.riskProbability == 2}>Remote</MenuItem>
                                         <MenuItem value={3} selected={item.riskProbability == 3}>Occasional</MenuItem>
                                         <MenuItem value={4} selected={item.riskProbability == 4}>Probable</MenuItem>
-                                        <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem>
+                                        <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem> */}
                                       </Select>
                                     </FormControl>
                                   </Grid>
@@ -1853,10 +1887,20 @@ const FlhaDetails = (props) => {
             <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={handleJobFormSubmit}>
               Save
             </Button>
-            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={handleJobFormSubmit}>
-              Submit
-            </Button>
-            <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
+            <div className={classes.loadingWrapper}>
+              <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={handleJobFormSubmit} disabled={loading}>
+                Submit
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
+            <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => {
+              history.push("/app/pages/assesments/xflha");
+            }}>
               Cancel
             </Button>
           </Grid>
