@@ -29,8 +29,8 @@ import api from '../../../utils/axios';
 import { useHistory } from 'react-router-dom'
 import ActionTracker from "../../Forms/ActionTracker";
 import { CircularProgress } from "@material-ui/core";
-
-
+import ActionShow from '../../Forms/ActionShow';
+import { handelActionData } from "../../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -191,10 +191,57 @@ const FlhaDetails = (props) => {
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
   );
+  const [updatePage, setUpdatePage] = React.useState(false)
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+
+  const handelActionTracker = async (id) => {
+    // let observationId = localStorage.getItem("fkFlhaId")
+    let allAction = await handelActionData(id, [], "title")
+    setActionData(allAction)
+  };
+  const handelActionShow = (id) => {
+    return (<>
+      <Grid>
+        <>
+          {
+            actionData.map((valueAction) => (
+              <>
+                <ActionShow
+                  action={{ id: valueAction.id, number: valueAction.actionNumber }}
+                  title={valueAction.actionTitle}
+                  companyId={fkCompanyId}
+                  projectId={projectId}
+                  updatePage={updatePage}
+                />
+              </>
+            ))
+          }
+        </>
+      </Grid>
+    </>
+    )
+  }
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : [];
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
+
+  const [actionData, setActionData] = React.useState([])
+
   const [value, setValue] = React.useState('female');
   const [loading, setLoading] = React.useState(false);
 
@@ -257,12 +304,13 @@ const FlhaDetails = (props) => {
 
   const handleFlhaSummaryPush = async (id) => {
     history.push(
-      "/app/pages/assesments/flhasummary/"+id
+      "/app/pages/assesments/flhasummary/" + id
       // "/app/pages/flha/FlhaSummary"
     );
   };
   const parts = history.location.pathname.split('/');
   let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+
 
   const AuditCheckSubmit = () => {
 
@@ -275,9 +323,9 @@ const FlhaDetails = (props) => {
     ninetimeCall('Energies isolated or controlled', remark7, step7)
     ninetimeCall('Re-assesment of hazards completed after pause and resart', remark8, step8)
     ninetimeCall('Agreement signed', remark9, step9)
-   
+
   }
-  
+
 
   const ninetimeCall = async (auditType, auditRemarks, auditCheck) => {
     const parts = history.location.pathname.split('/');
@@ -294,14 +342,14 @@ const FlhaDetails = (props) => {
     formData.append('auditRemarks', auditRemarks);
     formData.append('fkFlhaId', last_part);
     formData.append('auditCheck', auditCheck);
-    
+
     const res = await api.post(`/api/v1/flhas/${last_part}/auditchecks/`, formData);
     await setLoading(true)
-    if (auditType=='Agreement signed'){
-    history.push(
-      "/app/pages/assesments/flhasummary/"+last_part
-      // "/app/pages/flha/FlhaSummary"
-    );
+    if (auditType == 'Agreement signed') {
+      history.push(
+        "/app/pages/assesments/flhasummary/" + last_part
+        // "/app/pages/flha/FlhaSummary"
+      );
     }
   }
 
@@ -386,7 +434,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">Control and isolation method</TableCell>
                                 <TableCell align="left">Yes</TableCell>
                                 <TableCell align="left">No</TableCell>
-                                <TableCell align="left">Action</TableCell>
+                                {/* <TableCell align="left">Action</TableCell> */}
                                 <TableCell align="left">Needs improvements (Specify)</TableCell>
                               </TableRow>
                             </TableHead>
@@ -402,7 +450,22 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /> */}
+                                  {/* <Typography className={classes.labelValue}>
+                                    {handelActionShow(value.id)}
+                                    {console.log(handelActionShow(value.id), 'iiii')}
+                                  </Typography> */}
+                                  {/* <ActionTracker
+                                    actionContext="flha"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${value.id}`}
+                                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    setUpdatePage={setUpdatePage}
+                                    handelShowData={handelActionTracker}
+                                  /> */}
+                                  {/* </TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -426,7 +489,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2 == 'No' ? true : false} onClick={() => setStep2('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -450,7 +513,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3 == 'No' ? true : false} onClick={() => setStep3('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -474,7 +537,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4 == 'No' ? true : false} onClick={() => setStep4('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -498,7 +561,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5 == 'No' ? true : false} onClick={() => setStep5('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -522,7 +585,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6 == 'No' ? true : false} onClick={() => setStep6('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -546,7 +609,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7 == 'No' ? true : false} onClick={() => setStep7('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -570,7 +633,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step8 == 'No' ? true : false} onClick={() => setStep8('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -594,7 +657,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9 == 'No' ? true : false} onClick={() => setStep9('No')} />
                                 </TableCell>
-                                <TableCell align="left"><OfflineBoltIcon /></TableCell>
+                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"

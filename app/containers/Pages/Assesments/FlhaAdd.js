@@ -719,8 +719,9 @@ const FlhaDetails = (props) => {
     formDataPost.append('location', jobForm.location);
     formDataPost.append('permitToWork', jobForm.permitToWork);
     formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
-    formDataPost.append('attachment', jobForm.attachment);
-    formDataPost.append('flhaStage', jobForm.flhaStage);
+    if(jobForm.attachment!=null){
+    formDataPost.append('attachment', jobForm.attachment);}
+    // formDataPost.append('flhaStage', jobForm.flhaStage);
     // console.log({ jobformUpdated: data });
 
     // const formData = new FormData();
@@ -1093,6 +1094,7 @@ const FlhaDetails = (props) => {
                     onChange={(e) => handleJobFormChange(e, 'jobTitle')}
                     value={jobForm.jobTitle}
                   />
+                   <div style={{ color: "red" }}>{error.jobTitle}</div>
                 </Grid>
                 <Grid item xs={2} className="formFieldBTNSection" align="center"><Button variant="outlined" onClick={handleClickOpen('paper')}>Select job </Button></Grid>
                 <Grid item xs={1}><img src={jobForm.jobTitleImage} height={58} alt="" className={classes.mttopSix} /></Grid>
@@ -1182,6 +1184,8 @@ const FlhaDetails = (props) => {
                     onChange={(e) => handleJobFormChange(e, 'jobDetails')}
                     value={jobForm.jobDetails}
                   />
+                                      <div style={{ color: "red" }}>{error.jobDetails}</div>
+
                 </Grid>
               </Grid>
             </Paper>
@@ -1568,6 +1572,8 @@ const FlhaDetails = (props) => {
                       <FormControlLabel value="no" control={<Radio />} label="No" />
                       <FormControlLabel value="na" control={<Radio />} label="NA" />
                     </RadioGroup>
+                    <div style={{ color: "red" }}>{error.permitToWork}</div>
+
                   </FormControl>
                 </Grid>
 
@@ -1791,6 +1797,8 @@ const FlhaDetails = (props) => {
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
+                    <div style={{ color: "red" }}>{error.firstAid}</div>
+
                   </FormControl>
                 </Grid>
                 <Grid
@@ -1808,6 +1816,7 @@ const FlhaDetails = (props) => {
                     value={jobForm.emergencyPhoneNumber}
                     onChange={(e) => handleJobFormChange(e, 'emergencyPhoneNumber')}
                   />
+
                 </Grid>
               </Grid>
               <Grid container spacing={3}>
@@ -1822,6 +1831,8 @@ const FlhaDetails = (props) => {
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
+                    <div style={{ color: "red" }}>{error.jhaReviewed}</div>
+
                   </FormControl>
                 </Grid>
                 <Grid
@@ -1853,6 +1864,8 @@ const FlhaDetails = (props) => {
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
+                    <div style={{ color: "red" }}>{error.accessToJobProcedure}</div>
+
                   </FormControl>
                 </Grid>
                 <Grid
