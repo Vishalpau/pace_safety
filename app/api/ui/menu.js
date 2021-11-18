@@ -37,11 +37,6 @@ var menu = [
         name: 'AHA',
         linkParent: '/app/pages/aha',
       },
-      {
-        key: 'jha',
-        name: 'JSA',
-        linkParent: "/app/pages/jha/all_jha",
-      },
     ],
   },
   {
