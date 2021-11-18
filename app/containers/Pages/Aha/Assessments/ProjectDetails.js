@@ -32,6 +32,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
+import Loader from "../../../Forms/Loader";
 
 import axios from "axios";
 import api from "../../../../utils/axios";
@@ -307,6 +308,7 @@ const ProjectDetails = () => {
     await setLoading(true);
     // form["assessmentDate"] = new Date().toISOString().split('T')[0]
     if (form.id) {
+      form["assessmentDate"] = form['assessmentDate'].split('T')[0]
       delete form["ahaAssessmentAttachment"]
       // form['updatedBy'] = form['createdBy']
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
@@ -329,6 +331,10 @@ const ProjectDetails = () => {
       }
 
     } else {
+      if(form['permitToPerform'] === "No"){
+        form['typeOfPermit']  = ""
+        form['permitNumber'] = ""
+      }
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
@@ -524,7 +530,6 @@ const ProjectDetails = () => {
       fetchAhaData()
       fetchTeamData()
     }
-
   }, []);
   return (
     <>
@@ -635,7 +640,7 @@ const ProjectDetails = () => {
                     onChange={(e) => {
                       setForm({
                         ...form,
-                        assessmentDate: moment(e).format("YYYY-MM-DD h:mm:ss a"),
+                        assessmentDate: moment(e).format("YYYY-MM-DD"),
                       });
                     }}
                     InputProps={{ readOnly: true }}
@@ -835,7 +840,7 @@ const ProjectDetails = () => {
             </Grid>
           </Grid> :
           <>
-            Loading...
+            <Loader/>
           </>
         }
       </PapperBlock>

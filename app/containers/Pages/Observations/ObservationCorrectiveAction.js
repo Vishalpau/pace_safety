@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import apiAction from "../../../utils/axiosActionTracker";
-import { handelActionData } from "../../../utils/CheckerValue";
+import { handelActionIcare } from "../../../utils/CheckerValue";
 import {
   access_token,
   ACCOUNT_API_URL
@@ -208,7 +208,7 @@ function ObservationCorrectiveAction() {
 
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
-    let allAction = await handelActionData(observationId, [], "title")
+    let allAction = await handelActionIcare(observationId, [], "title","iCare")
     setActionData(allAction)
   };
 
@@ -405,17 +405,8 @@ function ObservationCorrectiveAction() {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results;
-          let user = [];
-          // user = result;
-          let data = result.filter((item) =>
-            item['companyId'] == fkCompanyId
-          )
-
-          for (var i in data[0].users) {
-            filterReportedByName.push(data[0].users[i]);
-          }
-          setReportedByName(filterReportedByName);
+          const result = response.data.data.results.users;
+          setReportedByName(result);
         }
       })
       .catch((error) => {

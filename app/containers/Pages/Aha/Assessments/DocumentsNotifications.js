@@ -29,6 +29,7 @@ import { useParams, useHistory } from 'react-router';
 import api from "../../../../utils/axios";
 import { CircularProgress } from '@material-ui/core';
 
+import Loader from "../../../Forms/Loader";
 
 import { AHA } from "../constants";
 
@@ -426,7 +427,7 @@ const DocumentNotification = () => {
           </Grid>) :
           (
             <>
-              Loading...
+        <Loader/>
             </>
           )
         }

@@ -24,6 +24,7 @@ import { handelActionWithEntity } from "../../../../utils/CheckerValue";
 import { LESSION_LEARNED_FORM} from "../constants";
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
+import Loader from "../../../Forms/Loader";
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -126,6 +127,7 @@ const LessonsLearned = () => {
   const [submitLoader , setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [ isLoading, setIsLoading] = useState(false)
 
   const history = useHistory()
   const handelJobDetails = async () => {
@@ -137,6 +139,7 @@ const LessonsLearned = () => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.id
     setForm(apiData)
+    setIsLoading(true)
   }
 
   const handelUserName = () => {
@@ -149,7 +152,6 @@ const LessonsLearned = () => {
     <Grid>
       {actionData.map((val) => (
         <>
-          {console.log(val)}
           <ActionShow
             action={{ id: val.id, number: val.actionNumber }}
             title={val.actionTitle}
@@ -190,6 +192,7 @@ const LessonsLearned = () => {
   return (
     <>
     <PapperBlock title="Lessons Learned" icon="ion-md-list-box">
+    {isLoading ? 
     <Row>
           <Col md={9}>
         <Grid container spacing={3}>
@@ -390,7 +393,7 @@ const LessonsLearned = () => {
               selectedItem={"Lessons Learned"}
             />
           </Col>
-        </Row>
+        </Row> : <><Loader/></>}
     </PapperBlock>
     </>
   );

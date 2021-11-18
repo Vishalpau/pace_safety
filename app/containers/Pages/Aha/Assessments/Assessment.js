@@ -32,6 +32,7 @@ import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
 import ActionTracker from "../../../Forms/ActionTracker";
 import { CircularProgress } from '@material-ui/core';
+import Loader from "../../../Forms/Loader";
 
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow'
@@ -287,43 +288,43 @@ const Assessment = () => {
     //     "Catastrophic",
     //  ];
 
-    let sagar = [...result]
+
+    let getSeverity = [...result]
     for (var i = 0; i < result.length; i++) {
       if (result[i].severity !== "") {
-        if (result[i].severity === "Negligible") {
-          sagar[i].riskSeverityValue = 1
-        } else if (result[i].severity === "Minor") {
-          sagar[i].riskSeverityValue = 2
+        if (result[i].severity === "Sightly harmful") {
+          getSeverity[i].riskSeverityValue = 2
+        } else if (result[i].severity === "Harmful") {
+          getSeverity[i].riskSeverityValue = 4
 
-        } else if (result[i].severity === "Moderate") {
-          sagar[i].riskSeverityValue = 3
+        } else if (result[i].severity === "Very harmful") {
+          getSeverity[i].riskSeverityValue = 6
 
-        } else if (result[i].severity === "Major/ Critical") {
-          sagar[i].riskSeverityValue = 4
+        } else if (result[i].severity === "Extremely harmful") {
+          getSeverity[i].riskSeverityValue = 8
 
         } else {
-          sagar[i].riskSeverityValue = 5
+          // sagar[i].riskSeverityValue = 10
         }
       }
     }
-
-
-    let abc = [...sagar]
-    for (var i = 0; i < sagar.length; i++) {
-      if (sagar[i].probability !== "") {
-        if (sagar[i].probability === "Improbable") {
+    
+    let abc = [...getSeverity]
+    for (var i = 0; i < getSeverity.length; i++) {
+      if (getSeverity[i].probability !== "") {
+        if (getSeverity[i].probability === "Highly unlikely") {
           abc[i].riskProbabilityValue = 1
-        } else if (sagar[i].probability === "Remote") {
+        } else if (getSeverity[i].probability === "Unlikely") {
           abc[i].riskProbabilityValue = 2
 
-        } else if (sagar[i].probability === "Occasional") {
+        } else if (getSeverity[i].probability === "Likely") {
           abc[i].riskProbabilityValue = 3
 
-        } else if (sagar[i].probability === "Probable") {
+        } else if (getSeverity[i].probability === "Very likely") {
           abc[i].riskProbabilityValue = 4
 
         } else {
-          abc[i].riskProbabilityValue = 5
+          // abc[i].riskProbabilityValue = 5
         }
       }
     }
@@ -332,15 +333,19 @@ const Assessment = () => {
 
     for (var i = 0; i < abc.length; i++) {
       if (abc[i].riskRating !== "") {
-        if (abc[i].riskRating === "25%") {
-          zzz[i].riskRatingColour = '#1EBD10'
-        } else if (abc[i].riskRating === "50%") {
-          zzz[i].riskRatingColour = '#FFEB13'
+        if (abc[i].riskRating === "20%") {
+          zzz[i].riskRatingColour = '#006400'
+        } else if (abc[i].riskRating === "40%") {
+          zzz[i].riskRatingColour = '#6AA121'
 
-        } else if (abc[i].riskRating === "75%") {
+        } else if (abc[i].riskRating === "60%") {
           zzz[i].riskRatingColour = '#F3C539'
 
-        } else {
+        }  else if (abc[i].riskRating === "80%") {
+          zzz[i].riskRatingColour = '#800000'
+
+        }
+        else {
           zzz[i].riskRatingColour = '#FF0000'
         }
       }
@@ -464,8 +469,10 @@ const Assessment = () => {
 
   const checkList = async () => {
     const temp = {};
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const res = await api.get(
-      "/api/v1/core/checklists/aha-document-conditions/1/"
+      `/api/v1/core/checklists/aha-document-conditions/${projectId}/`
     );
     const checklistGroups = res.data.data.results[0].checklistValues;
 
@@ -506,17 +513,19 @@ const Assessment = () => {
     } else {
       temp[key].probability = txt;
     }
-
     if (riskRating >= 1 && riskRating <= 4) {
-      temp[key].riskRating = '25%';
+      temp[key].riskRating = '20%';
       temp[key].riskRatingColour = '#1EBD10';
-    } else if (riskRating > 4 && riskRating <= 9) {
-      temp[key].riskRating = '50%';
-      temp[key].riskRatingColour = '#FFEB13';
-    } else if (riskRating > 9 && riskRating <= 14) {
-      temp[key].riskRating = '75%';
+    } else if (riskRating > 5 && riskRating <= 8) {
+      temp[key].riskRating = '40%';
+      temp[key].riskRatingColour = '#008000';
+    } else if (riskRating > 9 && riskRating <= 16) {
+      temp[key].riskRating = '60%';
       temp[key].riskRatingColour = '#F3C539';
-    } else {
+    } else if (riskRating > 17 && riskRating <= 24) {
+      temp[key].riskRating = '80%';
+      temp[key].riskRatingColour = '#800000';
+    }else {
       temp[key].riskRating = '100%';
       temp[key].riskRatingColour = '#FF0000';
     }
@@ -614,11 +623,10 @@ const Assessment = () => {
                                 value={value.riskSeverityValue}
                                 onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue')}
                               >
-                                <MenuItem value={1}>Negligible</MenuItem>
-                                <MenuItem value={2}>Minor</MenuItem>
-                                <MenuItem value={3}>Moderate</MenuItem>
-                                <MenuItem value={4}>Major/ Critical</MenuItem>
-                                <MenuItem value={5}>Catastrophic</MenuItem>
+                                <MenuItem value={2}>Sightly harmful</MenuItem>
+                                <MenuItem value={4}>Harmful</MenuItem>
+                                <MenuItem value={6}>Very harmful</MenuItem>
+                                <MenuItem value={8}>Extremely harmful</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -638,11 +646,10 @@ const Assessment = () => {
                                 value={value.riskProbabilityValue}
                                 onChange={(e) => handleRiskChange(e, index, 'riskProbabilityValue')}
                               >
-                                <MenuItem value={1} selected={value.probability == 1}>Improbable</MenuItem>
-                                <MenuItem value={2} selected={value.probability == 2}>Remote</MenuItem>
-                                <MenuItem value={3} selected={value.probability == 3}>Occasional</MenuItem>
-                                <MenuItem value={4} selected={value.probability == 4}>Probable</MenuItem>
-                                <MenuItem value={5} selected={value.probability == 5}>Frequent</MenuItem>
+                                <MenuItem value={1} selected={value.riskProbability == 1}>Highly unlikely</MenuItem>
+                                <MenuItem value={2} selected={value.riskProbability == 2}>Unlikely</MenuItem>
+                                <MenuItem value={3} selected={value.riskProbability == 3}>Likely</MenuItem>
+                                <MenuItem value={4} selected={value.riskProbability == 4}>Very likely</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -862,7 +869,7 @@ const Assessment = () => {
             </Grid>
           </Grid>) : (
           <>
-            Loading...
+            <Loader/>
           </>
         )
         }

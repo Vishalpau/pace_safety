@@ -413,7 +413,7 @@ class SimpleTabs extends React.Component {
                       </ListItemIcon>
                       <Link
                       disabled={true}
-                        href="/app/pages/assesments/AuditCheck"
+                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
