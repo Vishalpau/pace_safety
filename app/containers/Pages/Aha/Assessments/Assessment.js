@@ -464,8 +464,10 @@ const Assessment = () => {
 
   const checkList = async () => {
     const temp = {};
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const res = await api.get(
-      "/api/v1/core/checklists/aha-document-conditions/1/"
+      `/api/v1/core/checklists/aha-document-conditions/${projectId}/`
     );
     const checklistGroups = res.data.data.results[0].checklistValues;
 

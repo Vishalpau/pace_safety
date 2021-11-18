@@ -162,17 +162,9 @@ const CloseOut = () => {
             .then(function (response) {
 
                 if (response.status === 200) {
-                    const result = response.data.data.results;
-                    let user = [];
-                    // user = result;
-                    let data = result.filter((item) =>
-                        item['companyId'] == fkCompanyId
-                    )
+                    const result = response.data.data.results.users;
 
-                    for (var i in data[0].users) {
-                        filterUserListName.push(data[0].users[i]);
-                    }
-                    setUserList(filterUserListName);
+                    setUserList(result);
                 }
             })
             .catch(function (error) {
@@ -260,11 +252,6 @@ const CloseOut = () => {
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
                                     onClick={(e) => setIsDateShow(true)}
-                                    // error={error.closeDate}
-                                    // helperText={
-                                    //     error.closeDate ? error.closeDate : null
-                                    // }
-                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     id="date-picker-dialog"
@@ -274,12 +261,6 @@ const CloseOut = () => {
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-                                    // onChange={(e) => {
-                                    //     setJhaListdata({
-                                    //         ...jhaListData,
-                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
-                                    //     });
-                                    // }}
                                     disableFuture
                                     InputProps={{ readOnly: true }}
                                     open={isDateShow}
