@@ -1033,7 +1033,7 @@ const IncidentDetails = (props) => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Property affected",
+                        "Property/Material affected",
                         "propertyAffect"
                       );
                       setNextPath({
