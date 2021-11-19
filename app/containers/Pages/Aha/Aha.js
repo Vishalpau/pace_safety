@@ -251,7 +251,7 @@ function Aha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/ahas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
 
     const result = res.data.data.results.results
     await setAllAHAData(result)
@@ -277,7 +277,7 @@ function Aha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/ahas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     console.log("----------", res)
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
@@ -309,7 +309,7 @@ function Aha(props) {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-  }, [props.projectName.breakDown])
+  }, [props.projectName.breakDown,searchIncident])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
       <Box>
@@ -376,10 +376,7 @@ function Aha(props) {
           </div>
 
           {cardView ? (<>
-            {allAHAData.length > 0 && Object.entries(allAHAData).filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-              item[1]["description"].toLowerCase().includes(
-                searchIncident.toLowerCase()
-              )).map((item, index) => (
+            {allAHAData.length > 0 && Object.entries(allAHAData).map((item, index) => (
                 <Card variant="outlined" className={Incidents.card}>
                   <CardContent>
                     <Grid container spacing={3}>
@@ -563,28 +560,14 @@ function Aha(props) {
                 </Card>))}</>)
             : (
               <MUIDataTable
-                title="Incidents List"
+                title="Aha List"
 
 
-                data={Object.entries(allAHAData).filter(
-                  (item) => {
-                    return (
-
-                      item[1]["description"]
-                        .toLowerCase()
-                        .includes(searchIncident.toLowerCase()) ||
-                      item[1]["ahaNumber"].toLowerCase().includes(
-                        searchIncident.toLowerCase()
-
-                      )
-                    )
-                  }
-
-                ).map((item) => [
+                data={Object.entries(allAHAData).map((item) => [
                   item[1]["ahaNumber"],
                   item[1]["location"],
                   item[1]["username"],
-                  item[1]["createdAt"],
+                  moment(item[1]["createdAt"]).format("Do MMMM YYYY, h:mm:ss a"),
                 ])}
 
                 columns={columns}

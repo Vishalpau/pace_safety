@@ -170,7 +170,7 @@ function Jha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/jhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results !== undefined && res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)
@@ -196,7 +196,7 @@ function Jha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await setPage(value)
     await handelTableView(res.data.data.results.results)
@@ -237,10 +237,11 @@ function Jha(props) {
     print: false,
     rowsPerPage: 100,
     page: 100,
-    search: true,
+    search: false,
     filter: false,
     viewColumns: false,
-    download: false
+    download: false,
+    pagination: false
   };
 
   const handleSummaryPush = async (e, index) => {
@@ -259,7 +260,7 @@ function Jha(props) {
 
   useEffect(() => {
     fetchData()
-  }, [props.projectName.breakDown])
+  }, [props.projectName.breakDown,searchIncident])
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
@@ -325,10 +326,7 @@ function Jha(props) {
         </div>
 
         {cardView ? (<>
-          {allJHAData.length > 0 && Object.entries(allJHAData).filter((item) => item[1]["jhaNumber"].includes(searchIncident.toUpperCase()) ||
-            item[1]["description"].toLowerCase().includes(
-              searchIncident.toLowerCase()
-            )).map((item, index) => (
+          {allJHAData.length > 0 && Object.entries(allJHAData).map((item, index) => (
               <Card variant="outlined" className={Incidents.card}>
                 {console.log(item)}
                 <CardContent>

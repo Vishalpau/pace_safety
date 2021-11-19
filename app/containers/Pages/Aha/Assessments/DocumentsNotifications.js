@@ -29,9 +29,14 @@ import { useParams, useHistory } from 'react-router';
 import api from "../../../../utils/axios";
 import { CircularProgress } from '@material-ui/core';
 
+import Loader from "../../../Forms/Loader";
 
 import { AHA } from "../constants";
-
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH, SSO_URL
+} from "../../../../utils/constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -154,7 +159,15 @@ const DocumentNotification = () => {
   const history = useHistory();
   const attachmentName = useRef("")
   const [isLoading, setIsLoading] = useState(false);
+  const fkCompanyId =
+  JSON.parse(localStorage.getItem("company")) !== null
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
 
+const projectId =
+  JSON.parse(localStorage.getItem("projectName")) !== null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null;
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
 
@@ -286,6 +299,26 @@ const DocumentNotification = () => {
     await setAHAForm(result);
     await setIsLoading(true)
   };
+  const [notificationSentValue, setNotificationSentValue] = useState([]);
+
+
+  const fetchNotificationSent = async () => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        setNotificationSentValue(result);
+      }
+    } catch (error) { }
+  };
 
 
   const classes = useStyles();
@@ -293,6 +326,7 @@ const DocumentNotification = () => {
   useEffect(() => {
 
     fetchAhaData();
+    fetchNotificationSent()
   }, []);
   return (
     <>
@@ -348,35 +382,35 @@ const DocumentNotification = () => {
                   onChange={(e) => setAHAForm({ ...ahaform, link: e.target.value })}
                 />
               </Grid>
-              {/* <Grid
-        item
-        md={12}
-        xs={12}
-        className={classes.formBox}
-        >
-        <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-        <FormGroup row>{notification.map((value) => (
-          <FormControlLabel
-            className={classes.labelValue}
-            control={(
-                <Checkbox
-                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                name="checkedI"
-                // onChange={handleChange}
-                // onChange={}
-                checked ={ahaform.notifyTo !== null ? ahaform.notifyTo.includes(value) : ""}
-                onChange={(e) => handleNotification(e , value)}
-                />
-            )}
-            label={value}
-            />
+              {notificationSentValue.length > 0 ? 
+              
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+                >
+                <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
+                <FormGroup row>{notificationSentValue.map((value) => (
+                  <FormControlLabel
+                    className={classes.labelValue}
+                    control={(
+                        <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        name="checkedI"
+                        checked ={ahaform.notifyTo !== null ? ahaform.notifyTo.includes(value.id) : ""}
+                        onChange={(e) => handleNotification(e , value.id)}
+                        />
+                    )}
+                    label={value.roleName}
+                    />
 
-        ))}
-            
-            
-        </FormGroup>
-        </Grid> */}
+                ))}   
+                </FormGroup>
+              </Grid> : null}
+
+      
 
               <Grid
                 item
@@ -426,7 +460,7 @@ const DocumentNotification = () => {
           </Grid>) :
           (
             <>
-              Loading...
+        <Loader/>
             </>
           )
         }

@@ -20,6 +20,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import Checkbox from '@material-ui/core/Checkbox';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
+import {
+  SSO_URL,
+  HEADER_AUTH,
+} from '../../../utils/constants';
+// import { api } from "../../../utils/axios";
+import api from '../../../utils/axios';
+import { useHistory } from 'react-router-dom'
+import ActionTracker from "../../Forms/ActionTracker";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -157,25 +167,11 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 750,
   },
 }));
-// Top 100 films as rated by IMDb users.
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-  { title: 'The Good, the Bad and the Ugly', year: 1966 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-];
-const FlhaDetails = () => {
+
+
+const FlhaDetails = (props) => {
+  let history = useHistory();
+
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(
     new Date('2014-08-18T21:11:54')
@@ -186,6 +182,30 @@ const FlhaDetails = () => {
   };
   const [value, setValue] = React.useState('female');
 
+  const [step1, setStep1] = React.useState('')
+  const [step2, setStep2] = React.useState('')
+  const [step3, setStep3] = React.useState('')
+  const [step4, setStep4] = React.useState('')
+  const [step5, setStep5] = React.useState('')
+  const [step6, setStep6] = React.useState('')
+  const [step7, setStep7] = React.useState('')
+  const [step8, setStep8] = React.useState('')
+  const [step9, setStep9] = React.useState('')
+
+  const [remark1, setRemark1] = React.useState('')
+  const [remark2, setRemark2] = React.useState('')
+  const [remark3, setRemark3] = React.useState('')
+  const [remark4, setRemark4] = React.useState('')
+  const [remark5, setRemark5] = React.useState('')
+  const [remark6, setRemark6] = React.useState('')
+  const [remark7, setRemark7] = React.useState('')
+  const [remark8, setRemark8] = React.useState('')
+  const [remark9, setRemark9] = React.useState('')
+
+  const [auditName, setAuditName] = React.useState('')
+
+  const [isLock, setIsLock] = React.useState(false)
+
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -193,6 +213,109 @@ const FlhaDetails = () => {
   const onClick = () => setRadioUnplanned(true);
 
   const [checked, setChecked] = React.useState(true);
+
+  const [users, setUser] = React.useState([])
+
+  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    .projectName.projectId;
+  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
+
+  const [auditForm, setAuditForm] = React.useState({
+    auditor: "",
+    auditType: "",
+    auditCheck: "",
+    auditRemarks: "",
+    fkActionNumber: "",
+    status: "",
+    createdBy: "",
+    fkFlhaId: ""
+  });
+
+  const auditUserList = () => {
+    api.get(`${SSO_URL}/api/v1/companies/` + JSON.parse(localStorage.getItem("company")).fkCompanyId + '/company-users/')
+      .then(response => {
+        setUser(response.data.data.results.users.map(user => { return { title: user.name } }))
+      })
+  };
+
+  const AuditCheckSubmit = () => {
+    ninetimeCall('Identification information complete', remark1, step1)
+    ninetimeCall('Job described accuratly', remark2, step2)
+    ninetimeCall('Critical tasks identified', remark3, step3)
+    ninetimeCall('Applicable hazards identified', remark4, step4)
+    ninetimeCall('Controlled developed for hazards identified', remark5, step5)
+    ninetimeCall('All present earnings identified at the job site', remark6, step6)
+    ninetimeCall('Energies isolated or controlled', remark7, step7)
+    ninetimeCall('Re-assesment of hazards completed after pause and resart', remark8, step8)
+    ninetimeCall('Agreement signed', remark9, step9)
+  }
+  const parts = history.location.pathname.split('/');
+    let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+
+  const ninetimeCall = (auditType, auditRemarks, auditCheck) => {
+    const parts = history.location.pathname.split('/');
+    let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+
+    const formData = new FormData(); // formdata object
+
+    // formData.append('fkCompanyId', JSON.parse(localStorage.getItem('company')).fkCompanyId);
+    // formData.append('fkProjectId', JSON.parse(localStorage.getItem('projectName')).projectName.projectId);
+    // formData.append('projectName', JSON.parse(localStorage.getItem('projectName')).projectName.projectName);
+    formData.append('createdBy', JSON.parse(localStorage.getItem('userDetails')).id);
+    formData.append('auditor', auditName);
+    formData.append('auditType', auditType);
+    formData.append('auditRemarks', auditRemarks);
+    formData.append('fkFlhaId', last_part);
+    formData.append('auditCheck', auditCheck);
+
+    const res = api.post(`/api/v1/flhas/${last_part}/auditchecks/`, formData);
+    setAuditForm({auditor: "",
+    auditType: "",
+    auditCheck: "",
+    auditRemarks: "",
+    fkActionNumber: "",
+    })
+
+  }
+
+  const auditData = () => {
+    const parts = history.location.pathname.split('/');
+    let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+    const res = api.get(`/api/v1/flhas/${last_part}/auditchecks/`)
+      .then(response => {
+        
+        if (response.data.data.results.length){
+        setStep1(response.data.data.results.filter(data=>data.auditType=='Identification information complete')[0].auditCheck)
+        setStep2(response.data.data.results.filter(data=>data.auditType=='Job described accuratly')[0].auditCheck)
+        setStep3(response.data.data.results.filter(data=>data.auditType=='Critical tasks identified')[0].auditCheck)
+        setStep4(response.data.data.results.filter(data=>data.auditType=='Applicable hazards identified')[0].auditCheck)
+        setStep5(response.data.data.results.filter(data=>data.auditType=='Controlled developed for hazards identified')[0].auditCheck)
+        setStep6(response.data.data.results.filter(data=>data.auditType=='All present earnings identified at the job site')[0].auditCheck)
+        setStep7(response.data.data.results.filter(data=>data.auditType=='Energies isolated or controlled')[0].auditCheck)
+        setStep8(response.data.data.results.filter(data=>data.auditType=='Re-assesment of hazards completed after pause and resart')[0].auditCheck)
+        setStep9(response.data.data.results.filter(data=>data.auditType=='Agreement signed')[0].auditCheck)
+
+        setRemark1(response.data.data.results.filter(data=>data.auditType=='Identification information complete')[0].auditRemarks)
+        setRemark2(response.data.data.results.filter(data=>data.auditType=='Job described accuratly')[0].auditRemarks)
+        setRemark3(response.data.data.results.filter(data=>data.auditType=='Critical tasks identified')[0].auditRemarks)
+        setRemark4(response.data.data.results.filter(data=>data.auditType=='Applicable hazards identified')[0].auditRemarks)
+        setRemark5(response.data.data.results.filter(data=>data.auditType=='Controlled developed for hazards identified')[0].auditRemarks)
+        setRemark6(response.data.data.results.filter(data=>data.auditType=='All present earnings identified at the job site')[0].auditRemarks)
+        setRemark7(response.data.data.results.filter(data=>data.auditType=='Energies isolated or controlled')[0].auditRemarks)
+        setRemark8(response.data.data.results.filter(data=>data.auditType=='Re-assesment of hazards completed after pause and resart')[0].auditRemarks)
+        setRemark9(response.data.data.results.filter(data=>data.auditType=='Agreement signed')[0].auditRemarks)
+
+        setAuditName(response.data.data.results.filter(data=>data.auditType=='Agreement signed')[0].auditor)
+        setIsLock(true)
+      }})
+  };
+
+
+  React.useEffect(() => {
+    auditUserList()
+    auditData()
+  }, []);
 
   return (
     <div>
@@ -205,13 +328,19 @@ const FlhaDetails = () => {
                   <Grid item xs={12}>
                     <Grid container spacing={3}>
                       <Grid item md={6} sm={6} xs={12}>
+                        {auditName=='' ?
                         <Autocomplete
                           id="combo-box-demo"
                           className={classes.mtTen}
-                          options={top100Films}
+                          // value={auditName}
+                          options={users}
+                          // defaultValue={auditName}
                           getOptionLabel={(option) => option.title}
+                          onChange={(e) => setAuditName(e.currentTarget.innerHTML)}
                           renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                         />
+                        :'Auditor Name: ' +auditName}
+                        
                       </Grid>
                       <Grid item xs={12}>
                         <TableContainer>
@@ -230,70 +359,73 @@ const FlhaDetails = () => {
                               <TableRow>
                                 <TableCell align="left">1</TableCell>
                                 <TableCell align="left">
-                                    Identification information complete
+                                  Identification information complete
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1=='Yes' ? true : false} onClick={() => setStep1('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1=='No' ? true : false} onClick={() => setStep1('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark1(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell align="left">2</TableCell>
                                 <TableCell align="left">
-                                    Job described accuratly
+                                  Job described accuratly
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2=='Yes' ? true : false} onClick={() => setStep2('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2=='No' ? true : false} onClick={() => setStep2('No')} />
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark2(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell align="left">3</TableCell>
                                 <TableCell align="left">
-                                    Critical tasks identified
+                                  Critical tasks identified
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3=='Yes' ? true : false} onClick={() => setStep3('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3=='No' ? true : false} onClick={() => setStep3('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark3(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
@@ -302,21 +434,22 @@ const FlhaDetails = () => {
                                   Applicable hazards identified
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4=='Yes' ? true : false} onClick={() => setStep4('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4=='No' ? true : false} onClick={() => setStep4('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark4(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
@@ -325,113 +458,119 @@ const FlhaDetails = () => {
                                   Controlled developed for hazards identified
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5=='Yes' ? true : false} onClick={() => setStep5('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5=='No' ? true : false} onClick={() => setStep5('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark5(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell align="left">6</TableCell>
                                 <TableCell align="left">
-                                    All present earnings identified at the job site
+                                  All present earnings identified at the job site
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6=='Yes' ? true : false} onClick={() => setStep6('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6=='No' ? true : false} onClick={() => setStep6('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark6(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell align="left">7</TableCell>
                                 <TableCell align="left">
-                                    Energies isolated or controlled
+                                  Energies isolated or controlled
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7=='Yes' ? true : false} onClick={() => setStep7('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7=='No' ? true : false} onClick={() => setStep7('No')}/>
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark7(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell align="left">8</TableCell>
                                 <TableCell align="left">
-                                    Re-assesment of hazards completed after pause and resart
+                                  Re-assesment of hazards completed after pause and resart
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step8=='Yes' ? true : false} onClick={() => setStep8('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }}checked={step8=='No' ? true : false} onClick={() => setStep8('No')} />
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    onChange={(e) => setRemark8(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                               <TableRow>
                                 <TableCell align="left">9</TableCell>
                                 <TableCell align="left">
-                                    Agreement signed
+                                  Agreement signed
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9=='Yes' ? true : false} onClick={() => setStep9('Yes')} />
                                 </TableCell>
                                 <TableCell align="left">
-                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} />
+                                  <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9=='No' ? true : false} onClick={() => setStep9('No')} />
                                 </TableCell>
                                 <TableCell align="left"><OfflineBoltIcon /></TableCell>
                                 <TableCell align="left">
                                   <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="1"
-                  label=""
-                  className={classes.fullWidth}
-                />
+                                    variant="outlined"
+                                    id="immediate-actions"
+                                    multiline
+                                    rows="1"
+                                    label=""
+                                    value={remark9}
+                                    onChange={(e) => setRemark9(e.currentTarget.value)}
+                                    className={classes.fullWidth}
+                                  />
                                 </TableCell>
                               </TableRow>
                             </TableBody>
@@ -440,9 +579,9 @@ const FlhaDetails = () => {
                       </Grid>
                       <Grid item md={12} xs={12}>
                         <Box marginTop={1}>
-                          <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
+                          {isLock ? '' :<Button size="medium" variant="contained" color="primary" className={classes.spacerRight}  onClick={() => AuditCheckSubmit()}>
                             Submit
-                          </Button>
+                          </Button>}
                         </Box>
                       </Grid>
                     </Grid>

@@ -61,18 +61,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
-  aLabelValue: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#063d55',
-    float: 'left',
-    width: '100%',
-    paddingRight: '40px',
-    '& div': {
-      display: 'inline-block',
-      float: 'right',
-    },
-  },
   updateLink: {
     float: 'left',
     fontSize: '0.88rem',

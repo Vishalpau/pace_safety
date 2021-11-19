@@ -67,6 +67,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { CreateNewFolderSharp } from '@material-ui/icons';
 import { useHistory, useParams } from 'react-router';
 import api from '../../../utils/axios';
+import { getPicklistvalues } from '../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -88,8 +89,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: 'inset 0px 0px 9px #dedede',
     '& td textHeight': {
       padding: '2.5px 5px',
-    	borderRadius: '8px',
-	  },
+      borderRadius: '8px',
+    },
   },
   spacer: {
     padding: '5px 0',
@@ -254,11 +255,11 @@ const useStyles = makeStyles((theme) => ({
   },
   widthSelect: {
     minWidth: '170px',
-	  height: '58px',
+    height: '58px',
     borderRadius: '4px',
   },
   divider: {
-	  margin: '15px 15px',
+    margin: '15px 15px',
     width: '97.4%',
     boxShadow: '1px 2px 10px #d4d4d4',
   },
@@ -385,6 +386,7 @@ const FlhaEdit = (props) => {
     setSelectedDate(date);
   };
   const [value, setValue] = React.useState('female');
+  const [hazardtype, setHazardType] = React.useState([])
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -398,10 +400,10 @@ const FlhaEdit = (props) => {
     <li key={file.path}>
       {file.path}
       {' '}
--
+      -
       {file.size}
       {' '}
-bytes
+      bytes
     </li>
   ));
 
@@ -504,27 +506,32 @@ bytes
   const handleRiskChange = (e, key, taskIndex, fieldname) => {
     const temp = [...taskForm];
     temp[taskIndex].hazards[key][fieldname] = e.target.value;
-    
+
     const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverity == undefined || temp[taskIndex].hazards[key].riskSeverity == '' || isNaN(temp[taskIndex].hazards[key].riskSeverity)) ? 1 : temp[taskIndex].hazards[key].riskSeverity);
     const riskProbability = ((temp[taskIndex].hazards[key].riskProbability == undefined || temp[taskIndex].hazards[key].riskProbability == '' || isNaN(temp[taskIndex].hazards[key].riskProbability)) ? 1 : temp[taskIndex].hazards[key].riskProbability);
     console.log({ riskSeverity: riskSeverity });
     console.log({ riskprobability: riskProbability });
     const riskRating = riskSeverity * riskProbability;
-    alert(riskRating)
+    // alert(riskRating)
 
     if (riskRating >= 1 && riskRating <= 4) {
       // alert("low")
-      temp[taskIndex].hazards[key].riskRating = 'Low';
-      temp[taskIndex].hazards[key].riskRatingColour = '#1EBD10';
-    } else if (riskRating > 4 && riskRating <= 9) {
+      temp[taskIndex].hazards[key].riskRating = '20';
+      temp[taskIndex].hazards[key].riskRatingColour = '#006400';
+    } else if (riskRating > 5 && riskRating <= 8) {
       // alert("medium")
-      temp[taskIndex].hazards[key].riskRating = 'Medium';
-      temp[taskIndex].hazards[key].riskRatingColour = '#FFEB13';
-    } else if (riskRating > 9 && riskRating <= 14) {
+      temp[taskIndex].hazards[key].riskRating = '40';
+      temp[taskIndex].hazards[key].riskRatingColour = '#6AA121';
+    } else if (riskRating > 9 && riskRating <= 16) {
       // alert("serious")
-      temp[taskIndex].hazards[key].riskRating = 'Serious';
+      temp[taskIndex].hazards[key].riskRating = '60';
       temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
-    } else {
+    }  else if (riskRating > 17 && riskRating <= 24) {
+      // alert("serious")
+      temp[taskIndex].hazards[key].riskRating = '80';
+      temp[taskIndex].hazards[key].riskRatingColour = '#800000';
+    }
+    else {
       // alert("high")
       temp[taskIndex].hazards[key].riskRating = 'High';
       temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
@@ -658,6 +665,8 @@ bytes
   React.useEffect(() => {
     getFlhaDetails(props.match.params.id);
     getPreventiveControls(props.match.params.id);
+    getPicklistvalues(83, setHazardType)
+
   }, []);
 
   const getFlhaDetails = async (flhaId) => {
@@ -734,7 +743,7 @@ bytes
                     <Typography variant="h6">
                       <DescriptionOutlinedIcon className={classes.headingIcon} />
                       {' '}
-Job information
+                      Job information
                     </Typography>
                   </Grid>
 
@@ -742,11 +751,11 @@ Job information
                     <Typography variant="h6" />
                     <FormLabel component="legend">Job Title</FormLabel>
                     <Typography>
-                    {flhaDetails.jobTitle}
+                      {flhaDetails.jobTitle}
                     </Typography>
                   </Grid>
                   <Grid item xs={2}>
-                    
+
                     <img src={project} height={58} alt="" className={classes.mttopSix} />
                   </Grid>
                   <Grid item xs={12}>
@@ -761,7 +770,7 @@ Job information
                         <Typography variant="h6">
                           <ControlCameraOutlinedIcon className={classes.headingIcon} />
                           {' '}
-Preventive controls
+                          Preventive controls
                         </Typography>
                       </Grid>
                       <Divider className={classes.divider} />
@@ -769,7 +778,7 @@ Preventive controls
                         <Typography variant="h6">
                           <AssignmentLateOutlinedIcon className={classes.headingIcon} />
                           {' '}
-Critical tasks
+                          Critical tasks
                         </Typography>
 
                       </Grid>
@@ -777,7 +786,7 @@ Critical tasks
                       <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                         <div>
                           {taskForm.map((taskValue, taskIndex) => (
-                          // console.log({taskvalue: taskValue})
+                            // console.log({taskvalue: taskValue})
                             <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
                               <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
@@ -788,7 +797,7 @@ Critical tasks
                                 <Typography className={classes.heading}>
                                   <MenuOpenOutlinedIcon className={classes.headingIcon} />
                                   {' '}
-Task#1 - "Task identification"
+                                  Task#1 - "Task identification"
                                 </Typography>
                               </AccordionSummary>
                               <AccordionDetails>
@@ -806,7 +815,7 @@ Task#1 - "Task identification"
                                   />
                                 </Grid>
                                 {taskValue.hazards.map((item, index) => (
-                                // console.log({item: item})
+                                  // console.log({item: item})
                                   <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
                                     <AccordionSummary
                                       expandIcon={<ExpandMoreIcon />}
@@ -814,7 +823,7 @@ Task#1 - "Task identification"
                                       id="panel2bh-header"
                                       className={classes.headingColor}
                                     >
-                                      <Typography className={classes.heading}>Hazardk#1 - "Hazard Name"</Typography>
+                                      <Typography className={classes.heading}>Hazard#1 - "Hazard Name"</Typography>
                                       <Typography className={classes.secondaryHeading}>
                                         <Fab
                                           color="secondary"
@@ -838,9 +847,10 @@ Task#1 - "Task identification"
                                             className={classes.formControl}
                                           >
                                             <InputLabel id="demo-simple-select-label">
-                                    *Hazards
+                                              *Hazards
+                                              {' '}
                                             </InputLabel>
-                                            <TextField
+                                            <Select
                                               multiline
                                               variant="outlined"
                                               rows="3"
@@ -850,12 +860,22 @@ Task#1 - "Task identification"
                                               value={item.hazards}
                                               onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazards')
                                               }
-                                            />
+                                            >
+                                              {hazardtype.map((value) => <MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
+
+                                              {/* <MenuItem value={2}>Physical</MenuItem>
+                                              <MenuItem value={4}>Chemical</MenuItem>
+                                              <MenuItem value={6}>Vehicle</MenuItem>
+                                              <MenuItem value={8}>Biological</MenuItem>
+                                              <MenuItem value={8}>Electrical</MenuItem>
+                                              <MenuItem value={8}>Scaffolding Hazards</MenuItem>
+                                              <MenuItem value={8}>Ladder Hazards</MenuItem> */}
+                                            </Select>
                                           </FormControl>
                                           <div className={classes.spacer}>
                                             <FormControl component="fieldset">
                                               <FormLabel component="legend">
-                                          Hazard Status
+                                                Hazard Status
                                               </FormLabel>
                                               <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
                                                 <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
@@ -883,7 +903,7 @@ Task#1 - "Task identification"
                                             <div className={classes.spacer}>
                                               <FormControl component="fieldset">
                                                 <FormLabel component="legend">
-                                            Control Status
+                                                  Control Status
                                                 </FormLabel>
                                                 <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
                                                   <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
@@ -902,7 +922,7 @@ Task#1 - "Task identification"
                                               className={classes.formControl}
                                             >
                                               <InputLabel id="demo-simple-select-label">
-                                        Risk Severity
+                                                Risk Severity
                                               </InputLabel>
                                               <Select
                                                 labelId="incident-type-label"
@@ -912,11 +932,11 @@ Task#1 - "Task identification"
                                                 onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskSeverity')
                                                 }
                                               >
-                                                <MenuItem value={1}>Negligible</MenuItem>
-                                                <MenuItem value={2}>Minor</MenuItem>
-                                                <MenuItem value={3}>Moderate</MenuItem>
-                                                <MenuItem value={4}>Major/ Critical</MenuItem>
-                                                <MenuItem value={5}>Catastrophic</MenuItem>
+                                                <MenuItem value={2}>Sightly harmful</MenuItem>
+                                                <MenuItem value={4}>Harmful</MenuItem>
+                                                <MenuItem value={6}>Very harmful</MenuItem>
+                                                <MenuItem value={8}>Extremely harmful</MenuItem>
+                                                {/* <MenuItem value={5}>Catastrophic</MenuItem> */}
                                               </Select>
                                             </FormControl>
                                           </Grid>
@@ -927,7 +947,7 @@ Task#1 - "Task identification"
                                               className={classes.formControl}
                                             >
                                               <InputLabel id="demo-simple-select-label">
-                                        Risk Probability
+                                                Risk Probability
                                               </InputLabel>
                                               <Select
                                                 labelId="incident-type-label"
@@ -937,11 +957,11 @@ Task#1 - "Task identification"
                                                 onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskProbability')
                                                 }
                                               >
-                                                <MenuItem value={1} selected={item.riskProbability == 1}>Improbable</MenuItem>
-                                                <MenuItem value={2} selected={item.riskProbability == 2}>Remote</MenuItem>
-                                                <MenuItem value={3} selected={item.riskProbability == 3}>Occasional</MenuItem>
-                                                <MenuItem value={4} selected={item.riskProbability == 4}>Probable</MenuItem>
-                                                <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem>
+                                                <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
+                                                <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
+                                                <MenuItem value={3} selected={item.riskProbability == 3}>Likely</MenuItem>
+                                                <MenuItem value={4} selected={item.riskProbability == 4}>Very likely</MenuItem>
+                                                {/* <MenuItem value={5} selected={item.riskProbability == 5}>Frequent</MenuItem> */}
                                               </Select>
                                             </FormControl>
                                           </Grid>
@@ -963,7 +983,7 @@ Task#1 - "Task identification"
                                     className={classes.button}
                                     onClick={(e) => handleNewHazard(e, taskIndex)}
                                   >
-                                  Add new hazard
+                                    Add new hazard
                                   </Button>
                                 </Grid>
                               </AccordionDetails>
@@ -985,13 +1005,13 @@ Task#1 - "Task identification"
 
                 <Box marginTop={4}>
                   <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
-                  Save
+                    Save
                   </Button>
                   <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={handleJobFormSubmit}>
-                  Submit
+                    Submit
                   </Button>
-                  <Button size="medium" variant="contained" color="secondary" className={classes.spacerRight}>
-                  Cancel
+                  <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => { history.push("/app/pages/assesments/xflha"); }}>
+                    Cancel
                   </Button>
                 </Box>
               </Box>

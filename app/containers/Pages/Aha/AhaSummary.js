@@ -55,7 +55,9 @@ import Attachment from "../../Attachment/Attachment";
 import axios from "axios";
 import { Comments } from "../../pageListAsync";
 import ActionShow from '../../Forms/ActionShow';
-import { handelActionData } from "../../../utils/CheckerValue"
+import { handelActionData , handelActionWithEntity } from "../../../utils/CheckerValue"
+import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
+import Loader from "../../Forms/Loader";
 
 // import AhaSummary from "../../../containers/Activity/Activity" ;
 
@@ -87,16 +89,11 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium,
   },
   aLabelValue: {
-    fontSize: "1rem",
-    fontWeight: "600",
-    color: "#063d55",
-    float: "left",
-    width: "100%",
-    paddingRight: "40px",
-    "& div": {
-      display: "inline-block",
-      float: "right",
-    },
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#063d55',
+    float: 'left',
+    width: '100%',
   },
   updateLink: {
     float: "left",
@@ -174,9 +171,7 @@ function AhaSummary() {
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [isNext, setIsNext] = useState(false)
   const [approvalActionData, setApprovalactionData] = useState([])
-
-
-
+  const [lessionAction, setLessionAction] = useState([])
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -302,7 +297,6 @@ function AhaSummary() {
         : null;
     let structName = []
     let projectStructId = assessment.fkProjectStructureIds.split(":")
-    console.log(projectStructId, "PPPPP")
     for (let key in projectStructId) {
       let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
       const api_work_area = axios.create({
@@ -310,14 +304,11 @@ function AhaSummary() {
         headers: HEADER_AUTH
       });
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-      console.log(workArea, "!@#$")
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName, "@@@@@@")
     setProjectStructName(structName)
   }
 
-  console.log(projectStructName, "LLL")
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -326,8 +317,8 @@ function AhaSummary() {
     const result = res.data.data.results;
     await setTeamForm(result);
   };
+  const projectData = JSON.parse(localStorage.getItem('projectName'));
   const fetchBreakDownData = async (projectBreakdown) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
@@ -414,23 +405,25 @@ function AhaSummary() {
     const result = res.data.data.results;
 
     let zzz = [...result]
-
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
-        if (result[i].riskRating === "25%") {
-          zzz[i].riskRatingColour = '#1EBD10'
-        } else if (result[i].riskRating === "50%") {
-          zzz[i].riskRatingColour = '#FFEB13'
+        if (result[i].riskRating === "20%") {
+          zzz[i].riskRatingColour = '#006400'
+        } else if (result[i].riskRating === "40%") {
+          zzz[i].riskRatingColour = '#6AA121'
 
-        } else if (result[i].riskRating === "75%") {
+        } else if (result[i].riskRating === "60%") {
           zzz[i].riskRatingColour = '#F3C539'
 
-        } else {
+        } else if (result[i].riskRating === "80%") {
+          zzz[i].riskRatingColour = '#800000'
+        }
+        else {
           zzz[i].riskRatingColour = '#FF0000'
-
         }
       }
     }
+
     await setForm(zzz);
     await handelActionTracker(result)
   };
@@ -453,6 +446,12 @@ function AhaSummary() {
   const handelShowData = () => {
 
   }
+
+  const handelLessionActionTracker = async () => {
+    let ahaId = localStorage.getItem("fkAHAId")
+    let allAction = await handelActionWithEntity(ahaId, "aha:lessionLearned")
+    setLessionAction(allAction)
+  };
 
 
   const fkCompanyId =
@@ -477,11 +476,33 @@ function AhaSummary() {
     // await setIsLoading(true);
   };
 
+  const [checkListAssessment, setCheckListAssessment] = useState({})
+
+  const assessmentDataValues = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    var tempPerformance = {}
+    
+
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/aha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+
+   
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })    
+    setCheckListAssessment(tempPerformance)
+  }
+
+
   useEffect(() => {
     if (id) {
       fetchAHASummary();
       fetchTeamData();
       fetchHzardsData();
+      handelLessionActionTracker();
+      assessmentDataValues();
       // fetchactionTrackerData();
     }
   }, []);
@@ -730,17 +751,17 @@ function AhaSummary() {
                                     >
                                       Risk Assessment team
                                     </Typography>
-                                    {Teamform.map((value, index) => (
+                                    {Teamform.length > 0 ? 
+                                    Teamform.map((value, index) => (
                                       <ul
                                         className={Fonts.labelValue}
                                         key={index}
                                       >
-                                        {value.teamName !== "" ? (
+                                        
                                           <li>{value.teamName}</li>
-                                        ) : "-"}
                                       </ul>
-                                    ))}
-                                  </Grid>
+                                    )) : "-" }
+                                   </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>
@@ -1073,7 +1094,12 @@ function AhaSummary() {
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.workStopCondition ? ahaData.workStopCondition : "-"}
+                                    {checkValue(ahaData.workStopCondition).split(",").map((value) => (
+                                            <p>
+                                               {checkListAssessment[value]}
+                                            </p>
+                                          ))}
+                                      {/* {ahaData.workStopCondition ? ahaData.workStopCondition : "-"} */}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1151,10 +1177,10 @@ function AhaSummary() {
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.link ? ahaData.link : "-"}
+                                      {ahaData.link !== "null" ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
-                                  {/* <Grid item xs={12} md={12}>
+                                  <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
                                       gutterBottom
@@ -1169,7 +1195,7 @@ function AhaSummary() {
                                     >
                                       {ahaData.notifyTo ? ahaData.notifyTo : "-"}
                                     </Typography>
-                                  </Grid> */}
+                                  </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>
@@ -1183,7 +1209,7 @@ function AhaSummary() {
                       <>
                         <Grid item xs={12} style={{ padding: "0px 12px" }}>
                           <Typography className={classes.heading}>
-                            Work Responsible Person
+                          Competent person
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -1335,30 +1361,48 @@ function AhaSummary() {
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Work Responsible Person
+                              Competent person
                               </Typography>
                               <Typography
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {user.name}, {user.badgeNo}
+                                {user.name}, {user.badgeNo ? user.badgeNo : "-"}
                               </Typography>
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={12}>
                               <Typography
                                 variant="h6"
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Lessons learnt
+                                Lessons learned
                               </Typography>
                               <Typography
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
+                                {ahaData.lessonLearntDetails ? ahaData.lessonLearntDetails : "-"}
                               </Typography>
                             </Grid>
+
+                            <Grid item xs={12} md={12}>
+                                  <Typography className={classes.aLabelValue}>
+                                    {lessionAction.map((value) => (
+                                      <>
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={projectData.companyId}
+                                          projectId={projectData.projectId}
+                                          handelShowData={handelShowData}
+                                        />
+
+                                      </>
+                                    ))}
+                                  </Typography>
+                            </Grid>
+                            
                           </Grid>
                         </Grid>
                       </>
@@ -1489,7 +1533,7 @@ function AhaSummary() {
       </Box>
     </> :
       <>
-        Loading...
+        <Loader/>
       </>
       }
     </PapperBlock>
