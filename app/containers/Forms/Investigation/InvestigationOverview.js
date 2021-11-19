@@ -140,7 +140,7 @@ const InvestigationOverview = () => {
           <Col md={9}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Typography variant="h6">Unit constructor manager</Typography>
+                <Typography variant="h6">Unit manager</Typography>
               </Grid>
 
               <Grid item xs={12} md={6}>
