@@ -3,6 +3,8 @@ import {
 } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -139,7 +141,7 @@ const DocumentNotification = () => {
   const [form, setForm] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const history = useHistory();
-
+  const [notifyToList, setNotifyToList] = useState([]);
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('');
@@ -150,7 +152,6 @@ const DocumentNotification = () => {
     const jhaId = handelJhaId();
     const res = await api.get(`/api/v1/jhas/${jhaId}/`);
     const apiData = res.data.data.results;
-    apiData.notifyTo == null ? apiData.notifyTo = '' : apiData.notifyTo = apiData.notifyTo.split(',');
     setForm(apiData);
     handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
 
@@ -158,12 +159,11 @@ const DocumentNotification = () => {
     const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
     const config = {
       method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/`,
+      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
       headers: HEADER_AUTH,
     };
     const notify = await api(config);
     if (notify.status === 200) {
-      console.log(notify.data.data.results);
       const result = notify.data.data.results;
       setNotificationSentValue(result);
     }
@@ -223,24 +223,31 @@ const DocumentNotification = () => {
   };
 
   const handelNotifyTo = async (e, value) => {
-    if (e.target.checked === false) {
-      const newData = form.notifyTo.filter((item) => item !== value);
-      setForm({
-        ...form,
-        notifyTo: newData
-      });
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+
+      temp.push(value)
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq)
+
+      setForm({ ...form, notifyTo: temp.toString() });
     } else {
-      setForm({
-        ...form,
-        notifyTo: [...form.notifyTo, value]
-      });
+      let temp = [...notifyToList];
+
+      let newData = temp.filter((item) => item !== value);
+
+      setNotifyToList(newData);
+      setForm({ ...form, notifyTo: newData.toString() });
+
     }
+
   };
 
   const handelApiError = () => {
     setSubmitLoader(false);
     history.push('/app/pages/error');
   };
+
 
   const handelNext = async () => {
     setSubmitLoader(true);
@@ -339,22 +346,32 @@ const DocumentNotification = () => {
 
             {notificationSentValue.length > 0
               ? (
-                <Grid item md={12}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">Notifications to be sent to</FormLabel>
-                    <FormGroup>
-                      {notificationSentValue.map((value) => (
-                        <FormControlLabel
-                          control={<Checkbox name={value.roleName} />}
-                          label={value.roleName}
-                          checked={form.notifyTo && form.notifyTo !== null && form.notifyTo.includes(value.id.toString())}
-                          onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+                >
+                <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
+                <FormGroup row>{notificationSentValue.map((value) => (
+                  <FormControlLabel
+                    className={classes.labelValue}
+                    control={(
+                        <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        name="checkedI"
+                        checked ={form.notifyTo !== null ? form.notifyTo.includes(value.id) : ""}
+                        onChange={(e) => handelNotifyTo(e , value.id)}
                         />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  <Box borderTop={1} marginTop={2} borderColor="grey.300" />
-                </Grid>
+                    )}
+                    label={value.roleName}
+                    />
+
+                ))}   
+                </FormGroup>
+              </Grid>
+                
               )
               : null}
 

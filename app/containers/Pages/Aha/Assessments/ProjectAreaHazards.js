@@ -404,7 +404,8 @@ const ProjectAreaHazards = () => {
   useEffect(() => {
 
     checkList()
-    handelUpdate()
+      handelUpdate()
+    
 
   }, []);
   return (
