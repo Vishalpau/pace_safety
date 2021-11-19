@@ -887,16 +887,16 @@ const ReportingAndNotification = () => {
                           size="small"
                           variant="outlined"
                           label="Evidences remark"
-                          error={
-                            evidenceError
-                            && evidenceError[`evidenceRemark${[index]}`]
-                          }
-                          helperText={
-                            evidenceError
-                              && evidenceError[`evidenceRemark${[index]}`]
-                              ? evidenceError[`evidenceRemark${[index]}`]
-                              : null
-                          }
+                          // error={
+                          //   evidenceError
+                          //   && evidenceError[`evidenceRemark${[index]}`]
+                          // }
+                          // helperText={
+                          //   evidenceError
+                          //     && evidenceError[`evidenceRemark${[index]}`]
+                          //     ? evidenceError[`evidenceRemark${[index]}`]
+                          //     : null
+                          // }
                           disabled={!item.evidenceDocument}
                           className={classes.formControl}
                           value={item.evidenceRemark}

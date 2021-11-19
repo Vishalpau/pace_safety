@@ -378,10 +378,10 @@ const IncidentDetails = (props) => {
   const fetchIncidentTypeValue = async () => {
     try {
       const res = await api.get("api/v1/lists/1/value");
-      const result = res.data.data.results;let data = [];
+      const result = res.data.data.results; let data = [];
       data = result
-      await setIncidentTypeValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
-    
+      await setIncidentTypeValue([...data, { inputLabel: "Other", inputValue: "Other" }, { inputLabel: "NA", inputValue: "NA" }]);
+
       // await setIncidentTypeValue(result);
     } catch (error) {
       history.push("/app/pages/error")
@@ -396,7 +396,7 @@ const IncidentDetails = (props) => {
       const result = res.data.data.results;
       let data = [];
       data = result
-      await setContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
+      await setContractorValue([...data, { inputLabel: "Other", inputValue: "Other" }, { inputLabel: "NA", inputValue: "NA" }]);
     } catch (error) {
       setIsNext(true);
 
@@ -414,8 +414,8 @@ const IncidentDetails = (props) => {
       let data = [];
       data = result
 
-      await setSubContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
-    
+      await setSubContractorValue([...data, { inputLabel: "Other", inputValue: "Other" }, { inputLabel: "NA", inputValue: "NA" }]);
+
     } catch (error) {
       setIsNext(true);
 
@@ -899,7 +899,7 @@ const IncidentDetails = (props) => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor/Agency name"
-                    value={form.contractor.trim() || ""}
+                    value={form.contractor !== null && form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
