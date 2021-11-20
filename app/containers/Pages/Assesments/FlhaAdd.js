@@ -1043,7 +1043,7 @@ const FlhaDetails = (props) => {
                     variant="outlined"
                     rows="1"
                     // id="Department"
-                    label="*Department"
+                    label="Department"
                     className="formControl"
                     // value={departNmae.departmentName}
                     value={(departNmae.departmentName != undefined) ? departNmae.departmentName : ''}
