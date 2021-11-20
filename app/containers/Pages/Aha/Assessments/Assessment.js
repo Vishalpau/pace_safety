@@ -333,6 +333,7 @@ const Assessment = () => {
           zzz[i].riskRatingColour = '#F3C539'
 
         }  else if (abc[i].riskRating === "18 Substantial" || abc[i].riskRating === "24 Substantial") {
+
           zzz[i].riskRatingColour = '#800000'
         }
         else {

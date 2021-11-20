@@ -697,9 +697,7 @@ function xflha(props) {
   return (
 
     <>
-
       <PapperBlock title="Field Level Hazard Assessment" icon="ion-md-list-box" desc="">
-
         <Box>
           <div className={classes.root}>
             <AppBar position="static" color="transparent" className={classes.searchHeaderTop}>
@@ -851,7 +849,7 @@ function xflha(props) {
 
                                   <Grid item sm={12} xs={12}>
                                     <Grid container spacing={3}>
-                                      <Grid item md={3} sm={6} xs={12}>
+                                      {/* <Grid item md={3} sm={6} xs={12}>
                                         <Typography
                                           variant="body1"
                                           gutterBottom
@@ -864,12 +862,12 @@ function xflha(props) {
                                         <Typography
                                           gutterBottom
                                           className={classes.listingLabelValue}
-                                        >
+                                        > */}
                                           {/* {item[1]["incidentReportedByName"]} */}
-                                          Not found
+                                          {/* Not found
                                         </Typography>
-                                      </Grid>
-                                      <Grid item md={3} sm={6} xs={12}>
+                                      </Grid> */}
+                                      {/* <Grid item md={3} sm={6} xs={12}>
                                         <Typography
                                           variant="body1"
                                           color="textPrimary"
@@ -884,7 +882,7 @@ function xflha(props) {
                                         >
                                           {item[1].location}
                                         </Typography>
-                                      </Grid>
+                                      </Grid> */}
 
                                       <Grid item md={3} sm={6} xs={12}>
                                         <Typography
@@ -1512,7 +1510,7 @@ function xflha(props) {
           )}
 
         </Box>
-        <Loader />
+        {/* <Loader /> */}
       </PapperBlock>
 
 
