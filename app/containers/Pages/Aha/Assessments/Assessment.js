@@ -280,15 +280,6 @@ const Assessment = () => {
     handelCommonObject("commonObject", "aha", "assessmentIds", temp)
     await handelActionTracker(result)
 
-    //   const severity = [
-    //     "Negligible",
-    //    "Minor",
-    //    "Moderate",
-    //     "Major/ Critical",
-    //     "Catastrophic",
-    //  ];
-
-
     let getSeverity = [...result]
     for (var i = 0; i < result.length; i++) {
       if (result[i].severity !== "") {
@@ -350,9 +341,7 @@ const Assessment = () => {
         }
       }
     }
-
     await setForm(zzz)
-
   };
 
   const handelActionTracker = async () => {
@@ -388,29 +377,6 @@ const Assessment = () => {
     )
   }
 
-  const handelActionLink = () => {
-
-    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-      ? JSON.parse(localStorage.getItem('userDetails')).id
-      : null;
-
-    const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
-
-    const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
-
-    setProjectData({
-      projectId: projectId,
-      companyId: fkCompanyId,
-      createdBy: userId,
-      projectStructId: JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]
-    })
-  }
 
   const handelRiskAndControl = (changeType, index, value) => {
     const temp = [...form]
@@ -532,15 +498,15 @@ const Assessment = () => {
     setForm(temp);
   };
 
+  console.log(risk.current,"LLLLLL")
+
 
   const handelCallBack = async () => {
 
     await fetchHzardsData();
     await checkList();
     await fetchAhaData();
-    await handelActionLink()
     await pickListValue()
-    await handelActionTracker()
     await setIsLoading(true)
   }
 

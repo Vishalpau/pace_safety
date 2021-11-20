@@ -1180,7 +1180,7 @@ function AhaSummary() {
                                       {ahaData.link !== "null" ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
-                                  {/* <Grid item xs={12} md={12}>
+                                  <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
                                       gutterBottom
@@ -1195,7 +1195,7 @@ function AhaSummary() {
                                     >
                                       {ahaData.notifyTo ? ahaData.notifyTo : "-"}
                                     </Typography>
-                                  </Grid> */}
+                                  </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>
