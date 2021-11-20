@@ -333,15 +333,15 @@ const Assessment = () => {
 
     for (var i = 0; i < abc.length; i++) {
       if (abc[i].riskRating !== "") {
-        if (abc[i].riskRating === "20%") {
+        if (abc[i].riskRating === "20%  Trivial") {
           zzz[i].riskRatingColour = '#006400'
-        } else if (abc[i].riskRating === "40%") {
+        } else if (abc[i].riskRating === "40%  Tolerable") {
           zzz[i].riskRatingColour = '#6AA121'
 
-        } else if (abc[i].riskRating === "60%") {
+        } else if (abc[i].riskRating === "60%  Moderate") {
           zzz[i].riskRatingColour = '#F3C539'
 
-        }  else if (abc[i].riskRating === "80%") {
+        }  else if (abc[i].riskRating === "80%  Substantial") {
           zzz[i].riskRatingColour = '#800000'
 
         }
@@ -514,19 +514,19 @@ const Assessment = () => {
       temp[key].probability = txt;
     }
     if (riskRating >= 1 && riskRating <= 4) {
-      temp[key].riskRating = '20%';
+      temp[key].riskRating = '20%  Trivial';
       temp[key].riskRatingColour = '#1EBD10';
     } else if (riskRating > 5 && riskRating <= 8) {
-      temp[key].riskRating = '40%';
+      temp[key].riskRating = '40%  Tolerable';
       temp[key].riskRatingColour = '#008000';
     } else if (riskRating > 9 && riskRating <= 16) {
-      temp[key].riskRating = '60%';
+      temp[key].riskRating = '60%  Moderate';
       temp[key].riskRatingColour = '#F3C539';
     } else if (riskRating > 17 && riskRating <= 24) {
-      temp[key].riskRating = '80%';
+      temp[key].riskRating = '80%  Substantial';
       temp[key].riskRatingColour = '#800000';
     }else {
-      temp[key].riskRating = '100%';
+      temp[key].riskRating = '100%  Intoreable';
       temp[key].riskRatingColour = '#FF0000';
     }
     setForm(temp);

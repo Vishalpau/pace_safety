@@ -25,7 +25,7 @@ import {
   HEADER_AUTH,
 } from '../../../utils/constants';
 // import { api } from "../../../utils/axios";
-import api from '../../../utils/axios';
+import api, { appapi, setApiUrl } from '../../../utils/axios';
 import { useHistory } from 'react-router-dom'
 import ActionTracker from "../../Forms/ActionTracker";
 import { CircularProgress } from "@material-ui/core";
@@ -108,6 +108,17 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '10px',
       cursor: 'pointer',
     },
+  },
+  labelValue: {
+    fontSize: "1rem",
+    fontWeight: "600",
+    color: "#063d55",
+  },
+  labelValueName: {
+    fontSize: "1rem",
+    fontWeight: "600",
+    color: "#063d55",
+    paddingLeft: '10px',
   },
   root: {
     flexGrow: 1,
@@ -192,54 +203,6 @@ const FlhaDetails = (props) => {
     new Date('2014-08-18T21:11:54')
   );
   const [updatePage, setUpdatePage] = React.useState(false)
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const projectId =
-    JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-      : null;
-
-  const handelActionTracker = async (id) => {
-    // let observationId = localStorage.getItem("fkFlhaId")
-    let allAction = await handelActionData(id, [], "title")
-    setActionData(allAction)
-  };
-  const handelActionShow = (id) => {
-    return (<>
-      <Grid>
-        <>
-          {
-            actionData.map((valueAction) => (
-              <>
-                <ActionShow
-                  action={{ id: valueAction.id, number: valueAction.actionNumber }}
-                  title={valueAction.actionTitle}
-                  companyId={fkCompanyId}
-                  projectId={projectId}
-                  updatePage={updatePage}
-                />
-              </>
-            ))
-          }
-        </>
-      </Grid>
-    </>
-    )
-  }
-  const selectBreakdown =
-    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : [];
-  let struct = "";
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-
-
   const [actionData, setActionData] = React.useState([])
 
   const [value, setValue] = React.useState('female');
@@ -255,6 +218,26 @@ const FlhaDetails = (props) => {
   const [step8, setStep8] = React.useState('')
   const [step9, setStep9] = React.useState('')
 
+  const [id1, setId1] = React.useState('1')
+  const [id2, setId2] = React.useState('2')
+  const [id3, setId3] = React.useState('3')
+  const [id4, setId4] = React.useState('4')
+  const [id5, setId5] = React.useState('5')
+  const [id6, setId6] = React.useState('6')
+  const [id7, setId7] = React.useState('7')
+  const [id8, setId8] = React.useState('8')
+  const [id9, setId9] = React.useState('9')
+
+  const [idd1, setIdd1] = React.useState([])
+  const [idd2, setIdd2] = React.useState([])
+  const [idd3, setIdd3] = React.useState([])
+  const [idd4, setIdd4] = React.useState([])
+  const [idd5, setIdd5] = React.useState([])
+  const [idd6, setIdd6] = React.useState([])
+  const [idd7, setIdd7] = React.useState([])
+  const [idd8, setIdd8] = React.useState([])
+  const [idd9, setIdd9] = React.useState([])
+
   const [remark1, setRemark1] = React.useState('')
   const [remark2, setRemark2] = React.useState('')
   const [remark3, setRemark3] = React.useState('')
@@ -269,6 +252,34 @@ const FlhaDetails = (props) => {
 
   const [isLock, setIsLock] = React.useState(false)
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+
+  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    .projectName.projectId;
+
+  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
+
+  const parts = history.location.pathname.split('/');
+  let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : [];
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -278,11 +289,6 @@ const FlhaDetails = (props) => {
   const [checked, setChecked] = React.useState(true);
 
   const [users, setUser] = React.useState([])
-
-  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
-    .projectName.projectId;
-  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const [auditForm, setAuditForm] = React.useState({
     auditor: "",
@@ -302,18 +308,7 @@ const FlhaDetails = (props) => {
       })
   };
 
-  const handleFlhaSummaryPush = async (id) => {
-    history.push(
-      "/app/pages/assesments/flhasummary/" + id
-      // "/app/pages/flha/FlhaSummary"
-    );
-  };
-  const parts = history.location.pathname.split('/');
-  let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
-
-
   const AuditCheckSubmit = () => {
-
     ninetimeCall('Identification information complete', remark1, step1)
     ninetimeCall('Job described accuratly', remark2, step2)
     ninetimeCall('Critical tasks identified', remark3, step3)
@@ -323,26 +318,18 @@ const FlhaDetails = (props) => {
     ninetimeCall('Energies isolated or controlled', remark7, step7)
     ninetimeCall('Re-assesment of hazards completed after pause and resart', remark8, step8)
     ninetimeCall('Agreement signed', remark9, step9)
-
   }
-
 
   const ninetimeCall = async (auditType, auditRemarks, auditCheck) => {
     const parts = history.location.pathname.split('/');
     let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
-
     const formData = new FormData(); // formdata object
-
-    // formData.append('fkCompanyId', JSON.parse(localStorage.getItem('company')).fkCompanyId);
-    // formData.append('fkProjectId', JSON.parse(localStorage.getItem('projectName')).projectName.projectId);
-    // formData.append('projectName', JSON.parse(localStorage.getItem('projectName')).projectName.projectName);
     formData.append('createdBy', JSON.parse(localStorage.getItem('userDetails')).id);
     formData.append('auditor', auditName);
     formData.append('auditType', auditType);
     formData.append('auditRemarks', auditRemarks);
     formData.append('fkFlhaId', last_part);
     formData.append('auditCheck', auditCheck);
-
     const res = await api.post(`/api/v1/flhas/${last_part}/auditchecks/`, formData);
     await setLoading(true)
     if (auditType == 'Agreement signed') {
@@ -370,6 +357,45 @@ const FlhaDetails = (props) => {
           setStep8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditCheck)
           setStep9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditCheck)
 
+
+          setId1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].id)
+          setId2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].id)
+          setId3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].id)
+          setId4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].id)
+          setId5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].id)
+          setId6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].id)
+          setId7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].id)
+          setId8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].id)
+          setId9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].id)
+
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id1).then(res => {
+          //   setIdd1(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2).then(res => {
+          //   setIdd2(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id3).then(res => {
+          //   setIdd3(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id4).then(res => {
+          //   setIdd4(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id5).then(res => {
+          //   setIdd5(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id6).then(res => {
+          //   setIdd6(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id7).then(res => {
+          //   setIdd7(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id8).then(res => {
+          //   setIdd8(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id9).then(res => {
+          //   setIdd9(res.data.data.results.results)
+          // })
+
           setRemark1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditRemarks)
           setRemark2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditRemarks)
           setRemark3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditRemarks)
@@ -391,13 +417,79 @@ const FlhaDetails = (props) => {
           setAuditName(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditor)
           setIsLock(true)
         }
+
       })
   };
 
+  const setActions = () => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id1).then(res => {
+      setIdd1(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2).then(res => {
+      setIdd2(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id3).then(res => {
+      setIdd3(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id4).then(res => {
+      setIdd4(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id5).then(res => {
+      setIdd5(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id6).then(res => {
+      setIdd6(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id7).then(res => {
+      setIdd7(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id8).then(res => {
+      setIdd8(res.data.data.results.results)
+    })
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id9).then(res => {
+      setIdd9(res.data.data.results.results)
+    })
+  }
+  const handelActionTracker = async (id) => {
+    // let observationId = localStorage.getItem("fkFlhaId")
+    let allAction = await handelActionData(id, [], "title")
+
+    setActionData(allAction)
+  };
+  const handelActionShow = (id) => {
+    return (<>
+      <Grid>
+        <>
+          {
+            actionData.map((valueAction) => (
+              <>
+                <ActionShow
+                  action={{ id: valueAction.id, number: valueAction.actionNumber }}
+                  title={valueAction.actionTitle}
+                  companyId={fkCompanyId}
+                  projectId={projectId}
+                  updatePage={updatePage}
+                />
+              </>
+            ))
+          }
+        </>
+      </Grid>
+    </>
+    )
+  }
+  const [actionData1, setActionData1] = React.useState([])
+
+  // const handelActionShow = async (fid, aid) => {
+  //   const res = await appapi.get(setApiUrl() + 'api/v1/actions/?context_id=' + `${fid}:${aid}`)
+  //   setActionData1(res.data.data.results.results)
+  //   console.log(res.data.data.results.results, 'res')
+  // }
 
   React.useEffect(() => {
     auditUserList()
     auditData()
+    setActions()
   }, []);
 
   return (
@@ -433,7 +525,7 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">Control and isolation method</TableCell>
                                 <TableCell align="left">Yes</TableCell>
                                 <TableCell align="left">No</TableCell>
-                                {/* <TableCell align="left">Action</TableCell> */}
+                                <TableCell align="left">Action</TableCell>
                                 <TableCell align="left">Needs improvements (Specify)</TableCell>
                               </TableRow>
                             </TableHead>
@@ -449,22 +541,43 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /> */}
-                                  {/* <Typography className={classes.labelValue}>
-                                    {handelActionShow(value.id)}
-                                    {console.log(handelActionShow(value.id), 'iiii')}
-                                  </Typography> */}
-                                  {/* <ActionTracker
-                                    actionContext="flha"
-                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${value.id}`}
-                                    fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                <TableCell align="left">
+                                  {/* {idd1.map(i1 => {
+                                      {i1.actionNumber}
+
+                                    })} */}
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id1}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
                                     fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                     fkProjectStructureIds={fkProjectStructureIds}
                                     createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                    setUpdatePage={setUpdatePage}
                                     handelShowData={handelActionTracker}
-                                  /> */}
-                                  {/* </TableCell> */}
+                                  />
+                                  {console.log(id1, 'idd1')}
+
+                                  {idd1.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+                                    <Grid item xs={6} className={classes.createHazardbox}>
+                                      {/* {value.action.length > 0 && value.action.map((valueAction) => (
+                              <ActionShow
+                                action={valueAction}
+                                companyId={projectData.companyId}
+                                projectId={projectData.projectId}
+                                updatePage={updatePage}
+                              />
+                            ))} */}
+                                      {/* {console.log(handelActionShow(`${localStorage.getItem("flhaId")}:${id1}`), 'tt')} */}
+
+
+                                    </Grid>                                  </Typography>
+                                  )}
+
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -488,7 +601,24 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2 == 'No' ? true : false} onClick={() => setStep2('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon fontSize="medium" /></TableCell> */}
+                                <TableCell align="left">
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id2}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd2.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -512,7 +642,24 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3 == 'No' ? true : false} onClick={() => setStep3('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id3}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd3.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -536,7 +683,25 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4 == 'No' ? true : false} onClick={() => setStep4('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id4}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd4.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -560,7 +725,25 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5 == 'No' ? true : false} onClick={() => setStep5('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id5}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd5.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -584,7 +767,25 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6 == 'No' ? true : false} onClick={() => setStep6('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id6}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd6.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -608,7 +809,25 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7 == 'No' ? true : false} onClick={() => setStep7('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id7}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd7.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -632,7 +851,25 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step8 == 'No' ? true : false} onClick={() => setStep8('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id8}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd8.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"
@@ -656,7 +893,25 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">
                                   <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9 == 'No' ? true : false} onClick={() => setStep9('No')} />
                                 </TableCell>
-                                {/* <TableCell align="left"><OfflineBoltIcon /></TableCell> */}
+                                <TableCell align="left">
+
+                                  <ActionTracker
+                                    actionContext="flha:audit"
+                                    enitityReferenceId={`${localStorage.getItem("flhaId")}:${id9}`}
+                                    setUpdatePage={setUpdatePage}
+                                    updatePage={updatePage}
+                                    fkCompanyId={fkCompanyId}
+                                    fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                    fkProjectStructureIds={fkProjectStructureIds}
+                                    createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                    handelShowData={handelActionTracker}
+                                  />
+                                  {idd9.map(i1 => <Typography className={classes.labelValueName}>
+                                    {i1.actionNumber}
+
+                                  </Typography>
+                                  )}
+                                </TableCell>
                                 <TableCell align="left">
                                   <TextField
                                     variant="outlined"

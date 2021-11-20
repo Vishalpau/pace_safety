@@ -449,6 +449,8 @@ const FlhaDetails = (props) => {
     // setTaskForm(temp);
   };
 
+  
+
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     console.log({ props: props.criticalTasks });
@@ -581,27 +583,27 @@ const FlhaDetails = (props) => {
                                           <Grid item md={4} sm={4} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
                                             <Typography>
-                                              {riskServ[hazard.riskSeverity]}
+                                              {hazard.riskSeverity}
+                                              {/* {riskServ[hazard.riskSeverity]} */}
                                             </Typography>
                                           </Grid>
                                           <Grid item md={4} sm={4} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Risk Probability</FormLabel>
                                             <Typography>
-                                              {riskProb[hazard.riskProbability]}
-
+                                              {/* {riskProb[hazard.riskProbability]} */}
+                                              {hazard.riskProbability}
                                             </Typography>
                                           </Grid>
                                           <Grid item md={4} sm={4} xs={12} >
-                                            {/* {console.log(hazard,'col')}
-                                            {hazard.riskRatingLevel} */}
-                                            <div
+                                            {hazard.riskRatingLevel}
+                                            {/* <div
                                               className={
                                                 classes.ratioColororange
                                               }
-                                              style={{ backgroundColor: handleRiskChange(hazard.riskProbability, hazard.riskSeverity) }}
+                                              style={{ backgroundColor: hazard.riskRatingColour }}
                                             >
 
-                                            </div>
+                                            </div> */}
 
                                           </Grid>
                                         </Grid>

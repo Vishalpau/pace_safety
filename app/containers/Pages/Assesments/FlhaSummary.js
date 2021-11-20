@@ -165,6 +165,7 @@ class SimpleTabs extends React.Component {
     visualConfirmations: {},
     versions: ["1.0",]
   };
+    
 
   handleChangeTab = (event, value) => {
     // alert(value)
@@ -239,7 +240,8 @@ class SimpleTabs extends React.Component {
                     variant="p"
                     gutterBottom
                   >
-                    {flha.status}
+                    Open
+                    {/* {flha.status} */}
 
                   </Typography>
                 </Grid>
@@ -379,7 +381,6 @@ class SimpleTabs extends React.Component {
 
              */}
           </Grid>
-
           <Grid item md={3} xs={12}>
             <Paper elevation={0}>
               <div className={classes.root}>
@@ -412,7 +413,7 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                      disabled={true}
+                      // disabled={true}
                         href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id}
                         variant="subtitle"
                       >
