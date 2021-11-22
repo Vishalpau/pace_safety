@@ -248,10 +248,6 @@ const FlhaDetails = (props) => {
   const [remark8, setRemark8] = React.useState('')
   const [remark9, setRemark9] = React.useState('')
 
-  const [auditName, setAuditName] = React.useState('')
-
-  const [isLock, setIsLock] = React.useState(false)
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -279,6 +275,14 @@ const FlhaDetails = (props) => {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
+
+ 
+
+ 
+
+  const [auditName, setAuditName] = React.useState('')
+
+  const [isLock, setIsLock] = React.useState(false)
 
   const handleChange = (event) => {
     setValue(event.target.value);
