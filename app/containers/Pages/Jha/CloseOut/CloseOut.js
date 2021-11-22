@@ -81,7 +81,7 @@ const CloseOut = () => {
     // const dispatch = useDispatch();
     const [jhaListData, setJhaListdata] = useState({});
     const [userList, setUserList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState({})
     const [form, setForm] = useState({
         reviewedBy: 0,
@@ -102,20 +102,21 @@ const CloseOut = () => {
         const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
-        console.log(result)
         if (result.closedDate == null) {
             result["closedDate"] = new Date()
         }
-        setJhaListdata(result)
+        await setJhaListdata(result)
+        await setIsLoading(true)
     };
     // handle close snackbar
 
     //   fetch user data
 
     const fetchUserList = async () => {
+        let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
         var config = {
             method: 'get',
-            url: `${ACCOUNT_API_URL}api/v1/companies/${JSON.parse(localStorage.getItem('company')).fkCompanyId}/users/`,
+            url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/users/`,
             headers: {
                 Authorization: `Bearer ${access_token}`,
             },
@@ -123,9 +124,8 @@ const CloseOut = () => {
 
         axios(config)
             .then(function (response) {
-
                 if (response.status === 200) {
-                    const result = response.data.data.results[0].users
+                    const result = response.data.data.results.users
                     setUserList(result)
                 }
             })
@@ -150,10 +150,8 @@ const CloseOut = () => {
     }
 
     const handelCallBack = async () => {
-        await setIsLoading(true)
         await fetchUserList()
         await fetchJhaData()
-        await setIsLoading(false)
     }
 
     useEffect(() => {
@@ -162,7 +160,7 @@ const CloseOut = () => {
     const isDesktop = useMediaQuery("(min-width:992px)");
     return (
         <PapperBlock title="Close out" icon="ion-md-list-box">
-            {isLoading === false ? (
+            {isLoading ? (
                 <Grid container spacing={3}>
                     <Grid container item xs={12} md={9} justify="flex-start" spacing={3}>
                         <Grid item xs={12}>

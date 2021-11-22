@@ -66,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     lineHeight: '30px',
     border: 'none',
-    marginTop: '12px',
     '&:hover': {
       backgroundColor: '#ff8533',
       border: 'none',
@@ -310,10 +309,10 @@ const DocumentNotification = () => {
                 <Typography title={handelFileName(form.jhaAssessmentAttachment)}>
                   {form.jhaAssessmentAttachment !== ''
                     && typeof form.jhaAssessmentAttachment === 'string' ? (
-                      <Attachment value={form.jhaAssessmentAttachment} />
-                    ) : (
-                      <p />
-                    )}
+                    <Attachment value={form.jhaAssessmentAttachment} />
+                  ) : (
+                    <p />
+                  )}
                 </Typography>
               </Grid>
             </Grid>

@@ -29,6 +29,7 @@ import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import { useParams, useHistory } from 'react-router';
 import api from "../../../../utils/axios";
 import { CircularProgress } from '@material-ui/core';
+import Loader from "../../../Forms/Loader";
 
 import { AHA } from "../constants";
 
@@ -199,25 +200,12 @@ const ProjectAreaHazards = () => {
   }
 
   const handlePhysicalHazards = (e, index, value, checkListID) => {
-    console.log(form, "''''''''")
     let temp = [...form]
-    console.log(temp, "<<<<<<")
     let tempRemove = []
     if (e.target.checked == false) {
       temp.map((ahaValue, index) => {
-        console.log(ahaValue.fkChecklistId)
-        console.log(temp[index]['fkChecklistId'])
-        console.log(checkListID)
+      
         if (ahaValue['fkChecklistId'] === checkListID) {
-          console.log(temp, "LLLLLLLLLL")
-
-          // if(temp[index].id){
-          //   console.log(temp[index].id)
-          //   const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
-
-          // }
-
-
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
 
@@ -558,13 +546,13 @@ const ProjectAreaHazards = () => {
                     Next
                   </Button>
                   {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-                  </div>
-                  
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+
               </Grid>
 
             </Grid>
@@ -575,7 +563,12 @@ const ProjectAreaHazards = () => {
                 selectedItem="Project Area Hazards"
               />
             </Grid>
-          </Grid>) : (<h1>Loading...</h1>)}
+          </Grid>) : (
+          <>
+            <Loader/>
+          </>
+        )
+        }
       </PapperBlock>
 
     </>

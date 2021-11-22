@@ -143,6 +143,7 @@ const Approvals = () => {
     ProjectStructId: "",
   });
   const [open, setOpen] = useState(false);
+  const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
   const [loading, setLoading] = useState(false)
 
   const handelJobDetails = async () => {
@@ -153,8 +154,8 @@ const Approvals = () => {
     setForm(apiData)
     setCheck({
       ...check,
-      wrp: apiData.wrpApprovalUser !== null ? true : false,
-      pic: apiData.picApprovalUser !== null ? true : false
+      wrp: apiData.wrpApprovalUser !== null && apiData.wrpApprovalUser !== "" ? true : false,
+      pic: apiData.sapApprovalUser !== null && apiData.sapApprovalUser !== "" ? true : false
     })
   }
 
@@ -166,9 +167,9 @@ const Approvals = () => {
       setCheck({ ...check, wrp: !check.wrp })
       setForm({ ...form, wrpApprovalUser: name, wrpApprovalDateTime: new Date() })
     } else if (type == "pic") {
-      check.pic == false && alert("You have approved person incharge")
+      setOpenSeniorAuthorized(false)
       setCheck({ ...check, pic: !check.pic })
-      setForm({ ...form, picApprovalUser: name, picApprovalDateTime: new Date() })
+      setForm({ ...form, sapApprovalUser: name, sapApprovalDateTime: new Date() })
     }
   }
 
@@ -210,6 +211,7 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
+    console.log(form)
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
@@ -231,6 +233,10 @@ const Approvals = () => {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleCloseSenirorAuthorized = () => {
+    setOpenSeniorAuthorized(false)
   }
 
   useEffect(() => {
@@ -262,7 +268,7 @@ const Approvals = () => {
                   className={classes.formBox}
                 >
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                    Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"
@@ -274,15 +280,43 @@ const Approvals = () => {
                   </Button>
                   {/* Approved by userName on Date "date" (edited)  */}
                   <div>
-                    {form.wrpApprovalDateTime !== undefined && form.wrpApprovalUser !== null
+                    {form.wrpApprovalDateTime !== null && form.wrpApprovalUser !== null
                       &&
                       form.wrpApprovalDateTime !== `Approved by: ${form.wrpApprovalUser} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}` ?
                       `Approved by: ${form.wrpApprovalUser} on Date ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
                       : null
                     }
                   </div>
-
                 </Grid>
+
+
+                <Grid
+                  item
+                  md={8}
+                  xs={12}
+                  className={classes.formBox}
+                >
+                  <Typography variant="h6" gutterBottom className={classes.labelName}>
+                    Senior Authorized Person (SAP)
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color={check.pic ? "secondary" : "primary"}
+                    className={classes.approvalButton}
+                    onClick={(e) => setOpenSeniorAuthorized(true)}
+                  >
+                    {check.pic ? "Approved" : "Approve Now"}
+                  </Button>
+                  <div>
+                    {form.sapApprovalDateTime !== undefined && form.sapApprovalUser !== null
+                      &&
+                      form.sapApprovalDateTime !== `Approved by: ${form.sapApprovalUser} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}` ?
+                      `Approved by: ${form.sapApprovalUser} on Date ${moment(form.sapApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
+                      : null
+                    }
+                  </div>
+                </Grid>
+
                 <Dialog
                   className={classes.projectDialog}
                   open={open}
@@ -306,7 +340,7 @@ const Approvals = () => {
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving work responsible person.
+                        You are approving competent person.
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
@@ -325,6 +359,56 @@ const Approvals = () => {
                         variant="contained"
                         color="primary"
                         onClick={(e) => handelWorkAndPic("work")}
+                      >
+                        Ok
+                      </Button>
+                    </Tooltip>
+                  </DialogActions>
+                </Dialog>
+
+
+                <Dialog
+                  className={classes.projectDialog}
+                  open={openSeniorAuthorized}
+                  onClose={handleCloseSenirorAuthorized}
+                  PaperProps={{
+                    style: {
+                      width: "100%",
+                      maxWidth: 400,
+                    },
+                  }}
+                >
+                  <DialogTitle onClose={() => handleCloseSenirorAuthorized()}>
+                    Confirmation
+                  </DialogTitle>
+                  <IconButton className={classes.closeIcon} onClick={() => handleCloseSenirorAuthorized()}><Close /></IconButton>
+                  <DialogContent>
+                    <DialogContentText>
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        className={classes.projectSelectionTitle}
+                      >
+                        You are approving senior authorized person.
+                      </Typography>
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Tooltip title="Cancel">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleCloseSenirorAuthorized()}
+                      >
+                        cancel
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Ok">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => handelWorkAndPic("pic")}
                       >
                         Ok
                       </Button>
@@ -363,17 +447,7 @@ const Approvals = () => {
                         handelShowData={handelActionTracker}
                       />))}
                   </Typography>
-                  <Typography className={classes.aLabelValue}>
-                    {actionData.map((value) => (
-                      <ActionShow
-                        action={{ id: value.id, number: value.actionNumber }}
-                        title={value.actionTitle}
-                        companyId={projectData.companyId}
-                        projectId={projectData.projectId}
-                        updatePage={updatePage}
-                      />
-                    ))}
-                  </Typography>
+
                 </Grid>
 
                 <Grid

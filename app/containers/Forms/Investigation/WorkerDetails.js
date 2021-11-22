@@ -38,6 +38,7 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -725,9 +726,10 @@ const WorkerDetails = () => {
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
+                    error={error && error.noOfDaysIntoShift}
                   >
                     <InputLabel id="unit-name-label">
-                      Number of days into shift
+                      Number of days into shift*
                     </InputLabel>
                     <Select
                       labelId="unit-name-label"
@@ -742,6 +744,37 @@ const WorkerDetails = () => {
                       }}
                     >
                       {noOfDaysIntoShift.map((value) => (
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {error && error.noOfDaysIntoShift && (
+                    <FormHelperText style={{ color: "red" }}>{error.noOfDaysIntoShift}</FormHelperText>
+                  )}
+                </Grid>
+
+                {/* time in industry */}
+                <Grid item xs={12} md={6}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="unit-name-label">
+                      Time in industry
+                    </InputLabel>
+                    <Select
+                      labelId="unit-name-label"
+                      id="unit-name"
+                      label="Time in Industry"
+                      value={form.timeInIndustry}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          timeInIndustry: e.target.value,
+                        });
+                      }}
+                    >
+                      {timeInIndustry.map((value) => (
                         <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
@@ -783,7 +816,7 @@ const WorkerDetails = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="unit-name-label">
-                      Time on project
+                      Time on project/plant
                     </InputLabel>
                     <Select
                       labelId="unit-name-label"
@@ -798,34 +831,6 @@ const WorkerDetails = () => {
                       }}
                     >
                       {timeOnProject.map((value) => (
-                        <MenuItem value={value.value}>{value.label}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                {/* time in industry */}
-                <Grid item xs={12} md={6}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="unit-name-label">
-                      Time in industry
-                    </InputLabel>
-                    <Select
-                      labelId="unit-name-label"
-                      id="unit-name"
-                      label="Time in Industry"
-                      value={form.timeInIndustry}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          timeInIndustry: e.target.value,
-                        });
-                      }}
-                    >
-                      {timeInIndustry.map((value) => (
                         <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
@@ -1442,7 +1447,7 @@ const WorkerDetails = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="unit-name-label">
-                      Supervisor time on project
+                      Supervisor time on project/plant
                     </InputLabel>
                     <Select
                       labelId="unit-name-label"
@@ -1533,7 +1538,7 @@ const WorkerDetails = () => {
                     onClick={() => handleNext()}
                     disabled={buttonLoading}
                   >
-                    Next
+                    Next{buttonLoading && <CircularProgress size={20} />}
                   </Button>
                 </Grid>
               </Grid>

@@ -150,10 +150,11 @@ const IncidentDetailsSummary = () => {
       let projectId = JSON.parse(localStorage.getItem("projectName"))
         .projectName.projectId;
 
-      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,)
+      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom`)
         .then((res) => {
           if (res.status === 200) {
             const result = res.data.data.results;
+            console.log(result)
             data = []
             const newData = result.map(item => {
 
@@ -478,7 +479,7 @@ const IncidentDetailsSummary = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography className={classes.heading}>
-                    Property affected
+                    Property/Material affected
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -491,7 +492,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            {key + 1}: Details of property
+                            {key + 1}: Details of property/material
                           </Typography>
                         </Grid>
 
@@ -501,7 +502,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            Property type
+                            Property/Material type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
                             {propertydata.propertyType
@@ -516,7 +517,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            Property other type
+                            Property/Material other type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
                             {propertydata.propertyOtherType

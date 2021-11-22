@@ -57,6 +57,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import ViewHazard from './ViewHazard';
 import api from '../../../utils/axios';
+//import Loader from "../Loader";
+
 
 function TabContainer(props) {
   const { children } = props;
@@ -411,7 +413,7 @@ class SimpleTabs extends React.Component {
                       </ListItemIcon>
                       <Link
                       disabled={true}
-                        href="/app/pages/assesments/AuditCheck"
+                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
@@ -524,6 +526,7 @@ class SimpleTabs extends React.Component {
             </Paper>
           </Grid>
         </Grid>
+        
       </PapperBlock>
     );
   }

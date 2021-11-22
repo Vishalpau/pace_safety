@@ -19,7 +19,7 @@ import {
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -193,25 +193,32 @@ const InvestigationOverview = () => {
     regulationValues.current = await PickListData(44);
     reputaionValues.current = await PickListData(45);
     financialValues.current = await PickListData(46);
-    highestImpactReceptor.current = await PickListData(77);
+    highestImpactReceptor.current = await PickListData(72);
 
     await setIsLoading(true);
   };
 
   const handelClassification = async (value) => {
-    if (value == classificationValues.current[0].value || value == classificationValues.current[1].value) {
+    if (value == classificationValues.current[0].value ||
+      value == classificationValues.current[1].value ||
+      value == classificationValues.current[3].value ||
+      value == classificationValues.current[5].value
+    ) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "PACE cause analysis",
       });
-    } else if (value == classificationValues.current[2].value) {
+    } else if (value == classificationValues.current[2].value ||
+      value == classificationValues.current[4].value ||
+      value == classificationValues.current[6].value
+    ) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "Cause analysis",
       });
-    } else if (value == classificationValues.current[3].value) {
+    } else if (value == classificationValues.current[7].value) {
       await setForm({
         ...form,
         classification: value,
@@ -619,7 +626,7 @@ const InvestigationOverview = () => {
                   onClick={() => handleNext()}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

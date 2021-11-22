@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import apiAction from "../../../utils/axiosActionTracker";
-import { handelActionData } from "../../../utils/CheckerValue";
+import { handelActionIcare } from "../../../utils/CheckerValue";
 import {
   access_token,
   ACCOUNT_API_URL
@@ -208,7 +208,7 @@ function ObservationCorrectiveAction() {
 
   const handelActionTracker = async () => {
     let observationId = localStorage.getItem("fkobservationId")
-    let allAction = await handelActionData(observationId, [], "title")
+    let allAction = await handelActionIcare(observationId, [], "title","iCare")
     setActionData(allAction)
   };
 
@@ -320,7 +320,7 @@ function ObservationCorrectiveAction() {
 
   const handleCancle = async () => {
     history.push(`/app/icare/details/${id}`)
-    if(form.isCorrectiveActionTaken == ""){
+    if (form.isCorrectiveActionTaken == "") {
       await localStorage.setItem("update", "Pending");
     } else {
       await localStorage.setItem("ActionUpdate", "Pending");
@@ -337,6 +337,7 @@ function ObservationCorrectiveAction() {
     if (result.isCorrectiveActionTaken === "Yes") {
       await setActionOpen(true);
     }
+    result['reviewedOn'] = new Date()
     await setForm(result);
     await handelActionTracker();
 
@@ -404,17 +405,8 @@ function ObservationCorrectiveAction() {
     axios(config)
       .then((response) => {
         if (response.status === 200) {
-          const result = response.data.data.results;
-          let user = [];
-          // user = result;
-          let data = result.filter((item) =>
-            item['companyId'] == fkCompanyId
-          )
-
-          for (var i in data[0].users) {
-            filterReportedByName.push(data[0].users[i]);
-          }
-          setReportedByName(filterReportedByName);
+          const result = response.data.data.results.users;
+          setReportedByName(result);
         }
       })
       .catch((error) => {
@@ -489,8 +481,8 @@ function ObservationCorrectiveAction() {
                 <g id="Group_5274" data-name="Group 5274" transform="translate(8.516 23.289)">
                   <path id="Path_5153" data-name="Path 5153" d="M32.13,102.808H24.007a.188.188,0,1,1,0-.375H32.13a.188.188,0,1,1,0,.375Z" transform="translate(-23.819 -102.433)" fill="#06425c" stroke="#06425c" stroke-width="0.5" />
                 </g>
-                </g>
-              </svg> iCare details
+              </g>
+            </svg> iCare details
           </Typography>
         </Grid>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -627,11 +619,9 @@ function ObservationCorrectiveAction() {
                       {handelActionShow(id)}
                     </Typography>
 
-
                     <Typography className={classes.increaseRowBox}>
-
                       <ActionTracker
-                        actionContext="Observation"
+                        actionContext="iCare"
                         enitityReferenceId={id}
                         setUpdatePage={setUpdatePage}
                         fkCompanyId={fkCompanyId}
@@ -644,7 +634,6 @@ function ObservationCorrectiveAction() {
                       />
 
                     </Typography>
-
                   </>
                 )
                   :

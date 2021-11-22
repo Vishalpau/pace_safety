@@ -22,6 +22,7 @@ import Comment from '@material-ui/icons/Comment';
 import Edit from '@material-ui/icons/Edit';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import History from '@material-ui/icons/History';
+import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 // Icons
 import Print from '@material-ui/icons/Print';
 import Share from '@material-ui/icons/Share';
@@ -40,20 +41,6 @@ import ActionShow from '../../Forms/ActionShow';
 import { Comments } from "../../pageListAsync";
 import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
 
-import Link from '@material-ui/core/Link';
-import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
-import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
-import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
-
-import FormLabel from '@material-ui/core/FormLabel';
-import projectpj from 'dan-images/projectpj.png';
-
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 
 
 
@@ -73,18 +60,6 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
-  },
-  aLabelValue: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#063d55',
-    float: 'left',
-    width: '100%',
-    paddingRight: '40px',
-    '& div': {
-      display: 'inline-block',
-      float: 'right',
-    },
   },
   updateLink: {
     float: 'left',
@@ -186,14 +161,14 @@ function JhaSummary() {
     await setAssessment(result)
     await handelWorkArea(result)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
-    const resultTeam = resTeam.data.data.results.results
+    const resultTeam = resTeam.data.data.results
     await setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
-    let approvalDecider = result.wrpApprovalUser !== null
+    let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
     await setFormStatus({
@@ -303,6 +278,30 @@ function JhaSummary() {
 
   }
 
+  const [checkListAssessment, setCheckListAssessment] = useState({})
+
+  const assessmentDataValues = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    var tempPerformance = {}
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
+    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+
+    apiDataPerformance.map((value) => {
+      value.checkListValues.map((checkValue) => {
+        tempPerformance[checkValue.inputValue] = checkValue.inputLabel
+      });
+    });
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })
+    setCheckListAssessment(tempPerformance)
+  }
+
   const handelWorkArea = async (assessment) => {
     let structName = {}
     let projectStructId = assessment.fkProjectStructureIds.split(":")
@@ -319,6 +318,7 @@ function JhaSummary() {
       structName[result["structure_name"]] = result["structureName"]
     }
     setProjectStructName(structName)
+
   }
 
   const handelInputValue = async () => {
@@ -327,10 +327,8 @@ function JhaSummary() {
     const baseUrl = localStorage.getItem("apiBaseUrl")
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
-    console.log(apiDataPerformance)
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
-    console.log(apiCondition)
   }
 
   let errorMessage = "Please fill"
@@ -395,6 +393,7 @@ function JhaSummary() {
     await handelInputValue()
     await handelLessionActionTracker()
     await handelApprovalActions()
+    await assessmentDataValues()
     await setLoader(false)
   }
 
@@ -404,141 +403,143 @@ function JhaSummary() {
 
   const classes = useStyles();
   return (
-    <>
-      <PapperBlock
-        title={`Assessment Number: ${assessment.jhaNumber !== undefined ? assessment.jhaNumber : ""}`}
-        icon="ion-md-list-box"
-      >
-        {loader == false ?
-          <>
-            {/* {console.log(commentsView)} */}
-            <Box paddingBottom={1}>
-              <div className={Styles.incidents}>
 
-                <div className={Styles.item}>
-                  <Button
-                    color={assessmentsView ? "secondary" : "primary"}
-                    size="large"
-                    variant={formStatus.assessmentStatus ? "contained" : "outlined"}
-                    endIcon={
-                      formStatus.assessmentStatus ? <CheckCircle /> : <AccessTime />
-                    }
-                    className={classes.statusButton}
-                    onClick={(e) => viewSwitch("assessment")}
-                  >
-                    Assessments
-                  </Button>
-                  <Typography variant="caption" display="block">
-                    {formStatus.assessmentStatus ? "Done" : ""}
-                  </Typography>
-                </div>
+    <PapperBlock
+      title={`Assessment Number: ${assessment.jhaNumber !== undefined ? assessment.jhaNumber : ""}`}
+      icon="ion-md-list-box"
+    >
+      {loader == false ?
+        <>
+          {/* {console.log(commentsView)} */}
+          <Box paddingBottom={1}>
+            <div className={Styles.incidents}>
 
-                <div className={Styles.item}>
-                  <Button
-                    color={approvalsView ? "secondary" : "primary"}
-                    variant="outlined"
-                    size="large"
-                    variant={formStatus.approvalStatus ? "contained" : "outlined"}
-                    endIcon={
-                      formStatus.approvalStatus ? <CheckCircle /> : <AccessTime />
-                    }
-                    className={classes.statusButton}
-                    onClick={(e) => viewSwitch("approval")}
-                  >
-                    Approvals
-                  </Button>
-                  <Typography variant="caption" display="block">
-                    {formStatus.approvalStatus ? "Done" : ""}
-                  </Typography>
-                </div>
-
-                <div className={Styles.item}>
-                  <Button
-                    color={closeOutView ? "secondary" : "primary"}
-                    variant="outlined"
-                    size="large"
-                    variant={formStatus.closeOutStatus ? "contained" : "outlined"}
-                    endIcon={
-                      formStatus.closeOutStatus ? <CheckCircle /> : <AccessTime />
-                    }
-                    className={classes.statusButton}
-                    onClick={(e) => viewSwitch("closeOut")}
-                  >
-                    Close out
-                  </Button>
-                  <Typography variant="caption" display="block">
-                    {formStatus.closeOutStatus ? "Done" : ""}
-                  </Typography>
-                </div>
-
-                <div className={Styles.item}>
-                  <Button
-                    color={lessonsLearnedView ? "secondary" : "primary"}
-                    variant="outlined"
-                    size="large"
-                    variant={formStatus.lessionLeranedStatus ? "contained" : "outlined"}
-                    endIcon={
-                      formStatus.lessionLeranedStatus ? <CheckCircle /> : <AccessTime />
-                    }
-                    className={classes.statusButton}
-                    onClick={(e) => viewSwitch("lession")}
-                  >
-                    Lessons Learned
-                  </Button>
-                  <Typography variant="caption" display="block">
-                    {formStatus.lessionLeranedStatus ? "Done" : ""}
-                  </Typography>
-                </div>
-
+              <div className={Styles.item}>
+                <Button
+                  color={assessmentsView ? "secondary" : "primary"}
+                  size="large"
+                  variant={formStatus.assessmentStatus ? "contained" : "outlined"}
+                  endIcon={
+                    formStatus.assessmentStatus ? <CheckCircle /> : <AccessTime />
+                  }
+                  className={classes.statusButton}
+                  onClick={(e) => viewSwitch("assessment")}
+                >
+                  Assessments
+                </Button>
+                <Typography variant="caption" display="block">
+                  {formStatus.assessmentStatus ? "Done" : ""}
+                </Typography>
               </div>
-              <Divider />
-            </Box>
 
-            <Box marginTop={4}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={9}>
-                  <Grid container spacing={3}>
+              <div className={Styles.item}>
+                <Button
+                  color={approvalsView ? "secondary" : "primary"}
+                  variant="outlined"
+                  size="large"
+                  variant={formStatus.approvalStatus ? "contained" : "outlined"}
+                  endIcon={
+                    formStatus.approvalStatus ? <CheckCircle /> : <AccessTime />
+                  }
+                  className={classes.statusButton}
+                  onClick={(e) => viewSwitch("approval")}
+                >
+                  Approvals
+                </Button>
+                <Typography variant="caption" display="block">
+                  {formStatus.approvalStatus ? "Done" : ""}
+                </Typography>
+              </div>
 
-                    {/* summary and part */}
-                    <>
-                      {(() => {
-                        if (
-                          assessmentsView == true
-                          || (approvalsView === false
-                            && lessonsLearnedView === false
-                            && closeOutView === false
-                            && commentsView == false)
-                        ) {
-                          return (
-                            <>
-                              <Grid item xs={12}>
-                                <Accordion
-                                  expanded={expanded === "panel1"}
-                                  onChange={handleExpand("panel1")}
-                                >
-                                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography className={classes.heading}>
-                                      Job Details
-                                    </Typography>
-                                  </AccordionSummary>
-                                  <AccordionDetails>
-                                    <Grid container item xs={12} spacing={3}>
-                                      <>
-                                        <Grid item md={12}>
-                                          <Typography variant="h6" gutterBottom className={Fonts.labelName}>
-                                            Project structure
-                                          </Typography>
-                                          <Typography className={Fonts.labelValue}>
+              <div className={Styles.item}>
+                <Button
+                  color={closeOutView ? "secondary" : "primary"}
+                  variant="outlined"
+                  size="large"
+                  variant={formStatus.closeOutStatus ? "contained" : "outlined"}
+                  endIcon={
+                    formStatus.closeOutStatus ? <CheckCircle /> : <AccessTime />
+                  }
+                  className={classes.statusButton}
+                  onClick={(e) => viewSwitch("closeOut")}
+                >
+                  Close out
+                </Button>
+                <Typography variant="caption" display="block">
+                  {formStatus.closeOutStatus ? "Done" : ""}
+                </Typography>
+              </div>
 
-                                            {projectStructure.projectName} -
-                                            {Object.entries(projectStructName).map(([key, value], index) => (
-                                              <>
-                                                {!key.includes("Work") ? Object.keys(projectStructName)[index + 2] !== undefined ? `${value} - ` : `${value}` : ""}
-                                              </>
-                                            ))}
-                                          </Typography>
-                                        </Grid>
-                                        {/* work area */}
+              <div className={Styles.item}>
+                <Button
+                  color={lessonsLearnedView ? "secondary" : "primary"}
+                  variant="outlined"
+                  size="large"
+                  variant={formStatus.lessionLeranedStatus ? "contained" : "outlined"}
+                  endIcon={
+                    formStatus.lessionLeranedStatus ? <CheckCircle /> : <AccessTime />
+                  }
+                  className={classes.statusButton}
+                  onClick={(e) => viewSwitch("lession")}
+                >
+                  Lessons Learned
+                </Button>
+                <Typography variant="caption" display="block">
+                  {formStatus.lessionLeranedStatus ? "Done" : ""}
+                </Typography>
+              </div>
+
+            </div>
+            <Divider />
+          </Box>
+
+          <Box marginTop={4}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={9}>
+                <Grid container spacing={3}>
+
+                  {/* summary and part */}
+                  <>
+                    {(() => {
+                      if (
+                        assessmentsView == true
+                        || (approvalsView === false
+                          && lessonsLearnedView === false
+                          && closeOutView === false
+                          && commentsView == false)
+                      ) {
+                        return (
+                          <>
+                            <Grid item xs={12}>
+                              <Accordion
+                                expanded={expanded === "panel1"}
+                                onChange={handleExpand("panel1")}
+                              >
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <Typography className={classes.heading}>
+                                    Job Details
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Grid container item xs={12} spacing={3}>
+                                    <>
+                                      <Grid item md={12}>
+                                        <Typography variant="h6" gutterBottom className={Fonts.labelName}>
+                                          Project structure
+                                        </Typography>
+                                        <Typography className={Fonts.labelValue}>
+
+                                          {projectStructure.projectName} -
+                                          {Object.entries(projectStructName).map(([key, value], index) => (
+                                            <>
+                                              {Object.keys(projectStructName)[index + 1] !== undefined ? `${value} - ` : `${value}`}
+                                            </>
+                                          ))}
+                                        </Typography>
+                                      </Grid>
+                                      {/* work area */}
+
+                                      {false &&
                                         <Grid item xs={12} md={6}>
                                           <Typography
                                             variant="h6"
@@ -548,53 +549,56 @@ function JhaSummary() {
                                             Work Area
                                           </Typography>
                                           <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(projectStructName["Work Area(s)"])}
+                                            {checkValue(projectStructName["Work Area"])}
                                           </Typography>
                                         </Grid>
+                                      }
 
-                                        {/* location */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Location
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.location)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* location */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Location
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.location)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* job title */}
-                                        <Grid item xs={12} md={12}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Job Title
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.jobTitle)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* job title */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Job Title
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.jobTitle)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* job description */}
-                                        <Grid item xs={12} md={12}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Job Description
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.description)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* job description */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Job Description
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.description)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* assessment performed by */}
+                                      {/* assessment performed by */}
+
+                                      {false &&
                                         <Grid item xs={12} md={6}>
                                           <Typography
                                             variant="h6"
@@ -607,36 +611,39 @@ function JhaSummary() {
                                             NA
                                           </Typography>
                                         </Grid>
+                                      }
 
-                                        {/* assessment start date */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Assessment started on
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.jhaAssessmentDate)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* assessment start date */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Assessment started on
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.jhaAssessmentDate)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* permit to perform */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Permit to perform
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.permitToPerform)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* permit to perform */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Permit to work
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.permitToPerform)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* permit refrence */}
+                                      {/* permit refrence */}
+
+                                      {false &&
                                         <Grid item xs={12} md={6}>
                                           <Typography
                                             variant="h6"
@@ -649,131 +656,133 @@ function JhaSummary() {
                                             Yes
                                           </Typography>
                                         </Grid>
+                                      }
 
-                                        {/* risk assessment team */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Risk Assessment team
-                                          </Typography>
-                                          {team !== undefined && team.map((value) => (
-                                            <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
-                                          ))}
+                                      {/* risk assessment team */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Risk Assessment team
+                                        </Typography>
+                                        {team !== undefined && team.map((value) => (
+                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value.teamName}</Typography>
+                                        ))}
 
-                                        </Grid>
+                                      </Grid>
 
-                                        {/* emergench details      */}
-                                        <Grid item xs={12} md={12}>
-                                          <Typography className={classes.heading}>
-                                            Emergency Contact Details
-                                          </Typography>
-                                        </Grid>
+                                      {/* emergench details      */}
+                                      <Grid item xs={12} md={12}>
+                                        <Typography className={classes.heading}>
+                                          Emergency Contact Details
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* supervisor */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Supervisor
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.supervisorName)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* supervisor */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Supervisor
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.supervisorName)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* department */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Department
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.department)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* department */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Department
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.department)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* emergency phone number */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Emergency Phone Number
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.emergencyNumber)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* emergency phone number */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Emergency Phone Number
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.emergencyNumber)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* evacuation assembly point */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Evacuation assembly point
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.evacuationAssemblyPoint)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* evacuation assembly point */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Evacuation assembly point
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.evacuationAssemblyPoint)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* permit number */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Permit number
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.permitNumber)}
-                                          </Typography>
-                                        </Grid>
+                                      {/* permit number */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Permit number
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.permitNumber)}
+                                        </Typography>
+                                      </Grid>
 
-                                        {/* order number */}
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Order number
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.jobOrderNumber)}
-                                          </Typography>
-                                        </Grid>
-                                      </>
-                                    </Grid>
-                                  </AccordionDetails>
-                                </Accordion>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Accordion
-                                  expanded={expanded === "panel2"}
-                                  onChange={handleExpand("panel2")}
-                                >
-                                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography className={classes.heading}>
-                                      Area Hazards
-                                    </Typography>
-                                  </AccordionSummary>
-                                  <AccordionDetails>
-                                    <Grid container item xs={12} spacing={3}>
-                                      <>
-                                        <Grid item xs={12} md={6}>
+                                      {/* order number */}
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Order number
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.jobOrderNumber)}
+                                        </Typography>
+                                      </Grid>
+                                    </>
+                                  </Grid>
+                                </AccordionDetails>
+                              </Accordion>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Accordion
+                                expanded={expanded === "panel2"}
+                                onChange={handleExpand("panel2")}
+                              >
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <Typography className={classes.heading}>
+                                    Area Hazards
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Grid container item xs={12} spacing={3}>
+                                    <>
+                                      <Grid item xs={12} md={12}>
+                                        {false &&
                                           <Typography
                                             variant="h6"
                                             gutterBottom
@@ -781,497 +790,547 @@ function JhaSummary() {
                                           >
                                             Hazards Group
                                           </Typography>
-                                          {hazard !== undefined && hazard.map((value) => (
+                                        }
+                                        {
+                                          hazard !== undefined && hazard.map((value, index) => (
                                             <div>
-
-                                              <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "10px" }}>
+                                              <Typography variant="body" style={{ marginLeft: "10px" }}>
                                                 {checkValue(value.hazard)}
                                               </Typography>
                                             </div>
-                                          ))}
-
-                                        </Grid>
-                                      </>
-                                    </Grid>
-                                  </AccordionDetails>
-                                </Accordion>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Accordion
-                                  expanded={expanded === "panel3"}
-                                  onChange={handleExpand("panel3")}
-                                >
-                                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography className={classes.heading}>
-                                      Assessment
-                                    </Typography>
-                                  </AccordionSummary>
-                                  <AccordionDetails>
-                                    <Grid container item xs={12} spacing={3}>
-                                      <>
-                                        <Grid
-                                          item
-                                          md={12}
-                                          xs={12}
-                                        >
-                                          <div>
-                                            {hazard !== undefined && hazard.map((value, index) => (
-                                              <Accordion
-                                                expanded={expandedHazard === `panel${index}`}
-                                                onChange={handleHazardExpand(`panel${index}`)}
-                                                defaultExpanded
-                                                className={classes.backPaper}
-                                                key={index}
-                                              >
-                                                <AccordionSummary
-                                                  expandIcon={<ExpandMoreIcon />}
-                                                  aria-controls="panel1bh-content"
-                                                  id="panel1bh-header"
-                                                  className={classes.headingColor}
-                                                >
-                                                  <Typography
-                                                    className={classes.heading}>
-                                                    <MenuOpenOutlinedIcon
-                                                      className={classes.headingIcon}
-                                                    />
-                                                    {`${value.hazard}`}
-                                                  </Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                  <Grid container spacing={2}>
-
-                                                    <Grid item md={6} sm={6} xs={6}>
-                                                      <Typography
-                                                        variant="h6"
-                                                        gutterBottom
-                                                        className={Fonts.labelName}
-                                                      >
-                                                        Risk
-                                                      </Typography>
-                                                      <Typography variant="body" className={Fonts.labelValue}>
-                                                        {checkValue(value.risk)}
-                                                      </Typography>
-                                                    </Grid>
-
-                                                    <Grid item md={6} sm={6} xs={6}>
-                                                      <Typography
-                                                        variant="h6"
-                                                        gutterBottom
-                                                        className={Fonts.labelName}
-                                                      >
-                                                        Controls
-                                                      </Typography>
-                                                      <Typography variant="body" className={Fonts.labelValue}>
-                                                        {checkValue(value.control)}
-                                                      </Typography>
-                                                    </Grid>
-
-                                                    <Grid item md={12} xs={12} className={classes.createHazardbox}>
-                                                      <Divider light />
-                                                    </Grid>
-
-                                                  </Grid>
-                                                  <Grid>
-                                                    {value.action.map((valueAction) => (
-                                                      <ActionShow
-                                                        action={valueAction}
-                                                        companyId={projectData.companyId}
-                                                        projectId={projectData.projectId}
-                                                        handelShowData={handelShowData}
-                                                      />
-                                                    ))}
-
-                                                  </Grid>
-                                                </AccordionDetails>
-                                              </Accordion>
-                                            ))}
-                                          </div>
-
-                                        </Grid>
-
-                                        {assessment.workStopCondition !== undefined &&
-                                          assessment.workStopCondition !== "" &&
-                                          assessment.workStopCondition !== null &&
-                                          assessment.workStopCondition.split(",").length > 0 ?
-                                          <Grid item xs={12} md={12}>
-                                            {console.log(assessment.workStopCondition.split(","))}
-                                            <Typography
-                                              variant="h6"
-                                              gutterBottom
-                                              className={Fonts.labelName}
+                                          ))
+                                        }
+                                      </Grid>
+                                    </>
+                                  </Grid>
+                                </AccordionDetails>
+                              </Accordion>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Accordion
+                                expanded={expanded === "panel3"}
+                                onChange={handleExpand("panel3")}
+                              >
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <Typography className={classes.heading}>
+                                    Assessment
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Grid container item xs={12} spacing={3}>
+                                    <>
+                                      <Grid
+                                        item
+                                        md={12}
+                                        xs={12}
+                                      >
+                                        <div>
+                                          {hazard !== undefined && hazard.map((value, index) => (
+                                            <Accordion
+                                              defaultExpanded
+                                              className={classes.backPaper}
+                                              key={index}
                                             >
-                                              Conditions when the work must be stopped
-                                            </Typography>
+                                              <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls="panel1bh-content"
+                                                id="panel1bh-header"
+                                                className={classes.headingColor}
+                                              >
+                                                <Typography
+                                                  className={classes.heading}>
+                                                  <MenuOpenOutlinedIcon
+                                                    className={classes.headingIcon}
+                                                  />
+                                                  {`${value.hazard}`}
+                                                </Typography>
+                                              </AccordionSummary>
+                                              <AccordionDetails>
+                                                <Grid container spacing={2}>
 
-                                            {checkValue(assessment.workStopCondition).split(",").map((value) => (
+                                                  <Grid item md={6} sm={6} xs={6}>
+                                                    <Typography
+                                                      variant="h6"
+                                                      gutterBottom
+                                                      className={Fonts.labelName}
+                                                    >
+                                                      Risk
+                                                    </Typography>
+                                                    <Typography variant="body" className={Fonts.labelValue}>
+                                                      {checkValue(value.risk)}
+                                                    </Typography>
+                                                  </Grid>
+
+                                                  <Grid item md={6} sm={6} xs={6}>
+                                                    <Typography
+                                                      variant="h6"
+                                                      gutterBottom
+                                                      className={Fonts.labelName}
+                                                    >
+                                                      Controls
+                                                    </Typography>
+                                                    <Typography variant="body" className={Fonts.labelValue}>
+                                                      {checkValue(value.control)}
+                                                    </Typography>
+                                                  </Grid>
+
+                                                  <Grid item md={12} xs={12} className={classes.createHazardbox}>
+                                                    <Divider light />
+                                                  </Grid>
+
+                                                </Grid>
+                                                <Grid>
+                                                  {value.action.map((valueAction) => (
+                                                    <ActionShow
+                                                      action={valueAction}
+                                                      companyId={projectData.companyId}
+                                                      projectId={projectData.projectId}
+                                                      handelShowData={handelShowData}
+                                                    />
+                                                  ))}
+
+                                                </Grid>
+                                              </AccordionDetails>
+                                            </Accordion>
+                                          ))}
+                                        </div>
+
+                                      </Grid>
+
+                                      {assessment.workStopCondition !== undefined &&
+                                        assessment.workStopCondition !== "" &&
+                                        assessment.workStopCondition !== null &&
+                                        assessment.workStopCondition.split(",").length > 0 ?
+                                        <Grid item xs={12} md={12}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Conditions when the work must be stopped
+                                          </Typography>
+
+                                          {checkValue(assessment.workStopCondition).split(",").map((value) => (
+                                            <p>
+                                              {checkListAssessment[value]}
+                                            </p>
+                                          ))}
+                                        </Grid>
+                                        : null}
+
+                                      {assessment.humanPerformanceAspects &&
+                                        assessment.humanPerformanceAspects !== "" &&
+                                        assessment.humanPerformanceAspects.split(",").length > 0 ?
+
+                                        <Grid item xs={12} md={12}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Specific human performance aspects that have been discussed before commencing the work
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
                                               <p>
-                                                {value.replace("-", " ")}
+                                                {checkListAssessment[value]}
                                               </p>
                                             ))}
-                                          </Grid>
-                                          : null}
-
-                                        {assessment.humanPerformanceAspects &&
-                                          assessment.humanPerformanceAspects !== "" &&
-                                          assessment.humanPerformanceAspects.split(",").length > 0 ?
-
-                                          <Grid item xs={12} md={12}>
-                                            <Typography
-                                              variant="h6"
-                                              gutterBottom
-                                              className={Fonts.labelName}
-                                            >
-                                              Specific human performance aspects that have been discussed before commencing the work
-                                            </Typography>
-                                            <Typography variant="body" className={Fonts.labelValue}>
-                                              {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
-                                                <p>
-                                                  {value.replace("-", " ")}
-                                                </p>
-                                              ))}
-                                            </Typography>
-                                          </Grid>
-                                          :
-                                          null}
-                                        <Grid item xs={12} md={12}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Additional remarks
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.additionalRemarks)}
                                           </Typography>
                                         </Grid>
-                                      </>
-                                    </Grid>
-                                  </AccordionDetails>
-                                </Accordion>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Accordion
-                                  expanded={expanded === "panel4"}
-                                  onChange={handleExpand("panel4")}
-                                >
-                                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography className={classes.heading}>
-                                      Documents & Notifications
-                                    </Typography>
-                                  </AccordionSummary>
-                                  <AccordionDetails>
-                                    <Grid container item xs={12} spacing={3}>
-                                      <>
-                                        <Grid item xs={12} md={12}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Risk assessment supporting documents
-                                          </Typography>
-                                          <Typography title={handelFileName(assessment.jhaAssessmentAttachment)}>
-                                            {assessment.jhaAssessmentAttachment != "" &&
-                                              typeof assessment.jhaAssessmentAttachment == "string" ? (
-                                              <Attachment value={assessment.jhaAssessmentAttachment} />
-                                            ) :
-                                              "-"
-                                            }
-                                          </Typography>
-                                        </Grid>
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Links
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(assessment.link)}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid item xs={12} md={12}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Notifications sent to
-                                          </Typography>
-                                          {checkValue(assessment.notifyTo).split(",").map((value) => (
-                                            <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
-                                          ))}
-                                        </Grid>
-                                      </>
-                                    </Grid>
-                                  </AccordionDetails>
-                                </Accordion>
-                              </Grid>
-                            </>
-                          );
-                        }
-                        if (approvalsView == true) {
-                          return (
-                            <>
-                              <Grid item xs={12} style={{ padding: '0px 12px' }}>
-                                <Typography className={classes.heading}>
-                                  Work Responsible Person
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={12} md={6}>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      className={Fonts.labelName}
-                                    >
-                                      Approved by
-                                    </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      {checkValue(assessment.wrpApprovalUser)}
-                                    </Typography>
+                                        :
+                                        null}
+                                      <Grid item xs={12} md={12}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Additional remarks
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.additionalRemarks)}
+                                        </Typography>
+                                      </Grid>
+                                    </>
                                   </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      className={Fonts.labelName}
-                                    >
-                                      Approved on
-                                    </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
-
-                                    </Typography>
+                                </AccordionDetails>
+                              </Accordion>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Accordion
+                                expanded={expanded === "panel4"}
+                                onChange={handleExpand("panel4")}
+                              >
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                  <Typography className={classes.heading}>
+                                    Documents & Notifications
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Grid container item xs={12} spacing={3}>
+                                    <>
+                                      <Grid item xs={12} md={12}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Risk assessment supporting documents
+                                        </Typography>
+                                        <Typography title={handelFileName(assessment.jhaAssessmentAttachment)}>
+                                          {assessment.jhaAssessmentAttachment != "" &&
+                                            typeof assessment.jhaAssessmentAttachment == "string" ? (
+                                            <Attachment value={assessment.jhaAssessmentAttachment} />
+                                          ) :
+                                            "-"
+                                          }
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={12} md={6}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Links
+                                        </Typography>
+                                        <Typography variant="body" className={Fonts.labelValue}>
+                                          {checkValue(assessment.link)}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={12} md={12}>
+                                        <Typography
+                                          variant="h6"
+                                          gutterBottom
+                                          className={Fonts.labelName}
+                                        >
+                                          Notifications sent to
+                                        </Typography>
+                                        {checkValue(assessment.notifyTo).split(",").map((value) => (
+                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
+                                        ))}
+                                      </Grid>
+                                    </>
                                   </Grid>
-                                </Grid>
-                              </Grid>
-
-                              <Grid item xs={12}>
-                                <Typography className={classes.heading}>
-                                  Actions
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={12} md={8}>
-                                    <Typography className={classes.aLabelValue}>
-                                      {approvalAction.map((value) => (
-                                        <>
-
-                                          <ActionShow
-                                            action={{ id: value.actionId, number: value.actionNumber }}
-                                            title={value.actionTitle}
-                                            companyId={projectData.companyId}
-                                            projectId={projectData.projectId}
-                                            handelShowData={handelShowData}
-                                          />
-                                        </>
-                                      ))}
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </>
-                          );
-                        }
-                        if (lessonsLearnedView == true) {
-                          return (
-                            <>
-                              <Grid item xs={12}>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={12} md={12}>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      className={Fonts.labelName}
-                                    >
-                                      Work Responsible Person
-                                    </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      {user.name} {user.badgeNumber}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      className={Fonts.labelName}
-                                    >
-                                      Lessons learnt
-                                    </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      {checkValue(assessment.lessonLearntDetails)}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} md={8}>
-                                    <Typography className={classes.aLabelValue}>
-                                      {lessionAction.map((value) => (
-                                        <>
-                                          <ActionShow
-                                            action={{ id: value.actionId, number: value.actionNumber }}
-                                            title={value.actionTitle}
-                                            companyId={projectData.companyId}
-                                            projectId={projectData.projectId}
-                                            handelShowData={handelShowData}
-                                          />
-
-                                        </>
-                                      ))}
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </>
-                          );
-                        }
-                        if (closeOutView === true) {
-                          return (
-                            <>
-                              <Grid item xs={12}>
-                                <Grid container spacing={3}>
-
-                                  <Grid item xs={12} md={6}>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      className={Fonts.labelName}
-                                    >
-                                      Closed by
-                                    </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      {checkValue(assessment.closedByName)}
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={12} md={6}>
-                                    <Typography
-                                      variant="h6"
-                                      gutterBottom
-                                      className={Fonts.labelName}
-                                    >
-                                      Closed Data
-                                    </Typography>
-                                    <Typography variant="body" className={Fonts.labelValue}>
-                                      {moment(checkValue(assessment.closedDate)).format("DD-MM-YY")}
-
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-
-
-                            </>
-                          )
-                        }
-                        if (commentsView == true) {
-                          return (
-                            <>
-                              <Comments
-                                commentContext="Jha"
-                                id={localStorage.getItem("fkJHAId")}
-                              />
-                            </>
-                          )
-                        }
-                      })()}
-                    </>
-
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-                  <Paper>
-                    <List
-                      dense
-                      subheader={
-                        <ListSubheader component="div">Actions</ListSubheader>
+                                </AccordionDetails>
+                              </Accordion>
+                            </Grid>
+                          </>
+                        );
                       }
-                    >
-                      <ListItemLink
-                        onClick={(e) => handleNewJhaPush(e)}
-                        disabled={formStatus.closeOutStatus}
-                      >
-                        <ListItemIcon>
-                          {formStatus.assessmentStatus ? <Edit /> : <Add />}
-                        </ListItemIcon>
-                        <ListItemText primary="Assessments" />
-                      </ListItemLink>
+                      if (approvalsView == true) {
+                        return (
+                          <>
+                            <Grid item xs={12} style={{ padding: '0px 12px' }}>
+                              <Typography className={classes.heading}>
+                                Competent Person
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved by
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.wrpApprovalUser)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved on
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {assessment.wrpApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
+                                      </>
+                                      : "-"
+                                    }
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
 
-                      <ListItemLink
-                        onClick={(e) => handleJhaApprovalsPush(e)}
-                        disabled={formStatus.closeOutStatus}
-                      >
-                        <ListItemIcon>
-                          {formStatus.approvalStatus ? <Edit /> : <Add />}
-                        </ListItemIcon>
-                        <ListItemText primary="Approvals" />
-                      </ListItemLink>
+                            <Grid item xs={12} style={{ padding: '0px 12px' }}>
+                              <Typography className={classes.heading}>
+                                Senior authorized Person
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved by
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.sapApprovalUser)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved on
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {assessment.sapApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("DD-MM-YY")}
+                                      </>
+                                      : "-"
+                                    }
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
 
-                      <ListItemLink
-                        onClick={(e) => handleJhaLessonLearnPush(e)}
-                      >
-                        <ListItemIcon>
-                          {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
-                        </ListItemIcon>
-                        <ListItemText primary="Lessons Learned" />
-                      </ListItemLink>
+                            <Grid item xs={12}>
+                              <Typography className={classes.heading}>
+                                Actions
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={8}>
+                                  <Typography className={classes.aLabelValue}>
+                                    {approvalAction.map((value) => (
+                                      <>
 
-                      <ListItem
-                        button
-                        divider
-                        onClick={(e) => handleClosePush(e)}
-                      >
-                        <ListItemIcon>
-                          <Close />
-                        </ListItemIcon>
-                        <ListItemText primary="Close Out" />
-                      </ListItem>
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={projectData.companyId}
+                                          projectId={projectData.projectId}
+                                          handelShowData={handelShowData}
+                                        />
+                                      </>
+                                    ))}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </>
+                        );
+                      }
+                      if (lessonsLearnedView == true) {
+                        return (
+                          <>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={12}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Competent person
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Lessons learned
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.lessonLearntDetails)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={8}>
+                                  <Typography className={classes.aLabelValue}>
+                                    {lessionAction.map((value) => (
+                                      <>
+                                        <ActionShow
+                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          title={value.actionTitle}
+                                          companyId={projectData.companyId}
+                                          projectId={projectData.projectId}
+                                          handelShowData={handelShowData}
+                                        />
 
-                      <ListItemLink onClick={(e) => viewSwitch("comments")}>
-                        <ListItemIcon>
-                          <Comment />
-                        </ListItemIcon>
-                        <ListItemText primary="Comments" />
-                      </ListItemLink>
+                                      </>
+                                    ))}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </>
+                        );
+                      }
+                      if (closeOutView === true) {
+                        return (
+                          <>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
 
-                      <ListItem button>
-                        <ListItemIcon>
-                          <History />
-                        </ListItemIcon>
-                        <ListItemText primary="Activity History" />
-                      </ListItem>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Closed by
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.closedByName)}
+                                  </Typography>
+                                </Grid>
 
-                    </List>
-                    <Divider />
-                    <List dense>
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Print />
-                        </ListItemIcon>
-                        <ListItemText primary="Print" />
-                      </ListItem>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Closed on
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {moment(checkValue(assessment.closedDate)).format("DD-Mo-YYYY")}
 
-                      <ListItem button>
-                        <ListItemIcon>
-                          <Share />
-                        </ListItemIcon>
-                        <ListItemText primary="Share" />
-                      </ListItem>
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
 
-                    </List>
-                  </Paper>
+
+                          </>
+                        )
+                      }
+                      if (commentsView == true) {
+                        return (
+                          <>
+                            <Comments
+                              commentContext="Jha"
+                              id={localStorage.getItem("fkJHAId")}
+                            />
+                          </>
+                        )
+                      }
+                    })()}
+                  </>
+
                 </Grid>
               </Grid>
-            </Box>
-          </>
-          : "Loading..."
-        }
-      </PapperBlock >
-    </>
+
+              <Grid item xs={12} md={3}>
+                <Paper>
+                  <List
+                    dense
+                    subheader={
+                      <ListSubheader component="div">Actions</ListSubheader>
+                    }
+                  >
+                    <ListItemLink
+                      onClick={(e) => handleNewJhaPush(e)}
+                      disabled={formStatus.closeOutStatus}
+                    >
+                      <ListItemIcon>
+                        {formStatus.assessmentStatus ? <Edit /> : <Add />}
+                      </ListItemIcon>
+                      <ListItemText primary="Assessments" />
+                    </ListItemLink>
+
+                    <ListItemLink
+                      onClick={(e) => handleJhaApprovalsPush(e)}
+                      disabled={formStatus.closeOutStatus}
+                    >
+                      <ListItemIcon>
+                        {formStatus.approvalStatus ? <Edit /> : <Add />}
+                      </ListItemIcon>
+                      <ListItemText primary="Approvals" />
+                    </ListItemLink>
+
+                    <ListItemLink
+                      onClick={(e) => handleJhaLessonLearnPush(e)}
+                    >
+                      <ListItemIcon>
+                        {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
+                      </ListItemIcon>
+                      <ListItemText primary="Lessons Learned" />
+                    </ListItemLink>
+
+                    <ListItem
+                      button
+                      divider
+                      onClick={(e) => handleClosePush(e)}
+                    >
+                      <ListItemIcon>
+                        <Close />
+                      </ListItemIcon>
+                      <ListItemText primary="Close Out" />
+                    </ListItem>
+
+                    {false &&
+                      <>
+                        <ListItemLink onClick={(e) => viewSwitch("comments")}>
+                          <ListItemIcon>
+                            <Comment />
+                          </ListItemIcon>
+                          <ListItemText primary="Comments" />
+                        </ListItemLink>
+
+                        <ListItem button>
+                          <ListItemIcon>
+                            <History />
+                          </ListItemIcon>
+                          <ListItemText primary="Activity History" />
+                        </ListItem>
+                      </>
+                    }
+
+                  </List>
+                  <Divider />
+                  <List dense>
+
+                    {false &&
+                      <>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Print />
+                          </ListItemIcon>
+                          <ListItemText primary="Print" />
+                        </ListItem>
+
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Share />
+                          </ListItemIcon>
+                          <ListItemText primary="Share" />
+                        </ListItem>
+                      </>
+                    }
+
+                  </List>
+                </Paper>
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+        : "Loading..."
+      }
+    </PapperBlock >
+
   );
 }
 
