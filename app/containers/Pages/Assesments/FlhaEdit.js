@@ -493,6 +493,17 @@ const FlhaDetails = () => {
 
   const getDepartments = async () => {
     let allDepartment = []
+    const config = {
+      method: 'get',
+      url: `${SSO_URL}/api/v1/companies/${companyId}/departments/`,
+      headers: HEADER_AUTH,
+    };
+    const res = await api(config);
+    console.log(res)
+    const departmentData = res.data.data.results
+    departmentData.map((value) => {
+      allDepartment.push(value["departmentName"])
+    })
     setDepartments(allDepartment);
   };
 
