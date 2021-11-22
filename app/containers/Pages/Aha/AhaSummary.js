@@ -69,6 +69,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import { map } from "draft-js/lib/DefaultDraftBlockRenderMap";
 
 // Sidebar Links Helper Function
 
@@ -173,6 +174,7 @@ function AhaSummary() {
   const [isNext, setIsNext] = useState(false)
   const [approvalActionData, setApprovalactionData] = useState([])
   const [lessionAction, setLessionAction] = useState([])
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -284,6 +286,7 @@ function AhaSummary() {
     await setAHAData(result);
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
+    await fetchNotificationSent(result.notifyTo)
 
   };
   const handelWorkArea = async (assessment) => {
@@ -409,18 +412,18 @@ function AhaSummary() {
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
         if (result[i].riskRating === "2 Trivial" || result[i].riskRating === "4 Trivial") {
-          zzz[i].riskRatingColour = '#006400'
+          zzz[i].riskRatingColour = '#009933'
         } else if (result[i].riskRating === "6 Tolerable" || result[i].riskRating === "8 Tolerable") {
-          zzz[i].riskRatingColour = '#6AA121'
+          zzz[i].riskRatingColour = '#8da225'
 
         } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
-          zzz[i].riskRatingColour = '#F3C539'
+          zzz[i].riskRatingColour = '#fff82e'
 
         }  else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
-          zzz[i].riskRatingColour = '#800000'
+          zzz[i].riskRatingColour = '#990000'
         }
         else {
-          zzz[i].riskRatingColour = '#FF0000'
+          zzz[i].riskRatingColour = '#ff0000'
         }
       }
     }
@@ -495,6 +498,25 @@ function AhaSummary() {
     })    
     setCheckListAssessment(tempPerformance)
   }
+
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        const result = res.data.data.results;
+        let user = result.filter(name => name.id = notifyTo)
+        await setNotificationSentValue(user);
+      }
+    } catch (error) { }
+  };
 
 
   useEffect(() => {
@@ -1095,11 +1117,11 @@ function AhaSummary() {
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                    {checkValue(ahaData.workStopCondition).split(",").map((value) => (
+                                    {ahaData.workStopCondition !== "" ? checkValue(ahaData.workStopCondition).split(",").map((value) => (
                                             <p>
                                                {checkListAssessment[value]}
                                             </p>
-                                          ))}
+                                          )) : "-"}
                                       {/* {ahaData.workStopCondition ? ahaData.workStopCondition : "-"} */}
                                     </Typography>
                                   </Grid>
@@ -1194,7 +1216,7 @@ function AhaSummary() {
                                       display="block"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.notifyTo ? ahaData.notifyTo : "-"}
+                                      {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
                                     </Typography>
                                   </Grid>
                                 </>

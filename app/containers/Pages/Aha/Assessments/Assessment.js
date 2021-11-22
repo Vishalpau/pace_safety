@@ -325,18 +325,18 @@ const Assessment = () => {
     for (var i = 0; i < abc.length; i++) {
       if (abc[i].riskRating !== "") {
         if (abc[i].riskRating === "2 Trivial" || abc[i].riskRating === "4 Trivial") {
-          zzz[i].riskRatingColour = '#006400'
+          zzz[i].riskRatingColour = '#009933'
         } else if (abc[i].riskRating === "6 Tolerable" || abc[i].riskRating === "8 Tolerable") {
-          zzz[i].riskRatingColour = '#6AA121'
+          zzz[i].riskRatingColour = '#8da225'
 
         } else if (abc[i].riskRating === "12 Moderate" || abc[i].riskRating === "16 Moderate") {
-          zzz[i].riskRatingColour = '#F3C539'
+          zzz[i].riskRatingColour = '#fff82e'
 
         }  else if (abc[i].riskRating === "18 Substantial" || abc[i].riskRating === "24 Substantial") {
-          zzz[i].riskRatingColour = '#800000'
+          zzz[i].riskRatingColour = '#990000'
         }
         else {
-          zzz[i].riskRatingColour = '#FF0000'
+          zzz[i].riskRatingColour = '#ff0000'
         }
       }
     }
@@ -480,24 +480,23 @@ const Assessment = () => {
     }
     if (riskRating >= 1 && riskRating <= 4) {
       temp[key].riskRating = `${riskRating} Trivial`;
-      temp[key].riskRatingColour = '#1EBD10';
+      temp[key].riskRatingColour = '#009933';
     } else if (riskRating > 5 && riskRating <= 8) {
       temp[key].riskRating =  `${riskRating} Tolerable`;
-      temp[key].riskRatingColour = '#008000';
+      temp[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       temp[key].riskRating = `${riskRating} Moderate`;
-      temp[key].riskRatingColour = '#F3C539';
+      temp[key].riskRatingColour = '#fff82e';
     } else if (riskRating > 17 && riskRating <= 24) {
       temp[key].riskRating = `${riskRating} Substantial`;
-      temp[key].riskRatingColour = '#800000';
+      temp[key].riskRatingColour = '#990000';
     }else {
       temp[key].riskRating = `${riskRating} Intoreable`;
-      temp[key].riskRatingColour = '#FF0000';
+      temp[key].riskRatingColour = '#ff0000';
     }
     setForm(temp);
   };
 
-  console.log(risk.current,"LLLLLL")
 
 
   const handelCallBack = async () => {
