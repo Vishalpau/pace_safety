@@ -319,22 +319,22 @@ const Assessment = () => {
         }
       }
     }
+    
 
     let zzz = [...abc]
-
     for (var i = 0; i < abc.length; i++) {
       if (abc[i].riskRating !== "") {
-        if (abc[i].riskRating === "20%  Trivial") {
+        if (abc[i].riskRating === "2 Trivial" || abc[i].riskRating === "4 Trivial") {
           zzz[i].riskRatingColour = '#006400'
-        } else if (abc[i].riskRating === "40%  Tolerable") {
+        } else if (abc[i].riskRating === "6 Tolerable" || abc[i].riskRating === "8 Tolerable") {
           zzz[i].riskRatingColour = '#6AA121'
 
-        } else if (abc[i].riskRating === "60%  Moderate") {
+        } else if (abc[i].riskRating === "12 Moderate" || abc[i].riskRating === "16 Moderate") {
           zzz[i].riskRatingColour = '#F3C539'
 
-        }  else if (abc[i].riskRating === "80%  Substantial") {
-          zzz[i].riskRatingColour = '#800000'
+        }  else if (abc[i].riskRating === "18 Substantial" || abc[i].riskRating === "24 Substantial") {
 
+          zzz[i].riskRatingColour = '#800000'
         }
         else {
           zzz[i].riskRatingColour = '#FF0000'
@@ -480,19 +480,19 @@ const Assessment = () => {
       temp[key].probability = txt;
     }
     if (riskRating >= 1 && riskRating <= 4) {
-      temp[key].riskRating = '20%  Trivial';
+      temp[key].riskRating = `${riskRating} Trivial`;
       temp[key].riskRatingColour = '#1EBD10';
     } else if (riskRating > 5 && riskRating <= 8) {
-      temp[key].riskRating = '40%  Tolerable';
+      temp[key].riskRating =  `${riskRating} Tolerable`;
       temp[key].riskRatingColour = '#008000';
     } else if (riskRating > 9 && riskRating <= 16) {
-      temp[key].riskRating = '60%  Moderate';
+      temp[key].riskRating = `${riskRating} Moderate`;
       temp[key].riskRatingColour = '#F3C539';
     } else if (riskRating > 17 && riskRating <= 24) {
-      temp[key].riskRating = '80%  Substantial';
+      temp[key].riskRating = `${riskRating} Substantial`;
       temp[key].riskRatingColour = '#800000';
     }else {
-      temp[key].riskRating = '100%  Intoreable';
+      temp[key].riskRating = `${riskRating} Intoreable`;
       temp[key].riskRatingColour = '#FF0000';
     }
     setForm(temp);
@@ -621,9 +621,8 @@ const Assessment = () => {
                           </Grid>
                           <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: value.riskRatingColour, marginTop: "16px" }}>
                             <InputLabel id="demo-simple-select-label">
-                              Risk Rating
                             </InputLabel>
-                            {value.riskRating ? `${value.riskRating} risk` : ''}
+                            {value.riskRating ? value.riskRating : ''}
                           </Grid>
 
                           <Grid item md={12} sm={12} xs={12}>
