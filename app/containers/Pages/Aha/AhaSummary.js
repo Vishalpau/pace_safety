@@ -128,11 +128,12 @@ const useStyles = makeStyles((theme) => ({
   },
   ratioColororange: {
     backgroundColor: "orange",
-    padding: "16px!important",
-    height: "56px",
-    marginTop: "7px",
+    padding: "7px!important",
+    height: "50px",
+    marginTop: "0px",
     borderRadius: "5px",
     color: "#ffffff",
+    width: "100%",
   },
   labelValue: {
     fontSize: "1rem",
@@ -407,15 +408,15 @@ function AhaSummary() {
     let zzz = [...result]
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
-        if (result[i].riskRating === "20%") {
+        if (result[i].riskRating === "2 Trivial" || result[i].riskRating === "4 Trivial") {
           zzz[i].riskRatingColour = '#006400'
-        } else if (result[i].riskRating === "40%") {
+        } else if (result[i].riskRating === "6 Tolerable" || result[i].riskRating === "8 Tolerable") {
           zzz[i].riskRatingColour = '#6AA121'
 
-        } else if (result[i].riskRating === "60%") {
+        } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
           zzz[i].riskRatingColour = '#F3C539'
 
-        } else if (result[i].riskRating === "80%") {
+        }  else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
           zzz[i].riskRatingColour = '#800000'
         }
         else {
@@ -941,7 +942,7 @@ function AhaSummary() {
                                                       style={{ backgroundColor: item.riskRatingColour }}
                                                     >
                                                       {item.riskRating
-                                                        ? `${item.riskRating} risk`
+                                                        ? item.riskRating
                                                         : "-"}
                                                     </div>
                                                   </Grid>
@@ -1180,7 +1181,7 @@ function AhaSummary() {
                                       {ahaData.link !== "null" ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
-                                  {/* <Grid item xs={12} md={12}>
+                                  <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
                                       gutterBottom
@@ -1195,7 +1196,7 @@ function AhaSummary() {
                                     >
                                       {ahaData.notifyTo ? ahaData.notifyTo : "-"}
                                     </Typography>
-                                  </Grid> */}
+                                  </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>

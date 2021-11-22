@@ -492,9 +492,9 @@ function PersonalDashboard(props) {
                   <div className="hexagontent hexagon_content_box" />
                 </div>
           
-                <div className={!(codes.includes('environments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
-                    <a className="hse_hse_control_tower" onClick={() => handleClick('environments')}>
+                    <a className="hse_hse_control_tower" onClick={() => handleClick('controltower')}>
                       <p>Control Tower</p>
                     </a>
                   </div>
@@ -575,7 +575,7 @@ function PersonalDashboard(props) {
                     </a>
                   </div>
                 </div>
-
+                
                 <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
                     <a className="hse_rapid_knowledge_collaboration"

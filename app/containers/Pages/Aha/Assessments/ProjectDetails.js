@@ -363,8 +363,7 @@ const ProjectDetails = () => {
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
   const fetchCallBack = async () => {
-    let fetchPermit = await PickListData(81)
-    // setPermitTypes(fetchPermit)
+    
     setSelectBreakDown([])
     for (var key in projectData.projectName.breakdown) {
 

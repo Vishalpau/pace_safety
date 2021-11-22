@@ -899,7 +899,7 @@ const IncidentDetails = (props) => {
                     labelId="contractor-type-label"
                     id="contractor"
                     label="Contractor/Agency name"
-                    value={form.contractor.trim() || ""}
+                    value={form.contractor !== null && form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -1033,7 +1033,7 @@ const IncidentDetails = (props) => {
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Property affected",
+                        "Property/Material affected",
                         "propertyAffect"
                       );
                       setNextPath({
