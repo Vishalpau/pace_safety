@@ -31,6 +31,7 @@ import ActionTracker from "../../Forms/ActionTracker";
 import { CircularProgress } from "@material-ui/core";
 import ActionShow from '../../Forms/ActionShow';
 import { handelActionData } from "../../../utils/CheckerValue";
+import apiAction from "../../../utils/axiosActionTracker"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -450,41 +451,93 @@ const FlhaDetails = (props) => {
       setIdd9(res.data.data.results.results)
     })
   }
+
+  const handelAllData = async (apiData, type = "all") => {
+    // let flhaId =localStorage.getItem("fkFlhaId")
+    const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
+    if (actionSelect.status === 200) {
+      // for(let i=0 ; i>9; i++){
+        const allActionData = await appapi.get(setApiUrl() +'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2)
+        const allAction = allActionData.data.data.results.results
+        console.log(allActionData.data.data.results.results,'allAction')
+  
+        if (type == "all") {
+            let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
+            apiAllData.map((value) => {
+                allAction.map((valueAction) => {
+                    if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
+                        const tempAction = {
+                            "number": valueAction.actionNumber,
+                            "id": valueAction.id,
+                            "title": valueAction.actionTitle
+                        };
+                        if (value["action"] == undefined) {
+                            value["action"] = [tempAction]
+                        } else if (value["action"] !== undefined) {
+                            value["action"].push(tempAction)
+                        }
+                    }
+                })
+                if (value["action"] == undefined) {
+                    value["action"] = []
+                }
+            })
+            return apiAllData
+        } else {
+            return allAction
+        }
+    }
+  // }
+}
+
+
+
   const handelActionTracker = async (id) => {
     // let observationId = localStorage.getItem("fkFlhaId")
-    let allAction = await handelActionData(id, [], "title")
-
-    setActionData(allAction)
+    let allAction = await handelAllData([], "title")
+    console.log(allAction,'allAction')
+    // setActionData(allAction)
   };
-  const handelActionShow = (id) => {
-    return (<>
-      <Grid>
-        <>
-          {
-            actionData.map((valueAction) => (
-              <>
-                <ActionShow
-                  action={{ id: valueAction.id, number: valueAction.actionNumber }}
-                  title={valueAction.actionTitle}
-                  companyId={fkCompanyId}
-                  projectId={projectId}
-                  updatePage={updatePage}
-                />
-              </>
-            ))
-          }
-        </>
-      </Grid>
-    </>
-    )
-  }
+
+
+  
+  // const handelActionShow = (id) => {
+  //   return (<>
+  //     <Grid>
+  //       <>
+  //         {
+  //           actionData.map((valueAction) => (
+  //             <>
+  //               <ActionShow
+  //                 action={{ id: valueAction.id, number: valueAction.actionNumber }}
+  //                 title={valueAction.actionTitle}
+  //                 companyId={fkCompanyId}
+  //                 projectId={projectId}
+  //                 updatePage={updatePage}
+  //               />
+  //             </>
+  //           ))
+  //         }
+  //       </>
+  //     </Grid>
+  //   </>
+  //   )
+  // }
   const [actionData1, setActionData1] = React.useState([])
 
-  // const handelActionShow = async (fid, aid) => {
-  //   const res = await appapi.get(setApiUrl() + 'api/v1/actions/?context_id=' + `${fid}:${aid}`)
-  //   setActionData1(res.data.data.results.results)
-  //   console.log(res.data.data.results.results, 'res')
-  // }
+  
+
+
+
+  const handelActionShow = async (fid, aid) => {
+    const res = await appapi.get(setApiUrl() + 'api/v1/actions/?context_id=' + `${fid}:${aid}`)
+    setActionData1(res.data.data.results.results)
+    console.log(res.data.data.results.results, 'res')
+  }
 
   React.useEffect(() => {
     auditUserList()
@@ -558,23 +611,9 @@ const FlhaDetails = (props) => {
                                     createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                     handelShowData={handelActionTracker}
                                   />
-                                  {console.log(id1, 'idd1')}
-
                                   {idd1.map(i1 => <Typography className={classes.labelValueName}>
                                     {i1.actionNumber}
-                                    <Grid item xs={6} className={classes.createHazardbox}>
-                                      {/* {value.action.length > 0 && value.action.map((valueAction) => (
-                              <ActionShow
-                                action={valueAction}
-                                companyId={projectData.companyId}
-                                projectId={projectData.projectId}
-                                updatePage={updatePage}
-                              />
-                            ))} */}
-                                      {/* {console.log(handelActionShow(`${localStorage.getItem("flhaId")}:${id1}`), 'tt')} */}
-
-
-                                    </Grid>                                  </Typography>
+                                  </Typography>
                                   )}
 
                                 </TableCell>

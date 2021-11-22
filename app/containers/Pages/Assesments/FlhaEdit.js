@@ -528,27 +528,27 @@ const FlhaEdit = (props) => {
     console.log({ riskprobability: riskProbability });
     const riskRating = riskSeverity * riskProbability;
     // alert(riskRating)
-
+    
     if (riskRating >= 1 && riskRating <= 4) {
       // alert("low")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Trivial`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#006400';
+      temp[taskIndex].hazards[key].riskRatingColour = '#009933';
     } else if (riskRating > 5 && riskRating <= 8) {
       // alert("medium")
       temp[taskIndex].hazards[key].riskRatingLevel =  `${riskRating} Tolerable`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#6AA121';
+      temp[taskIndex].hazards[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       // alert("serious")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Moderate`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
+      temp[taskIndex].hazards[key].riskRatingColour = '#fff82e';
     } else if (riskRating > 17 && riskRating <= 24) {
       // alert("serious")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Substantial`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#800000';
+      temp[taskIndex].hazards[key].riskRatingColour = '#990000';
     }else {
       // alert("high")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Intoreable`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
+      temp[taskIndex].hazards[key].riskRatingColour = '#ff0000';
     }
     console.log({ updated: temp });
     setTaskForm(temp);
