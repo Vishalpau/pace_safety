@@ -367,7 +367,6 @@ const FlhaDetails = (props) => {
 
   const setActions = () => {
     appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id1).then(res => {
-      console.log(res.data.data.results.results, '----------------------------------------------------------')
       setIdd1(res.data.data.results.results)
     })
     appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2).then(res => {
@@ -579,8 +578,13 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd2.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
-
+                                      
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
                                     </Typography>
                                     )}
                                   </TableCell>
@@ -621,8 +625,13 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd3.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
-
+                                     
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
                                     </Typography>
                                     )}
                                   </TableCell>
@@ -664,7 +673,12 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd4.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
 
                                     </Typography>
                                     )}
@@ -707,7 +721,12 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd5.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
 
                                     </Typography>
                                     )}
@@ -750,7 +769,12 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd6.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
 
                                     </Typography>
                                     )}
@@ -793,7 +817,12 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd7.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
 
                                     </Typography>
                                     )}
@@ -836,7 +865,12 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd8.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
 
                                     </Typography>
                                     )}
@@ -879,7 +913,12 @@ const FlhaDetails = (props) => {
                                       handelShowData={handelActionTracker}
                                     />
                                     {idd9.map(i1 => <Typography className={classes.labelValueName}>
-                                      {i1.actionNumber}
+                                      <ActionShow
+                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                        updatePage={updatePage}
+                                      />
 
                                     </Typography>
                                     )}
