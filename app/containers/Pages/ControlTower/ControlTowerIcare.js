@@ -658,9 +658,9 @@ const ControlTowerIcare = () => {
                   aria-label="scrollable auto tabs example"
                 >
                   {/* <Tab className="customTabLebl" disabled square label="Summary" {...a11yProps(0)} /> */}
-                  <Tab className="customTabLebl" square label="Summary" {...a11yProps(0)} />
-                  <Tab className="customTabLebl" square label="iCare" {...a11yProps(1)} />
-                  <Tab className="customTabLebl" square label="Compliance" {...a11yProps(2)} />
+                  <Tab className="customTabLebl" square label={config[0].contextName} {...a11yProps(0)} />
+                  <Tab className="customTabLebl" square label={config[1].contextName} {...a11yProps(1)} />
+                  <Tab className="customTabLebl" square label={config[2].contextName} {...a11yProps(2)} />
                   {/* <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} /> */}
                 </Tabs>
               </AppBar>

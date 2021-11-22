@@ -11,7 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { deepOrange, green } from "@material-ui/core/colors";
 import Tooltip from '@material-ui/core/Tooltip';
 import AlertMessage from "./AttachmentModal.js";
-
+import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 export const Attachment = ({ value }) => {
+    console.log(value.size)
     const [open, setOpen] = useState(false)
     const classes = useStyles();
     const fileNameArray = value.split("/");
@@ -86,16 +87,16 @@ export const Attachment = ({ value }) => {
     } else {
         return (
             <>
-                <IconButton onClick={() => setOpen(true)}>
-                    <Tooltip title={fileName}>
-                        <Avatar
-                            alt="image"
-                            src={value}
-                            variant="square"
-                            className={classes.square}
-                        />
-                    </Tooltip>
-                </IconButton>
+            <Grid item md={12} sm={12} xs={12}>
+                                      <div className="attachFileThumb">
+                                        <img src={value} className="attachFileStyle" alt="attachment" />
+                                        <div className="attachContent">
+                                        <p>{fileName}</p>
+                                        <p>{value.size}</p>
+                                        </div>
+                                      </div>
+                                    </Grid>
+              
 
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </>

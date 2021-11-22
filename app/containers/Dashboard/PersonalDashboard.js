@@ -221,26 +221,24 @@ function PersonalDashboard(props) {
 
         const modules = data.map(subscription => subscription.modules)
         var modulesState = []
-        var temp=[]
-        modules.map(module =>
-          {
-            modulesState = [...modulesState]
-            temp=[...temp]
-            if(module.length>0){
-            module.map(mod=>
-              
-              {
-                modulesState.push(mod)
-                // this.setState({modules: module})
-                if(mod.subscriptionStatus=='active'){
+        var temp = []
+        modules.map(module => {
+          modulesState = [...modulesState]
+          temp = [...temp]
+          if (module.length > 0) {
+            module.map(mod => {
+              modulesState.push(mod)
+              // this.setState({modules: module})
+              if (mod.subscriptionStatus == 'active') {
                 temp.push(mod.moduleCode)
                 // this.setState({ codes: temp })
                 return temp
-              }}
-              )
-    
-              // this.setState({ codes: codes })
-    
+              }
+            }
+            )
+
+            // this.setState({ codes: codes })
+
           }
         })
         setCode(temp)
@@ -249,7 +247,7 @@ function PersonalDashboard(props) {
     }
 
   }
-  
+
   const getModules = async (apps) => {
     let data = await api
       .post(`${ACCOUNT_API_URL}${API_VERSION}applications/modules/`, { "fkAppId": apps })
@@ -267,35 +265,35 @@ function PersonalDashboard(props) {
     await setCode(codes)
   }
 
-  const handleClick = async(appCode) => {
+  const handleClick = async (appCode) => {
 
-    const companyId =  JSON.parse(localStorage.getItem('company')).fkCompanyId;
-    const projectId =  JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
-   
+    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+
     let data = await api
-    .get(ACCOUNT_API_URL + API_VERSION + 'applications/modules/'+ appCode + '/' +companyId + '/')
-    .then(function (res) {
-      
-      return res.data.data.results;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-    
+      .get(ACCOUNT_API_URL + API_VERSION + 'applications/modules/' + appCode + '/' + companyId + '/')
+      .then(function (res) {
+
+        return res.data.data.results;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     if (data.hostings != undefined) {
-          const targetPage = (data.modules ? data.modules.targetPage : "")
-          // alert(localStorage.getItem('companyId'))
-          const clientId = data.hostings.clientId
-          
-            window.open(ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + companyId + '&projectId=' + projectId,
-            ) // <- This is what makes it open in a new window.
-          
-        }
+      const targetPage = (data.modules ? data.modules.targetPage : "")
+      // alert(localStorage.getItem('companyId'))
+      const clientId = data.hostings.clientId
+
+      window.open(ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + companyId + '&projectId=' + projectId,
+      ) // <- This is what makes it open in a new window.
+
+    }
 
   }
 
   const handleDisableModule = (appcode) => {
-    
+
     let moduleDisable = modules.map(module => {
       if (module.moduleCode == appCode) {
         return false;
@@ -413,7 +411,7 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
-          
+
             // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
@@ -470,158 +468,177 @@ function PersonalDashboard(props) {
     return (
       <PapperBlock title="Home" icon="ion-md-list-box">
         {isLoading && <>
+
           <div className="seven_hexagon_row">
-        <div className="honeycomb">
-          <div className="ibws-fix hexagon_row1">
+            <div className="honeycomb">
+              <div className="ibws-fix hexagon_row1">
 
-            <div className="hexagon hide_responsiv">
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_health_safety_environment_mgmt_new"
+                      onClick={() => handleClick('HSE')}
+                    >
+                      <p>HSE Management</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+          
+                <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_hse_control_tower" onClick={() => handleClick('controltower')}>
+                      <p>Control Tower</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_incident_reporting_management"
+                      onClick={() => handleClick('incidents')}
+                    >
+                      <p>Incident Management</p>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+              </div>
+
+              <div className="ibws-fix hexagon_row2">
+                <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
+                      <p>Project Information Hub</p>
+                    </a>
+                  </div>
+                </div>
+
+                {/* <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
-            </div>
+            </div> */}
+                <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_compliance_protocols" onClick={() => handleClick('compliances')}>
+                      <p>Compliance</p>
+                    </a>
+                  </div>
+                </div>
+                
 
-            <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_observations" onClick={() => handleClick('observations')}>
+                      <p>iCare</p>
+                    </a>
+                  </div>
+                </div>
+                <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
+                      <p>Assessments</p>
+                    </a>
+                  </div>
+                </div>
+                
+                <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_action_tracker"
+                      onClick={() => handleClick('actions')}
+                    >
+                      <p>Action Tracker</p>
+                    </a>
+                  </div>
+                </div>
+                <div className={!(codes.includes('permits')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a
+                      className="hse_intelligent_permit_management_new"
+                      onClick={() => handleClick('permits')}
+                    >
+                      <p>Permit Management</p>
+                    </a>
+                  </div>
+                </div>
+                
+                <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                  <div className="hexagontent hexagon_content_box">
+                    <a className="hse_rapid_knowledge_collaboration"
+                      onClick={() => handleClick('knowledge')}
+                    >
+                      <p>Rapid Knowledge &amp; Collaboration</p>
+                    </a>
+                  </div>
+                </div>
+
+                
+
+                {/* <div className="hexagon hide_responsiv">
+            <div className="hexagontent hexagon_content_box" />
+          </div> */}
+
+                {/* <div className={!(codes.includes('environments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
               <div className="hexagontent hexagon_content_box">
-                <a
-                  className="hse_health_safety_environment_mgmt_new"
-                  onClick={() => handleClick('HSE')}
+                <a className="hse_environment_development"
+                  onClick={() => handleClick('environments')}
                 >
-                  <p>HSE Management</p>
-                </a>
-              </div>
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_compliance_protocols" onClick={() => handleClick('compliances')}>
-                  <p>Compliance Protocols</p>
-                </a>
-              </div>
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a
-                  className="hse_incident_reporting_management"
-                  onClick={() => handleClick('incidents')}
-                >
-                  <p>Incident Management</p>
-                </a>
-              </div>
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-          </div>
-
-          <div className="ibws-fix hexagon_row2">
-            <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
-                  <p>Project Information Hub</p>
-                </a>
-              </div>
-            </div>
-
-            
-
-            <div className={!(codes.includes('environments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_environment_development" onClick={() => handleClick('environments')}>
                   <p>Environment Management</p>
                 </a>
               </div>
-            </div>
+            </div> */}
+
+              </div>
 
 
-            <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
-                  <p>Assessments</p>
-                </a>
-              </div>
-            </div>
-            <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_rapid_knowledge_collaboration"
-                  onClick={() => handleClick('knowledge')}
-                >
-                  <p>Rapid Knowledge &amp; Collaboration</p>
-                </a>
-              </div>
-            </div>
-            <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_action_tracker"
-                  onClick={() => handleClick('actions')}
-                >
-                  <p>Action Tracker</p>
-                </a>
-              </div>
-            </div>
-            <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_observations" onClick={() => handleClick('observations')}>
-                  <p>iCare</p>
-                </a>
-              </div>
-            </div>
 
-            <div className={!(codes.includes('permits')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a
-                  className="hse_intelligent_permit_management_new"
-                  onClick={() => handleClick('permits')}
-                >
-                  <p>Permit Management</p>
-                </a>
+
+              <div className="ibws-fix hexagon_row1">
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className="hexagon bghide_in_view hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className="hexagon hide_responsiv hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className="hexagon bghide_in_view hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className="hexagon bghide_in_view hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
+
+                <div className="hexagon hide_responsiv">
+                  <div className="hexagontent hexagon_content_box" />
+                </div>
               </div>
             </div>
           </div>
 
-
-
-
-          <div className="ibws-fix hexagon_row1">
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon bghide_in_view hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon hide_responsiv hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon bghide_in_view hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon bghide_in_view hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-
-            <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-          
 
           <Dialog
             className={classes.projectDialog}
