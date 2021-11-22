@@ -37,6 +37,7 @@ import {
   ACCOUNT_API_URL,
   HEADER_AUTH, SSO_URL
 } from "../../../../utils/constants";
+import { split } from 'lodash';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -179,9 +180,9 @@ const projectId =
   const [ahaform, setAHAForm] = useState({})
   const handleSubmit = async () => {
     await setSubmitLoader(true)
-
+    
     let data = new FormData()
-
+  
     data.append("fkCompanyId", ahaform.fkCompanyId)
     data.append("fkProjectId", ahaform.fkProjectId),
       data.append("fkProjectStructureIds", ahaform.fkProjectStructureIds),
@@ -197,14 +198,13 @@ const projectId =
     ) {
       data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
     }
-    // data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
     data.append("description", ahaform.description),
       data.append("workStopCondition", ahaform.workStopCondition),
       data.append("department", ahaform.department),
       data.append("additionalRemarks", ahaform.additionalRemarks),
       data.append("classification", ahaform.classification),
-      data.append("link", ahaform.link),
-      data.append("notifyTo", ahaform.notifyTo),
+      data.append("link", ahaform.link)  
+      data.append("notifyTo" , ahaform.notifyTo)
       data.append("permitToPerform", ahaform.permitToPerform),
       data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
       data.append("picApprovalUser", ahaform.picApprovalUser),
@@ -273,7 +273,7 @@ const projectId =
       let newData = temp.filter((item) => item !== value);
 
       setNotifyToList(newData);
-      setForm({ ...form, notifyTo: newData.toString() });
+      setAHAForm({ ...ahaform, notifyTo: newData.toString() });
 
     }
 

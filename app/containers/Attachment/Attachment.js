@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import { IconButton } from "@material-ui/core";
-import {
-    mdiFilePdfBox,
-    mdiMicrosoftExcel,
-    mdiFileExcel,
-    mdiFileWord,
-    mdiFilePowerpoint,
-    
-} from "@mdi/js";
-import Icon from "@mdi/react";
+
+import pdfIcon from 'dan-images/pdfIcon.png';
+import excelIcon from 'dan-images/excelIcon.png';
+import wordIcon from 'dan-images/wordIcon.png';
+import pptIcon from 'dan-images/pptIcon.png';
+
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { deepOrange, green } from "@material-ui/core/colors";
 import Tooltip from '@material-ui/core/Tooltip';
 import AlertMessage from "./AttachmentModal.js";
-
+import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
@@ -36,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 export const Attachment = ({ value }) => {
+    console.log(value.size)
     const [open, setOpen] = useState(false)
     const classes = useStyles();
     const fileNameArray = value.split("/");
@@ -46,7 +44,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                    <Icon path={mdiFilePdfBox} size={1} onClick={() => setOpen(true)} />
+                    <Avatar src={pdfIcon} size={1} variant="square" onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
@@ -58,7 +56,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                    <Icon path={mdiMicrosoftExcel} size={1} onClick={() => setOpen(true)} />
+                    <Avatar src={excelIcon} variant="square" size={1} onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
@@ -71,7 +69,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                    <Icon path={mdiFileWord} size={1} onClick={() => setOpen(true)} />
+                    <Avatar src={wordIcon} size={1} variant="square" onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
@@ -80,7 +78,7 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
-                    <Icon path={mdiFilePowerpoint} size={1} onClick={() => setOpen(true)} />
+                    <Avatar src={pptIcon} size={1} variant="square" onClick={() => setOpen(true)} />
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
 
@@ -89,16 +87,16 @@ export const Attachment = ({ value }) => {
     } else {
         return (
             <>
-                <IconButton onClick={() => setOpen(true)}>
-                    <Tooltip title={fileName}>
-                        <Avatar
-                            alt="image"
-                            src={value}
-                            variant="square"
-                            className={classes.square}
-                        />
-                    </Tooltip>
-                </IconButton>
+            <Grid item md={12} sm={12} xs={12}>
+                                      <div className="attachFileThumb">
+                                        <img src={value} className="attachFileStyle" alt="attachment" />
+                                        <div className="attachContent">
+                                        <p>{fileName}</p>
+                                        <p>{value.size}</p>
+                                        </div>
+                                      </div>
+                                    </Grid>
+              
 
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </>
