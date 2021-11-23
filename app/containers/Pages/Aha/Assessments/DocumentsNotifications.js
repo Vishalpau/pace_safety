@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   formBox: {
     '& .dropzone': {
       flex: '1',
-      display: 'flex',
+      display: 'block',
       flexDirection: 'column',
       alignItems: 'center',
       padding: '35px',
@@ -180,6 +180,10 @@ const projectId =
   const [ahaform, setAHAForm] = useState({})
   const handleSubmit = async () => {
     await setSubmitLoader(true)
+
+    // if(ahaform['notifyTo'] === null){
+    //   ahaform['notifyTo'] = "null"
+    // }
     
     let data = new FormData()
   
@@ -391,7 +395,7 @@ const projectId =
                 className={classes.formBox}
                 >
                 <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-                <FormGroup row>{notificationSentValue.map((value) => (
+                <FormGroup>{notificationSentValue.map((value) => (
                   <FormControlLabel
                     className={classes.labelValue}
                     control={(

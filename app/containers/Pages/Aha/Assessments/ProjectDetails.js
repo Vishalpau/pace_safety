@@ -310,15 +310,19 @@ const ProjectDetails = () => {
     if (form.id) {
       form["assessmentDate"] = form['assessmentDate'].split('T')[0]
       delete form["ahaAssessmentAttachment"]
+      if(form['notifyTo'] === null){
+        form['notifyTo'] = "null"
+      }
       // form['updatedBy'] = form['createdBy']
-      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
+      console.log("><><><>")
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form).then(res => {
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
-          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
+          const res =  api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
         } else {
           Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
           if (Teamform[i].teamName !== "") {
-            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+            const res =  api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
           }
           if (res.status === 200) {
             history.push("/app/pages/aha/assessments/project-area-hazards")
@@ -328,7 +332,11 @@ const ProjectDetails = () => {
       }
       if (res.status === 200) {
         history.push(`/app/pages/aha/assessments/project-area-hazards/`)
-      }
+      }}).catch(err => {
+         setLoading(false);
+      })
+
+
 
     } else {
       if(form['permitToPerform'] === "No"){
@@ -349,8 +357,11 @@ const ProjectDetails = () => {
           }
         }
         history.push("/app/pages/aha/assessments/project-area-hazards")
+      }else{
+        await setLoading(false);
       }
     }
+
   }
 
   const [selectedDate, setSelectedDate] = useState(new Date());

@@ -87,16 +87,16 @@ export const Attachment = ({ value }) => {
     } else {
         return (
             <>
-            <Grid item md={12} sm={12} xs={12}>
-                                      <div className="attachFileThumb">
-                                        <img src={value} className="attachFileStyle" alt="attachment" />
-                                        <div className="attachContent">
-                                        <p>{fileName}</p>
-                                        <p>{value.size}</p>
-                                        </div>
-                                      </div>
-                                    </Grid>
-              
+            <IconButton onClick={() => setOpen(true)}>
+                    <Tooltip title={fileName}>
+                        <Avatar
+                            alt="image"
+                            src={value}
+                            variant="square"
+                            className={classes.square}
+                        />
+                    </Tooltip>
+                </IconButton>
 
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </>
