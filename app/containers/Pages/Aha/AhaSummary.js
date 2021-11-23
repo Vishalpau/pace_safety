@@ -1,75 +1,51 @@
-import React, { useState, useEffect } from "react";
-import { PapperBlock } from "dan-components";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
-import CheckCircle from "@material-ui/icons/CheckCircle";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import AccessTime from "@material-ui/icons/AccessTime";
+import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import classNames from "classnames";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-
+import Grid from "@material-ui/core/Grid";
 // List
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
-import { useHistory, useParams } from "react-router";
-
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import AccessTime from "@material-ui/icons/AccessTime";
+import Add from "@material-ui/icons/Add";
+import CheckCircle from "@material-ui/icons/CheckCircle";
+import Close from "@material-ui/icons/Close";
+import Comment from "@material-ui/icons/Comment";
+import Edit from "@material-ui/icons/Edit";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import History from "@material-ui/icons/History";
+import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
 // Icons
 import Print from "@material-ui/icons/Print";
 import Share from "@material-ui/icons/Share";
-import Close from "@material-ui/icons/Close";
-import Comment from "@material-ui/icons/Comment";
-import History from "@material-ui/icons/History";
-import Edit from "@material-ui/icons/Edit";
-import Add from "@material-ui/icons/Add";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
-import Styles from "dan-styles/Summary.scss";
-import Fonts from "dan-styles/Fonts.scss";
-
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-
-import ImageIcon from "@material-ui/icons/Image";
-import Avatar from "@material-ui/core/Avatar";
-import Link from "@material-ui/core/Link";
-
-import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
-
-import api from "../../../utils/axios";
-import moment from "moment";
-
-import Attachment from "../../Attachment/Attachment";
 import axios from "axios";
-import { Comments } from "../../pageListAsync";
-import ActionShow from '../../Forms/ActionShow';
-import { handelActionData , handelActionWithEntity } from "../../../utils/CheckerValue"
-import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
-import Loader from "../../Forms/Loader";
-
-// import AhaSummary from "../../../containers/Activity/Activity" ;
+import { PapperBlock } from "dan-components";
+import Fonts from "dan-styles/Fonts.scss";
+import Styles from "dan-styles/Summary.scss";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router";
+import api from "../../../utils/axios";
+import { handelActionData, handelActionWithEntity } from "../../../utils/CheckerValue";
 
 import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
-import { map } from "draft-js/lib/DefaultDraftBlockRenderMap";
+import Attachment from "../../Attachment/Attachment";
+import ActionShow from '../../Forms/ActionShow';
+import Loader from "../../Forms/Loader";
+import { Comments } from "../../pageListAsync";
+import { checkValue } from "../Jha/Utils/checkValue";
+
+
 
 // Sidebar Links Helper Function
 
@@ -419,7 +395,7 @@ function AhaSummary() {
         } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
           zzz[i].riskRatingColour = '#fff82e'
 
-        }  else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
+        } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
           zzz[i].riskRatingColour = '#990000'
         }
         else {
@@ -487,15 +463,15 @@ function AhaSummary() {
     const projectId = project.projectName.projectId
     const baseUrl = localStorage.getItem("apiBaseUrl")
     var tempPerformance = {}
-    
+
 
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/aha-document-conditions/${projectId}/`);
     const apiCondition = documentCondition.data.data.results[0].checklistValues;
 
-   
+
     apiCondition.map((value) => {
       tempPerformance[value.inputValue] = value.inputLabel
-    })    
+    })
     setCheckListAssessment(tempPerformance)
   }
 
@@ -774,17 +750,17 @@ function AhaSummary() {
                                     >
                                       Risk Assessment team
                                     </Typography>
-                                    {Teamform.length > 0 ? 
-                                    Teamform.map((value, index) => (
-                                      <ul
-                                        className={Fonts.labelValue}
-                                        key={index}
-                                      >
-                                        
+                                    {Teamform.length > 0 ?
+                                      Teamform.map((value, index) => (
+                                        <ul
+                                          className={Fonts.labelValue}
+                                          key={index}
+                                        >
+
                                           <li>{value.teamName}</li>
-                                      </ul>
-                                    )) : "-" }
-                                   </Grid>
+                                        </ul>
+                                      )) : "-"}
+                                  </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>
@@ -1117,11 +1093,11 @@ function AhaSummary() {
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                    {ahaData.workStopCondition !== "" ? checkValue(ahaData.workStopCondition).split(",").map((value) => (
-                                            <p>
-                                               {checkListAssessment[value]}
-                                            </p>
-                                          )) : "-"}
+                                      {ahaData.workStopCondition !== "" ? checkValue(ahaData.workStopCondition).split(",").map((value) => (
+                                        <p>
+                                          {checkListAssessment[value]}
+                                        </p>
+                                      )) : "-"}
                                       {/* {ahaData.workStopCondition ? ahaData.workStopCondition : "-"} */}
                                     </Typography>
                                   </Grid>
@@ -1232,7 +1208,7 @@ function AhaSummary() {
                       <>
                         <Grid item xs={12} style={{ padding: "0px 12px" }}>
                           <Typography className={classes.heading}>
-                          Competent person
+                            Competent person
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -1384,7 +1360,7 @@ function AhaSummary() {
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                              Competent person
+                                Competent person
                               </Typography>
                               <Typography
                                 variant="body"
@@ -1410,22 +1386,22 @@ function AhaSummary() {
                             </Grid>
 
                             <Grid item xs={12} md={12}>
-                                  <Typography className={classes.aLabelValue}>
-                                    {lessionAction.map((value) => (
-                                      <>
-                                        <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
-                                          title={value.actionTitle}
-                                          companyId={projectData.companyId}
-                                          projectId={projectData.projectId}
-                                          handelShowData={handelShowData}
-                                        />
+                              <Typography className={classes.aLabelValue}>
+                                {lessionAction.map((value) => (
+                                  <>
+                                    <ActionShow
+                                      action={{ id: value.actionId, number: value.actionNumber }}
+                                      title={value.actionTitle}
+                                      companyId={projectData.companyId}
+                                      projectId={projectData.projectId}
+                                      handelShowData={handelShowData}
+                                    />
 
-                                      </>
-                                    ))}
-                                  </Typography>
+                                  </>
+                                ))}
+                              </Typography>
                             </Grid>
-                            
+
                           </Grid>
                         </Grid>
                       </>
@@ -1556,7 +1532,7 @@ function AhaSummary() {
       </Box>
     </> :
       <>
-        <Loader/>
+        <Loader />
       </>
       }
     </PapperBlock>

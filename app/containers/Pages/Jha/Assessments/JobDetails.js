@@ -482,8 +482,10 @@ const JobDetails = (props) => {
 
   const classes = useStyles();
 
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
   const pickListValue = async () => {
-    setPermitType(await PickListData(80))
+    setPermitType(await pickListValues["80"])
   }
 
   const handelCallBack = async () => {

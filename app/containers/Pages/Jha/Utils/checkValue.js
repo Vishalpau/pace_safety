@@ -2,7 +2,7 @@ import api from "../../../../utils/axios";
 
 export const checkValue = (value) => {
     let noValue = "-"
-    if (value !== null && value !== undefined && value !== "") {
+    if (value !== null && value !== undefined && value !== "" && value !== "null") {
         return value
     } else {
         return noValue

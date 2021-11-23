@@ -1,56 +1,36 @@
-import React, { useEffect, useState, Component, useRef } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
+import DateFnsUtils from '@date-io/date-fns';
+import { Button, CircularProgress, FormHelperText, Grid, TextField, Typography } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from '@material-ui/core/FormGroup';
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import { FormHelperText } from "@material-ui/core";
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import moment from "moment";
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
+import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams, useHistory } from 'react-router';
-import { CircularProgress } from '@material-ui/core';
-import Loader from "../../../Forms/Loader";
-
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import axios from "axios";
+import { PapperBlock } from 'dan-components';
+import moment from "moment";
+import React, { useEffect, useRef, useState } from 'react';
+import { useHistory, useParams } from 'react-router';
+import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import api from "../../../../utils/axios";
-
-import { handelCommonObject } from "../../../../utils/CheckerValue"
-import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
-
-import { AHA } from "../constants";
-import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import { handelCommonObject } from "../../../../utils/CheckerValue";
 import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../../utils/constants";
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+import Loader from "../../../Forms/Loader";
+import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import { AHA } from "../constants";
+import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -310,37 +290,38 @@ const ProjectDetails = () => {
     if (form.id) {
       form["assessmentDate"] = form['assessmentDate'].split('T')[0]
       delete form["ahaAssessmentAttachment"]
-      if(form['notifyTo'] === null){
+      if (form['notifyTo'] === null) {
         form['notifyTo'] = "null"
       }
       // form['updatedBy'] = form['createdBy']
       console.log("><><><>")
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form).then(res => {
-      for (let i = 0; i < Teamform.length; i++) {
-        if (Teamform[i].id) {
-          const res =  api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
-        } else {
-          Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          if (Teamform[i].teamName !== "") {
-            const res =  api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+        for (let i = 0; i < Teamform.length; i++) {
+          if (Teamform[i].id) {
+            const res = api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
+          } else {
+            Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
+            if (Teamform[i].teamName !== "") {
+              const res = api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+            }
+            if (res.status === 200) {
+              history.push("/app/pages/aha/assessments/project-area-hazards")
+            }
           }
-          if (res.status === 200) {
-            history.push("/app/pages/aha/assessments/project-area-hazards")
-          }
-        }
 
-      }
-      if (res.status === 200) {
-        history.push(`/app/pages/aha/assessments/project-area-hazards/`)
-      }}).catch(err => {
-         setLoading(false);
+        }
+        if (res.status === 200) {
+          history.push(`/app/pages/aha/assessments/project-area-hazards/`)
+        }
+      }).catch(err => {
+        setLoading(false);
       })
 
 
 
     } else {
-      if(form['permitToPerform'] === "No"){
-        form['typeOfPermit']  = ""
+      if (form['permitToPerform'] === "No") {
+        form['typeOfPermit'] = ""
         form['permitNumber'] = ""
       }
       const res = await api.post("/api/v1/ahas/", form)
@@ -357,7 +338,7 @@ const ProjectDetails = () => {
           }
         }
         history.push("/app/pages/aha/assessments/project-area-hazards")
-      }else{
+      } else {
         await setLoading(false);
       }
     }
@@ -374,7 +355,7 @@ const ProjectDetails = () => {
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
   const fetchCallBack = async () => {
-    
+
     setSelectBreakDown([])
     for (var key in projectData.projectName.breakdown) {
 
@@ -527,8 +508,10 @@ const ProjectDetails = () => {
     await setTeamForm(result)
   }
 
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
   const pickListValue = async () => {
-    permitType.current = await PickListData(81)
+    permitType.current = await pickListValues["81"]
   }
 
   const classes = useStyles();
@@ -850,7 +833,7 @@ const ProjectDetails = () => {
             </Grid>
           </Grid> :
           <>
-            <Loader/>
+            <Loader />
           </>
         }
       </PapperBlock>

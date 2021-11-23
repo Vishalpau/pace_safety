@@ -246,7 +246,7 @@ function PersonalDashboard(props) {
         getModules(apps)
       } catch (error) { }
     }
-
+    getAllPickList()
   }
 
   const getModules = async (apps) => {
@@ -452,6 +452,7 @@ function PersonalDashboard(props) {
 
   // fetching picklist 
   const getAllPickList = async () => {
+    console.log("here")
     let pickListValues = {}
     let allPickList = await api.get(`${localStorage.getItem("apiBaseUrl")}/api/v1/lists/`);
     let allPickListValue = allPickList.data.data.results
@@ -479,7 +480,6 @@ function PersonalDashboard(props) {
     await userDetails(comId, proId, redback, tarPage, tarId);
 
     await getSubscriptions();
-    await getAllPickList();
   }
 
   useEffect(() => {
