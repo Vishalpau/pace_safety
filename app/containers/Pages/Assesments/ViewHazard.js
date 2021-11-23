@@ -421,32 +421,26 @@ const FlhaDetails = (props) => {
   };
 
 
-  const handleRiskChange = (riskSeverity, riskProbability) => {
+  const handleRiskChange = (rating) => {
+    console.log(rating,'rating')
     let colorRating = ''
-    const riskRating = riskSeverity * riskProbability;
-    // alert(riskRating)
+    if (rating === "2 Trivial" || rating=== "4 Trivial") {
+      colorRating = '#009933'
+    } else if (rating=== "6 Tolerable" || rating=== "8 Tolerable") {
+      colorRating = '#8da225'
 
-    if (riskRating >= 1 && riskRating <= 4) {
-      colorRating = '#006400'
-    } else if (riskRating > 5 && riskRating <= 8) {
-      // alert("medium")
-      colorRating = '#6AA121'
-    } else if (riskRating > 9 && riskRating <= 16) {
-      // alert("serious")
-      colorRating = '#F3C539'
-    } else if (riskRating > 17 && riskRating <= 24) {
-      // alert("serious")
-      colorRating = '#800000'
-    } else {
-      // alert("high")
-      // temp[taskIndex].hazards[key].riskRatingLevel = '100';
-      // temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
+    } else if (rating=== "12 Moderate" || rating=== "16 Moderate") {
+      colorRating = '#fff82e'
+
+    }  else if (rating=== "18 Substantial" || rating=== "24 Substantial") {
+      colorRating = '#990000'
+    }
+    else {
+      colorRating = '#ff0000'
     }
 
     return colorRating
 
-    // console.log({ updated: temp });
-    // setTaskForm(temp);
   };
 
   
@@ -595,15 +589,15 @@ const FlhaDetails = (props) => {
                                             </Typography>
                                           </Grid>
                                           <Grid item md={4} sm={4} xs={12} >
-                                            {hazard.riskRatingLevel}
-                                            {/* <div
+                                            
+                                            <div
                                               className={
                                                 classes.ratioColororange
                                               }
-                                              style={{ backgroundColor: hazard.riskRatingColour }}
+                                              style={{ backgroundColor: handleRiskChange(hazard.riskRatingLevel) }}
                                             >
-
-                                            </div> */}
+                                              {hazard.riskRatingLevel}
+                                            </div>
 
                                           </Grid>
                                         </Grid>
