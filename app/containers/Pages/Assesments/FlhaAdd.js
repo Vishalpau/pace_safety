@@ -427,7 +427,8 @@ const FlhaDetails = (props) => {
   const [value, setValue] = React.useState('N/A');
   const [error, setError] = React.useState({});
   const handleChange = (event) => {
-    // setValue(event.target.value);
+    alert(event.target.value)
+    setJobForm({...jobForm,Checked:!jobForm.Checked});
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
@@ -439,7 +440,6 @@ const FlhaDetails = (props) => {
   const [loading, setLoading] = useState(false);
   const [hazardtype, setHazardType] = React.useState([])
   const [hazardValue, setHazardValue] = React.useState('')
-
 
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -472,7 +472,6 @@ const FlhaDetails = (props) => {
     meetingPoint: '',
     department: '',
     permitToWork: '',
-    permitNumber: '',
     permitToWorkNumber: '',
     dateTimeFlha: new Date().toISOString(),
     referenceGroup: '',
@@ -500,7 +499,8 @@ const FlhaDetails = (props) => {
     updatedBy: null,
     source: "Web",
     vendor: "",
-    vendorReferenceId: ""
+    vendorReferenceId: "",
+    Checked:false
   });
 
   const [contractors, setContractors] = React.useState([]);
@@ -589,6 +589,8 @@ const FlhaDetails = (props) => {
     } else {
       temp[fieldname] = value;
     }
+
+
     console.log({ temp });
     await setJobForm(temp);
     // await console.log({jobForm: jobForm})
@@ -614,13 +616,12 @@ const FlhaDetails = (props) => {
 
   const handleHazardForm = async (e, key, taskIndex, fieldname) => {
     // alert(12345678)
-    console.log(key, 'taskIndex');
+    console.log(fieldname);
     const temp = [...taskForm];
     console.log({ tempform: temp });
-    // temp[taskIndex].hazards[key][fieldname]= e.target.value
-    setHazardValue(e.target.value)
-    // console.log(temp,'tepm')
-    const { value } = e.target.value;
+
+    const { value } = e.target;
+    setHazardValue(value)
     if (key == undefined) {
       temp[taskIndex][fieldname] = value;
     } else {
@@ -630,6 +631,7 @@ const FlhaDetails = (props) => {
       }
       temp[taskIndex].hazards[key][fieldname] = value;
     }
+
     console.log({ temp });
     await setTaskForm(temp);
   };
@@ -684,7 +686,7 @@ const FlhaDetails = (props) => {
 
 
   const handleJobFormSubmit = async () => {
-    const { error, isValid } = validate(jobForm);
+    const { error, isValid } = validate(jobForm,selectDepthAndId);
     if (isValid) {
       await createFlha();
     } else {
@@ -730,6 +732,7 @@ const FlhaDetails = (props) => {
     formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
     formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
     formDataPost.append('referenceNumber', jobForm.referenceNumber);
+    // formDataPost.append('Checked', jobForm.Checked);
 
     // formDataPost.append('flhaStage', jobForm.flhaStage);
     // console.log({ jobformUpdated: data });
@@ -972,7 +975,6 @@ const FlhaDetails = (props) => {
       temp[taskIndex].hazards[key].riskRatingColour = '#ff0000';
     }
 
-
     console.log({ updated: temp });
     setTaskForm(temp);
   };
@@ -982,15 +984,6 @@ const FlhaDetails = (props) => {
     setJobForm({ ...jobForm, attachment: e.target.files[0] })
     // setFileName(e.target.files[0].name)
   };
-
-  function text(x) {
-    if (x == 0) document.getElementById("myCode").style.display = "visible";
-    else document.getElementById("myCode").style.display = "hidden";
-    return
-  };
-
-
-
 
 
   return (
@@ -1214,7 +1207,6 @@ const FlhaDetails = (props) => {
                           />
                         </Grid>
                         {taskValue.hazards.map((item, index) => (
-
                           <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.backPaperSubAccordian}>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
@@ -1224,17 +1216,6 @@ const FlhaDetails = (props) => {
                             >
                               <Typography className={classes.heading}>Hazard#{index + 1} - {(item.hazard) ? item.hazard : hazardValue}</Typography>
                               <Typography className={classes.secondaryHeading}>
-                                {/* <Fab
-                                  color="secondary"
-                                  size="small"
-                                  align="right"
-                                  height={30}
-                                  width={30}
-                                  aria-label="remove"
-                                  className={classNames(classes.button, classes.mRight)}
-                                >
-                                  <RemoveIcon />
-                                </Fab> */}
                               </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
@@ -1245,15 +1226,14 @@ const FlhaDetails = (props) => {
                                     requirement
                                     className={classes.formControl}
                                   >
-                                    <InputLabel className={classes.heading}>
-                                      Hazard
+                                    <InputLabel id="demo-simple-select-label">
+                                      Hazards
                                       {' '}
-                                 
                                     </InputLabel>
                                     <Select
                                       multiline
                                       variant="outlined"
-                                      rows="1"
+                                      rows="3"
                                       id="hazards"
                                       // label="*Hazards"
                                       className={classes.fullWidth}
@@ -1387,9 +1367,9 @@ const FlhaDetails = (props) => {
                         </Grid>
                       </AccordionDetails>
                     </Accordion>
+
                   ))}
                 </div>
-
               </Grid>
               <Divider className={classes.divider} />
             </Box>
@@ -1573,10 +1553,10 @@ const FlhaDetails = (props) => {
                           multiline
                           variant="outlined"
                           rows="1"
-                          id="permitToWorkNumber"
+                          id="permitNumber"
                           label="Enter permit number"
-                          value={jobForm.permitToWorkNumber}
-                          onChange={(e) => handleJobFormChange(e, 'permitToWorkNumber')}
+                          value={jobForm.permitNumber}
+                          onChange={(e) => handleJobFormChange(e, 'permitNumber')}
                           className="formControl"
                         />
                       </Grid>
@@ -1788,10 +1768,13 @@ const FlhaDetails = (props) => {
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     name="checkedI"
                     onChange={handleChange}
+                    value={jobForm.Checked}
                   />
                 )}
                 label="I pledge that I will always be responsible for my safety and the safety of people around me *"
               />
+                                  <div style={{ color: "red" }}>{error.Checked}</div>
+
             </FormGroup>
           </Grid>
           <Grid

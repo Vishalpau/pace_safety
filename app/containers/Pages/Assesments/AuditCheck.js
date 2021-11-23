@@ -223,7 +223,7 @@ const FlhaDetails = (props) => {
   const [id8, setId8] = React.useState('8')
   const [id9, setId9] = React.useState('9')
 
-  const objId = { "id1": 1, "id2": 2, "id3": 3, "id4": 4, "id5": 5, "id6": 6, "id7": 7, "id8": 8, "id8": 8, "id9": 9 }
+  const objId = { "id1": 1, "id2": 2, "id3": 3, "id4": 4, "id5": 5, "id6": 6, "id7": 7, "id8": 8,"id9": 9 }
 
   const [idd1, setIdd1] = React.useState([])
   const [idd2, setIdd2] = React.useState([])
@@ -358,14 +358,75 @@ const FlhaDetails = (props) => {
       .then(response => {
 
         if (response.data.data.results.length) {
-          allAuditType.map((valueAudit) => {
-            allAuditIds.map((valueIds) => {
-              setStep1(response.data.data.results.filter(data => data.auditType == valueAudit)[0][`${valueIds}`])
-            })
-          })
+          setStep1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditCheck)
+          setStep2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditCheck)
+          setStep3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditCheck)
+          setStep4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditCheck)
+          setStep5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditCheck)
+          setStep6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditCheck)
+          setStep7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditCheck)
+          setStep8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditCheck)
+          setStep9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditCheck)
+
+          setId1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].id)
+          setId2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].id)
+          setId3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].id)
+          setId4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].id)
+          setId5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].id)
+          setId6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].id)
+          setId7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].id)
+          setId8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].id)
+          setId9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].id)
+
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id1).then(res => {
+          //   setIdd1(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2).then(res => {
+          //   setIdd2(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id3).then(res => {
+          //   setIdd3(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id4).then(res => {
+          //   setIdd4(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id5).then(res => {
+          //   setIdd5(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id6).then(res => {
+          //   setIdd6(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id7).then(res => {
+          //   setIdd7(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id8).then(res => {
+          //   setIdd8(res.data.data.results.results)
+          // })
+          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id9).then(res => {
+          //   setIdd9(res.data.data.results.results)
+          // })
+
+          setRemark1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditRemarks)
+          setRemark2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditRemarks)
+          setRemark3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditRemarks)
+          setRemark4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditRemarks)
+          setRemark5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditRemarks)
+          setRemark6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditRemarks)
+          setRemark7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditRemarks)
+          setRemark8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditRemarks)
+          setRemark9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditRemarks)
+
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditor)
+          setAuditName(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditor)
           setIsLock(true)
         }
-
       })
   };
 
@@ -397,6 +458,7 @@ const FlhaDetails = (props) => {
     appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id9).then(res => {
       setIdd9(res.data.data.results.results)
     })
+   
   }
 
   const handelAllData = async (apiData, type = "all") => {
@@ -447,18 +509,6 @@ const FlhaDetails = (props) => {
     let allAction = await handelAllData([], "title")
     console.log(allAction, 'allAction')
   };
-
-  const [actionData1, setActionData1] = React.useState([])
-
-
-
-
-
-  const handelActionShow = async (fid, aid) => {
-    const res = await appapi.get(setApiUrl() + 'api/v1/actions/?context_id=' + `${fid}:${aid}`)
-    setActionData1(res.data.data.results.results)
-    console.log(res.data.data.results.results, 'res')
-  }
 
   const handelCallBack = async () => {
     await auditUserList()
@@ -522,6 +572,7 @@ const FlhaDetails = (props) => {
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
                                   </TableCell>
+                                  {console.log(step1,'step1')}
                                   <TableCell align="left">
                                     <ActionTracker
                                       actionContext="flha:audit"
@@ -572,7 +623,7 @@ const FlhaDetails = (props) => {
                                   <TableCell align="left">
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id2}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id2"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -588,7 +639,9 @@ const FlhaDetails = (props) => {
                                         companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                                         projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                         updatePage={updatePage}
+
                                       />
+                                      
                                     </Typography>
                                     )}
                                   </TableCell>
@@ -619,7 +672,7 @@ const FlhaDetails = (props) => {
                                   <TableCell align="left">
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id3}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id3"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -667,7 +720,7 @@ const FlhaDetails = (props) => {
 
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id4}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id4"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -715,7 +768,7 @@ const FlhaDetails = (props) => {
 
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id5}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id5"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -763,7 +816,7 @@ const FlhaDetails = (props) => {
 
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id6}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id6"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -811,7 +864,7 @@ const FlhaDetails = (props) => {
 
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id7}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id7"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -859,7 +912,7 @@ const FlhaDetails = (props) => {
 
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id8}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id8"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
@@ -907,7 +960,7 @@ const FlhaDetails = (props) => {
 
                                     <ActionTracker
                                       actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${id9}`}
+                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id9"]}`}
                                       setUpdatePage={setUpdatePage}
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
