@@ -115,7 +115,6 @@ const InvestigationOverview = () => {
       setIncidentsListdata(result);
     })
       .catch((err) => history.push("/app/pages/error"))
-
   };
 
   const classes = useStyles();
@@ -124,12 +123,11 @@ const InvestigationOverview = () => {
     severityValues.current = await pickListValues["41"];
     setIsLoading(true);
     localStorage.removeItem("WorkerDataFetched");
+    await fetchIncidentsData()
   };
 
   useEffect(() => {
-    handelUpdateCheck();
     callback();
-    fetchIncidentsData()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");

@@ -241,9 +241,9 @@ const EventDetails = () => {
     await setError(error);
     await setErrorWeather(errorWeather);
     await setErrorCost(errorCost)
-    setButtonLoading(true)
     const temp = incidentsListData
     temp.updatedAt = new Date().toISOString();
+    setButtonLoading(true)
     if (incidentsListData.incidentStage === "Investigation") {
       temp.incidentStatus = "Done"
       try {
@@ -419,8 +419,46 @@ const EventDetails = () => {
         <>
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
-
               {/* job task */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  error={
+                    error && error.jobTask
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Job task</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Job task"
+                    value={form.jobTask}
+                  >
+                    {jobTaskValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues.value}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            jobTask: selectValues.value,
+                          });
+                        }}
+                      >
+                        {selectValues.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {error && error.jobTask && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error.jobTask}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {/* activity */}
               <Grid item xs={12} md={6}>
                 <FormControl
                   error={
@@ -430,7 +468,7 @@ const EventDetails = () => {
                   required
                   className={classes.formControl}
                 >
-                  <InputLabel id="project-name-label">Job task</InputLabel>
+                  <InputLabel id="project-name-label">Activity</InputLabel>
                   <Select
                     id="project-name"
                     labelId="project-name-label"
@@ -455,46 +493,6 @@ const EventDetails = () => {
                 {error && error.activity && (
                   <FormHelperText style={{ color: "red" }}>
                     {error.activity}
-                  </FormHelperText>
-                )}
-              </Grid>
-
-              {/* activity */}
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  error={
-                    error && error.jobTask
-                  }
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="project-name-label">Activity</InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Job task"
-                    value={form.jobTask}
-                  >
-                    {jobTaskValues.current.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues.value}
-                        onClick={(e) => {
-                          setForm({
-                            ...form,
-                            jobTask: selectValues.value,
-                          });
-                        }}
-                      >
-                        {selectValues.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                {error && error.jobTask && (
-                  <FormHelperText style={{ color: "red" }}>
-                    {error.jobTask}
                   </FormHelperText>
                 )}
               </Grid>
@@ -663,9 +661,6 @@ const EventDetails = () => {
 
               <Grid item xs={12} md={6}>
                 <FormControl
-                  error={
-                    error && error.spillsFluidType
-                  }
                   variant="outlined"
                   required
                   className={classes.formControl}
@@ -692,11 +687,6 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {error && error.spillsFluidType && (
-                  <FormHelperText style={{ color: "red" }}>
-                    {error.spillsFluidType}
-                  </FormHelperText>
-                )}
               </Grid>
 
               <Grid item xs={12} md={6}>
