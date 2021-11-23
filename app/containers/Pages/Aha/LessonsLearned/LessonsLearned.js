@@ -282,8 +282,10 @@ const LessonsLearned = () => {
                         />
                       </Grid>
 
-                      <Grid item md={6} xs={12}>
+                      <Grid item md={12} xs={12}>
                         <Typography variant="h6" gutterBottom className={classes.labelName}>
+                        Create an action to share lesson learnt
+                        </Typography>
                           <ActionTracker
                             actionContext="aha:lessionLearned"
                             enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
@@ -295,7 +297,6 @@ const LessonsLearned = () => {
                             createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                             handelShowData={handelActionTracker}
                           />
-                        </Typography>
                       </Grid>
                       <Grid item xs={12} className={classes.createHazardbox}>
                         {handelActionShow(localStorage.getItem("fkAHAId"))}
