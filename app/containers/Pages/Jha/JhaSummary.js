@@ -537,22 +537,6 @@ function JhaSummary() {
                                           ))}
                                         </Typography>
                                       </Grid>
-                                      {/* work area */}
-
-                                      {false &&
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Work Area
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(projectStructName["Work Area"])}
-                                          </Typography>
-                                        </Grid>
-                                      }
 
                                       {/* location */}
                                       <Grid item xs={12} md={6}>
@@ -1007,6 +991,7 @@ function JhaSummary() {
                                         >
                                           Notifications sent to
                                         </Typography>
+                                        {console.log(assessment.notifyTo)}
                                         {checkValue(assessment.notifyTo).split(",").map((value) => (
                                           <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
                                         ))}

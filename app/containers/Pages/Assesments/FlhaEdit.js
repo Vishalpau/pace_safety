@@ -621,11 +621,12 @@ const FlhaDetails = () => {
     let breakDown = allBreakDownValues.filter(breakDownStruct => breakDownUrl.push(breakDownStruct['structure'][0]["url"]))
     setProjectData({ ...projectData, projectName: projectName })
   }
+  let pickListValuesData = JSON.parse(localStorage.getItem("pickList"))
 
   const handelPickListValues = async () => {
-    let reasonReportingPickList = await PickListData(84)
-    let hazardPickList = await PickListData(83)
-    let permitTypeCheckList = await PickListData(81)
+    let reasonReportingPickList = await pickListValuesData["84"]
+    let hazardPickList = await pickListValuesData["83"]
+    let permitTypeCheckList = await pickListValuesData["81"]
     await setPickListValues({ "resonReporting": reasonReportingPickList, "hazard": hazardPickList, "permitType": permitTypeCheckList })
   }
 
