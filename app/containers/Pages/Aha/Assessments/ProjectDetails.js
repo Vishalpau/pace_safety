@@ -350,6 +350,10 @@ const ProjectDetails = () => {
         }
       }
     } else {
+      if(form['permitToPerform'] === "No"){
+        form['typeOfPermit']  = ""
+        form['permitNumber'] = ""
+      }
       form['ahaStage'] = "Assessment"
       form['ahaStatus'] = "Pending"
       const res = await api.post("/api/v1/ahas/", form)
@@ -873,6 +877,7 @@ const ProjectDetails = () => {
                           )}
                         </FormControl>
                       </Grid>
+                      {form.permitToPerform === "Yes" || form.permitToPerform === "" ? <>
                       <Grid item md={6} sm={12} xs={12}>
                         <FormControl
                           variant="outlined"
@@ -920,6 +925,7 @@ const ProjectDetails = () => {
                           className={classes.formControl}
                         />
                       </Grid>
+                      </>:null}
                       <Grid
                         item
                         md={12}
@@ -927,7 +933,7 @@ const ProjectDetails = () => {
                         className={classes.formBox}
                       >
                         <TextField
-                          label="Description*"
+                          label="Description of area*"
                           // margin="dense"
                           name="description"
                           id="description"
@@ -962,7 +968,7 @@ const ProjectDetails = () => {
                         >
 
                           <TextField
-                            label="Team Name"
+                            label={`Name ${index + 1}`}
                             // margin="dense"
                             name="arename"
                             id="arename"
