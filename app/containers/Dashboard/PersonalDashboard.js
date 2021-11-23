@@ -60,8 +60,9 @@ import { useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { projectName, company } from "../../redux/actions/initialDetails";
 // import Hexagon from "./Hexagon";
-import './style.css';
+import { allPickListData } from "../../redux/actions/initialDetails";
 
+import './style.css';
 const useStyles = makeStyles((theme) => ({
   //Project selections
   cardContentBox: {
@@ -449,7 +450,23 @@ function PersonalDashboard(props) {
       });
   };
 
-  useEffect(() => {
+  // fetching picklist 
+  const getAllPickList = async () => {
+    let pickListValues = {}
+    let allPickList = await api.get(`${localStorage.getItem("apiBaseUrl")}/api/v1/lists/`);
+    let allPickListValue = allPickList.data.data.results
+    allPickListValue.map((value) => {
+      let required_fields = []
+      value.picklistValues.map((value) => {
+        required_fields.push({ value: value.inputValue, label: value.inputLabel })
+      })
+      pickListValues[value["id"]] = required_fields
+    })
+    localStorage.setItem("pickList", JSON.stringify(pickListValues))
+    dispatch(allPickListData(pickListValues))
+  }
+
+  const handelCallback = async () => {
     let state = JSON.parse(localStorage.getItem('direct_loading'))
     let comId = 0
     let proId = 0
@@ -457,12 +474,16 @@ function PersonalDashboard(props) {
     let tarPage = ''
     let tarId = 0
     if (state !== null) {
-      setIsLoading(false)
+      await setIsLoading(false)
     }
-    userDetails(comId, proId, redback, tarPage, tarId);
+    await userDetails(comId, proId, redback, tarPage, tarId);
 
-    getSubscriptions();
+    await getSubscriptions();
+    await getAllPickList();
+  }
 
+  useEffect(() => {
+    handelCallback()
   }, [props.initialValues.companyListData]);
   if (isLoading) {
     return (
@@ -491,7 +512,7 @@ function PersonalDashboard(props) {
                 <div className="hexagon hide_responsiv">
                   <div className="hexagontent hexagon_content_box" />
                 </div>
-          
+
                 <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
                     <a className="hse_hse_control_tower" onClick={() => handleClick('controltower')}>
@@ -539,7 +560,7 @@ function PersonalDashboard(props) {
                     </a>
                   </div>
                 </div>
-                
+
 
                 <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
@@ -555,7 +576,7 @@ function PersonalDashboard(props) {
                     </a>
                   </div>
                 </div>
-                
+
                 <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
                     <a className="hse_action_tracker"
@@ -575,7 +596,7 @@ function PersonalDashboard(props) {
                     </a>
                   </div>
                 </div>
-                
+
                 <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
                     <a className="hse_rapid_knowledge_collaboration"
@@ -586,7 +607,7 @@ function PersonalDashboard(props) {
                   </div>
                 </div>
 
-                
+
 
                 {/* <div className="hexagon hide_responsiv">
             <div className="hexagontent hexagon_content_box" />

@@ -37,6 +37,7 @@ const InvestigationOverview = () => {
   const severityValues = useRef([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [buttonLoading, setButtonLoading] = useState(false)
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -120,7 +121,7 @@ const InvestigationOverview = () => {
   const classes = useStyles();
   const callback = async () => {
     await handelUpdateCheck();
-    severityValues.current = await PickListData(41);
+    severityValues.current = await pickListValues["41"];
     setIsLoading(true);
     localStorage.removeItem("WorkerDataFetched");
   };
