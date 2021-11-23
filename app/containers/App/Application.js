@@ -159,6 +159,8 @@ import {
   JhaCloseOut,
   ShowGroup,
   ShowCheckList,
+  Picklist,
+  PicklistValue,
   Xflha,
   FlhaSummary,
   FlhaAdd,
@@ -602,9 +604,13 @@ function Application(props) {
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
+        {/* Picklist */}
+        <Route exact path="/app/pages/picklist" component={Picklist} />
+        <Route exact path="/app/pages/picklist/value/:id" component={PicklistValue} />
         {/* Xflha Routes  */}
         <Route path="/app/pages/summary" component={Summary} />
         <Route path="/app/pages/sample" component={SamplePage} />
+        <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
         <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
         <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />

@@ -13,8 +13,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import controlTowerIcon from 'dan-images/controlTowerIcon.png';
 import Highcharts from 'highcharts';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from "../../../components/Header/header-jss";
+import Loader from "../Loader";
+import api from "../../../utils/axios";
+
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -102,6 +106,8 @@ const useStyles = makeStyles((theme) => ({
 const ControlTowerIcare = () => {
 
   const [projectOpen, setProjectOpen] = React.useState(false);
+  const [config, setConfig] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);  
 
   const handleProjectOpen = () => {
     setProjectOpen(true);
@@ -110,6 +116,20 @@ const ControlTowerIcare = () => {
   const handleProjectClose = () => {
     setProjectOpen(false);
   };
+
+  const load = async () => {
+    const comp_id = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const project_id = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    const res = await api.get(
+      `/api/v1/controltowerbi/?company=${comp_id}&project=${project_id}&portfolio=HSE`
+    );
+    setConfig(res.data.data.results)
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    load()
+  }, []);
 
   const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -614,7 +634,9 @@ const ControlTowerIcare = () => {
 
 
 
-  return (
+  return  (
+    isLoading ? <Loader /> :
+    config.length == 0 ? 'Control Tower is not configured yet.' :
     <>
       <Grid container spacing={1}>
         <Grid item sm={12} xs={12} className={classes.borderTop}>
@@ -636,9 +658,9 @@ const ControlTowerIcare = () => {
                   aria-label="scrollable auto tabs example"
                 >
                   {/* <Tab className="customTabLebl" disabled square label="Summary" {...a11yProps(0)} /> */}
-                  <Tab className="customTabLebl" square label="Summary" {...a11yProps(0)} />
-                  <Tab className="customTabLebl" square label="iCare" {...a11yProps(1)} />
-                  <Tab className="customTabLebl" square label="Compliance" {...a11yProps(2)} />
+                  <Tab className="customTabLebl" square label={config[0].contextName} {...a11yProps(0)} />
+                  <Tab className="customTabLebl" square label={config[1].contextName} {...a11yProps(1)} />
+                  <Tab className="customTabLebl" square label={config[2].contextName} {...a11yProps(2)} />
                   {/* <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} /> */}
                 </Tabs>
               </AppBar>
@@ -656,7 +678,8 @@ const ControlTowerIcare = () => {
                       <iframe
                         width="1600"
                         height="1000"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
+                        // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
+                        src={config[0].biToolUrl}
                         frameborder="0"
                         allowFullScreen="true"
                       >
@@ -687,7 +710,8 @@ const ControlTowerIcare = () => {
                       <iframe
                         width="1600"
                         height="1000"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiZTQ1ZmI0NjQtZjM5Zi00ZGExLTljOWMtY2EzNDE3NWFjZTMwIiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection"
+                        // src="https://app.powerbi.com/view?r=eyJrIjoiZTQ1ZmI0NjQtZjM5Zi00ZGExLTljOWMtY2EzNDE3NWFjZTMwIiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection"
+                        src={config[1].biToolUrl}
                         frameborder="0"
                         allowFullScreen="true"
                       >
@@ -702,7 +726,8 @@ const ControlTowerIcare = () => {
                       <iframe
                         width="1600"
                         height="1000"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
+                        // src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
+                        src={config[2].biToolUrl}
                         frameborder="0"
                         allowFullScreen="true"
                       >
@@ -717,7 +742,8 @@ const ControlTowerIcare = () => {
                       <iframe
                         width="1600"
                         height="1000"
-                        src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
+                        // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
+                        src={config[3].biToolUrl}
                         frameborder="0"
                         allowFullScreen="true"
                       >
@@ -730,10 +756,6 @@ const ControlTowerIcare = () => {
             </Grid>
           </Paper>
         </Grid>
-
-
-
-
       </Grid>
     </>
   );

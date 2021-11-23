@@ -156,7 +156,7 @@ background-position-y: -9%;
 }
 
 .hexagon_fullcontnt .hse_compliance_protocols {
-background: url(../../../public//images/hexagon/4.png) no-repeat 50% 152%;
+background: url(../../../public//images/hexagon/4.png) no-repeat 50% 125%;
 display: block;
 background-size: 85px;
 padding-top: 15px;
@@ -218,11 +218,27 @@ display: block;
 .hexagon_fullcontnt:hover .hse_environment_development {
 background-position-y: 1%;
 }
+.hexagon_fullcontnt .hse_hse_control_tower {
+	background: url(../../../public//images/hexagon/11.png) no-repeat 50% 130%;
+	display: block;
+	background-size: 70px;
+}
+.hexagon_fullcontnt:hover .hse_hse_control_tower {
+	background-position-y: 1%;
+}
 
 .hexagon_fullcontnt .hse_observations {
 	background: url(../../../public//images/hexagon/9.png) no-repeat 50% 116%;
 	display: block;
 	background-size: 85px;
+}
+.hexagon_fullcontnt .hse_action_tracker {
+	background: url(../../../public//images/hexagon/10.png) no-repeat 50% 116%;
+	display: block;
+	background-size: 85px;
+}
+.hexagon_fullcontnt:hover .hse_action_tracker {
+	background-position-y: 1%;
 }
 .hexagon_fullcontnt:hover .hse_observations {
 	background-position-y: 1%;

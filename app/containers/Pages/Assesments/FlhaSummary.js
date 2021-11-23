@@ -57,6 +57,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import ViewHazard from './ViewHazard';
 import api from '../../../utils/axios';
+//import Loader from "../Loader";
+
 
 function TabContainer(props) {
   const { children } = props;
@@ -163,9 +165,10 @@ class SimpleTabs extends React.Component {
     visualConfirmations: {},
     versions: ["1.0",]
   };
+    
 
   handleChangeTab = (event, value) => {
-    alert(value)
+    // alert(value)
     this.setState({ value });
     this.getPreventiveControls(value)
   };
@@ -186,9 +189,7 @@ class SimpleTabs extends React.Component {
 
   getPreventiveControls = async (value=undefined) => {
     const flhaId = this.props.match.params.id;
-    // this.props.match.params.id
     if(value != undefined){
-      // var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/?version='+value);
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
     }
     else{
@@ -219,7 +220,7 @@ class SimpleTabs extends React.Component {
     console.log({versionscon: versions})
 
     return (
-      <PapperBlock title={'FLHA Number: ' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
+      <PapperBlock title={'FLHA Number:' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
         <Grid container spacing={1}>
           <Grid item md={9} xs={12}>
             <Paper elevation={0} className={classes.pTopandRight}>
@@ -237,7 +238,8 @@ class SimpleTabs extends React.Component {
                     variant="p"
                     gutterBottom
                   >
-                    {flha.status}
+                    Open
+                    {/* {flha.status} */}
 
                   </Typography>
                 </Grid>
@@ -251,7 +253,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={6}>
                   <FormLabel component="legend">Reference</FormLabel>
                   <Typography>
-                    {flha.referenceGroup + '|' + flha.referenceNumber}
+                    {flha.referenceNumber}
 
                   </Typography>
                 </Grid>
@@ -305,7 +307,7 @@ class SimpleTabs extends React.Component {
                 <TabContainer />
               )} */}
             </div>
-            <Grid container spacing={1}>
+            {/* <Grid container spacing={1}>
               <Grid item xs={6}>
                 <Typography>
 				Has the energy control being completed?
@@ -331,7 +333,8 @@ class SimpleTabs extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid item xs={12} className={classes.mttopThirty}>
+             */}
+            {/* <Grid item xs={12} className={classes.mttopThirty}>
               <FormLabel component="legend">Actions</FormLabel>
 
               <Grid item xs={12}>
@@ -373,8 +376,9 @@ class SimpleTabs extends React.Component {
                 </Breadcrumbs>
               </Grid>
             </Grid>
-          </Grid>
 
+             */}
+          </Grid>
           <Grid item md={3} xs={12}>
             <Paper elevation={0}>
               <div className={classes.root}>
@@ -400,25 +404,29 @@ class SimpleTabs extends React.Component {
                     </ListItem>
                     <Divider />
                     <ListItem
+                      disbaled={true}
                       button
                     >
                       <ListItemIcon>
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        href="/app/pages/assesments/AuditCheck"
+                      // disabled={true}
+                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
                       </Link>
                     </ListItem>
                     <ListItem
+                      disabled={true}
                       button
                     >
                       <ListItemIcon>
                         <CommentIcon />
                       </ListItemIcon>
                       <Link
+                        disabled={true}
                         href={"/app/pages/assesments/flha/"+this.props.match.params.id+"/comments"}
                         // href="/app/pages/actions/comments"
                         variant="subtitle"
@@ -429,6 +437,7 @@ class SimpleTabs extends React.Component {
                     </ListItem>
                     <Divider />
                     <ListItem
+                    disabled={true}
                       button
                     >
                       <ListItemIcon>
@@ -470,7 +479,7 @@ class SimpleTabs extends React.Component {
 				</Link>
 				</ListItem>
 				<Divider /> */}
-                    <ListItem>
+                    <ListItem disabled={true}>
                       <ListItemIcon>
                         <CloseIcon />
                       </ListItemIcon>
@@ -483,6 +492,7 @@ class SimpleTabs extends React.Component {
                       </Link>
                     </ListItem>
                     <ListItem
+                      disabled={true}
                       button
                     >
                       <ListItemIcon>
@@ -496,6 +506,7 @@ class SimpleTabs extends React.Component {
                       </Link>
                     </ListItem>
                     <ListItem
+                      disabled={true}
                       button
                     >
                       <ListItemIcon>
@@ -514,6 +525,7 @@ class SimpleTabs extends React.Component {
             </Paper>
           </Grid>
         </Grid>
+        
       </PapperBlock>
     );
   }

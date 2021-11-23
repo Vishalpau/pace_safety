@@ -629,7 +629,7 @@ function Header(props) {
                               <div className={classesm.cardMediaBox}>
                                 <CardMedia
                                   className={classesm.media}
-                                  image={ProjectImg}
+                                  image={value.projectImage === null?ProjectImg:value.projectImage}
 
                                 //title=""
                                 />

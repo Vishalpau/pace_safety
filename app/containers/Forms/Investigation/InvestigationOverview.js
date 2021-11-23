@@ -17,7 +17,7 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -140,7 +140,7 @@ const InvestigationOverview = () => {
           <Col md={9}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Typography variant="h6">Unit constructor manager</Typography>
+                <Typography variant="h6">Unit manager</Typography>
               </Grid>
 
               <Grid item xs={12} md={6}>
@@ -299,7 +299,7 @@ const InvestigationOverview = () => {
                   onClick={() => handleNext()}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

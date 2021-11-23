@@ -145,7 +145,7 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null, actionTitle: "" , severity:""});
+    await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
   };
@@ -160,7 +160,7 @@ export default function ActionTracker(props) {
         form["severity"] = "Normal"
       }
       form["plannedEndDate"] = form["plannedStartDate"]
-      let res = await apiAction.post("api/v1/actions/", form);
+      let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
       if (res.status == 201) {
         await setError({ actionTitle: "" });
         await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });

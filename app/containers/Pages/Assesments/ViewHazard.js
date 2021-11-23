@@ -86,8 +86,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: 'inset 0px 0px 9px #dedede',
     '& td textHeight': {
       padding: '2.5px 5px',
-    	borderRadius: '8px',
-	  },
+      borderRadius: '8px',
+    },
   },
   spacer: {
     padding: '5px 0',
@@ -253,11 +253,11 @@ const useStyles = makeStyles((theme) => ({
   },
   widthSelect: {
     minWidth: '170px',
-	  height: '58px',
+    height: '58px',
     borderRadius: '4px',
   },
   divider: {
-	  margin: '15px 15px',
+    margin: '15px 15px',
     width: '97.4%',
     boxShadow: '1px 2px 10px #d4d4d4',
   },
@@ -373,6 +373,10 @@ const top100Films = [
   { title: 'Inception', year: 2010 },
   { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
 ];
+
+let riskProb = { 1: 'Highly unlikely', 2: 'Unlikely', 3: 'Likely', 4: 'Very likely' }
+let riskServ = { 2: 'Sightly harmful', 4: 'Harmful', 6: 'Very harmful', 8: 'Extremely harmful' }
+
 const FlhaDetails = (props) => {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = React.useState(
@@ -397,10 +401,10 @@ const FlhaDetails = (props) => {
     <li key={file.path}>
       {file.path}
       {' '}
--
+      -
       {file.size}
       {' '}
-bytes
+      bytes
     </li>
   ));
 
@@ -415,6 +419,31 @@ bytes
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  const handleRiskChange = (rating) => {
+    console.log(rating,'rating')
+    let colorRating = ''
+    if (rating === "2 Trivial" || rating=== "4 Trivial") {
+      colorRating = '#009933'
+    } else if (rating=== "6 Tolerable" || rating=== "8 Tolerable") {
+      colorRating = '#8da225'
+
+    } else if (rating=== "12 Moderate" || rating=== "16 Moderate") {
+      colorRating = '#fff82e'
+
+    }  else if (rating=== "18 Substantial" || rating=== "24 Substantial") {
+      colorRating = '#990000'
+    }
+    else {
+      colorRating = '#ff0000'
+    }
+
+    return colorRating
+
+  };
+
+  
 
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
@@ -465,7 +494,7 @@ bytes
                     <Typography variant="h6">
                       <ControlCameraOutlinedIcon className={classes.headingIcon} />
                       {' '}
-Preventive controls
+                      Preventive controls
                     </Typography>
                   </Grid>
                   <Divider className={classes.divider} />
@@ -473,7 +502,7 @@ Preventive controls
                     <Typography variant="h6">
                       <AssignmentLateOutlinedIcon className={classes.headingIcon} />
                       {' '}
-Critical tasks
+                      Critical tasks
                     </Typography>
 
                   </Grid>
@@ -491,14 +520,14 @@ Critical tasks
                               <Typography className={classes.heading}>
                                 <MenuOpenOutlinedIcon className={classes.headingIcon} />
                                 {' '}
-Task#1 -
+                                Task#1 -
                                 {' '}
                                 {task.taskIdentification}
                               </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                               <Grid item sm={12} xs={12}>
-                                <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
+                                <FormLabel component="legend" className={classes.mttoptenn}>Task Name</FormLabel>
                                 <Typography>
                                   {task.taskIdentification}
                                 </Typography>
@@ -513,7 +542,7 @@ Task#1 -
                                       className={classes.headingColor}
                                     >
                                       <Typography className={classes.heading}>
-                                        Hazard#{(key)+1} -
+                                        Hazard#{(key) + 1} -
                                         {hazard.hazards}
                                       </Typography>
 
@@ -529,36 +558,47 @@ Task#1 -
                                         <Grid item sm={11} xs={8}>
                                           <FormLabel component="legend" className={classes.mttoptenn}>Control</FormLabel>
                                           <Typography>
-                                            {hazard.control}
+                                            {hazard.control ? hazard.control : "-"}
                                           </Typography>
                                         </Grid>
                                         <Grid item sm={1} xs={4}>
                                           {(hazard.hazardImage) ? <img src={hazard.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                          
+
                                         </Grid>
-                                        <Grid container spacing={2}>
+                                        {/* <Grid container spacing={2}>
                                           <Grid item sm={12} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Task Identification</FormLabel>
                                             <Typography>
                                               {task.taskIdentification}
                                             </Typography>
                                           </Grid>
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid container spacing={1}>
                                           <Grid item md={4} sm={4} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
                                             <Typography>
                                               {hazard.riskSeverity}
+                                              {/* {riskServ[hazard.riskSeverity]} */}
                                             </Typography>
                                           </Grid>
                                           <Grid item md={4} sm={4} xs={12}>
                                             <FormLabel component="legend" className={classes.mttoptenn}>Risk Probability</FormLabel>
                                             <Typography>
+                                              {/* {riskProb[hazard.riskProbability]} */}
                                               {hazard.riskProbability}
                                             </Typography>
                                           </Grid>
-                                          <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>
-                                            {hazard.riskRatingLevel}
+                                          <Grid item md={4} sm={4} xs={12} >
+                                            
+                                            <div
+                                              className={
+                                                classes.ratioColororange
+                                              }
+                                              style={{ backgroundColor: handleRiskChange(hazard.riskRatingLevel) }}
+                                            >
+                                              {hazard.riskRatingLevel}
+                                            </div>
+
                                           </Grid>
                                         </Grid>
                                       </Grid>
@@ -580,7 +620,7 @@ Task#1 -
                       <Typography variant="h6">
                         <CheckOutlinedIcon className={classes.headingIcon} />
                         {' '}
-Job visual confirmation
+                        Job visual confirmation
                       </Typography>
 
                       <Table className={classes.table} aria-label="simple table">
@@ -602,8 +642,12 @@ Job visual confirmation
                                   </div>
                                 </TableCell>
                                 <TableCell align="left">
-
-                                  <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
+                                  {
+                                    (visualConf.visualConfirmationAttachment) ?
+                                      <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
+                                      : "NA"
+                                  }
+                                  {/* <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} /> */}
                                 </TableCell>
                               </TableRow>
                             ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}

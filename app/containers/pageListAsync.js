@@ -752,6 +752,17 @@ export const ShowCheckList = loadable(() =>
   import("./Pages/CheckList/ShowCheckList"), {
   fallback: <Loading />,
 });
+
+// Picklist
+
+export const Picklist = loadable(() => import("./Pages/Picklist/index "), {
+  fallback: <Loading />,
+});
+export const PicklistValue = loadable(() => import("./Pages/Picklist/values"), {
+  fallback: <Loading />,
+});
+
+
 // XFLHA
 
 export const Xflha = loadable(() => import("./Pages/Assesments/Xflha"), {

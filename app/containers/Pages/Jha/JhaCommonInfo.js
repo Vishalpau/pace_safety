@@ -44,7 +44,6 @@ const JhaCommonInfo = () => {
         const jhaId = handelJhaId()
         const res = await api.get(`/api/v1/jhas/${jhaId}/`)
         const result = res.data.data.results;
-        console.log(result)
         setJhaListdata(result)
     };
 
@@ -59,7 +58,7 @@ const JhaCommonInfo = () => {
 
                 <Grid item xs={12} md={6}>
                     <Typography variant="h6" className={Type.labelName} gutterBottom>
-                        Jha number
+                        JSA number
                     </Typography>
 
                     <Typography varint="body1" className={Type.labelValue}>
@@ -69,7 +68,7 @@ const JhaCommonInfo = () => {
 
                 <Grid item xs={12} md={6}>
                     <Typography variant="h6" className={Type.labelName} gutterBottom>
-                        Jha assessment data
+                        JSA assessment data
                     </Typography>
                     <Typography className={Type.labelValue}>
                         {moment(jhaListData.jhaAssessmentDate).format(
@@ -80,7 +79,7 @@ const JhaCommonInfo = () => {
 
                 <Grid item xs={12} md={6}>
                     <Typography variant="h6" className={Type.labelName} gutterBottom>
-                        Jha description
+                        JSA description
                     </Typography>
                     <Typography className={Type.labelValue}>
                         {jhaListData.description}
@@ -89,7 +88,7 @@ const JhaCommonInfo = () => {
 
                 <Grid item xs={12} md={6}>
                     <Typography variant="h6" className={Type.labelName} gutterBottom>
-                        Jha location
+                        JSA location
                     </Typography>
                     <Typography className={Type.labelValue}>
                         {jhaListData.location}

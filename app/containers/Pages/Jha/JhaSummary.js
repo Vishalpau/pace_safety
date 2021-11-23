@@ -61,18 +61,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
-  aLabelValue: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#063d55',
-    float: 'left',
-    width: '100%',
-    paddingRight: '40px',
-    '& div': {
-      display: 'inline-block',
-      float: 'right',
-    },
-  },
   updateLink: {
     float: 'left',
     fontSize: '0.88rem',
@@ -173,14 +161,14 @@ function JhaSummary() {
     await setAssessment(result)
     await handelWorkArea(result)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
-    const resultTeam = resTeam.data.data.results.results
+    const resultTeam = resTeam.data.data.results
     await setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.notifyTo !== null
-    let approvalDecider = result.wrpApprovalUser !== null
+    let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
     await setFormStatus({
@@ -290,6 +278,30 @@ function JhaSummary() {
 
   }
 
+  const [checkListAssessment, setCheckListAssessment] = useState({})
+
+  const assessmentDataValues = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    var tempPerformance = {}
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
+    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+
+    apiDataPerformance.map((value) => {
+      value.checkListValues.map((checkValue) => {
+        tempPerformance[checkValue.inputValue] = checkValue.inputLabel
+      });
+    });
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })
+    setCheckListAssessment(tempPerformance)
+  }
+
   const handelWorkArea = async (assessment) => {
     let structName = {}
     let projectStructId = assessment.fkProjectStructureIds.split(":")
@@ -306,6 +318,7 @@ function JhaSummary() {
       structName[result["structure_name"]] = result["structureName"]
     }
     setProjectStructName(structName)
+
   }
 
   const handelInputValue = async () => {
@@ -314,10 +327,8 @@ function JhaSummary() {
     const baseUrl = localStorage.getItem("apiBaseUrl")
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
     const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
-    console.log(apiDataPerformance)
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
     const apiCondition = documentCondition.data.data.results[0].checklistValues
-    console.log(apiCondition)
   }
 
   let errorMessage = "Please fill"
@@ -382,6 +393,7 @@ function JhaSummary() {
     await handelInputValue()
     await handelLessionActionTracker()
     await handelApprovalActions()
+    await assessmentDataValues()
     await setLoader(false)
   }
 
@@ -520,24 +532,27 @@ function JhaSummary() {
                                           {projectStructure.projectName} -
                                           {Object.entries(projectStructName).map(([key, value], index) => (
                                             <>
-                                              {!key.includes("Work") ? Object.keys(projectStructName)[index + 2] !== undefined ? `${value} - ` : `${value}` : ""}
+                                              {Object.keys(projectStructName)[index + 1] !== undefined ? `${value} - ` : `${value}`}
                                             </>
                                           ))}
                                         </Typography>
                                       </Grid>
                                       {/* work area */}
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Work Area
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructName["Work Area(s)"])}
-                                        </Typography>
-                                      </Grid>
+
+                                      {false &&
+                                        <Grid item xs={12} md={6}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Work Area
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            {checkValue(projectStructName["Work Area"])}
+                                          </Typography>
+                                        </Grid>
+                                      }
 
                                       {/* location */}
                                       <Grid item xs={12} md={6}>
@@ -554,7 +569,7 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* job title */}
-                                      <Grid item xs={12} md={12}>
+                                      <Grid item xs={12} md={6}>
                                         <Typography
                                           variant="h6"
                                           gutterBottom
@@ -568,7 +583,7 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* job description */}
-                                      <Grid item xs={12} md={12}>
+                                      <Grid item xs={12} md={6}>
                                         <Typography
                                           variant="h6"
                                           gutterBottom
@@ -582,18 +597,21 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* assessment performed by */}
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Assessment performed by
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
+
+                                      {false &&
+                                        <Grid item xs={12} md={6}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Assessment performed by
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            NA
+                                          </Typography>
+                                        </Grid>
+                                      }
 
                                       {/* assessment start date */}
                                       <Grid item xs={12} md={6}>
@@ -616,7 +634,7 @@ function JhaSummary() {
                                           gutterBottom
                                           className={Fonts.labelName}
                                         >
-                                          Permit to perform
+                                          Permit to work
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
                                           {checkValue(assessment.permitToPerform)}
@@ -624,18 +642,21 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* permit refrence */}
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Permit reference
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          Yes
-                                        </Typography>
-                                      </Grid>
+
+                                      {false &&
+                                        <Grid item xs={12} md={6}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Permit reference
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            Yes
+                                          </Typography>
+                                        </Grid>
+                                      }
 
                                       {/* risk assessment team */}
                                       <Grid item xs={12} md={6}>
@@ -647,7 +668,7 @@ function JhaSummary() {
                                           Risk Assessment team
                                         </Typography>
                                         {team !== undefined && team.map((value) => (
-                                          <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
+                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value.teamName}</Typography>
                                         ))}
 
                                       </Grid>
@@ -760,23 +781,25 @@ function JhaSummary() {
                                 <AccordionDetails>
                                   <Grid container item xs={12} spacing={3}>
                                     <>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Hazards Group
-                                        </Typography>
-                                        {hazard !== undefined && hazard.map((value) => (
-                                          <div>
-
-                                            <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "10px" }}>
-                                              {checkValue(value.hazard)}
-                                            </Typography>
-                                          </div>
-                                        ))}
-
+                                      <Grid item xs={12} md={12}>
+                                        {false &&
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Hazards Group
+                                          </Typography>
+                                        }
+                                        {
+                                          hazard !== undefined && hazard.map((value, index) => (
+                                            <div>
+                                              <Typography variant="body" style={{ marginLeft: "10px" }}>
+                                                {checkValue(value.hazard)}
+                                              </Typography>
+                                            </div>
+                                          ))
+                                        }
                                       </Grid>
                                     </>
                                   </Grid>
@@ -804,8 +827,6 @@ function JhaSummary() {
                                         <div>
                                           {hazard !== undefined && hazard.map((value, index) => (
                                             <Accordion
-                                              expanded={expandedHazard === `panel${index}`}
-                                              onChange={handleHazardExpand(`panel${index}`)}
                                               defaultExpanded
                                               className={classes.backPaper}
                                               key={index}
@@ -881,7 +902,6 @@ function JhaSummary() {
                                         assessment.workStopCondition !== null &&
                                         assessment.workStopCondition.split(",").length > 0 ?
                                         <Grid item xs={12} md={12}>
-                                          {console.log(assessment.workStopCondition.split(","))}
                                           <Typography
                                             variant="h6"
                                             gutterBottom
@@ -892,7 +912,7 @@ function JhaSummary() {
 
                                           {checkValue(assessment.workStopCondition).split(",").map((value) => (
                                             <p>
-                                              {value.replace("-", " ")}
+                                              {checkListAssessment[value]}
                                             </p>
                                           ))}
                                         </Grid>
@@ -913,7 +933,7 @@ function JhaSummary() {
                                           <Typography variant="body" className={Fonts.labelValue}>
                                             {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
                                               <p>
-                                                {value.replace("-", " ")}
+                                                {checkListAssessment[value]}
                                               </p>
                                             ))}
                                           </Typography>
@@ -1004,7 +1024,7 @@ function JhaSummary() {
                           <>
                             <Grid item xs={12} style={{ padding: '0px 12px' }}>
                               <Typography className={classes.heading}>
-                                Work Responsible Person
+                                Competent Person
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -1030,8 +1050,51 @@ function JhaSummary() {
                                     Approved on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
+                                    {assessment.wrpApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMMM YYYY")}
+                                      </>
+                                      : "-"
+                                    }
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
 
+                            <Grid item xs={12} style={{ padding: '0px 12px' }}>
+                              <Typography className={classes.heading}>
+                                Senior authorized Person
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved by
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.sapApprovalUser)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved on
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {assessment.sapApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMMM YYYY")}
+                                      </>
+                                      : "-"
+                                    }
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -1076,10 +1139,10 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Work Responsible Person
+                                    Competent person
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {user.name} {user.badgeNumber}
+                                    {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
@@ -1088,7 +1151,7 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Lessons learnt
+                                    Lessons learned
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {checkValue(assessment.lessonLearntDetails)}
@@ -1140,10 +1203,10 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Closed Data
+                                    Closed on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.closedDate)).format("DD-MM-YY")}
+                                    {moment(checkValue(assessment.closedDate)).format("DD-Mo-YYYY")}
 
                                   </Typography>
                                 </Grid>
@@ -1218,36 +1281,45 @@ function JhaSummary() {
                       <ListItemText primary="Close Out" />
                     </ListItem>
 
-                    <ListItemLink onClick={(e) => viewSwitch("comments")}>
-                      <ListItemIcon>
-                        <Comment />
-                      </ListItemIcon>
-                      <ListItemText primary="Comments" />
-                    </ListItemLink>
+                    {false &&
+                      <>
+                        <ListItemLink onClick={(e) => viewSwitch("comments")}>
+                          <ListItemIcon>
+                            <Comment />
+                          </ListItemIcon>
+                          <ListItemText primary="Comments" />
+                        </ListItemLink>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <History />
-                      </ListItemIcon>
-                      <ListItemText primary="Activity History" />
-                    </ListItem>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <History />
+                          </ListItemIcon>
+                          <ListItemText primary="Activity History" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                   <Divider />
                   <List dense>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Print />
-                      </ListItemIcon>
-                      <ListItemText primary="Print" />
-                    </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Share />
-                      </ListItemIcon>
-                      <ListItemText primary="Share" />
-                    </ListItem>
+                    {false &&
+                      <>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Print />
+                          </ListItemIcon>
+                          <ListItemText primary="Print" />
+                        </ListItem>
+
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Share />
+                          </ListItemIcon>
+                          <ListItemText primary="Share" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                 </Paper>

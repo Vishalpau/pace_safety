@@ -170,7 +170,7 @@ function Jha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/jhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results !== undefined && res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)
@@ -196,7 +196,7 @@ function Jha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await setPage(value)
     await handelTableView(res.data.data.results.results)
@@ -216,7 +216,7 @@ function Jha(props) {
 
   //   Data for the table view
 
-  const columns = ['Jha number', 'Location', 'Work area', 'Created by', 'Created on'];
+  const columns = ['Jha number', 'Location', 'Created by', 'Created on'];
 
   const handelTableView = (result) => {
     const temp = []
@@ -224,9 +224,8 @@ function Jha(props) {
       temp.push([
         value.jhaNumber,
         value.location,
-        value.workArea,
         value.username,
-        moment(value.createdAt).format('DD MM YYYY')
+        moment(value.createdAt).format('Do MMMM YYYY')
       ])
     })
     setData(temp)
@@ -238,10 +237,11 @@ function Jha(props) {
     print: false,
     rowsPerPage: 100,
     page: 100,
-    search: true,
+    search: false,
     filter: false,
     viewColumns: false,
-    download: false
+    download: false,
+    pagination: false
   };
 
   const handleSummaryPush = async (e, index) => {
@@ -260,12 +260,12 @@ function Jha(props) {
 
   useEffect(() => {
     fetchData()
-  }, [props.projectName.breakDown])
+  }, [props.projectName.breakDown,searchIncident])
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
   return (
-    <PapperBlock title="JHA" icon="ion-md-list-box">
+    <PapperBlock title="JSA" icon="ion-md-list-box">
       {isLoading ? <>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -317,7 +317,7 @@ function Jha(props) {
                     disableElevation
                     onClick={(e) => handleNewJhaPush(e)}
                   >
-                    New JHA
+                    New JSA
                   </Button>
                 </Grid>
               </Grid>
@@ -326,22 +326,20 @@ function Jha(props) {
         </div>
 
         {cardView ? (<>
-          {allJHAData.length > 0 && Object.entries(allJHAData).filter((item) => item[1]["jhaNumber"].includes(searchIncident.toUpperCase()) ||
-            item[1]["description"].toLowerCase().includes(
-              searchIncident.toLowerCase()
-            )).map((item, index) => (
+          {allJHAData.length > 0 && Object.entries(allJHAData).map((item, index) => (
               <Card variant="outlined" className={Incidents.card}>
+                {console.log(item)}
                 <CardContent>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item xs={11}>
+                        <Grid item xs={10}>
                           <Typography variant="h6">
                             {item[1]["description"]}
                           </Typography>
                         </Grid>
 
-                        <Grid item xs={1} justifyContent="flex-end">
+                        <Grid item xs={2} justifyContent="flex-end">
                           <Chip
                             avatar={<Avatar src={item[1]["avatar"]} />}
                             label={item[1]["username"]}
@@ -376,7 +374,7 @@ function Jha(props) {
                         <Grid item xs={6} md={3}>
                           <Chip
                             variant="outlined"
-                            label="JHA"
+                            label="JSA"
                             color="primary"
                             size="small"
                           />
@@ -398,15 +396,18 @@ function Jha(props) {
                       </Grid>
                     </Grid>
 
-                    <Grid item xs={6} lg={3}>
-                      <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Work Area
-                      </Typography>
+                    {false &&
+                      <Grid item xs={6} lg={3}>
+                        <Typography className={Fonts.listingLabelName} gutterBottom>
+                          Work Area
+                        </Typography>
 
-                      <Typography className={Fonts.listingLabelValue}>
-                        {item[1]["workArea"]}
-                      </Typography>
-                    </Grid>
+                        <Typography className={Fonts.listingLabelValue}>
+                          {item[1]["workArea"]}
+                        </Typography>
+                      </Grid>
+                    }
+
                     <Grid item xs={6} lg={3}>
                       <Typography className={Fonts.listingLabelName} gutterBottom>
                         Location
@@ -469,7 +470,8 @@ function Jha(props) {
                         Actions:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["actionCount"]}</ILink>
+                        {/* <ILink href="#">{item[1]["actionCount"]}</ILink> */}
+                        {item[1]["actionCount"]}
                       </Typography>
                     </Grid>
                     <Grid item xs={6} md={3}>
@@ -483,7 +485,8 @@ function Jha(props) {
                         Attachments:
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["attachmentCount"]}</ILink>
+                        {/* <ILink href="#">{item[1]["attachmentCount"]}</ILink> */}
+                        {item[1]["attachmentCount"]}
                       </Typography>
                     </Grid>
 
@@ -513,7 +516,7 @@ function Jha(props) {
               </Card>))}</>)
           : (
             <MUIDataTable
-              title="Incidents List"
+              title="JSA List"
               data={data}
               columns={columns}
               options={options}
@@ -524,7 +527,11 @@ function Jha(props) {
           {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
           <Pagination count={pageCount} page={page} onChange={handleChange} />
         </div>
-      </> : <h1>Loading...</h1>}
+      </> :
+        <>
+          Loading...
+        </>
+      }
     </PapperBlock>
   );
 }

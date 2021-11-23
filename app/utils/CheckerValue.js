@@ -132,7 +132,6 @@ export const handelActionWithEntity = async (incidentId, actionContextValue) => 
 
 
 export const handelActionDataAssessment = async (incidentId, apiData, type = "all", actionContext) => {
-    console.log(actionContext)
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -193,4 +192,46 @@ export const handelValueToLabel = (value) => {
         label = "-"
     }
     return label
+}
+
+
+export const handelActionIcare = async (incidentId, apiData, type = "all" , actionContext) => {
+    const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
+
+    if (actionSelect.status === 200) {
+        const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}&actionContext=${actionContext}`)
+        const allAction = allActionData.data.data.results.results
+
+        if (type == "all") {
+            let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
+            apiAllData.map((value) => {
+                allAction.map((valueAction) => {
+                    if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
+                        const tempAction = {
+                            "number": valueAction.actionNumber,
+                            "id": valueAction.id,
+                            "title": valueAction.actionTitle
+                        };
+                        if (value["action"] == undefined) {
+                            value["action"] = [tempAction]
+                        } else if (value["action"] !== undefined) {
+                            value["action"].push(tempAction)
+                        }
+                    }
+                })
+                if (value["action"] == undefined) {
+                    value["action"] = []
+                }
+            })
+            return apiAllData
+        } else {
+            return allAction
+        }
+    }
+
 }
