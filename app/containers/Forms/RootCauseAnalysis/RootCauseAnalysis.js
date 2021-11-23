@@ -81,6 +81,7 @@ const RootCauseAnalysis = () => {
   const [buttonLoading, setButtonLoading] = useState(false)
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([])
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const handelUpdateCheck = async () => {
     const page_url = window.location.href;
@@ -130,7 +131,7 @@ const RootCauseAnalysis = () => {
       putId.current = incidentId;
       checkPost.current = false;
     }
-    classificationValues.current = await PickListData(40);
+    classificationValues.current = await pickListValues["40"];
     2;
   };
 

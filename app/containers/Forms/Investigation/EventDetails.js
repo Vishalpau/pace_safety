@@ -101,6 +101,7 @@ const EventDetails = () => {
   const [errorCost, setErrorCost] = useState({});
   const [loading, setLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   // check upadte 
   const handelUpdateCheck = async (e) => {
@@ -383,13 +384,13 @@ const EventDetails = () => {
   };
 
   const PickListCall = async () => {
-    activityListValues.current = await PickListData(63);
-    jobTaskValues.current = await PickListData(64);
-    weatherValues.current = await PickListData(65);
-    lightningValues.current = await PickListData(66);
-    fluidTypeValues.current = await PickListData(67);
-    costTypeValues.current = await PickListData(68);
-    casualFactorTypeValues.current = await PickListData(69);
+    activityListValues.current = await pickListValues["63"];
+    jobTaskValues.current = await pickListValues["64"];
+    weatherValues.current = await pickListValues["65"];
+    lightningValues.current = await pickListValues["66"];
+    fluidTypeValues.current = await pickListValues["67"];
+    costTypeValues.current = await pickListValues["68"];
+    casualFactorTypeValues.current = await pickListValues["69"];
     await handelUpdateCheck();
     await setLoading(true)
   };
