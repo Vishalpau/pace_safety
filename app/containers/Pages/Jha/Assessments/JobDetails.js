@@ -212,8 +212,6 @@ const JobDetails = (props) => {
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
     if (jhaId !== null) {
-      let fetchPermit = await PickListData(80)
-      setPermitType(fetchPermit)
       const res = await api.get(`/api/v1/jhas/${jhaId}/`)
       const result = res.data.data.results;
       result.id !== undefined ? setUpdate(true) : checkUpdate(false)
@@ -484,9 +482,14 @@ const JobDetails = (props) => {
 
   const classes = useStyles();
 
+  const pickListValue = async () => {
+    setPermitType(await PickListData(80))
+  }
+
   const handelCallBack = async () => {
     await setLoading(true)
     await fetchJhaData()
+    await pickListValue()
     await fetchTeamData()
     await fetchDepartment()
     await setLoading(false)

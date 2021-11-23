@@ -404,6 +404,9 @@ const Assessment = () => {
 
     ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     delete ahaform['ahaAssessmentAttachment']
+    if(ahaform['notifyTo'] === null){
+      ahaform['notifyTo'] = "null"
+    }
     const res1 = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
       ahaform
@@ -496,8 +499,6 @@ const Assessment = () => {
     }
     setForm(temp);
   };
-
-
 
   const handelCallBack = async () => {
 
@@ -739,17 +740,7 @@ const Assessment = () => {
                             />
                           </Grid>
                           <Grid item xs={6} className={classes.createHazardbox}>
-                            {/* {value.action.length > 0 && value.action.map((valueAction) => (
-                              <ActionShow
-                                action={valueAction}
-                                companyId={projectData.companyId}
-                                projectId={projectData.projectId}
-                                updatePage={updatePage}
-                              />
-                            ))} */}
                             {handelActionShow(value.id)}
-
-
                           </Grid>
                         </Grid>
                       </AccordionDetails>
@@ -811,7 +802,6 @@ const Assessment = () => {
                     style={{ marginLeft: "10px" }}
                     disabled={submitLoader}
                   >
-
                     Next
                   </Button>
                   {submitLoader && (
@@ -820,7 +810,6 @@ const Assessment = () => {
                       className={classes.buttonProgress}
                     />
                   )}</div>
-
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -840,9 +829,5 @@ const Assessment = () => {
     </>
   );
 };
-// const AhaAssementInit = connect((state) => ({
-//   initialValues: state.getIn(["IncidentReducer"]),
-// }))(Assessment);
 
-// export default withStyles(styles)(AhaAssementInit);
 export default Assessment;

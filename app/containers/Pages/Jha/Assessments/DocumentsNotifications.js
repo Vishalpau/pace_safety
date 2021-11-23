@@ -78,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
     '& .dropzone': {
       flex: '1',
       display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
       padding: '35px',
       borderWidth: '2px',
@@ -353,7 +352,7 @@ const DocumentNotification = () => {
                 className={classes.formBox}
                 >
                 <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-                <FormGroup row>{notificationSentValue.map((value) => (
+                <FormGroup>{notificationSentValue.map((value) => (
                   <FormControlLabel
                     className={classes.labelValue}
                     control={(
