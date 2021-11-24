@@ -213,7 +213,7 @@ const CloseOut = (props) => {
                     id="immediate-actions"
                     multiline
                     rows="4"
-                    label="Emergency Phone Number"
+                    label="Enter the details"
                     className={classes.fullWidth}
                     value={jobForm.workerRemarks}
                     onChange={(e) => handleJobFormChange(e, 'workerRemarks')}

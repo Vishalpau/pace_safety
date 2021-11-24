@@ -701,20 +701,20 @@ const FlhaDetails = () => {
       taskHazard[indexHazard].riskProbability = txt;
     }
     if (riskRating >= 1 && riskRating <= 4) {
-      taskHazard[indexHazard].riskRatingColour = '#1EBD10';
+      taskHazard[indexHazard].riskRatingColour = '#009933';
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Trivial`;
     } else if (riskRating > 5 && riskRating <= 8) {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Tolerable`;
-      taskHazard[indexHazard].riskRatingColour = '#008000';
+      taskHazard[indexHazard].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Moderate`;
-      taskHazard[indexHazard].riskRatingColour = '#F3C539';
+      taskHazard[indexHazard].riskRatingColour = '#fff82e';
     } else if (riskRating > 17 && riskRating <= 24) {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Substantial`;
-      taskHazard[indexHazard].riskRatingColour = '#800000';
+      taskHazard[indexHazard].riskRatingColour = '#990000';
     } else {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Intoreable`;
-      taskHazard[indexHazard].riskRatingColour = '#FF0000';
+      taskHazard[indexHazard].riskRatingColour = '#ff0000';
     }
     setTaskForm(temp)
   };
