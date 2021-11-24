@@ -529,11 +529,12 @@ function PersonalDashboard(props) {
     } else {
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
+    await getSubscriptions();
   }
 
   useEffect(() => {
-    handelCallback()
-    await getSubscriptions();
+    handelCallBack()
+    
   }, [props.initialValues.companyListData]);
 
   return (

@@ -34,6 +34,7 @@ function MainMenu(props) {
   const { classes, openSubMenu, open, dataMenu } = props;
   console.log(classes.opened,"active check")
   const getMenus = menuArray => menuArray.map((item, index) => {
+    console.log(menuArray)
     if (item.child || item.linkParent) {
         return (
           <div key={index.toString()}>
@@ -108,11 +109,11 @@ function MainMenu(props) {
           key={index.toString()}
           button
           exact
-          className={classes.nested}
+          className={item.name== selectedMenuItem?'selectmenu':""}
           activeClassName={classes.active}
           component={LinkBtn}
           to={item.link}
-          onClick={() => handleClick()}
+          onClick={() => {handleClick(),setSelectedMenuItem(item.name)}}
         >
           <ListItemText
             classes={{ primary: classes.primary }}
