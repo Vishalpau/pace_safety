@@ -199,7 +199,6 @@ function PersonalDashboard(props) {
   const [modules, setModules] = useState([]);
   const [codes, setCode] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
   const getSubscriptions = async (compId) => {
 
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
@@ -247,7 +246,6 @@ function PersonalDashboard(props) {
         getModules(apps)
       } catch (error) { }
     }
-    getAllPickList()
   }
 
   const getModules = async (apps) => {
