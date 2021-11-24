@@ -212,7 +212,6 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
-    console.log(form)
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
