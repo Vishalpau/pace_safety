@@ -24,8 +24,6 @@ import Loader from "../../../Forms/Loader";
 
 
 
-
-
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -263,7 +261,7 @@ const Approvals = () => {
                     variant="contained"
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className={classes.approvalButton}
-                    onClick={(e) => {setOpen(true),setPerson("competent person")}}
+                    onClick={(e) => { setOpen(true), setPerson("competent person") }}
                   >
                     {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
                   </Button>
@@ -279,13 +277,13 @@ const Approvals = () => {
                 <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                  Senior Authorized Person (SAP)
+                    Senior Authorized Person (SAP)
                   </Typography>
                   <Button
                     variant="contained"
                     color={form.sapApprovalUser === null ? "primary" : "secondary"}
                     className={classes.approvalButton}
-                    onClick={(e) => {setOpen(true),setPerson("senior authorized person")}}
+                    onClick={(e) => { setOpen(true), setPerson("senior authorized person") }}
                   >
                     {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
                   </Button>
@@ -411,7 +409,7 @@ const Approvals = () => {
               />
             </Col>
           </Row> </> : <Loader />}
-          
+
       </PapperBlock>
     </>
   );

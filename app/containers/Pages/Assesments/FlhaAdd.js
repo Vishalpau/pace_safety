@@ -438,6 +438,7 @@ const FlhaDetails = (props) => {
   const [levelLenght, setLevelLenght] = useState(0)
   const [loading, setLoading] = useState(false);
   const [hazardtype, setHazardType] = React.useState([])
+  const [hazardValue, setHazardValue] = React.useState('')
 
 
   const files = acceptedFiles.map(file => (
@@ -471,6 +472,7 @@ const FlhaDetails = (props) => {
     meetingPoint: '',
     department: '',
     permitToWork: '',
+    permitNumber: '',
     permitToWorkNumber: '',
     dateTimeFlha: new Date().toISOString(),
     referenceGroup: '',
@@ -587,8 +589,6 @@ const FlhaDetails = (props) => {
     } else {
       temp[fieldname] = value;
     }
-
-
     console.log({ temp });
     await setJobForm(temp);
     // await console.log({jobForm: jobForm})
@@ -614,10 +614,13 @@ const FlhaDetails = (props) => {
 
   const handleHazardForm = async (e, key, taskIndex, fieldname) => {
     // alert(12345678)
-    console.log(fieldname);
+    console.log(key, 'taskIndex');
     const temp = [...taskForm];
     console.log({ tempform: temp });
-    const { value } = e.target;
+    // temp[taskIndex].hazards[key][fieldname]= e.target.value
+    setHazardValue(e.target.value)
+    // console.log(temp,'tepm')
+    const { value } = e.target.value;
     if (key == undefined) {
       temp[taskIndex][fieldname] = value;
     } else {
@@ -627,7 +630,6 @@ const FlhaDetails = (props) => {
       }
       temp[taskIndex].hazards[key][fieldname] = value;
     }
-
     console.log({ temp });
     await setTaskForm(temp);
   };
@@ -724,6 +726,11 @@ const FlhaDetails = (props) => {
     if (jobForm.attachment != null) {
       formDataPost.append('attachment', jobForm.attachment);
     }
+    formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
+    formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
+    formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
+    formDataPost.append('referenceNumber', jobForm.referenceNumber);
+
     // formDataPost.append('flhaStage', jobForm.flhaStage);
     // console.log({ jobformUpdated: data });
 
@@ -946,23 +953,23 @@ const FlhaDetails = (props) => {
     if (riskRating >= 1 && riskRating <= 4) {
       // alert("low")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Trivial`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#006400';
+      temp[taskIndex].hazards[key].riskRatingColour = '#009933';
     } else if (riskRating > 5 && riskRating <= 8) {
       // alert("medium")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Tolerable`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#6AA121';
+      temp[taskIndex].hazards[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       // alert("serious")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Moderate`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#F3C539';
+      temp[taskIndex].hazards[key].riskRatingColour = '#fff82e';
     } else if (riskRating > 17 && riskRating <= 24) {
       // alert("serious")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Substantial`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#800000';
+      temp[taskIndex].hazards[key].riskRatingColour = '#990000';
     } else {
       // alert("high")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Intoreable`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#FF0000';
+      temp[taskIndex].hazards[key].riskRatingColour = '#ff0000';
     }
 
 
@@ -1032,11 +1039,11 @@ const FlhaDetails = (props) => {
               </svg> Job information
             </Typography>
           </Grid>
-          
+
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
-              <Grid item xs={12}>
+                <Grid item xs={12}>
                   <TextField
                     // error={error.departNmae.departmentName}
                     multiline
@@ -1090,7 +1097,7 @@ const FlhaDetails = (props) => {
                               options={departments}
                               getOptionLabel={(option) => option.departmentName}
                               renderInput={(params) => <TextField {...params} label="Department" className="formControl" variant="outlined" />}
-                              onChange={(e, value) => {handleDepartmentSelection(e, value); setDepartName(value)}}
+                              onChange={(e, value) => { handleDepartmentSelection(e, value); setDepartName(value) }}
                             />
                           </div>
                         </Grid>
@@ -1113,7 +1120,7 @@ const FlhaDetails = (props) => {
                     </DialogContent>
                   </Dialog>
                 </div>
-       
+
                 <Grid
                   item
                   md={12}
@@ -1179,7 +1186,7 @@ const FlhaDetails = (props) => {
               <Grid item sm={12} xs={12} className={classes.paddTRemove}>
                 <div>
                   {taskForm.map((taskValue, taskIndex) => (
-                 
+
                     <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaperAccordian}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -1207,6 +1214,7 @@ const FlhaDetails = (props) => {
                           />
                         </Grid>
                         {taskValue.hazards.map((item, index) => (
+
                           <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.backPaperSubAccordian}>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
@@ -1214,7 +1222,7 @@ const FlhaDetails = (props) => {
                               id="panel2bh-header"
                               className={classes.accordionSubHeaderSection}
                             >
-                              <Typography className={classes.heading}>Hazard#{index + 1} - {(item.hazard) ? item.hazard : ""}</Typography>
+                              <Typography className={classes.heading}>Hazard#{index + 1} - {(item.hazard) ? item.hazard : hazardValue}</Typography>
                               <Typography className={classes.secondaryHeading}>
                                 {/* <Fab
                                   color="secondary"
@@ -1237,26 +1245,27 @@ const FlhaDetails = (props) => {
                                     requirement
                                     className={classes.formControl}
                                   >
-                                    <InputLabel id="demo-simple-select-label">
-                                      Hazards
+                                    <InputLabel className={classes.heading}>
+                                      Hazard
                                       {' '}
+                                 
                                     </InputLabel>
                                     <Select
                                       multiline
                                       variant="outlined"
-                                      rows="3"
+                                      rows="1"
                                       id="hazards"
                                       // label="*Hazards"
                                       className={classes.fullWidth}
                                       // defaultValue={item.hazard}
-                                      value={(item.hazard != undefined) ? item.hazard : ''}
-
-                                      onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazards')
+                                      value={(item.hazard != undefined) ? item.hazard : hazardValue}
+                                      disabled={(item.hazard != undefined) ? item.hazard : ''}
+                                      onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazards'), setHazardType }
                                       }
                                     // InputLabelProps={{ shrink: true }}
                                     >
                                       {hazardtype.map((value) => <MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
-                                      
+
                                     </Select>
                                   </FormControl>
                                   <div className={classes.spacer} id="myCode" >
@@ -1380,6 +1389,7 @@ const FlhaDetails = (props) => {
                     </Accordion>
                   ))}
                 </div>
+
               </Grid>
               <Divider className={classes.divider} />
             </Box>
@@ -1563,10 +1573,10 @@ const FlhaDetails = (props) => {
                           multiline
                           variant="outlined"
                           rows="1"
-                          id="permitNumber"
+                          id="permitToWorkNumber"
                           label="Enter permit number"
-                          value={jobForm.permitNumber}
-                          onChange={(e) => handleJobFormChange(e, 'permitNumber')}
+                          value={jobForm.permitToWorkNumber}
+                          onChange={(e) => handleJobFormChange(e, 'permitToWorkNumber')}
                           className="formControl"
                         />
                       </Grid>
@@ -1584,7 +1594,7 @@ const FlhaDetails = (props) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  </> : null}
+                </> : null}
               </Grid>
             </Paper>
           </Grid>

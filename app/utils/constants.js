@@ -137,7 +137,7 @@ export const projectId =
     ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
     : null;
 
-export const CompanyId =
+export const companyId =
   JSON.parse(localStorage.getItem("company")) !== null
     ? JSON.parse(localStorage.getItem("company")).fkCompanyId
     : null;

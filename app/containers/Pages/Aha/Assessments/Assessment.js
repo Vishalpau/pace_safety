@@ -1,51 +1,36 @@
-import React, { useEffect, useState, Component, useRef } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { PapperBlock } from "dan-components";
-
-import PropTypes from "prop-types";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import Chip from "@material-ui/core/Chip";
-import MUIDataTable from "mui-datatables";
-import MenuItem from "@material-ui/core/MenuItem";
+import { Button, CircularProgress, Grid, TextField, Typography } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormLabel from "@material-ui/core/FormLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { makeStyles } from "@material-ui/core/styles";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-import Link from "@material-ui/core/Link";
-import Divider from "@material-ui/core/Divider";
-import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams, useHistory } from "react-router";
-import ActionTracker from "../../../Forms/ActionTracker";
-import { CircularProgress } from '@material-ui/core';
-import Loader from "../../../Forms/Loader";
-
-import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
-import ActionShow from '../../../Forms/ActionShow'
-import { handelIncidentId, checkValue, handelCommonObject, handelActionData } from "../../../../utils/CheckerValue";
-
-import { connect } from "react-redux";
+import { PapperBlock } from "dan-components";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-
-import axios from "axios";
+import { useHistory } from "react-router";
+import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import api from "../../../../utils/axios";
-
+import { handelActionData, handelCommonObject } from "../../../../utils/CheckerValue";
+import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+import ActionShow from '../../../Forms/ActionShow';
+import ActionTracker from "../../../Forms/ActionTracker";
+import Loader from "../../../Forms/Loader";
 import { AHA } from "../constants";
-import { keySeq } from "draft-js/lib/DefaultDraftBlockRenderMap";
+
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -299,7 +284,7 @@ const Assessment = () => {
         }
       }
     }
-    
+
     let abc = [...getSeverity]
     for (var i = 0; i < getSeverity.length; i++) {
       if (getSeverity[i].probability !== "") {
@@ -319,25 +304,24 @@ const Assessment = () => {
         }
       }
     }
-    
+
 
     let zzz = [...abc]
     for (var i = 0; i < abc.length; i++) {
       if (abc[i].riskRating !== "") {
         if (abc[i].riskRating === "2 Trivial" || abc[i].riskRating === "4 Trivial") {
-          zzz[i].riskRatingColour = '#006400'
+          zzz[i].riskRatingColour = '#009933'
         } else if (abc[i].riskRating === "6 Tolerable" || abc[i].riskRating === "8 Tolerable") {
-          zzz[i].riskRatingColour = '#6AA121'
+          zzz[i].riskRatingColour = '#8da225'
 
         } else if (abc[i].riskRating === "12 Moderate" || abc[i].riskRating === "16 Moderate") {
-          zzz[i].riskRatingColour = '#F3C539'
+          zzz[i].riskRatingColour = '#fff82e'
 
-        }  else if (abc[i].riskRating === "18 Substantial" || abc[i].riskRating === "24 Substantial") {
-
-          zzz[i].riskRatingColour = '#800000'
+        } else if (abc[i].riskRating === "18 Substantial" || abc[i].riskRating === "24 Substantial") {
+          zzz[i].riskRatingColour = '#990000'
         }
         else {
-          zzz[i].riskRatingColour = '#FF0000'
+          zzz[i].riskRatingColour = '#ff0000'
         }
       }
     }
@@ -405,6 +389,9 @@ const Assessment = () => {
 
     ahaform["workStopCondition"] = additinalJobDetails.workStopCondition.toString()
     delete ahaform['ahaAssessmentAttachment']
+    if (ahaform['notifyTo'] === null) {
+      ahaform['notifyTo'] = "null"
+    }
     const res1 = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`,
       ahaform
@@ -457,10 +444,12 @@ const Assessment = () => {
     });
   };
 
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
   const pickListValue = async () => {
-    risk.current = await PickListData(78)
-    riskResidual.current = await PickListData(76)
-    monitor.current = await PickListData(77)
+    risk.current = await pickListValues["78"]
+    riskResidual.current = await pickListValues["76"]
+    monitor.current = await pickListValues["77"]
   }
 
 
@@ -481,25 +470,22 @@ const Assessment = () => {
     }
     if (riskRating >= 1 && riskRating <= 4) {
       temp[key].riskRating = `${riskRating} Trivial`;
-      temp[key].riskRatingColour = '#1EBD10';
+      temp[key].riskRatingColour = '#009933';
     } else if (riskRating > 5 && riskRating <= 8) {
-      temp[key].riskRating =  `${riskRating} Tolerable`;
-      temp[key].riskRatingColour = '#008000';
+      temp[key].riskRating = `${riskRating} Tolerable`;
+      temp[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       temp[key].riskRating = `${riskRating} Moderate`;
-      temp[key].riskRatingColour = '#F3C539';
+      temp[key].riskRatingColour = '#fff82e';
     } else if (riskRating > 17 && riskRating <= 24) {
       temp[key].riskRating = `${riskRating} Substantial`;
-      temp[key].riskRatingColour = '#800000';
-    }else {
+      temp[key].riskRatingColour = '#990000';
+    } else {
       temp[key].riskRating = `${riskRating} Intoreable`;
-      temp[key].riskRatingColour = '#FF0000';
+      temp[key].riskRatingColour = '#ff0000';
     }
     setForm(temp);
   };
-
-  console.log(risk.current,"LLLLLL")
-
 
   const handelCallBack = async () => {
 
@@ -741,17 +727,7 @@ const Assessment = () => {
                             />
                           </Grid>
                           <Grid item xs={6} className={classes.createHazardbox}>
-                            {/* {value.action.length > 0 && value.action.map((valueAction) => (
-                              <ActionShow
-                                action={valueAction}
-                                companyId={projectData.companyId}
-                                projectId={projectData.projectId}
-                                updatePage={updatePage}
-                              />
-                            ))} */}
                             {handelActionShow(value.id)}
-
-
                           </Grid>
                         </Grid>
                       </AccordionDetails>
@@ -813,7 +789,6 @@ const Assessment = () => {
                     style={{ marginLeft: "10px" }}
                     disabled={submitLoader}
                   >
-
                     Next
                   </Button>
                   {submitLoader && (
@@ -822,7 +797,6 @@ const Assessment = () => {
                       className={classes.buttonProgress}
                     />
                   )}</div>
-
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -834,7 +808,7 @@ const Assessment = () => {
             </Grid>
           </Grid>) : (
           <>
-            <Loader/>
+            <Loader />
           </>
         )
         }
@@ -842,9 +816,5 @@ const Assessment = () => {
     </>
   );
 };
-// const AhaAssementInit = connect((state) => ({
-//   initialValues: state.getIn(["IncidentReducer"]),
-// }))(Assessment);
 
-// export default withStyles(styles)(AhaAssementInit);
 export default Assessment;

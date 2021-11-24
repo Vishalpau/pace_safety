@@ -14,10 +14,10 @@ function EventDetailsValidate(data) {
         isValid = false;
     }
 
-    if (validator.isEmpty(data.spillsFluidType.toString())) {
-        error.spillsFluidType = "please select spills type";
-        isValid = false;
-    }
+    // if (validator.isEmpty(data.spillsFluidType.toString())) {
+    //     error.spillsFluidType = "please select spills type";
+    //     isValid = false;
+    // }
     if (data.temperature.length !== 0 && data.temperature.length > 45) {
         error.temperature = "please enter less than 45 characters in temperature";
     }

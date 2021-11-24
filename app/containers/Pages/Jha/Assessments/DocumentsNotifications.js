@@ -1,23 +1,21 @@
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button, Grid, TextField, Typography
 } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import MuiAlert from '@material-ui/lab/Alert';
 import { PapperBlock } from 'dan-components';
-import React, { useEffect, useRef, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
+
 import api from '../../../../utils/axios';
 import { handelCommonObject, handelFileName } from '../../../../utils/CheckerValue';
 import {
@@ -78,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
     '& .dropzone': {
       flex: '1',
       display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
       padding: '35px',
       borderWidth: '2px',
@@ -262,7 +259,7 @@ const DocumentNotification = () => {
       data.append('description', form.description);
       data.append('classification', form.classification);
       data.append('workHours', form.workHours);
-      data.append('notifyTo', form.notifyTo.toString());
+      data.append('notifyTo', form.notifyTo !== null ? form.notifyTo.toString() : null);
       data.append('link', form.link);
       data.append('jhaAssessmentAttachment', form.jhaAssessmentAttachment);
       await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiError());
@@ -347,31 +344,31 @@ const DocumentNotification = () => {
             {notificationSentValue.length > 0
               ? (
                 <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
+                  item
+                  md={12}
+                  xs={12}
+                  className={classes.formBox}
                 >
-                <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-                <FormGroup row>{notificationSentValue.map((value) => (
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
+                  <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
+                  <FormGroup>{notificationSentValue.map((value) => (
+                    <FormControlLabel
+                      className={classes.labelValue}
+                      control={(
                         <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        checked ={form.notifyTo !== null ? form.notifyTo.includes(value.id) : ""}
-                        onChange={(e) => handelNotifyTo(e , value.id)}
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          name="checkedI"
+                          checked={form.notifyTo !== null ? form.notifyTo.includes(value.id) : ""}
+                          onChange={(e) => handelNotifyTo(e, value.id)}
                         />
-                    )}
-                    label={value.roleName}
+                      )}
+                      label={value.roleName}
                     />
 
-                ))}   
-                </FormGroup>
-              </Grid>
-                
+                  ))}
+                  </FormGroup>
+                </Grid>
+
               )
               : null}
 

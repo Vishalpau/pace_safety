@@ -1,42 +1,27 @@
-import React, { useEffect, useState, Component, useRef } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import FormLabel from '@material-ui/core/FormLabel';
-import { PapperBlock } from 'dan-components';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-import PropTypes from 'prop-types';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Chip from '@material-ui/core/Chip';
-import MUIDataTable from 'mui-datatables';
-
+import { PapperBlock } from 'dan-components';
 import { useDropzone } from 'react-dropzone';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { handelFileName } from "../../../../utils/CheckerValue";
+import { useHistory } from 'react-router';
 import Attachment from "../../../../containers/Attachment/Attachment";
-
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams, useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { CircularProgress } from '@material-ui/core';
-
-import Loader from "../../../Forms/Loader";
-
-import { AHA } from "../constants";
+import { handelFileName } from "../../../../utils/CheckerValue";
 import {
-  access_token,
-  ACCOUNT_API_URL,
   HEADER_AUTH, SSO_URL
 } from "../../../../utils/constants";
+import Loader from "../../../Forms/Loader";
+import { AHA } from "../constants";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   formBox: {
     '& .dropzone': {
       flex: '1',
-      display: 'flex',
+      display: 'block',
       flexDirection: 'column',
       alignItems: 'center',
       padding: '35px',
@@ -160,14 +145,14 @@ const DocumentNotification = () => {
   const attachmentName = useRef("")
   const [isLoading, setIsLoading] = useState(false);
   const fkCompanyId =
-  JSON.parse(localStorage.getItem("company")) !== null
-    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-    : null;
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
-const projectId =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-    : null;
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
 
@@ -179,6 +164,10 @@ const projectId =
   const [ahaform, setAHAForm] = useState({})
   const handleSubmit = async () => {
     await setSubmitLoader(true)
+
+    // if(ahaform['notifyTo'] === null){
+    //   ahaform['notifyTo'] = "null"
+    // }
 
     let data = new FormData()
 
@@ -197,15 +186,14 @@ const projectId =
     ) {
       data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
     }
-    // data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
     data.append("description", ahaform.description),
       data.append("workStopCondition", ahaform.workStopCondition),
       data.append("department", ahaform.department),
       data.append("additionalRemarks", ahaform.additionalRemarks),
       data.append("classification", ahaform.classification),
-      data.append("link", ahaform.link),
-      data.append("notifyTo", ahaform.notifyTo),
-      data.append("permitToPerform", ahaform.permitToPerform),
+      data.append("link", ahaform.link)
+    data.append("notifyTo", ahaform.notifyTo)
+    data.append("permitToPerform", ahaform.permitToPerform),
       data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
       data.append("picApprovalUser", ahaform.picApprovalUser),
       data.append("signedUser", ahaform.signedUser),
@@ -273,7 +261,7 @@ const projectId =
       let newData = temp.filter((item) => item !== value);
 
       setNotifyToList(newData);
-      setForm({ ...form, notifyTo: newData.toString() });
+      setAHAForm({ ...ahaform, notifyTo: newData.toString() });
 
     }
 
@@ -382,35 +370,35 @@ const projectId =
                   onChange={(e) => setAHAForm({ ...ahaform, link: e.target.value })}
                 />
               </Grid>
-              {notificationSentValue.length > 0 ? 
-              
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
+              {notificationSentValue.length > 0 ?
+
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                  className={classes.formBox}
                 >
-                <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
-                <FormGroup row>{notificationSentValue.map((value) => (
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
+                  <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
+                  <FormGroup>{notificationSentValue.map((value) => (
+                    <FormControlLabel
+                      className={classes.labelValue}
+                      control={(
                         <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        checked ={ahaform.notifyTo !== null ? ahaform.notifyTo.includes(value.id) : ""}
-                        onChange={(e) => handleNotification(e , value.id)}
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          name="checkedI"
+                          checked={ahaform.notifyTo !== null ? ahaform.notifyTo.includes(value.id) : ""}
+                          onChange={(e) => handleNotification(e, value.id)}
                         />
-                    )}
-                    label={value.roleName}
+                      )}
+                      label={value.roleName}
                     />
 
-                ))}   
-                </FormGroup>
-              </Grid> : null}
+                  ))}
+                  </FormGroup>
+                </Grid> : null}
 
-      
+
 
               <Grid
                 item
@@ -460,7 +448,7 @@ const projectId =
           </Grid>) :
           (
             <>
-        <Loader/>
+              <Loader />
             </>
           )
         }

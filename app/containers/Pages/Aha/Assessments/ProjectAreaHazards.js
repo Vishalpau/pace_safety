@@ -1,39 +1,25 @@
-import React, { useEffect, useState, Component, useRef } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { PapperBlock } from 'dan-components';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useHistory, useParams } from 'react-router';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams, useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { CircularProgress } from '@material-ui/core';
 import Loader from "../../../Forms/Loader";
-
+import CheckListData from "../CheckList";
 import { AHA } from "../constants";
 
-import CheckListData from "../CheckList"
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -204,7 +190,7 @@ const ProjectAreaHazards = () => {
     let tempRemove = []
     if (e.target.checked == false) {
       temp.map((ahaValue, index) => {
-      
+
         if (ahaValue['fkChecklistId'] === checkListID) {
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
@@ -404,8 +390,8 @@ const ProjectAreaHazards = () => {
   useEffect(() => {
 
     checkList()
-      handelUpdate()
-    
+    handelUpdate()
+
 
   }, []);
   return (
@@ -566,7 +552,7 @@ const ProjectAreaHazards = () => {
             </Grid>
           </Grid>) : (
           <>
-            <Loader/>
+            <Loader />
           </>
         )
         }
