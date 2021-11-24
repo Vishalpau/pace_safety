@@ -242,7 +242,7 @@ function PersonalDashboard(props) {
 
           }
         })
-        let mod = ['incidents','knowledge', 'observations', 'actions','controltower','HSE','compliances','ProjectInfo','assessments','permits']
+        let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
         setCode(temp)
         getModules(apps)
       } catch (error) { }
@@ -413,7 +413,7 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
-           
+
             // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
@@ -450,7 +450,7 @@ function PersonalDashboard(props) {
 
       });
   };
-  const fetchUserDetails = async (compId, proId,targetPage) => {
+  const fetchUserDetails = async (compId, proId, targetPage) => {
     console.log("welcome user details")
     // window.location.href = `/${tagetPage}`
     try {
@@ -498,7 +498,7 @@ function PersonalDashboard(props) {
                   dispatch(projectName(project[0]))
                 }
                 // fetchPermissionData();
-                history.push('/app/'+targetPage)
+                history.push('/app/' + targetPage)
                 localStorage.removeItem("direct_loading")
               })
 
@@ -529,11 +529,11 @@ function PersonalDashboard(props) {
     } else {
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
+    getSubscriptions()
   }
 
   useEffect(() => {
-    handelCallback()
-    await getSubscriptions();
+    handelCallBack()
   }, [props.initialValues.companyListData]);
 
   return (
@@ -658,7 +658,7 @@ function PersonalDashboard(props) {
               </div>
 
 
-          
+
 
             </div>
 
