@@ -991,7 +991,7 @@ function JhaSummary() {
                                         >
                                           Notifications sent to
                                         </Typography>
-                                        {console.log(assessment.notifyTo)}
+
                                         {checkValue(assessment.notifyTo).split(",").map((value) => (
                                           <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
                                         ))}
