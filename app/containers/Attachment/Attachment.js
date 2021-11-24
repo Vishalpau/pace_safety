@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 export const Attachment = ({ value }) => {
-    console.log(value.size)
     const [open, setOpen] = useState(false)
     const classes = useStyles();
     const fileNameArray = value.split("/");
@@ -87,7 +86,7 @@ export const Attachment = ({ value }) => {
     } else {
         return (
             <>
-            <IconButton onClick={() => setOpen(true)}>
+                <IconButton onClick={() => setOpen(true)}>
                     <Tooltip title={fileName}>
                         <Avatar
                             alt="image"
