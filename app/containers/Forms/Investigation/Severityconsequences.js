@@ -208,26 +208,35 @@ const InvestigationOverview = (props) => {
   };
 
   const handelClassification = async (value) => {
-    if (value == classificationValues.current[0].value ||
-      value == classificationValues.current[1].value ||
-      value == classificationValues.current[3].value ||
-      value == classificationValues.current[5].value
-    ) {
+
+    let paceCauseClassification = [
+      "Fatality",
+      "Lost time incident",
+      "Property damage more than Rs 5,00,00,000",
+      "Property damage more than Rs 1,00,00,000"
+    ]
+    let causeClassification = [
+      "Medical incident",
+      "Property damage more than Rs 25,00,000"
+    ]
+    let whyAnalysisClassification = [
+      "Property damage less than Rs 25,00,000",
+      "First aid"
+    ]
+
+    if (paceCauseClassification.includes(value)) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "PACE cause analysis",
       });
-    } else if (value == classificationValues.current[2].value ||
-      value == classificationValues.current[4].value ||
-      value == classificationValues.current[6].value
-    ) {
+    } else if (causeClassification.includes(value)) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "Cause analysis",
       });
-    } else if (value == classificationValues.current[7].value) {
+    } else if (whyAnalysisClassification.includes(value)) {
       await setForm({
         ...form,
         classification: value,
@@ -235,6 +244,7 @@ const InvestigationOverview = (props) => {
       });
     }
   }
+
 
   useEffect(() => {
     handelCall();

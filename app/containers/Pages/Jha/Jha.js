@@ -330,7 +330,6 @@ function Jha(props) {
         {cardView ? (<>
           {allJHAData.length > 0 && Object.entries(allJHAData).map((item, index) => (
             <Card variant="outlined" className={Incidents.card}>
-              {console.log(item)}
               <CardContent>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
