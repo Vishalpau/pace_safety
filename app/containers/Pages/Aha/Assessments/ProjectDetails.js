@@ -513,7 +513,7 @@ const ProjectDetails = () => {
   const pickListValue = async () => {
     permitType.current = await pickListValues["81"]
   }
-
+  console.log(permitType.current,"AASAS")
   const classes = useStyles();
 
   useEffect(() => {
