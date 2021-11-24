@@ -283,7 +283,7 @@ const ObservationSummary = () => {
                             Action Tracking
                           </Button>
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            {localStorage.getItem("action") === "Done" ? "Done" : "-"} {localStorage.getItem("action") === "Done" ? <CheckCircle /> : <AccessTime />}
+                            {localStorage.getItem("action") === "Done" ? "Done" : ""} {localStorage.getItem("action") === "Done" ? <CheckCircle /> : <AccessTime />}
                           </Typography>
 
                         </li>

@@ -51,7 +51,6 @@ const ActionShow = (props) => {
     // console.log(props)
     const classes = useStyles();
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
-
     const link = () => {
         return (
             <Link
