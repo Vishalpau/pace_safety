@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
@@ -23,17 +23,18 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) {
 
 // eslint-disable-next-line
 function MainMenu(props) {
+  const [selectedMenuItem, setSelectedMenuItem] = useState("")
   const handleClick = () => {
     const { toggleDrawerOpen, loadTransition } = props;
+    
     toggleDrawerOpen();
     loadTransition(false);
   };
 
   const { classes, openSubMenu, open, dataMenu } = props;
-
-  const getMenus = (menuArray) =>
-    menuArray.map((item, index) => {
-      if (item.child || item.linkParent) {
+  console.log(classes.opened,"active check")
+  const getMenus = menuArray => menuArray.map((item, index) => {
+    if (item.child || item.linkParent) {
         return (
           <div key={index.toString()}>
             <ListItem
@@ -42,14 +43,17 @@ function MainMenu(props) {
               to={item.linkParent ? item.linkParent : "#"}
               className={classNames(
                 classes.head,
-                item.icon ? classes.iconed : "",
+                item.key== selectedMenuItem?'selectmenu':"",
+                item.key ? `${item.key}Menu ` : null,
+                // item.icon ? classes.iconed : "",
                 open.indexOf(item.key) > -1 ? classes.opened : ""
               )}
-              onClick={() => openSubMenu(item.key, item.keyParent)}
+              onClick={() => {openSubMenu(item.key, item.keyParent),setSelectedMenuItem(item.key)}}
             >
               {item.icon && (
                 <ListItemIcon className={classes.icon}>
-                  <i className={item.icon} />
+                  <span className="leftCustomImg"> </span>
+                  {/* <i className={item.icon} /> */}
                 </ListItemIcon>
               )}
               <ListItemText
@@ -73,7 +77,7 @@ function MainMenu(props) {
                 component="div"
                 className={classNames(
                   classes.nolist,
-                  item.keyParent ? classes.child : ""
+                  item.keyParent ? classes.child : "",
                 )}
                 in={open.indexOf(item.key) > -1}
                 timeout="auto"

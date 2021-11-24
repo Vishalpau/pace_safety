@@ -25,17 +25,17 @@ var menu = [
       {
         key: 'flha',
         name: 'FLHA',
-        linkParent: "/app/pages/assesments/xflha",
+        link: "/app/pages/assesments/xflha",
       },
       {
         key: 'jha',
         name: 'JSA',
-        linkParent: "/app/pages/jha/all_jha",
+        link: "/app/pages/jha/all_jha",
       },
       {
         key: 'aha',
         name: 'AHA',
-        linkParent: '/app/pages/aha',
+        link: '/app/pages/aha',
       },
     ],
   },
@@ -46,7 +46,7 @@ var menu = [
     linkParent: '/app/icare',
   },
   {
-    key: "controltower",
+    key: "controlTower",
     name: "Control Tower",
     icon: "ion-ios-body",
     multilevel: false,
