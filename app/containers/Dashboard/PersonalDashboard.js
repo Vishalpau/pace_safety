@@ -198,7 +198,7 @@ function PersonalDashboard(props) {
   const [applications, setApplications] = useState([]);
   const [modules, setModules] = useState([]);
   const [codes, setCode] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const getSubscriptions = async (compId) => {
 
@@ -242,6 +242,7 @@ function PersonalDashboard(props) {
 
           }
         })
+        let mod = ['incidents','knowledge', 'observations', 'actions','controltower','HSE','compliances','ProjectInfo','assessments','permits']
         setCode(temp)
         getModules(apps)
       } catch (error) { }
@@ -385,7 +386,7 @@ function PersonalDashboard(props) {
     };
     await axios(config)
       .then(function (response) {
-
+        setIsLoading(true)
         if (response.status === 200) {
           if (comId != 0) {
             response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
@@ -412,7 +413,7 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
-
+           
             // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
@@ -449,41 +450,90 @@ function PersonalDashboard(props) {
 
       });
   };
+  const fetchUserDetails = async (compId, proId,targetPage) => {
+    console.log("welcome user details")
+    // window.location.href = `/${tagetPage}`
+    try {
+      if (compId) {
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
-  // fetching picklist 
-  const getAllPickList = async () => {
-    console.log("here")
-    let pickListValues = {}
-    let allPickList = await api.get(`${localStorage.getItem("apiBaseUrl")}/api/v1/lists/`);
-    let allPickListValue = allPickList.data.data.results
-    allPickListValue.map((value) => {
-      let required_fields = []
-      value.picklistValues.map((value) => {
-        required_fields.push({ value: value.inputValue, label: value.inputLabel })
-      })
-      pickListValues[value["id"]] = required_fields
-    })
-    localStorage.setItem("pickList", JSON.stringify(pickListValues))
-    dispatch(allPickListData(pickListValues))
+        await api(config)
+          .then(function (response) {
+            console.log(response)
+            if (response.status === 200) {
+              // setIsLoading(true)
+              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain
+
+              console.log(hosting)
+              let data1 = {
+                method: "get",
+                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+                headers: HEADER_AUTH,
+              };
+              axios(data1).then((res) => {
+                console.log(response)
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+
+                if (compId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+
+                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                  localStorage.setItem('company', JSON.stringify(companeyData))
+
+                  dispatch(company(companeyData))
+                }
+                if (proId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                  localStorage.setItem("projectName", JSON.stringify(project[0]))
+                  dispatch(projectName(project[0]))
+                }
+                // fetchPermissionData();
+                history.push('/app/'+targetPage)
+                localStorage.removeItem("direct_loading")
+              })
+
+
+
+
+
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    } catch (error) {
+    }
   }
 
-  const handelCallback = async () => {
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
+  const handelCallBack = async () => {
+    // await setIsLoading(true)
+    let state = JSON.parse(localStorage.getItem('direct_loading'));
     let comId = 0
     let proId = 0
     let redback = ''
     let tarPage = ''
     let tarId = 0
     if (state !== null) {
-      await setIsLoading(false)
+      console.log("state is not null")
+      await fetchUserDetails(state.comId, state.proId, state.tarPage)
+    } else {
+      await userDetails(comId, proId, redback, tarPage, tarId);
     }
-    await userDetails(comId, proId, redback, tarPage, tarId);
-
-    await getSubscriptions();
   }
 
   useEffect(() => {
     handelCallback()
+    await getSubscriptions();
   }, [props.initialValues.companyListData]);
 
   return (
@@ -608,20 +658,7 @@ function PersonalDashboard(props) {
               </div>
 
 
-
-              {/* <div className="hexagon hide_responsiv">
-            <div className="hexagontent hexagon_content_box" />
-          </div> */}
-
-              {/* <div className={!(codes.includes('environments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-              <div className="hexagontent hexagon_content_box">
-                <a className="hse_environment_development"
-                  onClick={() => handleClick('environments')}
-                >
-                  <p>Environment Management</p>
-                </a>
-              </div>
-            </div> */}
+          
 
             </div>
 

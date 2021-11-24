@@ -950,7 +950,7 @@ html .custmCancelBtn {
 
 
 /* Left menu custom style */
-.homeMenu,.incident-managementMenu,  .assessmentsMenu,.icareMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 20px !important;
 }
@@ -971,49 +971,50 @@ html .custmCancelBtn {
   background: url(../../../public/images/observationMenuIcon.png) no-repeat 10% -4%;
   margin-right: 5px;
 }
-/* .controlTowerMenu a .MuiListItemIcon-root {
-  background: url(../../../public/images/controlTowerMenuIcon.png) no-repeat 10% 0%;
+.controlTowerMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/controlTowerMenuIcon.png) no-repeat 10% 2%;
   margin-right: 5px;
-} */
+}
 
-.homeMenu.active .MuiListItemIcon-root,
-.homeMenu.active:hover .MuiListItemIcon-root,
-.homeMenu:hover .MuiListItemIcon-root,
-.homeMenu:hover .MuiListItemText-root span,
-.homeMenu.active:hover .MuiListItemText-root span,
-.homeMenu.active .MuiListItemText-root span,
 
-.incident-managementMenu.active .MuiListItemIcon-root,
-.incident-managementMenu.active:hover .MuiListItemIcon-root,
+.incident-managementMenu.selectmenu .MuiListItemIcon-root,
+.incident-managementMenu.selectmenu:hover .MuiListItemIcon-root,
 .incident-managementMenu:hover .MuiListItemIcon-root,
 .incident-managementMenu:hover .MuiListItemText-root span,
-.incident-managementMenu.active:hover .MuiListItemText-root span,
-.incident-managementMenu.active .MuiListItemText-root span,
+.incident-managementMenu.selectmenu:hover .MuiListItemText-root span,
+.incident-managementMenu.selectmenu .MuiListItemText-root span,
 
-.assessmentsMenu.active .MuiListItemIcon-root,
-.assessmentsMenu.active:hover .MuiListItemIcon-root,
+.homeMenu.selectmenu .MuiListItemIcon-root,
+.homeMenu.selectmenu:hover .MuiListItemIcon-root,
+.homeMenu:hover .MuiListItemIcon-root,
+.homeMenu:hover .MuiListItemText-root span,
+.homeMenu.selectmenu:hover .MuiListItemText-root span,
+.homeMenu.selectmenu .MuiListItemText-root span,
+
+.icareMenu.selectmenu .MuiListItemIcon-root,
+.icareMenu.selectmenu:hover .MuiListItemIcon-root,
+.icareMenu:hover .MuiListItemIcon-root,
+.icareMenu:hover .MuiListItemText-root span,
+.icareMenu.selectmenu:hover .MuiListItemText-root span,
+.icareMenu.selectmenu .MuiListItemText-root span,
+
+.assessmentsMenu.selectmenu .MuiListItemIcon-root,
+.assessmentsMenu.selectmenu:hover .MuiListItemIcon-root,
 .assessmentsMenu:hover .MuiListItemIcon-root,
 .assessmentsMenu:hover .MuiListItemText-root span,
-.assessmentsMenu.active:hover .MuiListItemText-root span,
-.assessmentsMenu.active .MuiListItemText-root span {
+.assessmentsMenu.selectmenu:hover .MuiListItemText-root span,
+.assessmentsMenu.selectmenu .MuiListItemText-root span {
   background-position-y: 102%;
   color: #ff8533;
   font-weight: 700;
 }
-.icareMenu.active .MuiListItemIcon-root,
-.icareMenu.active:hover .MuiListItemIcon-root,
-.icareMenu:hover .MuiListItemIcon-root,
-.icareMenu:hover .MuiListItemText-root span,
-.icareMenu.active:hover .MuiListItemText-root span,
-.icareMenu.active .MuiListItemText-root span,
-
-.controlTowerMenu a.active .MuiListItemIcon-root,
-.controlTowerMenu a.active:hover .MuiListItemIcon-root,
-.controlTowerMenu a:hover .MuiListItemIcon-root,
-.controlTowerMenu a:hover .MuiListItemText-root span,
-.controlTowerMenu a.active:hover .MuiListItemText-root span,
-.controlTowerMenu a.active .MuiListItemText-root span {
-  background-position-y: 100%;
+.controlTowerMenu.selectmenu .MuiListItemIcon-root,
+.controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
+.controlTowerMenu:hover .MuiListItemIcon-root,
+.controlTowerMenu:hover .MuiListItemText-root span,
+.controlTowerMenu.selectmenu:hover .MuiListItemText-root span,
+.controlTowerMenu.selectmenu .MuiListItemText-root span {
+  background-position-y: 102%;
   color: #ff8533;
   font-weight: 700;
 }
@@ -1023,7 +1024,6 @@ html .custmCancelBtn {
 .highcharts-credits {
   display: none;
 }
-
 .assessmentSelectionBox .MuiDialog-paper {
   min-width: 320px;
 }
