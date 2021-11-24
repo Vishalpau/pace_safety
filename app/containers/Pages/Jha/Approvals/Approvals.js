@@ -23,7 +23,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
-
+import ApprovalValidator from '../Validation/ApprovalValidation';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -143,6 +143,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   });
+  const [ error, setError] = useState({})
   const [open, setOpen] = useState(false);
   const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
   const [loading, setLoading] = useState(false)
@@ -213,6 +214,11 @@ const Approvals = () => {
 
   const handelSubmit = async () => {
     console.log(form)
+    const { error, isValid} = ApprovalValidator(form , actionData)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
@@ -418,7 +424,7 @@ const Approvals = () => {
                 </Dialog>
 
                 <Grid item md={12} xs={12}>
-                  <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography>
+                  {/* <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography> */}
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
 
                     <ActionTracker
@@ -450,6 +456,9 @@ const Approvals = () => {
                   </Typography>
 
                 </Grid>
+
+                {actionData.length == 0 ? <Grid item md={8}>
+                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
                 <Grid
                   item

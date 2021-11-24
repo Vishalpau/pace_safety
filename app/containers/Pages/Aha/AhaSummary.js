@@ -521,7 +521,7 @@ function AhaSummary() {
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
+      title={`Assessment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
       icon="ion-md-list-box"
     >{isLoading ? <>
       <Box paddingBottom={1}>
