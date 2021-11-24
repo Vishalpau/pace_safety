@@ -336,9 +336,9 @@ function JhaSummary() {
         let data = []
         let user = notifyTo.split(",");
         const result = res.data.data.results;
-        for(let i = 0; i < result.length; i++) {
-          for(let j = 0; j < user.length; j++) {
-            if(user[j] == result[i].id){
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
               data.push(result[i]);
             }
           }
@@ -1007,10 +1007,10 @@ function JhaSummary() {
                                           Notifications sent to
                                         </Typography>
 
-                                          <Typography variant="body" display="block" className={Fonts.labelValue}>
+                                        <Typography variant="body" display="block" className={Fonts.labelValue}>
                                           {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
-                                          </Typography>
-                                      
+                                        </Typography>
+
                                       </Grid>
                                     </>
                                   </Grid>
@@ -1112,8 +1112,9 @@ function JhaSummary() {
                                   <Typography className={classes.aLabelValue}>
                                     {allActionType["jha:approval"].map((value) => (
                                       <>
+                                        {/* {console.log(value, 'here')} */}
                                         <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
                                           companyId={projectData.companyId}
                                           projectId={projectData.projectId}
@@ -1162,7 +1163,7 @@ function JhaSummary() {
                                     {allActionType["jha:lessionLearned"].map((value) => (
                                       <>
                                         <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
                                           companyId={projectData.companyId}
                                           projectId={projectData.projectId}
