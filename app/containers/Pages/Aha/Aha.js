@@ -38,6 +38,7 @@ import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -309,6 +310,7 @@ function Aha(props) {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
+    allPickListDataValue()
   }, [props.projectName.breakDown, searchIncident])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
