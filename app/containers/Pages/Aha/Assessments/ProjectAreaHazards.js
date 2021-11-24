@@ -166,8 +166,10 @@ const ProjectAreaHazards = () => {
 
   const [checkGroups, setCheckListGroups] = useState([])
   const checkList = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const temp = {}
-    const res = await api.get("/api/v1/core/checklists/aha-hazards/1/")
+    const res = await api.get(`/api/v1/core/checklists/aha-hazards/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []

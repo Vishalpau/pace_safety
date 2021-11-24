@@ -1632,7 +1632,7 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-
+                  {attachment !== "" ?
             <Grid
             item
             md={12}
@@ -1640,7 +1640,7 @@ const ObservationInitialNotification = (props) => {
             className={classes.formBBanner}
           >
             <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
-          </Grid>
+          </Grid> :null}
 
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
