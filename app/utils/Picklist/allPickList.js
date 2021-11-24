@@ -1,6 +1,4 @@
-
 import api from "../axios";
-
 
 const allPickListDataValue = async () => {
     let pickListValues = {}
@@ -13,7 +11,7 @@ const allPickListDataValue = async () => {
         })
         pickListValues[value["id"]] = required_fields
     })
-    return pickListValues
+    localStorage.setItem("pickList", JSON.stringify(pickListValues))
 }
 
 export default allPickListDataValue;

@@ -40,6 +40,7 @@ import api from "../../../utils/axios";
 import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, SUMMERY_FORM } from "../../../utils/constants";
 import Loader from "../../Forms/Loader"
 import { AlertTitle } from "@material-ui/lab";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 
 // import { handleTimeOutError } from "../../../utils/CheckerValue"
@@ -308,6 +309,7 @@ function BlankPage(props) {
     } else {
       await fetchData();
     }
+    await allPickListDataValue()
     await setIsLoading(false)
   }
 
@@ -359,16 +361,16 @@ function BlankPage(props) {
     //   const idsToDelete = rowsDeleted.data.map(
     //     (d) => incidents[d.dataIndex].id
     //   );
-      
+
     //   for (var i = 0; i < idsToDelete.length; i++) {
     //     const res = api.put(`api/v1/incidents/${idsToDelete[i]}/`,{
     //       status:""
     //     })
     //     .then((res)=>{
     //       if(res.data.data.results.message === "Deleted Successfully!"){
-          
+
     //         fetchData();
-            
+
     //       }
     //     })
     //   }
@@ -697,7 +699,7 @@ function BlankPage(props) {
                             variant="body2"
                             display="inline"
                             className={Fonts.listingLabelName}
-                            // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
+                          // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                           >
                             <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
                           </Typography>
@@ -715,8 +717,8 @@ function BlankPage(props) {
                           </Typography>
                           <Typography variant="body2" display="inline">
                             {/* <ILink href="#"> */}
-                              {item[1]["attachmentCount"]}
-                              {/* </ILink> */}
+                            {item[1]["attachmentCount"]}
+                            {/* </ILink> */}
                           </Typography>
                         </Grid>
 

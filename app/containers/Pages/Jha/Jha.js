@@ -35,6 +35,7 @@ import { connect } from "react-redux";
 import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -260,7 +261,8 @@ function Jha(props) {
 
   useEffect(() => {
     fetchData()
-  }, [props.projectName.breakDown,searchIncident])
+    allPickListDataValue()
+  }, [props.projectName.breakDown, searchIncident])
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
@@ -327,193 +329,193 @@ function Jha(props) {
 
         {cardView ? (<>
           {allJHAData.length > 0 && Object.entries(allJHAData).map((item, index) => (
-              <Card variant="outlined" className={Incidents.card}>
-                {console.log(item)}
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item xs={10}>
-                          <Typography variant="h6">
-                            {item[1]["description"]}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={2} justifyContent="flex-end">
-                          <Chip
-                            avatar={<Avatar src={item[1]["avatar"]} />}
-                            label={item[1]["username"]}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6} md={3}>
-                          <Typography
-                            display="inline"
-                            className={Fonts.listingLabelName}
-                          >
-                            Number:
-                            <Link
-                              onClick={(e) => handleSummaryPush(e, index)}
-                              variant="subtitle2"
-                              className={Fonts.listingLabelValue}
-                              style={{
-                                textDecoration: 'underline',
-                                display: 'inline-block',
-                                marginLeft: '8px',
-                              }}
-                            >
-                              {item[1]["jhaNumber"]}
-                            </Link>
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={6} md={3}>
-                          <Chip
-                            variant="outlined"
-                            label="JSA"
-                            color="primary"
-                            size="small"
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} md={3}>
-                          <Typography
-                            display="inline"
-                            className={Fonts.listingLabelName}
-                          >
-                            <CalendarTodayIcon fontSize="small" />
-                            <span className={Fonts.listingLabelValue}>
-                              {moment(item[1]["assessmentDate"]).format(
-                                "Do MMMM YYYY"
-                              )}
-                            </span>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    {false &&
-                      <Grid item xs={6} lg={3}>
-                        <Typography className={Fonts.listingLabelName} gutterBottom>
-                          Work Area
-                        </Typography>
-
-                        <Typography className={Fonts.listingLabelValue}>
-                          {item[1]["workArea"]}
+            <Card variant="outlined" className={Incidents.card}>
+              {console.log(item)}
+              <CardContent>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <Grid container spacing={3} alignItems="flex-start">
+                      <Grid item xs={10}>
+                        <Typography variant="h6">
+                          {item[1]["description"]}
                         </Typography>
                       </Grid>
-                    }
 
-                    <Grid item xs={6} lg={3}>
-                      <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Location
-                      </Typography>
-                      <Typography className={Fonts.listingLabelValue}>
-                        {item[1]["location"]}
-                      </Typography>
+                      <Grid item xs={2} justifyContent="flex-end">
+                        <Chip
+                          avatar={<Avatar src={item[1]["avatar"]} />}
+                          label={item[1]["username"]}
+                        />
+                      </Grid>
                     </Grid>
+                  </Grid>
 
-                    <Grid item xs={6} lg={3}>
-                      <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Created on
-                      </Typography>
+                  <Grid item xs={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={6} md={3}>
+                        <Typography
+                          display="inline"
+                          className={Fonts.listingLabelName}
+                        >
+                          Number:
+                          <Link
+                            onClick={(e) => handleSummaryPush(e, index)}
+                            variant="subtitle2"
+                            className={Fonts.listingLabelValue}
+                            style={{
+                              textDecoration: 'underline',
+                              display: 'inline-block',
+                              marginLeft: '8px',
+                            }}
+                          >
+                            {item[1]["jhaNumber"]}
+                          </Link>
+                        </Typography>
+                      </Grid>
 
-                      <Typography variant="body1" className={Fonts.listingLabelValue}>
-                        {moment(item[1]["createdAt"]).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        )}
-                      </Typography>
+                      <Grid item xs={6} md={3}>
+                        <Chip
+                          variant="outlined"
+                          label="JSA"
+                          color="primary"
+                          size="small"
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} md={3}>
+                        <Typography
+                          display="inline"
+                          className={Fonts.listingLabelName}
+                        >
+                          <CalendarTodayIcon fontSize="small" />
+                          <span className={Fonts.listingLabelValue}>
+                            {moment(item[1]["assessmentDate"]).format(
+                              "Do MMMM YYYY"
+                            )}
+                          </span>
+                        </Typography>
+                      </Grid>
                     </Grid>
+                  </Grid>
 
+                  {false &&
                     <Grid item xs={6} lg={3}>
                       <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Created By
+                        Work Area
                       </Typography>
 
                       <Typography className={Fonts.listingLabelValue}>
-                        {item[1]["username"]}
+                        {item[1]["workArea"]}
                       </Typography>
                     </Grid>
+                  }
+
+                  <Grid item xs={6} lg={3}>
+                    <Typography className={Fonts.listingLabelName} gutterBottom>
+                      Location
+                    </Typography>
+                    <Typography className={Fonts.listingLabelValue}>
+                      {item[1]["location"]}
+                    </Typography>
                   </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    // justify="flex-end"
-                    alignItems="center"
-                  >
-                    <Grid item xs={6} md={3}>
-                      <Typography display="inline" className={Fonts.listingLabelName}>
-                        <MessageIcon fontSize="small" />
-                        {' '}
-                        Comments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["commentsCount"]}</ILink>
-                      </Typography>
-                    </Grid>
 
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <BuildIcon fontSize="small" />
-                        {' '}
-                        Actions:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        {/* <ILink href="#">{item[1]["actionCount"]}</ILink> */}
-                        {item[1]["actionCount"]}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <AttachmentIcon fontSize="small" />
-                        {' '}
-                        Attachments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        {/* <ILink href="#">{item[1]["attachmentCount"]}</ILink> */}
-                        {item[1]["attachmentCount"]}
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={6} lg={3}>
+                    <Typography className={Fonts.listingLabelName} gutterBottom>
+                      Created on
+                    </Typography>
 
-                    <Grid item xs={6} md={3}>
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Print />}
-                        className={Incidents.actionButton}
-                      >
-                        Print
-                      </Button>
-
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
-                      </Button>
-                    </Grid>
+                    <Typography variant="body1" className={Fonts.listingLabelValue}>
+                      {moment(item[1]["createdAt"]).format(
+                        "Do MMMM YYYY, h:mm:ss a"
+                      )}
+                    </Typography>
                   </Grid>
-                </CardActions>
-              </Card>))}</>)
+
+                  <Grid item xs={6} lg={3}>
+                    <Typography className={Fonts.listingLabelName} gutterBottom>
+                      Created By
+                    </Typography>
+
+                    <Typography className={Fonts.listingLabelValue}>
+                      {item[1]["username"]}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+              <Divider />
+              <CardActions className={Incidents.cardActions}>
+                <Grid
+                  container
+                  spacing={2}
+                  // justify="flex-end"
+                  alignItems="center"
+                >
+                  <Grid item xs={6} md={3}>
+                    <Typography display="inline" className={Fonts.listingLabelName}>
+                      <MessageIcon fontSize="small" />
+                      {' '}
+                      Comments:
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                      <ILink href="#">{item[1]["commentsCount"]}</ILink>
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6} md={3}>
+                    <Typography
+                      variant="body2"
+                      display="inline"
+                      className={Fonts.listingLabelName}
+                    >
+                      <BuildIcon fontSize="small" />
+                      {' '}
+                      Actions:
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                      {/* <ILink href="#">{item[1]["actionCount"]}</ILink> */}
+                      {item[1]["actionCount"]}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Typography
+                      variant="body2"
+                      display="inline"
+                      className={Fonts.listingLabelName}
+                    >
+                      <AttachmentIcon fontSize="small" />
+                      {' '}
+                      Attachments:
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                      {/* <ILink href="#">{item[1]["attachmentCount"]}</ILink> */}
+                      {item[1]["attachmentCount"]}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6} md={3}>
+                    <Button
+                      disabled
+                      size="small"
+                      color="primary"
+                      startIcon={<Print />}
+                      className={Incidents.actionButton}
+                    >
+                      Print
+                    </Button>
+
+                    <Button
+                      disabled
+                      size="small"
+                      color="primary"
+                      startIcon={<Share />}
+                      className={Incidents.actionButton}
+                    >
+                      Share
+                    </Button>
+                  </Grid>
+                </Grid>
+              </CardActions>
+            </Card>))}</>)
           : (
             <MUIDataTable
               title="JSA List"
