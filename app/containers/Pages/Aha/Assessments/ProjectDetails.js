@@ -607,7 +607,6 @@ const ProjectDetails = () => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
                 selectBreakDown = [
@@ -694,6 +693,7 @@ const ProjectDetails = () => {
         temp[value.hazard] = [value.risk]
       }
     })
+    await setIsLoading(true);
   }
 
   const pickListValue = async () => {
@@ -703,13 +703,18 @@ const ProjectDetails = () => {
 
   const classes = useStyles();
   useEffect(() => {
-    fetchCallBack()
-    checkList()
-    pickListValue()
+  
     if(id){
+    fetchCallBack()
+    pickListValue()
     fetchAhaData()
     fetchTeamData()
     handelUpdate()
+    checkList()
+      }else{
+        fetchCallBack()
+    pickListValue()
+    checkList()
       }
     
   }, []);

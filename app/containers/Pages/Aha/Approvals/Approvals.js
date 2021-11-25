@@ -125,6 +125,8 @@ const Approvals = () => {
   const [ error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [person, setPerson] = useState("")
+
   const user =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails"))
@@ -173,22 +175,23 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
-    if (type == "work") {
+    if (type == "competent person") {
       setForm({
         ...form,
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
-      setOpen(false)
-    } else if (type == "pic") {
+      setProjectOpen(false)
+    } else if (type == "senior authorized person") {
       setForm({
         ...form,
-        picApprovalUser: name,
-        picApprovalDateTime: new Date(),
+        sapApprovalUser: name,
+        sapApprovalDateTime: new Date(),
       });
+      setProjectOpen(false)
     }
-    handleProjectClose()
   };
+
   const handleClose = () => {
     setOpen(false)
   }
@@ -294,15 +297,13 @@ const [projectOpen , setProjectOpen] = useState(false)
                 <Grid item md={8} xs={12} className="formFieldBTNSection">
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                  Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className="marginT0"
-                    onClick={handleProjectOpen}
-
-                    // onClick={(e) => setOpen(true)}
+                    onClick={(e) => { setProjectOpen(true), setPerson("competent person") }}
                   >
                     {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
                   </Button>
@@ -314,6 +315,30 @@ const [projectOpen , setProjectOpen] = useState(false)
                   <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
                   <Typography className="viewLabelValue">
                   {`${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
+                  </Typography>
+                </Grid> : null}
+
+                <Grid item md={8} xs={12} className="formFieldBTNSection">
+
+                    <Typography variant="h6" gutterBottom className={classes.labelName}>
+                      Senior Authorized Person (SAP)
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color={form.sapApprovalUser === null ? "primary" : "secondary"}
+                      className="marginT0"
+                      onClick={(e) => { setProjectOpen(true), setPerson("senior authorized person") }}
+                    >
+                      {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
+                    </Button>
+                </Grid>
+                {form.sapApprovalUser !== undefined
+                      &&
+                      form.sapApprovalUser !== null ?
+                <Grid item xs={12} md={6}>
+                  <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
+                  <Typography className="viewLabelValue">
+                  {`${form.sapApprovalUser} , ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
                   </Typography>
                 </Grid> : null}
 
@@ -357,72 +382,7 @@ const [projectOpen , setProjectOpen] = useState(false)
 
                 <Dialog
                   className={classes.projectDialog}
-                  fullScreen
-                  scroll='paper'
                   open={projectOpen}
-                  onClose={handleProjectClose}
-                >
-                  <DialogTitle onClose={handleProjectClose}>
-                    Approval of AHA - 127634
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      <Grid container spacing={4}>
-                        <Grid item md={3} xs={12}>
-                          <Grid
-                          item
-                          md={12}
-                          xs={12}
-                          margin="dense"
-                          className={classes.formLablBox}
-                          >
-                            <Typography variant="h6" className={classes.labelName} style={{paddingBottom: '10px'}}>Please enter your pin</Typography>
-                          </Grid>
-                          <Grid
-                          item
-                          md={12}
-                          xs={12}
-                          className={classes.formBox}
-                          >
-                            <TextField
-                              label="Enter pin"
-                              name="enterpin"
-                              id="enterpin"
-                              defaultValue=""
-                              fullWidth
-                              variant="outlined"
-                              className={classes.formControl}
-                          />
-                          </Grid>
-                        </Grid>
-
-                        {/* <Grid
-                          item
-                          md={12}
-                          xs={12}
-                          className={classes.popBttn}
-                          >
-                            <Button variant="outlined" size="medium" style={{marginLeft: '5px'}} className={classes.custmSubmitBtn}>Submit</Button>
-                            <Button variant="outlined" size="medium" className={classes.custmCancelBtn}>Cancel</Button>
-                          </Grid> */}
-                      </Grid>
-                    </DialogContentText>
-                  </DialogContent>
-                  <Grid item md={5} sm={6} xs={12} className={classes.popUpButtonBig}>
-                    <DialogActions align="left" className="marginB10">
-                      <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={(e) => handelWorkAndPic("work")}>
-                        Submit
-                      </Button>
-                      <Button onClick={handleProjectClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
-                        Cancel
-                      </Button>
-                    </DialogActions> 
-                  </Grid>
-                </Dialog>
-
-                <Dialog
-                  className={classes.projectDialog}
-                  open={open}
                   onClose={handleClose}
                   PaperProps={{
                     style: {
@@ -443,7 +403,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving work responsible person.
+                        You are approving {person}.
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
@@ -461,8 +421,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={(e) => handelWorkAndPic("work")}
-                      >
+                        onClick={(e) => handelWorkAndPic(person)}                      >
                         Ok
                       </Button>
                     </Tooltip>
