@@ -127,8 +127,11 @@ const IncidentDetailsSummary = () => {
   const fetchReportsData = async () => {
     const response = await api.get(`api/v1/incidents/${fkid}/reports/`);
     if (response.status === 200) {
-      await setReportsData(response.data.data.results);
-      fetchNotificationSent(response.data.data.results[0].notifyTo)
+      let results = response.data.data.results
+      await setReportsData(results);
+      if (results.length > 0) {
+        fetchNotificationSent(results[0].notifyTo)
+      }
     }
 
   };
