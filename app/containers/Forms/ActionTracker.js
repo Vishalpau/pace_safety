@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import { Button, Grid } from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -21,12 +22,13 @@ import {
 } from "@material-ui/pickers";
 import axios from "axios";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+
 import apiAction from "../../utils/axiosActionTracker";
 import {
   access_token,
   ACCOUNT_API_URL
 } from "../../utils/constants";
+import { handelCommonObject, fetchReportedBy } from "../../utils/CheckerValue";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -104,35 +106,17 @@ export default function ActionTracker(props) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({ actionTitle: "" });
 
-  const fetchReportedBy = () => {
-    let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
-    let filterReportedByName = []
-    const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
-    const config = {
-      method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/application/${appId}/users/`,
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    };
-    axios(config)
-      .then((response) => {
-        if (response.status === 200) {
-          const result = response.data.data.results;
+  const fetchReported = async () => {
+    try {
+      let commentObjectAction = JSON.parse(localStorage.getItem("commonObject"))["action"]["actionUser"]
+      setReportedByName(commentObjectAction)
+    }
+    catch {
+      let allUsers = await fetchReportedBy()
+      handelCommonObject("commonObject", "action", "actionUser", allUsers)
+      setReportedByName(allUsers)
+    }
 
-          let user = [];
-          user = result;
-          for (var i in result[0].users) {
-            filterReportedByName.push(result[0].users[i]);
-          }
-          setReportedByName(filterReportedByName);
-        }
-      })
-      .catch((error) => {
-      });
   };
 
   const select = async () => {
@@ -172,15 +156,12 @@ export default function ActionTracker(props) {
     }
   };
 
-  let user = ["user1", "user2", "user3", "user4"];
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
 
-
-
   const handelCallBack = async () => {
     await handelUpdate()
-    await fetchReportedBy()
+    await fetchReported()
   }
 
   useEffect(() => {

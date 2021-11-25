@@ -1,5 +1,14 @@
 import apiAction from "./axiosActionTracker"
 import moment from 'moment';
+import axios from "axios";
+
+import {
+    access_token,
+    ACCOUNT_API_URL,
+    companyId
+} from "./constants";
+import { useRef } from "react";
+
 
 export const checkValue = (value) => {
     let noValue = "-"
@@ -195,7 +204,7 @@ export const handelValueToLabel = (value) => {
 }
 
 
-export const handelActionIcare = async (incidentId, apiData, type = "all" , actionContext) => {
+export const handelActionIcare = async (incidentId, apiData, type = "all", actionContext) => {
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -235,3 +244,18 @@ export const handelActionIcare = async (incidentId, apiData, type = "all" , acti
     }
 
 }
+
+
+export const fetchReportedBy = async () => {
+    let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
+    const config = {
+        method: "get",
+        url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/application/${appId}/users/`,
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+    let allData = await axios(config)
+    let allUsers = allData.data.data.results[0]["users"]
+    return allUsers
+};

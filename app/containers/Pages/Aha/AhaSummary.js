@@ -34,7 +34,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
-import { handelActionData, handelActionWithEntity } from "../../../utils/CheckerValue";
+import { handelActionDataAssessment, handelActionWithEntity } from "../../../utils/CheckerValue";
 
 import {
   HEADER_AUTH, SSO_URL
@@ -410,18 +410,8 @@ function AhaSummary() {
 
   const handelActionTracker = async (resultHazard) => {
     let ahaId = localStorage.getItem("fkAHAId")
-
-    let actionData = await handelActionData(ahaId, resultHazard)
-    await setForm(actionData);
-
-    let allAction = await handelActionData(ahaId, [], "title")
-    let temp = []
-    allAction.map((value) => {
-      if (value.enitityReferenceId.split(":")[1] == "00") {
-        temp.push(value)
-      }
-    })
-    setApprovalactionData(temp !== null ? temp : [])
+    const allAction = await handelActionWithEntity(ahaId, "aha:approval");
+    setApprovalactionData(allAction)
   };
   const handelShowData = () => {
 
@@ -1305,8 +1295,9 @@ function AhaSummary() {
                             <Typography>
                               {approvalActionData.map((value) => (
                                 <>
+                                {console.log(value)}
                                   <ActionShow
-                                    action={{ id: value.actionId, number: value.actionNumber }}
+                                    action={{ id: value.id, number: value.actionNumber }}
                                     title={value.actionTitle}
                                     companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                                     projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
@@ -1398,7 +1389,7 @@ function AhaSummary() {
                                 {lessionAction.map((value) => (
                                   <>
                                     <ActionShow
-                                      action={{ id: value.actionId, number: value.actionNumber }}
+                                      action={{ id: value.id, number: value.actionNumber }}
                                       title={value.actionTitle}
                                       companyId={projectData.companyId}
                                       projectId={projectData.projectId}
