@@ -212,8 +212,6 @@ const JobDetails = (props) => {
   const fetchJhaData = async () => {
     const jhaId = handelJhaId()
     if (jhaId !== null) {
-      let fetchPermit = await PickListData(80)
-      setPermitType(fetchPermit)
       const res = await api.get(`/api/v1/jhas/${jhaId}/`)
       const result = res.data.data.results;
       result.id !== undefined ? setUpdate(true) : checkUpdate(false)
@@ -466,6 +464,9 @@ const JobDetails = (props) => {
     }
     await setSubmitLoader(true)
     await handelProjectData()
+    if(form['notifyTo'] == null){
+      form['notifyTo'] = "null"
+    }
     delete form["jhaAssessmentAttachment"]
     if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
@@ -484,9 +485,16 @@ const JobDetails = (props) => {
 
   const classes = useStyles();
 
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
+  const pickListValue = async () => {
+    setPermitType(await pickListValues["80"])
+  }
+
   const handelCallBack = async () => {
     await setLoading(true)
     await fetchJhaData()
+    await pickListValue()
     await fetchTeamData()
     await fetchDepartment()
     await setLoading(false)

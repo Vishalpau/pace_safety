@@ -285,6 +285,7 @@ const ProjectDetails = () => {
       "description": "",
       "workStopCondition": "",
       "department": "",
+      "notifyTo": "null",
       "additionalRemarks": "",
       "classification": "string",
       "wrpApprovalUser": "",
@@ -336,8 +337,15 @@ const ProjectDetails = () => {
     
     await setLoading(true);
     if (form.id) {
+      // if(form['notiftTo'] == null){
+      //   form['notiftTo']  = ""
+      // }
+      // if (form['notifyTo'] === null) {
+      //   form['notifyTo'] = "null"
+      // }
       delete form["ahaAssessmentAttachment"]
       form['updatedBy'] = userId
+      console.log(localStorage.getItem("fkAHAId"))
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
@@ -692,10 +700,8 @@ const ProjectDetails = () => {
     permitType.current = await PickListData(81)
   }
 
-  console.log(permitType.current,"!@#!@#")
 
   const classes = useStyles();
-
   useEffect(() => {
     fetchCallBack()
     checkList()

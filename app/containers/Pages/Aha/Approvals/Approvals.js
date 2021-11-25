@@ -122,6 +122,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
+  const [ error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const user =
@@ -192,6 +193,14 @@ const Approvals = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
+    if(form.notifyTo === null){
+      form['notifyTo'] = "null"
+    }
+    const { error, isValid} = ApprovalValidator(form , actionData)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
     await setSubmitLoader(true)
 
     delete form["ahaAssessmentAttachment"];

@@ -375,6 +375,7 @@ const Assessment = () => {
       projectStructId: JSON.parse(localStorage.getItem('commonObject')).jha.projectStruct
     });
   };
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const classes = useStyles();
 
@@ -383,9 +384,7 @@ const Assessment = () => {
     await handelCheckList();
     await handelJobDetails();
     await handelActionLink();
-    PickListData(78).then((results) => {
-      setRisk(results);
-    });
+    setRisk(pickListValues["78"])
     await handelActionTracker();
     await setLoading(false);
   };

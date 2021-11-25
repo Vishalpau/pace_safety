@@ -482,6 +482,7 @@ function Header(props) {
               labellist[0].breakdownValue = res.data.data.results
               setLabelList(labellist)
               setIsLoading(true)
+              localStorage.setItem('allBreakdown',labellist)
             }
           })
           .catch(err=>console.log(err.message))       

@@ -141,11 +141,8 @@ function App() {
         .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
-            if (!tagetPage) {
+            
               window.location.href = "/"
-            } else {
-              window.location.href = `/app/${tagetPage}`
-            }
           }
         })
         .catch(function (error) {

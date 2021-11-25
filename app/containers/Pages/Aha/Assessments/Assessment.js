@@ -48,11 +48,13 @@ import { useDispatch } from "react-redux";
 import { handelFileName } from "../../../../utils/CheckerValue";
 import axios from "axios";
 import api from "../../../../utils/axios";
-
+import Attachment from "../../../../containers/Attachment/Attachment";
 import { AHA } from "../constants";
 import { keySeq } from "draft-js/lib/DefaultDraftBlockRenderMap";
 import Loader from "../../Loader";
-
+import {
+  HEADER_AUTH, SSO_URL
+} from "../../../../utils/constants";
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -604,6 +606,7 @@ const Assessment = () => {
     setForm(temp);
   };
   const fetchNotificationSent = async () => {
+    console.log('sagar')
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
@@ -616,6 +619,7 @@ const Assessment = () => {
       const res = await api(config);
       if (res.status === 200) {
         const result = res.data.data.results;
+        console.log(result,"LLLLLL");
         setNotificationSentValue(result);
       }
     } catch (error) {}

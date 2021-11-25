@@ -35,7 +35,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
-import { handelActionData, handelActionWithEntity, handelActionDataAssessment } from "../../../utils/CheckerValue";
+import { handelActionData } from "../../../utils/CheckerValue";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
 import { Comments } from "../../pageListAsync";
@@ -139,6 +139,7 @@ function JhaSummary() {
   const [hazard, setHazard] = useState([])
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
   const [loader, setLoader] = useState(false)
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const [formStatus, setFormStatus] = useState({
     assessmentStatus: false,
     approvalStatus: false,
@@ -151,8 +152,7 @@ function JhaSummary() {
     companyId: "",
   })
   const [projectStructName, setProjectStructName] = useState([])
-  const [lessionAction, setLessionAction] = useState([])
-  const [approvalAction, setApprovalAction] = useState([])
+  const [allActionType, setAllActionType] = useState({})
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
@@ -160,6 +160,7 @@ function JhaSummary() {
     const result = res.data.data.results;
     await setAssessment(result)
     await handelWorkArea(result)
+    await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
     await setTeam(resultTeam)
@@ -219,27 +220,41 @@ function JhaSummary() {
     history.push("/app/pages/jha/close-out");
   };
 
-  const [expandedTableDetail, setExpandedTableDetail] = useState('panel5');
-
-  const handleTDChange = (panel) => (event, isExpanded) => {
-    setExpandedTableDetail(isExpanded ? panel : false);
-  };
-
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleHazardExpand = (panel) => (event, isExpanded) => {
-    setExpandedHazard(isExpanded ? panel : false);
-  };
-
   const handelActionTracker = async (resultHazard) => {
+    let actionType = { "jha:hazard": [], "jha:lessionLearned": [], "jha:approval": [] }
     let jhaId = localStorage.getItem("fkJHAId")
-
-    let actionData = await handelActionData(jhaId, resultHazard)
-    await setHazard(actionData)
-
     let allAction = await handelActionData(jhaId, [], "title")
+
+    allAction.map((value) => {
+      if (Object.keys(actionType).includes(value["actionContext"])) {
+        actionType[value["actionContext"]].push(value)
+      }
+    })
+    setAllActionType(actionType)
+    let allHazardActions = actionType["jha:hazard"]
+    let actionHazard = {}
+
+    allHazardActions.map((value) => {
+      let hazardId = value["enitityReferenceId"].split(":")[1]
+      let hazarAction = { "number": value["actionNumber"], "id": value["id"], "title": value["actionTitle"] }
+      if (Object.keys(actionHazard).includes(hazardId)) {
+        actionHazard[hazardId].push(hazarAction)
+      } else {
+        actionHazard[hazardId] = [hazarAction]
+      }
+    })
+
+    resultHazard.map((value) => {
+      if (Object.keys(actionHazard).includes(value["id"].toString())) {
+        value["action"] = actionHazard[value["id"]]
+      }
+    })
+    await setHazard(resultHazard)
+
     let temp = []
     allAction.map((value) => {
       if (value.enitityReferenceId.split(":")[1] == "00") {
@@ -248,18 +263,6 @@ function JhaSummary() {
     })
     setApprovalactionData(temp !== null ? temp : [])
   };
-
-  const handelLessionActionTracker = async () => {
-    let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
-    setLessionAction(allAction)
-  };
-
-  const handelApprovalActions = async () => {
-    let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
-    setApprovalAction(allAction)
-  }
 
   const handelActionLink = async () => {
     const projectId =
@@ -274,10 +277,7 @@ function JhaSummary() {
 
     await setProjectData({ ...projectData, projectId: projectId, companyId: fkCompanyId })
   }
-  const handelShowData = () => {
-
-  }
-
+  const handelShowData = () => { }
   const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const assessmentDataValues = async () => {
@@ -321,15 +321,33 @@ function JhaSummary() {
 
   }
 
-  const handelInputValue = async () => {
-    const project = JSON.parse(localStorage.getItem("projectName"))
-    const projectId = project.projectName.projectId
-    const baseUrl = localStorage.getItem("apiBaseUrl")
-    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
-    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
-    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
-    const apiCondition = documentCondition.data.data.results[0].checklistValues
-  }
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { }
+  };
+
 
   let errorMessage = "Please fill"
   let errorApproval = "approval"
@@ -390,9 +408,6 @@ function JhaSummary() {
     await handelAsessment()
     await handelProjectStructre()
     await handelActionLink()
-    await handelInputValue()
-    await handelLessionActionTracker()
-    await handelApprovalActions()
     await assessmentDataValues()
     await setLoader(false)
   }
@@ -537,22 +552,6 @@ function JhaSummary() {
                                           ))}
                                         </Typography>
                                       </Grid>
-                                      {/* work area */}
-
-                                      {false &&
-                                        <Grid item xs={12} md={6}>
-                                          <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            className={Fonts.labelName}
-                                          >
-                                            Work Area
-                                          </Typography>
-                                          <Typography variant="body" className={Fonts.labelValue}>
-                                            {checkValue(projectStructName["Work Area"])}
-                                          </Typography>
-                                        </Grid>
-                                      }
 
                                       {/* location */}
                                       <Grid item xs={12} md={6}>
@@ -880,7 +879,7 @@ function JhaSummary() {
 
                                                 </Grid>
                                                 <Grid>
-                                                  {value.action.map((valueAction) => (
+                                                  {value.action !== undefined && value.action.map((valueAction) => (
                                                     <ActionShow
                                                       action={valueAction}
                                                       companyId={projectData.companyId}
@@ -1007,9 +1006,11 @@ function JhaSummary() {
                                         >
                                           Notifications sent to
                                         </Typography>
-                                        {checkValue(assessment.notifyTo).split(",").map((value) => (
-                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
-                                        ))}
+
+                                        <Typography variant="body" display="block" className={Fonts.labelValue}>
+                                          {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
+                                        </Typography>
+
                                       </Grid>
                                     </>
                                   </Grid>
@@ -1109,11 +1110,10 @@ function JhaSummary() {
                               <Grid container spacing={3}>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {approvalAction.map((value) => (
+                                    {allActionType["jha:approval"].map((value) => (
                                       <>
-
                                         <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
                                           companyId={projectData.companyId}
                                           projectId={projectData.projectId}
@@ -1159,10 +1159,10 @@ function JhaSummary() {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {lessionAction.map((value) => (
+                                    {allActionType["jha:lessionLearned"].map((value) => (
                                       <>
                                         <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
                                           companyId={projectData.companyId}
                                           projectId={projectData.projectId}

@@ -1,27 +1,19 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import { PapperBlock } from 'dan-components';
+import React, { useEffect, useState } from 'react';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import Link from '@material-ui/core/Link';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import api from "../../../../utils/axios";
-import { useParams, useHistory } from "react-router";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import { makeStyles } from '@material-ui/core/styles';
+import { PapperBlock } from 'dan-components';
 import { Col, Row } from "react-grid-system";
-import { CircularProgress } from '@material-ui/core';
-import FormSideBar from '../../../Forms/FormSideBar';
-import IconButton from '@material-ui/core/IconButton';
+import { useHistory } from "react-router";
+import api from "../../../../utils/axios";
 import { handelActionWithEntity } from "../../../../utils/CheckerValue";
-import { LESSION_LEARNED_FORM} from "../constants";
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import Paper from '@material-ui/core/Paper';
@@ -30,7 +22,7 @@ import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
 import Loader from "../../Loader"
 
 const useStyles = makeStyles((theme) => ({
-// const styles = theme => ({
+  // const styles = theme => ({
   root: {
     width: '100%',
   },
@@ -38,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
   },
-  
+
   labelName: {
     fontSize: '0.88rem',
     fontWeight: '400',
@@ -127,7 +119,7 @@ const LessonsLearned = () => {
 
   const [form, setForm] = useState({})
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
-  const [submitLoader , setSubmitLoader] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
 
@@ -220,10 +212,10 @@ const LessonsLearned = () => {
             >
                 <Grid container spacing={3}>
                     <Grid
-                    item
-                    md={12}
-                    xs={12}
-                    className={classes.formBox}
+                      item
+                      md={12}
+                      xs={12}
+                      className={classes.formBox}
                     >
                         <FormControl component="fieldset">
                             <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?</FormLabel>
@@ -278,29 +270,31 @@ const LessonsLearned = () => {
                   </List>
                 </Grid>
 
-                      <Grid
-                        item
-                        md={12}
-                        xs={12}
-                        className={classes.formBox}
-                      >
-                        <TextField
-                          label="Lessons Learned"
-                          margin="dense"
-                          name="lessonslearned"
-                          id="lessonslearned"
-                          multiline
-                          rows={4}
-                          defaultValue={form.lessonLearntDetails || ""}
-                          fullWidth
-                          variant="outlined"
-                          className={classes.formControl}
-                          onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
-                        />
-                      </Grid>
+                        <Grid
+                          item
+                          md={12}
+                          xs={12}
+                          className={classes.formBox}
+                        >
+                          <TextField
+                            label="Lessons Learned"
+                            margin="dense"
+                            name="lessonslearned"
+                            id="lessonslearned"
+                            multiline
+                            rows={4}
+                            defaultValue={form.lessonLearntDetails || ""}
+                            fullWidth
+                            variant="outlined"
+                            className={classes.formControl}
+                            onChange={(e) => setForm({ ...form, lessonLearntDetails: e.target.value })}
+                          />
+                        </Grid>
 
-                      <Grid item md={6} xs={12}>
-                        <Typography variant="h6" gutterBottom className={classes.labelName}>
+                        <Grid item md={12} xs={12}>
+                          <Typography variant="h6" gutterBottom className={classes.labelName}>
+                            Create an action to share lesson learnt
+                          </Typography>
                           <ActionTracker
                             actionContext="aha:lessionLearned"
                             enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
@@ -312,11 +306,10 @@ const LessonsLearned = () => {
                             createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                             handelShowData={handelActionTracker}
                           />
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} className={classes.createHazardbox}>
-                        {handelActionShow(localStorage.getItem("fkAHAId"))}
-                      </Grid>
+                        </Grid>
+                        <Grid item xs={12} className={classes.createHazardbox}>
+                          {handelActionShow(localStorage.getItem("fkAHAId"))}
+                        </Grid>
 
                       <Grid item xs={12} md={6}>
                   <FormLabel component="legend" className="viewLabel">Work responsible Person (WRP)</FormLabel>
@@ -333,19 +326,19 @@ const LessonsLearned = () => {
             </Grid>
             </Paper></Grid>
 
-            <Grid
-            item
-            md={12}
-            xs={12}
-            >
-                      <div className={classes.loadingWrapper}>
-                <Button
-                  variant="outlined"
-                  onClick={(e) => handelSubmit()}
-                  className={classes.custmSubmitBtn}
-                  style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
                 >
+                  <div className={classes.loadingWrapper}>
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => handelSubmit()}
+                      className={classes.custmSubmitBtn}
+                      style={{ marginLeft: "10px" }}
+                      disabled={submitLoader}
+                    >
 
                   Submit
                 </Button>
