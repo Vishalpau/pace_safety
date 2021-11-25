@@ -210,10 +210,10 @@ const PersonalAndPpeDetails = () => {
     setIsNext(false)
     if (checkPut) {
       try {
-        const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
+        const res = await api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`, ppeList);
         if (res.status === 200) {
           history.push(
-            `/app/incident-management/registration/evidence/additional-details/${id}`
+            `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem("fkincidentId")}`
           );
         }
       } catch (err) {
@@ -267,12 +267,20 @@ const PersonalAndPpeDetails = () => {
   const fetchPpeList = async () => {
     const res = await api.get(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`);
     const result = res.data.data.results;
+    let allPpeQuestion = ["PPE worn properly?", "PPE in good shape?", "PPE proper fit?", "PPE appropriate for task?",
+      "Employee self supervised?", "Supervisor present at site?", "Supervisor provided clear detail of work?",
+      "Supervisor provided detail work package?", "Did supervisor conduct iCare observation?", "Was flag person required for this job?",
+      "Flag person trained/competent?", "Was flag person present?", "Metal on metal incident?", "Was person in the line of fire?"]
+    let PpeQuestions = []
+    result.map((value) => {
+      if (allPpeQuestion.includes(value["question"])) {
+        PpeQuestions.push(value)
+      }
+    })
     let temp = [...ppeData]
-    console.log(result)
     if (result.length > 20) {
       setCheckPut(true)
-      let requiredPpe = result.splice(7, 20)
-      requiredPpe.map((value, index) => {
+      PpeQuestions.map((value, index) => {
         temp[index]["answer"] = value["answer"]
         temp[index]["id"] = value["id"]
       })
