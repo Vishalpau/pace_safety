@@ -139,6 +139,7 @@ function JhaSummary() {
   const [hazard, setHazard] = useState([])
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
   const [loader, setLoader] = useState(false)
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const [formStatus, setFormStatus] = useState({
     assessmentStatus: false,
     approvalStatus: false,
@@ -159,6 +160,7 @@ function JhaSummary() {
     const result = res.data.data.results;
     await setAssessment(result)
     await handelWorkArea(result)
+    await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
     await setTeam(resultTeam)
@@ -318,6 +320,33 @@ function JhaSummary() {
     setProjectStructName(structName)
 
   }
+
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for(let i = 0; i < result.length; i++) {
+          for(let j = 0; j < user.length; j++) {
+            if(user[j] == result[i].id){
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { }
+  };
 
 
   let errorMessage = "Please fill"
@@ -978,9 +1007,10 @@ function JhaSummary() {
                                           Notifications sent to
                                         </Typography>
 
-                                        {checkValue(assessment.notifyTo).split(",").map((value) => (
-                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
-                                        ))}
+                                          <Typography variant="body" display="block" className={Fonts.labelValue}>
+                                          {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
+                                          </Typography>
+                                      
                                       </Grid>
                                     </>
                                   </Grid>

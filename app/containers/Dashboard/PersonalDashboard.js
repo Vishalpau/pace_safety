@@ -242,12 +242,12 @@ function PersonalDashboard(props) {
 
           }
         })
-        let mod = ['incidents','knowledge', 'observations', 'actions','controltower','HSE','compliances','ProjectInfo','assessments','permits']
+        let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
         setCode(temp)
         getModules(apps)
       } catch (error) { }
     }
-    getAllPickList()
+    // getAllPickList()
   }
 
   const getModules = async (apps) => {
@@ -413,7 +413,7 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
-           
+
             // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
@@ -450,7 +450,7 @@ function PersonalDashboard(props) {
 
       });
   };
-  const fetchUserDetails = async (compId, proId,targetPage) => {
+  const fetchUserDetails = async (compId, proId, targetPage) => {
     console.log("welcome user details")
     // window.location.href = `/${tagetPage}`
     try {
@@ -498,7 +498,7 @@ function PersonalDashboard(props) {
                   dispatch(projectName(project[0]))
                 }
                 // fetchPermissionData();
-                history.push('/app/'+targetPage)
+                history.push('/app/' + targetPage)
                 localStorage.removeItem("direct_loading")
               })
 
@@ -566,7 +566,7 @@ function PersonalDashboard(props) {
 
               <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_hse_control_tower" onClick={() => handleClick('controltower')}>
+                  <a className="hse_hse_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
                     <p>Control Tower</p>
                   </a>
                 </div>
@@ -580,7 +580,7 @@ function PersonalDashboard(props) {
                 <div className="hexagontent hexagon_content_box">
                   <a
                     className="hse_incident_reporting_management"
-                    onClick={() => handleClick('incidents')}
+                    onClick={() => history.push('/incidents/')}
                   >
                     <p>Incident Management</p>
                   </a>
@@ -615,14 +615,14 @@ function PersonalDashboard(props) {
 
               <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_observations" onClick={() => handleClick('observations')}>
+                  <a className="hse_observations" onClick={() => history.push('/app/icare')}>
                     <p>iCare</p>
                   </a>
                 </div>
               </div>
               <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
+                  <a className="hse_smart_permit_management" onClick={() => history.push('/app/pages/assesments/xflha')}>
                     <p>Assessments</p>
                   </a>
                 </div>
@@ -659,7 +659,7 @@ function PersonalDashboard(props) {
               </div>
 
 
-          
+
 
             </div>
 

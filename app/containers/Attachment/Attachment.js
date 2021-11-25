@@ -86,7 +86,7 @@ export const Attachment = ({ value }) => {
     } else {
         return (
             <>
-                <IconButton onClick={() => setOpen(true)}>
+           <IconButton onClick={() => setOpen(true)}>
                     <Tooltip title={fileName}>
                         <Avatar
                             alt="image"
@@ -98,6 +98,7 @@ export const Attachment = ({ value }) => {
                 </IconButton>
 
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
+
             </>
         );
     }

@@ -464,6 +464,9 @@ const JobDetails = (props) => {
     }
     await setSubmitLoader(true)
     await handelProjectData()
+    if(form['notifyTo'] == null){
+      form['notifyTo'] = "null"
+    }
     delete form["jhaAssessmentAttachment"]
     if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)

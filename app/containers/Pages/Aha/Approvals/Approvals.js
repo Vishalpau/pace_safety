@@ -21,7 +21,7 @@ import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { APPROVAL_FORM } from "../constants";
 import Loader from "../../../Forms/Loader";
-
+import ApprovalValidator from "../Validator/ApprovalValidation"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -118,6 +118,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
+  const [ error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const user =
@@ -189,6 +190,14 @@ const Approvals = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
+    if(form.notifyTo === null){
+      form['notifyTo'] = "null"
+    }
+    const { error, isValid} = ApprovalValidator(form , actionData)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
     await setSubmitLoader(true)
 
     delete form["ahaAssessmentAttachment"];
@@ -345,13 +354,15 @@ const Approvals = () => {
                     </Tooltip>
                   </DialogActions>
                 </Dialog>
-                <Grid item md={8} xs={12} className={classes.formBox}>
+                {/* <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
 
                     If not approved then create a action.
                   </Typography>
-                </Grid>
+                </Grid> */}
+                {actionData.length == 0 ? <Grid item md={8}>
+                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
                 <Grid item md={6} xs={12}>
                   <Typography variant="h6" gutterBottom className={classes.labelName}>

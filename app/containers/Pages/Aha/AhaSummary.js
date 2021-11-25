@@ -487,9 +487,17 @@ function AhaSummary() {
       };
       const res = await api(config);
       if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
         const result = res.data.data.results;
-        let user = result.filter(name => name.id = notifyTo)
-        await setNotificationSentValue(user);
+        for(let i = 0; i < result.length; i++) {
+          for(let j = 0; j < user.length; j++) {
+            if(user[j] == result[i].id){
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
       }
     } catch (error) { }
   };
@@ -513,7 +521,7 @@ function AhaSummary() {
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
+      title={`Assessment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
       icon="ion-md-list-box"
     >{isLoading ? <>
       <Box paddingBottom={1}>
