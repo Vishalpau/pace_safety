@@ -34,7 +34,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
-import { handelCommonObject } from "../../../utils/CheckerValue";
+import { handelCommonObject, fetchReportedBy } from "../../../utils/CheckerValue";
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 
