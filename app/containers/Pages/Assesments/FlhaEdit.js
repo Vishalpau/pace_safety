@@ -413,7 +413,8 @@ const FlhaDetails = () => {
     "revisionTime": new Date(),
     "rivisionReason": reasonRevison,
     "taskIdentification": "",
-    "version": ""
+    "status": "Active",
+    "version": `${parseFloat(version[version.length - 1]) + 0.1}`
   }
 
   const [flhaForm, setFlhaForm] = useState({})
@@ -602,6 +603,7 @@ const FlhaDetails = () => {
     handelTaskPerVersion(task)
     let allVersion = task["versions"]
     setVersion(allVersion)
+    console.log(allVersion)
     // taskForm.splice(0, 1)
     let temp = [...taskForm]
   }
@@ -805,6 +807,13 @@ const FlhaDetails = () => {
     return confirmationAttahment
   }
 
+  const handelValue = (value) => {
+    let flhaValue = ""
+    if (value !== undefined) {
+      flhaValue = value
+    }
+    return flhaValue
+  }
 
   const handelVisualTaskSubmit = async () => {
 
@@ -823,18 +832,9 @@ const FlhaDetails = () => {
   }
 
   const handelTaskSubmit = async () => {
-    taskForm.map((valueTask) => {
-      valueTask["version"] = parseInt(version[version.length - 1]) + 0.1
-    })
+    taskForm[0]["version"] = `${parseFloat(version[version.length - 1]) + 0.1}`
     const res = await api.post(`/api/v1/flhas/${flhaNumber}/criticaltasks/`, taskForm).then(() => handelVisualTaskSubmit()).catch()
-  }
-
-  const handelValue = (value) => {
-    let flhaValue = ""
-    if (value !== undefined) {
-      flhaValue = value
-    }
-    return flhaValue
+    console.log(taskForm)
   }
 
   const handelFlhaSubmit = async () => {
