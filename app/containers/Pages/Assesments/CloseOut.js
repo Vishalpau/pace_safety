@@ -18,6 +18,7 @@ import api from '../../../utils/axios';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
+import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -106,7 +107,7 @@ const CloseOut = (props) => {
   });
 
   const [loading, setLoading] = useState(false)
-
+  const { id } = props.match.params;
   const setFlhaDetails = async () => {
     const { id } = props.match.params;
     const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
@@ -130,7 +131,7 @@ const CloseOut = (props) => {
       jobTitle: flha.jobTitle,
       jobDetails: flha.jobDetails,
       fkCompanyId: flha.fkCompanyId,
-      fkProjectId: flha.fkProjectId
+      fkProjectId: flha.fkProjectId,
     })
   };
 
@@ -142,9 +143,12 @@ const CloseOut = (props) => {
   };
 
   const handleFormSubmit = async () => {
-    const { id } = props.match.params;
     const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
-    history.push('/app/pages/assesments/flhasummary/' + id);
+    if (jobForm.creatingIncident === "Yes") {
+      history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
+    } else {
+      history.push('/app/pages/assesments/flhasummary/' + id);
+    }
   };
 
   const handelCallBack = async () => {
@@ -206,19 +210,23 @@ const CloseOut = (props) => {
 
                 </Grid>
 
-                <Grid item md={12} xs={12}>
-                  <FormLabel component="legend" className="checkRadioLabel">If yes, explain</FormLabel>
-                  <TextField
-                    variant="outlined"
-                    id="immediate-actions"
-                    multiline
-                    rows="4"
-                    label="Enter the details"
-                    className={classes.fullWidth}
-                    value={jobForm.workerRemarks}
-                    onChange={(e) => handleJobFormChange(e, 'workerRemarks')}
-                  />
-                </Grid>
+                {jobForm.workerWorking === "Yes" ?
+                  <Grid item md={12} xs={12}>
+                    <FormLabel component="legend" className="checkRadioLabel">If yes, explain</FormLabel>
+                    <TextField
+                      variant="outlined"
+                      id="immediate-actions"
+                      multiline
+                      rows="4"
+                      label="Enter the details"
+                      className={classes.fullWidth}
+                      value={jobForm.workerRemarks}
+                      onChange={(e) => handleJobFormChange(e, 'workerRemarks')}
+                    />
+                  </Grid>
+                  :
+                  null
+                }
 
                 <Grid item md={6} sm={6} xs={12}>
                   <FormControl component="fieldset">
@@ -260,19 +268,23 @@ const CloseOut = (props) => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={12} xs={12}>
-                  <FormLabel component="legend" className="checkRadioLabel">If Yes, please provide details</FormLabel>
-                  <TextField
-                    variant="outlined"
-                    id="jobCompletionRemarks"
-                    multiline
-                    rows="4"
-                    label="Enter the details"
-                    value={jobForm.jobCompletionRemarks}
-                    onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
-                    className={classes.fullWidth}
-                  />
-                </Grid>
+                {jobForm.anyIncidents === "Yes" ?
+                  <Grid item md={12} xs={12}>
+                    <FormLabel component="legend" className="checkRadioLabel">If Yes, please provide details</FormLabel>
+                    <TextField
+                      variant="outlined"
+                      id="jobCompletionRemarks"
+                      multiline
+                      rows="4"
+                      label="Enter the details"
+                      value={jobForm.jobCompletionRemarks}
+                      onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
+                      className={classes.fullWidth}
+                    />
+                  </Grid>
+                  :
+                  null
+                }
 
                 <Grid item md={6} sm={6} xs={12}>
                   <FormControl component="fieldset">
@@ -301,9 +313,9 @@ const CloseOut = (props) => {
 
               <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
                 <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleFormSubmit()}>
-                  Submit
+                  Closeout
                 </Button>
-                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
+                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.push('/app/pages/assesments/flhasummary/' + id)}>
                   Cancel
                 </Button>
               </Grid>
