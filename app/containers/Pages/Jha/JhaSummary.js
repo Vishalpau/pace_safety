@@ -1112,6 +1112,7 @@ function JhaSummary() {
                                   <Typography className={classes.aLabelValue}>
                                     {allActionType["jha:approval"].map((value) => (
                                       <>
+                                        {/* {console.log(value, 'here')} */}
                                         <ActionShow
                                           action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
