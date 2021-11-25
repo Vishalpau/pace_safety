@@ -67,6 +67,8 @@ import { connect } from "react-redux";
 import { projectName, company } from '../../../redux/actions/initialDetails';
 import { useDispatch } from 'react-redux';
 import axios from "axios";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -692,6 +694,7 @@ function xflha(props) {
     } else {
       fetchData();
     }
+    allPickListDataValue()
   }, [props.projectName.projectName]);
 
   return (
@@ -863,8 +866,8 @@ function xflha(props) {
                                           gutterBottom
                                           className={classes.listingLabelValue}
                                         > */}
-                                          {/* {item[1]["incidentReportedByName"]} */}
-                                          {/* Not found
+                                      {/* {item[1]["incidentReportedByName"]} */}
+                                      {/* Not found
                                         </Typography>
                                       </Grid> */}
                                       {/* <Grid item md={3} sm={6} xs={12}>
