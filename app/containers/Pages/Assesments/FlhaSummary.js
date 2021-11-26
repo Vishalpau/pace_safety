@@ -253,7 +253,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={6}>
                   <FormLabel component="legend">Reference</FormLabel>
                   <Typography>
-                    {flha.referenceNumber}
+                    {(flha.referenceNumber) ? flha.referenceNumber : '-'}
 
                   </Typography>
                 </Grid>
@@ -262,7 +262,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={12}>
                   <FormLabel component="legend">Job description</FormLabel>
                   <Typography>
-                    {(flha.jobDetails) ? flha.jobDetails : 'NA'}
+                    {(flha.jobDetails) ? flha.jobDetails : '-'}
 
                   </Typography>
                 </Grid>
@@ -298,7 +298,7 @@ class SimpleTabs extends React.Component {
               {/* {value === 0
 			&& ( */}
 			  <TabContainer className={classes.paddZero}>
-            <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} />
+            <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
 			  </TabContainer>
 			{/* )} */}
               {/* {value === 1 && <TabContainer>Item Two</TabContainer>}
@@ -410,15 +410,17 @@ class SimpleTabs extends React.Component {
                       <ListItemIcon>
                         <HistoryIcon />
                       </ListItemIcon>
+                      {console.log(this.state,'w')}
                       <Link
+                      
                       // disabled={true}
-                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id}
+                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
                       </Link>
                     </ListItem>
-                    <ListItem
+                    {/* <ListItem
                       disabled={true}
                       button
                     >
@@ -434,8 +436,8 @@ class SimpleTabs extends React.Component {
 
                         <ListItemText primary="Comments" />
                       </Link>
-                    </ListItem>
-                    <Divider />
+                    </ListItem> */}
+                    {/* <Divider />
                     <ListItem
                     disabled={true}
                       button
@@ -450,7 +452,7 @@ class SimpleTabs extends React.Component {
                         <ListItemText primary="Activity History" />
                       </Link>
                     </ListItem>
-                    <Divider />
+                    <Divider /> */}
                     {/* <ListItem
 				button
 				>
@@ -479,7 +481,7 @@ class SimpleTabs extends React.Component {
 				</Link>
 				</ListItem>
 				<Divider /> */}
-                    <ListItem disabled={true}>
+                    <ListItem>
                       <ListItemIcon>
                         <CloseIcon />
                       </ListItemIcon>
@@ -491,7 +493,7 @@ class SimpleTabs extends React.Component {
                         <ListItemText primary="Close out" />
                       </Link>
                     </ListItem>
-                    <ListItem
+                    {/* <ListItem
                       disabled={true}
                       button
                     >
@@ -504,8 +506,8 @@ class SimpleTabs extends React.Component {
                       >
                         <ListItemText primary="Print" />
                       </Link>
-                    </ListItem>
-                    <ListItem
+                    </ListItem> */}
+                    {/* <ListItem
                       disabled={true}
                       button
                     >
@@ -518,7 +520,7 @@ class SimpleTabs extends React.Component {
                       >
                         <ListItemText disabled secondary="Share" />
                       </Link>
-                    </ListItem>
+                    </ListItem> */}
                   </List>
                 </Box>
               </div>

@@ -86,6 +86,13 @@ import { CircularProgress } from "@material-ui/core";
 import { getPicklistvalues } from '../../../utils/helper';
 import { appapi, setApiUrl } from '../../../utils/axios';
 import { appendFileSync } from 'fs';
+import {
+
+  KeyboardDateTimePicker,
+
+} from '@material-ui/pickers';
+import moment from "moment";
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -409,6 +416,9 @@ const useStyles = makeStyles((theme) => ({
       fontFamily: 'Montserrat-SemiBold !important',
     },
   },
+  paddL5: {
+    paddingLeft: '5px !important',
+  },
 }));
 // Top 100 films as rated by IMDb users.
 
@@ -427,8 +437,7 @@ const FlhaDetails = (props) => {
   const [value, setValue] = React.useState('N/A');
   const [error, setError] = React.useState({});
   const handleChange = (event) => {
-    alert(event.target.value)
-    setJobForm({...jobForm,Checked:!jobForm.Checked});
+    setJobForm({ ...jobForm, Checked: !jobForm.Checked });
   };
   const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
   const onClick = () => setRadioUnplanned(true);
@@ -440,6 +449,7 @@ const FlhaDetails = (props) => {
   const [loading, setLoading] = useState(false);
   const [hazardtype, setHazardType] = React.useState([])
   const [hazardValue, setHazardValue] = React.useState('')
+  const [notifyToValue, setNotifyToValue] = React.useState('')
 
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -451,7 +461,7 @@ const FlhaDetails = (props) => {
       bytes
     </li>
   ));
-  const [departNmae, setDepartName] = React.useState('');
+  const [departmentList, setDepartmentList] = React.useState('');
 
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState('paper');
@@ -500,7 +510,7 @@ const FlhaDetails = (props) => {
     source: "Web",
     vendor: "",
     vendorReferenceId: "",
-    Checked:false
+    Checked: false
   });
 
   const [contractors, setContractors] = React.useState([]);
@@ -577,24 +587,22 @@ const FlhaDetails = (props) => {
       'visualConfirmationAttachment': ''
     }
   ])
-  const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
-    console.log(jobForm);
+  // const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
+  //   console.log(jobForm);
 
-    const temp = { ...jobForm };
-    const { value } = e.target;
-
-    console.log({ value });
-    if (autovalue != undefined) {
-      temp[fieldname] = e.target.textContent;
-    } else {
-      temp[fieldname] = value;
-    }
-
-
-    console.log({ temp });
-    await setJobForm(temp);
-    // await console.log({jobForm: jobForm})
-  };
+  //   const temp = { ...jobForm };
+  //   setDepartmentList(e.target)
+  //   const { value } = e.target;
+  //   console.log({ value });
+  //   if (autovalue != undefined) {
+  //     temp[fieldname] = e.target.textContent;
+  //   } else {
+  //     temp[fieldname] = value;
+  //   }
+  //   console.log({ temp });
+  //   await setJobForm(temp);
+  //   // await console.log({jobForm: jobForm})
+  // };
 
   const handleJobConfirmationFormChange = async (e, fieldname, index) => {
     // alert(fieldname)
@@ -686,7 +694,7 @@ const FlhaDetails = (props) => {
 
 
   const handleJobFormSubmit = async () => {
-    const { error, isValid } = validate(jobForm,selectDepthAndId);
+    const { error, isValid } = validate(jobForm, selectDepthAndId);
     if (isValid) {
       await createFlha();
     } else {
@@ -703,19 +711,13 @@ const FlhaDetails = (props) => {
   const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const createFlha = async () => {
+    // jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
+
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     const formDataPost = new FormData();
-    // const data = { ...jobForm };
-    // console.log({ jobform: data });
-    // data.fkCompanyId = fkCompanyId;
-    // data.fkProjectId = fkProjectId;
-    // data.fkProjectStructureIds = fkProjectStructureId;
-    // data.createdBy = fkUserId;
-    // data.attachment = (acceptedFiles) ? acceptedFiles[0] : null;
-    // data.attachment = jobForm.attachment
     formDataPost.append('fkCompanyId', fkCompanyId);
     formDataPost.append('fkProjectId', fkProjectId);
     formDataPost.append('jobTitle', jobForm.jobTitle);
@@ -732,21 +734,6 @@ const FlhaDetails = (props) => {
     formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
     formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
     formDataPost.append('referenceNumber', jobForm.referenceNumber);
-    // formDataPost.append('Checked', jobForm.Checked);
-
-    // formDataPost.append('flhaStage', jobForm.flhaStage);
-    // console.log({ jobformUpdated: data });
-
-    // const formData = new FormData();
-    // // formData.append(data)
-    // console.log({ formData });
-
-    // for (const key in data) {
-    //   formData.append(key, data[key]);
-    // }
-    // console.log({ formData1111: formData });
-    // return;
-    // return;
     await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
@@ -837,7 +824,7 @@ const FlhaDetails = (props) => {
     getSupervisors();
     getFieldContractors();
     getDepartments();
-    // PickList()
+    handelNotifyToValues();
     getPicklistvalues(83, setHazardType)
 
     if (open) {
@@ -861,6 +848,7 @@ const FlhaDetails = (props) => {
   };
 
   const handleDepartmentSelection = async (e, value) => {
+
     getJobTitles(value.id);
   };
 
@@ -900,6 +888,10 @@ const FlhaDetails = (props) => {
         dateTimeFlha: new Date().toISOString(),
         permitToWork: jobForm.permitToWork,
         jobTitleImage: selectedJobTitle.jobTitleImage,
+        firstAid: jobForm.firstAid,
+        jhaReviewed: jobForm.jhaReviewed,
+        accessToJobProcedure: jobForm.accessToJobProcedure,
+        Checked: jobForm.Checked
       }
     );
     console.log({ jobtitleseleted: jobForm });
@@ -971,7 +963,7 @@ const FlhaDetails = (props) => {
       temp[taskIndex].hazards[key].riskRatingColour = '#990000';
     } else {
       // alert("high")
-      temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Intoreable`;
+      temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Intolerable`;
       temp[taskIndex].hazards[key].riskRatingColour = '#ff0000';
     }
 
@@ -984,7 +976,35 @@ const FlhaDetails = (props) => {
     setJobForm({ ...jobForm, attachment: e.target.files[0] })
     // setFileName(e.target.files[0].name)
   };
+  const handelNotifyToValues = async () => {
+    let allRoles = {}
+    const config = {
+    method: 'get',
+    url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/projects/${fkProjectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+    headers: HEADER_AUTH,
+    };    
+    const notify = await api(config);    
+    if (notify.status === 200) {    
+    const result = notify.data.data.results;    
+    result.map((value) => {   
+    allRoles[value["id"]] = value["roleName"]
+    })   
+    setNotifyToValue(allRoles);   
+    }  
+    }
 
+  const handelNotifyTo = async (e, value) => {
+    let temp = { ...jobForm }
+    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
+
+    if (e.target.checked === false) {
+    const newData = temp.notifyTo.filter((item) => item !== value);
+    temp["notifyTo"] = newData
+    } else {
+    temp["notifyTo"].push(value)
+    }
+    setJobForm(temp)
+    };
 
   return (
     <div>
@@ -1032,38 +1052,31 @@ const FlhaDetails = (props) => {
               </svg> Job information
             </Typography>
           </Grid>
-
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <TextField
-                    // error={error.departNmae.departmentName}
-                    multiline
-                    variant="outlined"
-                    rows="1"
-                    // id="Department"
-                    label="Department"
-                    className="formControl"
-                    // value={departNmae.departmentName}
-                    value={(departNmae.departmentName != undefined) ? departNmae.departmentName : ''}
-                  />
-                  {/* <div style={{ color: "red" }}>{error.jobTitle}</div> */}
-                </Grid>
+
                 <Grid item xs={9}>
                   <TextField
-                    error={error.jobTitle}
+                    error={jobForm.jobTitle ? '' : error.jobTitle}
                     multiline
                     variant="outlined"
                     rows="1"
                     id="JobTitle"
                     label="*Title"
                     className="formControl"
-                    onChange={(e) => handleJobFormChange(e, 'jobTitle')}
+                    // onChange={(e) => handleJobFormChange(e, 'jobTitle')}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        jobTitle: e.target.value,
+                      });
+                    }}
                     value={jobForm.jobTitle}
                   />
-                  <div style={{ color: "red" }}>{error.jobTitle}</div>
+                  <div style={{ color: "red" }}>{jobForm.jobTitle ? '' : error.jobTitle}</div>
                 </Grid>
+
 
                 <Grid item xs={2} className="formFieldBTNSection" align="center"><Button variant="outlined" onClick={handleClickOpen('paper')}>Select job </Button></Grid>
                 <Grid item xs={1}><img src={jobForm.jobTitleImage} height={58} alt="" className={classes.mttopSix} /></Grid>
@@ -1082,17 +1095,17 @@ const FlhaDetails = (props) => {
                     <Box padding={2}>
                       <Grid container spacing={3}>
                         <Grid item md={6} sm={6} xs={12}>
-                          <div className={classes.spacer}>
-                            <Autocomplete
-                              style={{ minWidth: 500 }}
-                              id="Department"
-                              className={classes.mtTen}
-                              options={departments}
-                              getOptionLabel={(option) => option.departmentName}
-                              renderInput={(params) => <TextField {...params} label="Department" className="formControl" variant="outlined" />}
-                              onChange={(e, value) => { handleDepartmentSelection(e, value); setDepartName(value) }}
-                            />
-                          </div>
+                          {/* <div className={classes.spacer}> */}
+                          <Autocomplete
+                            style={{ minWidth: 500 }}
+                            id="Department"
+                            className="formControl"
+                            options={departments}
+                            getOptionLabel={(option) => option.departmentName}
+                            renderInput={(params) => <TextField {...params} label="Department" className="formControl" variant="outlined" />}
+                            onChange={(e, value) => { handleDepartmentSelection(e, value); setDepartmentList(value) }}
+                          />
+                          {/* </div> */}
                         </Grid>
                       </Grid>
                     </Box>
@@ -1108,6 +1121,19 @@ const FlhaDetails = (props) => {
                               {jobTitle.jobTitle}
                             </Grid>
                           )) : ''}
+                          {departmentList ?
+                            <Grid item xs={3} className={classes.paddL5}>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddCircleIcon />}
+                                className={classes.button}
+                                onClick={() => setOpen(false)}
+                              >
+                                New job
+                              </Button>
+                            </Grid>
+                            : ''}
                         </Grid>
                       </DialogContentText>
                     </DialogContent>
@@ -1121,7 +1147,7 @@ const FlhaDetails = (props) => {
                 >
                   <TextField
                     label="*Job description"
-                    error={error.jobDetails}
+                    error={jobForm.jobDetails ? '' : error.jobDetails}
                     //margin="dense"
                     name="jobdescription"
                     id="description"
@@ -1131,11 +1157,27 @@ const FlhaDetails = (props) => {
                     fullWidth
                     variant="outlined"
                     className="formControl"
-                    onChange={(e) => handleJobFormChange(e, 'jobDetails')}
+                    // onChange={(e) => handleJobFormChange(e, 'jobDetails')}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        jobDetails: e.target.value,
+                      });
+                    }}
                     value={jobForm.jobDetails}
                   />
-                  <div style={{ color: "red" }}>{error.jobDetails}</div>
+                  <div style={{ color: "red" }}>{jobForm.jobDetails ? '' : error.jobDetails}</div>
 
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    multiline
+                    variant="outlined"
+                    rows="1"
+                    label="Department"
+                    className="formControl"
+                    value={(departmentList.departmentName != undefined) ? departmentList.departmentName : ''}
+                  />
                 </Grid>
               </Grid>
             </Paper>
@@ -1235,14 +1277,11 @@ const FlhaDetails = (props) => {
                                       variant="outlined"
                                       rows="3"
                                       id="hazards"
-                                      // label="*Hazards"
                                       className={classes.fullWidth}
-                                      // defaultValue={item.hazard}
                                       value={(item.hazard != undefined) ? item.hazard : hazardValue}
                                       disabled={(item.hazard != undefined) ? item.hazard : ''}
                                       onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazards'), setHazardType }
                                       }
-                                    // InputLabelProps={{ shrink: true }}
                                     >
                                       {hazardtype.map((value) => <MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
 
@@ -1265,8 +1304,9 @@ const FlhaDetails = (props) => {
                                   {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
                                 </Grid>
                                 <Grid container spacing={2}>
-                                  <Grid item sm={12} xs={12}>
-                                    {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
+                                  {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
+
+                                    <Grid item sm={12} xs={12}>
                                       <TextField
                                         multiline
                                         variant="outlined"
@@ -1277,23 +1317,25 @@ const FlhaDetails = (props) => {
                                         value={(item.control != undefined) ? item.control : ''}
                                         onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
                                         }
-                                      /></> : null}
+                                      />
 
-                                    <div className={classes.spacer}>
-                                      <FormControl component="fieldset">
-                                        <FormLabel component="legend">
-                                          Has this control been put in place?
-                                        </FormLabel>
-                                        <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
-                                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                                          <FormControlLabel value="NA" control={<Radio />} label="NA" />
-                                        </RadioGroup>
-                                      </FormControl>
-                                    </div>
-                                  </Grid>
+                                      <div className={classes.spacer}>
+                                        <FormControl component="fieldset">
+                                          <FormLabel component="legend">
+                                            Has this control been put in place?
+                                          </FormLabel>
+                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
+                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                            <FormControlLabel value="No" control={<Radio />} label="No" />
+                                            <FormControlLabel value="NA" control={<Radio />} label="NA" />
+                                          </RadioGroup>
+                                        </FormControl>
+                                      </div>
+                                    </Grid>
+                                  </> : null}
+
                                 </Grid>
-                                {item.controlStatus === "Yes" || item.controlStatus === "" || item.controlStatus === undefined ? <>
+                                {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
                                   <Grid container spacing={1}>
                                     <Grid item md={4} sm={4} xs={12}>
                                       <FormControl
@@ -1377,7 +1419,30 @@ const FlhaDetails = (props) => {
 
           <Grid item md={12} sm={12} xs={12}>
             <Grid container spacing={3}>
-              <Grid item md={4} sm={4} xs={12}>
+              <Grid item md={6} sm={6} xs={6}>
+
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
+                  className="formControl"
+                >
+                  <KeyboardDateTimePicker
+                    label="Date & time"
+                    value={jobForm.dateTimeFlha || null}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        dateTimeFlha: moment(e).toISOString(),
+                      });
+                    }}
+                    InputProps={{ readOnly: true }}
+                    format="yyyy/MM/dd HH:mm"
+                    inputVariant="outlined"
+                    disableFuture="true"
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+              {/* <Grid item md={4} sm={4} xs={12}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker
                     //className={classNames(classes.formControl, classes.heightDate)}
@@ -1392,8 +1457,8 @@ const FlhaDetails = (props) => {
                     }}
                   />
                 </MuiPickersUtilsProvider>
-              </Grid>
-              <Grid item md={4} sm={4} xs={12}>
+              </Grid> */}
+              {/* <Grid item md={4} sm={4} xs={12}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <div className="picker">
                     <TimePicker
@@ -1408,7 +1473,7 @@ const FlhaDetails = (props) => {
                   </div>
 
                 </MuiPickersUtilsProvider>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Grid>
           <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
@@ -1534,12 +1599,17 @@ const FlhaDetails = (props) => {
                 >
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className="checkRadioLabel">Is permit to work done?*</FormLabel>
-                    <RadioGroup row aria-label="permitToWork" name="permitToWork" value={jobForm.permitToWork} onChange={(e) => handleJobFormChange(e, 'permitToWork')}>
+                    <RadioGroup row aria-label="permitToWork" name="permitToWork" value={jobForm.permitToWork} onChange={(e) => {
+                            setJobForm({
+                              ...jobForm,
+                              permitToWork: e.target.value,
+                            });
+                          }}>
                       <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="no" control={<Radio />} label="No" />
                       <FormControlLabel value="na" control={<Radio />} label="NA" />
                     </RadioGroup>
-                    <div style={{ color: "red" }}>{error.permitToWork}</div>
+                    <div style={{ color: "red" }}>{jobForm.permitToWork ? '' : error.permitToWork}</div>
                   </FormControl>
                 </Grid>
                 {jobForm.permitToWork === "yes" || jobForm.permitToWork === "" || jobForm.permitToWork === undefined ? <>
@@ -1555,8 +1625,14 @@ const FlhaDetails = (props) => {
                           rows="1"
                           id="permitNumber"
                           label="Enter permit number"
-                          value={jobForm.permitNumber}
-                          onChange={(e) => handleJobFormChange(e, 'permitNumber')}
+                          value={jobForm.permitToWorkNumber}
+                          // onChange={(e) => handleJobFormChange(e, 'permitToWorkNumber')}
+                          onChange={(e) => {
+                            setJobForm({
+                              ...jobForm,
+                              permitToWorkNumber: e.target.value,
+                            });
+                          }}
                           className="formControl"
                         />
                       </Grid>
@@ -1569,7 +1645,13 @@ const FlhaDetails = (props) => {
                           label="Permit job reference"
                           className="formControl"
                           value={jobForm.referenceNumber}
-                          onChange={(e) => handleJobFormChange(e, 'referenceNumber')}
+                          // onChange={(e) => handleJobFormChange(e, 'referenceNumber')}
+                          onChange={(e) => {
+                            setJobForm({
+                              ...jobForm,
+                              referenceNumber: e.target.value,
+                            });
+                          }}
                         />
                       </Grid>
                     </Grid>
@@ -1578,6 +1660,9 @@ const FlhaDetails = (props) => {
               </Grid>
             </Paper>
           </Grid>
+
+
+
 
           {/* 
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1643,6 +1728,29 @@ const FlhaDetails = (props) => {
                   </Grid>
                 </Paper>
               </Grid> */}
+
+          <Grid container spacing={3}>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
+              <FormGroup className={classes.radioInline}>
+                {Object.entries(notifyToValue).map(([key, value]) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={value}
+                    // checked={jobForm["notifyTo"].includes(key)}
+                    onChange={async (e) => handelNotifyTo(e, key)}
+                  />
+                ))}
+              </FormGroup>
+            </Grid>
+          </Grid>
+
+
+
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
@@ -1661,13 +1769,19 @@ const FlhaDetails = (props) => {
                   md={5}
                   xs={12}
                 >
+
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className="checkRadioLabel">*Is a First Aid/Medical Aid present for your shift?</FormLabel>
-                    <RadioGroup row aria-label="firstAid" name="firstAid" value={jobForm.firstAid} onChange={(e) => handleJobFormChange(e, 'firstAid')}>
+                    <RadioGroup row aria-label="firstAid" name="firstAid" value={jobForm.firstAid} onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        firstAid: e.target.value,
+                      });
+                    }}>
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
-                    <div style={{ color: "red" }}>{error.firstAid}</div>
+                    <div style={{ color: "red" }}>{jobForm.firstAid ? '' : error.firstAid}</div>
                   </FormControl>
                 </Grid>
                 <Grid
@@ -1683,7 +1797,13 @@ const FlhaDetails = (props) => {
                     label="Emergency phone number"
                     className="formControl"
                     value={jobForm.emergencyPhoneNumber}
-                    onChange={(e) => handleJobFormChange(e, 'emergencyPhoneNumber')}
+                    // onChange={(e) => handleJobFormChange(e, 'emergencyPhoneNumber')}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        emergencyPhoneNumber: e.target,
+                      });
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -1695,11 +1815,16 @@ const FlhaDetails = (props) => {
                 >
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className="checkRadioLabel">*Has the JSA been reviewed?</FormLabel>
-                    <RadioGroup row aria-label="jhaReviewed" name="jhaReviewed" value={jobForm.jhaReviewed} onChange={(e) => handleJobFormChange(e, 'jhaReviewed')}>
+                    <RadioGroup row aria-label="jhaReviewed" name="jhaReviewed" value={jobForm.jhaReviewed} onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        jhaReviewed: e.target.value,
+                      });
+                    }}>
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
-                    <div style={{ color: "red" }}>{error.jhaReviewed}</div>
+                    <div style={{ color: "red" }}>{jobForm.jhaReviewed ? '' : error.jhaReviewed}</div>
                   </FormControl>
                 </Grid>
                 <Grid
@@ -1715,7 +1840,13 @@ const FlhaDetails = (props) => {
                     label="Enter the evacuation/assembly point"
                     className="formControl"
                     value={jobForm.evacuationPoint}
-                    onChange={(e) => handleJobFormChange(e, 'evacuationPoint')}
+                    // onChange={(e) => handleJobFormChange(e, 'evacuationPoint')}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        evacuationPoint: e.target.value,
+                      });
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -1727,11 +1858,16 @@ const FlhaDetails = (props) => {
                 >
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className="checkRadioLabel">*Do you have access to job procedure?</FormLabel>
-                    <RadioGroup row aria-label="accessToJobProcedure" name="accessToJobProcedure" value={jobForm.accessToJobProcedure} onChange={(e) => handleJobFormChange(e, 'accessToJobProcedure')}>
+                    <RadioGroup row aria-label="accessToJobProcedure" name="accessToJobProcedure" value={jobForm.accessToJobProcedure} onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        accessToJobProcedure: e.target.value,
+                      });
+                    }}>
                       <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
-                    <div style={{ color: "red" }}>{error.accessToJobProcedure}</div>
+                    <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div>
                   </FormControl>
                 </Grid>
                 <Grid
@@ -1747,7 +1883,13 @@ const FlhaDetails = (props) => {
                     label="Enter the location details"
                     className="formControl"
                     value={(jobForm.location) ? (jobForm.location) : ''}
-                    onChange={(e) => handleJobFormChange(e, 'location')}
+                    // onChange={(e) => handleJobFormChange(e, 'location')}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        location: e.target.value,
+                      });
+                    }}
                   />
                 </Grid>
               </Grid>
@@ -1773,7 +1915,7 @@ const FlhaDetails = (props) => {
                 )}
                 label="I pledge that I will always be responsible for my safety and the safety of people around me *"
               />
-                                  <div style={{ color: "red" }}>{error.Checked}</div>
+              <div style={{ color: "red" }}>{jobForm.Checked ? '' : error.Checked}</div>
 
             </FormGroup>
           </Grid>
