@@ -36,6 +36,7 @@ import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
 import { handelCommonObject, fetchReportedBy } from "../../../utils/CheckerValue";
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -342,7 +343,7 @@ function Jha(props) {
 
                       <Grid item xs={2} justifyContent="flex-end">
                         <Chip
-                          avatar={<Avatar src={item[1]["avatar"]} />}
+                          avatar={<Avatar src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} />}
                           label={item[1]["username"]}
                         />
                       </Grid>
