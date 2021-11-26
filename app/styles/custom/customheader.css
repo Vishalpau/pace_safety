@@ -950,29 +950,29 @@ html .custmCancelBtn {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 20px !important;
 }
 
 .homeMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/homeMenuIcon.png) no-repeat 10% -4%;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -40px -18px;
   margin-right: 5px;
 }
 .incident-managementMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/observationMenuIcon.png) no-repeat 10% -4%;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -108px -18px;
   margin-right: 5px;
 }
 .assessmentsMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/assessmentMenuIcon.png) no-repeat 10% -4%;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -320px -18px;
   margin-right: 5px;
 }
 .icareMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/observationMenuIcon.png) no-repeat 10% -4%;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -248px -18px;
   margin-right: 5px;
 }
 .controlTowerMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/controlTowerMenuIcon.png) no-repeat 10% 2%;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -945px -18px;
   margin-right: 5px;
 }
 
@@ -1003,20 +1003,72 @@ html .custmCancelBtn {
 .assessmentsMenu:hover .MuiListItemIcon-root,
 .assessmentsMenu:hover .MuiListItemText-root span,
 .assessmentsMenu.selectmenu:hover .MuiListItemText-root span,
-.assessmentsMenu.selectmenu .MuiListItemText-root span {
-  background-position-y: 102%;
-  color: #ff8533;
-  font-weight: 700;
-}
+.assessmentsMenu.selectmenu .MuiListItemText-root span,
 .controlTowerMenu.selectmenu .MuiListItemIcon-root,
 .controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemText-root span,
 .controlTowerMenu.selectmenu:hover .MuiListItemText-root span,
-.controlTowerMenu.selectmenu .MuiListItemText-root span {
-  background-position-y: 102%;
+.controlTowerMenu.selectmenu .MuiListItemText-root span{
+  background-position-y: -132px;
   color: #ff8533;
   font-weight: 700;
+}
+
+
+
+/* Left sub menu custom style */
+.flhaMenu, .jhaMenu, .ahaMenu {
+  position: relative;
+}
+.flhaMenu .MuiTypography-colorTextSecondary,
+.jhaMenu .MuiTypography-colorTextSecondary,
+.ahaMenu .MuiTypography-colorTextSecondary{
+  position: absolute;
+  left: 37px;
+  top: 10px;
+}
+.flhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.jhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg{
+  position: absolute;
+  top: 0px;
+}
+.flhaMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -394px -18px;
+  margin-right: 5px; 
+}
+.jhaMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -463px -18px;
+  margin-right: 5px; 
+}
+.ahaMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -534px -18px;
+  margin-right: 5px; 
+}
+
+.flhaMenu.selectmenu .MuiListItemText-root span,
+.flhaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.flhaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.flhaMenu.selectmenu:hover .MuiListItemText-root span,
+.flhaMenu:hover .MuiListItemText-root span,
+
+.jhaMenu.selectmenu .MuiListItemText-root span,
+.jhaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.jhaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.jhaMenu.selectmenu:hover .MuiListItemText-root span,
+.jhaMenu:hover .MuiListItemText-root span,
+
+.ahaMenu.selectmenu .MuiListItemText-root span,
+.ahaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.ahaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.ahaMenu.selectmenu:hover .MuiListItemText-root span,
+.ahaMenu:hover .MuiListItemText-root span
+{
+  background-position-y: -132px;
+  color: #ff8533;
+  font-weight: 700;
+  background-color: transparent !important;
 }
 .leftCustomImg {
   padding: 16px;
