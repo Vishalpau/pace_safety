@@ -165,10 +165,7 @@ const DocumentNotification = () => {
   const handleSubmit = async () => {
     await setSubmitLoader(true)
 
-    // if(ahaform['notifyTo'] === null){
-    //   ahaform['notifyTo'] = "null"
-    // }
-
+      
     let data = new FormData()
 
     data.append("fkCompanyId", ahaform.fkCompanyId)

@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -13,7 +14,6 @@ import ReorderIcon from '@material-ui/icons/Reorder';
 import classNames from "classnames";
 import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
 import ObservationSearchSection from './ObservationSearchSection';
@@ -23,6 +23,8 @@ import ObservationsList from './ObservationsList';
 // import DashboardIcon from '@material-ui/icons/Dashboard';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: '600',
       '&:hover': {
         color: '#f47607 !important',
-       },
+      },
     },
     '& .MuiTab-textColorInherit.Mui-selected': {
       color: '#f47607',
@@ -143,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'orange',
   },
   listViewTab: {
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       padding: '12px 12px 0px 12px !important',
     },
   },
@@ -235,6 +237,10 @@ export default function Observations() {
 
     history.push("/app/icare-initial-notification");
   };
+
+  useEffect(() => {
+    allPickListDataValue()
+  }, [])
 
   return (
     <div className={classes.root}>

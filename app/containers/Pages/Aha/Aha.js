@@ -38,6 +38,8 @@ import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -309,6 +311,7 @@ function Aha(props) {
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
+    allPickListDataValue()
   }, [props.projectName.breakDown, searchIncident])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
@@ -390,7 +393,7 @@ function Aha(props) {
 
                         <Grid item xs={1} justifyContent="flex-end">
                           <Chip
-                            avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
+                            avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : paceLogoSymbol} />}
                             label={item[1]["username"] ? item[1]["username"] : "Admin"}
                           />
                         </Grid>

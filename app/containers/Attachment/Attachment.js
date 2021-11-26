@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 export const Attachment = ({ value }) => {
-    console.log(value.size)
     const [open, setOpen] = useState(false)
     const classes = useStyles();
     const fileNameArray = value.split("/");

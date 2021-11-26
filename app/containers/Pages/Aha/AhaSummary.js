@@ -34,7 +34,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
-import { handelActionData, handelActionWithEntity } from "../../../utils/CheckerValue";
+import { handelActionDataAssessment, handelActionWithEntity } from "../../../utils/CheckerValue";
 
 import {
   HEADER_AUTH, SSO_URL
@@ -410,18 +410,8 @@ function AhaSummary() {
 
   const handelActionTracker = async (resultHazard) => {
     let ahaId = localStorage.getItem("fkAHAId")
-
-    let actionData = await handelActionData(ahaId, resultHazard)
-    await setForm(actionData);
-
-    let allAction = await handelActionData(ahaId, [], "title")
-    let temp = []
-    allAction.map((value) => {
-      if (value.enitityReferenceId.split(":")[1] == "00") {
-        temp.push(value)
-      }
-    })
-    setApprovalactionData(temp !== null ? temp : [])
+    const allAction = await handelActionWithEntity(ahaId, "aha:approval");
+    setApprovalactionData(allAction)
   };
   const handelShowData = () => {
 
@@ -487,9 +477,17 @@ function AhaSummary() {
       };
       const res = await api(config);
       if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
         const result = res.data.data.results;
-        let user = result.filter(name => name.id = notifyTo)
-        await setNotificationSentValue(user);
+        for(let i = 0; i < result.length; i++) {
+          for(let j = 0; j < user.length; j++) {
+            if(user[j] == result[i].id){
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
       }
     } catch (error) { }
   };
@@ -513,7 +511,7 @@ function AhaSummary() {
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
+      title={`Assessment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
       icon="ion-md-list-box"
     >{isLoading ? <>
       <Box paddingBottom={1}>
@@ -1297,8 +1295,9 @@ function AhaSummary() {
                             <Typography>
                               {approvalActionData.map((value) => (
                                 <>
+                                {console.log(value)}
                                   <ActionShow
-                                    action={{ id: value.actionId, number: value.actionNumber }}
+                                    action={{ id: value.id, number: value.actionNumber }}
                                     title={value.actionTitle}
                                     companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                                     projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
@@ -1390,7 +1389,7 @@ function AhaSummary() {
                                 {lessionAction.map((value) => (
                                   <>
                                     <ActionShow
-                                      action={{ id: value.actionId, number: value.actionNumber }}
+                                      action={{ id: value.id, number: value.actionNumber }}
                                       title={value.actionTitle}
                                       companyId={projectData.companyId}
                                       projectId={projectData.projectId}

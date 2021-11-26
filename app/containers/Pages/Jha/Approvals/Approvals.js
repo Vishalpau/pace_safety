@@ -23,7 +23,7 @@ import FormSideBar from '../../../Forms/FormSideBar';
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
-
+import ApprovalValidator from '../Validation/ApprovalValidation';
 
 
 const useStyles = makeStyles((theme) => ({

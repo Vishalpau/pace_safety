@@ -662,7 +662,6 @@ const EventDetails = () => {
               <Grid item xs={12} md={6}>
                 <FormControl
                   variant="outlined"
-                  required
                   className={classes.formControl}
                 >
                   <InputLabel id="project-name-label">Fluid type</InputLabel>

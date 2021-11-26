@@ -267,6 +267,12 @@ const ProjectDetails = () => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
+    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
+    await setLoading(true);
     let structName = []
     let projectStructId = fkProjectStructureId.split(":")
 
@@ -280,12 +286,6 @@ const ProjectDetails = () => {
       structName.push(workArea.data.data.results[0]["structureName"])
     }
     form["workArea"] = structName[structName.length - 1]
-    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
-    }
-    await setLoading(true);
     // form["assessmentDate"] = new Date().toISOString().split('T')[0]
     if (form.id) {
       form["assessmentDate"] = form['assessmentDate'].split('T')[0]
@@ -513,7 +513,7 @@ const ProjectDetails = () => {
   const pickListValue = async () => {
     permitType.current = await pickListValues["81"]
   }
-
+  console.log(permitType.current,"AASAS")
   const classes = useStyles();
 
   useEffect(() => {
@@ -620,7 +620,7 @@ const ProjectDetails = () => {
                     className={classes.formControl}
                     // margin="dense"
                     fullWidth
-                    label="Date & Time*"
+                    label="Date*"
                     value={form.assessmentDate || null}
                     error={error.assessmentDate}
                     helperText={error.assessmentDate ? error.assessmentDate : null}
