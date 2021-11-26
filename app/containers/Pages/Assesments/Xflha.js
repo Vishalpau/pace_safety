@@ -729,7 +729,6 @@ function xflha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    console.log("----------", res)
     await setFlhas(res.data.data.results.results);
     await setPage(value)
   };

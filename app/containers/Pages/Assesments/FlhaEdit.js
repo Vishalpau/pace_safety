@@ -717,7 +717,7 @@ const FlhaDetails = () => {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Substantial`;
       taskHazard[indexHazard].riskRatingColour = '#990000';
     } else {
-      taskHazard[indexHazard].riskRatingLevel = `${riskRating} Intoreable`;
+      taskHazard[indexHazard].riskRatingLevel = `${riskRating} Intolerable`;
       taskHazard[indexHazard].riskRatingColour = '#ff0000';
     }
     setTaskForm(temp)

@@ -14,6 +14,8 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import Grid from "@material-ui/core/Grid";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
+import { saveAs } from 'file-saver';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
