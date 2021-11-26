@@ -5,10 +5,6 @@ function validate(data,projectStructure) {
   let isValid = true;
   const error = {};
 
-
-  // function validate(data, projectStructure) {
-  //   let isValid = true;
-  //   const error = {};
     const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
     for (let i = 0; i < breakdownValue.length; i++) {
       if (projectStructure[i] === undefined) {
@@ -34,7 +30,10 @@ function validate(data,projectStructure) {
     isValid = false;
   }
 
+  console.log(data, 'data')
+  console.log(data.firstAid, data, 'datas')
   if (data.firstAid == "") {
+    
     error.firstAid = "Please enter Aid/Medical";
     isValid = false;
   }

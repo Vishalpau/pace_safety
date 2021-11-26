@@ -46,6 +46,7 @@ import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import moment from "moment";
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import api from '../../../utils/axios';
 import {
@@ -623,21 +624,31 @@ const FlhaDetails = (props) => {
       return depth;
     }).join(':');
 
-    jobForm["fkCompanyId"] = fkCompanyId
-    jobForm["createdBy"] = fkUserId
-    jobForm["fkProjectStructureIds"] = fkProjectStructureId
-    jobForm["fkProjectId"] = fkProjectId
+    const formDataPost = new FormData();
+    formDataPost.append('fkCompanyId', fkCompanyId);
+    formDataPost.append('fkProjectId', fkProjectId);
+    formDataPost.append('jobTitle', jobForm.jobTitle);
+    formDataPost.append('jobDetails', jobForm.jobDetails);
+    formDataPost.append('fkProjectStructureIds', fkProjectStructureId);
+    formDataPost.append('createdBy', fkUserId);
+    formDataPost.append('location', jobForm.location);
+    formDataPost.append('permitToWork', jobForm.permitToWork);
+    formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
+    if (jobForm.attachment != null) {
+      formDataPost.append('attachment', jobForm.attachment);
+    }
+    formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
+    formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
+    formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
+    formDataPost.append('referenceNumber', jobForm.referenceNumber);
+    formDataPost.append('firstAid', jobForm.firstAid);
+    formDataPost.append('jhaReviewed', jobForm.jhaReviewed);
+    formDataPost.append('accessToJobProcedure', jobForm.accessToJobProcedure);
 
-    let flhaData = new FormData();
-    Object.entries(jobForm).map(([key, value]) => {
-      if (value !== "" && value !== null) {
-        flhaData.append(key, value);
-      }
-    })
     await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
-      flhaData, { headers: { 'content-type': 'multipart/form-data' } }
+      formDataPost, { headers: { 'content-type': 'multipart/form-data' } }
     );
     await setFlha(res.data.data.results.id);
     await createCriticalTask(res.data.data.results.id);
@@ -695,6 +706,12 @@ const FlhaDetails = (props) => {
     let temp = [...taskForm]
     temp.push(taskData)
     setTaskForm(temp)
+  }
+
+  const handelTaskRemove = async (index) => {
+    let temp = [...taskForm]
+    temp.splice(index, 1)
+    await setTaskForm(temp)
   }
 
   const getDepartments = async () => {
@@ -1062,6 +1079,11 @@ const FlhaDetails = (props) => {
                           {' '}
                           Task#{(taskIndex + 1)} - "Task identification"
                         </Typography>
+                        <Grid container justify="flex-end">
+                          <Button>
+                            <RemoveIcon onClick={(e) => handelTaskRemove(taskIndex)} />
+                          </Button>
+                        </Grid>
                       </AccordionSummary>
                       <AccordionDetails>
                         <Grid item sm={12} xs={12}>
@@ -1072,7 +1094,7 @@ const FlhaDetails = (props) => {
                             id="taskIdentification"
                             label="Task Name"
                             className={classes.fullWidth}
-                            value={(taskValue.taskIdentification != undefined) ? taskValue.taskIdentification : ''}
+                            value={taskForm[taskIndex]["taskIdentification"]}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
                           />
@@ -1085,7 +1107,9 @@ const FlhaDetails = (props) => {
                               id="panel2bh-header"
                               className={classes.accordionSubHeaderSection}
                             >
-                              <Typography className={classes.heading}>Hazard#{index + 1} - {(item.hazard) ? item.hazard : hazardValue}</Typography>
+                              <Typography className={classes.heading}>
+                                Hazard#{index + 1} - {taskForm[taskIndex]["hazards"][index]["hazards"]}
+                              </Typography>
                               <Typography className={classes.secondaryHeading}>
                               </Typography>
                             </AccordionSummary>
@@ -1107,7 +1131,7 @@ const FlhaDetails = (props) => {
                                       rows="3"
                                       id="hazards"
                                       className={classes.fullWidth}
-                                      value={(item.hazard != undefined) ? item.hazard : hazardValue}
+                                      value={taskForm[taskIndex]["hazards"][index]["hazards"]}
                                       disabled={(item.hazard != undefined) ? item.hazard : ''}
                                       onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazards'), setHazardType }
                                       }
@@ -1143,7 +1167,7 @@ const FlhaDetails = (props) => {
                                         id="description"
                                         label="Control"
                                         className={classes.fullWidth}
-                                        value={(item.control != undefined) ? item.control : ''}
+                                        value={taskForm[taskIndex]["hazards"][index]["control"]}
                                         onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
                                         }
                                       />
