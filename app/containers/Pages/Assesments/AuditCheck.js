@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { PapperBlock } from 'dan-components';
 import { useHistory } from 'react-router-dom';
-
+import AuditCheckValidator from "./validation/auditCheckValidator"
 // import { api } from "../../../utils/axios";
 import api, { appapi, setApiUrl } from '../../../utils/axios';
 import apiAction from "../../../utils/axiosActionTracker";
@@ -302,19 +302,6 @@ const FlhaDetails = (props) => {
     fkFlhaId: ""
   });
 
-  const validate = () => {
-    let valid = true
-    let error = {}
-    if (auditForm.auditor == '') {
-      error['auditor'] = 'Please select atleast one filed'
-      valid = false
-    }
-    setError(error)
-
-    return valid
-  }
-
-
   const auditUserList = () => {
     api.get(`${SSO_URL}/api/v1/companies/` + JSON.parse(localStorage.getItem("company")).fkCompanyId + '/company-users/')
       .then(response => {
@@ -323,8 +310,11 @@ const FlhaDetails = (props) => {
   };
 
   const AuditCheckSubmit = () => {
-    let error =validate(error)
+    const { error, isValid} = AuditCheckValidator(auditForm)
     setError(error)
+    if(!isValid){
+      return " data not valid"
+    }
     ninetimeCall('Identification information complete', remark1, step1)
     ninetimeCall('Job described accuratly', remark2, step2)
     ninetimeCall('Critical tasks identified', remark3, step3)
@@ -337,19 +327,19 @@ const FlhaDetails = (props) => {
   }
 
   const ninetimeCall = async (auditType, auditRemarks, auditCheck) => {
-    let error =validate(error)
-    setError(error)
+    // let error =validate(error)
+    // setError(error)
     const parts = history.location.pathname.split('/');
     let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
     let ProjectStructureId = parts[parts.length - 1];
-   
     const formData = new FormData(); // formdata object
     formData.append('createdBy', JSON.parse(localStorage.getItem('userDetails')).id);
-    formData.append('auditor', auditName);
+    formData.append('auditor', auditForm.auditor);
     formData.append('auditType', auditType);
     formData.append('auditRemarks', auditRemarks);
     formData.append('fkFlhaId', last_part);
     formData.append('auditCheck', auditCheck);
+   
     const res = await api.post(`/api/v1/flhas/${last_part}/auditchecks/`, formData);
     await setLoading(true)
     if (auditType == 'Agreement signed') {
@@ -484,11 +474,10 @@ const FlhaDetails = (props) => {
                             <Autocomplete
                               id="combo-box-demo"
                               className={classes.mtTen}
-                              error={error}
                               options={users}
                               defaultValue={auditName}
                               getOptionLabel={(option) => option.title}
-                              onChange={(e) => setAuditName(e.currentTarget.innerHTML)}
+                              onChange={(e) => setAuditForm({...auditForm,auditor : e.currentTarget.innerHTML})}
                               renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                             />
                             : 'Auditor Name: ' + auditName}
@@ -519,6 +508,7 @@ const FlhaDetails = (props) => {
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'Yes' ? true : false} onClick={() => setStep1('Yes')} />
+                                    
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
@@ -562,7 +552,7 @@ const FlhaDetails = (props) => {
                                 <TableRow>
                                   <TableCell align="left">2</TableCell>
                                   <TableCell align="left">
-                                    Job described accuratly
+                                    Job described accurately
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2 == 'Yes' ? true : false} onClick={() => setStep2('Yes')} />
@@ -754,7 +744,7 @@ const FlhaDetails = (props) => {
                                 <TableRow>
                                   <TableCell align="left">6</TableCell>
                                   <TableCell align="left">
-                                    All present earnings identified at the job site
+                                    All present energies identified at the job site
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6 == 'Yes' ? true : false} onClick={() => setStep6('Yes')} />

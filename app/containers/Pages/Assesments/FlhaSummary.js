@@ -58,6 +58,7 @@ import moment from 'moment';
 import ViewHazard from './ViewHazard';
 import api from '../../../utils/axios';
 //import Loader from "../Loader";
+import Attachment from '../../../containers/Attachment/Attachment';
 
 
 function TabContainer(props) {
@@ -150,7 +151,7 @@ const styles = theme => ({
     minWidth: '50px',
     height: '30px',
     borderRadius: '4px',
-    float: 'right'
+    float: 'left'
   },
   table: {
     minWidth: 600,
@@ -274,6 +275,27 @@ class SimpleTabs extends React.Component {
                     )}
                   </Typography>
                 </Grid>
+                <Grid item xs={6}>
+                  <FormLabel component="legend">Attachment</FormLabel>
+                  <Typography>
+                    {/* {(flha.attachment) ? flha.attachment : '-'} */}
+                    {/* <img src={flha.attachment} className={classes.attachImg} height={40} /> */}
+                    {/* <Attachment value={flha.attachment} /> */}
+
+                  </Typography>
+                  <Typography >
+                                    {flha.attachment ===
+                                      null ? null : typeof flha.attachment ===
+                                        "string" ? (
+                                      <Attachment value={flha.attachment} />
+                                    ) : null}
+                                  </Typography>
+
+
+                </Grid>
+
+
+
 
               </Grid>
             </Paper>

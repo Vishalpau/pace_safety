@@ -587,22 +587,22 @@ const FlhaDetails = (props) => {
       'visualConfirmationAttachment': ''
     }
   ])
-  // const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
-  //   console.log(jobForm);
+  const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
+    console.log(jobForm);
 
-  //   const temp = { ...jobForm };
-  //   setDepartmentList(e.target)
-  //   const { value } = e.target;
-  //   console.log({ value });
-  //   if (autovalue != undefined) {
-  //     temp[fieldname] = e.target.textContent;
-  //   } else {
-  //     temp[fieldname] = value;
-  //   }
-  //   console.log({ temp });
-  //   await setJobForm(temp);
-  //   // await console.log({jobForm: jobForm})
-  // };
+    const temp = { ...jobForm };
+    setDepartmentList(e.target)
+    const { value } = e.target;
+    console.log({ value });
+    if (autovalue != undefined) {
+      temp[fieldname] = e.target.textContent;
+    } else {
+      temp[fieldname] = value;
+    }
+    console.log({ temp });
+    await setJobForm(temp);
+    // await console.log({jobForm: jobForm})
+  };
 
   const handleJobConfirmationFormChange = async (e, fieldname, index) => {
     // alert(fieldname)
@@ -716,48 +716,44 @@ const FlhaDetails = (props) => {
       return depth;
     }).join(':');
 
-    jobForm["fkCompanyId"] = fkCompanyId 
-    jobForm["createdBy"] = fkUserId  
-    jobForm["fkProjectStructureIds"] = fkProjectStructureId  
-    jobForm["fkProjectId"] = fkProjectId  
+    //   jobForm["fkCompanyId"] = fkCompanyId 
+    //   jobForm["createdBy"] = fkUserId  
+    //   jobForm["fkProjectStructureIds"] = fkProjectStructureId  
+    //   jobForm["fkProjectId"] = fkProjectId  
+
+    // let flhaData = new FormData();
+    // Object.entries(jobForm).map(([key, value]) => {
+    // if (value !== "" && value !== null)
+    //  {flhaData.append(key, value);
+    // }})
 
 
- 
-  let flhaData = new FormData();
-  Object.entries(jobForm).map(([key, value]) => {
-  if (value !== "" && value !== null)
-   {flhaData.append(key, value);
-  }})
-
-
-    // const formDataPost = new FormData();
-    // formDataPost.append('fkCompanyId', fkCompanyId);
-    // formDataPost.append('fkProjectId', fkProjectId);
-    // formDataPost.append('jobTitle', jobForm.jobTitle);
-    // formDataPost.append('jobDetails', jobForm.jobDetails);
-    // formDataPost.append('fkProjectStructureIds', fkProjectStructureId);
-    // formDataPost.append('createdBy', fkUserId);
-    // formDataPost.append('location', jobForm.location);
-    // formDataPost.append('permitToWork', jobForm.permitToWork);
-    // formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
-    // if (jobForm.attachment != null) {
-    //   formDataPost.append('attachment', jobForm.attachment);
-    // }
-    // formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
-    // formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
-    // formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
-    // formDataPost.append('referenceNumber', jobForm.referenceNumber);
-    // formDataPost.append('firstAid', jobForm.firstAid);
-    // formDataPost.append('jhaReviewed', jobForm.jhaReviewed);
-    // formDataPost.append('accessToJobProcedure', jobForm.accessToJobProcedure);
+    const formDataPost = new FormData();
+    formDataPost.append('fkCompanyId', fkCompanyId);
+    formDataPost.append('fkProjectId', fkProjectId);
+    formDataPost.append('jobTitle', jobForm.jobTitle);
+    formDataPost.append('jobDetails', jobForm.jobDetails);
+    formDataPost.append('fkProjectStructureIds', fkProjectStructureId);
+    formDataPost.append('createdBy', fkUserId);
+    formDataPost.append('location', jobForm.location);
+    formDataPost.append('permitToWork', jobForm.permitToWork);
+    formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
+    if (jobForm.attachment != null) {
+      formDataPost.append('attachment', jobForm.attachment);
+    }
+    formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
+    formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
+    formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
+    formDataPost.append('referenceNumber', jobForm.referenceNumber);
+    formDataPost.append('firstAid', jobForm.firstAid);
+    formDataPost.append('jhaReviewed', jobForm.jhaReviewed);
+    formDataPost.append('accessToJobProcedure', jobForm.accessToJobProcedure);
 
     await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
-      flhaData, { headers: { 'content-type': 'multipart/form-data' } }
+      formDataPost, { headers: { 'content-type': 'multipart/form-data' } }
     );
-
-    console.log(flhaData,"jjj");
     await setFlha(res.data.data.results.id);
 
     await createCriticalTask(res.data.data.results.id);
@@ -865,8 +861,9 @@ const FlhaDetails = (props) => {
   };
 
   const handleDepartmentSelection = async (e, value) => {
-
+    console.log(value.id,'oooo')
     getJobTitles(value.id);
+    setDepartmentList(value.id)
   };
 
   const getSupervisors = async () => {
@@ -996,32 +993,32 @@ const FlhaDetails = (props) => {
   const handelNotifyToValues = async () => {
     let allRoles = {}
     const config = {
-    method: 'get',
-    url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/projects/${fkProjectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
-    headers: HEADER_AUTH,
-    };    
-    const notify = await api(config);    
-    if (notify.status === 200) {    
-    const result = notify.data.data.results;    
-    result.map((value) => {   
-    allRoles[value["id"]] = value["roleName"]
-    })   
-    setNotifyToValue(allRoles);   
-    }  
+      method: 'get',
+      url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/projects/${fkProjectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+      headers: HEADER_AUTH,
+    };
+    const notify = await api(config);
+    if (notify.status === 200) {
+      const result = notify.data.data.results;
+      result.map((value) => {
+        allRoles[value["id"]] = value["roleName"]
+      })
+      setNotifyToValue(allRoles);
     }
+  }
 
   const handelNotifyTo = async (e, value) => {
     let temp = { ...jobForm }
     !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
 
     if (e.target.checked === false) {
-    const newData = temp.notifyTo.filter((item) => item !== value);
-    temp["notifyTo"] = newData
+      const newData = temp.notifyTo.filter((item) => item !== value);
+      temp["notifyTo"] = newData
     } else {
-    temp["notifyTo"].push(value)
+      temp["notifyTo"].push(value)
     }
     setJobForm(temp)
-    };
+  };
 
   return (
     <div>
@@ -1434,69 +1431,40 @@ const FlhaDetails = (props) => {
             </Box>
           </Grid>
 
-          <Grid item md={12} sm={12} xs={12}>
-            <Grid container spacing={3}>
-              <Grid item md={6} sm={6} xs={6}>
-
-                <MuiPickersUtilsProvider
-                  variant="outlined"
-                  utils={DateFnsUtils}
-                  className="formControl"
-                >
-                  <KeyboardDateTimePicker
-                    label="Date & time"
-                    value={jobForm.dateTimeFlha || null}
-                    onChange={(e) => {
-                      setJobForm({
-                        ...jobForm,
-                        dateTimeFlha: moment(e).toISOString(),
-                      });
-                    }}
-                    InputProps={{ readOnly: true }}
-                    format="yyyy/MM/dd HH:mm"
-                    inputVariant="outlined"
-                    disableFuture="true"
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid>
-              {/* <Grid item md={4} sm={4} xs={12}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    //className={classNames(classes.formControl, classes.heightDate)}
-                    className="formControl"
-                    variant="outlined"
-                    required
-                    id="date-picker-dialog"
-                    format="dd/MM/yyyy"
-                    value={selectedDate}
-                    onChange={(e) => {
-                      handleJobFormChange(e.toISOString().split('T')[0], 'dateTimeFlha')
-                    }}
-                  />
-                </MuiPickersUtilsProvider>
-              </Grid> */}
-              {/* <Grid item md={4} sm={4} xs={12}>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <div className="picker">
-                    <TimePicker
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid item md={12} sm={12} xs={12}>
+                <Grid container spacing={3}>
+                  <Grid item md={6} sm={6} xs={6}>
+                    <MuiPickersUtilsProvider
                       variant="outlined"
-                      required
-                      // value={selectedDate}
-                      //className={classNames(classes.formControl, classes.heightDate)}
+                      utils={DateFnsUtils}
                       className="formControl"
-                      value={selectedDate}
-                      onChange={handleDateChange}
-                    />
-                  </div>
+                    >
+                      <KeyboardDateTimePicker
+                        label="Date & time"
+                        value={jobForm.dateTimeFlha || null}
+                        onChange={(e) => {
+                          setJobForm({
+                            ...jobForm,
+                            dateTimeFlha: moment(e).toISOString(),
+                          });
+                        }}
+                        InputProps={{ readOnly: true }}
+                        format="yyyy/MM/dd HH:mm"
+                        inputVariant="outlined"
+                        disableFuture="true"
+                      />
+                    </MuiPickersUtilsProvider>
+                  </Grid>
+                </Grid>
+              </Grid>
 
-                </MuiPickersUtilsProvider>
-              </Grid> */}
-            </Grid>
-          </Grid>
-          <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
-            <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
-            <Typography className="viewLabelValue">
-              {/* <div {...getRootProps({ className: 'dropzone' })} onDrop={(e) => handleFileUpload(e)}>
+              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
+                  <Typography className="viewLabelValue">
+                    {/* <div {...getRootProps({ className: 'dropzone' })} onDrop={(e) => handleFileUpload(e)}>
                       <input onDrop={(e) => handleFileUpload(e)} {...getInputProps()} />
                       <span align="center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
@@ -1520,16 +1488,18 @@ const FlhaDetails = (props) => {
                       <h4>Files</h4>
                       <ul>{files}</ul>
                     </aside> */}
-              <input
-                type="file"
-                id="attachment"
-                accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                onChange={(e) => {
-                  handleFileUpload(e);
-                }} />
-            </Typography>
+                    <input
+                      type="file"
+                      id="attachment"
+                      accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                      onChange={(e) => {
+                        handleFileUpload(e);
+                      }} />
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
-
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
@@ -1617,11 +1587,11 @@ const FlhaDetails = (props) => {
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className="checkRadioLabel">Is permit to work done?*</FormLabel>
                     <RadioGroup row aria-label="permitToWork" name="permitToWork" value={jobForm.permitToWork} onChange={(e) => {
-                            setJobForm({
-                              ...jobForm,
-                              permitToWork: e.target.value,
-                            });
-                          }}>
+                      setJobForm({
+                        ...jobForm,
+                        permitToWork: e.target.value,
+                      });
+                    }}>
                       <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="no" control={<Radio />} label="No" />
                       <FormControlLabel value="na" control={<Radio />} label="NA" />
@@ -1681,93 +1651,42 @@ const FlhaDetails = (props) => {
 
 
 
-          {/* 
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                <Typography variant="h6" className="sectionHeading">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
-                  <g id="outline-assignment-24px" transform="translate(0 1.44)">
-                    <g id="Bounding_Boxes">
-                      <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none"/>
-                    </g>
-                    <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c"/>
+
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
+                <g id="outline-assignment-24px" transform="translate(0 1.44)">
+                  <g id="Bounding_Boxes">
+                    <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none" />
                   </g>
-                </svg> Notification block
-                </Typography>
-              </Grid>
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid
-                      item
-                      md={12}
-                      xs={12}
-                    >
-                      <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
-                      <FormGroup className={classes.customCheckBoxList}>
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Safety manager"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Role 2"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Role 3"
-                        />
-                      </FormGroup>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid> */}
-
-          <Grid container spacing={3}>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
-              <FormGroup className={classes.radioInline}>
-                {Object.entries(notifyToValue).map(([key, value]) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    // checked={jobForm["notifyTo"].includes(key)}
-                    onChange={async (e) => handelNotifyTo(e, key)}
-                  />
-                ))}
-              </FormGroup>
-            </Grid>
+                  <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c" />
+                </g>
+              </svg> Notification block
+            </Typography>
           </Grid>
-
-
-
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
+                  <FormGroup className={classes.customCheckBoxList}>
+                    {Object.entries(notifyToValue).map(([key, value]) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        // checked={jobForm["notifyTo"].includes(key)}
+                        onChange={async (e) => handelNotifyTo(e, key)}
+                      />
+                    ))}
+                  </FormGroup>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
