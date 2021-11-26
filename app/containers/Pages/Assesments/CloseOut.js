@@ -143,6 +143,8 @@ const CloseOut = (props) => {
   };
 
   const handleFormSubmit = async () => {
+    jobForm["flhaStage"] = "Close"
+    jobForm["flhaStatus"] = "Close"
     const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
     if (jobForm.creatingIncident === "Yes") {
       history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
@@ -179,40 +181,120 @@ const CloseOut = (props) => {
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
               <Paper elevation={1} className="paperSection">
                 <Grid item md={12} xs={12}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" className="checkRadioLabel">Has a pre-use inspection of tools/equipment been completed?</FormLabel>
-                    <RadioGroup className={classes.radioInline} aria-label="preUseInspection" name="preUseInspection" value={jobForm.preUseInspection} onChange={(e) => handleJobFormChange(e, 'preUseInspection')}>
-                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                  <FormControl
+                    component="fieldset"
+                  >
+                    <FormLabel
+                      component="legend"
+                      className="checkRadioLabel"
+                    >
+                      Has a pre-use inspection of tools/equipment been completed?
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.radioInline}
+                      aria-label="preUseInspection"
+                      name="preUseInspection"
+                      value={jobForm.preUseInspection}
+                      onChange={(e) => handleJobFormChange(e, 'preUseInspection')}
+                    >
+                      <FormControlLabel
+                        value="Yes"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="No"
+                        control={<Radio />}
+                        label="No"
+                      />
                     </RadioGroup>
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6} sm={6} xs={12}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" className="checkRadioLabel">Is a warning ribbon need?</FormLabel>
-                    <RadioGroup className={classes.radioInline} aria-label="warningRibbon" name="warningRibbon" value={jobForm.warningRibbon} onChange={(e) => handleJobFormChange(e, 'warningRibbon')}>
-                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                <Grid
+                  item
+                  md={6}
+                  sm={6}
+                  xs={12}
+                >
+                  <FormControl
+                    component="fieldset"
+                  >
+                    <FormLabel
+                      component="legend"
+                      className="checkRadioLabel"
+                    >
+                      Is a warning ribbon need?
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.radioInline}
+                      aria-label="warningRibbon"
+                      name="warningRibbon"
+                      value={jobForm.warningRibbon}
+                      onChange={(e) => handleJobFormChange(e, 'warningRibbon')}
+                    >
+                      <FormControlLabel
+                        value="Yes"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="No"
+                        control={<Radio />}
+                        label="No"
+                      />
                     </RadioGroup>
                   </FormControl>
                 </Grid>
 
-                <Grid item md={6} sm={6} xs={12}>
-
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" className="checkRadioLabel">Is the worker working alone?</FormLabel>
-                    <RadioGroup className={classes.radioInline} aria-label="workerWorking" name="workerWorking" value={jobForm.workerWorking} onChange={(e) => handleJobFormChange(e, 'workerWorking')}>
-                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                <Grid
+                  item
+                  md={6}
+                  sm={6}
+                  xs={12}
+                >
+                  <FormControl
+                    component="fieldset"
+                  >
+                    <FormLabel
+                      component="legend"
+                      className="checkRadioLabel"
+                    >
+                      Is the worker working alone?
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.radioInline}
+                      aria-label="workerWorking"
+                      name="workerWorking"
+                      value={jobForm.workerWorking}
+                      onChange={(e) => handleJobFormChange(e, 'workerWorking')}
+                    >
+                      <FormControlLabel
+                        value="Yes"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="No"
+                        control={<Radio />}
+                        label="No"
+                      />
                     </RadioGroup>
                   </FormControl>
-
                 </Grid>
 
                 {jobForm.workerWorking === "Yes" ?
-                  <Grid item md={12} xs={12}>
-                    <FormLabel component="legend" className="checkRadioLabel">If yes, explain</FormLabel>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <FormLabel
+                      component="legend"
+                      className="checkRadioLabel"
+                    >
+                      If yes, explain
+                    </FormLabel>
                     <TextField
                       variant="outlined"
                       id="immediate-actions"
@@ -296,12 +378,12 @@ const CloseOut = (props) => {
                   </FormControl>
                 </Grid>
 
-                <Grid item md={12} sm={12} xs={12} className="paddTRemove formFieldBTNSection">
-                  <Button className="marginT0" variant="outlined">Acknowledge </Button>
-                </Grid>
-
+                {false &&
+                  <Grid item md={12} sm={12} xs={12} className="paddTRemove formFieldBTNSection">
+                    <Button className="marginT0" variant="outlined">Acknowledge </Button>
+                  </Grid>
+                }
               </Paper>
-
 
               {false &&
                 <Grid item md={12} xs={12} className="buttonActionArea marginT10">
