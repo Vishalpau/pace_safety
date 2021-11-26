@@ -401,7 +401,8 @@ const FlhaDetails = () => {
     "riskRatingLevel": "",
     "riskSeverity": "",
     "riskSeverityValue": "",
-    "status": ""
+    "status": "Active",
+    "createdBy": userId
   }
 
   let taskData = {
@@ -414,7 +415,7 @@ const FlhaDetails = () => {
     "rivisionReason": reasonRevison,
     "taskIdentification": "",
     "status": "Active",
-    "version": `${parseFloat(version[version.length - 1]) + 0.1}`
+    "version": ""
   }
 
   const [flhaForm, setFlhaForm] = useState({})
@@ -443,7 +444,7 @@ const FlhaDetails = () => {
   }
 
   let colorProbablityObj = {
-    "Highly unlikel": 1,
+    "Highly unlikely": 1,
     "Unlikely": 2,
     "Likely": 3,
     "Very likely": 4
@@ -497,7 +498,6 @@ const FlhaDetails = () => {
       headers: HEADER_AUTH,
     };
     const res = await api(config);
-    console.log(res)
     const departmentData = res.data.data.results
     departmentData.map((value) => {
       allDepartment.push(value["departmentName"])
@@ -521,8 +521,6 @@ const FlhaDetails = () => {
       setJobVisualConfirmation(jobVisualData)
     }
   }
-
-
 
   const handelTaskPerVersion = (data) => {
     let dataVersion = {}
@@ -603,11 +601,8 @@ const FlhaDetails = () => {
     handelTaskPerVersion(task)
     let allVersion = task["versions"]
     setVersion(allVersion)
-    console.log(allVersion)
-    // taskForm.splice(0, 1)
     let temp = [...taskForm]
   }
-
 
   const handelProjectStuctId = async (companyId, projectId, projectStruct) => {
     let breakDownUrl = []
@@ -693,7 +688,6 @@ const FlhaDetails = () => {
     temp[0]["rivisionReason"] = value
     setTaskForm(temp)
   }
-
 
   const handleRiskChange = (e, key, fieldname, indexHazard) => {
 
@@ -787,6 +781,7 @@ const FlhaDetails = () => {
 
   const handelNotifyTo = async (e, value) => {
     let temp = { ...flhaForm }
+    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
     if (e.target.checked === false) {
       const newData = temp.notifyTo.filter((item) => item !== value);
       temp["notifyTo"] = newData
@@ -832,15 +827,23 @@ const FlhaDetails = () => {
   }
 
   const handelTaskSubmit = async () => {
-    taskForm[0]["version"] = `${parseFloat(version[version.length - 1]) + 0.1}`
+    let taskFields = ["riskProbabilityValue", "riskSeverityValue", "riskRatingColour", "fkTaskId", "updatedAt", "updatedBy", "createdAt"]
+    taskForm.map((value, index) => {
+      value["version"].length > 0 ? value["version"] = "" : value["version"] = value["version"]
+      let hazard = value["hazards"]
+      hazard.length > 0 && hazard.map((valueHazard, indexHazard) => {
+        taskFields.map((value) => {
+          valueHazard[value] !== undefined && delete valueHazard[value]
+        })
+      })
+    })
     const res = await api.post(`/api/v1/flhas/${flhaNumber}/criticaltasks/`, taskForm).then(() => handelVisualTaskSubmit()).catch()
-    console.log(taskForm)
   }
 
   const handelFlhaSubmit = async () => {
     delete flhaForm["qrCodeUrl"]
     typeof flhaForm["attachment"] == "string" && delete flhaForm["attachment"]
-    flhaForm["notifyTo"]
+    flhaForm["notifyTo"].length == 0 || flhaForm["notifyTo"] == "null" || flhaForm["notifyTo"] == null ? flhaForm["notifyTo"] = "null" : flhaForm["notifyTo"] = flhaForm["notifyTo"].toString()
     let flhaData = new FormData();
     Object.entries(flhaForm).map(([key, value]) => {
       if (value !== "" && value !== null) {
@@ -848,6 +851,7 @@ const FlhaDetails = () => {
       }
     })
     const res = await api.put(`/api/v1/flhas/${flhaNumber}/`, flhaData).then(() => handelTaskSubmit()).catch()
+    // handelTaskSubmit()
   }
 
   const handelCallBack = async () => {
@@ -1398,9 +1402,6 @@ const FlhaDetails = () => {
                                               {/* risk color */}
 
                                               <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
-                                                {/* <InputLabel id="demo-simple-select-label">
-                                                Risk Rating
-                                              </InputLabel> */}
                                                 {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
                                               </Grid>
 
