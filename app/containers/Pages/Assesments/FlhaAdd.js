@@ -711,36 +711,53 @@ const FlhaDetails = (props) => {
   const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const createFlha = async () => {
-    // jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
-
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
-    }).join(':')
-    const formDataPost = new FormData();
-    formDataPost.append('fkCompanyId', fkCompanyId);
-    formDataPost.append('fkProjectId', fkProjectId);
-    formDataPost.append('jobTitle', jobForm.jobTitle);
-    formDataPost.append('jobDetails', jobForm.jobDetails);
-    formDataPost.append('fkProjectStructureIds', fkProjectStructureId);
-    formDataPost.append('createdBy', fkUserId);
-    formDataPost.append('location', jobForm.location);
-    formDataPost.append('permitToWork', jobForm.permitToWork);
-    formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
-    if (jobForm.attachment != null) {
-      formDataPost.append('attachment', jobForm.attachment);
-    }
-    formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
-    formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
-    formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
-    formDataPost.append('referenceNumber', jobForm.referenceNumber);
+    }).join(':');
+
+    jobForm["fkCompanyId"] = fkCompanyId 
+    jobForm["createdBy"] = fkUserId  
+    jobForm["fkProjectStructureIds"] = fkProjectStructureId  
+    jobForm["fkProjectId"] = fkProjectId  
+
+
+ 
+  let flhaData = new FormData();
+  Object.entries(jobForm).map(([key, value]) => {
+  if (value !== "" && value !== null)
+   {flhaData.append(key, value);
+  }})
+
+
+    // const formDataPost = new FormData();
+    // formDataPost.append('fkCompanyId', fkCompanyId);
+    // formDataPost.append('fkProjectId', fkProjectId);
+    // formDataPost.append('jobTitle', jobForm.jobTitle);
+    // formDataPost.append('jobDetails', jobForm.jobDetails);
+    // formDataPost.append('fkProjectStructureIds', fkProjectStructureId);
+    // formDataPost.append('createdBy', fkUserId);
+    // formDataPost.append('location', jobForm.location);
+    // formDataPost.append('permitToWork', jobForm.permitToWork);
+    // formDataPost.append('dateTimeFlha', jobForm.dateTimeFlha);
+    // if (jobForm.attachment != null) {
+    //   formDataPost.append('attachment', jobForm.attachment);
+    // }
+    // formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
+    // formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
+    // formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
+    // formDataPost.append('referenceNumber', jobForm.referenceNumber);
+    // formDataPost.append('firstAid', jobForm.firstAid);
+    // formDataPost.append('jhaReviewed', jobForm.jhaReviewed);
+    // formDataPost.append('accessToJobProcedure', jobForm.accessToJobProcedure);
+
     await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
-      formDataPost, { headers: { 'content-type': 'multipart/form-data' } }
+      flhaData, { headers: { 'content-type': 'multipart/form-data' } }
     );
 
-    console.log(res.data.data.results.id);
+    console.log(flhaData,"jjj");
     await setFlha(res.data.data.results.id);
 
     await createCriticalTask(res.data.data.results.id);
@@ -1801,7 +1818,7 @@ const FlhaDetails = (props) => {
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,
-                        emergencyPhoneNumber: e.target,
+                        emergencyPhoneNumber: e.target.value,
                       });
                     }}
                   />

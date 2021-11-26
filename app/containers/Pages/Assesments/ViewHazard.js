@@ -695,7 +695,7 @@ const FlhaDetails = (props) => {
 																		Is a First Aid/Medical Aid present for your shift?
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																		Yes
+																		{flha.firstAid}
 																	</Typography>
 															
 																</Grid>
@@ -712,7 +712,7 @@ const FlhaDetails = (props) => {
 																		Emergency phone number
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																	{flha.emergencyPhoneNumber}
+																	{flha.emergencyPhoneNumber ? flha.emergencyPhoneNumber:'-'}
 																	</Typography>
 																</Grid>
 															</Grid>
@@ -730,7 +730,7 @@ const FlhaDetails = (props) => {
 																		Has the JHA been reviewed?
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																		Yes
+                                  {flha.jhaReviewed}
 																	</Typography>
 																
 																</Grid>
@@ -747,7 +747,7 @@ const FlhaDetails = (props) => {
 																		Enter the evacuation/assembly point
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																		{flha.evacuationPoint}
+																		{flha.evacuationPoint ? flha.evacuationPoint:'-'}
 																	</Typography>
 											
 																</Grid>
@@ -766,7 +766,7 @@ const FlhaDetails = (props) => {
 																		Do you have access to job procedure?
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																		Yes
+																		{flha.accessToJobProcedure}
 																	</Typography>
 
 																</Grid>
@@ -783,7 +783,7 @@ const FlhaDetails = (props) => {
 																		Enter the location details
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																	{flha.location ?flha.location: '-' }
+																	{flha.location ? flha.location: '-' }
 																	</Typography>
 																</Grid>
                               

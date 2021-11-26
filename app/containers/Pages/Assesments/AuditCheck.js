@@ -245,6 +245,9 @@ const FlhaDetails = (props) => {
   const [remark8, setRemark8] = React.useState('')
   const [remark9, setRemark9] = React.useState('')
 
+  const [error, setError] = React.useState({});
+
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -273,10 +276,6 @@ const FlhaDetails = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
- 
-
- 
-
   const [auditName, setAuditName] = React.useState('')
 
   const [isLock, setIsLock] = React.useState(false)
@@ -303,6 +302,19 @@ const FlhaDetails = (props) => {
     fkFlhaId: ""
   });
 
+  const validate = () => {
+    let valid = true
+    let error = {}
+    if (auditForm.auditor == '') {
+      error['auditor'] = 'Please select atleast one filed'
+      valid = false
+    }
+    setError(error)
+
+    return valid
+  }
+
+
   const auditUserList = () => {
     api.get(`${SSO_URL}/api/v1/companies/` + JSON.parse(localStorage.getItem("company")).fkCompanyId + '/company-users/')
       .then(response => {
@@ -311,6 +323,8 @@ const FlhaDetails = (props) => {
   };
 
   const AuditCheckSubmit = () => {
+    let error =validate(error)
+    setError(error)
     ninetimeCall('Identification information complete', remark1, step1)
     ninetimeCall('Job described accuratly', remark2, step2)
     ninetimeCall('Critical tasks identified', remark3, step3)
@@ -323,7 +337,8 @@ const FlhaDetails = (props) => {
   }
 
   const ninetimeCall = async (auditType, auditRemarks, auditCheck) => {
-    console.log(auditName,'auditName')
+    let error =validate(error)
+    setError(error)
     const parts = history.location.pathname.split('/');
     let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
     let ProjectStructureId = parts[parts.length - 1];
@@ -469,7 +484,7 @@ const FlhaDetails = (props) => {
                             <Autocomplete
                               id="combo-box-demo"
                               className={classes.mtTen}
-                              // value={auditName}
+                              error={error}
                               options={users}
                               defaultValue={auditName}
                               getOptionLabel={(option) => option.title}
@@ -477,6 +492,8 @@ const FlhaDetails = (props) => {
                               renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                             />
                             : 'Auditor Name: ' + auditName}
+                            <div style={{ color: "red" }}>{error.auditor}</div>
+
                     {/* <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div> */}
 
                         </Grid>
@@ -506,7 +523,6 @@ const FlhaDetails = (props) => {
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
                                   </TableCell>
-                                  {console.log(projectStr,'step1')}
                                   <TableCell align="left">
                                     <ActionTracker
                                       actionContext="flha:audit"
