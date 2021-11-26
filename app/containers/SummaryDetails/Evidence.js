@@ -264,6 +264,7 @@ const EvidenceSummary = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(0, 7).map((ad, key) => (
@@ -285,6 +286,7 @@ const EvidenceSummary = () => {
                     ))
                     : null}
                 </Grid>
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(7, 8).map((ad, key) => (
@@ -306,7 +308,7 @@ const EvidenceSummary = () => {
                     ))
                     : null}
                 </Grid>
-                {console.log(activity)}
+
                 {activity[7] !== undefined && activity[7]["answer"] === "Yes" ?
                   <Grid container spacing={3}>
                     {activity.length !== 0
@@ -330,6 +332,7 @@ const EvidenceSummary = () => {
                       : null}
                   </Grid>
                   : null}
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(11, 16).map((ad, key) => (
@@ -351,6 +354,7 @@ const EvidenceSummary = () => {
                     ))
                     : null}
                 </Grid>
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
                     ? activity.slice(16, 17).map((ad, key) => (

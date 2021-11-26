@@ -35,11 +35,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
-import Tooltip from "@material-ui/core/Tooltip";
 import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import RemoveIcon from '@material-ui/icons/Remove';
 import {
   KeyboardDateTimePicker, MuiPickersUtilsProvider
 } from '@material-ui/pickers';
@@ -48,15 +48,13 @@ import biologicalHazard from 'dan-images/biologicalHazard.png';
 import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import projectpj from 'dan-images/projectpj.png';
 import moment from "moment";
-import { useParams, useHistory } from "react-router";
-import { useDropzone } from 'react-dropzone';
 
+import { useDropzone } from 'react-dropzone';
+import { useHistory } from "react-router";
 import api from "../../../utils/axios";
 import { companyId, HEADER_AUTH, projectId, SSO_URL, userId } from '../../../utils/constants';
-import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import Attachment from "../../Attachment/Attachment";
-
-
+import { checkValue } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
 
@@ -379,7 +377,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const FlhaDetails = () => {
 
   const [open, setOpen] = useState(false);
@@ -404,7 +401,8 @@ const FlhaDetails = () => {
     "riskRatingLevel": "",
     "riskSeverity": "",
     "riskSeverityValue": "",
-    "status": ""
+    "status": "Active",
+    "createdBy": userId
   }
 
   let taskData = {
@@ -416,12 +414,13 @@ const FlhaDetails = () => {
     "revisionTime": new Date(),
     "rivisionReason": reasonRevison,
     "taskIdentification": "",
+    "status": "Active",
     "version": ""
   }
 
   const [flhaForm, setFlhaForm] = useState({})
 
-  const [taskForm, setTaskForm] = useState([taskData])
+  const [taskForm, setTaskForm] = useState([])
   const [taskPerVersion, setTaskPerVersion] = useState({})
   const [jobVisualConfirmation, setJobVisualConfirmation] = useState([])
 
@@ -445,7 +444,7 @@ const FlhaDetails = () => {
   }
 
   let colorProbablityObj = {
-    "Highly unlikel": 1,
+    "Highly unlikely": 1,
     "Unlikely": 2,
     "Likely": 3,
     "Very likely": 4
@@ -499,7 +498,6 @@ const FlhaDetails = () => {
       headers: HEADER_AUTH,
     };
     const res = await api(config);
-    console.log(res)
     const departmentData = res.data.data.results
     departmentData.map((value) => {
       allDepartment.push(value["departmentName"])
@@ -523,8 +521,6 @@ const FlhaDetails = () => {
       setJobVisualConfirmation(jobVisualData)
     }
   }
-
-
 
   const handelTaskPerVersion = (data) => {
     let dataVersion = {}
@@ -605,11 +601,8 @@ const FlhaDetails = () => {
     handelTaskPerVersion(task)
     let allVersion = task["versions"]
     setVersion(allVersion)
-    taskForm.splice(0, 1)
     let temp = [...taskForm]
-    // temp[0]["version"] = parseInt(allVersion[allVersion.length - 1]) + 0.1
   }
-
 
   const handelProjectStuctId = async (companyId, projectId, projectStruct) => {
     let breakDownUrl = []
@@ -642,10 +635,22 @@ const FlhaDetails = () => {
     setTaskForm(temp)
   }
 
+  const handelRemoveHazards = async (index, indexHazard) => {
+    let temp = [...taskForm]
+    temp[index]["hazards"].splice(indexHazard, 1)
+    await setTaskForm(temp)
+  }
+
   const handelTaskAdded = (index, value) => {
     let temp = [...taskForm]
     temp[index]["taskIdentification"] = value
     setTaskForm(temp)
+  }
+
+  const handelTaskRemove = async (index) => {
+    let temp = [...taskForm]
+    temp.splice(index, 1)
+    await setTaskForm(temp)
   }
 
   const handelHazard = (index, indexHazard, type, value) => {
@@ -683,7 +688,6 @@ const FlhaDetails = () => {
     temp[0]["rivisionReason"] = value
     setTaskForm(temp)
   }
-
 
   const handleRiskChange = (e, key, fieldname, indexHazard) => {
 
@@ -777,6 +781,7 @@ const FlhaDetails = () => {
 
   const handelNotifyTo = async (e, value) => {
     let temp = { ...flhaForm }
+    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
     if (e.target.checked === false) {
       const newData = temp.notifyTo.filter((item) => item !== value);
       temp["notifyTo"] = newData
@@ -786,6 +791,24 @@ const FlhaDetails = () => {
     setFlhaForm(temp)
   };
 
+  const handelJobVisualAttachment = (index) => {
+    let confirmationStatus = jobVisualConfirmation[index]["visualConfirmationStatus"]
+    let confirmationAttahment;
+    if (confirmationStatus == "Yes") {
+      confirmationAttahment = false
+    } else {
+      confirmationAttahment = true
+    }
+    return confirmationAttahment
+  }
+
+  const handelValue = (value) => {
+    let flhaValue = ""
+    if (value !== undefined) {
+      flhaValue = value
+    }
+    return flhaValue
+  }
 
   const handelVisualTaskSubmit = async () => {
 
@@ -804,8 +827,15 @@ const FlhaDetails = () => {
   }
 
   const handelTaskSubmit = async () => {
-    taskForm.map((valueTask) => {
-      valueTask["version"] = parseInt(version[version.length - 1]) + 0.1
+    let taskFields = ["riskProbabilityValue", "riskSeverityValue", "riskRatingColour", "fkTaskId", "updatedAt", "updatedBy", "createdAt"]
+    taskForm.map((value, index) => {
+      value["version"].length > 0 ? value["version"] = "" : value["version"] = value["version"]
+      let hazard = value["hazards"]
+      hazard.length > 0 && hazard.map((valueHazard, indexHazard) => {
+        taskFields.map((value) => {
+          valueHazard[value] !== undefined && delete valueHazard[value]
+        })
+      })
     })
     const res = await api.post(`/api/v1/flhas/${flhaNumber}/criticaltasks/`, taskForm).then(() => handelVisualTaskSubmit()).catch()
   }
@@ -813,7 +843,7 @@ const FlhaDetails = () => {
   const handelFlhaSubmit = async () => {
     delete flhaForm["qrCodeUrl"]
     typeof flhaForm["attachment"] == "string" && delete flhaForm["attachment"]
-    flhaForm["notifyTo"]
+    flhaForm["notifyTo"].length == 0 || flhaForm["notifyTo"] == "null" || flhaForm["notifyTo"] == null ? flhaForm["notifyTo"] = "null" : flhaForm["notifyTo"] = flhaForm["notifyTo"].toString()
     let flhaData = new FormData();
     Object.entries(flhaForm).map(([key, value]) => {
       if (value !== "" && value !== null) {
@@ -821,6 +851,7 @@ const FlhaDetails = () => {
       }
     })
     const res = await api.put(`/api/v1/flhas/${flhaNumber}/`, flhaData).then(() => handelTaskSubmit()).catch()
+    // handelTaskSubmit()
   }
 
   const handelCallBack = async () => {
@@ -1033,9 +1064,10 @@ const FlhaDetails = () => {
                           className="formControl"
                           value={flhaForm.jobTitle}
                           onChange={(e) => setFlhaForm({ ...flhaForm, jobTitle: e.target.value })}
+                          disabled={true}
                         />
                       </Grid>
-                      <Grid item xs={2} className="formFieldBTNSection" align="center"><Button variant="outlined" onClick={handleClickOpen('paper')}>Select job </Button></Grid>
+                      <Grid item xs={2} className="formFieldBTNSection" align="center"><Button variant="outlined" disabled={true} onClick={handleClickOpen('paper')}>Select job </Button></Grid>
                       <Grid item xs={1}><img src={projectpj} height={58} alt="" className={classes.mttopSix} /></Grid>
                       <Grid
                         item
@@ -1055,6 +1087,7 @@ const FlhaDetails = () => {
                           className="formControl"
                           onChange={(e) => setFlhaForm({ ...flhaForm, jobDetails: e.target.value })}
                           value={flhaForm.jobDetails}
+                          disabled={true}
                         />
                       </Grid>
                     </Grid>
@@ -1165,214 +1198,223 @@ const FlhaDetails = () => {
                                 className="accordionHeaderSection"
                               >
                                 <Typography className={classes.heading}>Task#{index + 1} - Task identification</Typography>
+                                <Grid container justify="flex-end">
+                                  <Button>
+                                    <RemoveIcon onClick={(e) => handelTaskRemove(index)} />
+                                  </Button>
+                                </Grid>
                               </AccordionSummary>
                               <AccordionDetails>
-                                <Grid item sm={12} xs={12}>
-                                  <TextField
-                                    multiline
-                                    variant="outlined"
-                                    rows="1"
-                                    id="description"
-                                    label="*Task identification"
-                                    className="formControl"
-                                    value={taskForm[index]["taskIdentification"]}
-                                    onChange={(e) => handelTaskAdded(index, e.target.value)}
-                                  />
-                                </Grid>
+                                {taskForm[index] !== undefined ? <>
+                                  <Grid item sm={12} xs={12}>
+                                    <TextField
+                                      multiline
+                                      variant="outlined"
+                                      rows="1"
+                                      id="description"
+                                      label="*Task identification"
+                                      className="formControl"
+                                      value={taskForm[index]["taskIdentification"]}
+                                      onChange={(e) => handelTaskAdded(index, e.target.value)}
+                                    />
+                                  </Grid>
 
-                                {/* hazard */}
-                                {value["hazards"].map((valueHazard, indexHazard) => (
-                                  <Accordion
-                                    expanded1={expanded1 === `panell${indexHazard}`}
-                                    onChange={handleOneChange(`panell${indexHazard}`)}
-                                    defaultExpanded
-                                    className="backPaperSubAccordian"
-                                  >
-                                    <AccordionSummary
-                                      expandIcon={<ExpandMoreIcon />}
-                                      aria-controls="panel2bh-content"
-                                      id="panel2bh-header"
-                                      className="accordionSubHeaderSection"
+                                  {/* hazard */}
+                                  {value["hazards"].map((valueHazard, indexHazard) => (
+                                    <Accordion
+                                      expanded1={expanded1 === `panell${indexHazard}`}
+                                      onChange={handleOneChange(`panell${indexHazard}`)}
+                                      defaultExpanded
+                                      className="backPaperSubAccordian"
                                     >
-                                      <Typography className={classes.heading}>Hazardk#{indexHazard + 1} - Hazard Name</Typography>
+                                      <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel2bh-content"
+                                        id="panel2bh-header"
+                                        className="accordionSubHeaderSection"
+                                      >
+                                        <Typography className={classes.heading}>Hazardk#{indexHazard + 1} - Hazard Name</Typography>
+                                        <Button>
+                                          <RemoveIcon onClick={(e) => handelRemoveHazards(index, indexHazard)} />
+                                        </Button>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                        <Grid container spacing={3}>
 
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                      <Grid container spacing={3}>
-
-                                        {/* hazard type */}
-                                        <Grid item sm={4} xs={8}>
-                                          <FormControl
-                                            variant="outlined"
-                                            requirement
-                                            className="formControl"
-                                          >
-                                            <InputLabel id="demo-simple-select-label">
-                                              *Hazards
-                                            </InputLabel>
-                                            <Select
-                                              labelId="incident-type-label"
-                                              id="incident-type"
-                                              label="Incident Type"
-                                              value={taskForm[index]["hazards"][indexHazard]["hazards"]}
+                                          {/* hazard type */}
+                                          <Grid item sm={4} xs={8}>
+                                            <FormControl
+                                              variant="outlined"
+                                              requirement
+                                              className="formControl"
                                             >
-                                              {pickListValues["hazard"] !== undefined && pickListValues["hazard"].map((selectValues) => (
-                                                <MenuItem
-                                                  value={selectValues.value}
-                                                  onClick={(e) => handelHazard(index, indexHazard, "hazardType", selectValues.value)}
-                                                >
-                                                  {selectValues.label}
-                                                </MenuItem>
-                                              ))}
-                                            </Select>
-                                          </FormControl>
-                                        </Grid>
-
-                                        <Grid item sm={8} xs={4}>
-                                          <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
-                                        </Grid>
-
-                                        {/* hazard present */}
-                                        <Grid
-                                          item
-                                          md={4}
-                                          xs={12}
-                                        >
-                                          <FormControl component="fieldset">
-                                            <FormLabel component="legend" className="checkRadioLabel">is this hazard present?</FormLabel>
-                                            <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                                              {radioDecide.slice(0, 2).map((value) => (
-                                                <FormControlLabel
-                                                  value={value}
-                                                  className="selectLabel"
-                                                  control={<Radio />}
-                                                  label={value}
-                                                  checked={taskForm[index]["hazards"][indexHazard]["hazardStatus"] == value}
-                                                  onChange={(e) =>
-                                                    handelHazard(index, indexHazard, "hazardPresnt", value)
-                                                  }
-                                                />
-                                              ))}
-                                            </RadioGroup>
-                                          </FormControl>
-                                        </Grid>
-
-                                        {/* control           */}
-                                        <Grid item sm={12} xs={12}>
-                                          <TextField
-                                            multiline
-                                            variant="outlined"
-                                            rows="3"
-                                            id="description"
-                                            label="*Control"
-                                            className="formControl"
-                                            value={taskForm[index]["hazards"][indexHazard]["control"] || ""}
-                                            onChange={(e) => handelHazard(index, indexHazard, "control", e.target.value)}
-                                          />
-                                        </Grid>
-
-                                        {/* control put */}
-                                        <Grid
-                                          item
-                                          md={4}
-                                          xs={12}
-                                        >
-                                          <FormControl component="fieldset">
-                                            <FormLabel component="legend" className="checkRadioLabel">Has this control been put in place?</FormLabel>
-                                            <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                                              {radioDecide.map((value) => (
-                                                <FormControlLabel
-                                                  value={value}
-                                                  className="selectLabel"
-                                                  control={<Radio />}
-                                                  label={value}
-                                                  checked={taskForm[index]["hazards"][indexHazard]["controlStatus"] == value}
-                                                  onChange={(e) =>
-                                                    handelHazard(index, indexHazard, "controlPut", value)
-                                                  }
-                                                />
-                                              ))}
-                                            </RadioGroup>
-                                          </FormControl>
-                                        </Grid>
-
-                                        {/* risk          */}
-                                        <Grid item md={12} sm={12} xs={12}>
-                                          <Grid container spacing={3}>
-                                            {/* risk severity */}
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormControl
-                                                variant="outlined"
-                                                requirement
-                                                className="formControl"
+                                              <InputLabel id="demo-simple-select-label">
+                                                *Hazards
+                                              </InputLabel>
+                                              <Select
+                                                labelId="incident-type-label"
+                                                id="incident-type"
+                                                label="Incident Type"
+                                                value={taskForm[index]["hazards"][indexHazard]["hazards"]}
                                               >
-                                                <InputLabel id="demo-simple-select-label">
-                                                  Risk severity
-                                                </InputLabel>
-                                                <Select
-                                                  labelId="incident-type-label"
-                                                  id="incident-type"
-                                                  label="Incident Type"
-                                                  value={valueHazard.riskSeverityValue}
-                                                  onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue', indexHazard)}
+                                                {pickListValues["hazard"] !== undefined && pickListValues["hazard"].map((selectValues) => (
+                                                  <MenuItem
+                                                    value={selectValues.value}
+                                                    onClick={(e) => handelHazard(index, indexHazard, "hazardType", selectValues.value)}
+                                                  >
+                                                    {selectValues.label}
+                                                  </MenuItem>
+                                                ))}
+                                              </Select>
+                                            </FormControl>
+                                          </Grid>
+
+                                          <Grid item sm={8} xs={4}>
+                                            <img src={biologicalHazard} alt="decoration" className={classes.mttopEight} height={56} />
+                                          </Grid>
+
+                                          {/* hazard present */}
+                                          <Grid
+                                            item
+                                            md={4}
+                                            xs={12}
+                                          >
+                                            <FormControl component="fieldset">
+                                              <FormLabel component="legend" className="checkRadioLabel">is this hazard present?</FormLabel>
+                                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                                                {radioDecide.slice(0, 2).map((value) => (
+                                                  <FormControlLabel
+                                                    value={value}
+                                                    className="selectLabel"
+                                                    control={<Radio />}
+                                                    label={value}
+                                                    checked={taskForm[index]["hazards"][indexHazard]["hazardStatus"] == value}
+                                                    onChange={(e) =>
+                                                      handelHazard(index, indexHazard, "hazardPresnt", value)
+                                                    }
+                                                  />
+                                                ))}
+                                              </RadioGroup>
+                                            </FormControl>
+                                          </Grid>
+
+                                          {/* control           */}
+                                          <Grid item sm={12} xs={12}>
+                                            <TextField
+                                              multiline
+                                              variant="outlined"
+                                              rows="3"
+                                              id="description"
+                                              label="*Control"
+                                              className="formControl"
+                                              value={taskForm[index]["hazards"][indexHazard]["control"] || ""}
+                                              onChange={(e) => handelHazard(index, indexHazard, "control", e.target.value)}
+                                            />
+                                          </Grid>
+
+                                          {/* control put */}
+                                          <Grid
+                                            item
+                                            md={4}
+                                            xs={12}
+                                          >
+                                            <FormControl component="fieldset">
+                                              <FormLabel component="legend" className="checkRadioLabel">Has this control been put in place?</FormLabel>
+                                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                                                {radioDecide.map((value) => (
+                                                  <FormControlLabel
+                                                    value={value}
+                                                    className="selectLabel"
+                                                    control={<Radio />}
+                                                    label={value}
+                                                    checked={taskForm[index]["hazards"][indexHazard]["controlStatus"] == value}
+                                                    onChange={(e) =>
+                                                      handelHazard(index, indexHazard, "controlPut", value)
+                                                    }
+                                                  />
+                                                ))}
+                                              </RadioGroup>
+                                            </FormControl>
+                                          </Grid>
+
+                                          {/* risk          */}
+                                          <Grid item md={12} sm={12} xs={12}>
+                                            <Grid container spacing={3}>
+                                              {/* risk severity */}
+                                              <Grid item md={4} sm={4} xs={12}>
+                                                <FormControl
+                                                  variant="outlined"
+                                                  requirement
+                                                  className="formControl"
                                                 >
-                                                  {Object.entries(colorSeverityObj).map(([key, valueSeverity]) => (
-                                                    <MenuItem
-                                                      value={valueSeverity}
-                                                    >
-                                                      {key}
-                                                    </MenuItem>
-                                                  ))}
+                                                  <InputLabel id="demo-simple-select-label">
+                                                    Risk severity
+                                                  </InputLabel>
+                                                  <Select
+                                                    labelId="incident-type-label"
+                                                    id="incident-type"
+                                                    label="Incident Type"
+                                                    value={valueHazard.riskSeverityValue}
+                                                    onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue', indexHazard)}
+                                                  >
+                                                    {Object.entries(colorSeverityObj).map(([key, valueSeverity]) => (
+                                                      <MenuItem
+                                                        value={valueSeverity}
+                                                      >
+                                                        {key}
+                                                      </MenuItem>
+                                                    ))}
 
 
-                                                </Select>
-                                              </FormControl>
-                                            </Grid>
+                                                  </Select>
+                                                </FormControl>
+                                              </Grid>
 
-                                            {/* risk probablity */}
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormControl
-                                                variant="outlined"
-                                                requirement
-                                                className="formControl"
-                                              >
-                                                <InputLabel id="demo-simple-select-label">
-                                                  Risk probability
-                                                </InputLabel>
-                                                <Select
-                                                  labelId="incident-type-label"
-                                                  id="incident-type"
-                                                  label="Incident Type"
-                                                  value={valueHazard.riskProbabilityValue}
-                                                  onChange={(e) => handleRiskChange(e, index, 'riskProbabilityValue', indexHazard)}
+                                              {/* risk probablity */}
+                                              <Grid item md={4} sm={4} xs={12}>
+                                                <FormControl
+                                                  variant="outlined"
+                                                  requirement
+                                                  className="formControl"
                                                 >
-                                                  {Object.entries(colorProbablityObj).map(([key, valueProbablity]) => (
-                                                    <MenuItem
-                                                      value={valueProbablity}
-                                                      selected={value.riskProbability == valueProbablity}
-                                                    >
-                                                      {key}
-                                                    </MenuItem>
-                                                  ))}
-                                                </Select>
-                                              </FormControl>
+                                                  <InputLabel id="demo-simple-select-label">
+                                                    Risk probability
+                                                  </InputLabel>
+                                                  <Select
+                                                    labelId="incident-type-label"
+                                                    id="incident-type"
+                                                    label="Incident Type"
+                                                    value={valueHazard.riskProbabilityValue}
+                                                    onChange={(e) => handleRiskChange(e, index, 'riskProbabilityValue', indexHazard)}
+                                                  >
+                                                    {Object.entries(colorProbablityObj).map(([key, valueProbablity]) => (
+                                                      <MenuItem
+                                                        value={valueProbablity}
+                                                        selected={value.riskProbability == valueProbablity}
+                                                      >
+                                                        {key}
+                                                      </MenuItem>
+                                                    ))}
+                                                  </Select>
+                                                </FormControl>
+                                              </Grid>
+
+                                              {/* risk color */}
+
+                                              <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
+                                                {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
+                                              </Grid>
+
                                             </Grid>
-
-                                            {/* risk color */}
-
-                                            <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
-                                              {/* <InputLabel id="demo-simple-select-label">
-                                                Risk Rating
-                                              </InputLabel> */}
-                                              {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
-                                            </Grid>
-
                                           </Grid>
                                         </Grid>
-                                      </Grid>
-                                    </AccordionDetails>
-                                  </Accordion>
-                                ))}
+                                      </AccordionDetails>
+                                    </Accordion>
+                                  ))}
+                                </>
+                                  :
+                                  null
+                                }
                                 <Grid item xs={12} className="formFieldBTNSection" align="left">
                                   <Button
                                     variant="contained"
@@ -1462,6 +1504,7 @@ const FlhaDetails = () => {
                                       onChange={(e) => {
                                         handelVisualAttachment(index, e, "visualConfirmation");
                                       }}
+                                      disabled={handelJobVisualAttachment(index)}
                                     />
                                     <IconButton aria-label="delete" align="right">
                                       <DeleteIcon onClick={(e) => handelVisualAttachmentRemove(index)} />
@@ -1501,34 +1544,16 @@ const FlhaDetails = () => {
                             <FormLabel component="legend" className="checkRadioLabel">Enter permit number</FormLabel>
                           </Grid>
                           <Grid item md={4} sm={4} xs={12}>
-                            <FormControl
+                            <TextField
+                              multiline
                               variant="outlined"
-                              requirement
+                              rows="1"
+                              id="description"
+                              label="Permit number"
                               className="formControl"
-                            >
-                              <InputLabel id="permit_type">
-                                Permit type
-                              </InputLabel>
-                              <Select
-                                labelId="permit_type"
-                                id="permit_type"
-                                label="Permit type"
-                              >
-                                {pickListValues["permitType"] !== undefined && pickListValues["permitType"].map((selectValues) => (
-                                  <MenuItem
-                                    value={selectValues.value}
-                                    onClick={(e) => {
-                                      setFlhaForm({
-                                        ...flhaForm,
-                                        referenceGroup: selectValues.value,
-                                      });
-                                    }}
-                                  >
-                                    {selectValues.label}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
+                              value={handelValue(flhaForm.permitToWorkNumber)}
+                              onChange={(e) => setFlhaForm({ ...flhaForm, permitToWorkNumber: e.target.value })}
+                            />
                           </Grid>
                           <Grid item md={4} sm={4} xs={12}>
                             <TextField
@@ -1538,17 +1563,18 @@ const FlhaDetails = () => {
                               id="permitreference"
                               label="Permit reference"
                               className="formControl"
-                              value={flhaForm.referenceNumber}
+                              value={handelValue(flhaForm.referenceNumber)}
                               onChange={(e) => setFlhaForm({ ...flhaForm, referenceNumber: e.target.value })}
                             />
                           </Grid>
                         </Grid>
                       </Grid>
 
-                      <Grid item md={12} sm={12} xs={12}>
+                      <Grid item md={6} sm={6} xs={6}>
                         <MuiPickersUtilsProvider
                           variant="outlined"
                           utils={DateFnsUtils}
+                          className="formControl"
                         >
                           <KeyboardDateTimePicker
                             label="Date & time"
@@ -1706,7 +1732,7 @@ const FlhaDetails = () => {
                           id="emergencynumber"
                           label="Emergency phone number"
                           className="formControl"
-                          value={flhaForm.emergencyPhoneNumber}
+                          value={handelValue(flhaForm.emergencyPhoneNumber)}
                           onChange={(e) => setFlhaForm({ ...flhaForm, emergencyPhoneNumber: e.target.value })}
                         />
                       </Grid>
@@ -1745,7 +1771,7 @@ const FlhaDetails = () => {
                           id="assemblypoint"
                           label="Enter the evacuation/assembly point"
                           className="formControl"
-                          value={flhaForm.evacuationPoint}
+                          value={handelValue(flhaForm.evacuationPoint)}
                           onChange={(e) => setFlhaForm({ ...flhaForm, evacuationPoint: e.target.value })}
                         />
                       </Grid>
@@ -1784,7 +1810,7 @@ const FlhaDetails = () => {
                           id="locationdetail"
                           label="Enter the location details"
                           className="formControl"
-                          value={flhaForm.location}
+                          value={handelValue(flhaForm.location)}
                           onChange={(e) => setFlhaForm({ ...flhaForm, location: e.target.value })}
                         />
                       </Grid>

@@ -38,6 +38,7 @@ import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import UserDetailsView from '../../UserDetails/UserDetail';
 import Loader from "../Loader";
 
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -843,7 +844,7 @@ function Actions(props) {
                                 <Button className={classes.floatR}
                                 // onClick={(e) => handleMyUserPClickOpen(item)} 
                                 >
-                                  <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
+                                  <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
                                 </Button>
                               </Grid>
                               <Link
