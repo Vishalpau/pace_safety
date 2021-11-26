@@ -34,7 +34,6 @@ function MainMenu(props) {
   const { classes, openSubMenu, open, dataMenu } = props;
   console.log(classes.opened,"active check")
   const getMenus = menuArray => menuArray.map((item, index) => {
-    console.log(menuArray)
     if (item.child || item.linkParent) {
         return (
           <div key={index.toString()}>
