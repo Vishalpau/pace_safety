@@ -1,97 +1,59 @@
-import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import React, { useState, useEffect, useRef } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from '@date-io/moment';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import {
-  TimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Paper from '@material-ui/core/Paper';
-import { PapperBlock } from 'dan-components';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useDropzone } from 'react-dropzone';
-import TableContainer from '@material-ui/core/TableContainer';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import IconButton from '@material-ui/core/IconButton';
-import pledgebanner from 'dan-images/pledgebanner.jpg';
-import biologicalHazard from 'dan-images/biologicalHazard.png';
-import chemicalHazard from 'dan-images/chemicalHazard.png';
-import project from 'dan-images/project.jpg';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { CircularProgress } from "@material-ui/core";
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Checkbox from '@material-ui/core/Checkbox';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import classNames from 'classnames';
-import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
-import { findAllByDisplayValue } from 'react-testing-library';
-import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
-import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
-import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined';
-import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined';
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
-import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
-import Tooltip from '@material-ui/core/Tooltip';
-import { ContactSupportOutlined, CreateNewFolderSharp } from '@material-ui/icons';
-import { useHistory, useParams } from 'react-router';
-import api from '../../../utils/axios';
-import validate from '../../Validator/jobFormValidation';
-import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
-import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
-import projectpj from 'dan-images/projectpj.png';
-import {
-  SSO_URL,
-  HEADER_AUTH,
-} from '../../../utils/constants';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Divider from '@material-ui/core/Divider';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Select from '@material-ui/core/Select';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Avatar from '@material-ui/core/Avatar';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import FormObservationbanner from 'dan-images/addFormObservationbanner.jpg';
-import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
-import { CircularProgress } from "@material-ui/core";
-import { getPicklistvalues } from '../../../utils/helper';
-import { appapi, setApiUrl } from '../../../utils/axios';
-import { appendFileSync } from 'fs';
-import {
-
-  KeyboardDateTimePicker,
-
-} from '@material-ui/pickers';
+import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import moment from "moment";
+import { useDropzone } from 'react-dropzone';
+import { useHistory } from 'react-router';
+
+import api from '../../../utils/axios';
+import {
+  HEADER_AUTH, SSO_URL, userId
+} from '../../../utils/constants';
+import { getPicklistvalues } from '../../../utils/helper';
+import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
+import validate from '../../Validator/jobFormValidation';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -427,19 +389,19 @@ const FlhaDetails = (props) => {
 
   const classes = useStyles();
   const history = useHistory();
-  const [selectedDate, setSelectedDate] = React.useState(
+  const [selectedDate, setSelectedDate] = useState(
     new Date()
   );
 
   const handleDateChange = (date) => {
     setSelectedDate(date.toISOString().split('T')[0]);
   };
-  const [value, setValue] = React.useState('N/A');
-  const [error, setError] = React.useState({});
+  const [value, setValue] = useState('N/A');
+  const [error, setError] = useState({});
   const handleChange = (event) => {
     setJobForm({ ...jobForm, Checked: !jobForm.Checked });
   };
-  const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
+  const [showRadioUnplanned, setRadioUnplanned] = useState(false);
   const onClick = () => setRadioUnplanned(true);
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -447,9 +409,9 @@ const FlhaDetails = (props) => {
   const [workArea, setWorkArea] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0)
   const [loading, setLoading] = useState(false);
-  const [hazardtype, setHazardType] = React.useState([])
-  const [hazardValue, setHazardValue] = React.useState('')
-  const [notifyToValue, setNotifyToValue] = React.useState('')
+  const [hazardtype, setHazardType] = useState([])
+  const [hazardValue, setHazardValue] = useState('')
+  const [notifyToValue, setNotifyToValue] = useState('')
 
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -461,12 +423,12 @@ const FlhaDetails = (props) => {
       bytes
     </li>
   ));
-  const [departmentList, setDepartmentList] = React.useState('');
+  const [departmentList, setDepartmentList] = useState('');
 
-  const [open, setOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState('paper');
-  const [jobTitles, setjobTitles] = React.useState([]);
-  const [jobForm, setJobForm] = React.useState({
+  const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState('paper');
+  const [jobTitles, setjobTitles] = useState([]);
+  const [jobForm, setJobForm] = useState({
     fkCompanyId: '',
     fkProjectId: '',
     jobTitle: '',
@@ -504,7 +466,6 @@ const FlhaDetails = (props) => {
     notifyTo: null,
     flhaStage: "Open",
     flhaStatus: "Open",
-    status: "Open",
     createdBy: 6,
     updatedBy: null,
     source: "Web",
@@ -513,9 +474,9 @@ const FlhaDetails = (props) => {
     Checked: false
   });
 
-  const [contractors, setContractors] = React.useState([]);
-  const [supervisors, setSupervisors] = React.useState([]);
-  const [hazardForm, setHazardForm] = React.useState([
+  const [contractors, setContractors] = useState([]);
+  const [supervisors, setSupervisors] = useState([]);
+  const [hazardForm, setHazardForm] = useState([
     {
       hazards: '',
       riskSeverity: '',
@@ -525,38 +486,48 @@ const FlhaDetails = (props) => {
       controlStatus: '',
       hazards: '',
       control: '',
-      // taskIdentification: "",
-      // evidenceDocument: null,
-      // status: "Active",
-      // createdBy: parseInt(userId),
-      // updatedBy: parseInt(userId),
-      // fkIncidentId: localStorage.getItem(""),
     },
   ]);
 
-  const [taskForm, setTaskForm] = React.useState([
-    {
-      taskIdentification: '',
-      riskRatingLevel: '',
-      rivisionReason: '',
-      revisionTime: null,
-      version: '',
-      createdBy: '',
-      hazards: [
-        {
-          hazards: '',
-          riskSeverity: '',
-          riskProbability: '',
-          control: '',
-          hazardStatus: '',
-          controlStatus: '',
-        }
-      ],
-    },
-  ]);
+  let hazardData = {
+    "control": "",
+    "controlStatus": "",
+    "hazardStatus": "",
+    "hazards": "",
+    "riskProbability": "",
+    "riskProbabilityValue": "",
+    "riskRatingLevel": "",
+    "riskSeverity": "",
+    "riskSeverityValue": "",
+    "status": "Active",
+    "createdBy": userId
+  }
 
-  const [flha, setFlha] = React.useState('');
-  const [departments, setDepartments] = React.useState([]);
+  let taskData = {
+    "createdBy": userId,
+    "hazards": [
+      hazardData
+    ],
+    "revisionTime": new Date(),
+    "rivisionReason": "",
+    "taskIdentification": "",
+    "status": "Active",
+    "version": ""
+  }
+
+  const [taskForm, setTaskForm] = useState([taskData]);
+  const [flha, setFlha] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [expanded, setExpanded] = useState('panel');
+  const [expanded1, setExpanded1] = useState(false);
+  const descriptionElementRef = useRef(null);
+
+  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    .projectName.projectId;
+  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
+
+
   const handleNewHazard = async (e, index) => {
     const temp = [...taskForm];
     temp[index].hazards.push({
@@ -567,10 +538,10 @@ const FlhaDetails = (props) => {
       hazardStatus: '',
       controlStatus: '',
     });
-    console.log({ temp });
     await setTaskForm(temp);
   };
-  const [jobConfirmation, setJobConfirmation] = React.useState([
+
+  const [jobConfirmation, setJobConfirmation] = useState([
     {
       'visualConfirmationType': 'See Pictures',
       'visualConfirmationStatus': '',
@@ -587,47 +558,20 @@ const FlhaDetails = (props) => {
       'visualConfirmationAttachment': ''
     }
   ])
-  const handleJobFormChange = async (e, fieldname, autovalue = undefined) => {
-    console.log(jobForm);
-
-    const temp = { ...jobForm };
-    setDepartmentList(e.target)
-    const { value } = e.target;
-    console.log({ value });
-    if (autovalue != undefined) {
-      temp[fieldname] = e.target.textContent;
-    } else {
-      temp[fieldname] = value;
-    }
-    console.log({ temp });
-    await setJobForm(temp);
-    // await console.log({jobForm: jobForm})
-  };
 
   const handleJobConfirmationFormChange = async (e, fieldname, index) => {
-    // alert(fieldname)
     if (fieldname == 'visualConfirmationAttachment') {
-      // alert(fieldname)
-      // console.log({'file': e.target})
       var fieldvalue = e.target.files[0]
     } else {
       var fieldvalue = e.target.value
     }
-
     const temp = [...jobConfirmation]
-    console.log({ temp: temp })
-    console.log({ tempindex: temp[index] })
     temp[index][fieldname] = fieldvalue
-    console.log(temp, ":::::")
     await setJobConfirmation(temp)
   }
 
   const handleHazardForm = async (e, key, taskIndex, fieldname) => {
-    // alert(12345678)
-    console.log(fieldname);
     const temp = [...taskForm];
-    console.log({ tempform: temp });
-
     const { value } = e.target;
     setHazardValue(value)
     if (key == undefined) {
@@ -639,59 +583,30 @@ const FlhaDetails = (props) => {
       }
       temp[taskIndex].hazards[key][fieldname] = value;
     }
-
-    console.log({ temp });
     await setTaskForm(temp);
   };
 
   const handleSelectedJobHazardFormTemp = async (tasks) => {
-    // alert(234567)
-    console.log({ hazardForm });
-    console.log({ tasks });
     const temp = [];
 
     const temp1 = tasks.map((task, index) => {
-      console.log({ task });
       temp[index] = task;
-      // temp[index]['taskIdentification'] = task['taskIdentification']
-      // temp[index]['hazards'] = task['hazards']
       return temp;
     });
-    // alert("Check temp")
-    console.log({ temp1111: temp1 });
-    console.log({ temp222: temp });
     await setTaskForm(temp);
-    console.log({ taskForm12345678: taskForm });
-
     await setHazardForm(temp.hazards);
-    console.log({ hazardForm });
   };
 
   const handleSelectedJobHazardForm = async (tasks) => {
-    // alert(234567)
-    console.log({ hazardForm });
-    console.log({ tasks });
-    // const temp = {}
     const temp = [];
     const temp1 = tasks.map((task, index) => {
-      console.log({ task: task.hazards });
-
       temp.taskIdentification = task.taskIdentification;
       temp.hazards = task.hazards;
       return temp;
     });
-    // alert('Check temp');
-    console.log({ temp1111: temp1 });
-
-    console.log({ temp2222: temp });
     await setTaskForm(temp);
-    console.log({ taskForm12345678: taskForm });
-    console.log({ taskForm12345678temp: temp });
-
     await setHazardForm(temp1.hazards);
-    console.log({ hazardForm });
   };
-
 
   const handleJobFormSubmit = async () => {
     const { error, isValid } = validate(jobForm, selectDepthAndId);
@@ -699,34 +614,14 @@ const FlhaDetails = (props) => {
       await createFlha();
     } else {
       await setError(error);
-
     }
-
   };
-
-
-  const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-  const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
-    .projectName.projectId;
-  const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const createFlha = async () => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':');
-
-    //   jobForm["fkCompanyId"] = fkCompanyId 
-    //   jobForm["createdBy"] = fkUserId  
-    //   jobForm["fkProjectStructureIds"] = fkProjectStructureId  
-    //   jobForm["fkProjectId"] = fkProjectId  
-
-    // let flhaData = new FormData();
-    // Object.entries(jobForm).map(([key, value]) => {
-    // if (value !== "" && value !== null)
-    //  {flhaData.append(key, value);
-    // }})
-
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -755,18 +650,12 @@ const FlhaDetails = (props) => {
       formDataPost, { headers: { 'content-type': 'multipart/form-data' } }
     );
     await setFlha(res.data.data.results.id);
-
     await createCriticalTask(res.data.data.results.id);
-
   };
 
   const createCriticalTask = async (flha) => {
     const data = taskForm;
-    // data['fkFlhaId'] = flha
-    console.log({ data });
-    console.log(data[0]);
     const flhaData = data.map((flhaDetail, index) => {
-      console.log({ flha: data });
       data[index].fkFlhaId = flha;
       data[index].createdBy = fkUserId;
       if (data[index].hazards.length > 0) {
@@ -776,50 +665,32 @@ const FlhaDetails = (props) => {
           data[index].hazards[key].updatedBy = fkUserId;
         });
       }
-      console.log({ updatedData: data });
     });
-    console.log({ data });
     const res = await api.post(
       `/api/v1/flhas/${flha}/criticaltasks/`,
       data
     );
-    console.log({ criticalpost: res.data.data.results });
     await createVisualConfirmation(flha);
   };
 
   const createVisualConfirmation = async (flha) => {
-    console.log({ "visualConf": jobConfirmation })
-    console.log({ "visualConf": jobConfirmation[0] })
     const confData = jobConfirmation.map((jobConfirmationData, index) => {
-      console.log({ flha: jobConfirmationData });
       jobConfirmation[index]['fkFlhaId'] = flha;
       jobConfirmation[index]['createdBy'] = fkUserId;
-
-
     });
     for (let i = 0; i < 3; i++) {
-      // e.preventDefault();
       let formData = new FormData();
 
       for (const key in jobConfirmation[i]) {
         formData.append(key, jobConfirmation[i][key]);
       }
-      console.log({ formdata: formData })
       const res = await api.post(
         `/api/v1/flhas/${flha}/visualconfirmations/`,
         formData
       );
     }
-    console.log({ updatedJobData: jobConfirmation });
-
-    //cerate job confirmation
     history.push('/app/pages/assesments/xflha/');
-    // alert(flha)
   };
-
-  // const handleChangeHazardStatus = async(e, key, fieldname) => {
-
-  // }
 
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
@@ -830,23 +701,11 @@ const FlhaDetails = (props) => {
     setOpen(false);
   };
 
-  const descriptionElementRef = React.useRef(null);
-
-  console.log(hazardtype, 'hazardtype')
-  React.useEffect(() => {
-    getSupervisors();
-    getFieldContractors();
-    getDepartments();
-    handelNotifyToValues();
-    getPicklistvalues(83, setHazardType)
-
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
+  const addTask = () => {
+    let temp = [...taskForm]
+    temp.push(taskData)
+    setTaskForm(temp)
+  }
 
   const getDepartments = async () => {
     const config = {
@@ -855,43 +714,33 @@ const FlhaDetails = (props) => {
       headers: HEADER_AUTH,
     };
     const res = await api(config);
-
-    console.log({ departments: res.data.data.results });
     setDepartments(res.data.data.results);
   };
 
   const handleDepartmentSelection = async (e, value) => {
-    console.log(value.id,'oooo')
     getJobTitles(value.id);
-    setDepartmentList(value.id)
   };
 
   const getSupervisors = async () => {
     const res = await api.get('api/v1/lists/2/value');
-    console.log({ supervisor: res.data.data.results });
     setSupervisors(res.data.data.results);
   };
+
   const getFieldContractors = async () => {
     const res = await api.get('api/v1/lists/3/value');
-    console.log({ fieldContractor: res.data.data.results });
     setContractors(res.data.data.results);
   };
+
   const getJobTitles = async (id) => {
     const res = await api.get(`api/v1/configflhas/department/${id}/jobtitles/?companyId=${fkCompanyId}&projectId=${fkProjectId}`
     );
-    console.log({ jobtitles: res.data.data.results });
     await setjobTitles(res.data.data.results);
   };
 
   const handleJobSelection = async (jobTitleId) => {
     const res = await api.get('api/v1/configflhas/jobtitles/' + jobTitleId + '/');
     const selectedJobTitle = res.data.data.results;
-    console.log({ jobtitleseleted: selectedJobTitle });
-
     const temp = { ...jobForm };
-
-    console.log({ temp });
-    // await setJobForm(temp);
 
     setJobForm(
       {
@@ -908,88 +757,53 @@ const FlhaDetails = (props) => {
         Checked: jobForm.Checked
       }
     );
-    console.log({ jobtitleseleted: jobForm });
     await handleSelectedJobHazardFormTemp(selectedJobTitle.critical_tasks);
     setOpen(false);
-    // setjobTitles(res.data.data.results.results)
   };
-
-  const [state, setState] = React.useState({
-    checkedA: true,
-  });
-
-  const [expanded, setExpanded] = React.useState('panel');
-
 
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-
-  const [expanded1, setExpanded1] = React.useState(false);
   const handleOneChange = (panell) => (event, isExpanded1) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
 
-
   const handleRiskChange = (e, key, taskIndex, fieldname) => {
-    console.log(e.nativeEvent.target.innerText);
     const temp = [...taskForm];
     const txt = e.nativeEvent.target.innerText;
     temp[taskIndex].hazards[key][fieldname] = e.target.value;
-    // if(fieldname == "riskSeverity"){
     const riskSeverity = ((temp[taskIndex].hazards[key].riskSeverityValue == undefined || temp[taskIndex].hazards[key].riskSeverityValue == '' || isNaN(temp[taskIndex].hazards[key].riskSeverityValue)) ? 1 : temp[taskIndex].hazards[key].riskSeverityValue);
-    console.log(riskSeverity, ">>>>>")
-    // }
-    // else if(fieldname == "riskProbability"){
     const riskProbability = ((temp[taskIndex].hazards[key].riskProbabilityValue == undefined || temp[taskIndex].hazards[key].riskProbabilityValue == '' || isNaN(temp[taskIndex].hazards[key].riskProbabilityValue)) ? 1 : temp[taskIndex].hazards[key].riskProbabilityValue);
-    // }
-
-
-    console.log({ riskSeverity });
-    console.log({ riskSeverity: riskProbability });
     const riskRating = riskSeverity * riskProbability;
-    // alert(riskRating)
-
     if (fieldname == 'riskSeverityValue') {
-      // alert('severity');
       temp[taskIndex].hazards[key].riskSeverity = txt;
     } else {
-      // alert('probability');
       temp[taskIndex].hazards[key].riskProbability = txt;
     }
-
     if (riskRating >= 1 && riskRating <= 4) {
-      // alert("low")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Trivial`;
       temp[taskIndex].hazards[key].riskRatingColour = '#009933';
     } else if (riskRating > 5 && riskRating <= 8) {
-      // alert("medium")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Tolerable`;
       temp[taskIndex].hazards[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
-      // alert("serious")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Moderate`;
       temp[taskIndex].hazards[key].riskRatingColour = '#fff82e';
     } else if (riskRating > 17 && riskRating <= 24) {
-      // alert("serious")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Substantial`;
       temp[taskIndex].hazards[key].riskRatingColour = '#990000';
     } else {
-      // alert("high")
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Intolerable`;
       temp[taskIndex].hazards[key].riskRatingColour = '#ff0000';
     }
-
-    console.log({ updated: temp });
     setTaskForm(temp);
   };
-  console.log(taskForm, "!@#")
+
   const handleFileUpload = (e) => {
-    // alert('changing file');
     setJobForm({ ...jobForm, attachment: e.target.files[0] })
-    // setFileName(e.target.files[0].name)
   };
+
   const handelNotifyToValues = async () => {
     let allRoles = {}
     const config = {
@@ -1019,6 +833,22 @@ const FlhaDetails = (props) => {
     }
     setJobForm(temp)
   };
+
+  useEffect(() => {
+    getSupervisors();
+    getFieldContractors();
+    getDepartments();
+    handelNotifyToValues();
+    getPicklistvalues(83, setHazardType)
+
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
+
 
   return (
     <div>
@@ -1079,7 +909,6 @@ const FlhaDetails = (props) => {
                     id="JobTitle"
                     label="*Title"
                     className="formControl"
-                    // onChange={(e) => handleJobFormChange(e, 'jobTitle')}
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,
@@ -1109,7 +938,6 @@ const FlhaDetails = (props) => {
                     <Box padding={2}>
                       <Grid container spacing={3}>
                         <Grid item md={6} sm={6} xs={12}>
-                          {/* <div className={classes.spacer}> */}
                           <Autocomplete
                             style={{ minWidth: 500 }}
                             id="Department"
@@ -1119,7 +947,6 @@ const FlhaDetails = (props) => {
                             renderInput={(params) => <TextField {...params} label="Department" className="formControl" variant="outlined" />}
                             onChange={(e, value) => { handleDepartmentSelection(e, value); setDepartmentList(value) }}
                           />
-                          {/* </div> */}
                         </Grid>
                       </Grid>
                     </Box>
@@ -1162,7 +989,6 @@ const FlhaDetails = (props) => {
                   <TextField
                     label="*Job description"
                     error={jobForm.jobDetails ? '' : error.jobDetails}
-                    //margin="dense"
                     name="jobdescription"
                     id="description"
                     multiline
@@ -1171,7 +997,6 @@ const FlhaDetails = (props) => {
                     fullWidth
                     variant="outlined"
                     className="formControl"
-                    // onChange={(e) => handleJobFormChange(e, 'jobDetails')}
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,
@@ -1426,80 +1251,62 @@ const FlhaDetails = (props) => {
 
                   ))}
                 </div>
+                <Grid item xs={12} className="formFieldBTNSectionAdd" align="left">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AddCircleIcon />}
+                    //className={classes.button}
+                    onClick={(e) => addTask()}
+                  >
+                    Add new task
+                  </Button>
+                </Grid>
               </Grid>
               <Divider className={classes.divider} />
             </Box>
           </Grid>
 
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Paper elevation={1} className="paperSection">
-              <Grid item md={12} sm={12} xs={12}>
-                <Grid container spacing={3}>
-                  <Grid item md={6} sm={6} xs={6}>
-                    <MuiPickersUtilsProvider
-                      variant="outlined"
-                      utils={DateFnsUtils}
-                      className="formControl"
-                    >
-                      <KeyboardDateTimePicker
-                        label="Date & time"
-                        value={jobForm.dateTimeFlha || null}
-                        onChange={(e) => {
-                          setJobForm({
-                            ...jobForm,
-                            dateTimeFlha: moment(e).toISOString(),
-                          });
-                        }}
-                        InputProps={{ readOnly: true }}
-                        format="yyyy/MM/dd HH:mm"
-                        inputVariant="outlined"
-                        disableFuture="true"
-                      />
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                </Grid>
-              </Grid>
+          <Grid item md={12} sm={12} xs={12}>
+            <Grid container spacing={3}>
+              <Grid item md={6} sm={6} xs={6}>
 
-              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
-                  <Typography className="viewLabelValue">
-                    {/* <div {...getRootProps({ className: 'dropzone' })} onDrop={(e) => handleFileUpload(e)}>
-                      <input onDrop={(e) => handleFileUpload(e)} {...getInputProps()} />
-                      <span align="center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
-                          <g id="upload-outbox-svgrepo-com" transform="translate(0 0)">
-                            <g id="Group_4970" data-name="Group 4970" transform="translate(13.004)">
-                              <g id="Group_4969" data-name="Group 4969">
-                                <path id="Path_3322" data-name="Path 3322" d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z" transform="translate(-166.342 -68.504)" fill="#7890a4" />
-                              </g>
-                            </g>
-                            <g id="Group_4972" data-name="Group 4972" transform="translate(0 12.502)">
-                              <g id="Group_4971" data-name="Group 4971">
-                                <path id="Path_3323" data-name="Path 3323" d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z" transform="translate(0 -228.424)" fill="#7890a4" />
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </span>
-                      <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
-                    </div>
-                    <aside>
-                      <h4>Files</h4>
-                      <ul>{files}</ul>
-                    </aside> */}
-                    <input
-                      type="file"
-                      id="attachment"
-                      accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                      onChange={(e) => {
-                        handleFileUpload(e);
-                      }} />
-                  </Typography>
-                </Grid>
+                <MuiPickersUtilsProvider
+                  variant="outlined"
+                  utils={DateFnsUtils}
+                  className="formControl"
+                >
+                  <KeyboardDateTimePicker
+                    label="Date & time"
+                    value={jobForm.dateTimeFlha || null}
+                    onChange={(e) => {
+                      setJobForm({
+                        ...jobForm,
+                        dateTimeFlha: moment(e).toISOString(),
+                      });
+                    }}
+                    InputProps={{ readOnly: true }}
+                    format="yyyy/MM/dd HH:mm"
+                    inputVariant="outlined"
+                    disableFuture="true"
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
-            </Paper>
+            </Grid>
           </Grid>
+          <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+            <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
+            <Typography className="viewLabelValue">
+              <input
+                type="file"
+                id="attachment"
+                accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                onChange={(e) => {
+                  handleFileUpload(e);
+                }} />
+            </Typography>
+          </Grid>
+
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
@@ -1613,7 +1420,6 @@ const FlhaDetails = (props) => {
                           id="permitNumber"
                           label="Enter permit number"
                           value={jobForm.permitToWorkNumber}
-                          // onChange={(e) => handleJobFormChange(e, 'permitToWorkNumber')}
                           onChange={(e) => {
                             setJobForm({
                               ...jobForm,
@@ -1632,7 +1438,6 @@ const FlhaDetails = (props) => {
                           label="Permit job reference"
                           className="formControl"
                           value={jobForm.referenceNumber}
-                          // onChange={(e) => handleJobFormChange(e, 'referenceNumber')}
                           onChange={(e) => {
                             setJobForm({
                               ...jobForm,
@@ -1648,45 +1453,25 @@ const FlhaDetails = (props) => {
             </Paper>
           </Grid>
 
-
-
-
-
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Typography variant="h6" className="sectionHeading">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
-                <g id="outline-assignment-24px" transform="translate(0 1.44)">
-                  <g id="Bounding_Boxes">
-                    <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none" />
-                  </g>
-                  <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c" />
-                </g>
-              </svg> Notification block
-            </Typography>
+          <Grid container spacing={3}>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
+              <FormGroup className={classes.radioInline}>
+                {Object.entries(notifyToValue).map(([key, value]) => (
+                  <FormControlLabel
+                    control={<Checkbox name={value} />}
+                    label={value}
+                    onChange={async (e) => handelNotifyTo(e, key)}
+                  />
+                ))}
+              </FormGroup>
+            </Grid>
           </Grid>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Paper elevation={1} className="paperSection">
-              <Grid container spacing={3}>
-                <Grid
-                  item
-                  md={12}
-                  xs={12}
-                >
-                  <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
-                  <FormGroup className={classes.customCheckBoxList}>
-                    {Object.entries(notifyToValue).map(([key, value]) => (
-                      <FormControlLabel
-                        control={<Checkbox name={value} />}
-                        label={value}
-                        // checked={jobForm["notifyTo"].includes(key)}
-                        onChange={async (e) => handelNotifyTo(e, key)}
-                      />
-                    ))}
-                  </FormGroup>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
+
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
@@ -1705,7 +1490,6 @@ const FlhaDetails = (props) => {
                   md={5}
                   xs={12}
                 >
-
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className="checkRadioLabel">*Is a First Aid/Medical Aid present for your shift?</FormLabel>
                     <RadioGroup row aria-label="firstAid" name="firstAid" value={jobForm.firstAid} onChange={(e) => {
@@ -1733,7 +1517,6 @@ const FlhaDetails = (props) => {
                     label="Emergency phone number"
                     className="formControl"
                     value={jobForm.emergencyPhoneNumber}
-                    // onChange={(e) => handleJobFormChange(e, 'emergencyPhoneNumber')}
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,
@@ -1776,7 +1559,6 @@ const FlhaDetails = (props) => {
                     label="Enter the evacuation/assembly point"
                     className="formControl"
                     value={jobForm.evacuationPoint}
-                    // onChange={(e) => handleJobFormChange(e, 'evacuationPoint')}
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,
@@ -1819,7 +1601,6 @@ const FlhaDetails = (props) => {
                     label="Enter the location details"
                     className="formControl"
                     value={(jobForm.location) ? (jobForm.location) : ''}
-                    // onChange={(e) => handleJobFormChange(e, 'location')}
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,
@@ -1861,14 +1642,23 @@ const FlhaDetails = (props) => {
             xs={12}
             className={classes.formBBanner}
           >
-            <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={FormObservationbanner} />
+            <Avatar
+              className={classes.observationFormBox}
+              variant="rounded"
+              alt="Observation form banner"
+              src={FormObservationbanner}
+            />
           </Grid>
           <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-            {/* <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={handleJobFormSubmit}>
-              Save
-            </Button> */}
             <div className={classes.loadingWrapper}>
-              <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={handleJobFormSubmit} disabled={loading}>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                className="spacerRight buttonStyle"
+                onClick={(e) => handleJobFormSubmit()}
+                disabled={loading}
+              >
                 Submit
               </Button>
               {loading && (
@@ -1878,16 +1668,17 @@ const FlhaDetails = (props) => {
                 />
               )}
             </div>
-            <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => {
-              history.push("/app/pages/assesments/xflha");
-            }}>
+            <Button
+              size="medium"
+              variant="contained"
+              color="secondary"
+              className="buttonStyle custmCancelBtn"
+              onClick={() => {
+                history.push("/app/pages/assesments/xflha");
+              }}>
               Cancel
             </Button>
           </Grid>
-          {/* <PapperBlock title="XFLHA - Initial Assessment" icon="ion-ios-create-outline" desc="" color="primary"> */}
-
-          {/* </PapperBlock> */}
-
         </Grid>
       </CustomPapperBlock>
     </div>

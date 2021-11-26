@@ -703,7 +703,7 @@ const FlhaDetails = (props) => {
 																		Is a First Aid/Medical Aid present for your shift?
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																		{flha.firstAid}
+																		{flha.firstAid ? flha.firstAid :'-' }
 																	</Typography>
 															
 																</Grid>

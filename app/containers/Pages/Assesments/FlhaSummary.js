@@ -91,8 +91,8 @@ const styles = theme => ({
     margin: '.5rem 0',
     '& td textHeight': {
       padding: '11.5px 14px',
-    	borderRadius: '8px',
-	  },
+      borderRadius: '8px',
+    },
   },
   spacerRight: {
     marginRight: '.75rem',
@@ -166,7 +166,7 @@ class SimpleTabs extends React.Component {
     visualConfirmations: {},
     versions: ["1.0",]
   };
-    
+
 
   handleChangeTab = (event, value) => {
     // alert(value)
@@ -188,19 +188,19 @@ class SimpleTabs extends React.Component {
     this.setState({ flha: res.data.data.results });
   }
 
-  getPreventiveControls = async (value=undefined) => {
+  getPreventiveControls = async (value = undefined) => {
     const flhaId = this.props.match.params.id;
-    if(value != undefined){
+    if (value != undefined) {
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
     }
-    else{
+    else {
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
     }
-    
-    
+
+
     await this.setState({ criticalTasks: res.data.data.results.tasks });
     console.log({ controls: this.state.criticalTasks });
-    await this.setState({versions: res.data.data.results.versions})
+    await this.setState({ versions: res.data.data.results.versions })
   }
 
   getJobVisualConfirmation = async () => {
@@ -218,7 +218,7 @@ class SimpleTabs extends React.Component {
     const handleChange = (event) => {
       setValue(event.target.value);
     };
-    console.log({versionscon: versions})
+    console.log({ versionscon: versions })
 
     return (
       <PapperBlock title={'FLHA Number:' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
@@ -284,12 +284,12 @@ class SimpleTabs extends React.Component {
 
                   </Typography>
                   <Typography >
-                                    {flha.attachment ===
-                                      null ? null : typeof flha.attachment ===
-                                        "string" ? (
-                                      <Attachment value={flha.attachment} />
-                                    ) : null}
-                                  </Typography>
+                    {flha.attachment ===
+                      null ? null : typeof flha.attachment ===
+                        "string" ? (
+                      <Attachment value={flha.attachment} />
+                    ) : null}
+                  </Typography>
 
 
                 </Grid>
@@ -304,12 +304,12 @@ class SimpleTabs extends React.Component {
               <AppBar position="static" className={classes.headerBackground}>
                 <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
                   {(this.state.versions.length > 0) ?
-                
-                  (versions.map((version) => (
-                    // console.log(this.state.versions)
-                    <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
-                  )))
-                  : "Initial Revision"
+
+                    (versions.map((version) => (
+                      // console.log(this.state.versions)
+                      <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
+                    )))
+                    : "Initial Revision"
 
                   }
                   {/* <Tab label="Initial revision" />
@@ -319,10 +319,10 @@ class SimpleTabs extends React.Component {
               </AppBar>
               {/* {value === 0
 			&& ( */}
-			  <TabContainer className={classes.paddZero}>
-            <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
-			  </TabContainer>
-			{/* )} */}
+              <TabContainer className={classes.paddZero}>
+                <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
+              </TabContainer>
+              {/* )} */}
               {/* {value === 1 && <TabContainer>Item Two</TabContainer>}
               {value === 2 && <TabContainer>Item Three</TabContainer>}
               {value === 3 && (
@@ -406,7 +406,7 @@ class SimpleTabs extends React.Component {
               <div className={classes.root}>
                 <Box padding={1} bgcolor="background.paper">
                   <Typography variant="h6" gutterBottom>
-				Quick Actions
+                    Quick Actions
 
                   </Typography>
                   <Divider />
@@ -432,11 +432,11 @@ class SimpleTabs extends React.Component {
                       <ListItemIcon>
                         <HistoryIcon />
                       </ListItemIcon>
-                      {console.log(this.state,'w')}
+                      {console.log(this.state, 'w')}
                       <Link
-                      
-                      // disabled={true}
-                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds}
+
+                        // disabled={true}
+                        href={'/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
@@ -549,7 +549,7 @@ class SimpleTabs extends React.Component {
             </Paper>
           </Grid>
         </Grid>
-        
+
       </PapperBlock>
     );
   }
