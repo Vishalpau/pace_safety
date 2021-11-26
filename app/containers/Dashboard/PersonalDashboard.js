@@ -246,6 +246,7 @@ function PersonalDashboard(props) {
         getModules(apps)
       } catch (error) { }
     }
+    // getAllPickList()
   }
 
   const getModules = async (apps) => {
@@ -527,11 +528,12 @@ function PersonalDashboard(props) {
     } else {
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
-    getSubscriptions()
+    await getSubscriptions();
   }
 
   useEffect(() => {
     handelCallBack()
+    
   }, [props.initialValues.companyListData]);
 
   return (
@@ -563,7 +565,7 @@ function PersonalDashboard(props) {
 
               <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_hse_control_tower" onClick={() => handleClick('controltower')}>
+                  <a className="hse_hse_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
                     <p>Control Tower</p>
                   </a>
                 </div>
@@ -577,7 +579,7 @@ function PersonalDashboard(props) {
                 <div className="hexagontent hexagon_content_box">
                   <a
                     className="hse_incident_reporting_management"
-                    onClick={() => handleClick('incidents')}
+                    onClick={() => history.push('/incidents/')}
                   >
                     <p>Incident Management</p>
                   </a>
@@ -612,14 +614,14 @@ function PersonalDashboard(props) {
 
               <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_observations" onClick={() => handleClick('observations')}>
+                  <a className="hse_observations" onClick={() => history.push('/app/icare')}>
                     <p>iCare</p>
                   </a>
                 </div>
               </div>
               <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
+                  <a className="hse_smart_permit_management" onClick={() => history.push('/app/pages/assesments/xflha')}>
                     <p>Assessments</p>
                   </a>
                 </div>
