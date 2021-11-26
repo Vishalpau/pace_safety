@@ -485,7 +485,6 @@ const FlhaDetails = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-
   const handleOneChange = (panell) => (event, isExpanded1) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
