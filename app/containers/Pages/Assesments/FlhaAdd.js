@@ -46,6 +46,7 @@ import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import moment from "moment";
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import api from '../../../utils/axios';
 import {
@@ -697,6 +698,12 @@ const FlhaDetails = (props) => {
     setTaskForm(temp)
   }
 
+  const handelTaskRemove = async (index) => {
+    let temp = [...taskForm]
+    temp.splice(index, 1)
+    await setTaskForm(temp)
+  }
+
   const getDepartments = async () => {
     const config = {
       method: 'get',
@@ -1062,6 +1069,11 @@ const FlhaDetails = (props) => {
                           {' '}
                           Task#{(taskIndex + 1)} - "Task identification"
                         </Typography>
+                        <Grid container justify="flex-end">
+                          <Button>
+                            <RemoveIcon onClick={(e) => handelTaskRemove(taskIndex)} />
+                          </Button>
+                        </Grid>
                       </AccordionSummary>
                       <AccordionDetails>
                         <Grid item sm={12} xs={12}>
@@ -1072,7 +1084,7 @@ const FlhaDetails = (props) => {
                             id="taskIdentification"
                             label="Task Name"
                             className={classes.fullWidth}
-                            value={(taskValue.taskIdentification != undefined) ? taskValue.taskIdentification : ''}
+                            value={taskForm[taskIndex]["taskIdentification"]}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
                           />
@@ -1085,7 +1097,9 @@ const FlhaDetails = (props) => {
                               id="panel2bh-header"
                               className={classes.accordionSubHeaderSection}
                             >
-                              <Typography className={classes.heading}>Hazard#{index + 1} - {(item.hazard) ? item.hazard : hazardValue}</Typography>
+                              <Typography className={classes.heading}>
+                                Hazard#{index + 1} - {taskForm[taskIndex]["hazards"][index]["hazards"]}
+                              </Typography>
                               <Typography className={classes.secondaryHeading}>
                               </Typography>
                             </AccordionSummary>
@@ -1107,7 +1121,7 @@ const FlhaDetails = (props) => {
                                       rows="3"
                                       id="hazards"
                                       className={classes.fullWidth}
-                                      value={(item.hazard != undefined) ? item.hazard : hazardValue}
+                                      value={taskForm[taskIndex]["hazards"][index]["hazards"]}
                                       disabled={(item.hazard != undefined) ? item.hazard : ''}
                                       onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazards'), setHazardType }
                                       }
@@ -1143,7 +1157,7 @@ const FlhaDetails = (props) => {
                                         id="description"
                                         label="Control"
                                         className={classes.fullWidth}
-                                        value={(item.control != undefined) ? item.control : ''}
+                                        value={taskForm[taskIndex]["hazards"][index]["control"]}
                                         onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
                                         }
                                       />
