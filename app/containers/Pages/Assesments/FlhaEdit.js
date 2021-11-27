@@ -754,6 +754,7 @@ const FlhaDetails = () => {
         setJobVisualConfirmation(temp)
       } else if (type == "flhaAttachment") {
         let temp = { ...flhaForm }
+
         temp["attachment"] = e.target.files[0];
         setFlhaForm(temp)
       }
@@ -802,11 +803,10 @@ const FlhaDetails = () => {
   }
 
   const handelValue = (value) => {
-    let flhaValue = ""
-    if (value !== undefined) {
-      flhaValue = value
+    if (value == undefined || value == 'undefined' || value == '') {
+      return ''
     }
-    return flhaValue
+    return value
   }
 
   const handelVisualTaskSubmit = async () => {
@@ -1505,9 +1505,16 @@ const FlhaDetails = () => {
                                       }}
                                       disabled={handelJobVisualAttachment(index)}
                                     />
-                                    <IconButton aria-label="delete" align="right">
+                                    
+                    {jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
+                      null ? null : typeof jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
+                        "string" ? (
+                      <Attachment value={jobVisualConfirmation[index]["visualConfirmationAttachment"]} />
+                    ) : null}
+                  
+                                    {/* <IconButton aria-label="delete" align="right">
                                       <DeleteIcon onClick={(e) => handelVisualAttachmentRemove(index)} />
-                                    </IconButton>
+                                    </IconButton> */}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -1606,7 +1613,7 @@ const FlhaDetails = () => {
                           }}
                         />
                       </Grid>
-
+{console.log(flhaForm.attachment,'ooo')}
                       <Grid item md={12} sm={12} xs={12}>
                         {flhaForm.attachment != "" &&
                           typeof flhaForm.attachment == "string" ? (

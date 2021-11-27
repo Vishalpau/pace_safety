@@ -464,7 +464,7 @@ const FlhaDetails = (props) => {
         descriptionElement.focus();
       }
     }
-  }, [props.criticalTasks, props.visualConfirmations]);
+  }, [props.criticalTasks, props.visualConfirmations, props.flha]);
 
 
   const [state, setState] = React.useState({
@@ -720,7 +720,8 @@ const FlhaDetails = (props) => {
 																		Emergency phone number
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																	{flha.emergencyPhoneNumber ? flha.emergencyPhoneNumber:'-'}
+                                    
+																	{flha.emergencyPhoneNumber == undefined || flha.emergencyPhoneNumber== 'undefined' || flha.emergencyPhoneNumber=='' ? '-' : flha.emergencyPhoneNumber}
 																	</Typography>
 																</Grid>
 															</Grid>
@@ -738,7 +739,8 @@ const FlhaDetails = (props) => {
 																		Has the JHA been reviewed?
 																	</Typography>
 																	<Typography className="viewLabelValue">
-                                  {flha.jhaReviewed}
+                                
+                                  {flha.jhaReviewed!=='undefined' ? flha.jhaReviewed :'-'}
 																	</Typography>
 																
 																</Grid>
@@ -755,7 +757,7 @@ const FlhaDetails = (props) => {
 																		Enter the evacuation/assembly point
 																	</Typography>
 																	<Typography className="viewLabelValue">
-																		{flha.evacuationPoint ? flha.evacuationPoint:'-'}
+                                  {flha.evacuationPoint == undefined || flha.evacuationPoint== 'undefined' || flha.evacuationPoint=='' ? '-' : flha.evacuationPoint}
 																	</Typography>
 											
 																</Grid>

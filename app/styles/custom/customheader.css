@@ -604,6 +604,9 @@ html .custmCancelBtn {
 .blockBGColor {
   background-color: #06425C !important;
 }
+.blockBGColor .formControl .MuiSelect-select {
+  color: #ffffff !important;
+}
 .reviseCount {
   margin-top: 4px !important;
 }

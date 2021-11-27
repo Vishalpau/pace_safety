@@ -167,16 +167,16 @@ const CloseOut = (props) => {
     <CustomPapperBlock title="FLHA - Close Out" icon={flhaLogoSymbol} whiteBg>
       {/* {console.log(jobForm)} */}
       {loading == false ?
-        <Paper elevation={3}>
+        // <Paper elevation={3}>
           <Grid container spacing={3}>
-            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-              <Typography variant="h6" className="sectionHeading">
-                <svg id="baseline-cancel-24px" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                  <path id="Path_1990" data-name="Path 1990" d="M12,2A10,10,0,1,0,22,12,9.991,9.991,0,0,0,12,2Zm5,13.59L15.59,17,12,13.41,8.41,17,7,15.59,10.59,12,7,8.41,8.41,7,12,10.59,15.59,7,17,8.41,13.41,12Z" fill="#06425c" />
-                  <path id="Path_1991" data-name="Path 1991" d="M0,0H24V24H0Z" fill="none" />
-                </svg> Close out
-              </Typography>
-            </Grid>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+            <svg id="baseline-cancel-24px" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+              <path id="Path_1990" data-name="Path 1990" d="M12,2A10,10,0,1,0,22,12,9.991,9.991,0,0,0,12,2Zm5,13.59L15.59,17,12,13.41,8.41,17,7,15.59,10.59,12,7,8.41,8.41,7,12,10.59,15.59,7,17,8.41,13.41,12Z" fill="#06425c"/>
+              <path id="Path_1991" data-name="Path 1991" d="M0,0H24V24H0Z" fill="none"/>
+            </svg> Close out
+            </Typography>
+          </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
               <Paper elevation={1} className="paperSection">
@@ -405,7 +405,7 @@ const CloseOut = (props) => {
             </Grid>
           </Grid>
 
-        </Paper>
+        // </Paper>
         : "Loading..."}
     </CustomPapperBlock>
   );

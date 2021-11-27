@@ -265,6 +265,11 @@ const useStyles = makeStyles((theme) => ({
   // },
   createHazardbox: {
     margin: '0px 0px 10px 0px',
+    '& button': {
+      textTransform: 'initial',
+      fontSize: '0.875rem',
+
+    },
   },
   createHazardboxRight: {
     paddingLeft: '5px',
@@ -331,11 +336,11 @@ const useStyles = makeStyles((theme) => ({
     color: '#06425c',
     borderRadius: '6px 6px 0px 0px',
   },
-  cellHeight: {
-    '& td': {
-      padding: '0px 6px',
-    },
-  },
+  // cellHeight: {
+  //   '& td': {
+  //     padding: '0px 6px',
+  //   },
+  // },
   headingIcon: {
     width: '35px',
     border: '1px solid rgb(229, 233, 235)',
@@ -382,6 +387,20 @@ const useStyles = makeStyles((theme) => ({
   paddL5: {
     paddingLeft: '5px !important',
   },
+  criticalHazardSection: {
+    '& .MuiAccordion-rounded': {
+      marginBottom: '15px !important',
+    },
+    '& .MuiAccordionSummary-root.Mui-expanded': {
+      borderTopRightRadius: '6px',
+      borderTopLeftRadius: '6px',
+    },
+    '& .MuiAccordion-root.Mui-expanded + div': {
+      borderTopRightRadius: '6px',
+      borderTopLeftRadius: '6px',
+    }
+  },
+
 }));
 // Top 100 films as rated by IMDb users.
 
@@ -411,7 +430,6 @@ const FlhaDetails = (props) => {
   const [levelLenght, setLevelLenght] = useState(0)
   const [loading, setLoading] = useState(false);
   const [hazardtype, setHazardType] = useState([])
-  const [hazardValue, setHazardValue] = useState('')
   const [notifyToValue, setNotifyToValue] = useState('')
 
   const files = acceptedFiles.map(file => (
@@ -515,6 +533,7 @@ const FlhaDetails = (props) => {
     "status": "Active",
     "version": ""
   }
+  const [isSelectedJob, setIsSelectedJob] = useState(false);
 
   const [taskForm, setTaskForm] = useState([taskData]);
   const [flha, setFlha] = useState('');
@@ -571,10 +590,9 @@ const FlhaDetails = (props) => {
     await setJobConfirmation(temp)
   }
 
-  const handleHazardForm = async (e, key, taskIndex, fieldname) => {
+  const handleHazardForm = (e, key, taskIndex, fieldname) => {
     const temp = [...taskForm];
     const { value } = e.target;
-    setHazardValue(value)
     if (key == undefined) {
       temp[taskIndex][fieldname] = value;
     } else {
@@ -584,7 +602,8 @@ const FlhaDetails = (props) => {
       }
       temp[taskIndex].hazards[key][fieldname] = value;
     }
-    await setTaskForm(temp);
+    console.log(temp, 'temp')
+    setTaskForm(temp);
   };
 
   const handleSelectedJobHazardFormTemp = async (tasks) => {
@@ -725,7 +744,10 @@ const FlhaDetails = (props) => {
   };
 
   const handleDepartmentSelection = async (e, value) => {
-    getJobTitles(value.id);
+    if (value != null) {
+      getJobTitles(value.id);
+    }
+
   };
 
   const getSupervisors = async () => {
@@ -747,6 +769,7 @@ const FlhaDetails = (props) => {
   const handleJobSelection = async (jobTitleId) => {
     const res = await api.get('api/v1/configflhas/jobtitles/' + jobTitleId + '/');
     const selectedJobTitle = res.data.data.results;
+    setIsSelectedJob(true)
     const temp = { ...jobForm };
 
     setJobForm(
@@ -945,11 +968,13 @@ const FlhaDetails = (props) => {
                     <Box padding={2}>
                       <Grid container spacing={3}>
                         <Grid item md={6} sm={6} xs={12}>
+                          {console.log(departmentList.departmentName, 'ooo')}
                           <Autocomplete
                             style={{ minWidth: 500 }}
                             id="Department"
                             className="formControl"
                             options={departments}
+                            value={departmentList.departmentName != undefined ? departmentList : ''}
                             getOptionLabel={(option) => option.departmentName}
                             renderInput={(params) => <TextField {...params} label="Department" className="formControl" variant="outlined" />}
                             onChange={(e, value) => { handleDepartmentSelection(e, value); setDepartmentList(value) }}
@@ -1022,7 +1047,7 @@ const FlhaDetails = (props) => {
                     rows="1"
                     label="Department"
                     className="formControl"
-                    value={(departmentList.departmentName != undefined) ? departmentList.departmentName : ''}
+                    value={(departmentList != null && departmentList.departmentName != undefined) ? departmentList.departmentName : ''}
                   />
                 </Grid>
               </Grid>
@@ -1064,7 +1089,7 @@ const FlhaDetails = (props) => {
                 </div>
               </Grid>
 
-              <Grid item sm={12} xs={12} className={classes.paddTRemove}>
+              <Grid item sm={12} xs={12} className={classes.criticalHazardSection}>
                 <div>
                   {taskForm.map((taskValue, taskIndex) => (
 
@@ -1108,7 +1133,7 @@ const FlhaDetails = (props) => {
                               className={classes.accordionSubHeaderSection}
                             >
                               <Typography className={classes.heading}>
-                                Hazard#{index + 1} - {taskForm[taskIndex]["hazards"][index]["hazards"]}
+                                Hazard#{index + 1} - {taskForm[taskIndex]["hazards"][index]["hazard"]}
                               </Typography>
                               <Typography className={classes.secondaryHeading}>
                               </Typography>
@@ -1121,28 +1146,42 @@ const FlhaDetails = (props) => {
                                     requirement
                                     className={classes.formControl}
                                   >
-                                    <InputLabel id="demo-simple-select-label">
-                                      Hazards
-                                      {' '}
-                                    </InputLabel>
-                                    <Select
-                                      multiline
-                                      variant="outlined"
-                                      rows="3"
-                                      id="hazards"
-                                      className={classes.fullWidth}
-                                      value={taskForm[taskIndex]["hazards"][index]["hazards"]}
-                                      disabled={(item.hazard != undefined) ? item.hazard : ''}
-                                      onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazards'), setHazardType }
-                                      }
-                                    >
-                                      {hazardtype.map((value) => <MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
+                                    {(taskForm[taskIndex]["hazards"][index]["hazard"]) && index === 0 && isSelectedJob ?
+                                      <TextField
+                                        disabled={true}
+                                        variant="outlined"
+                                        rows="1"
+                                        id="taskIdentification"
+                                        label="Hazards"
+                                        className={classes.fullWidth}
+                                        value={taskForm[taskIndex]["hazards"][index]["hazard"]}
 
-                                    </Select>
+                                      />
+                                      :
+                                      <>
+                                        <InputLabel id="demo-simple-select-label">
+                                          Hazards
+                                          {' '}
+                                        </InputLabel>
+                                        <Select
+                                          multiline
+                                          variant="outlined"
+                                          rows="3"
+                                          id="hazards"
+                                          className={classes.fullWidth}
+                                          value={taskForm[taskIndex]["hazards"][index]["hazard"]}
+                                          // disabled={(item.hazard != undefined) ? item.hazard : ''}
+                                          onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazard'), setHazardType }
+                                          }
+                                        >
+                                          {hazardtype.map((value) => <MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
+
+                                        </Select>
+                                      </>}
                                   </FormControl>
                                   <div className={classes.spacer} id="myCode" >
                                     <FormControl component="fieldset">
-                                      <FormLabel component="legend">
+                                      <FormLabel component="legend" className="checkRadioLabel">
                                         Is this hazard present?
                                       </FormLabel>
                                       <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
@@ -1174,7 +1213,7 @@ const FlhaDetails = (props) => {
 
                                       <div className={classes.spacer}>
                                         <FormControl component="fieldset">
-                                          <FormLabel component="legend">
+                                          <FormLabel component="legend" className="checkRadioLabel">
                                             Has this control been put in place?
                                           </FormLabel>
                                           <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
@@ -1281,45 +1320,50 @@ const FlhaDetails = (props) => {
             </Box>
           </Grid>
 
-          <Grid item md={12} sm={12} xs={12}>
-            <Grid container spacing={3}>
-              <Grid item md={6} sm={6} xs={6}>
 
-                <MuiPickersUtilsProvider
-                  variant="outlined"
-                  utils={DateFnsUtils}
-                  className="formControl"
-                >
-                  <KeyboardDateTimePicker
-                    label="Date & time"
-                    value={jobForm.dateTimeFlha || null}
-                    onChange={(e) => {
-                      setJobForm({
-                        ...jobForm,
-                        dateTimeFlha: moment(e).toISOString(),
-                      });
-                    }}
-                    InputProps={{ readOnly: true }}
-                    format="yyyy/MM/dd HH:mm"
-                    inputVariant="outlined"
-                    disableFuture="true"
-                  />
-                </MuiPickersUtilsProvider>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid item md={6} sm={6} xs={12}>
+                  <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
+                  <Typography className="viewLabelValue">
+                    <input
+                      type="file"
+                      id="attachment"
+                      accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                      onChange={(e) => {
+                        handleFileUpload(e);
+                      }} />
+                  </Typography>
+                </Grid>
+
+
+                <Grid item md={6} sm={6} xs={6}>
+                  <MuiPickersUtilsProvider
+                    variant="outlined"
+                    utils={DateFnsUtils}
+                    className="formControl"
+                  >
+                    <KeyboardDateTimePicker
+                      label="Date & time"
+                      value={jobForm.dateTimeFlha || null}
+                      onChange={(e) => {
+                        setJobForm({
+                          ...jobForm,
+                          dateTimeFlha: moment(e).toISOString(),
+                        });
+                      }}
+                      InputProps={{ readOnly: true }}
+                      format="yyyy/MM/dd HH:mm"
+                      inputVariant="outlined"
+                      disableFuture="true"
+                    />
+                  </MuiPickersUtilsProvider>
+                </Grid>
               </Grid>
-            </Grid>
+            </Paper>
           </Grid>
-          <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
-            <FormLabel className="checkRadioLabel" component="legend">Attach files </FormLabel>
-            <Typography className="viewLabelValue">
-              <input
-                type="file"
-                id="attachment"
-                accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
-                onChange={(e) => {
-                  handleFileUpload(e);
-                }} />
-            </Typography>
-          </Grid>
+
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -1467,23 +1511,41 @@ const FlhaDetails = (props) => {
             </Paper>
           </Grid>
 
-          <Grid container spacing={3}>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
-              <FormGroup className={classes.radioInline}>
-                {Object.entries(notifyToValue).map(([key, value]) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    onChange={async (e) => handelNotifyTo(e, key)}
-                  />
-                ))}
-              </FormGroup>
-            </Grid>
+
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
+                <g id="outline-assignment-24px" transform="translate(0 1.44)">
+                  <g id="Bounding_Boxes">
+                    <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none" />
+                  </g>
+                  <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c" />
+                </g>
+              </svg> Notification block
+            </Typography>
+          </Grid>
+
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
+                  <FormGroup className={classes.customCheckBoxList}>
+                    {Object.entries(notifyToValue).map(([key, value]) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        onChange={async (e) => handelNotifyTo(e, key)}
+                      />
+                    ))}
+                  </FormGroup>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1614,7 +1676,7 @@ const FlhaDetails = (props) => {
                     id="locationdetail"
                     label="Enter the location details"
                     className="formControl"
-                    value={(jobForm.location) ? (jobForm.location) : ''}
+                    value={jobForm.location}
                     onChange={(e) => {
                       setJobForm({
                         ...jobForm,

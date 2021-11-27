@@ -239,8 +239,8 @@ class SimpleTabs extends React.Component {
                     variant="p"
                     gutterBottom
                   >
-                    Open
-                    {/* {flha.status} */}
+                    
+                    {flha.flhaStatus}
 
                   </Typography>
                 </Grid>
@@ -254,8 +254,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={6}>
                   <FormLabel component="legend">Reference</FormLabel>
                   <Typography>
-                    {(flha.referenceNumber) ? flha.referenceNumber : '-'}
-
+                    {flha.referenceNumber!=='undefined' ? flha.referenceNumber :'-'}
                   </Typography>
                 </Grid>
 
@@ -278,28 +277,19 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={6}>
                   <FormLabel component="legend">Attachment</FormLabel>
                   <Typography>
-                    {/* {(flha.attachment) ? flha.attachment : '-'} */}
-                    {/* <img src={flha.attachment} className={classes.attachImg} height={40} /> */}
-                    {/* <Attachment value={flha.attachment} /> */}
 
                   </Typography>
+                  {flha.attachment ? (
                   <Typography >
                     {flha.attachment ===
                       null ? null : typeof flha.attachment ===
                         "string" ? (
                       <Attachment value={flha.attachment} />
                     ) : null}
-                  </Typography>
-
-
+                  </Typography>) : ("-")}
                 </Grid>
-
-
-
-
               </Grid>
             </Paper>
-
             <div className={classes.root}>
               <AppBar position="static" className={classes.headerBackground}>
                 <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
