@@ -179,7 +179,10 @@ const LessonsLearned = () => {
       }
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       history.push(SUMMARY_FORM["Summary"])
-    } else {
+    } else if (form.anyLessonsLearnt == "No") {
+      history.push(SUMMARY_FORM["Summary"])
+    }
+    else {
       setError({ LessonDecide: "Please select any one." })
     }
   }

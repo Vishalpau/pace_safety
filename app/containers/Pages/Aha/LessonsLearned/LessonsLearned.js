@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, CircularProgress, Grid, TextField, Typography, FormHelperText } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -122,6 +122,7 @@ const LessonsLearned = () => {
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState({})
 
   const history = useHistory()
   const handelJobDetails = async () => {
@@ -167,11 +168,17 @@ const LessonsLearned = () => {
   };
 
   const handelSubmit = async () => {
-    delete form["ahaAssessmentAttachment"]
-    form["lessonLearntUserName"] = user.name
-    await setSubmitLoader(true)
-    const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
-    history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
+    if (form.anyLessonsLearnt == "Yes") {
+      delete form["ahaAssessmentAttachment"]
+      form["lessonLearntUserName"] = user.name
+      await setSubmitLoader(true)
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
+      history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
+    } else if (form.anyLessonsLearnt == "No") {
+      history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
+    } else {
+      setError({ "LessonDecide": "Please select any one" })
+    }
   }
 
   // const classes = useStyles();
@@ -203,7 +210,14 @@ const LessonsLearned = () => {
                       className={classes.formBox}
                     >
                       <FormControl component="fieldset">
-                        <FormLabel component="legend" className={classes.labelName}>Are there any lessons learned?</FormLabel>
+                        <FormLabel
+                          component="legend"
+                          className={classes.labelName}
+                          error={error.LessonDecide}
+                          required
+                        >
+                          Are there any lessons learned?
+                        </FormLabel>
                         <RadioGroup row aria-label="gender" name="gender1">
                           {radioDecide.map((value) => (
                             <FormControlLabel
@@ -220,6 +234,9 @@ const LessonsLearned = () => {
 
                         </RadioGroup>
                       </FormControl>
+                      {error && error.LessonDecide && (
+                        <FormHelperText style={{ color: "red" }}>{error.LessonDecide}</FormHelperText>
+                      )}
                     </Grid>
                     {form.anyLessonsLearnt == "Yes" ?
                       <>
