@@ -413,6 +413,7 @@ class SimpleTabs extends React.Component {
                   <List component="nav" aria-label="main mailbox folders">
                     <ListItem
                       button
+                      disbaled={true}
                     >
                       <ListItemIcon>
                         <CommentIcon />
@@ -420,8 +421,12 @@ class SimpleTabs extends React.Component {
                       <Link
                         href={'/app/pages/assesments/flha/' + this.props.match.params.id + '/revise'}
                         variant="subtitle"
+                        disbaled={true}
                       >
-                        <ListItemText primary="Revise FLHA" />
+                        <ListItemText
+                          disbaled={true}
+                          primary="Revise FLHA"
+                        />
                       </Link>
                     </ListItem>
                     <Divider />
