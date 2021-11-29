@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { PapperBlock } from 'dan-components';
 import { useHistory } from 'react-router-dom';
-
+import AuditCheckValidator from "./validation/auditCheckValidator"
 // import { api } from "../../../utils/axios";
 import api, { appapi, setApiUrl } from '../../../utils/axios';
 import apiAction from "../../../utils/axiosActionTracker";
@@ -200,7 +200,7 @@ const FlhaDetails = (props) => {
   const [updatePage, setUpdatePage] = React.useState(false)
   const [actionData, setActionData] = React.useState([])
 
-  const [value, setValue] = React.useState('female');
+  const [projectStr, setProjectStr] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
   const [step1, setStep1] = React.useState('')
@@ -245,6 +245,9 @@ const FlhaDetails = (props) => {
   const [remark8, setRemark8] = React.useState('')
   const [remark9, setRemark9] = React.useState('')
 
+  const [error, setError] = React.useState({});
+
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -272,10 +275,6 @@ const FlhaDetails = (props) => {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-
- 
-
- 
 
   const [auditName, setAuditName] = React.useState('')
 
@@ -311,6 +310,11 @@ const FlhaDetails = (props) => {
   };
 
   const AuditCheckSubmit = () => {
+    const { error, isValid} = AuditCheckValidator(auditForm)
+    setError(error)
+    if(!isValid){
+      return " data not valid"
+    }
     ninetimeCall('Identification information complete', remark1, step1)
     ninetimeCall('Job described accuratly', remark2, step2)
     ninetimeCall('Critical tasks identified', remark3, step3)
@@ -323,15 +327,19 @@ const FlhaDetails = (props) => {
   }
 
   const ninetimeCall = async (auditType, auditRemarks, auditCheck) => {
+    // let error =validate(error)
+    // setError(error)
     const parts = history.location.pathname.split('/');
-    let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+    let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
+    let ProjectStructureId = parts[parts.length - 1];
     const formData = new FormData(); // formdata object
     formData.append('createdBy', JSON.parse(localStorage.getItem('userDetails')).id);
-    formData.append('auditor', auditName);
+    formData.append('auditor', auditForm.auditor);
     formData.append('auditType', auditType);
     formData.append('auditRemarks', auditRemarks);
     formData.append('fkFlhaId', last_part);
     formData.append('auditCheck', auditCheck);
+   
     const res = await api.post(`/api/v1/flhas/${last_part}/auditchecks/`, formData);
     await setLoading(true)
     if (auditType == 'Agreement signed') {
@@ -353,7 +361,10 @@ const FlhaDetails = (props) => {
 
   const auditData = () => {
     const parts = history.location.pathname.split('/');
-    let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
+    let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
+    let ProjectStructureId = parts[parts.length - 1];
+    console.log(ProjectStructureId,last_part,'pp')
+    setProjectStr(ProjectStructureId)
     const res = api.get(`/api/v1/flhas/${last_part}/auditchecks/`)
       .then(response => {
 
@@ -378,33 +389,7 @@ const FlhaDetails = (props) => {
           setId8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].id)
           setId9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].id)
 
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id1).then(res => {
-          //   setIdd1(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2).then(res => {
-          //   setIdd2(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id3).then(res => {
-          //   setIdd3(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id4).then(res => {
-          //   setIdd4(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id5).then(res => {
-          //   setIdd5(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id6).then(res => {
-          //   setIdd6(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id7).then(res => {
-          //   setIdd7(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id8).then(res => {
-          //   setIdd8(res.data.data.results.results)
-          // })
-          // appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id9).then(res => {
-          //   setIdd9(res.data.data.results.results)
-          // })
+
 
           setRemark1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditRemarks)
           setRemark2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditRemarks)
@@ -416,99 +401,50 @@ const FlhaDetails = (props) => {
           setRemark8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditRemarks)
           setRemark9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditRemarks)
 
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditor)
-          setAuditName(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditor)
+          setAuditName(response.data.data.results[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditor)
+          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditor)
           setIsLock(true)
         }
       })
   };
 
   const setActions = () => {
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id1).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 1).then(res => {
       setIdd1(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 2).then(res => {
       setIdd2(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id3).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 3).then(res => {
       setIdd3(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id4).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 4).then(res => {
       setIdd4(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id5).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 5).then(res => {
       setIdd5(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id6).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 6).then(res => {
       setIdd6(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id7).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 7).then(res => {
       setIdd7(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id8).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 8).then(res => {
       setIdd8(res.data.data.results.results)
     })
-    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id9).then(res => {
+    appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 9).then(res => {
       setIdd9(res.data.data.results.results)
     })
    
   }
-
-  const handelAllData = async (apiData, type = "all") => {
-    // let flhaId =localStorage.getItem("fkFlhaId")
-    const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
-    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
-    if (actionSelect.status === 200) {
-      // for(let i=0 ; i>9; i++){
-      const allActionData = await appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + id2)
-      const allAction = allActionData.data.data.results.results
-      console.log(allActionData.data.data.results.results, 'allAction')
-
-      if (type == "all") {
-        let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
-        apiAllData.map((value) => {
-          allAction.map((valueAction) => {
-            if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
-              const tempAction = {
-                "number": valueAction.actionNumber,
-                "id": valueAction.id,
-                "title": valueAction.actionTitle
-              };
-              if (value["action"] == undefined) {
-                value["action"] = [tempAction]
-              } else if (value["action"] !== undefined) {
-                value["action"].push(tempAction)
-              }
-            }
-          })
-          if (value["action"] == undefined) {
-            value["action"] = []
-          }
-        })
-        return apiAllData
-      } else {
-        return allAction
-      }
-    }
-    // }
-  }
-
-
-
-  const handelActionTracker = async (id) => {
-    let allAction = await handelAllData([], "title")
-    console.log(allAction, 'allAction')
-  };
 
   const handelCallBack = async () => {
     await auditUserList()
@@ -533,18 +469,22 @@ const FlhaDetails = (props) => {
                     <Grid item xs={12}>
                       <Grid container spacing={3}>
                         <Grid item md={6} sm={6} xs={12}>
-                          {auditName == '' ?
+                          
+                          {!isLock  ?
                             <Autocomplete
                               id="combo-box-demo"
                               className={classes.mtTen}
-                              // value={auditName}
                               options={users}
-                              // defaultValue={auditName}
+                              defaultValue={auditName}
                               getOptionLabel={(option) => option.title}
-                              onChange={(e) => setAuditName(e.currentTarget.innerHTML)}
+                              onChange={(e) => setAuditForm({...auditForm,auditor : e.currentTarget.innerHTML})}
                               renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                             />
                             : 'Auditor Name: ' + auditName}
+                            <div style={{ color: "red" }}>{error.auditor}</div>
+
+                    {/* <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div> */}
+
                         </Grid>
                         <Grid item xs={12}>
                           <TableContainer>
@@ -568,11 +508,11 @@ const FlhaDetails = (props) => {
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'Yes' ? true : false} onClick={() => setStep1('Yes')} />
+                                    
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
                                   </TableCell>
-                                  {console.log(step1,'step1')}
                                   <TableCell align="left">
                                     <ActionTracker
                                       actionContext="flha:audit"
@@ -581,9 +521,9 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd1.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow
@@ -612,7 +552,7 @@ const FlhaDetails = (props) => {
                                 <TableRow>
                                   <TableCell align="left">2</TableCell>
                                   <TableCell align="left">
-                                    Job described accuratly
+                                    Job described accurately
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2 == 'Yes' ? true : false} onClick={() => setStep2('Yes')} />
@@ -630,7 +570,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd2.map(i1 => <Typography className={classes.labelValueName}>
                                       
@@ -679,7 +619,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd3.map(i1 => <Typography className={classes.labelValueName}>
                                      
@@ -727,7 +667,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd4.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow
@@ -775,7 +715,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd5.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow
@@ -804,7 +744,7 @@ const FlhaDetails = (props) => {
                                 <TableRow>
                                   <TableCell align="left">6</TableCell>
                                   <TableCell align="left">
-                                    All present earnings identified at the job site
+                                    All present energies identified at the job site
                                   </TableCell>
                                   <TableCell align="left">
                                     <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6 == 'Yes' ? true : false} onClick={() => setStep6('Yes')} />
@@ -823,7 +763,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd6.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow
@@ -871,7 +811,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd7.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow
@@ -919,7 +859,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd8.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow
@@ -967,7 +907,7 @@ const FlhaDetails = (props) => {
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
                                       fkProjectStructureIds={fkProjectStructureIds}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={handelActionTracker}
+                                      handelShowData={setActions}
                                     />
                                     {idd9.map(i1 => <Typography className={classes.labelValueName}>
                                       <ActionShow

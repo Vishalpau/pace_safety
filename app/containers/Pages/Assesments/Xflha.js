@@ -59,14 +59,15 @@ import Loader from "../Loader";
 
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
-
-
+import Pagination from '@material-ui/lab/Pagination';
 import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
 // react-redux
 import { connect } from "react-redux";
 import { projectName, company } from '../../../redux/actions/initialDetails';
 import { useDispatch } from 'react-redux';
 import axios from "axios";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -424,6 +425,11 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  pagination: {
+    padding: "1rem 0",
+    display: "flex",
+    justifyContent: "flex-end"
+  },
 
   viewAttachmentDialog: {
     '& .MuiDialogContent-root': {
@@ -497,9 +503,13 @@ function xflha(props) {
   const [attachOpen, setAttachOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
   const [openAttachment, setopenAttachment] = React.useState(false);
-
+  const [searchIncident , setSeacrhIncident ] = React.useState('');
   const [commentsOpen, setCommentsOpen] = useState(false);
-
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page, setPage] = useState(1)
+  const [isLoading , setIsLoading] = useState(false)
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(2);
 
@@ -566,15 +576,35 @@ function xflha(props) {
   const classes = useStyles();
 
   const fetchData = async () => {
-    console.log(props.projectName, 'project');
-    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-    // alert(fkCompanyId);
-    const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    await setPage(1)
+
+    // console.log(props.projectName, 'project');
+    // const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    // // alert(fkCompanyId);
+    // const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+    //   .projectName.projectId;
+    // // alert(fkProjectId);
+
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-    // alert(fkProjectId);
-    const res = await api.get('api/v1/flhas/');
-    console.log({ res: res.data.data.results.results });
-    setFlhas(res.data.data.results.results);
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    // console.log({ res: res.data.data.results.results });
+    await setTotalData(res.data.data.results.count)
+    await setPageData(res.data.data.results.count / 25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
+    await setFlhas(res.data.data.results.results);
+    await setIsLoading(true)
   };
   const handleVisibility = () => {
     setAttachOpen(true);
@@ -683,6 +713,26 @@ function xflha(props) {
     } catch (error) {
     }
   }
+
+  const handleChange = async (event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setFlhas(res.data.data.results.results);
+    await setPage(value)
+  };
+
   useEffect(() => {
 
     let state = JSON.parse(localStorage.getItem('direct_loading'))
@@ -692,13 +742,14 @@ function xflha(props) {
     } else {
       fetchData();
     }
-  }, [props.projectName.projectName]);
+    allPickListDataValue()
+  }, [props.projectName.breakDown,searchIncident]);
 
   return (
 
     <>
       <PapperBlock title="Field Level Hazard Assessment" icon="ion-md-list-box" desc="">
-        <Box>
+        <Box> { isLoading ? <>
           <div className={classes.root}>
             <AppBar position="static" color="transparent" className={classes.searchHeaderTop}>
               <Toolbar className={classes.paddZero}>
@@ -714,6 +765,7 @@ function xflha(props) {
                         input: classes.inputInput,
                       }}
                       inputProps={{ 'aria-label': 'search' }}
+                      onChange={(e) => setSeacrhIncident(e.target.value)}
                     />
                   </Paper>
                 </div>
@@ -729,7 +781,7 @@ function xflha(props) {
                         <RecentActorsIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="list" aria-label="list">
+                    {/* <Tooltip title="list" aria-label="list">
                       <IconButton
                         aria-label="list"
                         onClick={(e) => handelViewTabel(e)}
@@ -737,7 +789,7 @@ function xflha(props) {
                       >
                         <ListAltOutlinedIcon />
                       </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                   </div>
                 </Grid>
                 <Grid item xs={12}>
@@ -761,18 +813,6 @@ function xflha(props) {
 
               <div className="gridView">
                 {Object.entries(flhas)
-                  .filter((searchText) => {
-                    console.log(searchText, 'searchtext');
-                    return (
-
-                      searchText[1].jobTitle
-                        .toLowerCase()
-                        .includes(searchFlha.toLowerCase())
-                      || searchText[1].flhaNumber.includes(
-                        searchFlha.toUpperCase()
-                      )
-                    );
-                  })
                   .map((item, index) => (
                     <Box>
                       <Grid className={classes.marginTopBottom}>
@@ -784,7 +824,7 @@ function xflha(props) {
                                   className={classes.userPictureBox}
                                 >
                                   <Button className={classNames(classes.floatR)}  >
-                                    <img src={item[1].avatar} className={classes.userImage} /> {item[1].username}
+                                    <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username}
                                   </Button>
                                 </Grid>
                                 <Link
@@ -833,8 +873,8 @@ function xflha(props) {
                                               color="textPrimary"
                                               className={classes.listingLabelName}
                                             >
-                                              Assignee: <span className={classes.listingLabelValue}>NA</span>
-                                              <span item xs={1} className={classes.sepHeightOne}></span>
+                                              {/* Assignee: <span className={classes.listingLabelValue}>NA</span>
+                                              <span item xs={1} className={classes.sepHeightOne}></span> */}
                                               Stage: <span className={classes.listingLabelValue}>{item[1].flhaStage}  <img src={in_progress_small} className={classes.smallImage} /></span>
                                               <span item xs={1} className={classes.sepHeightOne}> </span>
                                               Status: <span className="listingLabelValue statusColor_complete">{item[1].flhaStatus}</span>
@@ -863,8 +903,8 @@ function xflha(props) {
                                           gutterBottom
                                           className={classes.listingLabelValue}
                                         > */}
-                                          {/* {item[1]["incidentReportedByName"]} */}
-                                          {/* Not found
+                                      {/* {item[1]["incidentReportedByName"]} */}
+                                      {/* Not found
                                         </Typography>
                                       </Grid> */}
                                       {/* <Grid item md={3} sm={6} xs={12}>
@@ -957,7 +997,7 @@ function xflha(props) {
                                       {/* </Link> */}
                                     </span>
                                   </Typography>
-                                  <span item xs={1} className={classes.sepHeightTen}></span>
+                                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography
                                     variant="body1"
                                     display="inline"
@@ -965,14 +1005,11 @@ function xflha(props) {
                                     className={classes.mLeft}
                                   >
                                     <InsertCommentOutlinedIcon className={classes.mright5} />
-                                    {/* <Link href="#"
-                   onClick={handleVisibilityComments}
-                   aria-haspopup="true"> */}
+                                 
                                     Comments:
-                                    {/* </Link> */}
 
-                                  </Typography>
-                                  <Typography variant="body2" display="inline" className={classes.mLeft}>
+                                  </Typography> */}
+                                  {/* <Typography variant="body2" display="inline" className={classes.mLeft}>
                                     <span>
                                       <Link href="#"
                                         color="secondary"
@@ -981,7 +1018,7 @@ function xflha(props) {
                                         {item[1].commentsCount}
                                       </Link>
                                     </span>
-                                  </Typography>
+                                  </Typography> */}
                                 </Grid>
 
                                 <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
@@ -990,7 +1027,7 @@ function xflha(props) {
                 <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                 </Typography>
                 <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                    <Typography variant="body1" display="inline">
+                                    {/* <Typography variant="body1" display="inline">
                                       <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
                                     </Typography>
                                     <span item xs={1} className={classes.sepHeightTen}></span>
@@ -999,7 +1036,7 @@ function xflha(props) {
                                     <span item xs={1} className={classes.sepHeightTen}></span>
                                     <Typography variant="body1" display="inline">
                                       <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
-                                    </Typography>
+                                    </Typography> */}
                                   </div>
                                 </Grid>
                               </Grid>
@@ -1450,7 +1487,7 @@ function xflha(props) {
            Initial Action
           </Typography>
         </Grid> */}
-                        <Grid item md={3} sm={6} xs={12}>
+                        {/* <Grid item md={3} sm={6} xs={12}>
                           <Button
                             size="small"
                             color="secondary"
@@ -1470,7 +1507,7 @@ function xflha(props) {
                           >
                             Share
                           </Button>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </CardActions>
                   </Card>
@@ -1509,6 +1546,11 @@ function xflha(props) {
             </Grid>
           )}
 
+        <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+          </>:<Loader />}
         </Box>
         {/* <Loader /> */}
       </PapperBlock>

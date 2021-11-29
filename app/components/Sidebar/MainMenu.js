@@ -46,7 +46,7 @@ function MainMenu(props) {
                 item.key== selectedMenuItem?'selectmenu':"",
                 item.key ? `${item.key}Menu ` : null,
                 // item.icon ? classes.iconed : "",
-                open.indexOf(item.key) > -1 ? classes.opened : ""
+                // open.indexOf(item.key) > -1 ? classes.opened : ""
               )}
               onClick={() => {openSubMenu(item.key, item.keyParent),setSelectedMenuItem(item.key)}}
             >
@@ -108,15 +108,22 @@ function MainMenu(props) {
           key={index.toString()}
           button
           exact
-          className={classes.nested}
-          activeClassName={classes.active}
+          className={
+            classNames(
+              classes.head,
+              item.name== selectedMenuItem?'selectmenu':"",
+              item.key ? `${item.key}Menu` : null,
+            )
+          }
+          // activeClassName={classes.active}
           component={LinkBtn}
           to={item.link}
-          onClick={() => handleClick()}
+          onClick={() => {handleClick(),setSelectedMenuItem(item.name)}}
         >
           <ListItemText
             classes={{ primary: classes.primary }}
             inset
+            secondary={<span className="leftCustomImg"> </span>}
             primary={item.name}
           />
           {item.badge && (

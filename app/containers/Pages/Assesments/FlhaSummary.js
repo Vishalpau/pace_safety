@@ -58,6 +58,7 @@ import moment from 'moment';
 import ViewHazard from './ViewHazard';
 import api from '../../../utils/axios';
 //import Loader from "../Loader";
+import Attachment from '../../../containers/Attachment/Attachment';
 
 
 function TabContainer(props) {
@@ -90,8 +91,8 @@ const styles = theme => ({
     margin: '.5rem 0',
     '& td textHeight': {
       padding: '11.5px 14px',
-    	borderRadius: '8px',
-	  },
+      borderRadius: '8px',
+    },
   },
   spacerRight: {
     marginRight: '.75rem',
@@ -150,7 +151,7 @@ const styles = theme => ({
     minWidth: '50px',
     height: '30px',
     borderRadius: '4px',
-    float: 'right'
+    float: 'left'
   },
   table: {
     minWidth: 600,
@@ -165,7 +166,7 @@ class SimpleTabs extends React.Component {
     visualConfirmations: {},
     versions: ["1.0",]
   };
-    
+
 
   handleChangeTab = (event, value) => {
     // alert(value)
@@ -187,19 +188,19 @@ class SimpleTabs extends React.Component {
     this.setState({ flha: res.data.data.results });
   }
 
-  getPreventiveControls = async (value=undefined) => {
+  getPreventiveControls = async (value = undefined) => {
     const flhaId = this.props.match.params.id;
-    if(value != undefined){
+    if (value != undefined) {
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
     }
-    else{
+    else {
       var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
     }
-    
-    
+
+
     await this.setState({ criticalTasks: res.data.data.results.tasks });
     console.log({ controls: this.state.criticalTasks });
-    await this.setState({versions: res.data.data.results.versions})
+    await this.setState({ versions: res.data.data.results.versions })
   }
 
   getJobVisualConfirmation = async () => {
@@ -217,7 +218,7 @@ class SimpleTabs extends React.Component {
     const handleChange = (event) => {
       setValue(event.target.value);
     };
-    console.log({versionscon: versions})
+    console.log({ versionscon: versions })
 
     return (
       <PapperBlock title={'FLHA Number:' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
@@ -253,7 +254,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={6}>
                   <FormLabel component="legend">Reference</FormLabel>
                   <Typography>
-                    {flha.referenceNumber}
+                    {(flha.referenceNumber) ? flha.referenceNumber : '-'}
 
                   </Typography>
                 </Grid>
@@ -262,7 +263,7 @@ class SimpleTabs extends React.Component {
                 <Grid item xs={12}>
                   <FormLabel component="legend">Job description</FormLabel>
                   <Typography>
-                    {(flha.jobDetails) ? flha.jobDetails : 'NA'}
+                    {(flha.jobDetails) ? flha.jobDetails : '-'}
 
                   </Typography>
                 </Grid>
@@ -274,6 +275,27 @@ class SimpleTabs extends React.Component {
                     )}
                   </Typography>
                 </Grid>
+                <Grid item xs={6}>
+                  <FormLabel component="legend">Attachment</FormLabel>
+                  <Typography>
+                    {/* {(flha.attachment) ? flha.attachment : '-'} */}
+                    {/* <img src={flha.attachment} className={classes.attachImg} height={40} /> */}
+                    {/* <Attachment value={flha.attachment} /> */}
+
+                  </Typography>
+                  <Typography >
+                    {flha.attachment ===
+                      null ? null : typeof flha.attachment ===
+                        "string" ? (
+                      <Attachment value={flha.attachment} />
+                    ) : null}
+                  </Typography>
+
+
+                </Grid>
+
+
+
 
               </Grid>
             </Paper>
@@ -282,12 +304,12 @@ class SimpleTabs extends React.Component {
               <AppBar position="static" className={classes.headerBackground}>
                 <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
                   {(this.state.versions.length > 0) ?
-                
-                  (versions.map((version) => (
-                    // console.log(this.state.versions)
-                    <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
-                  )))
-                  : "Initial Revision"
+
+                    (versions.map((version) => (
+                      // console.log(this.state.versions)
+                      <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
+                    )))
+                    : "Initial Revision"
 
                   }
                   {/* <Tab label="Initial revision" />
@@ -297,10 +319,10 @@ class SimpleTabs extends React.Component {
               </AppBar>
               {/* {value === 0
 			&& ( */}
-			  <TabContainer className={classes.paddZero}>
-            <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} />
-			  </TabContainer>
-			{/* )} */}
+              <TabContainer className={classes.paddZero}>
+                <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
+              </TabContainer>
+              {/* )} */}
               {/* {value === 1 && <TabContainer>Item Two</TabContainer>}
               {value === 2 && <TabContainer>Item Three</TabContainer>}
               {value === 3 && (
@@ -384,7 +406,7 @@ class SimpleTabs extends React.Component {
               <div className={classes.root}>
                 <Box padding={1} bgcolor="background.paper">
                   <Typography variant="h6" gutterBottom>
-				Quick Actions
+                    Quick Actions
 
                   </Typography>
                   <Divider />
@@ -410,15 +432,17 @@ class SimpleTabs extends React.Component {
                       <ListItemIcon>
                         <HistoryIcon />
                       </ListItemIcon>
+                      {console.log(this.state, 'w')}
                       <Link
-                      // disabled={true}
-                        href={'/app/pages/assesments/AuditCheck/'+ this.props.match.params.id}
+
+                        // disabled={true}
+                        href={'/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
                       </Link>
                     </ListItem>
-                    <ListItem
+                    {/* <ListItem
                       disabled={true}
                       button
                     >
@@ -434,8 +458,8 @@ class SimpleTabs extends React.Component {
 
                         <ListItemText primary="Comments" />
                       </Link>
-                    </ListItem>
-                    <Divider />
+                    </ListItem> */}
+                    {/* <Divider />
                     <ListItem
                     disabled={true}
                       button
@@ -450,7 +474,7 @@ class SimpleTabs extends React.Component {
                         <ListItemText primary="Activity History" />
                       </Link>
                     </ListItem>
-                    <Divider />
+                    <Divider /> */}
                     {/* <ListItem
 				button
 				>
@@ -479,7 +503,7 @@ class SimpleTabs extends React.Component {
 				</Link>
 				</ListItem>
 				<Divider /> */}
-                    <ListItem disabled={true}>
+                    <ListItem>
                       <ListItemIcon>
                         <CloseIcon />
                       </ListItemIcon>
@@ -491,7 +515,7 @@ class SimpleTabs extends React.Component {
                         <ListItemText primary="Close out" />
                       </Link>
                     </ListItem>
-                    <ListItem
+                    {/* <ListItem
                       disabled={true}
                       button
                     >
@@ -504,8 +528,8 @@ class SimpleTabs extends React.Component {
                       >
                         <ListItemText primary="Print" />
                       </Link>
-                    </ListItem>
-                    <ListItem
+                    </ListItem> */}
+                    {/* <ListItem
                       disabled={true}
                       button
                     >
@@ -518,14 +542,14 @@ class SimpleTabs extends React.Component {
                       >
                         <ListItemText disabled secondary="Share" />
                       </Link>
-                    </ListItem>
+                    </ListItem> */}
                   </List>
                 </Box>
               </div>
             </Paper>
           </Grid>
         </Grid>
-        
+
       </PapperBlock>
     );
   }
