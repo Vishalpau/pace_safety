@@ -26,7 +26,9 @@ import moment from "moment";
 import apiAction from "../../utils/axiosActionTracker";
 import {
   access_token,
-  ACCOUNT_API_URL
+  ACCOUNT_API_URL,
+  userId,
+  userName
 } from "../../utils/constants";
 import { handelCommonObject, fetchReportedBy } from "../../utils/CheckerValue";
 
@@ -60,8 +62,8 @@ export default function ActionTracker(props) {
     severity: "",
     approver: props.createdBy,
     approverName: JSON.parse(localStorage.getItem('userDetails'))["name"],
-    assignTo: 0,
-    assignToName: "",
+    assignTo: userId,
+    assignToName: userName,
     deligateTo: 0,
     plannedStartDate: new Date(),
     actualStartDate: null,
@@ -88,6 +90,7 @@ export default function ActionTracker(props) {
     vendor: null,
     vendorReferenceId: null,
   });
+
   const [reportedByName, setReportedByName] = useState([]);
   const [isLoading, setLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
@@ -233,6 +236,8 @@ export default function ActionTracker(props) {
                 }
                 renderInput={(params) => <TextField {...params}
                   label="Assignee" variant="outlined" />}
+                value={reportedByName.find(value => value.name == userName)}
+                error={error.assignTo}
               />
             </Grid>
 

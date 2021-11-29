@@ -642,6 +642,7 @@ const FlhaDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':');
+    jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -656,6 +657,7 @@ const FlhaDetails = (props) => {
     if (jobForm.attachment != null) {
       formDataPost.append('attachment', jobForm.attachment);
     }
+    formDataPost.append('notifyTo', jobForm.notifyTo);
     formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
     formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
     formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
@@ -838,6 +840,20 @@ const FlhaDetails = (props) => {
     setJobForm({ ...jobForm, attachment: e.target.files[0] })
   };
 
+  const handelNotifyTo = async (e, value) => {
+    let temp = { ...jobForm }
+    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
+
+    if (e.target.checked === false) {
+      const newData = temp.notifyTo.filter((item) => item !== value);
+      temp["notifyTo"] = newData
+    } else {
+      temp["notifyTo"].push(value)
+    }
+    setJobForm(temp)
+  };
+
+
   const handelNotifyToValues = async () => {
     let allRoles = {}
     const config = {
@@ -855,18 +871,6 @@ const FlhaDetails = (props) => {
     }
   }
 
-  const handelNotifyTo = async (e, value) => {
-    let temp = { ...jobForm }
-    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
-
-    if (e.target.checked === false) {
-      const newData = temp.notifyTo.filter((item) => item !== value);
-      temp["notifyTo"] = newData
-    } else {
-      temp["notifyTo"].push(value)
-    }
-    setJobForm(temp)
-  };
 
   useEffect(() => {
     getSupervisors();
