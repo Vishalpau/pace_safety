@@ -223,7 +223,7 @@ const FlhaDetails = (props) => {
   const [id8, setId8] = React.useState('8')
   const [id9, setId9] = React.useState('9')
 
-  const objId = { "id1": 1, "id2": 2, "id3": 3, "id4": 4, "id5": 5, "id6": 6, "id7": 7, "id8": 8,"id9": 9 }
+  const objId = { "id1": 1, "id2": 2, "id3": 3, "id4": 4, "id5": 5, "id6": 6, "id7": 7, "id8": 8, "id9": 9 }
 
   const [idd1, setIdd1] = React.useState([])
   const [idd2, setIdd2] = React.useState([])
@@ -310,9 +310,9 @@ const FlhaDetails = (props) => {
   };
 
   const AuditCheckSubmit = () => {
-    const { error, isValid} = AuditCheckValidator(auditForm)
+    const { error, isValid } = AuditCheckValidator(auditForm)
     setError(error)
-    if(!isValid){
+    if (!isValid) {
       return " data not valid"
     }
     ninetimeCall('Identification information complete', remark1, step1)
@@ -339,7 +339,7 @@ const FlhaDetails = (props) => {
     formData.append('auditRemarks', auditRemarks);
     formData.append('fkFlhaId', last_part);
     formData.append('auditCheck', auditCheck);
-   
+
     const res = await api.post(`/api/v1/flhas/${last_part}/auditchecks/`, formData);
     await setLoading(true)
     if (auditType == 'Agreement signed') {
@@ -350,20 +350,12 @@ const FlhaDetails = (props) => {
     }
   }
 
-  let allAuditType = ["Identification information complete", "Job described accuratly", "Critical tasks identified", "Applicable hazards identified",
-    "Controlled developed for hazards identified", "All present earnings identified at the job site", "Energies isolated or controlled", "Re-assesment of hazards completed after pause and resart",
-    "Agreement signed"]
-
-
-  let allAuditIds = ["auditCheck", "id", "auditRemarks", "auditor"]
-
-
 
   const auditData = () => {
     const parts = history.location.pathname.split('/');
     let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
     let ProjectStructureId = parts[parts.length - 1];
-    console.log(ProjectStructureId,last_part,'pp')
+    console.log(ProjectStructureId, last_part, 'pp')
     setProjectStr(ProjectStructureId)
     const res = api.get(`/api/v1/flhas/${last_part}/auditchecks/`)
       .then(response => {
@@ -389,8 +381,6 @@ const FlhaDetails = (props) => {
           setId8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].id)
           setId9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].id)
 
-
-
           setRemark1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditRemarks)
           setRemark2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditRemarks)
           setRemark3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditRemarks)
@@ -402,14 +392,6 @@ const FlhaDetails = (props) => {
           setRemark9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditRemarks)
 
           setAuditName(response.data.data.results[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditor)
-          // setAuditName(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditor)
           setIsLock(true)
         }
       })
@@ -443,7 +425,7 @@ const FlhaDetails = (props) => {
     appapi.get(setApiUrl() + 'api/v1/actions/?enitityReferenceId=' + localStorage.getItem('flhaId') + ':' + 9).then(res => {
       setIdd9(res.data.data.results.results)
     })
-   
+
   }
 
   const handelCallBack = async () => {
@@ -469,21 +451,21 @@ const FlhaDetails = (props) => {
                     <Grid item xs={12}>
                       <Grid container spacing={3}>
                         <Grid item md={6} sm={6} xs={12}>
-                          
-                          {!isLock  ?
+
+                          {!isLock ?
                             <Autocomplete
                               id="combo-box-demo"
                               className={classes.mtTen}
                               options={users}
                               defaultValue={auditName}
                               getOptionLabel={(option) => option.title}
-                              onChange={(e) => setAuditForm({...auditForm,auditor : e.currentTarget.innerHTML})}
+                              onChange={(e) => setAuditForm({ ...auditForm, auditor: e.currentTarget.innerHTML })}
                               renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
                             />
                             : 'Auditor Name: ' + auditName}
-                            <div style={{ color: "red" }}>{error.auditor}</div>
+                          <div style={{ color: "red" }}>{error.auditor}</div>
 
-                    {/* <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div> */}
+                          {/* <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div> */}
 
                         </Grid>
                         <Grid item xs={12}>
@@ -507,11 +489,11 @@ const FlhaDetails = (props) => {
                                     Identification information complete
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'Yes' ? true : false} onClick={() => setStep1('Yes')} />
-                                    
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step1 == 'Yes' ? true : false} onClick={() => setStep1('Yes')} />
+
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
                                   </TableCell>
                                   <TableCell align="left">
                                     <ActionTracker
@@ -555,10 +537,10 @@ const FlhaDetails = (props) => {
                                     Job described accurately
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2 == 'Yes' ? true : false} onClick={() => setStep2('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step2 == 'Yes' ? true : false} onClick={() => setStep2('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step2 == 'No' ? true : false} onClick={() => setStep2('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step2 == 'No' ? true : false} onClick={() => setStep2('No')} />
                                   </TableCell>
                                   <TableCell align="left">
                                     <ActionTracker
@@ -568,12 +550,12 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
                                     {idd2.map(i1 => <Typography className={classes.labelValueName}>
-                                      
+
                                       <ActionShow
                                         action={{ id: i1["id"], number: i1["actionNumber"] }}
                                         companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
@@ -581,7 +563,7 @@ const FlhaDetails = (props) => {
                                         updatePage={updatePage}
 
                                       />
-                                      
+
                                     </Typography>
                                     )}
                                   </TableCell>
@@ -604,10 +586,10 @@ const FlhaDetails = (props) => {
                                     Critical tasks identified
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3 == 'Yes' ? true : false} onClick={() => setStep3('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step3 == 'Yes' ? true : false} onClick={() => setStep3('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step3 == 'No' ? true : false} onClick={() => setStep3('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step3 == 'No' ? true : false} onClick={() => setStep3('No')} />
                                   </TableCell>
                                   <TableCell align="left">
                                     <ActionTracker
@@ -617,12 +599,12 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
                                     {idd3.map(i1 => <Typography className={classes.labelValueName}>
-                                     
+
                                       <ActionShow
                                         action={{ id: i1["id"], number: i1["actionNumber"] }}
                                         companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
@@ -651,10 +633,10 @@ const FlhaDetails = (props) => {
                                     Applicable hazards identified
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4 == 'Yes' ? true : false} onClick={() => setStep4('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step4 == 'Yes' ? true : false} onClick={() => setStep4('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step4 == 'No' ? true : false} onClick={() => setStep4('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step4 == 'No' ? true : false} onClick={() => setStep4('No')} />
                                   </TableCell>
                                   <TableCell align="left">
 
@@ -665,7 +647,7 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
@@ -699,10 +681,10 @@ const FlhaDetails = (props) => {
                                     Controlled developed for hazards identified
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5 == 'Yes' ? true : false} onClick={() => setStep5('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step5 == 'Yes' ? true : false} onClick={() => setStep5('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step5 == 'No' ? true : false} onClick={() => setStep5('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step5 == 'No' ? true : false} onClick={() => setStep5('No')} />
                                   </TableCell>
                                   <TableCell align="left">
 
@@ -713,7 +695,7 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
@@ -747,10 +729,10 @@ const FlhaDetails = (props) => {
                                     All present energies identified at the job site
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6 == 'Yes' ? true : false} onClick={() => setStep6('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step6 == 'Yes' ? true : false} onClick={() => setStep6('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step6 == 'No' ? true : false} onClick={() => setStep6('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step6 == 'No' ? true : false} onClick={() => setStep6('No')} />
                                   </TableCell>
                                   <TableCell align="left">
 
@@ -761,7 +743,7 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
@@ -795,10 +777,10 @@ const FlhaDetails = (props) => {
                                     Energies isolated or controlled
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7 == 'Yes' ? true : false} onClick={() => setStep7('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step7 == 'Yes' ? true : false} onClick={() => setStep7('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step7 == 'No' ? true : false} onClick={() => setStep7('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step7 == 'No' ? true : false} onClick={() => setStep7('No')} />
                                   </TableCell>
                                   <TableCell align="left">
 
@@ -809,7 +791,7 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
@@ -843,10 +825,10 @@ const FlhaDetails = (props) => {
                                     Re-assesment of hazards completed after pause and resart
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step8 == 'Yes' ? true : false} onClick={() => setStep8('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'Yes' ? true : false} onClick={() => setStep8('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step8 == 'No' ? true : false} onClick={() => setStep8('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'No' ? true : false} onClick={() => setStep8('No')} />
                                   </TableCell>
                                   <TableCell align="left">
 
@@ -857,7 +839,7 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />
@@ -891,10 +873,10 @@ const FlhaDetails = (props) => {
                                     Agreement signed
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9 == 'Yes' ? true : false} onClick={() => setStep9('Yes')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step9 == 'Yes' ? true : false} onClick={() => setStep9('Yes')} />
                                   </TableCell>
                                   <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} checked={step9 == 'No' ? true : false} onClick={() => setStep9('No')} />
+                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step9 == 'No' ? true : false} onClick={() => setStep9('No')} />
                                   </TableCell>
                                   <TableCell align="left">
 
@@ -905,7 +887,7 @@ const FlhaDetails = (props) => {
                                       updatePage={updatePage}
                                       fkCompanyId={fkCompanyId}
                                       fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={fkProjectStructureIds}
+                                      fkProjectStructureIds={projectStr}
                                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                                       handelShowData={setActions}
                                     />

@@ -21,7 +21,7 @@ const Loader = () => {
     const classes = useStyles();
 
     return (
-        <Box m={50} pt={3} className={classes.loaderAlingment}>
+        <Box m={20} pt={3} className={classes.loaderAlingment}>
             <CircularProgress color="secondary" className={classes.loaderIcon} />
         </Box>
 
