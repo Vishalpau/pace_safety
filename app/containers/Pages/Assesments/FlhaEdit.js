@@ -1613,7 +1613,6 @@ const FlhaDetails = () => {
                           }}
                         />
                       </Grid>
-{console.log(flhaForm.attachment,'ooo')}
                       <Grid item md={12} sm={12} xs={12}>
                         {flhaForm.attachment != "" &&
                           typeof flhaForm.attachment == "string" ? (

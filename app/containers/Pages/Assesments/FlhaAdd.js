@@ -683,6 +683,10 @@ const FlhaDetails = (props) => {
           data[index].hazards[key].status = 'Active';
           data[index].hazards[key].createdBy = fkUserId;
           data[index].hazards[key].updatedBy = fkUserId;
+          data[index].hazards[key].hazards = dat.hazard;
+          data[index].hazards[key].control = data[index].control;
+
+
         });
       }
     });
@@ -880,6 +884,7 @@ const FlhaDetails = (props) => {
   }, [open]);
 
 
+
   return (
     <div>
       <CustomPapperBlock title="FLHA - Initial Assessment" icon={flhaLogoSymbol} whiteBg>
@@ -968,13 +973,12 @@ const FlhaDetails = (props) => {
                     <Box padding={2}>
                       <Grid container spacing={3}>
                         <Grid item md={6} sm={6} xs={12}>
-                          {console.log(departmentList.departmentName, 'ooo')}
                           <Autocomplete
                             style={{ minWidth: 500 }}
                             id="Department"
                             className="formControl"
                             options={departments}
-                            value={departmentList.departmentName != undefined ? departmentList : ''}
+                            value={departmentList != undefined ? departmentList : ''}
                             getOptionLabel={(option) => option.departmentName}
                             renderInput={(params) => <TextField {...params} label="Department" className="formControl" variant="outlined" />}
                             onChange={(e, value) => { handleDepartmentSelection(e, value); setDepartmentList(value) }}
@@ -1179,6 +1183,9 @@ const FlhaDetails = (props) => {
                                         </Select>
                                       </>}
                                   </FormControl>
+                                  <Grid item sm={1} xs={4}>
+                                  {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                </Grid>
                                   <div className={classes.spacer} id="myCode" >
                                     <FormControl component="fieldset">
                                       <FormLabel component="legend" className="checkRadioLabel">
@@ -1192,21 +1199,22 @@ const FlhaDetails = (props) => {
                                     </FormControl>
                                   </div>
                                 </Grid>
-                                <Grid item sm={1} xs={4}>
-                                  {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                </Grid>
+                                
                                 <Grid container spacing={2}>
                                   {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
 
                                     <Grid item sm={12} xs={12}>
+                                      {console.log(taskForm[taskIndex],'control')}
+                                  
                                       <TextField
-                                        multiline
-                                        variant="outlined"
-                                        rows="3"
-                                        id="description"
-                                        label="Control"
-                                        className={classes.fullWidth}
-                                        value={taskForm[taskIndex]["hazards"][index]["control"]}
+                                       multiline
+                                       variant="outlined"
+                                       rows="1"
+                                       id="control"
+                                       label="Control"
+                                       className={classes.fullWidth}
+                                       value={index === 0 ? taskForm[taskIndex]["control"] : ''}
+                                      
                                         onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
                                         }
                                       />
@@ -1237,6 +1245,7 @@ const FlhaDetails = (props) => {
                                       >
                                         <InputLabel id="demo-simple-select-label">
                                           Risk Severity
+                                          
                                         </InputLabel>
                                         <Select
                                           labelId="incident-type-label"
