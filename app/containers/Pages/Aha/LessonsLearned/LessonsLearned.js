@@ -20,6 +20,8 @@ import Paper from '@material-ui/core/Paper';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
 import Loader from "../../Loader"
+import FormSideBar from '../../../Forms/FormSideBar';
+import { LESSION_LEARNED_FORM } from "../constants";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -122,6 +124,7 @@ const LessonsLearned = () => {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const history = useHistory()
   const handelJobDetails = async () => {
@@ -132,7 +135,8 @@ const LessonsLearned = () => {
     apiData["lessonLearntUserName"] = name
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.id
-    setForm(apiData)
+    await setForm(apiData)
+    await setIsLoading(true)
   }
 
   const handelUserName = () => {
@@ -186,6 +190,7 @@ const LessonsLearned = () => {
   return (
     <>
       <CustomPapperBlock title="Assessment - Lessons learned" icon={ahaLogoSymbol} whiteBg>
+      {isLoading ? 
     <Row>
           <Col md={9}>
         <Grid container spacing={3}><Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -368,7 +373,7 @@ const LessonsLearned = () => {
               selectedItem={"Lessons Learned"}
             />
           </Col>
-        </Row>
+        </Row> : <Loader/>}
     </CustomPapperBlock>
     </>
   );

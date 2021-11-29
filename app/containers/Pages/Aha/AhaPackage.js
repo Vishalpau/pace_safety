@@ -638,7 +638,7 @@ useEffect(() => {
                       className={classes.userPictureBox}
                     >
                       <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(e)} >
-                        <img src={paceLogoSymbol} className={classes.userImage} /> {item[1].username}
+                        <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username}
                       </Button>
                     </Grid>
                     <Link

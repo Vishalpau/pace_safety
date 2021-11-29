@@ -25,7 +25,7 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
 import FormLabel from '@material-ui/core/FormLabel';
 import Loader from "../../Loader"
-
+import ApprovalValidator from "../Validator/ApprovalValidation"
 
 
 
@@ -202,6 +202,7 @@ const Approvals = () => {
     const { error, isValid} = ApprovalValidator(form , actionData)
     await setError(error)
     if(!isValid) {
+      console
       return "data not valid"
     }
     await setSubmitLoader(true)
@@ -342,13 +343,15 @@ const [projectOpen , setProjectOpen] = useState(false)
                   </Typography>
                 </Grid> : null}
 
-                <Grid item md={8} xs={12} className={classes.formBox}>
+                {actionData.length == 0 ? <Grid item md={8}>
+                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+                {/* <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
 
                     If not approved then create a action.
                   </Typography>
-                </Grid>
+                </Grid> */}
 
                 <Grid item md={6} xs={12}>
                   <FormLabel className="checkRadioLabel" component="legend">Create action </FormLabel>
