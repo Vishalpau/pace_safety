@@ -623,6 +623,7 @@ const FlhaDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':');
+    jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -637,6 +638,7 @@ const FlhaDetails = (props) => {
     if (jobForm.attachment != null) {
       formDataPost.append('attachment', jobForm.attachment);
     }
+    formDataPost.append('notifyTo', jobForm.notifyTo);
     formDataPost.append('evacuationPoint', jobForm.evacuationPoint);
     formDataPost.append('emergencyPhoneNumber', jobForm.emergencyPhoneNumber);
     formDataPost.append('permitToWorkNumber', jobForm.permitToWorkNumber);
@@ -811,6 +813,20 @@ const FlhaDetails = (props) => {
     setJobForm({ ...jobForm, attachment: e.target.files[0] })
   };
 
+  const handelNotifyTo = async (e, value) => {
+    let temp = { ...jobForm }
+    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
+
+    if (e.target.checked === false) {
+      const newData = temp.notifyTo.filter((item) => item !== value);
+      temp["notifyTo"] = newData
+    } else {
+      temp["notifyTo"].push(value)
+    }
+    setJobForm(temp)
+  };
+
+
   const handelNotifyToValues = async () => {
     let allRoles = {}
     const config = {
@@ -828,18 +844,6 @@ const FlhaDetails = (props) => {
     }
   }
 
-  const handelNotifyTo = async (e, value) => {
-    let temp = { ...jobForm }
-    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
-
-    if (e.target.checked === false) {
-      const newData = temp.notifyTo.filter((item) => item !== value);
-      temp["notifyTo"] = newData
-    } else {
-      temp["notifyTo"].push(value)
-    }
-    setJobForm(temp)
-  };
 
   useEffect(() => {
     getSupervisors();
@@ -1467,23 +1471,39 @@ const FlhaDetails = (props) => {
             </Paper>
           </Grid>
 
-          <Grid container spacing={3}>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
-              <FormGroup className={classes.radioInline}>
-                {Object.entries(notifyToValue).map(([key, value]) => (
-                  <FormControlLabel
-                    control={<Checkbox name={value} />}
-                    label={value}
-                    onChange={async (e) => handelNotifyTo(e, key)}
-                  />
-                ))}
-              </FormGroup>
-            </Grid>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
+                <g id="outline-assignment-24px" transform="translate(0 1.44)">
+                  <g id="Bounding_Boxes">
+                    <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none" />
+                  </g>
+                  <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c" />
+                </g>
+              </svg> Notification block
+            </Typography>
+          </Grid>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
+                  <FormGroup className={classes.radioInline}>
+                    {Object.entries(notifyToValue).map(([key, value]) => (
+                      <FormControlLabel
+                        control={<Checkbox name={value} />}
+                        label={value}
+                        onChange={async (e) => handelNotifyTo(e, key)}
+                      />
+                    ))}
+                  </FormGroup>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">

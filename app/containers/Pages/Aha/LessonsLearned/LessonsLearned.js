@@ -168,13 +168,11 @@ const LessonsLearned = () => {
   };
 
   const handelSubmit = async () => {
-    if (form.anyLessonsLearnt == "Yes") {
+    if (form.anyLessonsLearnt == "Yes" || form.anyLessonsLearnt == "No") {
       delete form["ahaAssessmentAttachment"]
       form["lessonLearntUserName"] = user.name
       await setSubmitLoader(true)
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
-      history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
-    } else if (form.anyLessonsLearnt == "No") {
       history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
     } else {
       setError({ "LessonDecide": "Please select any one" })
