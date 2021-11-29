@@ -1,4 +1,5 @@
-import Box from '@material-ui/core/Box';
+import React, { useEffect, useState } from 'react';
+import { FormHelperText } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -9,16 +10,17 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { PapperBlock } from 'dan-components';
-import React, { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 import Typography from "@material-ui/core/Typography";
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
+import { CircularProgress } from '@material-ui/core';
+
+
 import { useHistory } from 'react-router';
 import api from '../../../utils/axios';
-import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
-import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants"
+import CloseOutFlhaValidation from "./validation/CloseOutValidation";
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -108,6 +110,8 @@ const CloseOut = (props) => {
 
   const [loading, setLoading] = useState(false)
   const { id } = props.match.params;
+  const [error, setError] = useState({})
+
   const setFlhaDetails = async () => {
     const { id } = props.match.params;
     const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
@@ -143,13 +147,17 @@ const CloseOut = (props) => {
   };
 
   const handleFormSubmit = async () => {
+    const { error, isValid } = CloseOutFlhaValidation(jobForm);
+    setError(error)
     jobForm["flhaStage"] = "Close"
     jobForm["flhaStatus"] = "Close"
-    const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
-    if (jobForm.creatingIncident === "Yes") {
-      history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
-    } else {
-      history.push('/app/pages/assesments/flhasummary/' + id);
+    if (Object.keys(error).length === 0) {
+      const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
+      if (jobForm.creatingIncident === "Yes") {
+        history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
+      } else {
+        history.push('/app/pages/assesments/flhasummary/' + id);
+      }
     }
   };
 
@@ -183,6 +191,7 @@ const CloseOut = (props) => {
                 <Grid item md={12} xs={12}>
                   <FormControl
                     component="fieldset"
+                    error={true}
                   >
                     <FormLabel
                       component="legend"
@@ -209,6 +218,11 @@ const CloseOut = (props) => {
                       />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["preUseInspection"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["preUseInspection"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid
@@ -245,6 +259,11 @@ const CloseOut = (props) => {
                       />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["warningRibbon"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["warningRibbon"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid
@@ -281,6 +300,11 @@ const CloseOut = (props) => {
                       />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["workerWorking"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["workerWorking"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 {jobForm.workerWorking === "Yes" ?
@@ -305,6 +329,11 @@ const CloseOut = (props) => {
                       value={jobForm.workerRemarks}
                       onChange={(e) => handleJobFormChange(e, 'workerRemarks')}
                     />
+                    {error && error["workerRemarks"] && (
+                      <FormHelperText style={{ color: "red" }}>
+                        {error["workerRemarks"]}
+                      </FormHelperText>
+                    )}
                   </Grid>
                   :
                   null
@@ -318,6 +347,11 @@ const CloseOut = (props) => {
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["permitClosedOut"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["permitClosedOut"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item md={6} sm={6} xs={12}>
@@ -328,6 +362,11 @@ const CloseOut = (props) => {
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["hazardsRemaining"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["hazardsRemaining"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item md={6} sm={6} xs={12}>
@@ -338,6 +377,11 @@ const CloseOut = (props) => {
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["endOfJob"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["endOfJob"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item md={6} sm={6} xs={12}>
@@ -348,6 +392,11 @@ const CloseOut = (props) => {
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["anyIncidents"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["anyIncidents"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 {jobForm.anyIncidents === "Yes" ?
@@ -363,6 +412,11 @@ const CloseOut = (props) => {
                       onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
                       className={classes.fullWidth}
                     />
+                    {error && error["jobCompletionRemarks"] && (
+                      <FormHelperText style={{ color: "red" }}>
+                        {error["jobCompletionRemarks"]}
+                      </FormHelperText>
+                    )}
                   </Grid>
                   :
                   null
@@ -376,6 +430,11 @@ const CloseOut = (props) => {
                       <FormControlLabel value="No" control={<Radio />} label="No" />
                     </RadioGroup>
                   </FormControl>
+                  {error && error["creatingIncident"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["creatingIncident"]}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 {false &&

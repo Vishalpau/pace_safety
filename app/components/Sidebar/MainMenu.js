@@ -26,116 +26,115 @@ function MainMenu(props) {
   const [selectedMenuItem, setSelectedMenuItem] = useState("")
   const handleClick = () => {
     const { toggleDrawerOpen, loadTransition } = props;
-    
+
     toggleDrawerOpen();
     loadTransition(false);
   };
 
   const { classes, openSubMenu, open, dataMenu } = props;
-  console.log(classes.opened,"active check")
   const getMenus = menuArray => menuArray.map((item, index) => {
     if (item.child || item.linkParent) {
-        return (
-          <div key={index.toString()}>
-            <ListItem
-              button
-              component={LinkBtn}
-              to={item.linkParent ? item.linkParent : "#"}
-              className={classNames(
-                classes.head,
-                item.key== selectedMenuItem?'selectmenu':"",
-                item.key ? `${item.key}Menu ` : null,
-                // item.icon ? classes.iconed : "",
-                // open.indexOf(item.key) > -1 ? classes.opened : ""
-              )}
-              onClick={() => {openSubMenu(item.key, item.keyParent),setSelectedMenuItem(item.key)}}
-            >
-              {item.icon && (
-                <ListItemIcon className={classes.icon}>
-                  <span className="leftCustomImg"> </span>
-                  {/* <i className={item.icon} /> */}
-                </ListItemIcon>
-              )}
-              <ListItemText
-                style={{ color: "#000" }}
-                classes={{ primary: classes.primary }}
-                variant="inset"
-                primary={item.name}
-              />
-              {!item.linkParent && (
-                <span>
-                  {open.indexOf(item.key) > -1 ? (
-                    <ExpandLess />
-                  ) : (
-                    <ExpandMore />
-                  )}
-                </span>
-              )}
-            </ListItem>
-            {!item.linkParent && (
-              <Collapse
-                component="div"
-                className={classNames(
-                  classes.nolist,
-                  item.keyParent ? classes.child : "",
-                )}
-                in={open.indexOf(item.key) > -1}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List className={classes.dense} component="nav" dense>
-                  {getMenus(item.child, "key")}
-                </List>
-              </Collapse>
-            )}
-          </div>
-        );
-      }
-      if (item.title) {
-        return (
-          <ListSubheader
-            disableSticky
-            key={index.toString()}
-            component="div"
-            className={classes.title}
-          >
-            {item.name}
-          </ListSubheader>
-        );
-      }
       return (
-        <ListItem
-          key={index.toString()}
-          button
-          exact
-          className={
-            classNames(
+        <div key={index.toString()}>
+          <ListItem
+            button
+            component={LinkBtn}
+            to={item.linkParent ? item.linkParent : "#"}
+            className={classNames(
               classes.head,
-              item.name== selectedMenuItem?'selectmenu':"",
-              item.key ? `${item.key}Menu` : null,
-            )
-          }
-          // activeClassName={classes.active}
-          component={LinkBtn}
-          to={item.link}
-          onClick={() => {handleClick(),setSelectedMenuItem(item.name)}}
-        >
-          <ListItemText
-            classes={{ primary: classes.primary }}
-            inset
-            secondary={<span className="leftCustomImg"> </span>}
-            primary={item.name}
-          />
-          {item.badge && (
-            <Chip
-              color="primary"
-              label={item.badge}
-              className={classes.badge}
+              item.key == selectedMenuItem ? 'selectmenu' : "",
+              item.key ? `${item.key}Menu ` : null,
+              // item.icon ? classes.iconed : "",
+              // open.indexOf(item.key) > -1 ? classes.opened : ""
+            )}
+            onClick={() => { openSubMenu(item.key, item.keyParent), setSelectedMenuItem(item.key) }}
+          >
+            {item.icon && (
+              <ListItemIcon className={classes.icon}>
+                <span className="leftCustomImg"> </span>
+                {/* <i className={item.icon} /> */}
+              </ListItemIcon>
+            )}
+            <ListItemText
+              style={{ color: "#000" }}
+              classes={{ primary: classes.primary }}
+              variant="inset"
+              primary={item.name}
             />
+            {!item.linkParent && (
+              <span>
+                {open.indexOf(item.key) > -1 ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )}
+              </span>
+            )}
+          </ListItem>
+          {!item.linkParent && (
+            <Collapse
+              component="div"
+              className={classNames(
+                classes.nolist,
+                item.keyParent ? classes.child : "",
+              )}
+              in={open.indexOf(item.key) > -1}
+              timeout="auto"
+              unmountOnExit
+            >
+              <List className={classes.dense} component="nav" dense>
+                {getMenus(item.child, "key")}
+              </List>
+            </Collapse>
           )}
-        </ListItem>
+        </div>
       );
-    });
+    }
+    if (item.title) {
+      return (
+        <ListSubheader
+          disableSticky
+          key={index.toString()}
+          component="div"
+          className={classes.title}
+        >
+          {item.name}
+        </ListSubheader>
+      );
+    }
+    return (
+      <ListItem
+        key={index.toString()}
+        button
+        exact
+        className={
+          classNames(
+            classes.head,
+            item.name == selectedMenuItem ? 'selectmenu' : "",
+            item.key ? `${item.key}Menu` : null,
+          )
+        }
+        // activeClassName={classes.active}
+        component={LinkBtn}
+        to={item.link}
+        onClick={() => { handleClick(), setSelectedMenuItem(item.name) }}
+      >
+        <ListItemText
+          classes={{ primary: classes.primary }}
+          inset
+          secondary={<span className="leftCustomImg"> </span>}
+          primary={item.name}
+        />
+        {item.badge && (
+          <Chip
+            color="primary"
+            label={item.badge}
+            className={classes.badge}
+          />
+        )}
+      </ListItem>
+    );
+  });
   return <div>{getMenus(dataMenu)}</div>;
 }
 
