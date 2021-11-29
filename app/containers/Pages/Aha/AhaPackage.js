@@ -611,6 +611,17 @@ if(props.observation === "My Assessments"){
 
 };
 
+const handleDelete = async (item) => {
+  console.log(item[1].id)
+  let data = item[1]
+  // let id = item[1].id
+  data.status = "Delete"
+  delete data.ahaAssessmentAttachment
+  console.log(data, "!!!!!!!!!")
+  await setIsLoading(false)
+  const res1 = await api.put(`/api/v1/ahas/${data.id}/`, data).then(response => fetchAllAHAData()).catch(err => console.log(err))
+}
+
 
 
 //   Assigning 'classes' to useStyles()
@@ -813,7 +824,7 @@ useEffect(() => {
                       <Typography variant="body2" display="inline">
                         <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1].attachmentCount}</Link>
                       </Typography>
-                      <span item xs={1} className={classes.sepHeightTen}></span>
+                      {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography
                         variant="body1"
                         display="inline"
@@ -825,29 +836,29 @@ useEffect(() => {
                       </Typography>
                       <Typography variant="body2" display="inline" className={classes.mLeft}>
                         <Link href="#" color="secondary" className={classes.mLeft}>{item[1].commentsCount}</Link>
-                      </Typography>
+                      </Typography> */}
                     </Grid>
 
                     <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
                       <div className={classes.floatR}>
-                      <Typography variant="body1" display="inline">
+                      {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network view</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
                         <PrintOutlinedIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Print</Link>
-                      </Typography>
+                      </Typography> */}
                       {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography> */}
-                      <span item xs={1} className={classes.sepHeightTen}></span>
+                      {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
                       <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                      </Typography>
+                      </Typography> */}
                       <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
+                      <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
                       </Typography>
                       </div>
                     </Grid>
