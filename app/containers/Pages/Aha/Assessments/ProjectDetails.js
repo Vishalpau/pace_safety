@@ -695,9 +695,10 @@ const ProjectDetails = () => {
     })
     await setIsLoading(true);
   }
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const pickListValue = async () => {
-    permitType.current = await PickListData(81)
+    permitType.current = await pickListValues["81"]
   }
 
 

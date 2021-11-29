@@ -555,12 +555,13 @@ const Assessment = () => {
           : [],
     });
   };
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const pickListValue = async () => {
-    risk.current = await PickListData(78);
-    riskResidual.current = await PickListData(76);
-    monitor.current = await PickListData(77);
-  };
+    risk.current = await pickListValues["78"]
+    riskResidual.current = await pickListValues["76"]
+    monitor.current = await pickListValues["77"]
+  }
 
   const handleRiskChange = (e, key, fieldname) => {
     const temp = [...form];
