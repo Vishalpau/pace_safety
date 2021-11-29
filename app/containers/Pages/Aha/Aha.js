@@ -385,13 +385,13 @@ function Aha(props) {
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item xs={11}>
+                        <Grid item xs={10}>
                           <Typography variant="h6">
                             {item[1]["description"]}
                           </Typography>
                         </Grid>
 
-                        <Grid item xs={1} justifyContent="flex-end">
+                        <Grid item xs={2} justifyContent="flex-end">
                           <Chip
                             avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : paceLogoSymbol} />}
                             label={item[1]["username"] ? item[1]["username"] : "Admin"}
