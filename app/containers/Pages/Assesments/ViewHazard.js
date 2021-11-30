@@ -1,69 +1,25 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from '@date-io/moment';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import {
-  TimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Paper from '@material-ui/core/Paper';
-import { PapperBlock } from 'dan-components';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useDropzone } from 'react-dropzone';
-import TableContainer from '@material-ui/core/TableContainer';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import AttachmentIcon from '@material-ui/icons/Attachment';
-import IconButton from '@material-ui/core/IconButton';
-import pledgebanner from 'dan-images/pledgebanner.jpg';
-import biologicalHazard from 'dan-images/biologicalHazard.png';
-import chemicalHazard from 'dan-images/chemicalHazard.png';
-import project from 'dan-images/project.jpg';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import React, { useState, useEffect, useRef } from 'react';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Checkbox from '@material-ui/core/Checkbox';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import classNames from 'classnames';
-import FindInPageOutlinedIcon from '@material-ui/icons/FindInPageOutlined';
-import { findAllByDisplayValue } from 'react-testing-library';
-import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
-import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
-import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined';
-import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined';
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import ControlCameraOutlinedIcon from '@material-ui/icons/ControlCameraOutlined';
+import Box from '@material-ui/core/Box';
+import Divider from '@material-ui/core/Divider';
+import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
-import Tooltip from '@material-ui/core/Tooltip';
+import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+
 import Attachment from '../../../containers/Attachment/Attachment';
 
 
@@ -356,76 +312,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '20%',
   },
 }));
-// Top 100 films as rated by IMDb users.
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-  { title: 'The Good, the Bad and the Ugly', year: 1966 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-];
-
-let riskProb = { 1: 'Highly unlikely', 2: 'Unlikely', 3: 'Likely', 4: 'Very likely' }
-let riskServ = { 2: 'Sightly harmful', 4: 'Harmful', 6: 'Very harmful', 8: 'Extremely harmful' }
 
 const FlhaDetails = (props) => {
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
-  );
-  const [criticalTasks, setCriticalTasks] = React.useState({});
-  const [flha, setFlha] = React.useState({});
-
-  const [visualConfirmationsm, setVisualConfirmations] = React.useState({});
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const [value, setValue] = React.useState('female');
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-  const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
-  const onClick = () => setRadioUnplanned(true);
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
-      -
-      {file.size}
-      {' '}
-      bytes
-    </li>
-  ));
-
-  const [open, setOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState('paper');
-
-  const handleClickOpen = (scrollType) => () => {
-    setOpen(true);
-    setScroll(scrollType);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-
+  const [flha, setFlha] = useState({});
+  const [open, setOpen] = useState(false);
   const handleRiskChange = (rating) => {
-    console.log(rating, 'rating')
     let colorRating = ''
     if (rating === "2 Trivial" || rating === "4 Trivial") {
       colorRating = '#009933'
@@ -442,22 +334,20 @@ const FlhaDetails = (props) => {
 
       colorRating = '#ff0000'
     }
-
     return colorRating
-
+  };
+  const descriptionElementRef = useRef(null);
+  const [expanded, setExpanded] = useState('panel');
+  const handleTwoChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  const [expanded1, setExpanded1] = useState(false);
+  const handleOneChange = (panell) => (event, isExpanded1) => {
+    setExpanded1(isExpanded1 ? panell : false);
   };
 
-
-
-  const descriptionElementRef = React.useRef(null);
-  React.useEffect(() => {
-    console.log({ props: props.criticalTasks });
-    setCriticalTasks(props.criticalTasks);
-    console.log({ props2356: props.criticalTasks });
-    setVisualConfirmations(props.visualConfirmations);
+  useEffect(() => {
     setFlha(props.flha)
-    console.log({ tytyty: props.flha });
-    // getJobVisualConfirmation()
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -465,23 +355,6 @@ const FlhaDetails = (props) => {
       }
     }
   }, [props.criticalTasks, props.visualConfirmations, props.flha]);
-
-
-  const [state, setState] = React.useState({
-    checkedA: true,
-  });
-
-  const [expanded, setExpanded] = React.useState('panel');
-
-
-  const handleTwoChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  const [expanded1, setExpanded1] = React.useState(false);
-  const handleOneChange = (panell) => (event, isExpanded1) => {
-    setExpanded1(isExpanded1 ? panell : false);
-  };
 
   return (
 
@@ -521,7 +394,7 @@ const FlhaDetails = (props) => {
                   </Grid>
                   <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                     <div>
-                      {(props.criticalTasks.length > 0)
+                      {(props.criticalTasks !== undefined && props.criticalTasks.length > 0)
                         ? (props.criticalTasks.map((task,index) => (
                           <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
                             <AccordionSummary
@@ -600,19 +473,16 @@ const FlhaDetails = (props) => {
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
                                               <Typography>
-                                                {hazard.riskSeverity ? hazard.riskSeverity:'-'}
-                                                {/* {riskServ[hazard.riskSeverity]} */}
+                                                {hazard.riskSeverity ? hazard.riskSeverity : '-'}
                                               </Typography>
                                             </Grid>
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className={classes.mttoptenn}>Risk Probability</FormLabel>
                                               <Typography>
-                                                {/* {riskProb[hazard.riskProbability]} */}
-                                                {hazard.riskProbability ? hazard.riskProbability:'-'}
+                                                {hazard.riskProbability ? hazard.riskProbability : '-'}
                                               </Typography>
                                             </Grid>
                                             <Grid item md={4} sm={4} xs={12} >
-
                                               <div
                                                 className={
                                                   classes.ratioColororange
@@ -621,7 +491,6 @@ const FlhaDetails = (props) => {
                                               >
                                                 {hazard.riskRatingLevel}
                                               </div>
-
                                             </Grid>
                                           </Grid>
                                         </> : null}
@@ -666,11 +535,7 @@ const FlhaDetails = (props) => {
                                   </div>
                                 </TableCell>
                                 <TableCell align="left">
-                                  {/* {
-                                    (visualConf.visualConfirmationAttachment) ?
-                                      <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} />
-                                      : "NA"
-                                  } */}
+
                                   <Typography >
                                     {visualConf.visualConfirmationAttachment ===
                                       null ? null : typeof visualConf.visualConfirmationAttachment ===
@@ -678,8 +543,6 @@ const FlhaDetails = (props) => {
                                       <Attachment value={visualConf.visualConfirmationAttachment} />
                                     ) : null}
                                   </Typography>
-
-                                  {/* <img src={visualConf.visualConfirmationAttachment} className={classes.attachImg} alt="decoration" height={40} /> */}
                                 </TableCell>
                               </TableRow>
                             ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}
@@ -691,26 +554,26 @@ const FlhaDetails = (props) => {
 
                   <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Paper elevation={1} className="paperSection">
-                  <Grid item md={4} sm={4} xs={12}>
-                    <FormLabel component="legend" className={classes.mttoptenn}>Is permit to work done?*</FormLabel>
-                    <Typography>
-                      {flha.permitToWork}
-                    </Typography>
-                  </Grid>
-                  <Grid item md={4} sm={4} xs={12}>
-                    <FormLabel component="legend" className={classes.mttoptenn}>Enter permit number</FormLabel>
-                    <Typography>
-                      {flha.permitToWorkNumber == undefined || flha.permitToWorkNumber == 'undefined' || flha.permitToWorkNumber == '' ? '-' : flha.permitToWorkNumber}
-                    </Typography>
-                  </Grid>
-                  <Grid item md={4} sm={4} xs={12}>
-                    <FormLabel component="legend" className={classes.mttoptenn}>Permit job reference</FormLabel>
-                    <Typography>
-                      {flha.referenceNumber == undefined || flha.referenceNumber == 'undefined' || flha.referenceNumber == '' ? '-' : flha.referenceNumber}
+                      <Grid item md={4} sm={4} xs={12}>
+                        <FormLabel component="legend" className={classes.mttoptenn}>Is permit to work done?*</FormLabel>
+                        <Typography>
+                          {flha.permitToWork}
+                        </Typography>
+                      </Grid>
+                      <Grid item md={4} sm={4} xs={12}>
+                        <FormLabel component="legend" className={classes.mttoptenn}>Enter permit number</FormLabel>
+                        <Typography>
+                          {flha.permitToWorkNumber == undefined || flha.permitToWorkNumber == 'undefined' || flha.permitToWorkNumber == '' ? '-' : flha.permitToWorkNumber}
+                        </Typography>
+                      </Grid>
+                      <Grid item md={4} sm={4} xs={12}>
+                        <FormLabel component="legend" className={classes.mttoptenn}>Permit job reference</FormLabel>
+                        <Typography>
+                          {flha.referenceNumber == undefined || flha.referenceNumber == 'undefined' || flha.referenceNumber == '' ? '-' : flha.referenceNumber}
 
-                    </Typography>
-                  </Grid>
-                  </Paper>
+                        </Typography>
+                      </Grid>
+                    </Paper>
                   </Grid>
 
                   <Grid item md={12} sm={12} xs={12} className="paddTBRemove">

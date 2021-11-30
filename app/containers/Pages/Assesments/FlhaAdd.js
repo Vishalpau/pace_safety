@@ -1200,7 +1200,7 @@ const FlhaDetails = (props) => {
                                       <FormLabel component="legend" className="checkRadioLabel">
                                         Is this hazard present?
                                       </FormLabel>
-                                      <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
+                                      <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'hazardStatus')}>
                                         <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                                         <FormControlLabel value="No" control={<Radio />} label="No" />
                                         <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
@@ -1230,7 +1230,7 @@ const FlhaDetails = (props) => {
                                           <FormLabel component="legend" className="checkRadioLabel">
                                             Has this control been put in place?
                                           </FormLabel>
-                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
+                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
                                             <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                                             <FormControlLabel value="No" control={<Radio />} label="No" />
                                             <FormControlLabel value="NA" control={<Radio />} label="N/A" />
@@ -1250,7 +1250,7 @@ const FlhaDetails = (props) => {
                                         className={classes.formControl}
                                       >
                                         <InputLabel id="demo-simple-select-label">
-                                          Risk Severity
+                                          Risk severity
                                           
                                         </InputLabel>
                                         <Select
@@ -1260,7 +1260,7 @@ const FlhaDetails = (props) => {
                                           name="riskSeverityValue"
                                           value={item.riskSeverityValue}
 
-                                          onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskSeverityValue')
+                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
                                           }
                                         >
                                           <MenuItem value={2}>Sightly harmful</MenuItem>
@@ -1277,14 +1277,14 @@ const FlhaDetails = (props) => {
                                         className={classes.formControl}
                                       >
                                         <InputLabel id="demo-simple-select-label">
-                                          Risk Probability
+                                          Risk probability
                                         </InputLabel>
                                         <Select
                                           labelId="incident-type-label"
                                           id="riskProbabilityValue"
                                           label="Risk probability"
                                           value={item.riskProbabilityValue}
-                                          onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskProbabilityValue')
+                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
                                           }
                                         >
                                           <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
