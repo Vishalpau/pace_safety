@@ -535,11 +535,12 @@ function AhaSummary() {
           </div>
 
           <div className={Styles.item}>
+          {console.log(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null)}
             <Button
               color={approvals == true ? "secondary" : "primary"}
-              variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
+              variant={(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null) ? "contained" : "outlined"}
               size="small"
-              endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
+              endIcon={(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("approval")}
 
@@ -547,7 +548,7 @@ function AhaSummary() {
               Approvals
             </Button>
             <Typography variant="caption" display="block">
-              {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
+              {(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null) ? "Done" : "Pending"}
             </Typography>
           </div>
 
