@@ -229,15 +229,13 @@ function AhaSummary() {
   const [isNext, setIsNext] = useState(false)
   const [notificationSentValue, setNotificationSentValue] = useState([])
   const [approvalActionData, setApprovalactionData] = useState([])
-
-
+  const [lessionAction, setLessionAction] = useState([])
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
 
-  
   const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const assessmentDataValues = async () => {
@@ -436,7 +434,11 @@ function AhaSummary() {
     }
   };
 
-
+  const handelLessionActionTracker = async () => {
+    let ahaId = localStorage.getItem("fkAHAId")
+    let allAction = await handelActionWithEntity(ahaId, "aha:lessionLearned")
+    setLessionAction(allAction)
+  };
 
   // console.log(projectSturcturedData,"lkklklklkl")
   const [form, setForm] = useState([]);
@@ -527,7 +529,7 @@ function AhaSummary() {
       fetchTeamData();
       fetchHzardsData();
       assessmentDataValues();
-      // fetchactionTrackerData();
+      handelLessionActionTracker()
     }
   }, []);
 
@@ -988,18 +990,7 @@ function AhaSummary() {
                                         
                                       </TableRow></>))
                                     }
-                                        {/* {approvalActionData.map((value) => (
-                                          <>
-                                            <ActionShow
-                                              action={{ id: value.actionId, number: value.actionNumber }}
-                                              title={value.actionTitle}
-                                              companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                              projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                              handelShowData={handelShowData}
-                                            />
-
-                                          </>
-                                        ))} */}
+                                        
                                       </TableBody>
                                     </Table>
                                   </Grid> : null}
@@ -1095,6 +1086,37 @@ function AhaSummary() {
                                       {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
                                     </Typography>
                                   </Grid>
+                                  {lessionAction.length > 0 ? 
+                                  <Grid item md={12} xs={12}>
+                                    <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                                    <Table component={Paper}>
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                          <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      {/* Action show */}
+                                      <TableBody>
+                                      {lessionAction.map((action, index) => (<>
+                                      <TableRow>
+                                        <TableCell style={{ width: 50 }}>
+                                          <a
+                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                            target="_blank"
+                                          >{action.actionNumber}</a>
+
+                                        </TableCell>
+                                        <TableCell style={{ width: 50 }}>
+                                          {action.actionTitle}
+                                        </TableCell>
+                                        
+                                      </TableRow></>))
+                                    }
+                                        
+                                      </TableBody>
+                                    </Table>
+                                  </Grid> : null}
                                 </Grid>
                               </Paper>
                             </Grid>
