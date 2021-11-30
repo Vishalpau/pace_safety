@@ -72,10 +72,11 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
-import { handelActionData } from "../../../utils/CheckerValue";
+import { handelActionData ,handelActionWithEntity } from "../../../utils/CheckerValue";
 import Attachment from "../../Attachment/Attachment";
 import ActionShow from '../../Forms/ActionShow';
 import Loader from "../Loader"
+import { checkValue } from "../Jha/Utils/checkValue";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -141,7 +142,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'orange',
     padding: '16px!important',
     height: '56px',
-    marginTop: '7px',
+    marginTop: '0px',
+    marginTop: 'px',
     borderRadius: '5px',
     color: '#ffffff',
   },
@@ -225,6 +227,7 @@ function AhaSummary() {
   const [actionTakenData, setActionTakenData] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [isNext, setIsNext] = useState(false)
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const [approvalActionData, setApprovalactionData] = useState([])
 
 
@@ -234,20 +237,25 @@ function AhaSummary() {
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
 
-  // const handleNewAhaPush = async () => {
-  //   history.push(
-  //     `/app/pages/aha/assessments/project-details/${localStorage.getItem(
-  //       "fkAHAId"
-  //     )}`
-  //   );
-  // };
-  // const handleAhaApprovalsPush = async () => {
-  //   history.push("/app/pages/aha/approvals/approvals");
-  // };
-  // const handleAhaLessonLearnPush = async () => {
-  //   history.push("/app/pages/aha/lessons-learned/lessons-learned");
-  // };
+  
+  const [checkListAssessment, setCheckListAssessment] = useState({})
 
+  const assessmentDataValues = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    var tempPerformance = {}
+
+
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/aha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+
+
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })
+    setCheckListAssessment(tempPerformance)
+  }
 
   const viewSwitch = (viewName) => {
     if (viewName == "assessment") {
@@ -313,7 +321,7 @@ function AhaSummary() {
     await setAHAData(result);
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
-
+    await fetchNotificationSent(result.notifyTo)
   };
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
@@ -442,17 +450,19 @@ function AhaSummary() {
 
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
-        if (result[i].riskRating === "25%") {
-          zzz[i].riskRatingColour = '#1EBD10'
-        } else if (result[i].riskRating === "50%") {
-          zzz[i].riskRatingColour = '#FFEB13'
+        if (result[i].riskRating === "2 Trivial" || result[i].riskRating === "4 Trivial") {
+          zzz[i].riskRatingColour = '#009933'
+        } else if (result[i].riskRating === "6 Tolerable" || result[i].riskRating === "8 Tolerable") {
+          zzz[i].riskRatingColour = '#8da225'
 
-        } else if (result[i].riskRating === "75%") {
-          zzz[i].riskRatingColour = '#F3C539'
+        } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
+          zzz[i].riskRatingColour = '#fff82e'
 
-        } else {
-          zzz[i].riskRatingColour = '#FF0000'
-
+        } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
+          zzz[i].riskRatingColour = '#990000'
+        }
+        else {
+          zzz[i].riskRatingColour = '#ff0000'
         }
       }
     }
@@ -462,18 +472,8 @@ function AhaSummary() {
 
   const handelActionTracker = async (resultHazard) => {
     let ahaId = localStorage.getItem("fkAHAId")
-
-    let actionData = await handelActionData(ahaId, resultHazard)
-    await setForm(actionData);
-
-    let allAction = await handelActionData(ahaId, [], "title")
-    let temp = []
-    allAction.map((value) => {
-      if (value.enitityReferenceId.split(":")[1] == "00") {
-        temp.push(value)
-      }
-    })
-    setApprovalactionData(temp !== null ? temp : [])
+    const allAction = await handelActionWithEntity(ahaId, "aha:approval");
+    setApprovalactionData(allAction)
   };
   const handelShowData = () => {
 
@@ -485,21 +485,40 @@ function AhaSummary() {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
-  const fetchactionTrackerData = async () => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    let ActionToCause = {};
-    const allActionTrackerData = await api_action.get("/api/v1/actions/");
-    const allActionTracker = allActionTrackerData.data.data.results.results;
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId")
-    );
-    let sorting = newData.sort((a, b) => a.id - b.id);
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).companies
+      : null;
+    const abc = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
+    const dd = abc[0].projects.filter((user) => user.projectId === projectId)
+    return dd[0].projectName
+  }
 
-    await setActionTakenData(sorting);
-    // await setIsLoading(true);
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for(let i = 0; i < result.length; i++) {
+          for(let j = 0; j < user.length; j++) {
+            if(user[j] == result[i].id){
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -507,6 +526,7 @@ function AhaSummary() {
       fetchAHASummary();
       fetchTeamData();
       fetchHzardsData();
+      assessmentDataValues();
       // fetchactionTrackerData();
     }
   }, []);
@@ -520,7 +540,6 @@ function AhaSummary() {
   return (
     <>
       <CustomPapperBlock title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
-        // icon={ahaLogoSymbol} 
         whiteBg >{isLoading ? 
         <Grid container spacing={3}>
           <Grid item md={9} xs={12}>
@@ -542,12 +561,10 @@ function AhaSummary() {
                             color={assessments === true ? "secondary" : "primary"}
                             variant="contained"
                             size="small"
-                            // endIcon=
                             className={classes.statusButton}
                             onClick={(e) =>
                               viewSwitch("assessment")
                             }
-
                           >
                             Assessments
                           </Button>
@@ -560,7 +577,6 @@ function AhaSummary() {
                             color={approvals == true ? "secondary" : "primary"}
                             variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
                             size="small"
-                            //endIcon={<AccessTime />}
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("approval")}
                           >
@@ -575,7 +591,6 @@ function AhaSummary() {
                             color={closeOut == true ? "secondary" : "primary"}
                             variant={ahaData.closedByName !== null ? "contained" : "outlined"}
                             size="small"
-                            //endIcon={<AccessTime />}
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("closeOut")}
                           >
@@ -590,7 +605,6 @@ function AhaSummary() {
                             color={lessonsLearned == true ? "secondary" : "primary"}
                             variant={ahaData.anyLessonsLearnt !== "" ? "contained" : "outlined"}
                             size="small"
-                            //endIcon={<AccessTime />}
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("lession")}
                           >
@@ -607,8 +621,6 @@ function AhaSummary() {
                 </Paper>
               </Grid>
 
-
-
               <Grid item xs={12} md={12}>
                 {/* summary and part */}
                 <>
@@ -616,12 +628,10 @@ function AhaSummary() {
                     if (
                       assessments == true
                       || (approvals === false
-                        && lessonsLearned === false)
+                        && lessonsLearned === false && closeOut === false)
                     ) {
-
                       return (
                         <>
-
                           <Grid container spacing={3}>
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Typography variant="h6" className="sectionHeading">
@@ -635,13 +645,6 @@ function AhaSummary() {
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
-
-                                  {/* <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Assessment type</FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      NA
-																		</Typography>
-                                  </Grid> */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Assessment Location</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -682,7 +685,7 @@ function AhaSummary() {
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Risk assessment team</FormLabel>
-                                    {Teamform.map((value, index) => (
+                                    {Teamform.length > 0 ?  Teamform.map((value, index) => (
                                       <ul
                                         className={Fonts.labelValue}
                                         key={index}
@@ -691,7 +694,7 @@ function AhaSummary() {
                                           <li>{value.teamName}</li>
                                         ) : "-"}
                                       </ul>
-                                    ))}
+                                    )) : "-"}
                                   </Grid>
 
                                   <Grid item xs={12} md={12} className="paddBRemove">
@@ -709,29 +712,9 @@ function AhaSummary() {
                                       </>
                                     )) : "-"}
                                   </Grid>
-                                  {/* <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Physical hazards</FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      Option 1
-																		</Typography>
-                                    <Typography className="viewLabelValue">
-                                      Option 4
-																		</Typography>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Energy hazard</FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      Option 2
-																		</Typography>
-                                    <Typography className="viewLabelValue">
-                                      Option 5
-																		</Typography>
-                                  </Grid> */}
-
                                 </Grid>
                               </Paper>
                             </Grid>
-
 
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Typography variant="h6" className="sectionHeading">
@@ -796,11 +779,10 @@ function AhaSummary() {
                                               </Typography>
                                             </Grid>
                                             <Grid item md={4} sm={4} xs={12}>
-                                              <FormLabel component="legend" className="viewLabel">Risk %</FormLabel>
                                               <Typography className="viewLabelValue">
                                                 <div className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
                                                   {item.riskRating
-                                                    ? `${item.riskRating} risk`
+                                                    ? item.riskRating
                                                     : "-"}
                                                 </div>
                                               </Typography>
@@ -839,24 +821,19 @@ function AhaSummary() {
                                                   : "-"}
                                               </Typography>
                                             </Grid>
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormLabel component="legend" className="viewLabel">Monitor</FormLabel>
-                                              <Typography className="viewLabelValue">
-                                                {item.monitor
-                                                  ? item.monitor
-                                                  : "-"}
-                                              </Typography>
-                                            </Grid>
                                           </Grid>
                                         </AccordionDetails>
                                       </Accordion>
                                     </>))}
-
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Conditions when the work must be stopped</FormLabel>
                                     <Typography className="viewLabelValue">
-                                      {ahaData.workStopCondition ? ahaData.workStopCondition : "-"}
+                                    {ahaData.workStopCondition !== "" ? checkValue(ahaData.workStopCondition).split(",").map((value) => (
+                                        <p>
+                                          {checkListAssessment[value]}
+                                        </p>
+                                      )) : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -879,11 +856,6 @@ function AhaSummary() {
                                             }
                                           />
                                         ) : null}
-                                        {/* <img src={ahaData.ahaAssessmentAttachment} className="attachFileStyle" alt="attachment" />
-                                        <div className="attachContent">
-                                        <p>construction.jpg</p>
-                                        <p>125kb</p>
-                                        </div> */}
                                       </div>
                                     </Grid>
                                   </Grid>
@@ -891,8 +863,7 @@ function AhaSummary() {
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Notifications sent to</FormLabel>
                                     <Typography className="viewLabelValue">
-                                      {ahaData.notifyTo ? ahaData.notifyTo : "-"}
-                                    </Typography>
+                                    {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}                                    </Typography>
                                   </Grid>
                                 </Grid>
                               </Paper>
@@ -911,10 +882,10 @@ function AhaSummary() {
                                 <Grid container spacing={3}>
                                   <Grid item md={12} sm={12} xs={12}>
                                     <Typography gutterBottom className="labelValue">
-                                      {project.projectName}
+                                    {handleProjectName(ahaData.fkProjectId)}
                                     </Typography>
                                     <Typography className="labelValue">
-                                      {projectStructName.map((value) => ` - ${value}`)}
+                                    {projectStructName.map(value => { return value }).join(" : ")}
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -948,12 +919,12 @@ function AhaSummary() {
                                   <Grid item xs={12}>
                                     <Grid container spacing={3}>
                                       <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                        <FormLabel className="checkRadioLabel" component="legend">Work responsible person</FormLabel>
+                                        <FormLabel className="checkRadioLabel" component="legend">Competent person</FormLabel>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
                                         <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
                                         <Typography className="viewLabelValue">
-                                          {ahaData.username ? ahaData.username : "-"}
+                                        {ahaData.wrpApprovalUser ? ahaData.wrpApprovalUser : "-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
@@ -964,24 +935,33 @@ function AhaSummary() {
                                           ) : "-"}
                                         </Typography>
                                       </Grid>
-                                      {/* <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                        <FormLabel component="legend" className="checkRadioLabel">Person in-charge</FormLabel>
+                                      <Grid item xs={12} style={{ padding: "0px 12px" }}>
+                                        <Typography className={classes.heading}>
+                                          Senior Authorized Person
+                                        </Typography>
                                       </Grid>
-                                      <Grid item xs={12} md={6}>
+                                      <Grid item xs={12}>
+                                        <Grid container spacing={3}>
+                                        <Grid item xs={12} md={6}>
                                         <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                        {ahaData.sapApprovalUser ? ahaData.sapApprovalUser : "-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
                                         <FormLabel component="legend" className="viewLabel">Approved on</FormLabel>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
+                                            "Do MMMM YYYY"
+                                          ) : "-"}
                                         </Typography>
-                                      </Grid> */}
+                                      </Grid>
+                                          </Grid>
+                                      </Grid>
                                     </Grid>
                                   </Grid>
-
+                                              
+                                 {approvalActionData.length > 0 ? 
                                   <Grid item md={12} xs={12}>
                                     <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
                                     <Table component={Paper}>
@@ -989,13 +969,26 @@ function AhaSummary() {
                                         <TableRow>
                                           <TableCell className="tableHeadCellFirst">Action number</TableCell>
                                           <TableCell className="tableHeadCellSecond">Action title</TableCell>
-                                          {/* <TableCell className="tableHeadCellFirst">Assignee</TableCell>
-                                          <TableCell className="tableHeadCellSecond">Status</TableCell> */}
                                         </TableRow>
                                       </TableHead>
                                       {/* Action show */}
                                       <TableBody>
-                                        {approvalActionData.map((value) => (
+                                      {approvalActionData.map((action, index) => (<>
+                                      <TableRow>
+                                        <TableCell style={{ width: 50 }}>
+                                          <a
+                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                            target="_blank"
+                                          >{action.actionNumber}</a>
+
+                                        </TableCell>
+                                        <TableCell style={{ width: 50 }}>
+                                          {action.actionTitle}
+                                        </TableCell>
+                                        
+                                      </TableRow></>))
+                                    }
+                                        {/* {approvalActionData.map((value) => (
                                           <>
                                             <ActionShow
                                               action={{ id: value.actionId, number: value.actionNumber }}
@@ -1006,29 +999,62 @@ function AhaSummary() {
                                             />
 
                                           </>
-                                        ))}
+                                        ))} */}
                                       </TableBody>
                                     </Table>
+                                  </Grid> : null}
+                                </Grid>
+                              </Paper>
+                            </Grid>
+                          </Grid>
+                        </>
+                      );
+                    }
+                    if (closeOut == true) {
+                      return (
+                        <>
+                          <Grid container spacing={3}>
+                            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                              <Typography variant="h6" className="sectionHeading">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25.16" height="28.45" viewBox="0 0 25.16 28.45">
+                                  <g id="Group_5490" data-name="Group 5490" transform="translate(-1383 -174.131)">
+                                    <g id="approval" transform="translate(1383 174.131)">
+                                      <path id="Path_5203" data-name="Path 5203" d="M5.821,12.357a.641.641,0,0,0,0,1.283h4.656a.641.641,0,0,0,0-1.283ZM18.006,0a7.156,7.156,0,0,1,3.07,13.618V26.975A1.478,1.478,0,0,1,19.6,28.45H1.475A1.478,1.478,0,0,1,0,26.975V5.186A1.478,1.478,0,0,1,1.475,3.711H11.732A7.153,7.153,0,0,1,18.006,0Zm1.8,14.079a7.159,7.159,0,0,1-8.62-9.1H1.475a.209.209,0,0,0-.146.06.213.213,0,0,0-.06.146V26.973a.206.206,0,0,0,.206.206H19.6a.209.209,0,0,0,.146-.06.213.213,0,0,0,.06-.146V14.079ZM5.821,21.352a.634.634,0,1,0,0,1.269h8.907a.634.634,0,1,0,0-1.269Zm0-4.494a.634.634,0,1,0,0,1.269h8.907a.634.634,0,1,0,0-1.269ZM15.908,5.969l1.313,1.25,2.723-2.76c.225-.227.364-.41.641-.125l.9.917c.294.292.28.461,0,.732L17.733,9.673c-.586.574-.484.609-1.077.021L14.4,7.448a.26.26,0,0,1,.025-.4l1.04-1.079c.155-.162.282-.153.445,0Z" fill="#06425c" />
+                                    </g>
+                                    <g id="approval-2" data-name="approval" transform="translate(1383 174.131)">
+                                      <path id="Path_5203-2" data-name="Path 5203" d="M15.908,5.969l1.313,1.25,2.723-2.76c.225-.227.364-.41.641-.125l.9.917c.294.292.28.461,0,.732L17.733,9.673c-.586.574-.484.609-1.077.021L14.4,7.448a.26.26,0,0,1,.025-.4l1.04-1.079c.155-.162.282-.153.445,0Z" fill="#fff" />
+                                    </g>
+                                  </g>
+                                </svg> Close Out
+                              </Typography>
+                            </Grid>
+                            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                              <Paper elevation={1} className="paperSection">
+                                <Grid container spacing={3}>
+                                  <Grid item xs={12}>
+                                    <Grid container spacing={3}>
+                                      <Grid item xs={12} md={6}>
+                                      <FormLabel component="legend" className="viewLabel">Closed by</FormLabel>
+                                        <Typography
+                                          variant="body"
+                                          className="viewLabelValue"
+                                        >
+                                          {ahaData.closedByName ? ahaData.closedByName : "-"}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={12} md={6}>
+                                      <FormLabel component="legend" className="viewLabel">Closed on</FormLabel>
+                                        <Typography
+                                          variant="body"
+                                          className="viewLabelValue"
+                                        >
+                                          {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
+                                            "Do MMMM YYYY"
+                                          ) : "-"}
+                                        </Typography>
+                                      </Grid>
+                                    </Grid>
                                   </Grid>
-
-                                  {/* <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                    <FormLabel component="legend" className="checkRadioLabel">Sign-offs </FormLabel>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Signed-off by</FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      NA
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Signed-off on</FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                                        "Do MMMM YYYY"
-                                      ) : "-"}
-                                    </Typography>
-                                  </Grid> */}
-
                                 </Grid>
                               </Paper>
                             </Grid>
@@ -1215,7 +1241,10 @@ function AhaSummary() {
 
             </div>
           </Grid>
-        </Grid> : <Loader />}
+        </Grid>
+        :
+        <Loader />
+        }
       </CustomPapperBlock>
     </>
   );
