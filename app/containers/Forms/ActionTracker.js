@@ -63,7 +63,7 @@ export default function ActionTracker(props) {
     approver: props.createdBy,
     approverName: JSON.parse(localStorage.getItem('userDetails'))["name"],
     assignTo: userId,
-    assignToName: userName,
+    assignToName: "",
     deligateTo: 0,
     plannedStartDate: new Date(),
     actualStartDate: null,
@@ -138,8 +138,11 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
-    if (form.actionTitle == "") {
-      setError({ actionTitle: "Please enter action title" });
+    if (form.actionTitle == "" || form.assignToName == "") {
+      let error = {}
+      form.actionTitle == "" ? error["actionTitle"] = "Please enter action title" : ""
+      // form.assignToName == "" ? error["assignToName"] = "Please enter assignee name" : ""
+      setError(error)
     } else {
       setLoading(true)
       await select()
@@ -236,7 +239,7 @@ export default function ActionTracker(props) {
                 }
                 renderInput={(params) => <TextField {...params}
                   label="Assignee" variant="outlined" />}
-                value={reportedByName.find(value => value.name == userName)}
+                defaultValue={reportedByName.find(value => value.name == userName)}
                 error={error.assignTo}
               />
             </Grid>
