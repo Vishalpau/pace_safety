@@ -149,9 +149,9 @@ const CloseOut = (props) => {
   const handleFormSubmit = async () => {
     const { error, isValid } = CloseOutFlhaValidation(jobForm);
     setError(error)
-    jobForm["flhaStage"] = "Close"
-    jobForm["flhaStatus"] = "Close"
     if (Object.keys(error).length === 0) {
+      jobForm["flhaStage"] = "Close"
+      jobForm["flhaStatus"] = "Close"
       const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
       if (jobForm.creatingIncident === "Yes") {
         history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
@@ -173,9 +173,7 @@ const CloseOut = (props) => {
 
   return (
     <CustomPapperBlock title="FLHA - Close Out" icon={flhaLogoSymbol} whiteBg>
-      {/* {console.log(jobForm)} */}
       {loading == false ?
-        // <Paper elevation={3}>
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -307,7 +305,7 @@ const CloseOut = (props) => {
                 )}
               </Grid>
 
-              {jobForm.workerWorking === "Yes" ?
+              {jobForm.workerWorking === "Yes" || jobForm.workerWorking == null ?
                 <Grid
                   item
                   md={12}
@@ -399,7 +397,7 @@ const CloseOut = (props) => {
                 )}
               </Grid>
 
-              {jobForm.anyIncidents === "Yes" ?
+              {jobForm.anyIncidents === "Yes" || jobForm.anyIncidents == null ?
                 <Grid item md={12} xs={12}>
                   <FormLabel component="legend" className="checkRadioLabel">If Yes, please provide details</FormLabel>
                   <TextField
