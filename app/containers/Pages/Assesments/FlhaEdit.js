@@ -1701,7 +1701,7 @@ const FlhaDetails = () => {
                         <FormControl component="fieldset">
                           <FormLabel component="legend" className="checkRadioLabel">*Is a First Aid/Medical Aid present for your shift?</FormLabel>
                           <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                            {radioDecide.map((value) => (
+                            {radioDecide.slice(0,2).map((value) => (
                               <FormControlLabel
                                 value={value}
                                 className="selectLabel"
@@ -1740,7 +1740,7 @@ const FlhaDetails = () => {
                         <FormControl component="fieldset">
                           <FormLabel component="legend" className="checkRadioLabel">*Has the JSA been reviewed?</FormLabel>
                           <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                            {radioDecide.map((value) => (
+                            {radioDecide.slice(0,2).map((value) => (
                               <FormControlLabel
                                 value={value}
                                 className="selectLabel"
@@ -1779,7 +1779,7 @@ const FlhaDetails = () => {
                         <FormControl component="fieldset">
                           <FormLabel component="legend" className="checkRadioLabel">*Do you have access to job procedure?</FormLabel>
                           <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                            {radioDecide.map((value) => (
+                            {radioDecide.slice(0,2).map((value) => (
                               <FormControlLabel
                                 value={value}
                                 className="selectLabel"

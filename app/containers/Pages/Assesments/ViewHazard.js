@@ -522,7 +522,7 @@ const FlhaDetails = (props) => {
                   <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
                     <div>
                       {(props.criticalTasks.length > 0)
-                        ? (props.criticalTasks.map((task) => (
+                        ? (props.criticalTasks.map((task,index) => (
                           <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
@@ -533,7 +533,7 @@ const FlhaDetails = (props) => {
                               <Typography className={classes.heading}>
                                 <MenuOpenOutlinedIcon className={classes.headingIcon} />
                                 {' '}
-                                Task#1 -
+                                Task# {index + 1}-
                                 {' '}
                                 {task.taskIdentification}
                               </Typography>

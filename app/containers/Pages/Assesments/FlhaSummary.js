@@ -263,9 +263,7 @@ class SimpleTabs extends React.Component {
                       <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
                     )))
                     : "Initial Revision"
-
                   }
-
                 </Tabs>
               </AppBar>
 
@@ -296,7 +294,7 @@ class SimpleTabs extends React.Component {
                         href={'/app/pages/assesments/flha/' + this.props.match.params.id + '/revise'}
                         variant="subtitle"
                       >
-                        <ListItemText disabled={true} primary="Revise FLHA" />
+                        <ListItemText  primary="Revise FLHA" />
                       </Link>
                     </ListItem>
                     <Divider />
