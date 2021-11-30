@@ -1,3 +1,4 @@
+import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
@@ -17,11 +18,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import CommentIcon from '@material-ui/icons/Comment';
 import HistoryIcon from '@material-ui/icons/History';
 import { PapperBlock } from 'dan-components';
-// import Addhazard from './Addhazard';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
-//import Loader from "../Loader";
+
 import Attachment from '../../../containers/Attachment/Attachment';
 import api from '../../../utils/axios';
 import ViewHazard from './ViewHazard';
@@ -133,18 +132,10 @@ class SimpleTabs extends React.Component {
     versions: ["1.0",]
   };
 
-
-  handleChangeTab = (event, value) => {
-    // alert(value)
-    this.setState({ value });
-    this.getPreventiveControls(value)
-  };
-
-
   componentDidMount() {
     this.getFlhaDetails();
-    this.getPreventiveControls("1.0");
     this.getJobVisualConfirmation();
+    this.handelVersion();
   }
 
   getFlhaDetails = async () => {
@@ -153,18 +144,20 @@ class SimpleTabs extends React.Component {
     this.setState({ flha: res.data.data.results });
   }
 
-  getPreventiveControls = async (value = undefined) => {
+  handelVersion = async () => {
     const flhaId = this.props.match.params.id;
-    if (value != undefined) {
-      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
-    }
-    else {
-      var res = await api.get('api/v1/flhas/' + flhaId + '/criticaltasks/');
-    }
+    let taskUrl = `api/v1/flhas/${flhaId}/criticaltasks/`
+    var res = await api.get(`${taskUrl}?version=1.0`);
+    var resAllTask = await api.get(taskUrl);
+    await this.setState({ criticalTasks: res.data.data.results });
+    await this.setState({ versions: resAllTask.data.data.results.versions })
+  }
 
-
-    await this.setState({ criticalTasks: res.data.data.results.tasks });
-    await this.setState({ versions: res.data.data.results.versions })
+  getPreventiveControls = async (value) => {
+    const flhaId = this.props.match.params.id;
+    let taskUrl = `api/v1/flhas/${flhaId}/criticaltasks/`
+    var res = await api.get(`${taskUrl}?version=${value}`);
+    await this.setState({ criticalTasks: res.data.data.results });
   }
 
   getJobVisualConfirmation = async () => {
@@ -179,9 +172,6 @@ class SimpleTabs extends React.Component {
     const {
       value, flha, criticalTasks, visualConfirmations, versions
     } = this.state;
-    const handleChange = (event) => {
-      setValue(event.target.value);
-    };
 
     return (
       <PapperBlock title={'FLHA Number:' + flha.flhaNumber} icon="ion-ios-game-controller-a-outline" desc="">
@@ -257,15 +247,17 @@ class SimpleTabs extends React.Component {
             <div className={classes.root}>
               <AppBar position="static" className={classes.headerBackground}>
                 <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
-                  {(this.state.versions.length > 0) ?
+                  {(this.state.versions !== undefined && this.state.versions.length > 0) ?
 
                     (versions.map((version) => (
-                      <Tab value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version} />
+                      <Tab
+                        value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version}
+                        onClick={(e) => this.getPreventiveControls(version)}
+                      />
                     )))
                     : "Initial Revision"
 
                   }
-
                 </Tabs>
               </AppBar>
 
