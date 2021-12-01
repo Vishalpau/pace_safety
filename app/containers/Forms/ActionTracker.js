@@ -138,11 +138,8 @@ export default function ActionTracker(props) {
   };
 
   const handelSubmit = async () => {
-    if (form.actionTitle == "" || form.assignToName == "") {
-      let error = {}
-      form.actionTitle == "" ? error["actionTitle"] = "Please enter action title" : ""
-      // form.assignToName == "" ? error["assignToName"] = "Please enter assignee name" : ""
-      setError(error)
+    if (form.actionTitle == "") {
+      setError({ actionTitle: "Please enter action title" });
     } else {
       setLoading(true)
       await select()

@@ -256,7 +256,6 @@ class SimpleTabs extends React.Component {
                       />
                     )))
                     : "Initial Revision"
-
                   }
                 </Tabs>
               </AppBar>
@@ -288,7 +287,7 @@ class SimpleTabs extends React.Component {
                         href={'/app/pages/assesments/flha/' + this.props.match.params.id + '/revise'}
                         variant="subtitle"
                       >
-                        <ListItemText disabled={true} primary="Revise FLHA" />
+                        <ListItemText  primary="Revise FLHA" />
                       </Link>
                     </ListItem>
                     <Divider />

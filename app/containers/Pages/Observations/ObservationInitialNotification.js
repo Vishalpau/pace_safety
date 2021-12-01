@@ -1388,7 +1388,7 @@ const ObservationInitialNotification = (props) => {
                       component="fieldset"
                     >
                       <FormLabel component="legend" className="checkRadioLabel" error={error && error["observationType"]}>
-                        Type of iCare*
+                        Type of observation*
                       </FormLabel>
                       <RadioGroup
                         aria-label="gender"
