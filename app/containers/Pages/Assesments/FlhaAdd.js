@@ -640,7 +640,8 @@ const FlhaDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':');
-    jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
+
+    jobForm["notifyTo"] = jobForm["notifyTo"] !== undefined ? (jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null) ? "null" : jobForm["notifyTo"].toString() : "null"
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
