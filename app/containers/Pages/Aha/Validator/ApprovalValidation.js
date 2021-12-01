@@ -8,7 +8,7 @@ function ApprovalValidator(data , action) {
 
   
 
-  if (data.wrpApprovalUser === "") {
+  if (data.wrpApprovalUser === "" && data.sapApprovalUser === null) {
     if(action.length === 0)
     error.action = "If not approved then create a action.";
     isValid = false;

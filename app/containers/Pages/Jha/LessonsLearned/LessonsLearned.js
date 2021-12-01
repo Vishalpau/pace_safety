@@ -171,7 +171,7 @@ const LessonsLearned = () => {
   };
 
   const handelSubmit = async () => {
-    if (form.anyLessonsLearnt == "Yes") {
+    if (form.anyLessonsLearnt == "Yes" || form.anyLessonsLearnt == "No") {
       await setSubmitLoader(true)
       delete form["jhaAssessmentAttachment"]
       if (form["anyLessonsLearnt"] == null) {
@@ -179,7 +179,8 @@ const LessonsLearned = () => {
       }
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       history.push(SUMMARY_FORM["Summary"])
-    } else {
+    }
+    else {
       setError({ LessonDecide: "Please select any one." })
     }
   }
@@ -374,7 +375,7 @@ const LessonsLearned = () => {
               <FormSideBar
                 deleteForm={"hideArray"}
                 listOfItems={LESSION_LEARNED_FORM}
-                selectedItem={"Lession Learned"}
+                selectedItem={"Lesson Learned"}
               />
             </Col>
           </Row>

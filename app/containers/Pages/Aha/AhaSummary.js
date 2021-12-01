@@ -577,7 +577,7 @@ function AhaSummary() {
                         <li>
                           <Button
                             color={approvals == true ? "secondary" : "primary"}
-                            variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
+                            variant={(ahaData.wrpApprovalUser !== ""  && ahaData.sapApprovalUser !== null) ? "contained" : "outlined"}
                             size="small"
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("approval")}
@@ -585,7 +585,7 @@ function AhaSummary() {
                             Approvals
                           </Button>
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}{ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
+                            {(ahaData.wrpApprovalUser !== ""  && ahaData.sapApprovalUser !== null) ? "Done" : "Pending"}{(ahaData.wrpApprovalUser !== ""  && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
                           </Typography>
                         </li>
                         <li>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -29,6 +29,7 @@ import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory, useParams } from 'react-router';
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -254,6 +255,10 @@ export default function AhaMain() {
       "/app/pages/aha/assessments/project-details"
     );
   };
+
+  useEffect(() => {
+    allPickListDataValue()
+  }, [])
 
   return (
     <div className={classes.root}>

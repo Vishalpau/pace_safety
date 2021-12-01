@@ -146,6 +146,10 @@ export const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
   ? JSON.parse(localStorage.getItem('userDetails')).id
   : null;
 
+export const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+  ? JSON.parse(localStorage.getItem('userDetails')).name
+  : null;
+
 export const INITIAL_NOTIFICATION_FORM = {
   'Incident details': `/incident/${localStorage.getItem('fkincidentId')}/modify/`,
   'People affected': `/incident/${localStorage.getItem('fkincidentId')}/modify/peoples-afftected/`,

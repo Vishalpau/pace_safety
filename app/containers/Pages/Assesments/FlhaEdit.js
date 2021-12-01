@@ -48,6 +48,8 @@ import biologicalHazard from 'dan-images/biologicalHazard.png';
 import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import projectpj from 'dan-images/projectpj.png';
 import moment from "moment";
+import { CircularProgress } from '@material-ui/core';
+
 
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from "react-router";
@@ -375,6 +377,19 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "100%",
   },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 const FlhaDetails = () => {
@@ -430,6 +445,7 @@ const FlhaDetails = () => {
   const [notifyToValue, setNotifyToValue] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [versionSelected, setVersionSelected] = useState("")
+  const [buttonLoading, setButtonLoading] = useState(false)
 
   let taskUrl = `/api/v1/flhas/${flhaNumber}/criticaltasks/`
   const radioDecide = ["Yes", "No", "NA"]
@@ -754,6 +770,7 @@ const FlhaDetails = () => {
         setJobVisualConfirmation(temp)
       } else if (type == "flhaAttachment") {
         let temp = { ...flhaForm }
+
         temp["attachment"] = e.target.files[0];
         setFlhaForm(temp)
       }
@@ -802,11 +819,10 @@ const FlhaDetails = () => {
   }
 
   const handelValue = (value) => {
-    let flhaValue = ""
-    if (value !== undefined) {
-      flhaValue = value
+    if (value == undefined || value == 'undefined' || value == '') {
+      return ''
     }
-    return flhaValue
+    return value
   }
 
   const handelVisualTaskSubmit = async () => {
@@ -823,6 +839,7 @@ const FlhaDetails = () => {
       const res = await api.put(`/api/v1/flhas/${flhaNumber}/visualconfirmations/${jobVisualConfirmation[key]["id"]}/`, jobVisualizationData)
     }
     history.push(`/app/pages/assesments/FlhaSummary/${flhaNumber}`)
+    setButtonLoading(false)
   }
 
   const handelTaskSubmit = async () => {
@@ -840,6 +857,7 @@ const FlhaDetails = () => {
   }
 
   const handelFlhaSubmit = async () => {
+    setButtonLoading(true)
     delete flhaForm["qrCodeUrl"]
     typeof flhaForm["attachment"] == "string" && delete flhaForm["attachment"]
     flhaForm["notifyTo"].length == 0 || flhaForm["notifyTo"] == "null" || flhaForm["notifyTo"] == null ? flhaForm["notifyTo"] = "null" : flhaForm["notifyTo"] = flhaForm["notifyTo"].toString()
@@ -1196,7 +1214,7 @@ const FlhaDetails = () => {
                                 id="panel1bh-header"
                                 className="accordionHeaderSection"
                               >
-                                <Typography className={classes.heading}>Task#{index + 1} - Task identification</Typography>
+                                <Typography className={classes.heading}>Task#{index + 1} - {taskForm[index]["taskIdentification"]}</Typography>
                                 <Grid container justify="flex-end">
                                   <Button>
                                     <RemoveIcon onClick={(e) => handelTaskRemove(index)} />
@@ -1232,7 +1250,7 @@ const FlhaDetails = () => {
                                         id="panel2bh-header"
                                         className="accordionSubHeaderSection"
                                       >
-                                        <Typography className={classes.heading}>Hazardk#{indexHazard + 1} - Hazard Name</Typography>
+                                        <Typography className={classes.heading}>Hazard#{indexHazard + 1} - {taskForm[index]["hazards"][indexHazard]["hazards"]}</Typography>
                                         <Button>
                                           <RemoveIcon onClick={(e) => handelRemoveHazards(index, indexHazard)} />
                                         </Button>
@@ -1279,9 +1297,9 @@ const FlhaDetails = () => {
                                             xs={12}
                                           >
                                             <FormControl component="fieldset">
-                                              <FormLabel component="legend" className="checkRadioLabel">is this hazard present?</FormLabel>
+                                              <FormLabel component="legend" className="checkRadioLabel">Is this hazard present?</FormLabel>
                                               <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                                                {radioDecide.slice(0, 2).map((value) => (
+                                                {radioDecide.map((value) => (
                                                   <FormControlLabel
                                                     value={value}
                                                     className="selectLabel"
@@ -1297,115 +1315,123 @@ const FlhaDetails = () => {
                                             </FormControl>
                                           </Grid>
 
-                                          {/* control           */}
-                                          <Grid item sm={12} xs={12}>
-                                            <TextField
-                                              multiline
-                                              variant="outlined"
-                                              rows="3"
-                                              id="description"
-                                              label="*Control"
-                                              className="formControl"
-                                              value={taskForm[index]["hazards"][indexHazard]["control"] || ""}
-                                              onChange={(e) => handelHazard(index, indexHazard, "control", e.target.value)}
-                                            />
-                                          </Grid>
+                                          {taskForm[index]["hazards"][indexHazard]["hazardStatus"] === "Yes"
 
-                                          {/* control put */}
-                                          <Grid
-                                            item
-                                            md={4}
-                                            xs={12}
-                                          >
-                                            <FormControl component="fieldset">
-                                              <FormLabel component="legend" className="checkRadioLabel">Has this control been put in place?</FormLabel>
-                                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                                                {radioDecide.map((value) => (
-                                                  <FormControlLabel
-                                                    value={value}
-                                                    className="selectLabel"
-                                                    control={<Radio />}
-                                                    label={value}
-                                                    checked={taskForm[index]["hazards"][indexHazard]["controlStatus"] == value}
-                                                    onChange={(e) =>
-                                                      handelHazard(index, indexHazard, "controlPut", value)
-                                                    }
-                                                  />
-                                                ))}
-                                              </RadioGroup>
-                                            </FormControl>
-                                          </Grid>
-
-                                          {/* risk          */}
-                                          <Grid item md={12} sm={12} xs={12}>
-                                            <Grid container spacing={3}>
-                                              {/* risk severity */}
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormControl
+                                            ?
+                                            <>
+                                              {/* control           */}
+                                              <Grid item sm={12} xs={12}>
+                                                <TextField
+                                                  multiline
                                                   variant="outlined"
-                                                  requirement
+                                                  rows="3"
+                                                  id="description"
+                                                  label="*Control"
                                                   className="formControl"
-                                                >
-                                                  <InputLabel id="demo-simple-select-label">
-                                                    Risk severity
-                                                  </InputLabel>
-                                                  <Select
-                                                    labelId="incident-type-label"
-                                                    id="incident-type"
-                                                    label="Incident Type"
-                                                    value={valueHazard.riskSeverityValue}
-                                                    onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue', indexHazard)}
-                                                  >
-                                                    {Object.entries(colorSeverityObj).map(([key, valueSeverity]) => (
-                                                      <MenuItem
-                                                        value={valueSeverity}
-                                                      >
-                                                        {key}
-                                                      </MenuItem>
+                                                  value={taskForm[index]["hazards"][indexHazard]["control"] || ""}
+                                                  onChange={(e) => handelHazard(index, indexHazard, "control", e.target.value)}
+                                                />
+                                              </Grid>
+
+                                              {/* control put */}
+                                              <Grid
+                                                item
+                                                md={4}
+                                                xs={12}
+                                              >
+                                                <FormControl component="fieldset">
+                                                  <FormLabel component="legend" className="checkRadioLabel">Has this control been put in place?</FormLabel>
+                                                  <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                                                    {radioDecide.map((value) => (
+                                                      <FormControlLabel
+                                                        value={value}
+                                                        className="selectLabel"
+                                                        control={<Radio />}
+                                                        label={value}
+                                                        checked={taskForm[index]["hazards"][indexHazard]["controlStatus"] == value}
+                                                        onChange={(e) =>
+                                                          handelHazard(index, indexHazard, "controlPut", value)
+                                                        }
+                                                      />
                                                     ))}
-
-
-                                                  </Select>
+                                                  </RadioGroup>
                                                 </FormControl>
                                               </Grid>
 
-                                              {/* risk probablity */}
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormControl
-                                                  variant="outlined"
-                                                  requirement
-                                                  className="formControl"
-                                                >
-                                                  <InputLabel id="demo-simple-select-label">
-                                                    Risk probability
-                                                  </InputLabel>
-                                                  <Select
-                                                    labelId="incident-type-label"
-                                                    id="incident-type"
-                                                    label="Incident Type"
-                                                    value={valueHazard.riskProbabilityValue}
-                                                    onChange={(e) => handleRiskChange(e, index, 'riskProbabilityValue', indexHazard)}
-                                                  >
-                                                    {Object.entries(colorProbablityObj).map(([key, valueProbablity]) => (
-                                                      <MenuItem
-                                                        value={valueProbablity}
-                                                        selected={value.riskProbability == valueProbablity}
+                                              {/* risk          */}
+                                              <Grid item md={12} sm={12} xs={12}>
+                                                <Grid container spacing={3}>
+                                                  {/* risk severity */}
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormControl
+                                                      variant="outlined"
+                                                      requirement
+                                                      className="formControl"
+                                                    >
+                                                      <InputLabel id="demo-simple-select-label">
+                                                        Risk severity
+                                                      </InputLabel>
+                                                      <Select
+                                                        labelId="incident-type-label"
+                                                        id="incident-type"
+                                                        label="Incident Type"
+                                                        value={valueHazard.riskSeverityValue}
+                                                        onChange={(e) => handleRiskChange(e, index, 'riskSeverityValue', indexHazard)}
                                                       >
-                                                        {key}
-                                                      </MenuItem>
-                                                    ))}
-                                                  </Select>
-                                                </FormControl>
+                                                        {Object.entries(colorSeverityObj).map(([key, valueSeverity]) => (
+                                                          <MenuItem
+                                                            value={valueSeverity}
+                                                          >
+                                                            {key}
+                                                          </MenuItem>
+                                                        ))}
+
+
+                                                      </Select>
+                                                    </FormControl>
+                                                  </Grid>
+
+                                                  {/* risk probablity */}
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormControl
+                                                      variant="outlined"
+                                                      requirement
+                                                      className="formControl"
+                                                    >
+                                                      <InputLabel id="demo-simple-select-label">
+                                                        Risk probability
+                                                      </InputLabel>
+                                                      <Select
+                                                        labelId="incident-type-label"
+                                                        id="incident-type"
+                                                        label="Incident Type"
+                                                        value={valueHazard.riskProbabilityValue}
+                                                        onChange={(e) => handleRiskChange(e, index, 'riskProbabilityValue', indexHazard)}
+                                                      >
+                                                        {Object.entries(colorProbablityObj).map(([key, valueProbablity]) => (
+                                                          <MenuItem
+                                                            value={valueProbablity}
+                                                            selected={value.riskProbability == valueProbablity}
+                                                          >
+                                                            {key}
+                                                          </MenuItem>
+                                                        ))}
+                                                      </Select>
+                                                    </FormControl>
+                                                  </Grid>
+
+                                                  {/* risk color */}
+
+                                                  <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
+                                                    {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
+                                                  </Grid>
+
+                                                </Grid>
                                               </Grid>
-
-                                              {/* risk color */}
-
-                                              <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
-                                                {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
-                                              </Grid>
-
-                                            </Grid>
-                                          </Grid>
+                                            </>
+                                            :
+                                            null
+                                          }
                                         </Grid>
                                       </AccordionDetails>
                                     </Accordion>
@@ -1505,9 +1531,16 @@ const FlhaDetails = () => {
                                       }}
                                       disabled={handelJobVisualAttachment(index)}
                                     />
-                                    <IconButton aria-label="delete" align="right">
+                                    
+                    {jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
+                      null ? null : typeof jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
+                        "string" ? (
+                      <Attachment value={jobVisualConfirmation[index]["visualConfirmationAttachment"]} />
+                    ) : null}
+                  
+                                    {/* <IconButton aria-label="delete" align="right">
                                       <DeleteIcon onClick={(e) => handelVisualAttachmentRemove(index)} />
-                                    </IconButton>
+                                    </IconButton> */}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -1606,7 +1639,6 @@ const FlhaDetails = () => {
                           }}
                         />
                       </Grid>
-
                       <Grid item md={12} sm={12} xs={12}>
                         {flhaForm.attachment != "" &&
                           typeof flhaForm.attachment == "string" ? (
@@ -1616,43 +1648,6 @@ const FlhaDetails = () => {
                         )}
                       </Grid>
 
-                    </Grid>
-                  </Paper>
-                </Grid>
-
-                {/* notification block */}
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Typography variant="h6" className="sectionHeading">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
-                      <g id="outline-assignment-24px" transform="translate(0 1.44)">
-                        <g id="Bounding_Boxes">
-                          <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none" />
-                        </g>
-                        <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c" />
-                      </g>
-                    </svg> Notification block
-                  </Typography>
-                </Grid>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Paper elevation={1} className="paperSection">
-                    <Grid container spacing={3}>
-                      <Grid
-                        item
-                        md={12}
-                        xs={12}
-                      >
-                        <FormLabel className="checkRadioLabel" component="legend">Roles</FormLabel>
-                        <FormGroup className={classes.radioInline}>
-                          {Object.entries(notifyToValue).map(([key, value]) => (
-                            <FormControlLabel
-                              control={<Checkbox name={value} />}
-                              label={value}
-                              checked={flhaForm["notifyTo"].includes(key)}
-                              onChange={async (e) => handelNotifyTo(e, key)}
-                            />
-                          ))}
-                        </FormGroup>
-                      </Grid>
                     </Grid>
                   </Paper>
                 </Grid>
@@ -1818,20 +1813,33 @@ const FlhaDetails = () => {
                 </Grid>
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    color="primary"
-                    className="spacerRight buttonStyle"
-                    onClick={(e) => handelFlhaSubmit()}
-                  >
-                    Submit
-                  </Button>
+
+                  <div className={classes.loadingWrapper}>
+
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => handelFlhaSubmit()}
+                      className={classes.custmSubmitBtn}
+                      style={{ marginLeft: "10px" }}
+                      disabled={buttonLoading}
+                    >
+
+                      Next
+                    </Button>
+                    {buttonLoading && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
+
                   <Button
                     size="medium"
                     variant="contained"
                     color="secondary"
                     className="buttonStyle custmCancelBtn"
+                    onClick={(e) => history.push(`/app/pages/assesments/FlhaSummary/${flhaNumber}`)}
                   >
                     Cancel
                   </Button>
