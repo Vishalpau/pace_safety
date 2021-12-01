@@ -497,7 +497,6 @@ const JobDetails = (props) => {
         await setSubmitLoader(false)
         await handleSubmitHazard(newJhaId)
     }
-    const typeOfPremit = ["Type1", "Type2", "Type3", "Type4", "Type5"]
 
     const classes = useStyles();
 
@@ -655,6 +654,14 @@ const JobDetails = (props) => {
         setSubmitLoaderHazard(false)
     }
 
+    const [typeOfPremit,setTypeOfPremit] = useState([])
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
+  const pickListValue = async () => {
+    setTypeOfPremit(await pickListValues["80"])
+  }
+
+
     const handelCallBack = async () => {
         await setLoading(true)
         await fetchJhaData()
@@ -662,6 +669,7 @@ const JobDetails = (props) => {
         await fetchDepartment()
         await handelUpdateHazard()
         await checkList()
+        await pickListValue()
         await setLoading(false)
     }
 
@@ -909,11 +917,11 @@ const JobDetails = (props) => {
                                                 onChange={(e) => setForm({ ...form, typeOfPermit: e.target.value })}
                                                 variant="outlined"
                                             >
-                                                {typeOfPremit.map((option) => (
-                                                    <MenuItem key={option}
-                                                        value={option}
+                                                {typeOfPremit.map((selectValues) => (
+                                                    <MenuItem key={selectValues}
+                                                        value={selectValues.value}
                                                     >
-                                                        {option}
+                                                    {selectValues.label}
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
@@ -964,7 +972,7 @@ const JobDetails = (props) => {
                                         >
 
                                             <TextField
-                                                label="Team Name"
+                                                label={` name ${index + 1}`}
                                                 margin="dense"
                                                 name="arename"
                                                 id="arename"

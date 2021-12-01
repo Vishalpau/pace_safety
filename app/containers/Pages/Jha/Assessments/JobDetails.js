@@ -475,7 +475,12 @@ const JobDetails = (props) => {
     await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
     await setSubmitLoader(false)
   }
-  const typeOfPremit = ["Type1", "Type2", "Type3", "Type4", "Type5"]
+  const [typeOfPremit,setTypeOfPremit] = useState([])
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
+  const pickListValue = async () => {
+    setTypeOfPremit(await pickListValues["80"])
+  }
 
   const classes = useStyles();
 
@@ -484,6 +489,7 @@ const JobDetails = (props) => {
     await fetchJhaData()
     await fetchTeamData()
     await fetchDepartment()
+    await pickListValue()
     await setLoading(false)
   }
 
