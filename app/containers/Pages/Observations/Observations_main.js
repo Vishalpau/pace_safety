@@ -230,7 +230,9 @@ export default function Observations() {
     history.push("/app/icare-initial-notification");
   };
 
-  allPickListDataValue()
+  useEffect(() => {
+    allPickListDataValue()
+  }, [])
 
   return (
     <div className={classes.root}>

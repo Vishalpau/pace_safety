@@ -290,8 +290,6 @@ function BlankPage(props) {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
-  allPickListDataValue()
-
   const handelCallBack = async () => {
     await setIsLoading(true)
     let state = JSON.parse(localStorage.getItem('direct_loading'))
@@ -305,6 +303,7 @@ function BlankPage(props) {
 
   useEffect(() => {
     handelCallBack()
+    allPickListDataValue()
   }, [props.projectName.breakDown, props.projectName.projectName]);
 
   const columns = [
