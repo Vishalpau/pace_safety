@@ -16,16 +16,17 @@ import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
-import ObservationSearchSection from './ObservationSearchSection';
+import { chunk } from 'react-chunk';
+
 import ObservationsKanban from './ObservationsKanban';
-import ObservationsBarCharts from './ObservationsBarCharts';
 import ObservationsList from './ObservationsList';
 // import DashboardIcon from '@material-ui/icons/Dashboard';
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
-
+const ObservationSearchSection = chunk(() => import('./ObservationSearchSection'))();
+const ObservationsBarCharts = chunk(() => import('./ObservationsBarCharts'))();
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -219,12 +220,9 @@ export default function Observations() {
   const history = useHistory();
   const [searchText, setSearchText] = React.useState('')
 
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  console.log(value)
 
   const handleBulkUploadfilePush = async () => {
     history.push(
@@ -238,9 +236,7 @@ export default function Observations() {
     history.push("/app/icare-initial-notification");
   };
 
-  useEffect(() => {
-    allPickListDataValue()
-  }, [])
+  allPickListDataValue()
 
   return (
     <div className={classes.root}>
