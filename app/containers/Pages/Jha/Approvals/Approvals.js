@@ -27,6 +27,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
+import ApprovalValidator from '../Validation/ApprovalsValidation';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -144,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
 const Approvals = () => {
 
   const [form, setForm] = useState({})
-  const [check, setCheck] = useState({ wrp: false, pic: false })
+  const [check, setCheck] = useState({ wrp: false, sap: false })
   const history = useHistory()
   const [submitLoader, setSubmitLoader] = useState(false)
   const [updatePage, setUpdatePage] = useState(false)
@@ -155,6 +156,10 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   });
+  const [error, setError] = useState({})
+
+  const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false)
 
@@ -167,21 +172,21 @@ const Approvals = () => {
     setCheck({
       ...check,
       wrp: apiData.wrpApprovalUser !== null ? true : false,
-      pic: apiData.picApprovalUser !== null ? true : false
+      sap: apiData.sapApprovalUser !== null ? true : false
     })
   }
 
-  const handelWorkAndPic = (type) => {
+  const handelWorkAndsap = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.name
     if (type == "work") {
       setOpen(false)
       setCheck({ ...check, wrp: !check.wrp })
       setForm({ ...form, wrpApprovalUser: name, wrpApprovalDateTime: new Date() })
-    } else if (type == "pic") {
-      check.pic == false && alert("You have approved person incharge")
-      setCheck({ ...check, pic: !check.pic })
-      setForm({ ...form, picApprovalUser: name, picApprovalDateTime: new Date() })
+    } else if (type == "sap") {
+      setOpenSeniorAuthorized(false)
+      setCheck({ ...check, sap: !check.sap })
+      setForm({ ...form, sapApprovalUser: name, sapApprovalDateTime: new Date() })
     }
   }
 
@@ -197,6 +202,10 @@ const Approvals = () => {
     })
     setActionData(temp !== null ? temp : [])
   };
+
+  const handleCloseSenirorAuthorized = () => {
+    setOpenSeniorAuthorized(false)
+  }
 
   const handelActionLink = () => {
     const projectId =
@@ -223,11 +232,14 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
+    const { error, isValid} = ApprovalValidator(form , actionData)
+    await setError(error)
+    if(!isValid) {
+      console
+      return "data not valid"
+    }
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
-    if (form["wrpApprovalUser"] == null) {
-      form["wrpApprovalUser"] = ""
-    }
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     history.push(SUMMARY_FORM["Summary"])
     setSubmitLoader(false)
@@ -237,7 +249,7 @@ const Approvals = () => {
     await setLoading(true);
     await handelActionLink();
     await handelJobDetails();
-    await handelWorkAndPic();
+    await handelWorkAndsap();
     await handelActionTracker();
     await setLoading(false);
   }
@@ -281,101 +293,168 @@ const Approvals = () => {
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
 
-                      <Grid
-                        item
-                        md={8}
-                        xs={12}
-                        className={classes.formBox}
+                    <Grid
+                      item
+                      md={8}
+                      xs={12}
+                      className="formFieldBTNSection"
                       >
+                      <Typography variant="h6" gutterBottom className={classes.labelName}>
+                        Competent Person (CP)
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        color={check.wrp ? "secondary" : "primary"}
+                        className="marginT0"
+                        onClick={(e) => setOpen(true)}
+                      >
+                        {check.wrp ? "Approved" : "Approve Now"}
+                      </Button>
+                      {/* Approved by userName on Date "date" (edited)  */}
+                     
+                    </Grid>
 
-
-                        <Grid item xs={12} className="formFieldBTNSection" align="left">
-                          <Button
-                            color={check.wrp ? "secondary" : "primary"}
-                            variant="contained"
-                            className="marginT0"
-                            onClick={(e) => setOpen(true)}
-                          >
-                            {check.wrp ? "Approved" : "Approve Now"}
-                          </Button>
-                          <Button disabled variant="contained" color="primary" className={classes.approvalButtonColor}>Approved</Button>
-                        </Grid>
-
+                    {form.wrpApprovalDateTime !== undefined
+                      &&
+                      form.wrpApprovalDateTime !== null ?
                         <Grid item xs={12} md={6}>
                           <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
                           <Typography className="viewLabelValue">
-                            {form.wrpApprovalDateTime !== undefined && form.wrpApprovalUser !== null
-                              &&
-                              form.wrpApprovalDateTime !== `Approved by: ${form.wrpApprovalUser} on Date ${moment(new Date()).format('DD MMMM YYYY, h:mm:ss a')}` ?
-                              `${form.wrpApprovalUser} ${moment(form.wrpApprovalDateTime).format('DD MMMM YYYY, h:mm:ss a')}`
-                              : null
-                            }
+                          {`${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
                           </Typography>
-                        </Grid>
+                        </Grid> : null}
 
 
-                        <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                          <FormLabel className="checkRadioLabel" component="legend">PIC (if attended the toolbox meeting)</FormLabel>
-                        </Grid>
-                        <Grid item xs={12} className="formFieldBTNSection" align="left">
+                    <Grid
+                      item
+                      md={8}
+                      xs={12}
+                      className="formFieldBTNSection"
+                      >
+                      <Typography variant="h6" gutterBottom className={classes.labelName}>
+                        Senior Authorized Person (SAP)
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        color={check.sap ? "secondary" : "primary"}
+                        className="marginT0"
+                        onClick={(e) => setOpenSeniorAuthorized(true)}
+                      >
+                        {check.sap ? "Approved" : "Approve Now"}
+                      </Button>
+                    </Grid>
+
+                    {form.sapApprovalUser !== undefined
+                      &&
+                      form.sapApprovalUser !== null ?
+                      <Grid item xs={12} md={6}>
+                        <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
+                        <Typography className="viewLabelValue">
+                        {`${form.sapApprovalUser} , ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
+                        </Typography>
+                      </Grid> : null}
+
+                      {actionData.length == 0 ? <Grid item md={8}>
+                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+
+                    <Dialog
+                      className={classes.projectDialog}
+                      open={open}
+                      onClose={handleClose}
+                      PaperProps={{
+                        style: {
+                          width: "100%",
+                          maxWidth: 400,
+                        },
+                      }}
+                    >
+                      <DialogTitle onClose={() => handleClose()}>
+                        Confirmation
+                      </DialogTitle>
+                      <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
+                      <DialogContent>
+                        <DialogContentText>
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.projectSelectionTitle}
+                          >
+                            You are approving competent person.
+                          </Typography>
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Tooltip title="Cancel">
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleClose()}
+                          >
+                            cancel
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Ok">
                           <Button
                             variant="contained"
                             color="primary"
-                            className="marginT0"
+                            onClick={(e) => handelWorkAndsap("work")}
                           >
-                            Approve now
+                            Ok
                           </Button>
-                        </Grid>
+                        </Tooltip>
+                      </DialogActions>
+                    </Dialog>
 
-                      </Grid>
-                      <Dialog
-                        className={classes.projectDialog}
-                        open={open}
-                        onClose={handleClose}
-                        PaperProps={{
-                          style: {
-                            width: "100%",
-                            maxWidth: 400,
-                          },
-                        }}
-                      >
-                        <DialogTitle onClose={() => handleClose()}>
-                          Confirmation
-                        </DialogTitle>
-                        <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
-                        <DialogContent>
-                          <DialogContentText>
-                            <Typography
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              className={classes.projectSelectionTitle}
-                            >
-                              You are approving work responsible person.
-                            </Typography>
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Tooltip title="Cancel">
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              onClick={() => handleClose()}
-                            >
-                              cancel
-                            </Button>
-                          </Tooltip>
-                          <Tooltip title="Ok">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={(e) => handelWorkAndPic("work")}
-                            >
-                              Ok
-                            </Button>
-                          </Tooltip>
-                        </DialogActions>
-                      </Dialog>
+
+                    <Dialog
+                      className={classes.projectDialog}
+                      open={openSeniorAuthorized}
+                      onClose={handleCloseSenirorAuthorized}
+                      PaperProps={{
+                        style: {
+                          width: "100%",
+                          maxWidth: 400,
+                        },
+                      }}
+                    >
+                      <DialogTitle onClose={() => handleCloseSenirorAuthorized()}>
+                        Confirmation
+                      </DialogTitle>
+                      <IconButton className={classes.closeIcon} onClick={() => handleCloseSenirorAuthorized()}><Close /></IconButton>
+                      <DialogContent>
+                        <DialogContentText>
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h2"
+                            className={classes.projectSelectionTitle}
+                          >
+                            You are approving senior authorized person.
+                          </Typography>
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Tooltip title="Cancel">
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleCloseSenirorAuthorized()}
+                          >
+                            cancel
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Ok">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={(e) => handelWorkAndsap("sap")}
+                          >
+                            Ok
+                          </Button>
+                        </Tooltip>
+                      </DialogActions>
+                    </Dialog>
 
                       <Grid item md={12} xs={12}>
                         <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -410,18 +489,7 @@ const Approvals = () => {
 
                       </Grid>
 
-                      <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                        <FormLabel className="checkRadioLabel" component="legend">Signature</FormLabel>
-                      </Grid>
-                      <Grid item xs={12} className="formFieldBTNSection" align="left">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          className="marginT0"
-                        >
-                          Sign now
-                        </Button>
-                      </Grid>
+                     
                     </Grid>
                   </Paper>
                 </Grid>

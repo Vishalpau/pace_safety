@@ -905,7 +905,7 @@ const JobDetails = (props) => {
                                     </Grid>
 
                                     {/* permit type */}
-                                    {form.permitToPerform == "Yes" ?
+                                    {form.permitToPerform == "Yes" ? <>
                                         <Grid item md={6} xs={11}>
                                             <TextField
                                                 label="Type of permit"
@@ -926,9 +926,46 @@ const JobDetails = (props) => {
                                                 ))}
                                             </TextField>
                                         </Grid>
+                                        <Grid
+                                            item
+                                            md={6}
+                                            xs={11}
+                                        >
+                                            <TextField
+                                            label="Permit number"
+                                            name="permitnumber"
+                                            id="permitnumber"
+                                            value={form.permitNumber ? form.permitNumber : ""}
+                                            onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
+                                            fullWidth
+                                            variant="outlined"
+                                            className={classes.formControl}
+                                            />
+                                        </Grid>
+                                        </>
                                         :
                                         null
                                     }
+                                    <Grid item md={6} xs={11}>
+                                        <TextField
+                                        label="Department"
+                                        name="department"
+                                        id="department"
+                                        select
+                                        fullWidth
+                                        value={form.department ? form.department : ""}
+                                        onChange={(e) => setForm({ ...form, department: e.target.value })}
+                                        variant="outlined"
+                                        >
+                                        {departmentName.map((option) => (
+                                            <MenuItem key={option}
+                                            value={option}
+                                            >
+                                            {option}
+                                            </MenuItem>
+                                        ))}
+                                        </TextField>
+                                    </Grid>
 
                                     {/* scope work */}
                                     <Grid
@@ -972,7 +1009,7 @@ const JobDetails = (props) => {
                                         >
 
                                             <TextField
-                                                label={` name ${index + 1}`}
+                                                label={`Name ${index + 1}`}
                                                 margin="dense"
                                                 name="arename"
                                                 id="arename"
@@ -1053,27 +1090,7 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
-                                    {/* department */}
-                                    <Grid item md={6} xs={11}>
-                                        <TextField
-                                            label="Department"
-                                            name="department"
-                                            id="department"
-                                            select
-                                            fullWidth
-                                            value={form.department ? form.department : ""}
-                                            onChange={(e) => setForm({ ...form, department: e.target.value })}
-                                            variant="outlined"
-                                        >
-                                            {departmentName.map((option) => (
-                                                <MenuItem key={option}
-                                                    value={option}
-                                                >
-                                                    {option}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
+                                    
 
                                     {/* emergency number */}
                                     <Grid
@@ -1111,23 +1128,6 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
-                                    {/* permit number       */}
-                                    <Grid
-                                        item
-                                        md={6}
-                                        xs={11}
-                                    >
-                                        <TextField
-                                            label="Permit number"
-                                            name="permitnumber"
-                                            id="permitnumber"
-                                            value={form.permitNumber ? form.permitNumber : ""}
-                                            onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
-                                            fullWidth
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        />
-                                    </Grid>
 
                                     {/* order number */}
                                     <Grid

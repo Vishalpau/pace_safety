@@ -431,7 +431,7 @@ const AssessmentAndDocument = () => {
         const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
         const config = {
             method: 'get',
-            url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/`,
+            url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
             headers: HEADER_AUTH,
         };
         const notify = await api(config);
