@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
@@ -22,7 +22,6 @@ import AttachmentIcon from "@material-ui/icons/Attachment";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import FormatListBulleted from "@material-ui/icons/FormatListBulleted";
 import MessageIcon from "@material-ui/icons/Message";
-import Print from "@material-ui/icons/Print";
 import SearchIcon from "@material-ui/icons/Search";
 import ViewAgendaIcon from "@material-ui/icons/ViewAgenda";
 import Pagination from '@material-ui/lab/Pagination';
@@ -32,18 +31,16 @@ import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import moment from "moment";
 import MUIDataTable from "mui-datatables";
+
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-
 import { company, projectName, tabViewMode } from '../../../redux/actions/initialDetails';
 import api from "../../../utils/axios";
-import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL, SUMMERY_FORM } from "../../../utils/constants";
-import Loader from "../../Forms/Loader"
-import { AlertTitle } from "@material-ui/lab";
-import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
+import allPickListDataValue from "../../../utils/Picklist/allPickList";
 
+const Loader = lazy(() => import("../../Forms/Loader"))
 
-// import { handleTimeOutError } from "../../../utils/CheckerValue"
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -231,7 +228,6 @@ function BlankPage(props) {
 
   const userDetails = async (compId, proId) => {
     console.log("welcome user details")
-    // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
         let config = {
@@ -239,8 +235,6 @@ function BlankPage(props) {
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        console.log(config)
-        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
         await api(config)
           .then(function (response) {
@@ -296,20 +290,16 @@ function BlankPage(props) {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
-  const filterSubscription = () => {
-    // const userDetails = JSON.parse(localStorage.getItem(''))
-  }
+  allPickListDataValue()
 
   const handelCallBack = async () => {
     await setIsLoading(true)
     let state = JSON.parse(localStorage.getItem('direct_loading'))
     if (state !== null) {
-      console.log("state is not null")
       await userDetails(state.comId, state.proId)
     } else {
       await fetchData();
     }
-    await allPickListDataValue()
     await setIsLoading(false)
   }
 
@@ -369,17 +359,7 @@ function BlankPage(props) {
     pagination: false
 
   };
-  const fetchPermissionData = async () => {
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const res = await api.get(`${SELF_API}${fkCompanyId}/`)
 
-    let roles = res.data.data.results.data.companies[0].subscriptions.filter(item => item.appCode === "safety")
-
-    const fetchPermissiondata = await api.get(`${SSO_URL}${roles[0].roles[0].aclUrl.substring(0)}`)
-
-    setPermissionListData(fetchPermissiondata.data.data.results.permissions[0].incident)
-
-  }
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -394,7 +374,6 @@ function BlankPage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    // https://dev-safety-api.paceos.io/api/v1/incidents/?companyId=1&projectStructureIds=1L1:2L3:3L6&projectId=1
     const res = await api.get(`api/v1/incidents/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`)
       .then((res) => {
         setIncidents(res.data.data.results.results);
@@ -405,6 +384,7 @@ function BlankPage(props) {
       })
 
   };
+
   const handleSearchIncident = (serchValue) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -429,6 +409,7 @@ function BlankPage(props) {
         setPageCount(pageCount)
       })
   }
+
   const classes = useStyles();
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -495,7 +476,6 @@ function BlankPage(props) {
                         size="small"
                         startIcon={<AddCircleIcon />}
                         className={classes.newIncidentButton}
-                        // disabled={!permissionListData.add_incidents}
                         disableElevation
                       >
                         New Incident

@@ -640,7 +640,12 @@ const FlhaDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':');
-    jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
+    jobForm["notifyTo"] == null ?
+      jobForm["notifyTo"] = "null" :
+      jobForm["notifyTo"].length > 0 ?
+        jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
+        jobForm["notifyTo"] = "null"
+
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -788,7 +793,7 @@ const FlhaDetails = (props) => {
         Checked: jobForm.Checked
 
       }
-    ); 
+    );
     await handleSelectedJobHazardFormTemp(selectedJobTitle.critical_tasks);
     setOpen(false);
   };
@@ -1146,10 +1151,10 @@ const FlhaDetails = (props) => {
                               <Typography className={classes.secondaryHeading}>
                               </Typography>
                               <Grid container justify="flex-end">
-                          <Button>
-                          <RemoveIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
-                          </Button>
-                        </Grid>
+                                <Button>
+                                  <RemoveIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
+                                </Button>
+                              </Grid>
                             </AccordionSummary>
                             <AccordionDetails>
                               <Grid container spacing={2}>
@@ -1193,8 +1198,8 @@ const FlhaDetails = (props) => {
                                       </>}
                                   </FormControl>
                                   <Grid item sm={1} xs={4}>
-                                  {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                </Grid>
+                                    {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                  </Grid>
                                   <div className={classes.spacer} id="myCode" >
                                     <FormControl component="fieldset">
                                       <FormLabel component="legend" className="checkRadioLabel">
@@ -1208,19 +1213,19 @@ const FlhaDetails = (props) => {
                                     </FormControl>
                                   </div>
                                 </Grid>
-                                
+
                                 <Grid container spacing={2}>
                                   {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
 
                                     <Grid item sm={12} xs={12}>
-                                  
+
                                       <TextField
-                                       multiline
-                                       variant="outlined"
-                                       rows="1"
-                                       label="Control"
-                                       className="formControl"
-                                       value={taskForm[taskIndex]["hazards"][indexHazard]["control"] ? taskForm[taskIndex]["hazards"][indexHazard]["control"] : ''}
+                                        multiline
+                                        variant="outlined"
+                                        rows="1"
+                                        label="Control"
+                                        className="formControl"
+                                        value={taskForm[taskIndex]["hazards"][indexHazard]["control"] ? taskForm[taskIndex]["hazards"][indexHazard]["control"] : ''}
                                         onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
                                         }
                                       />
@@ -1251,7 +1256,7 @@ const FlhaDetails = (props) => {
                                       >
                                         <InputLabel id="demo-simple-select-label">
                                           Risk severity
-                                          
+
                                         </InputLabel>
                                         <Select
                                           labelId="incident-type-label"
