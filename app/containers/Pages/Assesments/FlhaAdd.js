@@ -641,7 +641,11 @@ const FlhaDetails = (props) => {
       return depth;
     }).join(':');
 
-    jobForm["notifyTo"] = jobForm["notifyTo"] !== undefined ? (jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null) ? "null" : jobForm["notifyTo"].toString() : "null"
+    jobForm["notifyTo"] == null ?
+    jobForm["notifyTo"] = "null" :
+    jobForm["notifyTo"].length > 0 ?
+    jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
+    jobForm["notifyTo"] = "null"
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
