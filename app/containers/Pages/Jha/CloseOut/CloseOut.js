@@ -19,7 +19,7 @@ import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import "../../../../styles/custom.css";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import FormHelperText from "@material-ui/core/FormHelperText";
 import api from "../../../../utils/axios";
 import {
     access_token,
@@ -28,7 +28,7 @@ import {
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { SUMMARY_FORM } from "../Utils/constants";
-
+import CloseOutValidator from "../Validation/CloseOutValidation"
 
 
 function Alert(props) {
@@ -125,7 +125,7 @@ const CloseOut = () => {
             .then(function (response) {
 
                 if (response.status === 200) {
-                    const result = response.data.data.results[0].users
+                    const result = response.data.data.results.users
                     setUserList(result)
                 }
             })
@@ -140,6 +140,11 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
+        const {error , isValid} = CloseOutValidator(jhaListData)
+        await setError(error)
+        if(!isValid) {
+            return "data not valid"
+        }
         await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
@@ -210,19 +215,22 @@ const CloseOut = () => {
                         </Grid>
 
                         <Grid item xs={12} md={6}>
+                        {console.log(userList,
+                            "userList")}
                             <FormControl
                                 variant="outlined"
                                 className={classes.formControl}
+                                error={error.closedByName ? error.closedByName : ""}
+                                
                             >
                                 <InputLabel id="demo-simple-select-label">
-                                    Closed by
+                                    Closed by*
                                 </InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Closed by"
                                     value={jhaListData.closedByName ? jhaListData.closedByName : ""}
-
                                 >
                                     {userList.map((selectValues, index) => (
                                         <MenuItem
@@ -234,7 +242,7 @@ const CloseOut = () => {
                                         </MenuItem>
                                     ))}
                                 </Select>
-
+                                {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6}>
