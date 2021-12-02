@@ -1481,7 +1481,8 @@ function AhaSummary() {
                     </ListItemIcon>
                     <ListItemText primary="Add Lessons Learned" />
                   </ListItemLink>)}
-                <ListItemLink onClick={(e) => handleCloseOutPush(e)}>
+                <ListItemLink disabled={ahaData.closedByName !== null}
+                onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>

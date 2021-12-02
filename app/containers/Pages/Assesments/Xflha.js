@@ -68,7 +68,6 @@ import { useDispatch } from 'react-redux';
 import axios from "axios";
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -483,7 +482,9 @@ const styles = theme => ({
 });
 const handleAttachClose = () => {
   setAttachOpen(false);
+  
 };
+
 
 const ILink = withStyles({
   root: {
@@ -795,7 +796,8 @@ function xflha(props) {
                 <Grid item xs={12}>
                   <div className={classes.rightSide}>
                     <Tooltip title="Create XFLHA" aria-label="new XFLHA">
-                      <Button size="medium" variant="contained" color="primary" href="/app/pages/assesments/flhaadd">
+                      <Button size="medium" variant="contained" color="primary" 
+                      onClick={()=>history.push("/app/pages/assesments/flhaadd")} >
                         <ControlPointIcon className={classes.spacerRight} />
                         {' '}
                         Create XFLHA

@@ -169,14 +169,14 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
-    if (type == "competent person") {
+    if (type == "Competent Person (CP)") {
       setForm({
         ...form,
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
       setOpen(false)
-    } else if (type == "senior authorized person") {
+    } else if (type == "Senior Authorized Person (SAP)") {
       setForm({
         ...form,
         sapApprovalUser: name,
@@ -270,7 +270,7 @@ const Approvals = () => {
                     variant="contained"
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className={classes.approvalButton}
-                    onClick={(e) => { setOpen(true), setPerson("competent person") }}
+                    onClick={(e) => { setOpen(true), setPerson("Competent Person (CP)") }}
                   >
                     {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
                   </Button>
@@ -292,7 +292,7 @@ const Approvals = () => {
                     variant="contained"
                     color={form.sapApprovalUser === null ? "primary" : "secondary"}
                     className={classes.approvalButton}
-                    onClick={(e) => { setOpen(true), setPerson("senior authorized person") }}
+                    onClick={(e) => { setOpen(true), setPerson("Senior Authorized Person (SAP)") }}
                   >
                     {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
                   </Button>
@@ -329,7 +329,7 @@ const Approvals = () => {
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving {person}.
+                        You are approving as {person}.
                       </Typography>
                     </DialogContentText>
                   </DialogContent>

@@ -481,7 +481,7 @@ const Assessment = () => {
       temp[key].riskRating = `${riskRating} Substantial`;
       temp[key].riskRatingColour = '#990000';
     } else {
-      temp[key].riskRating = `${riskRating} Intoreable`;
+      temp[key].riskRating = `${riskRating} Intolerable`;
       temp[key].riskRatingColour = '#ff0000';
     }
     setForm(temp);

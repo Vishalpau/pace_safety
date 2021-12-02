@@ -28,6 +28,8 @@ import {
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { SUMMARY_FORM } from "../Utils/constants";
+import CloseOutValidator from "../Validation/CloseOutValidation"
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 
 
@@ -140,6 +142,11 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
+        const { error, isValid } = CloseOutValidator(jhaListData);
+        await setError(error);
+        if (!isValid) {
+            return "Data is not valid";
+        }
         await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
@@ -199,6 +206,7 @@ const CloseOut = () => {
                                     //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
                                     //     });
                                     // }}
+                                    disabled
                                     disableFuture
                                     InputProps={{ readOnly: true }}
                                     open={isDateShow}
@@ -211,6 +219,8 @@ const CloseOut = () => {
                             <FormControl
                                 variant="outlined"
                                 className={classes.formControl}
+                                error={error.closedByName}
+
                             >
                                 <InputLabel id="demo-simple-select-label">
                                     Closed by
@@ -232,6 +242,7 @@ const CloseOut = () => {
                                         </MenuItem>
                                     ))}
                                 </Select>
+                                {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
 
                             </FormControl>
                         </Grid>

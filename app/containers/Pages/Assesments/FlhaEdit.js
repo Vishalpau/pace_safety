@@ -561,7 +561,7 @@ const FlhaDetails = () => {
   }
 
   const handelTaskColor = (tasksData) => {
-    if (tasksData.length > 0) {
+    if (tasksData !== undefined && tasksData.length > 0) {
       for (var i = 0; i < tasksData.length; i++) {
         let hazardData = tasksData[i].hazards
         for (var j = 0; j < hazardData.length; j++) {
@@ -1819,7 +1819,7 @@ const FlhaDetails = () => {
                     <Button
                       size="medium"
                       variant="contained"
-                      color="primary" 
+                      color="primary"
                       onClick={(e) => handelFlhaSubmit()}
                       className="spacerRight buttonStyle"
                       style={{ marginLeft: "10px" }}

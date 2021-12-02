@@ -252,6 +252,7 @@ const CloseOut = () => {
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
+                                    disabled
                                     disableFuture
                                     InputProps={{ readOnly: true }}
                                     open={isDateShow}
