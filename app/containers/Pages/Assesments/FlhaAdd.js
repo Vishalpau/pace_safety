@@ -689,7 +689,7 @@ const FlhaDetails = (props) => {
           data[index].hazards[key].createdBy = fkUserId;
           data[index].hazards[key].updatedBy = fkUserId;
           data[index].hazards[key].hazards = dat.hazard;
-          data[index].hazards[key].control = data[index].control;
+          // data[index].hazards[key].control = data[index].control;
         });
       }
     });
@@ -1115,7 +1115,7 @@ const FlhaDetails = (props) => {
                       >
                         <Typography className={classes.heading}>
                           {' '}
-                          Task#{(taskIndex + 1)} - "Task identification"
+                          Task#{(taskIndex + 1)} - {taskForm[taskIndex]["taskIdentification"]}
                         </Typography>
                         <Grid container justify="flex-end">
                           <Button>
@@ -1225,7 +1225,7 @@ const FlhaDetails = (props) => {
                                         rows="1"
                                         label="Control"
                                         className="formControl"
-                                        value={taskForm[taskIndex]["hazards"][indexHazard]["control"] ? taskForm[taskIndex]["hazards"][indexHazard]["control"] : ''}
+                                        value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
                                         onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
                                         }
                                       />
