@@ -21,15 +21,10 @@ import { useHistory } from "react-router";
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import api from "../../../../utils/axios";
 import { handelActionData, handelCommonObject } from "../../../../utils/CheckerValue";
-import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import Loader from "../../../Forms/Loader";
 import { AHA } from "../constants";
-
-
-
-
 
 
 const useStyles = makeStyles((theme) => ({
