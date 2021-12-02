@@ -25,6 +25,8 @@ import Attachment from '../../../containers/Attachment/Attachment';
 import api from '../../../utils/axios';
 import ViewHazard from './ViewHazard';
 
+import { withRouter } from 'react-router-dom';
+
 
 function TabContainer(props) {
   const { children } = props;
@@ -130,8 +132,9 @@ class SimpleTabs extends React.Component {
     criticalTasks: {},
     visualConfirmations: {},
     versions: ["1.0",]
+    
   };
-
+  
   componentDidMount() {
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
@@ -165,7 +168,12 @@ class SimpleTabs extends React.Component {
     const res = await api.get('api/v1/flhas/' + flhaId + '/visualconfirmations/');
     await this.setState({ visualConfirmations: res.data.data.results });
   }
-
+  redirectToHome = (Path) => { 
+    const { history } = this.props; 
+  if(history){
+   history.push(Path);
+ }
+}
 
   render() {
     const { classes } = this.props;
@@ -284,7 +292,8 @@ class SimpleTabs extends React.Component {
                         <CommentIcon />
                       </ListItemIcon>
                       <Link
-                        href={'/app/pages/assesments/flha/' + this.props.match.params.id + '/revise'}
+                        // onClick={()=>.push('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
+                        onClick={()=> this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
                         variant="subtitle"
                       >
                         <ListItemText  primary="Revise FLHA" />
@@ -299,7 +308,7 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        href={'/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds}
+                        onClick={()=> this.redirectToHome('/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds)}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
@@ -311,7 +320,7 @@ class SimpleTabs extends React.Component {
                         <CloseIcon />
                       </ListItemIcon>
                       <Link
-                        href={'/app/pages/assesments/flha/' + this.props.match.params.id + '/close-out'}
+                        onClick={()=> this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/close-out')}
                         variant="subtitle"
                       >
                         <ListItemText primary="Close out" />
@@ -333,4 +342,7 @@ SimpleTabs.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleTabs);
+export default withRouter(withStyles(styles)(SimpleTabs));
+
+
+// export default ;
