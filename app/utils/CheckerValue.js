@@ -1,12 +1,10 @@
-import apiAction from "./axiosActionTracker"
-import moment from 'moment';
 import axios from "axios";
-
+import moment from 'moment';
+import apiAction from "./axiosActionTracker";
 import {
     access_token,
     ACCOUNT_API_URL,
 } from "./constants";
-import { useRef } from "react";
 
 export const checkValue = (value) => {
     let noValue = "-"
@@ -17,7 +15,6 @@ export const checkValue = (value) => {
     }
 }
 
-
 export const handelApiValue = (value) => {
     if (value !== null && value !== undefined && value !== "") {
         return value
@@ -25,7 +22,6 @@ export const handelApiValue = (value) => {
         return []
     }
 }
-
 
 export const handelConvert = (value) => {
     let wordArray = value.split(/(?=[A-Z])/);
@@ -37,7 +33,6 @@ export const handelConvert = (value) => {
         });
     return newString;
 };
-
 
 export const handelIncidentId = () => {
     let page_url = window.location.href;
@@ -80,8 +75,7 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
     }
 }
 
-export const handleTimeOutError = (res) => {
-}
+export const handleTimeOutError = (res) => { }
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
     const fkCompanyId =
@@ -136,7 +130,6 @@ export const handelActionWithEntity = async (incidentId, actionContextValue) => 
     const allAction = allActionData.data.data.results.results
     return allAction
 }
-
 
 export const handelActionDataAssessment = async (incidentId, apiData, type = "all", actionContext) => {
     const fkCompanyId =
@@ -201,7 +194,6 @@ export const handelValueToLabel = (value) => {
     return label
 }
 
-
 export const handelActionIcare = async (incidentId, apiData, type = "all", actionContext) => {
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
@@ -242,7 +234,6 @@ export const handelActionIcare = async (incidentId, apiData, type = "all", actio
     }
 
 }
-
 
 export const fetchReportedBy = async () => {
     let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
