@@ -506,14 +506,14 @@ const FlhaDetails = () => {
   };
 
   const getDepartments = async () => {
-    export const companyId =
+    export const companyIds =
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
     let allDepartment = []
     const config = {
       method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/departments/`,
+      url: `${SSO_URL}/api/v1/companies/${companyIds}/departments/`,
       headers: HEADER_AUTH,
     };
     const res = await api(config);
