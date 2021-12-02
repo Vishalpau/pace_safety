@@ -368,7 +368,6 @@ const JobDetails = (props) => {
   };
 
   const handelRemove = async (e, index) => {
-
     if (Teamform.length > 1) {
       if (Teamform[index].id !== undefined) {
         const res = await api.delete(
@@ -464,10 +463,11 @@ const JobDetails = (props) => {
     }
     await setSubmitLoader(true)
     await handelProjectData()
-    if(form['notifyTo'] == null){
+    if (form['notifyTo'] == null) {
       form['notifyTo'] = "null"
     }
     delete form["jhaAssessmentAttachment"]
+    form["jhaStage"] = "Assessment"
     if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
         .then(res => handelApiError(res))
@@ -481,7 +481,6 @@ const JobDetails = (props) => {
     await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
     await setSubmitLoader(false)
   }
-  const typeOfPremit = ["Type1", "Type2", "Type3", "Type4", "Type5"]
 
   const classes = useStyles();
 

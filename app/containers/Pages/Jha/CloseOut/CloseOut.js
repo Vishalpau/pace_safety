@@ -149,6 +149,8 @@ const CloseOut = () => {
         }
         await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
+        form["jhaStage"] = "Close out"
+        form["jhaStatus"] = "Close"
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
         if (res.status == 200) {
             history.push(SUMMARY_FORM["Summary"])

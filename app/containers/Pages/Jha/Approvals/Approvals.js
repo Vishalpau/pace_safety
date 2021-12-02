@@ -143,7 +143,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   });
-  const [error , setError] = useState({})
+  const [error, setError] = useState({})
   const [open, setOpen] = useState(false);
   const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
   const [loading, setLoading] = useState(false)
@@ -213,17 +213,18 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
-    const { error, isValid} = ApprovalValidator(form , actionData)
+    const { error, isValid } = ApprovalValidator(form, actionData)
     await setError(error)
-    if(!isValid) {
+    if (!isValid) {
       return "data not valid"
     }
-    console.log(form)
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
       form["wrpApprovalUser"] = ""
     }
+    form["jhaStage"] = "Approval"
+    form["jhaStatus"] = "Close"
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     history.push(SUMMARY_FORM["Summary"])
     setSubmitLoader(false)
@@ -325,7 +326,7 @@ const Approvals = () => {
                 </Grid>
 
                 {actionData.length == 0 ? <Grid item md={8}>
-                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+                  <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
                 <Dialog
                   className={classes.projectDialog}
