@@ -426,7 +426,7 @@ function Aha(props) {
                         <Grid item xs={6} md={3}>
                           <Chip
                             variant="outlined"
-                            label="AHA"
+                            label={item[1]['ahaStage']}
                             color="primary"
                             size="small"
                           />

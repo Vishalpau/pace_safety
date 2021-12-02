@@ -193,6 +193,12 @@ const Approvals = () => {
     if(form.notifyTo === null){
       form['notifyTo'] = "null"
     }
+    form["ahaStage"] = "Approval"
+    if(form['wrpApprovalUser'] === null ){
+      form["ahaStatus"] = "Pending"
+    }else{
+      form["ahaStatus"] = "Done"
+    }
     const { error, isValid} = ApprovalValidator(form , actionData)
     await setError(error)
     if(!isValid) {
