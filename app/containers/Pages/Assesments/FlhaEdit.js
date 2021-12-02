@@ -506,6 +506,10 @@ const FlhaDetails = () => {
   };
 
   const getDepartments = async () => {
+    export const companyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
     let allDepartment = []
     const config = {
       method: 'get',
