@@ -510,7 +510,7 @@ const FlhaDetails = () => {
     let allDepartment = []
     const config = {
       method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/departments/`,
+      url: `${SSO_URL}/api/v1/companies/${JSON.parse(localStorage.getItem("company")).fkCompanyId}/departments/`,
       headers: HEADER_AUTH,
     };
     const res = await api(config);
