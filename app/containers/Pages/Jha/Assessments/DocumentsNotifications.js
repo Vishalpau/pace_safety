@@ -265,7 +265,7 @@ const DocumentNotification = () => {
       await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiError());
     } else {
       delete form.jhaAssessmentAttachment;
-      form.notifyTo = form.notifyTo.toString();
+      form.notifyTo = form.notifyTo !== undefined && form.notifyTo.toString();
       await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, form).catch(() => handelApiError());
     }
     history.push(SUMMARY_FORM.Summary);
