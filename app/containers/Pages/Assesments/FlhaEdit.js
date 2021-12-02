@@ -779,35 +779,6 @@ const FlhaDetails = () => {
     }
   }
 
-  const handelNotifyToValues = async () => {
-    let allRoles = {}
-    const config = {
-      method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
-      headers: HEADER_AUTH,
-    };
-    const notify = await api(config);
-    if (notify.status === 200) {
-      const result = notify.data.data.results;
-      result.map((value) => {
-        allRoles[value["id"]] = value["roleName"]
-      })
-      setNotifyToValue(allRoles);
-    }
-  }
-
-  const handelNotifyTo = async (e, value) => {
-    let temp = { ...flhaForm }
-    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
-    if (e.target.checked === false) {
-      const newData = temp.notifyTo.filter((item) => item !== value);
-      temp["notifyTo"] = newData
-    } else {
-      temp["notifyTo"].push(value)
-    }
-    setFlhaForm(temp)
-  };
-
   const handelJobVisualAttachment = (index) => {
     let confirmationStatus = jobVisualConfirmation[index]["visualConfirmationStatus"]
     let confirmationAttahment;
@@ -879,7 +850,6 @@ const FlhaDetails = () => {
     await fetchFlhaData();
     await fetchJobVisualData();
     await getDepartments();
-    await handelNotifyToValues();
     // await getPreventiveControls(props.match.params.id);
     await handelPickListValues()
     await setIsLoading(false)
