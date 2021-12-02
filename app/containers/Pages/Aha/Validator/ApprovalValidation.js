@@ -9,16 +9,11 @@ function ApprovalValidator(data , action) {
   
 
   if (data.wrpApprovalUser === "" && data.sapApprovalUser === null) {
-    if(action.length === 0)
-    error.action = "If not approved then create a action.";
-    isValid = false;
+    if(action.length === 0){
+      error.action = "If not approved then create a action.";
+      isValid = false;
+    }
   }
-
-
-  // if (data.closedDate === "") {
-  //   error.closedDate = "Please select date and time";
-  //   isValid = false;
-  // }
 
 return { error, isValid };
 }

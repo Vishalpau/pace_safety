@@ -21,15 +21,10 @@ import { useHistory } from "react-router";
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import api from "../../../../utils/axios";
 import { handelActionData, handelCommonObject } from "../../../../utils/CheckerValue";
-import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import Loader from "../../../Forms/Loader";
 import { AHA } from "../constants";
-
-
-
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -481,7 +476,7 @@ const Assessment = () => {
       temp[key].riskRating = `${riskRating} Substantial`;
       temp[key].riskRatingColour = '#990000';
     } else {
-      temp[key].riskRating = `${riskRating} Intoreable`;
+      temp[key].riskRating = `${riskRating} Intolerable`;
       temp[key].riskRatingColour = '#ff0000';
     }
     setForm(temp);

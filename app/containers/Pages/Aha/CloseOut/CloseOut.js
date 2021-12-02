@@ -164,6 +164,9 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
+            ahaListData["ahaStage"] = "Close out"
+            ahaListData["ahaStatus"] = "Done"
+          
 
         const { error, isValid } = CloseOutValidator(ahaListData);
         await setError(error);
@@ -252,6 +255,7 @@ const CloseOut = () => {
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
+                                    disabled
                                     disableFuture
                                     InputProps={{ readOnly: true }}
                                     open={isDateShow}

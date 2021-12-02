@@ -177,6 +177,8 @@ const LessonsLearned = () => {
       if (form["anyLessonsLearnt"] == null) {
         form["anyLessonsLearnt"] = ""
       }
+      form["jhaStage"] = "Lesson learned"
+      form["jhaStatus"] = "Close"
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       history.push(SUMMARY_FORM["Summary"])
     }

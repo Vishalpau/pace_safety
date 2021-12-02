@@ -275,21 +275,8 @@ function Actions() {
 
   const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
-
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
-
   const [value, setValue] = React.useState(2);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Date submitted', 'Date approved', 'Approved by'];
 
   const data = [

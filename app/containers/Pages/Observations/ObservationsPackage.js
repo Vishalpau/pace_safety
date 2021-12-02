@@ -1,3 +1,4 @@
+import React, { useEffect, useState, lazy } from "react";
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -27,18 +28,17 @@ import preplanning from 'dan-images/preplanning.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
-import React, { useEffect, useState } from "react";
 // react-redux
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { company, projectName } from '../../../redux/actions/initialDetails';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
-import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
-import UserDetailsView from '../../UserDetails/UserDetail';
-import Loader from "../Loader";
-
+import { HEADER_AUTH, SELF_API, userId } from '../../../utils/constants';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+
+const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
+const Loader = lazy(() => import('../Loader'));
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
@@ -358,11 +358,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '12px !important',
       },
     },
-    // '& p': {
-    //   ['@media (max-width:375px)']: { 
-    //     fontSize: '12px !important',
-    //   },
-    // },
   },
   cardActionBottomBox: {
     ['@media (max-width:480px)']: {
@@ -405,22 +400,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Actions(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const type = localStorage.getItem("type")
 
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).name
     : null;
   const dispatch = useDispatch();
-  const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
@@ -428,40 +414,25 @@ function Actions(props) {
   const [page, setPage] = useState(1)
   const [userInfo, setUserInfo] = useState({})
   const history = useHistory();
+  const [allInitialData, setAllInitialData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const searchIncident = props.searchIncident
+  const status = props.status;
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
-  const handleMyUserPClickOpen = (item) => {
-    setUserInfo({ name: item[1].createdByName, userIcon: item[1].avatar })
-    setMyUserPOpen(true);
-  };
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
   };
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
-
-  const [value, setValue] = React.useState(2);
-
-  // const handleChange = (event, newValue) => {
-  //   setValue(newValue);
-  // };
-
-  //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Date submitted', 'Date approved', 'Approved by'];
-
   const data = [
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ];
+
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -478,20 +449,8 @@ function Actions(props) {
     rowsPerPage: 10,
     page: 0,
   };
-  //dialog
-  const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  const handleMyFavClickOpen = () => {
-    setMyFavOpen(true);
-  };
-
-  const handleMyFavClose = () => {
-    setMyFavOpen(false);
-  };
-
-  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
+  const createdBy = userId
 
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
@@ -504,10 +463,6 @@ function Actions(props) {
     history.push(`/app/icare/details/${id}`);
   };
 
-  const [allInitialData, setAllInitialData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const searchIncident = props.searchIncident
-  const status = props.status;
   const fetchInitialiObservation = async () => {
     await setPage(1)
 
@@ -690,22 +645,12 @@ function Actions(props) {
     setopenAtt(value)
     setopenAttachment(true);
   };
-  console.log(openAttachment, ">>>>>>>>>>>>>")
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
-  };
-
 
   const [attachOpen, setAttachOpen] = useState(false);
   const [attachIndex, setAttachIndex] = useState("");
   const [hidden, setHidden] = useState(false);
 
-  const handleVisibility = (index) => {
-    console.log(index, "LLLL");
-    setAttachIndex(index);
-    setAttachOpen(true);
-    setHidden(!hidden);
-  };
+
   const handleAttachClick = () => {
     setAttachOpen(!open);
   };
@@ -722,11 +667,6 @@ function Actions(props) {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
 
-  const handleVisibilityComments = (id) => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-    history.push(`/app/icare/comments/${id}`);
-  };
   const handleCommentsClick = () => {
     setCommentsOpen(!open);
   };
@@ -739,13 +679,7 @@ function Actions(props) {
     setCommentsOpen(false);
   };
 
-  const handlePrintPush = async (index) => {
-    const id = allInitialData[index].id;
-    localStorage.setItem("fkobservationId", id);
-    history.push(`/app/prints/${id}`);
-  };
   const userDetails = async (compId, proId) => {
-    // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
 
@@ -754,8 +688,6 @@ function Actions(props) {
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
-
         await api(config)
           .then(function (response) {
             if (response.status === 200) {
@@ -807,13 +739,13 @@ function Actions(props) {
   const handleDelete = async (item) => {
     console.log(item[1].id)
     let data = item[1]
-    // let id = item[1].id
     data.status = "Delete"
     delete data.attachment
     console.log(data, "!!!!!!!!!")
     await setIsLoading(false)
     const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
   }
+
   useEffect(() => {
     let state = JSON.parse(localStorage.getItem('direct_loading'))
     if (state !== null) {
@@ -821,7 +753,6 @@ function Actions(props) {
     } else {
       fetchInitialiObservation();
     }
-    // fetchInitialiObservation();
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
 
   return (
@@ -842,7 +773,6 @@ function Actions(props) {
                                 className={classes.userPictureBox}
                               >
                                 <Button className={classes.floatR}
-                                // onClick={(e) => handleMyUserPClickOpen(item)} 
                                 >
                                   <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
                                 </Button>
@@ -1026,7 +956,7 @@ function Actions(props) {
                                 </Typography>
                                 <Typography variant="body2" display="inline">
                                   <Link color="secondary" className={classes.mLeftR5}
-                                    // onClick={() => handleVisibility(index)}
+                                  // onClick={() => handleVisibility(index)}
                                   >
                                     {item[1]['attachmentCount']}</Link>
                                 </Typography>

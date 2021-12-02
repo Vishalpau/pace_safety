@@ -1,3 +1,4 @@
+import React, { useEffect, useState, lazy } from "react";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -31,11 +32,10 @@ import { PapperBlock } from "dan-components";
 import Fonts from "dan-styles/Fonts.scss";
 import Styles from "dan-styles/Summary.scss";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import api from "../../../utils/axios";
-import { handelActionDataAssessment, handelActionWithEntity } from "../../../utils/CheckerValue";
 
+import api from "../../../utils/axios";
+import { handelActionWithEntity, handelActionDataAssessment } from "../../../utils/CheckerValue";
 import {
   HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
@@ -44,7 +44,6 @@ import ActionShow from '../../Forms/ActionShow';
 import Loader from "../../Forms/Loader";
 import { Comments } from "../../pageListAsync";
 import { checkValue } from "../Jha/Utils/checkValue";
-
 
 
 // Sidebar Links Helper Function
@@ -128,33 +127,39 @@ function AhaSummary() {
   const [closeOut, setCloseOut] = useState(false);
   const [comments, setComments] = useState(false);
   const [activity, setActivity] = useState(false);
-  //const [summary, setSummary] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel5"
   );
-
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   const { id } = useParams();
-  //const [summary, setSummary] = useState(false);
   const [ahaData, setAHAData] = useState({});
   const [Teamform, setTeamForm] = useState([]);
   const [projectSturcturedData, setProjectSturcturedData] = useState([]);
-  const [actionTakenData, setActionTakenData] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [isNext, setIsNext] = useState(false)
   const [approvalActionData, setApprovalactionData] = useState([])
   const [lessionAction, setLessionAction] = useState([])
   const [notificationSentValue, setNotificationSentValue] = useState([])
+  const [projectStructName, setProjectStructName] = useState([])
+  const [form, setForm] = useState([]);
+  const [checkListAssessment, setCheckListAssessment] = useState({})
+
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const user = JSON.parse(localStorage.getItem("userDetails"));
+  const projectData = JSON.parse(localStorage.getItem('projectName'));
 
   const handleNewAhaPush = async () => {
     history.push(
@@ -163,19 +168,18 @@ function AhaSummary() {
       )}`
     );
   };
+
   const handleAhaApprovalsPush = async () => {
     history.push("/app/pages/aha/approvals/approvals");
   };
+
   const handleAhaLessonLearnPush = async () => {
     history.push("/app/pages/aha/lessons-learned/lessons-learned");
   };
 
   const handleCloseOutPush = async () => {
-
     history.push("/app/pages/aha/close-out");
   };
-
-
 
   const viewSwitch = (viewName) => {
     if (viewName == "assessment") {
@@ -225,7 +229,6 @@ function AhaSummary() {
     }
   }
 
-
   const handleCommentsPush = async () => {
     await setAssessments(false);
     await setApprovals(false);
@@ -233,9 +236,8 @@ function AhaSummary() {
     await setCloseOut(false);
     await setComments(true);
     await setActivity(false);
-
-    // history.push("/app/comments/comments");
   };
+
   const handleActivityPush = async () => {
     await setAssessments(false);
     await setApprovals(false);
@@ -243,19 +245,8 @@ function AhaSummary() {
     await setCloseOut(false);
     await setComments(false);
     await setActivity(true);
-    // history.push("/app/activity/activity");
   };
 
-  const user = JSON.parse(localStorage.getItem("userDetails"));
-
-  const handelFileName = (value) => {
-    const fileNameArray = value.split("/");
-    const fileName = fileNameArray[fileNameArray.length - 1].split("-");
-    const lastNameArray = fileName[fileName.length - 1];
-    // const lastName = fileName.split("-");
-    return lastNameArray;
-  };
-  const [projectStructName, setProjectStructName] = useState([])
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
@@ -263,8 +254,8 @@ function AhaSummary() {
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
     await fetchNotificationSent(result.notifyTo)
-
   };
+
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -289,7 +280,6 @@ function AhaSummary() {
     setProjectStructName(structName)
   }
 
-
   const fetchTeamData = async () => {
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`
@@ -297,7 +287,7 @@ function AhaSummary() {
     const result = res.data.data.results;
     await setTeamForm(result);
   };
-  const projectData = JSON.parse(localStorage.getItem('projectName'));
+
   const fetchBreakDownData = async (projectBreakdown) => {
     let breakdownLength = projectData.projectName.breakdown.length
     let selectBreakDown = [];
@@ -374,38 +364,36 @@ function AhaSummary() {
     }
   };
 
-
-
-  // console.log(projectSturcturedData,"lkklklklkl")
-  const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
+    let ahaID = localStorage.getItem("fkAHAId")
     const res = await api.get(
-      `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
+      `/api/v1/ahas/${ahaID}/areahazards/`
     );
     const result = res.data.data.results;
-
-    let zzz = [...result]
+    let colorAssessmment = [...result]
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
         if (result[i].riskRating === "2 Trivial" || result[i].riskRating === "4 Trivial") {
-          zzz[i].riskRatingColour = '#009933'
+          colorAssessmment[i].riskRatingColour = '#009933'
         } else if (result[i].riskRating === "6 Tolerable" || result[i].riskRating === "8 Tolerable") {
-          zzz[i].riskRatingColour = '#8da225'
+          colorAssessmment[i].riskRatingColour = '#8da225'
 
         } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
-          zzz[i].riskRatingColour = '#fff82e'
+          colorAssessmment[i].riskRatingColour = '#fff82e'
 
         } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
-          zzz[i].riskRatingColour = '#990000'
+          colorAssessmment[i].riskRatingColour = '#990000'
         }
         else {
-          zzz[i].riskRatingColour = '#ff0000'
+          colorAssessmment[i].riskRatingColour = '#ff0000'
         }
       }
     }
 
-    await setForm(zzz);
+    let resAction = await handelActionDataAssessment(ahaID, colorAssessmment, "all", "aha:hazard")
+    await setForm(resAction);
     await handelActionTracker(result)
+
   };
 
   const handelActionTracker = async (resultHazard) => {
@@ -413,9 +401,8 @@ function AhaSummary() {
     const allAction = await handelActionWithEntity(ahaId, "aha:approval");
     setApprovalactionData(allAction)
   };
-  const handelShowData = () => {
 
-  }
+  const handelShowData = () => { }
 
   const handelLessionActionTracker = async () => {
     let ahaId = localStorage.getItem("fkAHAId")
@@ -423,30 +410,9 @@ function AhaSummary() {
     setLessionAction(allAction)
   };
 
-
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
-
-  const fetchactionTrackerData = async () => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    let ActionToCause = {};
-    const allActionTrackerData = await api_action.get("/api/v1/actions/");
-    const allActionTracker = allActionTrackerData.data.data.results.results;
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId")
-    );
-    let sorting = newData.sort((a, b) => a.id - b.id);
-
-    await setActionTakenData(sorting);
-    // await setIsLoading(true);
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
-
-  const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const assessmentDataValues = async () => {
     const project = JSON.parse(localStorage.getItem("projectName"))
@@ -480,9 +446,9 @@ function AhaSummary() {
         let data = []
         let user = notifyTo.split(",");
         const result = res.data.data.results;
-        for(let i = 0; i < result.length; i++) {
-          for(let j = 0; j < user.length; j++) {
-            if(user[j] == result[i].id){
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
               data.push(result[i]);
             }
           }
@@ -500,13 +466,8 @@ function AhaSummary() {
       fetchHzardsData();
       handelLessionActionTracker();
       assessmentDataValues();
-      // fetchactionTrackerData();
     }
   }, []);
-
-  const handleExpand = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
 
   const classes = useStyles();
   return (
@@ -517,6 +478,7 @@ function AhaSummary() {
       <Box paddingBottom={1}>
         <div className={Styles.incidents}>
           <div className={Styles.item}>
+
             <Button
               color={assessments == true ? "secondary" : "primary"}
               variant="contained"
@@ -529,13 +491,15 @@ function AhaSummary() {
             >
               Assessments
             </Button>
+
             <Typography variant="caption" display="block">
               {ahaData.notifyTo !== "" ? "Done" : "Pending"}
+
             </Typography>
+
           </div>
 
           <div className={Styles.item}>
-          {console.log(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null)}
             <Button
               color={approvals == true ? "secondary" : "primary"}
               variant={(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null) ? "contained" : "outlined"}
@@ -543,7 +507,6 @@ function AhaSummary() {
               endIcon={(ahaData.wrpApprovalUser !== "" && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("approval")}
-
             >
               Approvals
             </Button>
@@ -555,19 +518,16 @@ function AhaSummary() {
           <div className={Styles.item}>
             <Button
               color={closeOut == true ? "secondary" : "primary"}
-
               size="small"
               variant={ahaData.closedByName !== null ? "contained" : "outlined"}
               endIcon={ahaData.closedByName !== null ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("closeOut")}
-
             >
               Close Out
             </Button>
             <Typography variant="caption" display="block">
               {ahaData.closedByName !== null ? "Done" : "Pending"}
-
             </Typography>
           </div>
 
@@ -579,13 +539,11 @@ function AhaSummary() {
               endIcon={ahaData.anyLessonsLearnt !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("lession")}
-
             >
               Lessons Learned
             </Button>
             <Typography variant="caption" display="block">
               {ahaData.anyLessonsLearnt !== "" ? "Done" : "Pending"}
-
             </Typography>
           </div>
 
@@ -597,8 +555,6 @@ function AhaSummary() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={9}>
             <Grid container spacing={3}>
-
-
               {/* summary and part */}
               <>
                 {(() => {
@@ -631,9 +587,9 @@ function AhaSummary() {
                                     </Typography>
                                     <Typography className={Fonts.labelValue}>
                                       {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
-
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -649,6 +605,7 @@ function AhaSummary() {
                                       {ahaData.workArea ? ahaData.workArea : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -664,6 +621,7 @@ function AhaSummary() {
                                       {ahaData.location ? ahaData.location : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -679,6 +637,7 @@ function AhaSummary() {
                                       {ahaData.username ? ahaData.username : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -696,6 +655,7 @@ function AhaSummary() {
                                       )}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -711,6 +671,7 @@ function AhaSummary() {
                                       {ahaData.permitToPerform ? ahaData.permitToPerform : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -726,6 +687,7 @@ function AhaSummary() {
                                       {ahaData.permitNumber ? ahaData.permitNumber : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
@@ -741,6 +703,7 @@ function AhaSummary() {
                                       {ahaData.description ? ahaData.description : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -760,11 +723,13 @@ function AhaSummary() {
                                         </ul>
                                       )) : "-"}
                                   </Grid>
+
                                 </>
                               </Grid>
                             </AccordionDetails>
                           </Accordion>
                         </Grid>
+
                         <Grid item xs={12}>
                           <Accordion
                             expanded={expanded === "panel2"}
@@ -789,15 +754,13 @@ function AhaSummary() {
                                         </ul>
                                       </>
                                     )) : "-"}
-                                    {/* <Typography variant="body" className={Fonts.labelValue}>
-                                        {item.risk}
-                                      </Typography> */}
                                   </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>
                           </Accordion>
                         </Grid>
+
                         <Grid item xs={12}>
                           <Accordion
                             expanded={expanded === "panel3"}
@@ -1296,7 +1259,7 @@ function AhaSummary() {
                             <Typography>
                               {approvalActionData.map((value) => (
                                 <>
-                                {console.log(value)}
+                                  {console.log(value)}
                                   <ActionShow
                                     action={{ id: value.id, number: value.actionNumber }}
                                     title={value.actionTitle}
@@ -1415,11 +1378,6 @@ function AhaSummary() {
                       />
                     </div>)
                   }
-                  // if (summary == true) {
-                  //   return (
-                  //       <div>Summary Section</div>
-                  //       );
-                  // }
                 })()}
               </>
             </Grid>
@@ -1481,7 +1439,8 @@ function AhaSummary() {
                     </ListItemIcon>
                     <ListItemText primary="Add Lessons Learned" />
                   </ListItemLink>)}
-                <ListItemLink onClick={(e) => handleCloseOutPush(e)}>
+                <ListItemLink disabled={ahaData.closedByName !== null}
+                onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
