@@ -30,8 +30,6 @@ function validate(data,projectStructure) {
     isValid = false;
   }
 
-  console.log(data, 'data')
-  console.log(data.firstAid, data, 'datas')
   if (data.firstAid == "") {
     
     error.firstAid = "Please enter Aid/Medical";

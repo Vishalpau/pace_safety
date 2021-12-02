@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { connect } from "react-redux";
-import { PapperBlock } from "dan-components";
 import Grid from "@material-ui/core/Grid";
 import moment from 'moment';
 
@@ -17,8 +16,6 @@ function BarSimple(props) {
   const [charData, setCharData] = useState([])
   const [secondCharData, setSecondChartData] = useState([])
   const [chartSize, setChartSize] = useState({ width: "100%", height: "50px" })
-  const [secondChartSize, setSecondChartSize] = useState({ width: "100%", height: "50px" })
-  // const [projectStruct, setProjectStruct] = useState("")
 
   const handelProjectStruct = () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -34,7 +31,6 @@ function BarSimple(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    // setProjectStruct(fkProjectStructureIds)
     return fkProjectStructureIds
   }
 
@@ -304,17 +300,6 @@ function BarSimple(props) {
       }
     },
     series: secondCharData,
-  }
-
-  const handelChartSize = (sizeChangeType) => {
-    if (sizeChangeType === "small") {
-      console.log("here")
-      setChartSize({ width: "50%", height: "50px" })
-    } else if (sizeChangeType === "large") {
-      setChartSize({ width: "75%", height: "75px" })
-    } else if (sizeChangeType === "auto") {
-      setChartSize({ width: "100%", height: "85px" })
-    }
   }
 
   const callBack = async () => {

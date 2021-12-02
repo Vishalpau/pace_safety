@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, lazy } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -16,15 +16,11 @@ import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
-import ObservationSearchSection from './ObservationSearchSection';
-import ObservationsKanban from './ObservationsKanban';
-import ObservationsBarCharts from './ObservationsBarCharts';
-import ObservationsList from './ObservationsList';
-// import DashboardIcon from '@material-ui/icons/Dashboard';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
+const ObservationSearchSection = lazy(() => import('./ObservationSearchSection'));
+const ObservationsBarCharts = lazy(() => import('./ObservationsBarCharts'));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -215,26 +211,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Observations() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const history = useHistory();
-  const [searchText, setSearchText] = React.useState('')
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  console.log(value)
 
   const handleBulkUploadfilePush = async () => {
     history.push(
       '/app/icare-bulkuploadfile'
     );
   }
+
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
     localStorage.removeItem("value")
-
     history.push("/app/icare-initial-notification");
   };
 
@@ -255,12 +247,10 @@ export default function Observations() {
 
             {false && <Button
               variant="contained"
-              // color="primary"
               size="small"
               className={classNames(classes.buttonsNew, classes.floatR)}
               disableElevation
               startIcon={<CloudUploadIcon />}
-              //onClick={() => handleBulkUploadPush()}
               style={{ marginLeft: '10px' }}
               onClick={() => handleBulkUploadfilePush()}
             >
@@ -283,8 +273,6 @@ export default function Observations() {
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
                 <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
-                {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
@@ -292,24 +280,6 @@ export default function Observations() {
         <Grid item sm={4} xs={12}>
           <Grid className={classes.Lheight}>
             <div className={classes.floatR}>
-
-              <span className={classes.pLTen}>
-                {/* <Button size="small" className={classes.buttonsNTwo} variant="contained">
-					  <PermIdentityIcon /> GIS
-					</Button> */}
-              </span>
-
-              {/* <span className={classes.pLTen}>
-					<Button size="small" className={classes.buttonsNTwo} variant="contained">
-					  <DateRangeOutlinedIcon />iPlanner
-					</Button>
-				</span>
-				
-			  <span className={classes.pLTen}>
-				<Button size="small" className={classes.buttonsNTwo} variant="contained">
-				  <GamesOutlinedIcon /> 3D
-				</Button>
-				</span> */}
             </div>
           </Grid>
         </Grid>
@@ -320,9 +290,6 @@ export default function Observations() {
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
         <ObservationSearchSection value={value} />
       </TabPanel>
-      {/* <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <ObservationsKanban />
-      </TabPanel> */}
       <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsBarCharts />
       </TabPanel>

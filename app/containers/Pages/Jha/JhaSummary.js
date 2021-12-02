@@ -1274,6 +1274,7 @@ function JhaSummary() {
                     <ListItem
                       button
                       divider
+                      disabled={formStatus.closeOutStatus}
                       onClick={(e) => handleClosePush(e)}
                     >
                       <ListItemIcon>
