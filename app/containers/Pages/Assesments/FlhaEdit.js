@@ -442,7 +442,6 @@ const FlhaDetails = () => {
   const descriptionElementRef = useRef(null);
   const [projectData, setProjectData] = useState({ projectName: "" })
   const [pickListValues, setPickListValues] = useState({})
-  const [notifyToValue, setNotifyToValue] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [versionSelected, setVersionSelected] = useState("")
   const [buttonLoading, setButtonLoading] = useState(false)
