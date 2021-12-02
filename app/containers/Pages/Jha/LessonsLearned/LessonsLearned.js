@@ -305,7 +305,7 @@ const LessonsLearned = () => {
                           <p><small>Create an action to share lesson learnt</small></p>
                           <Typography variant="h6" gutterBottom className={classes.labelName}>
                             <ActionTracker
-                              actionContext="jha:lessionLearned"
+                              actionContext="jha:lessonLearned"
                               enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                               setUpdatePage={setUpdatePage}
                               updatePage={updatePage}
