@@ -212,12 +212,13 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
-    console.log(form)
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     if (form["wrpApprovalUser"] == null) {
       form["wrpApprovalUser"] = ""
     }
+    form["jhaStage"] = "Approval"
+    form["jhaStatus"] = "Close"
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
     history.push(SUMMARY_FORM["Summary"])
     setSubmitLoader(false)

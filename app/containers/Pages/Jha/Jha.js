@@ -376,7 +376,7 @@ function Jha(props) {
                       <Grid item xs={6} md={3}>
                         <Chip
                           variant="outlined"
-                          label="JSA"
+                          label={item[1]["jhaStage"] || "JSA"}
                           color="primary"
                           size="small"
                         />
