@@ -294,7 +294,6 @@ const ProjectDetails = () => {
         form['notifyTo'] = "null"
       }
       // form['updatedBy'] = form['createdBy']
-      console.log("><><><>")
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form).then(res => {
         for (let i = 0; i < Teamform.length; i++) {
           if (Teamform[i].id) {
@@ -324,6 +323,8 @@ const ProjectDetails = () => {
         form['typeOfPermit'] = ""
         form['permitNumber'] = ""
       }
+      form["ahaStage"] = "Assessments"
+      form["ahaStatus"] = "Pending"
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
         let fkAHAId = res.data.data.results.id

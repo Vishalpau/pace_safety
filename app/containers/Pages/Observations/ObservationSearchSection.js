@@ -1,3 +1,4 @@
+import React, { useState, lazy } from "react";
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -9,13 +10,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import PropTypes from 'prop-types';
-import React, { useState } from "react";
+
 import "../../../styles/custom/customheader.css";
-import ObservationBookmarkFilter from './ObservationBookmarkFilter';
-import ObservationsFilter from './ObservationsFilter';
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
 import completed from 'dan-images/completed.png';
+
+const ObservationBookmarkFilter = lazy(() => import('./ObservationBookmarkFilter'));
+const ObservationsFilter = lazy(() => import('./ObservationsFilter'));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

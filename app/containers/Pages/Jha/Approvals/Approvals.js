@@ -143,6 +143,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   });
+  const [error , setError] = useState({})
   const [open, setOpen] = useState(false);
   const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
   const [loading, setLoading] = useState(false)
@@ -212,6 +213,11 @@ const Approvals = () => {
   }
 
   const handelSubmit = async () => {
+    const { error, isValid} = ApprovalValidator(form , actionData)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
     console.log(form)
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
@@ -318,6 +324,9 @@ const Approvals = () => {
                   </div>
                 </Grid>
 
+                {actionData.length == 0 ? <Grid item md={8}>
+                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+
                 <Dialog
                   className={classes.projectDialog}
                   open={open}
@@ -341,7 +350,7 @@ const Approvals = () => {
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving competent person.
+                        You are approving as Competent Person (CP).
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
@@ -391,7 +400,7 @@ const Approvals = () => {
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving senior authorized person.
+                        You are approving as Senior Authorized Person (SAP).
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
@@ -418,7 +427,6 @@ const Approvals = () => {
                 </Dialog>
 
                 <Grid item md={12} xs={12}>
-                  <Typography variant="h6" gutterBottom className={classes.labelName}>If not approved , you can also add actions.</Typography>
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
 
                     <ActionTracker

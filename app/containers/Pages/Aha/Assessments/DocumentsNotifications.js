@@ -163,6 +163,8 @@ const DocumentNotification = () => {
 
   const [ahaform, setAHAForm] = useState({})
   const handleSubmit = async () => {
+    ahaform["ahaStage"] = "Assessments"
+    ahaform["ahaStatus"] = "Done"
     await setSubmitLoader(true)
 
       
