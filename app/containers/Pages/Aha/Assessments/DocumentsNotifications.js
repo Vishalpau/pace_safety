@@ -166,6 +166,13 @@ const DocumentNotification = () => {
 
   const [ahaform , setAHAForm] = useState({})
   const handleSubmit = async () => {
+    let userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+    ahaform["ahaStage"] = "Assessments"
+    ahaform["ahaStatus"] = "Done"
+
+    ahaform["updatedBy"] = userId
     await setSubmitLoader(true)
 
     let data = new FormData()
@@ -185,7 +192,6 @@ const DocumentNotification = () => {
       ) {
         data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
       }
-      // data.append("ahaAssessmentAttachment" , ahaform.ahaAssessmentAttachment)
       data.append("description" ,  ahaform.description),
       data.append("workStopCondition" , ahaform.workStopCondition),
       data.append("department" , ahaform.department),

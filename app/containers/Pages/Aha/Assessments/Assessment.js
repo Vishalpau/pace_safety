@@ -422,32 +422,35 @@ const Assessment = () => {
   const [checkGroups, setCheckListGroups] = useState([]);
 
   const handleSubmit = async (e) => {
-    await setSubmitLoader(true);
-
+    let userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+    
     ahaform[
       "workStopCondition"
     ] = additinalJobDetails.workStopCondition.toString();
-    if (ahaform["ahaStage"] === "Open") {
-      ahaform["ahaStage"] = "Assessment";
-      ahaform["ahaStatus"] = "Done";
-    }
+    ahaform["ahaStage"] = "Assessment";
+    ahaform["ahaStatus"] = "Done";
+    
+    
+    ahaform["updatedBy"] = userId
     let data = new FormData();
-      data.append("fkCompanyId", ahaform.fkCompanyId),
-      data.append("fkProjectId", ahaform.fkProjectId),
-      data.append("fkProjectStructureIds", ahaform.fkProjectStructureIds),
-      data.append("workArea", ahaform.workArea),
-      data.append("location", ahaform.location),
-      data.append("assessmentDate", ahaform.assessmentDate),
-      data.append("permitToPerahaform", ahaform.permitToPerahaform),
-      data.append("permitNumber", ahaform.permitNumber),
-      data.append("ahaNumber", ahaform.ahaNumber);
+    data.append("fkCompanyId", ahaform.fkCompanyId),
+    data.append("fkProjectId", ahaform.fkProjectId),
+    data.append("fkProjectStructureIds", ahaform.fkProjectStructureIds),
+    data.append("workArea", ahaform.workArea),
+    data.append("location", ahaform.location),
+    data.append("assessmentDate", ahaform.assessmentDate),
+    data.append("permitToPerahaform", ahaform.permitToPerahaform),
+    data.append("permitNumber", ahaform.permitNumber),
+    data.append("ahaNumber", ahaform.ahaNumber);
     if (
       ahaform.ahaAssessmentAttachment !== null &&
       typeof ahaform.ahaAssessmentAttachment !== "string"
-    ) {
-      data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
-    }
-    data.append("description", ahaform.description),
+      ) {
+        data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
+      }
+      data.append("description", ahaform.description),
       data.append("workStopCondition", ahaform.workStopCondition),
       data.append("department", ahaform.department),
       data.append("additionalRemarks", ahaform.additionalRemarks),
@@ -467,10 +470,12 @@ const Assessment = () => {
       data.append("badgeNumber", ahaform.badgeNumber),
       data.append("status", ahaform.status),
       data.append("createdBy", ahaform.createdBy),
+      data.append("updatedBy", ahaform.updatedBy),
       data.append("source", ahaform.source),
       data.append("vendor", ahaform.vendor);
-    data.append("vendorReferenceId", ahaform.vendorReferenceId);
-
+      data.append("vendorReferenceId", ahaform.vendorReferenceId);
+      
+      await setSubmitLoader(true);
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`,
       form
@@ -601,7 +606,7 @@ const Assessment = () => {
       temp[key].riskRating = `${riskRating} Substantial`;
       temp[key].riskRatingColour = "#990000";
     } else {
-      temp[key].riskRating = `${riskRating} Intoreable`;
+      temp[key].riskRating = `${riskRating} Intolerable`;
       temp[key].riskRatingColour = "#ff0000";
     }
     setForm(temp);

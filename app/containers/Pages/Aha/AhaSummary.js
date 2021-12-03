@@ -72,7 +72,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
-import { handelActionData ,handelActionWithEntity } from "../../../utils/CheckerValue";
+import { handelActionData ,handelActionWithEntity,handelActionDataAssessment  } from "../../../utils/CheckerValue";
 import Attachment from "../../Attachment/Attachment";
 import ActionShow from '../../Forms/ActionShow';
 import Loader from "../Loader"
@@ -168,9 +168,12 @@ function AhaSummary() {
 
   const handleNewAhaPush = async () => {
     history.push(
-      "/app/pages/aha/assessments"
+      `/app/pages/aha/assessments/project-details/${localStorage.getItem(
+        "fkAHAId"
+      )}`
     );
   };
+
   const handleAhaApprovalsPush = async () => {
     if (ahaData.closedByName !== null) {
       return
@@ -443,32 +446,34 @@ function AhaSummary() {
   // console.log(projectSturcturedData,"lkklklklkl")
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
+    let ahaID = localStorage.getItem("fkAHAId")
     const res = await api.get(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
     );
     const result = res.data.data.results;
 
-    let zzz = [...result]
+    let colorAssessmment = [...result]
 
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
         if (result[i].riskRating === "2 Trivial" || result[i].riskRating === "4 Trivial") {
-          zzz[i].riskRatingColour = '#009933'
+          colorAssessmment[i].riskRatingColour = '#009933'
         } else if (result[i].riskRating === "6 Tolerable" || result[i].riskRating === "8 Tolerable") {
-          zzz[i].riskRatingColour = '#8da225'
+          colorAssessmment[i].riskRatingColour = '#8da225'
 
         } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
-          zzz[i].riskRatingColour = '#fff82e'
+          colorAssessmment[i].riskRatingColour = '#fff82e'
 
         } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
-          zzz[i].riskRatingColour = '#990000'
+          colorAssessmment[i].riskRatingColour = '#990000'
         }
         else {
-          zzz[i].riskRatingColour = '#ff0000'
+          colorAssessmment[i].riskRatingColour = '#ff0000'
         }
       }
     }
-    await setForm(zzz);
+    let resAction = await handelActionDataAssessment(ahaID, colorAssessmment, "all", "aha:hazard")
+    await setForm(resAction);
     await handelActionTracker(result)
   };
 
@@ -850,14 +855,14 @@ function AhaSummary() {
                                     <Grid item md={12} sm={12} xs={12}>
                                       <div className="attachFileThumb">
                                         {ahaData.ahaAssessmentAttachment ===
-                                          null ? null : typeof ahaData.ahaAssessmentAttachment ===
+                                          null ? "-" : typeof ahaData.ahaAssessmentAttachment ===
                                             "string" ? (
                                           <Attachment
                                             value={
                                               ahaData.ahaAssessmentAttachment
                                             }
                                           />
-                                        ) : null}
+                                        ) : "-"}
                                       </div>
                                     </Grid>
                                   </Grid>
@@ -1144,7 +1149,7 @@ function AhaSummary() {
                     <Link
                       variant="subtitle"
                       disabled={ahaData.closedByName !== null}
-                      onClick={(e) => handleAhaApprovalsPush(e)}
+                      onClick={(e) => handleNewAhaPush(e)}
                     >
                       <ListItemText primary="Modify Assessments" />
                     </Link>
