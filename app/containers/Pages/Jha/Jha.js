@@ -524,7 +524,6 @@ function Jha(props) {
               </CardContent>
             </Card>
           }
-
         </>
         )
           : (

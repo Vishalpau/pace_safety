@@ -166,7 +166,7 @@ const LessonsLearned = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
+    let allAction = await handelActionWithEntity(jhaId, "jha:lessonLearned")
     setActionData(allAction)
   };
 
@@ -377,7 +377,7 @@ const LessonsLearned = () => {
               <FormSideBar
                 deleteForm={"hideArray"}
                 listOfItems={LESSION_LEARNED_FORM}
-                selectedItem={"Lesson Learned"}
+                selectedItem={"Lessons Learned"}
               />
             </Col>
           </Row>

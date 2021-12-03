@@ -164,9 +164,9 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
-            ahaListData["ahaStage"] = "Close out"
-            ahaListData["ahaStatus"] = "Done"
-          
+        ahaListData["ahaStage"] = "Close out"
+        ahaListData["ahaStatus"] = "Done"
+
 
         const { error, isValid } = CloseOutValidator(ahaListData);
         await setError(error);
@@ -245,7 +245,7 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
-                                    onClick={(e) => setIsDateShow(true)}
+                                    // onClick={(e) => setIsDateShow(true)}
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     id="date-picker-dialog"
