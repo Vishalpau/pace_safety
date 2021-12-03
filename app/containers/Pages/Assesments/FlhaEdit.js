@@ -1540,7 +1540,7 @@ const FlhaDetails = () => {
                           </RadioGroup>
                         </FormControl>
                       </Grid>
-                      {flhaForm.permitToWork === 'Yes' ? 
+                      {flhaForm.permitToWork === 'Yes' || flhaForm.permitToWork === 'yes' ? 
                           <Grid item md={12} sm={12} xs={12}>
                             <Grid container spacing={3}>
                               <Grid item md={12} sm={12} xs={12} className="paddBRemove">
