@@ -1423,7 +1423,7 @@ const FlhaDetails = (props) => {
                             </div>
                           </TableCell>
                           <TableCell align="left">
-                            <input accept="image/*" disabled={jobConfirmation[0].visualConfirmationStatus === "No" || jobConfirmation[0].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 0)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
+                            <input accept="image/*" disabled={jobConfirmation[0].visualConfirmationStatus === "" || jobConfirmation[0].visualConfirmationStatus === "No" || jobConfirmation[0].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 0)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
                           </TableCell>
                         </TableRow>
                         <TableRow className={classes.cellHeight}>
@@ -1440,7 +1440,7 @@ const FlhaDetails = (props) => {
                             </div>
                           </TableCell>
                           <TableCell align="left">
-                            <input accept="image/*" disabled={jobConfirmation[1].visualConfirmationStatus === "No" || jobConfirmation[1].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 1)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
+                            <input accept="image/*" disabled={jobConfirmation[1].visualConfirmationStatus === "" || jobConfirmation[1].visualConfirmationStatus === "No" || jobConfirmation[1].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 1)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
                           </TableCell>
                         </TableRow>
                         <TableRow className={classes.cellHeight}>
@@ -1457,7 +1457,7 @@ const FlhaDetails = (props) => {
                             </div>
                           </TableCell>
                           <TableCell align="left">
-                            <input accept="image/*" disabled={jobConfirmation[2].visualConfirmationStatus === "No" || jobConfirmation[2].visualConfirmationStatus === "N/A" ? true : false} type="file" value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 2)} onChangeclassName="tableFileAttach" id="icon-button-file" />
+                            <input accept="image/*" disabled={jobConfirmation[2].visualConfirmationStatus === "" || jobConfirmation[2].visualConfirmationStatus === "No" || jobConfirmation[2].visualConfirmationStatus === "N/A" ? true : false} type="file" value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 2)} onChangeclassName="tableFileAttach" id="icon-button-file" />
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -1478,8 +1478,8 @@ const FlhaDetails = (props) => {
                       });
                     }}>
                       <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="no" control={<Radio />} label="No" />
-                      <FormControlLabel value="na" control={<Radio />} label="N/A" />
+                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                      <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.permitToWork ? '' : error.permitToWork}</div>
                   </FormControl>
