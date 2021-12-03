@@ -180,7 +180,6 @@ function Jha(props) {
     let pageCount = Math.ceil(res.data.data.results.count / 25)
     await setPageCount(pageCount)
     handelTableView(result)
-
     await setIsLoading(true)
   }
 
@@ -298,7 +297,7 @@ function Jha(props) {
                       className={classes.filterIcon}
                       onClick={handleView}
                     >
-                      <FormatListBulleted />
+                      <ViewAgendaIcon />
                     </IconButton>
 
                     <IconButton
@@ -306,7 +305,7 @@ function Jha(props) {
                       className={classes.filterIcon}
                       onClick={handleTabelView}
                     >
-                      <ViewAgendaIcon />
+                      <FormatListBulleted />
                     </IconButton>
                   </div>
                 </Grid>
@@ -329,7 +328,8 @@ function Jha(props) {
         </div>
 
         {cardView ? (<>
-          {allJHAData.length > 0 && Object.entries(allJHAData).map((item, index) => (
+
+          {allJHAData.length > 0 ? Object.entries(allJHAData).map((item, index) => (
             <Card variant="outlined" className={Incidents.card}>
               <CardContent>
                 <Grid container spacing={3}>
@@ -457,7 +457,7 @@ function Jha(props) {
                       Comments:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      <ILink href="#">{item[1]["commentsCount"]}</ILink>
+                      {item[1]["commentsCount"]}
                     </Typography>
                   </Grid>
 
@@ -472,8 +472,7 @@ function Jha(props) {
                       Actions:
                     </Typography>
                     <Typography variant="body2" display="inline">
-                      {/* <ILink href="#">{item[1]["actionCount"]}</ILink> */}
-                      {item[1]["actionCount"]}
+                      {item[1]["actionCount"] || 0}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={3}>
@@ -515,7 +514,18 @@ function Jha(props) {
                   </Grid>
                 </Grid>
               </CardActions>
-            </Card>))}</>)
+            </Card>))
+            :
+            <Card variant="outlined" className={Incidents.card}>
+              <CardContent>
+                <Grid container spacing={3} justify="center">
+                  Sorry, no matching records found
+                </Grid>
+              </CardContent>
+            </Card>
+          }
+        </>
+        )
           : (
             <MUIDataTable
               title="JSA List"

@@ -158,6 +158,7 @@ function JhaSummary() {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const result = res.data.data.results;
+    console.log(result)
     await setAssessment(result)
     await handelWorkArea(result)
     await fetchNotificationSent(result.notifyTo)
@@ -225,7 +226,7 @@ function JhaSummary() {
   };
 
   const handelActionTracker = async (resultHazard) => {
-    let actionType = { "jha:hazard": [], "jha:lessionLearned": [], "jha:approval": [] }
+    let actionType = { "jha:hazard": [], "jha:lessonLearned": [], "jha:approval": [] }
     let jhaId = localStorage.getItem("fkJHAId")
     let allAction = await handelActionData(jhaId, [], "title")
 
@@ -286,10 +287,10 @@ function JhaSummary() {
     const baseUrl = localStorage.getItem("apiBaseUrl")
     var tempPerformance = {}
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
-    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ? specificPerformance.data.data.results[0].checklistGroups : [];
 
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
-    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
 
     apiDataPerformance.map((value) => {
       value.checkListValues.map((checkValue) => {
@@ -348,6 +349,13 @@ function JhaSummary() {
     } catch (error) { }
   };
 
+  const handelApprovalTabStatus = () => {
+    let approvalStatusDecide;
+    assessment["wrpApprovalUser"] !== null &&
+      assessment["sapApprovalDateTime"] !== null ? approvalStatusDecide = true : approvalStatusDecide = false
+    return approvalStatusDecide
+  }
+
 
   let errorMessage = "Please fill"
   let errorApproval = "approval"
@@ -366,7 +374,7 @@ function JhaSummary() {
       setCommentsView(false)
     } else if (viewName == "approval") {
       setAssessmentsView(false);
-      if (formStatus.approvalStatus) {
+      if (handelApprovalTabStatus()) {
         setApprovalsView(true);
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
@@ -443,7 +451,7 @@ function JhaSummary() {
                   Assessments
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.assessmentStatus ? "Done" : ""}
+                  {formStatus.assessmentStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -452,9 +460,9 @@ function JhaSummary() {
                   color={approvalsView ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
-                  variant={formStatus.approvalStatus ? "contained" : "outlined"}
+                  variant={handelApprovalTabStatus() ? "contained" : "outlined"}
                   endIcon={
-                    formStatus.approvalStatus ? <CheckCircle /> : <AccessTime />
+                    handelApprovalTabStatus() ? <CheckCircle /> : <AccessTime />
                   }
                   className={classes.statusButton}
                   onClick={(e) => viewSwitch("approval")}
@@ -462,7 +470,7 @@ function JhaSummary() {
                   Approvals
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.approvalStatus ? "Done" : ""}
+                  {handelApprovalTabStatus() ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -481,7 +489,7 @@ function JhaSummary() {
                   Close out
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.closeOutStatus ? "Done" : ""}
+                  {formStatus.closeOutStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -500,7 +508,7 @@ function JhaSummary() {
                   Lessons Learned
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.lessionLeranedStatus ? "Done" : ""}
+                  {formStatus.lessionLeranedStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -1053,7 +1061,7 @@ function JhaSummary() {
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {assessment.wrpApprovalDateTime !== null ?
                                       <>
-                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMMM YYYY")}
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMM YYYY")}
                                       </>
                                       : "-"
                                     }
@@ -1092,7 +1100,7 @@ function JhaSummary() {
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {assessment.sapApprovalDateTime !== null ?
                                       <>
-                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMMM YYYY")}
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMM YYYY")}
                                       </>
                                       : "-"
                                     }
@@ -1160,7 +1168,7 @@ function JhaSummary() {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {allActionType["jha:lessionLearned"].map((value) => (
+                                    {allActionType["jha:lessonLearned"].map((value) => (
                                       <>
                                         <ActionShow
                                           action={{ id: value.id, number: value.actionNumber }}
@@ -1207,7 +1215,7 @@ function JhaSummary() {
                                     Closed on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.closedDate)).format("DD-Mo-YYYY")}
+                                    {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
 
                                   </Typography>
                                 </Grid>
@@ -1249,7 +1257,7 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.assessmentStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Assessments" />
+                      <ListItemText primary={formStatus.assessmentStatus ? "Update assessment" : "Add assessment"} />
                     </ListItemLink>
 
                     <ListItemLink
@@ -1259,7 +1267,7 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.approvalStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Approvals" />
+                      <ListItemText primary={formStatus.approvalStatus ? "Update approval" : "Add approval"} />
                     </ListItemLink>
 
                     <ListItemLink
@@ -1268,7 +1276,8 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Lessons Learned" />
+                      {/* Lessons Learned */}
+                      <ListItemText primary={formStatus.lessionLeranedStatus ? "Update lessons learned" : "Add lessons learned"} />
                     </ListItemLink>
 
                     <ListItem

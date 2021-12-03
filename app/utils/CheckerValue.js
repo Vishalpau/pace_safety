@@ -236,11 +236,12 @@ export const handelActionIcare = async (incidentId, apiData, type = "all", actio
 }
 
 export const fetchReportedBy = async () => {
+    let allUser;
     let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
     let companyId =
-  JSON.parse(localStorage.getItem("company")) !== null
-    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-    : null;
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
     const config = {
         method: "get",
         url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/application/${appId}/users/`,
@@ -248,8 +249,13 @@ export const fetchReportedBy = async () => {
             Authorization: `Bearer ${access_token}`,
         },
     };
-    
-    let allData = await axios(config)
-    let allUsers = allData.data.data.results[0]["users"]
-    return allUsers
+    try {
+        let allData = await axios(config)
+        let allUsers = allData.data.data.results[0]["users"]
+        allUser = allUsers
+    } catch {
+        let allUsers = ["No users found"]
+        allUser = allUsers
+    }
+    return allUser;
 };

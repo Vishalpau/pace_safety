@@ -651,7 +651,7 @@ function AhaSummary() {
                                       className={Fonts.labelValue}
                                     >
                                       {moment(ahaData["assessmentDate"]).format(
-                                        "Do MMMM YYYY"
+                                        "Do MMM YYYY"
                                       )}
                                     </Typography>
                                   </Grid>
@@ -1203,7 +1203,7 @@ function AhaSummary() {
                                 className={Fonts.labelValue}
                               >
                                 {ahaData.wrpApprovalDateTime ? moment(ahaData["wrpApprovalDateTime"]).format(
-                                  "Do MMMM YYYY"
+                                  "Do MMM YYYY"
                                 ) : "-"}
                               </Typography>
                             </Grid>
@@ -1244,7 +1244,7 @@ function AhaSummary() {
                                 className={Fonts.labelValue}
                               >
                                 {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
-                                  "Do MMMM YYYY"
+                                  "Do MMM YYYY"
                                 ) : "-"}
                               </Typography>
                             </Grid>
@@ -1305,7 +1305,7 @@ function AhaSummary() {
                           className={Fonts.labelValue}
                         >
                           {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                            "Do MMMM YYYY"
+                            "Do MMM YYYY"
                           ) : "-"}
 
                         </Typography>
@@ -1440,7 +1440,7 @@ function AhaSummary() {
                     <ListItemText primary="Add Lessons Learned" />
                   </ListItemLink>)}
                 <ListItemLink disabled={ahaData.closedByName !== null}
-                onClick={(e) => handleCloseOutPush(e)}>
+                  onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
