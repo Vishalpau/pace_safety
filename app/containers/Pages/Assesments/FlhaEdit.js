@@ -1393,7 +1393,7 @@ const FlhaDetails = () => {
                                                   {/* risk color */}
 
                                                   <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
-                                                    {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
+                                                    {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel}` : ''}
                                                   </Grid>
 
                                                 </Grid>
