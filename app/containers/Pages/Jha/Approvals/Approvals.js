@@ -215,19 +215,15 @@ const Approvals = () => {
   const handelSubmit = async () => {
     const { error, isValid } = ApprovalValidator(form, actionData)
     await setError(error)
-    if (!isValid) {
-      return "data not valid"
+    if (Object.keys(error).length == 0) {
+      await setSubmitLoader(true)
+      delete form["jhaAssessmentAttachment"]
+      form["jhaStage"] = "Approval"
+      form["jhaStatus"] = "Close"
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      history.push(SUMMARY_FORM["Summary"])
+      setSubmitLoader(false)
     }
-    await setSubmitLoader(true)
-    delete form["jhaAssessmentAttachment"]
-    if (form["wrpApprovalUser"] == null) {
-      form["wrpApprovalUser"] = ""
-    }
-    form["jhaStage"] = "Approval"
-    form["jhaStatus"] = "Close"
-    const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-    history.push(SUMMARY_FORM["Summary"])
-    setSubmitLoader(false)
   }
 
   const handelCallBack = async () => {
@@ -261,7 +257,6 @@ const Approvals = () => {
           <Row>
             <Col md={9}>
               <Grid container spacing={3}>
-
                 <Grid
                   item
                   xs={12}
@@ -283,10 +278,10 @@ const Approvals = () => {
                     color={check.wrp ? "secondary" : "primary"}
                     className={classes.approvalButton}
                     onClick={(e) => setOpen(true)}
+                    disabled={check.wrp || form.wrpApprovalUser !== null}
                   >
                     {check.wrp ? "Approved" : "Approve Now"}
                   </Button>
-                  {/* Approved by userName on Date "date" (edited)  */}
                   <div>
                     {form.wrpApprovalDateTime !== null && form.wrpApprovalUser !== null
                       &&
@@ -296,7 +291,6 @@ const Approvals = () => {
                     }
                   </div>
                 </Grid>
-
 
                 <Grid
                   item
@@ -312,6 +306,7 @@ const Approvals = () => {
                     color={check.pic ? "secondary" : "primary"}
                     className={classes.approvalButton}
                     onClick={(e) => setOpenSeniorAuthorized(true)}
+                    disabled={check.pic || form.sapApprovalUser !== null}
                   >
                     {check.pic ? "Approved" : "Approve Now"}
                   </Button>
@@ -325,8 +320,9 @@ const Approvals = () => {
                   </div>
                 </Grid>
 
-                {actionData.length == 0 ? <Grid item md={8}>
-                  <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+                <Grid item md={8}>
+                  <p style={{ color: "red" }}>{error.action}</p>
+                </Grid>
 
                 <Dialog
                   className={classes.projectDialog}
@@ -376,7 +372,6 @@ const Approvals = () => {
                     </Tooltip>
                   </DialogActions>
                 </Dialog>
-
 
                 <Dialog
                   className={classes.projectDialog}
@@ -475,6 +470,7 @@ const Approvals = () => {
                     variant="outlined"
                   />
                 </Grid>
+
                 {/* submitLoader */}
                 <Grid
                   item
@@ -508,6 +504,7 @@ const Approvals = () => {
                     Cancel
                   </Button>
                 </Grid>
+
               </Grid>
             </Col>
             <Col md={3}>

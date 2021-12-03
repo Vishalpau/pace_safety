@@ -187,7 +187,7 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
-                                    onClick={(e) => setIsDateShow(true)}
+                                    // onClick={(e) => setIsDateShow(true)}
                                     // error={error.closeDate}
                                     // helperText={
                                     //     error.closeDate ? error.closeDate : null
@@ -208,7 +208,7 @@ const CloseOut = () => {
                                     //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
                                     //     });
                                     // }}
-                                    disabled
+                                    disabled={true}
                                     disableFuture
                                     InputProps={{ readOnly: true }}
                                     open={isDateShow}

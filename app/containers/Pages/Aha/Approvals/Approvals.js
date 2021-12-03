@@ -118,7 +118,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
-  const [ error, setError] = useState({})
+  const [error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const user =
@@ -190,18 +190,18 @@ const Approvals = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
-    if(form.notifyTo === null){
+    if (form.notifyTo === null) {
       form['notifyTo'] = "null"
     }
     form["ahaStage"] = "Approval"
-    if(form['wrpApprovalUser'] === null ){
+    if (form['wrpApprovalUser'] === null) {
       form["ahaStatus"] = "Pending"
-    }else{
+    } else {
       form["ahaStatus"] = "Done"
     }
-    const { error, isValid} = ApprovalValidator(form , actionData)
+    const { error, isValid } = ApprovalValidator(form, actionData)
     await setError(error)
-    if(!isValid) {
+    if (!isValid) {
       return "data not valid"
     }
     await setSubmitLoader(true)
@@ -277,6 +277,7 @@ const Approvals = () => {
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className={classes.approvalButton}
                     onClick={(e) => { setOpen(true), setPerson("Competent Person (CP)") }}
+                  // disabled={form.wrpApprovalUser !== null}
                   >
                     {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
                   </Button>
@@ -299,6 +300,7 @@ const Approvals = () => {
                     color={form.sapApprovalUser === null ? "primary" : "secondary"}
                     className={classes.approvalButton}
                     onClick={(e) => { setOpen(true), setPerson("Senior Authorized Person (SAP)") }}
+                  // disabled={form.sapApprovalUser !== null}
                   >
                     {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
                   </Button>
@@ -368,7 +370,7 @@ const Approvals = () => {
                   </Typography>
                 </Grid> */}
                 {actionData.length == 0 ? <Grid item md={8}>
-                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+                  <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
                 <Grid item md={6} xs={12}>
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
