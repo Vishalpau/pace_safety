@@ -139,9 +139,7 @@ import {
   AhaSummary,
   AssessmentsForms,
   ProjectDetails,
-  ProjectAreaHazards,
   Assessment,
-  DocumentNotification,
   Approvals,
   LessonsLearned,
   AhaCloseOut,
@@ -170,10 +168,10 @@ import {
   EnergyControl,
   AuditCheck,
   AssessmentCloseOut,
-  FlhaConfigHazard,
-  FlhaConfig,
-  FlhaConfigCriticalTask,
-  FlhaConfigAdd,
+  // FlhaConfigHazard,
+  // FlhaConfig,
+  // FlhaConfigCriticalTask,
+  // FlhaConfigAdd,
   SamplePage,
   PrintFlha,
   FlhaActivities,
@@ -547,12 +545,8 @@ function Application(props) {
         <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
         <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />
         <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetails} />
-        <Route path="/app/pages/aha/assessments/project-area-hazards" exact component={ProjectAreaHazards} />
-        <Route path="/app/pages/aha/assessments/project-area-hazards/:id" exact component={ProjectAreaHazards} />
         <Route path="/app/pages/aha/assessments/assessment" exact component={Assessment} />
         <Route path="/app/pages/aha/assessments/assessment/:id" exact component={Assessment} />
-        <Route path="/app/pages/aha/assessments/DocumentsNotifications" exact component={DocumentNotification} />
-        <Route path="/app/pages/aha/assessments/DocumentsNotifications/:id" exact component={DocumentNotification} />
         <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
         <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
         <Route path="/app/pages/aha/close-out" component={AhaCloseOut} />
@@ -609,7 +603,7 @@ function Application(props) {
         <Route exact path="/app/pages/picklist/value/:id" component={PicklistValue} />
         {/* Xflha Routes  */}
         <Route path="/app/pages/summary" component={Summary} />
-        <Route path="/app/pages/sample" component={SamplePage} />
+        {/* <Route path="/app/pages/sample" component={SamplePage} /> */}
         <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
         <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
@@ -624,10 +618,10 @@ function Application(props) {
         <Route path="/app/pages/assesments/flha/:id/activities" component={FlhaActivities} />
         <Route path="/app/pages/assesments/flha/:id/comments" component={FlhaComments} />
         {/* Xflha Config  */}
-        <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
+        {/* <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
         <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
-        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} /> */}
         {/* Control Tower */}
         <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
 

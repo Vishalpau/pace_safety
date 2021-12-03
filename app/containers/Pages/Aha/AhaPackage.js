@@ -697,8 +697,6 @@ useEffect(() => {
                                 color="textPrimary"
                                 className={classes.listingLabelName}
                               >
-                                Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
-                                <span item xs={1} className={classes.sepHeightOne}></span>
                                 Stage: <span className={classes.listingLabelValue}>{item[1].ahaStage} <img src={in_progress_small} className={classes.smallImage} /></span>
                                 <span item xs={1} className={classes.sepHeightOne}></span>
                                 Status: <span className={classes.listingLabelValue}>{item[1].ahaStatus} <img src={completed_small} className={classes.smallImage} /></span>
@@ -819,10 +817,12 @@ useEffect(() => {
 
                       >
                         <AttachmentIcon className={classes.mright5} />
-                          Attachments:
+                          Attachments: {" "}
                       </Typography>
                       <Typography variant="body2" display="inline">
-                        <Link href="#" color="secondary" className={classes.mLeftR5}>{item[1].attachmentCount}</Link>
+                        {/* <Link href="#" color="secondary" className={classes.mLeftR5}> */}
+                        {item[1].attachmentCount}
+                        {/* </Link> */}
                       </Typography>
                       {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography

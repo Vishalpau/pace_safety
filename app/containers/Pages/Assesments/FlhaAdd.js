@@ -500,10 +500,8 @@ const FlhaDetails = (props) => {
       hazards: '',
       riskSeverity: '',
       riskProbability: '',
-      control: '',
       hazardStatus: '',
       controlStatus: '',
-      hazards: '',
       control: '',
     },
   ]);
@@ -602,7 +600,6 @@ const FlhaDetails = (props) => {
       }
       temp[taskIndex].hazards[key][fieldname] = value;
     }
-    console.log(temp, 'temp')
     setTaskForm(temp);
   };
 
@@ -611,10 +608,11 @@ const FlhaDetails = (props) => {
 
     const temp1 = tasks.map((task, index) => {
       temp[index] = task;
+      temp[index].hazards[0].control = task.control
       return temp;
     });
     await setTaskForm(temp);
-    await setHazardForm(temp.hazards);
+    await setHazardForm(temp1.hazards);
   };
 
   const handleSelectedJobHazardForm = async (tasks) => {
@@ -642,7 +640,12 @@ const FlhaDetails = (props) => {
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':');
-    jobForm["notifyTo"].length == 0 || jobForm["notifyTo"] == "null" || jobForm["notifyTo"] == null ? jobForm["notifyTo"] = "null" : jobForm["notifyTo"] = jobForm["notifyTo"].toString()
+
+    jobForm["notifyTo"] == null ?
+    jobForm["notifyTo"] = "null" :
+    jobForm["notifyTo"].length > 0 ?
+    jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
+    jobForm["notifyTo"] = "null"
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -686,9 +689,7 @@ const FlhaDetails = (props) => {
           data[index].hazards[key].createdBy = fkUserId;
           data[index].hazards[key].updatedBy = fkUserId;
           data[index].hazards[key].hazards = dat.hazard;
-          data[index].hazards[key].control = data[index].control;
-
-
+          // data[index].hazards[key].control = data[index].control;
         });
       }
     });
@@ -776,7 +777,6 @@ const FlhaDetails = (props) => {
     const res = await api.get('api/v1/configflhas/jobtitles/' + jobTitleId + '/');
     const selectedJobTitle = res.data.data.results;
     setIsSelectedJob(true)
-    const temp = { ...jobForm };
 
     setJobForm(
       {
@@ -791,6 +791,7 @@ const FlhaDetails = (props) => {
         jhaReviewed: jobForm.jhaReviewed,
         accessToJobProcedure: jobForm.accessToJobProcedure,
         Checked: jobForm.Checked
+
       }
     );
     await handleSelectedJobHazardFormTemp(selectedJobTitle.critical_tasks);
@@ -870,7 +871,11 @@ const FlhaDetails = (props) => {
       setNotifyToValue(allRoles);
     }
   }
-
+  const handelRemoveHazards = async (index, indexHazard) => {
+    let temp = [...taskForm]
+    temp[index]["hazards"].splice(indexHazard, 1)
+    await setTaskForm(temp)
+  }
 
   useEffect(() => {
     getSupervisors();
@@ -1110,7 +1115,7 @@ const FlhaDetails = (props) => {
                       >
                         <Typography className={classes.heading}>
                           {' '}
-                          Task#{(taskIndex + 1)} - "Task identification"
+                          Task#{(taskIndex + 1)} - {taskForm[taskIndex]["taskIdentification"]}
                         </Typography>
                         <Grid container justify="flex-end">
                           <Button>
@@ -1125,14 +1130,14 @@ const FlhaDetails = (props) => {
                             variant="outlined"
                             rows="1"
                             id="taskIdentification"
-                            label="Task Name"
+                            label="Task name"
                             className={classes.fullWidth}
                             value={taskForm[taskIndex]["taskIdentification"]}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
                           />
                         </Grid>
-                        {taskValue.hazards.map((item, index) => (
+                        {taskValue.hazards.map((item, indexHazard) => (
                           <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.backPaperSubAccordian}>
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
@@ -1141,10 +1146,15 @@ const FlhaDetails = (props) => {
                               className={classes.accordionSubHeaderSection}
                             >
                               <Typography className={classes.heading}>
-                                Hazard#{index + 1} - {taskForm[taskIndex]["hazards"][index]["hazard"]}
+                                Hazard#{indexHazard + 1} - {taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
                               </Typography>
                               <Typography className={classes.secondaryHeading}>
                               </Typography>
+                              <Grid container justify="flex-end">
+                                <Button>
+                                  <RemoveIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
+                                </Button>
+                              </Grid>
                             </AccordionSummary>
                             <AccordionDetails>
                               <Grid container spacing={2}>
@@ -1154,7 +1164,7 @@ const FlhaDetails = (props) => {
                                     requirement
                                     className={classes.formControl}
                                   >
-                                    {(taskForm[taskIndex]["hazards"][index]["hazard"]) && index === 0 && isSelectedJob ?
+                                    {(taskForm[taskIndex]["hazards"][indexHazard]["hazard"]) && indexHazard === 0 && isSelectedJob ?
                                       <TextField
                                         disabled={true}
                                         variant="outlined"
@@ -1162,7 +1172,7 @@ const FlhaDetails = (props) => {
                                         id="taskIdentification"
                                         label="Hazards"
                                         className={classes.fullWidth}
-                                        value={taskForm[taskIndex]["hazards"][index]["hazard"]}
+                                        value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
 
                                       />
                                       :
@@ -1177,9 +1187,9 @@ const FlhaDetails = (props) => {
                                           rows="3"
                                           id="hazards"
                                           className={classes.fullWidth}
-                                          value={taskForm[taskIndex]["hazards"][index]["hazard"]}
+                                          value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
                                           // disabled={(item.hazard != undefined) ? item.hazard : ''}
-                                          onChange={(e) => { handleHazardForm(e, index, taskIndex, 'hazard'), setHazardType }
+                                          onChange={(e) => { handleHazardForm(e, indexHazard, taskIndex, 'hazard'), setHazardType }
                                           }
                                         >
                                           {hazardtype.map((value) => <MenuItem value={value.inputLabel}>{value.inputLabel}</MenuItem>)}
@@ -1188,14 +1198,14 @@ const FlhaDetails = (props) => {
                                       </>}
                                   </FormControl>
                                   <Grid item sm={1} xs={4}>
-                                  {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                </Grid>
+                                    {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                  </Grid>
                                   <div className={classes.spacer} id="myCode" >
                                     <FormControl component="fieldset">
                                       <FormLabel component="legend" className="checkRadioLabel">
                                         Is this hazard present?
                                       </FormLabel>
-                                      <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'hazardStatus')}>
+                                      <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'hazardStatus')}>
                                         <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                                         <FormControlLabel value="No" control={<Radio />} label="No" />
                                         <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
@@ -1203,23 +1213,20 @@ const FlhaDetails = (props) => {
                                     </FormControl>
                                   </div>
                                 </Grid>
-                                
+
                                 <Grid container spacing={2}>
                                   {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
 
                                     <Grid item sm={12} xs={12}>
-                                      {console.log(taskForm[taskIndex],'control')}
-                                  
+
                                       <TextField
-                                       multiline
-                                       variant="outlined"
-                                       rows="1"
-                                       id="control"
-                                       label="Control"
-                                       className={classes.fullWidth}
-                                       value={index === 0 ? taskForm[taskIndex]["control"] : ''}
-                                      
-                                        onChange={(e) => handleHazardForm(e, index, taskIndex, 'control')
+                                        multiline
+                                        variant="outlined"
+                                        rows="1"
+                                        label="Control"
+                                        className="formControl"
+                                        value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
+                                        onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
                                         }
                                       />
 
@@ -1228,10 +1235,10 @@ const FlhaDetails = (props) => {
                                           <FormLabel component="legend" className="checkRadioLabel">
                                             Has this control been put in place?
                                           </FormLabel>
-                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, index, taskIndex, 'controlStatus')}>
+                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
                                             <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                                             <FormControlLabel value="No" control={<Radio />} label="No" />
-                                            <FormControlLabel value="NA" control={<Radio />} label="NA" />
+                                            <FormControlLabel value="NA" control={<Radio />} label="N/A" />
                                           </RadioGroup>
                                         </FormControl>
                                       </div>
@@ -1248,17 +1255,17 @@ const FlhaDetails = (props) => {
                                         className={classes.formControl}
                                       >
                                         <InputLabel id="demo-simple-select-label">
-                                          Risk Severity
-                                          
+                                          Risk severity
+
                                         </InputLabel>
                                         <Select
                                           labelId="incident-type-label"
                                           id="riskSeverityValue"
-                                          label="Risk Severity"
+                                          label="Risk severity"
                                           name="riskSeverityValue"
                                           value={item.riskSeverityValue}
 
-                                          onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskSeverityValue')
+                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
                                           }
                                         >
                                           <MenuItem value={2}>Sightly harmful</MenuItem>
@@ -1275,14 +1282,14 @@ const FlhaDetails = (props) => {
                                         className={classes.formControl}
                                       >
                                         <InputLabel id="demo-simple-select-label">
-                                          Risk Probability
+                                          Risk probability
                                         </InputLabel>
                                         <Select
                                           labelId="incident-type-label"
                                           id="riskProbabilityValue"
-                                          label="Risk Probability"
+                                          label="Risk probability"
                                           value={item.riskProbabilityValue}
-                                          onChange={(e) => handleRiskChange(e, index, taskIndex, 'riskProbabilityValue')
+                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
                                           }
                                         >
                                           <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
@@ -1472,7 +1479,7 @@ const FlhaDetails = (props) => {
                     }}>
                       <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                       <FormControlLabel value="no" control={<Radio />} label="No" />
-                      <FormControlLabel value="na" control={<Radio />} label="NA" />
+                      <FormControlLabel value="na" control={<Radio />} label="N/A" />
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.permitToWork ? '' : error.permitToWork}</div>
                   </FormControl>

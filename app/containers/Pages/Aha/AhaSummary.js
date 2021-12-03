@@ -212,7 +212,6 @@ function AhaSummary() {
   const [closeOut, setCloseOut] = useState(false);
   const [comments, setComments] = useState(false);
   const [activity, setActivity] = useState(false);
-  //const [summary, setSummary] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   // const [expandedTableDetail, setExpandedTableDetail] = React.useState(
   //   "panel5"
@@ -223,11 +222,9 @@ function AhaSummary() {
   };
 
   const { id } = useParams();
-  //const [summary, setSummary] = useState(false);
   const [ahaData, setAHAData] = useState({});
   const [Teamform, setTeamForm] = useState([]);
   const [projectSturcturedData, setProjectSturcturedData] = useState([]);
-  const [actionTakenData, setActionTakenData] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [isNext, setIsNext] = useState(false)
   const [notificationSentValue, setNotificationSentValue] = useState([])
@@ -238,6 +235,12 @@ function AhaSummary() {
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const user = JSON.parse(localStorage.getItem("userDetails"));
+  const projectData = JSON.parse(localStorage.getItem('projectName'));
 
   const [checkListAssessment, setCheckListAssessment] = useState({})
 
@@ -306,7 +309,6 @@ function AhaSummary() {
     }
   }
 
-  const user = JSON.parse(localStorage.getItem("userDetails"));
 
   const handelFileName = (value) => {
     const fileNameArray = value.split("/");
@@ -324,6 +326,7 @@ function AhaSummary() {
     await fetchBreakDownData(result.fkProjectStructureIds);
     await fetchNotificationSent(result.notifyTo)
   };
+
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -448,7 +451,7 @@ function AhaSummary() {
   const fetchHzardsData = async () => {
     let ahaID = localStorage.getItem("fkAHAId")
     const res = await api.get(
-      `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
+      `/api/v1/ahas/${ahaID}/areahazards/`
     );
     const result = res.data.data.results;
 
@@ -475,6 +478,7 @@ function AhaSummary() {
     let resAction = await handelActionDataAssessment(ahaID, colorAssessmment, "all", "aha:hazard")
     await setForm(resAction);
     await handelActionTracker(result)
+
   };
 
   const handelActionTracker = async (resultHazard) => {
@@ -482,16 +486,9 @@ function AhaSummary() {
     const allAction = await handelActionWithEntity(ahaId, "aha:approval");
     setApprovalactionData(allAction)
   };
-  const handelShowData = () => {
 
-  }
-
-
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
-
+  const handelShowData = () => { }
+  console.log(form,"Eee")
   const handleProjectName = (projectId) => {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
@@ -516,9 +513,9 @@ function AhaSummary() {
         let data = []
         let user = notifyTo.split(",");
         const result = res.data.data.results;
-        for(let i = 0; i < result.length; i++) {
-          for(let j = 0; j < user.length; j++) {
-            if(user[j] == result[i].id){
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
               data.push(result[i]);
             }
           }
@@ -658,6 +655,7 @@ function AhaSummary() {
                                       {ahaData.location ? ahaData.location : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Assessment started on</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -666,12 +664,14 @@ function AhaSummary() {
                                       )}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Assessment performed by</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {ahaData.username ? ahaData.username : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Type of permit</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -684,6 +684,7 @@ function AhaSummary() {
                                       {ahaData.permitNumber ? ahaData.permitNumber : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Description of area</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -828,6 +829,14 @@ function AhaSummary() {
                                                   : "-"}
                                               </Typography>
                                             </Grid>
+                                            {item.action !== undefined && item.action.map((valueAction) => (
+                                                    <ActionShow
+                                                      action={valueAction}
+                                                      companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                                      projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                                      handelShowData={handelShowData}
+                                                    />
+                                                  ))}
                                           </Grid>
                                         </AccordionDetails>
                                       </Accordion>
@@ -1142,49 +1151,46 @@ function AhaSummary() {
               </Typography>
               <List component="nav" aria-label="main mailbox folders">
                 {ahaData.notifyTo !== "" ?
-                  <ListItem button>
+                  <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                     <ListItemIcon>
                       <Edit />
                     </ListItemIcon>
                     <Link
                       variant="subtitle"
-                      disabled={ahaData.closedByName !== null}
+                      
                       onClick={(e) => handleNewAhaPush(e)}
                     >
                       <ListItemText primary="Modify Assessments" />
                     </Link>
-                  </ListItem> :
-                  <ListItem button>
+                  </ListItem> : <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                     <ListItemIcon>
                       <Add />
                     </ListItemIcon>
                     <Link
                       variant="subtitle"
-                      disabled={ahaData.closedByName !== null}
-                      onClick={(e) => handleAhaApprovalsPush(e)}
+                      disabled={ahaData.closedByName !== null ? true : false}
+                      onClick={(e) => handleNewAhaPush(e)}
                     >
                       <ListItemText primary="Assessments" />
                     </Link>
                   </ListItem>}
                 {ahaData.wrpApprovalUser !== "" ?
-                  <ListItem button>
+                  <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                     <ListItemIcon>
                       <Edit />
                     </ListItemIcon>
                     <Link
                       variant="subtitle"
-                      disabled={ahaData.closedByName !== null}
                       onClick={(e) => handleAhaApprovalsPush(e)}
                     >
                       <ListItemText primary="Modify Approvals" />
                     </Link>
-                  </ListItem> : <ListItem button>
+                  </ListItem> : <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                     <ListItemIcon>
                       <Add />
                     </ListItemIcon>
                     <Link
                       variant="subtitle"
-                      disabled={ahaData.closedByName !== null}
                       onClick={(e) => handleAhaApprovalsPush(e)}
                     >
                       <ListItemText primary="Approvals" />
@@ -1192,13 +1198,12 @@ function AhaSummary() {
                   </ListItem>
                 }
                 {ahaData.anyLessonsLearnt !== "" ? (
-                  <ListItem button >
+                  <ListItem button disabled={ahaData.closedByName !== null ? true : false} >
                     <ListItemIcon>
                       <Edit />
                     </ListItemIcon>
                     <Link
                       variant="subtitle"
-                      disabled={ahaData.closedByName !== null}
                       onClick={(e) => handleAhaLessonLearnPush(e)}>
 
                       <ListItemText primary="Modify Lessons learned" />
@@ -1206,25 +1211,25 @@ function AhaSummary() {
                   </ListItem>
                 ) :
                   (
-                    <ListItem button >
+                    <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                       <ListItemIcon>
                         <Add />
                       </ListItemIcon>
                       <Link
                         variant="subtitle"
-                        disabled={ahaData.closedByName !== null}
                         onClick={(e) => handleAhaLessonLearnPush(e)}>
 
                         <ListItemText primary="Lessons learned" />
                       </Link>
                     </ListItem>
                   )}
-                <ListItem button>
+                <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
                   <Link
                     variant="subtitle"
+                    disabled={ahaData.closedByName !== null ? true : false}
                     onClick={(e) => viewSwitch("closeout")}
                   >
                     <ListItemText primary="Close out" />

@@ -199,6 +199,12 @@ const Approvals = () => {
     if(form.notifyTo === null){
       form['notifyTo'] = "null"
     }
+    form["ahaStage"] = "Approval"
+    if(form['wrpApprovalUser'] === null ){
+      form["ahaStatus"] = "Pending"
+    }else{
+      form["ahaStatus"] = "Done"
+    }
     const { error, isValid} = ApprovalValidator(form , actionData)
     await setError(error)
     if(!isValid) {
@@ -345,15 +351,9 @@ const [projectOpen , setProjectOpen] = useState(false)
 
                 {actionData.length == 0 ? <Grid item md={8}>
                 <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
-                {/* <Grid item md={8} xs={12} className={classes.formBox}>
 
-                  <Typography variant="h6" gutterBottom className={classes.labelName}>
 
-                    If not approved then create a action.
-                  </Typography>
-                </Grid> */}
-
-                <Grid item md={6} xs={12}>
+                <Grid item md={12} xs={12}>
                   <FormLabel className="checkRadioLabel" component="legend">Create action </FormLabel>
                     <ActionTracker
                       actionContext="aha:approval"
@@ -366,8 +366,10 @@ const [projectOpen , setProjectOpen] = useState(false)
                       createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
                       handelShowData={handelActionTracker}
                     />
-                  <Typography className={classes.aLabelValue}>
-                    {actionData.map((value) => (
+                  
+                </Grid>
+                <Grid item md={6} xs={12}>
+                {actionData.map((value) => (
                       <ActionShow
                         action={{ id: value.id, number: value.actionNumber }}
                         title={value.actionTitle}
@@ -376,7 +378,6 @@ const [projectOpen , setProjectOpen] = useState(false)
                         updatePage={updatePage}
                       />
                     ))}
-                  </Typography>
                 </Grid>
 
                 </Grid>

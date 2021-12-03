@@ -212,11 +212,11 @@ const Assessment = () => {
     const project = JSON.parse(localStorage.getItem('projectName'));
     const { projectId } = project.projectName;
     const baseUrl = localStorage.getItem('apiBaseUrl');
-    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
-    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ?  specificPerformance.data.data.results[0].checklistGroups :[];
 
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
-    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
 
     apiDataPerformance.map((value) => {
       const checkList = [];

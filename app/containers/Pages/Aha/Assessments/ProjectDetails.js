@@ -50,7 +50,6 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../../utils/constants";
-import ProjectAreaHazards from "./ProjectAreaHazards"
 import Loader from "../../Loader"
 
 const useStyles = makeStyles((theme) => ({

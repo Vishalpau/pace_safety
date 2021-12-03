@@ -442,7 +442,6 @@ const FlhaDetails = () => {
   const descriptionElementRef = useRef(null);
   const [projectData, setProjectData] = useState({ projectName: "" })
   const [pickListValues, setPickListValues] = useState({})
-  const [notifyToValue, setNotifyToValue] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [versionSelected, setVersionSelected] = useState("")
   const [buttonLoading, setButtonLoading] = useState(false)
@@ -506,10 +505,11 @@ const FlhaDetails = () => {
   };
 
   const getDepartments = async () => {
+
     let allDepartment = []
     const config = {
       method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/departments/`,
+      url: `${SSO_URL}/api/v1/companies/${JSON.parse(localStorage.getItem("company")).fkCompanyId}/departments/`,
       headers: HEADER_AUTH,
     };
     const res = await api(config);
@@ -561,7 +561,7 @@ const FlhaDetails = () => {
   }
 
   const handelTaskColor = (tasksData) => {
-    if (tasksData.length > 0) {
+    if (tasksData !== undefined && tasksData.length > 0) {
       for (var i = 0; i < tasksData.length; i++) {
         let hazardData = tasksData[i].hazards
         for (var j = 0; j < hazardData.length; j++) {
@@ -778,35 +778,6 @@ const FlhaDetails = () => {
     }
   }
 
-  const handelNotifyToValues = async () => {
-    let allRoles = {}
-    const config = {
-      method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
-      headers: HEADER_AUTH,
-    };
-    const notify = await api(config);
-    if (notify.status === 200) {
-      const result = notify.data.data.results;
-      result.map((value) => {
-        allRoles[value["id"]] = value["roleName"]
-      })
-      setNotifyToValue(allRoles);
-    }
-  }
-
-  const handelNotifyTo = async (e, value) => {
-    let temp = { ...flhaForm }
-    !Array.isArray(temp["notifyTo"]) ? temp["notifyTo"] = [] : temp["notifyTo"] = temp["notifyTo"]
-    if (e.target.checked === false) {
-      const newData = temp.notifyTo.filter((item) => item !== value);
-      temp["notifyTo"] = newData
-    } else {
-      temp["notifyTo"].push(value)
-    }
-    setFlhaForm(temp)
-  };
-
   const handelJobVisualAttachment = (index) => {
     let confirmationStatus = jobVisualConfirmation[index]["visualConfirmationStatus"]
     let confirmationAttahment;
@@ -878,7 +849,6 @@ const FlhaDetails = () => {
     await fetchFlhaData();
     await fetchJobVisualData();
     await getDepartments();
-    await handelNotifyToValues();
     // await getPreventiveControls(props.match.params.id);
     await handelPickListValues()
     await setIsLoading(false)
@@ -1423,7 +1393,7 @@ const FlhaDetails = () => {
                                                   {/* risk color */}
 
                                                   <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
-                                                    {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
+                                                    {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel}` : ''}
                                                   </Grid>
 
                                                 </Grid>
@@ -1531,13 +1501,13 @@ const FlhaDetails = () => {
                                       }}
                                       disabled={handelJobVisualAttachment(index)}
                                     />
-                                    
-                    {jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
-                      null ? null : typeof jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
-                        "string" ? (
-                      <Attachment value={jobVisualConfirmation[index]["visualConfirmationAttachment"]} />
-                    ) : null}
-                  
+
+                                    {jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
+                                      null ? null : typeof jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
+                                        "string" ? (
+                                      <Attachment value={jobVisualConfirmation[index]["visualConfirmationAttachment"]} />
+                                    ) : null}
+
                                     {/* <IconButton aria-label="delete" align="right">
                                       <DeleteIcon onClick={(e) => handelVisualAttachmentRemove(index)} />
                                     </IconButton> */}
@@ -1701,7 +1671,7 @@ const FlhaDetails = () => {
                         <FormControl component="fieldset">
                           <FormLabel component="legend" className="checkRadioLabel">*Is a First Aid/Medical Aid present for your shift?</FormLabel>
                           <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                            {radioDecide.map((value) => (
+                            {radioDecide.slice(0, 2).map((value) => (
                               <FormControlLabel
                                 value={value}
                                 className="selectLabel"
@@ -1740,7 +1710,7 @@ const FlhaDetails = () => {
                         <FormControl component="fieldset">
                           <FormLabel component="legend" className="checkRadioLabel">*Has the JSA been reviewed?</FormLabel>
                           <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                            {radioDecide.map((value) => (
+                            {radioDecide.slice(0, 2).map((value) => (
                               <FormControlLabel
                                 value={value}
                                 className="selectLabel"
@@ -1779,7 +1749,7 @@ const FlhaDetails = () => {
                         <FormControl component="fieldset">
                           <FormLabel component="legend" className="checkRadioLabel">*Do you have access to job procedure?</FormLabel>
                           <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
-                            {radioDecide.map((value) => (
+                            {radioDecide.slice(0, 2).map((value) => (
                               <FormControlLabel
                                 value={value}
                                 className="selectLabel"
@@ -1817,14 +1787,16 @@ const FlhaDetails = () => {
                   <div className={classes.loadingWrapper}>
 
                     <Button
-                      variant="outlined"
+                      size="medium"
+                      variant="contained"
+                      color="primary"
                       onClick={(e) => handelFlhaSubmit()}
-                      className={classes.custmSubmitBtn}
+                      className="spacerRight buttonStyle"
                       style={{ marginLeft: "10px" }}
                       disabled={buttonLoading}
                     >
 
-                      Next
+                      Submit
                     </Button>
                     {buttonLoading && (
                       <CircularProgress
