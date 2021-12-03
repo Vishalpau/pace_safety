@@ -215,28 +215,17 @@ function Aha(props) {
     const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
     localStorage.setItem('fkAHAId', id)
     handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
-    //console.log("Ashutosh")
     history.push(
       `/app/pages/aha/aha-summary/${id}`
     );
   };
 
   const handleNewAhaPush = async () => {
-    //console.log("Ashutosh")
     localStorage.removeItem('fkAHAId')
     history.push(
       "/app/pages/aha/assessments/project-details"
     );
   };
-
-  // const fetchAllAHAData = async () => {
-  //   const res = await api.get("/api/v1/ahas/")
-  //   const result = res.data.data.results.results
-
-  //   await setAllAHAData(result)
-  //   // await handelTableView(result)
-  // }
-
 
   const fetchAllAHAData = async () => {
     await setPage(1)
@@ -280,37 +269,14 @@ function Aha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     const res = await api.get(`api/v1/ahas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    console.log("----------", res)
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
   };
 
-
-
-  const handelTableView = (result) => {
-    const temp = []
-    result.filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-      item[1]["description"].toLowerCase().includes(
-        searchIncident.toLowerCase()
-      )).map((item, index) => {
-        temp.push([
-          item[1]["ahaNumber"],
-          item[1]['location'],
-          item[1]['createdBy'],
-          item[1]['createdAt']
-        ])
-      })
-    setData(temp)
-  }
-
-  console.log(allAHAData);
-
-  //   Assigning 'classes' to useStyles()
   const classes = useStyles();
 
   useEffect(() => {
     fetchAllAHAData()
-    // handleProjectList()
     allPickListDataValue()
   }, [props.projectName.breakDown, searchIncident])
   return (
@@ -379,7 +345,7 @@ function Aha(props) {
           </div>
 
           {cardView ? (<>
-            {allAHAData.length > 0 && Object.entries(allAHAData).map((item, index) => (
+            {allAHAData.length > 0 ? Object.entries(allAHAData).map((item, index) => (
               <Card variant="outlined" className={Incidents.card}>
                 <CardContent>
                   <Grid container spacing={3}>
@@ -560,7 +526,16 @@ function Aha(props) {
                     </Grid>}
                   </Grid>
                 </CardActions>
-              </Card>))}</>)
+              </Card>))
+              :
+              <Card variant="outlined" className={Incidents.card}>
+                <CardContent>
+                  <Grid container spacing={3} justify="center">
+                    Sorry, no matching records found
+                  </Grid>
+                </CardContent>
+              </Card>
+            }</>)
             : (
               <MUIDataTable
                 title="Aha List"

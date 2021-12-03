@@ -11,7 +11,7 @@ export const APPROVAL_FORM = {
 }
 
 export const LESSION_LEARNED_FORM = {
-    "Lesson Learned": `/app/pages/jha/lessons-learned/lessons-learned`
+    "Lessons Learned": `/app/pages/jha/lessons-learned/lessons-learned`
 }
 
 export const SUMMARY_FORM = {

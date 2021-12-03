@@ -27,8 +27,6 @@ import apiAction from "../../utils/axiosActionTracker";
 import {
   access_token,
   ACCOUNT_API_URL,
-  userId,
-  userName
 } from "../../utils/constants";
 import { handelCommonObject, fetchReportedBy } from "../../utils/CheckerValue";
 
@@ -44,9 +42,28 @@ const useStyles = makeStyles((theme) => ({
     top: theme.spacing(1),
     right: theme.spacing(1),
   },
+  button: {
+    marginRight: "20px",
+  },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
+
 }));
 
 export default function ActionTracker(props) {
+  const userName = JSON.parse(localStorage.getItem('userDetails')).name
+  const userId = JSON.parse(localStorage.getItem('userDetails')).id
   const [form, setForm] = useState({
     fkCompanyId: props.fkCompanyId,
     fkProjectId: props.fkProjectId,
@@ -95,6 +112,7 @@ export default function ActionTracker(props) {
   const [isLoading, setLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
 
+
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
       const res = await apiAction.get(`/api/v1/actions/${props.actionID}/`)
@@ -123,7 +141,7 @@ export default function ActionTracker(props) {
   };
 
   const select = async () => {
-    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
+    // await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
   }
 
   const handleClickOpen = async () => {
@@ -146,7 +164,10 @@ export default function ActionTracker(props) {
       if (form["severity"] === "") {
         form["severity"] = "Normal"
       }
-      form["plannedEndDate"] = form["plannedStartDate"]
+      form["assignToName"] === "" ? form["assignToName"] = userName : form["assignToName"] = form["assignToName"]
+      if (form["plannedEndDate"] === null) {
+        form.plannedEndDate = new Date()
+      }
       let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
       if (res.status == 201) {
         await setError({ actionTitle: "" });
@@ -221,24 +242,34 @@ export default function ActionTracker(props) {
             </Grid>
 
             {/* assigen */}
-            <Grid item md={12}>
-              <Autocomplete
-                id="combo-box-demo"
-                options={reportedByName}
-                className={classes.mT30}
-                getOptionLabel={(option) => option.name}
-                onChange={(e, option) =>
-                  setForm({
-                    ...form,
-                    assignTo: option.id,
-                    assignToName: option.name
-                  })
-                }
-                renderInput={(params) => <TextField {...params}
-                  label="Assignee" variant="outlined" />}
-                defaultValue={reportedByName.find(value => value.name == userName)}
-                error={error.assignTo}
-              />
+            <Grid item xs={12}>
+              {reportedByName[0] !== "No users found" ?
+                <Autocomplete
+                  id="combo-box-demo"
+                  options={reportedByName}
+                  className={classes.mT30}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(e, option) =>
+                    setForm({
+                      ...form,
+                      assignTo: option.id,
+                      assignToName: option.name
+                    })
+                  }
+                  renderInput={(params) => <TextField {...params}
+                    label="Assignee" variant="outlined" />}
+                  defaultValue={reportedByName.find(value => value.name == userName)}
+                  error={error.assignTo}
+                />
+                :
+                <TextField
+                  className={classes.formControl}
+                  id="filled-basic"
+                  variant="outlined"
+                  label="Assignee"
+                  disabled={true}
+                />
+              }
             </Grid>
 
             {/* due date */}
@@ -289,11 +320,35 @@ export default function ActionTracker(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={(e) => handelSubmit()} color="primary">
-            {isLoading ? <CircularProgress /> : "Create action"}
-          </Button>
+          {reportedByName[0] !== "No users found" ?
+            <>
+              <div className={classes.loadingWrapper}>
+                <Button
+                  variant="contained"
+                  onClick={(e) => handelSubmit()}
+                  className={classes.button}
+                  disabled={isLoading}
+                >
+                  Create action
+                </Button>
+                {isLoading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+            </>
+            :
+            <div style={{ marginRight: "29px", color: "red" }}>
+              Please add user to add action
+            </div>
+          }
         </DialogActions>
       </Dialog>
     </>
   );
 }
+
+
+
