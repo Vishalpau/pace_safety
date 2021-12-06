@@ -132,6 +132,7 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const apiData = res.data.data.results;
+    console.log(apiData)
     setForm(apiData);
     setIsLoading(true)
   };
@@ -274,12 +275,12 @@ const Approvals = () => {
                   </Typography>
                   <Button
                     variant="contained"
-                    color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
+                    color={form.wrpApprovalUser == null ? "primary" : "secondary"}
                     className={classes.approvalButton}
                     onClick={(e) => { setOpen(true), setPerson("Competent Person (CP)") }}
-                  // disabled={form.wrpApprovalUser !== null}
+                    disabled={form.wrpApprovalUser !== null}
                   >
-                    {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
+                    {form.wrpApprovalUser == null ? "Approve Now" : "Approved"}
                   </Button>
                   <div>
                     {form.wrpApprovalDateTime !== undefined
@@ -300,7 +301,7 @@ const Approvals = () => {
                     color={form.sapApprovalUser === null ? "primary" : "secondary"}
                     className={classes.approvalButton}
                     onClick={(e) => { setOpen(true), setPerson("Senior Authorized Person (SAP)") }}
-                  // disabled={form.sapApprovalUser !== null}
+                    disabled={form.sapApprovalUser !== null}
                   >
                     {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
                   </Button>
