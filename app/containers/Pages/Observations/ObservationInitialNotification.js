@@ -311,25 +311,19 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
+          console.log(result,"LLLLL");
           const userDetails =
             JSON.parse(localStorage.getItem("userDetails")) !== null
               ? JSON.parse(localStorage.getItem("userDetails"))
               : null;
-          let us = {
-            inputValue: userDetails.name,
-            reportedById: userDetails.id,
-            badgeNo: userDetails.badgeNo,
-          };
+        
           let user = [];
 
-          let data = result.filter((item) =>
-            item['companyId'] == fkCompanyId
-          )
-          for (var i in data[0].users) {
+          for (var i in result.users) {
             let temp = {};
-            temp["inputValue"] = data[0].users[i].name;
-            temp["reportedById"] = data[0].users[i].id;
-            temp["badgeNo"] = data[0].users[i].badgeNo;
+            temp["inputValue"] = result.users[i].name;
+            temp["reportedById"] = result.users[i].id;
+            temp["badgeNo"] = result.users[i].badgeNo;
             user.push(temp);
           }
           setReportedByDetails(user);

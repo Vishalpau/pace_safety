@@ -406,7 +406,7 @@ function Aha(props) {
                             <CalendarTodayIcon fontSize="small" />
                             <span className={Fonts.listingLabelValue}>
                               {moment(item[1]["assessmentDate"]).format(
-                                "Do MMMM YYYY"
+                                "Do MMM YYYY"
                               )}
                             </span>
                           </Typography>
@@ -439,7 +439,7 @@ function Aha(props) {
 
                       <Typography variant="body1" className={Fonts.listingLabelValue}>
                         {moment(item[1]["createdAt"]).format(
-                          "Do MMMM YYYY, h:mm:ss a"
+                          "Do MMM YYYY, h:mm:ss a"
                         )}
                       </Typography>
                     </Grid>
@@ -545,7 +545,7 @@ function Aha(props) {
                   item[1]["ahaNumber"],
                   item[1]["location"],
                   item[1]["username"],
-                  moment(item[1]["createdAt"]).format("Do MMMM YYYY, h:mm:ss a"),
+                  moment(item[1]["createdAt"]).format("Do MMM YYYY, h:mm:ss a"),
                 ])}
 
                 columns={columns}

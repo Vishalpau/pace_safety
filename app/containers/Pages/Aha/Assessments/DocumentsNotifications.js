@@ -167,7 +167,7 @@ const DocumentNotification = () => {
     ahaform["ahaStatus"] = "Done"
     await setSubmitLoader(true)
 
-      
+
     let data = new FormData()
 
     data.append("fkCompanyId", ahaform.fkCompanyId)
@@ -193,7 +193,6 @@ const DocumentNotification = () => {
       data.append("link", ahaform.link)
     data.append("notifyTo", ahaform.notifyTo)
     data.append("permitToPerform", ahaform.permitToPerform),
-      data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
       data.append("picApprovalUser", ahaform.picApprovalUser),
       data.append("signedUser", ahaform.signedUser),
       data.append("signedDateTime", ahaform.signedDateTime),
@@ -237,33 +236,20 @@ const DocumentNotification = () => {
       </IconButton>
     </>
   ));
-  // const handleNotification = (e ,value) => {
-  //   temp = {...form}
-  //   tempdata  = []
-  //   if(e.target.checked=== true) {
-  //     temp
-  //   }
-  // }
   const [notifyToList, setNotifyToList] = useState([]);
   const handleNotification = async (e, value) => {
     if (e.target.checked === true) {
       let temp = [...notifyToList];
-
       temp.push(value)
       let uniq = [...new Set(temp)];
       setNotifyToList(uniq)
-
       setAHAForm({ ...ahaform, notifyTo: temp.toString() });
     } else {
       let temp = [...notifyToList];
-
       let newData = temp.filter((item) => item !== value);
-
       setNotifyToList(newData);
       setAHAForm({ ...ahaform, notifyTo: newData.toString() });
-
     }
-
   };
 
   const handleFile = (e) => {
