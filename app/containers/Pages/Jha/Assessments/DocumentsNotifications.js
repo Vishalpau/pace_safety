@@ -149,6 +149,7 @@ const DocumentNotification = () => {
     const jhaId = handelJhaId();
     const res = await api.get(`/api/v1/jhas/${jhaId}/`);
     const apiData = res.data.data.results;
+    console.log(apiData)
     setForm(apiData);
     handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
 
@@ -262,9 +263,14 @@ const DocumentNotification = () => {
       data.append('notifyTo', form.notifyTo !== null ? form.notifyTo.toString() : null);
       data.append('link', form.link);
       data.append('jhaAssessmentAttachment', form.jhaAssessmentAttachment);
+      data.append('jhaStatus', "Close")
+      data.append("jhaStage", "Assessment")
       await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiError());
     } else {
       delete form.jhaAssessmentAttachment;
+      form["jhaStatus"] = "Close"
+      form["jhaStage"] = "Assessment"
+      form["link"] = ""
       form.notifyTo = form.notifyTo !== undefined && form.notifyTo.toString();
       await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, form).catch(() => handelApiError());
     }

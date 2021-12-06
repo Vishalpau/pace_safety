@@ -166,7 +166,7 @@ const LessonsLearned = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
+    let allAction = await handelActionWithEntity(jhaId, "jha:lessonLearned")
     setActionData(allAction)
   };
 
@@ -177,6 +177,8 @@ const LessonsLearned = () => {
       if (form["anyLessonsLearnt"] == null) {
         form["anyLessonsLearnt"] = ""
       }
+      form["jhaStage"] = "Lesson learned"
+      form["jhaStatus"] = "Close"
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       history.push(SUMMARY_FORM["Summary"])
     }
@@ -303,7 +305,7 @@ const LessonsLearned = () => {
                           <p><small>Create an action to share lesson learnt</small></p>
                           <Typography variant="h6" gutterBottom className={classes.labelName}>
                             <ActionTracker
-                              actionContext="jha:lessionLearned"
+                              actionContext="jha:lessonLearned"
                               enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                               setUpdatePage={setUpdatePage}
                               updatePage={updatePage}
@@ -375,7 +377,7 @@ const LessonsLearned = () => {
               <FormSideBar
                 deleteForm={"hideArray"}
                 listOfItems={LESSION_LEARNED_FORM}
-                selectedItem={"Lesson Learned"}
+                selectedItem={"Lessons Learned"}
               />
             </Col>
           </Row>

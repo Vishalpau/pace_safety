@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -30,14 +31,18 @@ import axios from "axios";
 import { PapperBlock } from 'dan-components';
 import Fonts from 'dan-styles/Fonts.scss';
 import Styles from 'dan-styles/Summary.scss';
+import MuiAlert from '@material-ui/lab/Alert';
 import moment from "moment";
-import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
 import { handelActionData } from "../../../utils/CheckerValue";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
+import Snackbar from '@material-ui/core/Snackbar';
 import { Comments } from "../../pageListAsync";
 import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
 
@@ -124,6 +129,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function JhaSummary() {
   const [assessmentsView, setAssessmentsView] = useState(true);
   const [approvalsView, setApprovalsView] = useState(false);
@@ -133,7 +142,6 @@ function JhaSummary() {
   const history = useHistory();
   const [assessment, setAssessment] = useState({})
   const [expanded, setExpanded] = useState(false);
-  const [expandedHazard, setExpandedHazard] = useState(false);
   const [projectStructure, setProjectStructure] = useState({})
   const [team, setTeam] = useState([])
   const [hazard, setHazard] = useState([])
@@ -153,6 +161,9 @@ function JhaSummary() {
   })
   const [projectStructName, setProjectStructName] = useState([])
   const [allActionType, setAllActionType] = useState({})
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [messageSnackBar, setMessageSnackbar] = useState("")
+  const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
@@ -168,7 +179,7 @@ function JhaSummary() {
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
-    let assessmentDecider = result.notifyTo !== null
+    let assessmentDecider = result.link !== null
     let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
@@ -180,6 +191,17 @@ function JhaSummary() {
       lessionLeranedStatus: lessionDecider
     })
   }
+
+  const handleClickSnackBar = () => {
+    setOpenSnackBar(true);
+  };
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
   const handelProjectStructre = () => {
     const project = JSON.parse(localStorage.getItem("projectName"))
@@ -206,16 +228,19 @@ function JhaSummary() {
       "/app/pages/Jha/assessments/project-details/"
     );
   };
+
   const handleJhaApprovalsPush = async () => {
     history.push(
       "/app/pages/jha/approvals/approvals"
     );
   };
+
   const handleJhaLessonLearnPush = async () => {
     history.push(
       "/app/pages/jha/lessons-learned/lessons-learned"
     );
   };
+
   const handleClosePush = async () => {
     history.push("/app/pages/jha/close-out");
   };
@@ -225,7 +250,7 @@ function JhaSummary() {
   };
 
   const handelActionTracker = async (resultHazard) => {
-    let actionType = { "jha:hazard": [], "jha:lessionLearned": [], "jha:approval": [] }
+    let actionType = { "jha:hazard": [], "jha:lessonLearned": [], "jha:approval": [] }
     let jhaId = localStorage.getItem("fkJHAId")
     let allAction = await handelActionData(jhaId, [], "title")
 
@@ -278,7 +303,6 @@ function JhaSummary() {
     await setProjectData({ ...projectData, projectId: projectId, companyId: fkCompanyId })
   }
   const handelShowData = () => { }
-  const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const assessmentDataValues = async () => {
     const project = JSON.parse(localStorage.getItem("projectName"))
@@ -286,10 +310,10 @@ function JhaSummary() {
     const baseUrl = localStorage.getItem("apiBaseUrl")
     var tempPerformance = {}
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
-    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ? specificPerformance.data.data.results[0].checklistGroups : [];
 
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
-    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
 
     apiDataPerformance.map((value) => {
       value.checkListValues.map((checkValue) => {
@@ -348,25 +372,36 @@ function JhaSummary() {
     } catch (error) { }
   };
 
+  const handelApprovalTabStatus = () => {
+    let approvalStatusDecide;
+    assessment["wrpApprovalUser"] !== null &&
+      assessment["sapApprovalDateTime"] !== null ? approvalStatusDecide = true : approvalStatusDecide = false
+    return approvalStatusDecide
+  }
+
 
   let errorMessage = "Please fill"
-  let errorApproval = "approval"
+  let errorAssessment = "assessments"
+  let errorApproval = "approvals"
   let errorLession = "lession learned"
+  let errorCloseOut = "close out"
 
-  const viewSwitch = (viewName) => {
-    if (viewName == "assessment") {
-      if (formStatus.assessmentStatus) {
-        setAssessmentsView(true);
-      } else {
-        history.push(`/app/pages/Jha/assessments/project-details/`)
-      }
-      setApprovalsView(false);
-      setCloseOutView(false);
-      setLessonsLearnedView(false);
-      setCommentsView(false)
-    } else if (viewName == "approval") {
+  const handleAssessmentViewChanges = () => {
+    if (formStatus.assessmentStatus) {
+      setAssessmentsView(true);
+    } else {
+      history.push(`/app/pages/Jha/assessments/project-details/`)
+    }
+    setApprovalsView(false);
+    setCloseOutView(false);
+    setLessonsLearnedView(false);
+    setCommentsView(false)
+  }
+
+  const handelApprovalViewChange = () => {
+    if (formStatus.assessmentStatus === true) {
       setAssessmentsView(false);
-      if (formStatus.approvalStatus) {
+      if (handelApprovalTabStatus()) {
         setApprovalsView(true);
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
@@ -374,7 +409,15 @@ function JhaSummary() {
       setCloseOutView(false);
       setLessonsLearnedView(false);
       setCommentsView(false)
-    } else if (viewName == "lession") {
+    } else {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment}`)
+      handleClickSnackBar()
+    }
+
+  }
+
+  const handelLessionLearnedChanges = () => {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === true) {
       setAssessmentsView(false);
       setApprovalsView(false);
       setCloseOutView(false);
@@ -384,13 +427,20 @@ function JhaSummary() {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
       }
       setCommentsView(false)
-    } else if (viewName == "comments") {
-      setAssessmentsView(false);
-      setApprovalsView(false);
-      setCloseOutView(false);
-      setLessonsLearnedView(false);
-      setCommentsView(true)
-    } else if (viewName = "closeOut") {
+    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval} and ${errorCloseOut}`)
+      handleClickSnackBar()
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorApproval} and ${errorCloseOut}`)
+      handleClickSnackBar()
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorCloseOut}`)
+      handleClickSnackBar()
+    }
+  }
+
+  const handelCloseOutViewChanges = () => {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true) {
       setAssessmentsView(false);
       setApprovalsView(false);
       if (formStatus.closeOutStatus) {
@@ -400,8 +450,49 @@ function JhaSummary() {
       }
       setLessonsLearnedView(false);
       setCommentsView(false)
+    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval}`)
+      handleClickSnackBar()
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorApproval}`)
+      handleClickSnackBar()
     }
   }
+
+  const handelCommentsViewChange = () => {
+    setAssessmentsView(false);
+    setApprovalsView(false);
+    setCloseOutView(false);
+    setLessonsLearnedView(false);
+    setCommentsView(true)
+  }
+
+  const viewSwitch = (viewName) => {
+    if (viewName == "assessment") {
+      handleAssessmentViewChanges()
+    } else if (viewName == "approval") {
+      handelApprovalViewChange()
+    } else if (viewName == "lession") {
+      handelLessionLearnedChanges()
+    } else if (viewName == "comments") {
+      handelCommentsViewChange()
+    } else if (viewName = "closeOut") {
+      handelCloseOutViewChanges()
+    }
+  }
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackBar}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   const handelCallBack = async () => {
     await setLoader(true)
@@ -443,7 +534,7 @@ function JhaSummary() {
                   Assessments
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.assessmentStatus ? "Done" : ""}
+                  {formStatus.assessmentStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -452,9 +543,9 @@ function JhaSummary() {
                   color={approvalsView ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
-                  variant={formStatus.approvalStatus ? "contained" : "outlined"}
+                  variant={handelApprovalTabStatus() ? "contained" : "outlined"}
                   endIcon={
-                    formStatus.approvalStatus ? <CheckCircle /> : <AccessTime />
+                    handelApprovalTabStatus() ? <CheckCircle /> : <AccessTime />
                   }
                   className={classes.statusButton}
                   onClick={(e) => viewSwitch("approval")}
@@ -462,7 +553,7 @@ function JhaSummary() {
                   Approvals
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.approvalStatus ? "Done" : ""}
+                  {handelApprovalTabStatus() ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -481,7 +572,7 @@ function JhaSummary() {
                   Close out
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.closeOutStatus ? "Done" : ""}
+                  {formStatus.closeOutStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -500,7 +591,7 @@ function JhaSummary() {
                   Lessons Learned
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.lessionLeranedStatus ? "Done" : ""}
+                  {formStatus.lessionLeranedStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -1053,7 +1144,7 @@ function JhaSummary() {
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {assessment.wrpApprovalDateTime !== null ?
                                       <>
-                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMMM YYYY")}
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMM YYYY")}
                                       </>
                                       : "-"
                                     }
@@ -1092,7 +1183,7 @@ function JhaSummary() {
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {assessment.sapApprovalDateTime !== null ?
                                       <>
-                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMMM YYYY")}
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMM YYYY")}
                                       </>
                                       : "-"
                                     }
@@ -1160,7 +1251,7 @@ function JhaSummary() {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {allActionType["jha:lessionLearned"].map((value) => (
+                                    {allActionType["jha:lessonLearned"].map((value) => (
                                       <>
                                         <ActionShow
                                           action={{ id: value.id, number: value.actionNumber }}
@@ -1207,13 +1298,12 @@ function JhaSummary() {
                                     Closed on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.closedDate)).format("DD-Mo-YYYY")}
+                                    {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
 
                                   </Typography>
                                 </Grid>
                               </Grid>
                             </Grid>
-
 
                           </>
                         )
@@ -1249,7 +1339,7 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.assessmentStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Assessments" />
+                      <ListItemText primary={formStatus.assessmentStatus ? "Update assessment" : "Add assessment"} />
                     </ListItemLink>
 
                     <ListItemLink
@@ -1259,7 +1349,7 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.approvalStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Approvals" />
+                      <ListItemText primary={formStatus.approvalStatus ? "Update approval" : "Add approval"} />
                     </ListItemLink>
 
                     <ListItemLink
@@ -1268,7 +1358,8 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Lessons Learned" />
+                      {/* Lessons Learned */}
+                      <ListItemText primary={formStatus.lessionLeranedStatus ? "Update lessons learned" : "Add lessons learned"} />
                     </ListItemLink>
 
                     <ListItem
@@ -1331,6 +1422,15 @@ function JhaSummary() {
         </>
         : "Loading..."
       }
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="warning">
+          {messageSnackBar}
+        </Alert>
+      </Snackbar>
     </PapperBlock >
 
   );

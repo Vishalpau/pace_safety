@@ -149,6 +149,8 @@ const CloseOut = () => {
         }
         await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
+        form["jhaStage"] = "Close out"
+        form["jhaStatus"] = "Close"
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, jhaListData)
         if (res.status == 200) {
             history.push(SUMMARY_FORM["Summary"])
@@ -185,7 +187,7 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
-                                    onClick={(e) => setIsDateShow(true)}
+                                    // onClick={(e) => setIsDateShow(true)}
                                     // error={error.closeDate}
                                     // helperText={
                                     //     error.closeDate ? error.closeDate : null
@@ -206,7 +208,7 @@ const CloseOut = () => {
                                     //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
                                     //     });
                                     // }}
-                                    disabled
+                                    disabled={true}
                                     disableFuture
                                     InputProps={{ readOnly: true }}
                                     open={isDateShow}
