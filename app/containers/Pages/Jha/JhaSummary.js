@@ -313,10 +313,9 @@ function JhaSummary() {
     const projectId = project.projectName.projectId
     const baseUrl = localStorage.getItem("apiBaseUrl")
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
-    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups
-    console.log(apiDataPerformance)
-    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`)
-    const apiCondition = documentCondition.data.data.results[0].checklistValues
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ?  specificPerformance.data.data.results[0].checklistGroups :[];
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
     console.log(apiCondition)
   }
 

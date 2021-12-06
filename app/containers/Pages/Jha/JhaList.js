@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -34,6 +34,11 @@ import MUIDataTable from 'mui-datatables';
 import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import moment from 'moment';
+import api from "../../../utils/axios";
+import { connect } from "react-redux";
+import Pagination from '@material-ui/lab/Pagination';
+import Loader from "../Loader"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,11 +123,26 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     color: 'rgba(0, 0, 0, 0.87) !important',
   },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '10px',
+  },
 }));
 
-function JhaList() {
+function JhaList(props) {
   const [incidents] = useState([]);
+  const [cardView, setCardView] = useState(true);
+  const [tableView, setTableView] = useState(false);
+  const [allJHAData , setAllJHAData] = useState([])
   const [listToggle, setListToggle] = useState(false);
+  const [searchIncident, setSeacrhIncident] = useState("");
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handelView = (e) => {
     setListToggle(false);
@@ -133,13 +153,9 @@ function JhaList() {
 
   const [value, setValue] = React.useState(2);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  
   //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
-const data = [
+  const data = [
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
@@ -152,7 +168,7 @@ const data = [
     print: false,
     filter: false,
     search: false,
-    download: true,
+    download: false,
     viewColumns: false,
     selectableRowsHideCheckboxes: false,
     selectableRowsHeader: false,
@@ -161,28 +177,130 @@ const data = [
     selectableRows: false,
     rowsPerPage: 10,
     page: 0,
+    pagination:false
+  };
+
+  const fetchAllJHAData = async () => {
+    await setPage(1)
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+  let struct = "";
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+    if(props.assessment === "My Assessments"){
+      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+  
+      const result = res.data.data.results.results
+      await setAllJHAData(result)
+      await setTotalData(res.data.data.results.count)
+            await setPageData(res.data.data.results.count / 25)
+            let pageCount = Math.ceil(res.data.data.results.count / 25)
+            await setPageCount(pageCount)
+    }else{
+      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+  
+      const result = res.data.data.results.results
+      await setAllJHAData(result)
+      await setTotalData(res.data.data.results.count)
+            await setPageData(res.data.data.results.count / 25)
+            let pageCount = Math.ceil(res.data.data.results.count / 25)
+            await setPageCount(pageCount)
+    }
+    await setIsLoading(true)
+  };
+
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  if(props.assessment === "My Assessments"){
+    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value)
+  }else{
+    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllJHAData(res.data.data.results.results);
+    await setPage(value)
+  }
   };
 
   const classes = useStyles();
 
+  useEffect(() => {
+    fetchAllJHAData()
+},[props.projectName.breakDown,props.search,props.assessment])
+
   return (
     <>
       <Box>
+      {isLoading ? <>
         <TableContainer component={Paper}>
           <Grid component={Paper}>
               <MUIDataTable
                 //title="Observations List"
                 className="dataTableSectionDesign"
-                data={data}
+                data={Object.entries(allJHAData).map((item) => [
+                      item[1]["jhaNumber"],
+                      item[1]["typeOfPermit"],
+                      item[1]["username"],
+                      item[1]["jhaStatus"],
+                      item[1]['createdByName'],
+                      moment(item[1]["createdAt"]).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                ),
+                      item[1]["-"],
+                      item[1]["wrpApprovalUser"],
+                      moment(item[1]["wrpApprovalDateTime"]).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                )
+                ])}
                 columns={columns}
                 options={options}
                 //className="classes.dataTableNew"
               />
               </Grid>
             </TableContainer>
+            <div className={classes.pagination}>
+      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div></> : null}
       </Box>
     </>
   );
 }
 
-export default JhaList;
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(JhaList);
+

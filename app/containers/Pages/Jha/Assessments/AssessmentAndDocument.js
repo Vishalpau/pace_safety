@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#06425c',
         lineHeight: '30px',
         border: 'none',
-        marginTop: '12px',
+        marginTop: '0px',
         '&:hover': {
             backgroundColor: '#ff8533',
             border: 'none',
@@ -227,10 +227,10 @@ const AssessmentAndDocument = () => {
         const { projectId } = project.projectName;
         const baseUrl = localStorage.getItem('apiBaseUrl');
         const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
-        const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+        const apiDataPerformance = specificPerformance.data.data.results.length > 0 ?  specificPerformance.data.data.results[0].checklistGroups :[];
 
         const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
-        const apiCondition = documentCondition.data.data.results[0].checklistValues;
+        const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
 
         apiDataPerformance.map((value) => {
             const checkList = [];
@@ -392,14 +392,14 @@ const AssessmentAndDocument = () => {
 
     const classes = useStyles();
 
+    let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
     const handelCallBack = async () => {
         await setLoading(true);
         await handelCheckList();
         await handelJobDetails();
         await handelActionLink();
-        PickListData(78).then((results) => {
-            setRisk(results);
-        });
+        setRisk(pickListValues["78"])
         await handelActionTracker();
         await setLoading(false);
     };

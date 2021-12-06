@@ -227,12 +227,12 @@ const LessonsLearned = () => {
                           className={classes.formBox}
                         >
                           <FormControl component="fieldset">
-                            <FormLabel component="legend" className={classes.labelName}>Are there any lessons learned?</FormLabel>
+                          <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?</FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
                               {radioDecide.map((value) => (
                                 <FormControlLabel
                                   value={value}
-                                  className={classes.labelValue}
+                                  className="selectLabel"
                                   control={<Radio />}
                                   label={value}
                                   checked={form.anyLessonsLearnt == value}
@@ -246,37 +246,37 @@ const LessonsLearned = () => {
                         </Grid>
                         {form.anyLessonsLearnt == "Yes" ?
                           <>
-                            <Grid
-                              item
-                              md={12}
-                              xs={12}
-                              className={classes.formBox}
-                            >
-                              <Typography variant="h6" className={classes.fildTitle}>
-                                Work Completion and Lessons Learned Discussion
-                              </Typography>
-
-                              <List margin="dense">
-                                <ListItem>
-                                  <ListItemText
-                                    primary="1. What, where and when?"
-                                    className={classes.fildLableTitle}
-                                  />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText
-                                    primary="2. How could the job have been improved?"
-                                    className={classes.fildLableTitle}
-                                  />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText
-                                    primary="3. Lessons Learned"
-                                    className={classes.fildLableTitle}
-                                  />
-                                </ListItem>
-                              </List>
-                            </Grid>
+                          <Grid
+                  item
+                  md={12}
+                  xs={12}
+                  className="paddBRemove"
+                >
+                  <FormLabel className="checkRadioLabel" component="legend">Work completion and lessons learned discussion</FormLabel>
+                  <List className="listGapRemove">
+                    <ListItem>
+                        <ListItemText
+                          primary="1. What, where and when?"
+                          //className={classes.fildLableTitle}
+                          className="selectLabel"
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                          primary="2. How could the job have been improved?"
+                          //className={classes.fildLableTitle}
+                          className="selectLabel"
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                          primary="3. Lessons learned"
+                          //className={classes.fildLableTitle}
+                          className="selectLabel"
+                        />
+                    </ListItem>
+                  </List>
+                </Grid>
 
                             <Grid
                               item
@@ -318,15 +318,7 @@ const LessonsLearned = () => {
                               {handelActionShow(localStorage.getItem("fkJHAId"))}
                             </Grid>
 
-                            <Grid
-                              item
-                              md={12}
-                              xs={12}
-                              margin="dense"
-                              className={classes.formLablBox}
-                            >
-                              <Typography variant="h6" className={classes.fildTitle}>Work Responsible Person (WRP)</Typography>
-                            </Grid>
+                            
 
                             <Grid
                               item
@@ -335,9 +327,8 @@ const LessonsLearned = () => {
                               className={classes.formBox}
                               margin="dense"
                             >
-                              <Typography className={classes.labelValue}>
+                  <FormLabel component="legend" className="viewLabel">Work responsible Person (WRP)</FormLabel>
                                 {user.name} {user.badgeNumber}
-                              </Typography>
                             </Grid>
                           </>
                           : null}
@@ -353,9 +344,7 @@ const LessonsLearned = () => {
               >
                 <div className={classes.loadingWrapper}>
                   <Button
-                    variant="outlined"
-                    size="medium"
-                    className={classes.custmSubmitBtn}
+                    size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
                     onClick={(e) => handelSubmit()}
                     style={{ marginLeft: "10px" }}
                     disabled={submitLoader}
@@ -369,6 +358,12 @@ const LessonsLearned = () => {
                     />
                   )}
                 </div>
+                <Button
+                   size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+                    onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
+                  >
+                    Cancel
+                  </Button>
               </Grid>
             </Grid>
 

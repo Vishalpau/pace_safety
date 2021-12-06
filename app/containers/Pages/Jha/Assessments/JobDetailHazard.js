@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
         top: "50%",
         left: "50%",
         marginTop: -12,
-        marginLeft: -12,
+        marginLeft: -75,
     },
     loadingWrapper: {
         margin: theme.spacing(1),

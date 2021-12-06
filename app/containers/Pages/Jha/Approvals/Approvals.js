@@ -29,6 +29,22 @@ import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import ApprovalValidator from '../Validation/ApprovalsValidation';
 
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../../utils/constants";
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -157,6 +173,15 @@ const Approvals = () => {
     ProjectStructId: "",
   });
   const [error, setError] = useState({})
+
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
   const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
 
@@ -471,23 +496,40 @@ const Approvals = () => {
                             handelShowData={handelActionTracker}
                           />
                         </Typography>
-                        <Typography className={classes.aLabelValue}>
-                          {actionData.map((value) => (
-                            <ActionShow
-                              action={{ id: value.id, number: value.actionNumber }}
-                              title={value.actionTitle}
-                              companyId={projectData.companyId}
-                              projectId={projectData.projectId}
-                              updatePage={updatePage}
-                              fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                              fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                              fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["jha"]["projectStruct"]}
-                              createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                              handelShowData={handelActionTracker}
-                            />))}
-                        </Typography>
+                       
 
                       </Grid>
+                      {actionData.length > 0 ? 
+                                  <Grid item md={12} xs={12}>
+                                    <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                                    <Table component={Paper}>
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                          <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      {/* Action show */}
+                                      <TableBody>
+                                      {actionData.map((action, index) => (<>
+                                      <TableRow>
+                                        <TableCell style={{ width: 50 }}>
+                                          <a
+                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                            target="_blank"
+                                          >{action.actionNumber}</a>
+
+                                        </TableCell>
+                                        <TableCell style={{ width: 50 }}>
+                                          {action.actionTitle}
+                                        </TableCell>
+                                        
+                                      </TableRow></>))
+                                    }
+                                    
+                                    </TableBody>
+                                    </Table>
+                                  </Grid> : null}
 
                      
                     </Grid>
@@ -501,8 +543,7 @@ const Approvals = () => {
                 >
                   <div className={classes.loadingWrapper}>
                     <Button
-                      variant="outlined"
-                      size="medium"
+                      size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
                       className={classes.custmSubmitBtn}
                       onClick={(e) => handelSubmit()}
                       disabled={submitLoader}
@@ -517,10 +558,7 @@ const Approvals = () => {
                     )}
                   </div>
                   <Button
-                    variant="outlined"
-                    size="medium"
-                    color="secondary"
-                    className={classes.custmSubmitBtn}
+                    size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
                     onClick={(e) => history.push(SUMMARY_FORM["Summary"])}
                   >
                     Cancel
