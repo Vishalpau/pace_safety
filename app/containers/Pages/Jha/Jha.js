@@ -226,7 +226,7 @@ function Jha(props) {
         value.jhaNumber,
         value.location,
         value.username,
-        moment(value.createdAt).format('Do MMMM YYYY')
+        moment(value.createdAt).format('Do MMM YYYY, h:mm:ss a')
       ])
     })
     setData(temp)
@@ -390,7 +390,7 @@ function Jha(props) {
                           <CalendarTodayIcon fontSize="small" />
                           <span className={Fonts.listingLabelValue}>
                             {moment(item[1]["assessmentDate"]).format(
-                              "Do MMMM YYYY"
+                              "Do MMM YYYY"
                             )}
                           </span>
                         </Typography>
@@ -426,7 +426,7 @@ function Jha(props) {
 
                     <Typography variant="body1" className={Fonts.listingLabelValue}>
                       {moment(item[1]["createdAt"]).format(
-                        "Do MMMM YYYY, h:mm:ss a"
+                        "Do MMM YYYY, h:mm:ss a"
                       )}
                     </Typography>
                   </Grid>
