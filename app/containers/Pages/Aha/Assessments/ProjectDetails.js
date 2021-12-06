@@ -241,7 +241,7 @@ const ProjectDetails = () => {
       "department": "",
       "additionalRemarks": "",
       "classification": "string",
-      "wrpApprovalUser": "",
+      "wrpApprovalUser": null,
       "wrpApprovalDateTime": null,
       "picApprovalUser": "",
       "picApprovalDateTime": null,
@@ -514,7 +514,7 @@ const ProjectDetails = () => {
   const pickListValue = async () => {
     permitType.current = await pickListValues["81"]
   }
-  console.log(permitType.current,"AASAS")
+  console.log(permitType.current, "AASAS")
   const classes = useStyles();
 
   useEffect(() => {
