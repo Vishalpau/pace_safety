@@ -497,7 +497,7 @@ function PersonalDashboard(props) {
                   dispatch(projectName(project[0]))
                 }
                 // fetchPermissionData();
-                history.push('/app/' + targetPage)
+                // history.push('/app/' + targetPage)
                 localStorage.removeItem("direct_loading")
               })
 
@@ -533,7 +533,7 @@ function PersonalDashboard(props) {
 
   useEffect(() => {
     handelCallBack()
-    
+
   }, [props.initialValues.companyListData]);
 
   return (
