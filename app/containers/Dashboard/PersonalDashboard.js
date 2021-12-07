@@ -358,30 +358,9 @@ function PersonalDashboard(props) {
 
   // fecthing project structure with name and label
   const handelProjectStruct = async (compId, proId, tarProjectStruct) => {
-    let selectBreakDown = []
-    try {
-      if (tarProjectStruct !== "") {
-        let redirectedBreakDown = tarProjectStruct.split(",")
-        for (let key in redirectedBreakDown) {
-          let structName = {}
-          let workAreaId = [redirectedBreakDown[key].substring(0, 2), redirectedBreakDown[key].substring(2)]
-          let config = {
-            method: "get",
-            url: `${ACCOUNT_API_URL}api/v1/companies/${compId}/projects/${proId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`,
-            headers: HEADER_AUTH,
-          };
-          const workArea = await api(config);
-          let result = workArea.data.data.results[0]
-          structName["depth"] = result["depth"]
-          structName["id"] = result["id"]
-          structName["name"] = result["name"]
-          structName["label"] = result["structure_name"]
-          selectBreakDown.push(structName)
-        }
-      }
-      localStorage.setItem("selectBreakDown", JSON.stringify(selectBreakDown))
-      dispatch(breakDownDetails(selectBreakDown))
-    } catch { }
+    let breakDownData = JSON.parse(tarProjectStruct)
+    localStorage.setItem("selectBreakDown", JSON.stringify(breakDownData))
+    dispatch(breakDownDetails(breakDownData))
   }
   // end fetching name and label
 
