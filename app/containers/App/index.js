@@ -141,8 +141,8 @@ function App() {
         .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
-            
-              window.location.href = "/"
+
+            window.location.href = "/"
           }
         })
         .catch(function (error) {
