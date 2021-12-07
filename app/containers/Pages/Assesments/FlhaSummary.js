@@ -299,7 +299,7 @@ class SimpleTabs extends React.Component {
                   </Paper>
                 </Grid>
 
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <FormLabel component="legend">Date</FormLabel>
                   <Typography>
                     {moment(this.state.flha.dateTimeFlha).format(
@@ -321,9 +321,10 @@ class SimpleTabs extends React.Component {
                         <Attachment value={flha.attachment} />
                       ) : null}
                     </Typography>) : ("-")}
-                </Grid>
+                </Grid> */}
 
               </Grid>
+              <Grid>
               <AppBar position="static" className={classes.headerBackground}>
                 <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
                   {(this.state.versions !== undefined && this.state.versions.length > 0) ?
@@ -342,6 +343,7 @@ class SimpleTabs extends React.Component {
               <TabContainer className={classes.paddZero}>
                 <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
               </TabContainer>
+              </Grid>
           </Grid>
           <Grid item md={3} xs={12}>
             <Paper elevation={0}>
