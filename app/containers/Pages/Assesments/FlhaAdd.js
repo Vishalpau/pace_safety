@@ -196,8 +196,7 @@ const useStyles = makeStyles((theme) => ({
   ratioColororange: {
     backgroundColor: 'orange',
     padding: '15px!important',
-    height: '70%',
-    marginTop: '12px',
+    height: '55px',
     borderRadius: '5px',
     color: '#ffffff'
   },
@@ -642,10 +641,10 @@ const FlhaDetails = (props) => {
     }).join(':');
 
     jobForm["notifyTo"] == null ?
-    jobForm["notifyTo"] = "null" :
-    jobForm["notifyTo"].length > 0 ?
-    jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
-    jobForm["notifyTo"] = "null"
+      jobForm["notifyTo"] = "null" :
+      jobForm["notifyTo"].length > 0 ?
+        jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
+        jobForm["notifyTo"] = "null"
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -1106,12 +1105,12 @@ const FlhaDetails = (props) => {
                 <div>
                   {taskForm.map((taskValue, taskIndex) => (
 
-                    <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaperAccordian}>
+                    <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className="backPaperAccordian">
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
-                        className={classes.headingColor}
+                        className="accordionHeaderSection"
                       >
                         <Typography className={classes.heading}>
                           {' '}
@@ -1131,19 +1130,19 @@ const FlhaDetails = (props) => {
                             rows="1"
                             id="taskIdentification"
                             label="Task name"
-                            className={classes.fullWidth}
+                            className="formControl"
                             value={taskForm[taskIndex]["taskIdentification"]}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
                           />
                         </Grid>
                         {taskValue.hazards.map((item, indexHazard) => (
-                          <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.backPaperSubAccordian}>
+                          <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className="backPaperSubAccordian">
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
                               aria-controls="panel2bh-content"
                               id="panel2bh-header"
-                              className={classes.accordionSubHeaderSection}
+                              className="accordionSubHeaderSection"
                             >
                               <Typography className={classes.heading}>
                                 Hazard#{indexHazard + 1} - {taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
@@ -1158,11 +1157,11 @@ const FlhaDetails = (props) => {
                             </AccordionSummary>
                             <AccordionDetails>
                               <Grid container spacing={2}>
-                                <Grid item sm={12} xs={12}>
+                                <Grid item sm={4} xs={4}>
                                   <FormControl
                                     variant="outlined"
                                     requirement
-                                    className={classes.formControl}
+                                    className="formControl"
                                   >
                                     {(taskForm[taskIndex]["hazards"][indexHazard]["hazard"]) && indexHazard === 0 && isSelectedJob ?
                                       <TextField
@@ -1171,7 +1170,7 @@ const FlhaDetails = (props) => {
                                         rows="1"
                                         id="taskIdentification"
                                         label="Hazards"
-                                        className={classes.fullWidth}
+                                        className="formControl"
                                         value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
 
                                       />
@@ -1186,7 +1185,7 @@ const FlhaDetails = (props) => {
                                           variant="outlined"
                                           rows="3"
                                           id="hazards"
-                                          className={classes.fullWidth}
+                                          className="formControl"
                                           value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
                                           // disabled={(item.hazard != undefined) ? item.hazard : ''}
                                           onChange={(e) => { handleHazardForm(e, indexHazard, taskIndex, 'hazard'), setHazardType }
@@ -1197,9 +1196,11 @@ const FlhaDetails = (props) => {
                                         </Select>
                                       </>}
                                   </FormControl>
-                                  <Grid item sm={1} xs={4}>
+                                </Grid>
+                                <Grid item md={8} sm={8} xs={8}>
                                     {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                  </Grid>
+                                </Grid>
+                                <Grid item md={12} sm={12} xs={12}>
                                   <div className={classes.spacer} id="myCode" >
                                     <FormControl component="fieldset">
                                       <FormLabel component="legend" className="checkRadioLabel">
@@ -1214,7 +1215,7 @@ const FlhaDetails = (props) => {
                                   </div>
                                 </Grid>
 
-                                <Grid container spacing={2}>
+                                {/* <Grid container spacing={3}> */}
                                   {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
 
                                     <Grid item sm={12} xs={12}>
@@ -1229,8 +1230,8 @@ const FlhaDetails = (props) => {
                                         onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
                                         }
                                       />
-
-                                      <div className={classes.spacer}>
+                                    </Grid>
+                                    <Grid item sm={12} xs={12}>
                                         <FormControl component="fieldset">
                                           <FormLabel component="legend" className="checkRadioLabel">
                                             Has this control been put in place?
@@ -1241,18 +1242,17 @@ const FlhaDetails = (props) => {
                                             <FormControlLabel value="NA" control={<Radio />} label="N/A" />
                                           </RadioGroup>
                                         </FormControl>
-                                      </div>
                                     </Grid>
                                   </> : null}
 
-                                </Grid>
+                                {/* </Grid> */}
                                 {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
-                                  <Grid container spacing={1}>
+                                  {/* <Grid container spacing={1}> */}
                                     <Grid item md={4} sm={4} xs={12}>
                                       <FormControl
                                         variant="outlined"
                                         requirement
-                                        className={classes.formControl}
+                                        className="formControl"
                                       >
                                         <InputLabel id="demo-simple-select-label">
                                           Risk severity
@@ -1279,7 +1279,7 @@ const FlhaDetails = (props) => {
                                       <FormControl
                                         variant="outlined"
                                         requirement
-                                        className={classes.formControl}
+                                        className="formControl"
                                       >
                                         <InputLabel id="demo-simple-select-label">
                                           Risk probability
@@ -1299,16 +1299,19 @@ const FlhaDetails = (props) => {
                                         </Select>
                                       </FormControl>
                                     </Grid>
-                                    <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
+                                    <Grid item md={4} sm={4} xs={12} >
+                                      <div className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
                                       {item.riskRatingLevel}
+                                    </div>
+                                     
                                     </Grid>
-                                  </Grid>
+                                  {/* </Grid> */}
                                 </> : null}
                               </Grid>
                             </AccordionDetails>
                           </Accordion>
                         ))}
-                        <Grid item xs={12} className={classes.createHazardbox}>
+                        <Grid item xs={12} className="formFieldBTNSection">
                           <Button
                             variant="contained"
                             color="primary"
