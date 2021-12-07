@@ -77,6 +77,7 @@ function App() {
     let tarPage = ''
     let tarId = 0
     let jsonCode = ""
+    let tarProjectStruct;
     if (window.location.search !== "") {
       // let state = localStorage.getItem('direct_landing')
       var search = location.search.substring(1);
@@ -85,30 +86,15 @@ function App() {
       if (state) {
         jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
         let newArr = (0, eval)('(' + jsonCode + ')')
-
         state = newArr;
-        if (state["projectStructure"] !== "") {
-          let redirectedBreakDown = state["projectStructure"].split(",")
-          let structName = {}
-          for (let key in redirectedBreakDown) {
-            let workAreaId = [redirectedBreakDown[key].substring(0, 2), redirectedBreakDown[key].substring(2)]
-            const api_work_area = axios.create({
-              baseURL: SSO_URL,
-              headers: HEADER_AUTH
-            });
-            const workArea = await
-              api_work_area.get(`/api/v1/companies/${state.companyId}/projects/${state.projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-            let result = workArea.data.data.results[0]
-            structName[result["structure_name"]] = result["structureName"]
-          }
-        }
         comId = state.companyId;
         proId = state.projectId;
         redback = state.redirect_back;
         tarPage = state.targetPage.trim();
         tarId = state.targetId;
+        tarProjectStruct = state.projectStructure
         if (comId !== "") {
-          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage }))
+          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
         }
       }
     }
@@ -120,6 +106,7 @@ function App() {
     const projectId = searchParams.get('projectId') || proId
 
     let data = {}
+    console.log(code)
     if (code) {
       if (window.location.hostname === 'localhost') {
 
@@ -155,7 +142,6 @@ function App() {
         .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
-
             window.location.href = "/"
           }
         })

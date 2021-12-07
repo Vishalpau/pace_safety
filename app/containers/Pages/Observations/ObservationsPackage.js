@@ -482,22 +482,25 @@ function Actions(props) {
     if (props.type == "All" || props.type == "Type") {
       // await setAllInitialData(result)
       if (props.observation == "My Observations") {
-        const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
-        const result = allLogInUserData.data.data.results.results
-        await setAllInitialData(result)
-        await setTotalData(allLogInUserData.data.data.results.count)
-        await setPageData(allLogInUserData.data.data.results.count / 25)
-        let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
-        await setPageCount(pageCount)
-
+        try {
+          const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
+          const result = allLogInUserData.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(allLogInUserData.data.data.results.count)
+          await setPageData(allLogInUserData.data.data.results.count / 25)
+          let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } catch { }
       } else {
-        const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
-        const result = res.data.data.results.results
-        await setAllInitialData(result)
-        await setTotalData(res.data.data.results.count)
-        await setPageData(res.data.data.results.count / 25)
-        let pageCount = Math.ceil(res.data.data.results.count / 25)
-        await setPageCount(pageCount)
+        try {
+          const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
+          const result = res.data.data.results.results
+          await setAllInitialData(result)
+          await setTotalData(res.data.data.results.count)
+          await setPageData(res.data.data.results.count / 25)
+          let pageCount = Math.ceil(res.data.data.results.count / 25)
+          await setPageCount(pageCount)
+        } catch { }
       }
     } else {
       if (props.type == "Risk") {

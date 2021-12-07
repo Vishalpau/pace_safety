@@ -1,68 +1,48 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import brand from "dan-api/dummy/brand";
-// import { Helmet } from "react-helmet";
-import { withStyles } from "@material-ui/core/styles";
-import styles from "./dashboard-jss";
-import { PapperBlock } from "dan-components";
-
-import Loading from 'dan-components/Loading';
-import "../../styles/custom/hexagon.css";
-
-import { makeStyles } from "@material-ui/core/styles";
-
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import { Typography } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+// import EditIcon from "@material-ui/icons/Edit";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Slide from "@material-ui/core/Slide";
-
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import Slide from "@material-ui/core/Slide";
+// import { Helmet } from "react-helmet";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
 import ImageIcon from "@material-ui/icons/Image";
-
-import ProjectImg from "dan-images/projectImages/projectimg.jpg";
-import cTower from "dan-images/projectImages/cTower.png";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import CardActions from "@material-ui/core/CardActions";
-import Divider from "@material-ui/core/Divider";
-// import EditIcon from "@material-ui/icons/Edit";
-
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import { useHistory } from "react-router";
-
 import axios from "axios";
+import brand from "dan-api/dummy/brand";
+import { PapperBlock } from "dan-components";
+import cTower from "dan-images/projectImages/cTower.png";
+import ProjectImg from "dan-images/projectImages/projectimg.jpg";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+// redux
+import { connect, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { company, projectName, breakDownDetails } from "../../redux/actions/initialDetails";
+import "../../styles/custom/hexagon.css";
 import api from "../../utils/axios";
 import {
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  API_VERSION,
-  SELF_API
+  ACCOUNT_API_URL, API_VERSION, HEADER_AUTH, SELF_API
 } from "../../utils/constants";
-
-// Styles
-import Fonts from "dan-styles/Fonts.scss";
-import { Typography } from "@material-ui/core";
-import { async } from "fast-glob";
-
-// redux
-
-import { useDispatch } from "react-redux";
-import { connect } from "react-redux";
-import { projectName, company } from "../../redux/actions/initialDetails";
-// import Hexagon from "./Hexagon";
-import { allPickListData } from "../../redux/actions/initialDetails";
-
+import styles from "./dashboard-jss";
 import './style.css';
+
+
 const useStyles = makeStyles((theme) => ({
   //Project selections
   cardContentBox: {
@@ -376,6 +356,35 @@ function PersonalDashboard(props) {
     setProjectOpen(false);
   };
 
+  // fecthing project structure with name and label
+  const handelProjectStruct = async (compId, proId, tarProjectStruct) => {
+    let selectBreakDown = []
+    try {
+      if (tarProjectStruct !== "") {
+        let redirectedBreakDown = tarProjectStruct.split(",")
+        for (let key in redirectedBreakDown) {
+          let structName = {}
+          let workAreaId = [redirectedBreakDown[key].substring(0, 2), redirectedBreakDown[key].substring(2)]
+          let config = {
+            method: "get",
+            url: `${ACCOUNT_API_URL}api/v1/companies/${compId}/projects/${proId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`,
+            headers: HEADER_AUTH,
+          };
+          const workArea = await api(config);
+          let result = workArea.data.data.results[0]
+          structName["depth"] = result["depth"]
+          structName["id"] = result["id"]
+          structName["name"] = result["name"]
+          structName["label"] = result["structure_name"]
+          selectBreakDown.push(structName)
+        }
+      }
+      localStorage.setItem("selectBreakDown", JSON.stringify(selectBreakDown))
+      dispatch(breakDownDetails(selectBreakDown))
+    } catch { }
+  }
+  // end fetching name and label
+
   // fetch user data
   const userDetails = async (comId = 0, proId = 0, redback = '', tarPage = '', tarId) => {
     let config = {
@@ -449,8 +458,7 @@ function PersonalDashboard(props) {
 
       });
   };
-  const fetchUserDetails = async (compId, proId, targetPage) => {
-    console.log("welcome user details")
+  const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct) => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -459,26 +467,20 @@ function PersonalDashboard(props) {
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        console.log(config)
-        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
         await api(config)
           .then(function (response) {
-            console.log(response)
             if (response.status === 200) {
               // setIsLoading(true)
               let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
                 .subscriptions.filter(subs => subs.appCode === "safety")[0]
                 .hostings[0].apiDomain
-
-              console.log(hosting)
               let data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
               axios(data1).then((res) => {
-                console.log(response)
                 localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
 
                 if (compId) {
@@ -497,14 +499,9 @@ function PersonalDashboard(props) {
                   dispatch(projectName(project[0]))
                 }
                 // fetchPermissionData();
-                // history.push('/app/' + targetPage)
+                history.push('/app/' + targetPage)
                 localStorage.removeItem("direct_loading")
               })
-
-
-
-
-
             }
           })
           .catch(function (error) {
@@ -512,10 +509,10 @@ function PersonalDashboard(props) {
       }
     } catch (error) {
     }
+    handelProjectStruct(compId, proId, tarProjectStruct)
   }
 
   const handelCallBack = async () => {
-    // await setIsLoading(true)
     let state = JSON.parse(localStorage.getItem('direct_loading'));
     let comId = 0
     let proId = 0
@@ -523,8 +520,7 @@ function PersonalDashboard(props) {
     let tarPage = ''
     let tarId = 0
     if (state !== null) {
-      console.log("state is not null")
-      await fetchUserDetails(state.comId, state.proId, state.tarPage)
+      await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct)
     } else {
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
@@ -533,7 +529,6 @@ function PersonalDashboard(props) {
 
   useEffect(() => {
     handelCallBack()
-
   }, [props.initialValues.companyListData]);
 
   return (
