@@ -77,10 +77,16 @@ import Attachment from "../../Attachment/Attachment";
 import ActionShow from '../../Forms/ActionShow';
 import Loader from "../Loader"
 import { checkValue } from "../Jha/Utils/checkValue";
+import Snackbar from '@material-ui/core/Snackbar';
+
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -261,21 +267,40 @@ function AhaSummary() {
     setCheckListAssessment(tempPerformance)
   }
 
-  const viewSwitch = (viewName) => {
-    if (viewName == "assessment") {
-      if (ahaData.notifyTo !== "") {
-        setAssessments(true);
-      } else {
-        history.push(`/app/pages/aha/assessments/project-details/`)
-      }
-      setApprovals(false);
-      setCloseOut(false);
-      setLessonsLearned(false);
-      setComments(false);
-      setActivity(false);
-    } else if (viewName == "approval") {
+  const handleClickSnackBar = () => {
+    setOpenSnackBar(true);
+  };
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
+
+  let errorMessage = "Please fill"
+  let errorAssessment = "assessments"
+  let errorApproval = "approvals"
+  let errorLession = "lession learned"
+  let errorCloseOut = "close out"
+
+  const handleAssessmentViewChanges = () => {
+    if (ahaData.notifyTo !== "") {
+      setAssessments(true);
+    } else {
+      history.push(`/app/pages/aha/assessments/project-details/`)
+    }
+    setApprovals(false);
+    setCloseOut(false);
+    setLessonsLearned(false);
+    setComments(false);
+    setActivity(false);
+  }
+
+  const handelApprovalViewChange = () => {
+    if (ahaData.notifyTo !== "") {
       setAssessments(false);
-      if (ahaData.wrpApprovalUser !== "") {
+      if (ahaData.wrpApprovalUser !== null) {
         setApprovals(true);
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
@@ -284,7 +309,14 @@ function AhaSummary() {
       setLessonsLearned(false);
       setComments(false);
       setActivity(false);
-    } else if (viewName == "lession") {
+    } else {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment}`)
+      handleClickSnackBar()
+    }
+  }
+
+  const handelLessionLearnedChanges = () => {
+    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName !== null) {
       setAssessments(false);
       setApprovals(false);
       setCloseOut(false);
@@ -295,7 +327,23 @@ function AhaSummary() {
       }
       setComments(false);
       setActivity(false);
-    } else if (viewName = "closeOut") {
+    } else {
+      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
+        setMessageSnackbar(`${errorMessage} ${errorAssessment} , ${errorApproval} and  ${errorCloseOut}`)
+        handleClickSnackBar()
+      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
+        setMessageSnackbar(`${errorMessage}  ${errorApproval} and  ${errorCloseOut}`)
+        handleClickSnackBar()
+      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName == null) {
+        setMessageSnackbar(`${errorMessage}  ${errorCloseOut}`)
+        handleClickSnackBar()
+      }
+    }
+
+  }
+
+  const handelCloseOutViewChanges = () => {
+    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) {
       setAssessments(false);
       setApprovals(false);
       if (ahaData.closedByName !== null) {
@@ -306,6 +354,27 @@ function AhaSummary() {
       setLessonsLearned(false);
       setComments(false);
       setActivity(false);
+    } else {
+      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null) {
+        setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval}`)
+        handleClickSnackBar()
+      } else {
+        setMessageSnackbar(`${errorMessage} ${errorApproval} `)
+        handleClickSnackBar()
+      }
+    }
+
+  }
+
+  const viewSwitch = (viewName) => {
+    if (viewName == "assessment") {
+      handleAssessmentViewChanges()
+    } else if (viewName == "approval") {
+      handelApprovalViewChange()
+    } else if (viewName == "lession") {
+      handelLessionLearnedChanges()
+    } else if (viewName = "closeOut") {
+      handelCloseOutViewChanges()
     }
   }
 
@@ -321,6 +390,7 @@ function AhaSummary() {
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
+    console.log(result)
     await setAHAData(result);
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
@@ -660,7 +730,7 @@ function AhaSummary() {
                                     <FormLabel component="legend" className="viewLabel">Assessment started on</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {moment(ahaData["assessmentDate"]).format(
-                                        "Do MMMM YYYY"
+                                        "Do MMM YYYY"
                                       )}
                                     </Typography>
                                   </Grid>

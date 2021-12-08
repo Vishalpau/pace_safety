@@ -122,7 +122,7 @@ const Approvals = () => {
     createdBy: "",
     ProjectStructId: "",
   })
-  const [ error, setError] = useState({})
+  const [error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [person, setPerson] = useState("")
@@ -138,6 +138,7 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const apiData = res.data.data.results;
+    console.log(apiData)
     setForm(apiData);
     setIsLoading(true)
   };
@@ -196,16 +197,16 @@ const Approvals = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
-    if(form.notifyTo === null){
+    if (form.notifyTo === null) {
       form['notifyTo'] = "null"
     }
     form["ahaStage"] = "Approval"
-    if(form['wrpApprovalUser'] === null ){
+    if (form['wrpApprovalUser'] === null) {
       form["ahaStatus"] = "Pending"
-    }else{
+    } else {
       form["ahaStatus"] = "Done"
     }
-    const { error, isValid} = ApprovalValidator(form , actionData)
+    const { error, isValid } = ApprovalValidator(form, actionData)
     await setError(error)
     if(!isValid) {
       console
@@ -312,7 +313,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                     className="marginT0"
                     onClick={(e) => { setProjectOpen(true), setPerson("competent person") }}
                   >
-                    {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
+                    {form.wrpApprovalUser == null ? "Approve Now" : "Approved"}
                   </Button>
                 </Grid>
                 {form.wrpApprovalDateTime !== undefined

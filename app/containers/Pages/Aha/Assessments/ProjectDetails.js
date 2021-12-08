@@ -287,7 +287,7 @@ const ProjectDetails = () => {
       "notifyTo": "null",
       "additionalRemarks": "",
       "classification": "string",
-      "wrpApprovalUser": "",
+      "wrpApprovalUser": null,
       "wrpApprovalDateTime": null,
       "picApprovalUser": "",
       "picApprovalDateTime": null,
