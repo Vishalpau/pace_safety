@@ -1,6 +1,7 @@
 import validator from "validator";
 
 function PersonalAndPpeDetailValidate(data) {
+  // console.log(data)
   let isValid = true;
   const error = [];
   for (let key in data) {
@@ -18,6 +19,9 @@ function PersonalAndPpeDetailValidate(data) {
     }
     error.push(dataObj);
   }
+
+
+  console.log(error, '-----------')
 
   return { error, isValid };
 }
