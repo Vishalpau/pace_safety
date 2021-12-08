@@ -29,6 +29,7 @@ import {
   ACCOUNT_API_URL,
 } from "../../utils/constants";
 import { handelCommonObject, fetchReportedBy } from "../../utils/CheckerValue";
+import { values } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -80,9 +81,10 @@ export default function ActionTracker(props) {
     approver: props.createdBy,
     approverName: JSON.parse(localStorage.getItem('userDetails'))["name"],
     assignTo: userId,
-    assignToName: "",
+    assignToName: userName,
     deligateTo: 0,
     plannedStartDate: new Date(),
+    department: "",
     actualStartDate: null,
     plannedEndDate: null,
     actualEndDate: null,
@@ -111,7 +113,8 @@ export default function ActionTracker(props) {
   const [reportedByName, setReportedByName] = useState([]);
   const [isLoading, setLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
-
+  const allDepartment = JSON.parse(localStorage.getItem("commonObject"))["ActionDept"]["department"]
+  const [assigneeValue, setAssigneeValue] = useState("")
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
@@ -137,7 +140,6 @@ export default function ActionTracker(props) {
       handelCommonObject("commonObject", "action", "actionUser", allUsers)
       setReportedByName(allUsers)
     }
-
   };
 
   const select = async () => {
@@ -180,16 +182,54 @@ export default function ActionTracker(props) {
     }
   };
 
+  const handelAssigne = () => {
+    let assigneName;
+    if (form["department"] == "") {
+      assigneName = reportedByName
+    } else {
+      let deptAssigneName = []
+      reportedByName.map((value) => {
+        if (value["department"].length > 0) {
+          value["department"].map((valueDept) => {
+            if (form["department"] === valueDept["departmentName"]) {
+              deptAssigneName.push(value)
+            }
+          })
+        }
+      })
+      assigneName = deptAssigneName
+    }
+    return assigneName
+  }
+
+  const handelDeparment = (value = "") => {
+    setForm({
+      ...form,
+      department: value,
+      assignTo: "",
+      assignToName: "",
+    })
+    if (form["department"] == "") {
+      setAssigneeValue(userName)
+    } else {
+      console.log("here1")
+      let firstAssigneeName = handelAssigne()
+      setAssigneeValue("");
+    }
+  }
+
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
 
   const handelCallBack = async () => {
     await handelUpdate()
     await fetchReported()
+    await handelDeparment()
   }
 
   useEffect(() => {
     handelCallBack()
+
   }, [])
 
   return (
@@ -241,12 +281,40 @@ export default function ActionTracker(props) {
               />
             </Grid>
 
+            {/* department */}
+            <Grid item xs={12}>
+              <FormControl
+                variant="outlined"
+                requirement
+                className="formControl"
+              >
+                <InputLabel id="Department">
+                  Department
+                </InputLabel>
+                <Select
+                  labelId="Department"
+                  id="Department"
+                  label="Department"
+                  defaultValue=""
+                >
+                  {allDepartment.map((value) => (
+                    <MenuItem
+                      value={value}
+                      onClick={(e) => handelDeparment(value)}
+                    >
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
             {/* assigen */}
             <Grid item xs={12}>
-              {reportedByName[0] !== "No users found" ?
+              {reportedByName !== undefined && reportedByName[0] !== "No users found" ?
                 <Autocomplete
                   id="combo-box-demo"
-                  options={reportedByName}
+                  options={handelAssigne()}
                   className={classes.mT30}
                   getOptionLabel={(option) => option.name}
                   onChange={(e, option) =>
@@ -258,7 +326,7 @@ export default function ActionTracker(props) {
                   }
                   renderInput={(params) => <TextField {...params}
                     label="Assignee" variant="outlined" />}
-                  defaultValue={reportedByName.find(value => value.name == userName)}
+                  value={form.assignToName}
                   error={error.assignTo}
                 />
                 :
@@ -320,7 +388,7 @@ export default function ActionTracker(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {reportedByName[0] !== "No users found" ?
+          {reportedByName !== undefined && reportedByName[0] !== "No users found" ?
             <>
               <div className={classes.loadingWrapper}>
                 <Button

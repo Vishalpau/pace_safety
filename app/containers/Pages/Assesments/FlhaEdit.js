@@ -15,7 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import Grid from '@material-ui/core/Grid';  
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Link from '@material-ui/core/Link';
