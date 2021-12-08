@@ -29,6 +29,7 @@ import ViewHazard from './ViewHazard';
 
 import { withRouter } from 'react-router-dom';
 import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
+import { companyId, HEADER_AUTH, projectId, SSO_URL, userId } from '../../../utils/constants';
 
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 
@@ -156,10 +157,12 @@ class SimpleTabs extends React.Component {
 
   };
 
+
   componentDidMount() {
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
     this.handelVersion();
+    this.handelNotifyToValues();
   }
 
   getFlhaDetails = async () => {
@@ -189,6 +192,30 @@ class SimpleTabs extends React.Component {
     const res = await api.get('api/v1/flhas/' + flhaId + '/visualconfirmations/');
     await this.setState({ visualConfirmations: res.data.data.results });
   }
+
+  handelNotifyToValues = async () => {
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
+      .projectName.projectId;
+    const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
+    let allRoles = {}
+    const config = {
+      method: 'get',
+      url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/projects/${fkProjectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+      headers: HEADER_AUTH,
+    };
+    const notify = await api(config);
+    if (notify.status === 200) {
+      const result = notify.data.data.results;
+      result.map((value) => {
+        allRoles[value["id"]] = value["roleName"]
+      })
+      console.log(allRoles,'allRoles')
+
+      await this.setState({notifyToValues:allRoles});
+
+    }
+  }
   redirectToHome = (Path) => {
     const { history } = this.props;
     if (history) {
@@ -196,11 +223,15 @@ class SimpleTabs extends React.Component {
     }
   }
 
+  
+
   render() {
     const { classes } = this.props;
     const {
       value, flha, criticalTasks, visualConfirmations, versions
     } = this.state;
+
+
 
     return (
 
@@ -341,7 +372,7 @@ class SimpleTabs extends React.Component {
               </AppBar>
 
               <TabContainer className={classes.paddZero}>
-                <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
+                <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} notifyToValues={this.state.notifyToValues}/>
               </TabContainer>
               </Grid>
           </Grid>

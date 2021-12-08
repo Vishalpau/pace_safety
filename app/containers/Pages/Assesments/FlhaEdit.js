@@ -417,11 +417,13 @@ const FlhaDetails = () => {
     "riskSeverity": "",
     "riskSeverityValue": "",
     "status": "Active",
-    "createdBy": userId
+    "createdBy": JSON.parse(localStorage.getItem('userDetails')).id
+
   }
 
   let taskData = {
-    "createdBy": userId,
+    "createdBy": JSON.parse(localStorage.getItem('userDetails')).id
+    ,
     "fkFlhaId": flhaNumber,
     "hazards": [
       hazardData

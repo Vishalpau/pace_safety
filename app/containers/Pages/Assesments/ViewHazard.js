@@ -318,6 +318,8 @@ const useStyles = makeStyles((theme) => ({
 const FlhaDetails = (props) => {
   const classes = useStyles();
   const [flha, setFlha] = useState({});
+  const [notify, setNotify] = useState('');
+
   const [open, setOpen] = useState(false);
   const handleRiskChange = (rating) => {
     let colorRating = ''
@@ -349,6 +351,8 @@ const FlhaDetails = (props) => {
   };
 
   useEffect(() => {
+    if (props.notifyToValues != undefined){
+    setNotify(props.notifyToValues[props.flha.notifyTo])}
     setFlha(props.flha)
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -356,8 +360,8 @@ const FlhaDetails = (props) => {
         descriptionElement.focus();
       }
     }
-  }, [props.criticalTasks, props.visualConfirmations, props.flha]);
-
+  }, [props.criticalTasks, props.visualConfirmations, props.flha, props.notifyToValues]);
+console.log(notify,"props.notifyToValues")
   return (
 
     <div>
@@ -544,18 +548,19 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">{visualConf.visualConfirmationType}</TableCell>
                                 <TableCell className="attachFileStylethum" align="left">
                                   <div className="attachFileThumb">
-                                    {visualConf.visualConfirmationStatus}
+                                    {visualConf.visualConfirmationStatus ? visualConf.visualConfirmationStatus:'-'}
                                   </div>
                                 </TableCell>
                                 <TableCell align="left">
-
+                                {visualConf.visualConfirmationAttachment ?
                                   <Typography >
                                     {visualConf.visualConfirmationAttachment ===
                                       null ? null : typeof visualConf.visualConfirmationAttachment ===
                                         "string" ? (
-                                      <Attachment value={visualConf.visualConfirmationAttachment} />
+                                      <Attachment value={visualConf.visualConfirmationAttachment ?visualConf.visualConfirmationAttachment:'-'} />
                                     ) : null}
                                   </Typography>
+                                  :'-'}
                                 </TableCell>
                               </TableRow>
                             ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}
@@ -632,7 +637,7 @@ const FlhaDetails = (props) => {
                             Roles
                           </Typography>
                           <Typography className="viewLabelValue">
-                            {flha.notifyTo}
+                            {notify ? notify: '-'}
                           </Typography>
                         </Grid>
                       </Grid>
