@@ -36,6 +36,7 @@ import { JHA_FORM_COMBINE } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
+import Loader from "../../Loader"
 
 
 
@@ -1303,7 +1304,7 @@ const JobDetails = (props) => {
                     </Col>
 
                 </Row>
-                : "Loading"}
+                : <Loader/>}
         </CustomPapperBlock >
     );
 };

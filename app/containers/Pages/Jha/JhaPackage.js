@@ -58,7 +58,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { connect } from "react-redux";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
-
+import Loader from "../Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1143,7 +1143,7 @@ function JhaPackage(props) {
               </div> 
 
       </Box>
-      : "Loading..."}
+      : <Loader/>}
     </>
   );
 }

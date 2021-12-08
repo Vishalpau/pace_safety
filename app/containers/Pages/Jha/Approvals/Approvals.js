@@ -38,6 +38,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Loader from "../../Loader"
 
 import {
   access_token,
@@ -548,8 +549,10 @@ const Approvals = () => {
                 >
                   <div className={classes.loadingWrapper}>
                     <Button
-                      size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
-                      className={classes.custmSubmitBtn}
+                      size="medium"
+                      variant="contained"
+                      color="primary"
+                      className="spacerRight buttonStyle"
                       onClick={(e) => handelSubmit()}
                       disabled={submitLoader}
                     >
@@ -580,7 +583,7 @@ const Approvals = () => {
               />
             </Col>
           </Row>
-          : "Loading..."}
+          : <Loader/>}
       </CustomPapperBlock>
     </>
   );

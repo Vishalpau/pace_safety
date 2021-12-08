@@ -25,7 +25,7 @@ import { useHistory } from 'react-router';
 import Paper from '@material-ui/core/Paper';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-
+import Loader from "../../Loader"
 import api from '../../../../utils/axios';
 import { handelActionDataAssessment, handelCommonObject, handelFileName } from '../../../../utils/CheckerValue';
 import {
@@ -529,12 +529,14 @@ const AssessmentAndDocument = () => {
             data.append('classification', formDocument.classification);
             data.append('workHours', formDocument.workHours);
             data.append('notifyTo', formDocument.notifyTo.toString());
-            data.append('link', formDocument.link);
+            data.append('link', "");
             data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
+            formDocument.link = ""
             formDocument.notifyTo = formDocument.notifyTo.toString();
+            console.log(formDocument)
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
         }
         history.push(SUMMARY_FORM.Summary);
@@ -909,7 +911,7 @@ const AssessmentAndDocument = () => {
                         </Col>
                     </Row>
                 )
-                : <p>Loading....</p>
+                : <Loader/>
             }
         </CustomPapperBlock>
     );
