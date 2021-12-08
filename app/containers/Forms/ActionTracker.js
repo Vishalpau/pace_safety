@@ -141,7 +141,7 @@ export default function ActionTracker(props) {
   };
 
   const select = async () => {
-    // await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
+    await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
   }
 
   const handleClickOpen = async () => {
