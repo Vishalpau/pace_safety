@@ -146,7 +146,7 @@ import {
   AhaCloseOut,
   Prints,
   Setting,
-  Jha,
+  JhaMain,
   JhaSummary,
   JhaJobDetails,
   JhaJobDetailHazard,
@@ -160,6 +160,8 @@ import {
   JhaCloseOut,
   ShowGroup,
   ShowCheckList,
+  Picklist,
+  PicklistValue,
   Xflha,
   FlhaSummary,
   FlhaAdd,
@@ -169,10 +171,10 @@ import {
   EnergyControl,
   AuditCheck,
   AssessmentCloseOut,
-  FlhaConfigHazard,
-  FlhaConfig,
-  FlhaConfigCriticalTask,
-  FlhaConfigAdd,
+  // FlhaConfigHazard,
+  // FlhaConfig,
+  // FlhaConfigCriticalTask,
+  // FlhaConfigAdd,
   SamplePage,
   PrintFlha,
   FlhaActivities,
@@ -559,7 +561,7 @@ function Application(props) {
 
         {/* Jha  */}
 
-        <Route path="/app/pages/jha/all_jha" component={Jha} />
+        <Route path="/app/pages/jha/all_jha" component={JhaMain} />
         <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
         <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
@@ -605,9 +607,13 @@ function Application(props) {
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
+        {/* Picklist */}
+        <Route exact path="/app/pages/picklist" component={Picklist} />
+        <Route exact path="/app/pages/picklist/value/:id" component={PicklistValue} />
         {/* Xflha Routes  */}
         <Route path="/app/pages/summary" component={Summary} />
-        <Route path="/app/pages/sample" component={SamplePage} />
+        {/* <Route path="/app/pages/sample" component={SamplePage} /> */}
+        <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
         <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
         <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
@@ -621,10 +627,10 @@ function Application(props) {
         <Route path="/app/pages/assesments/flha/:id/activities" component={FlhaActivities} />
         <Route path="/app/pages/assesments/flha/:id/comments" component={FlhaComments} />
         {/* Xflha Config  */}
-        <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
+        {/* <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
         <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
-        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} /> */}
         {/* Control Tower */}
         <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
 

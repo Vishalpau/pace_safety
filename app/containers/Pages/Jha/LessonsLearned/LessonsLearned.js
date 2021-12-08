@@ -1,4 +1,4 @@
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, TextField, Typography, FormHelperText } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -12,6 +12,7 @@ import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
+
 import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { handelJhaId } from "../Utils/checkValue";
@@ -128,6 +129,8 @@ const LessonsLearned = () => {
   const history = useHistory()
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState({})
 
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
@@ -166,26 +169,34 @@ const LessonsLearned = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
+    let allAction = await handelActionWithEntity(jhaId, "jha:lessonLearned")
     setActionData(allAction)
   };
 
   const handelSubmit = async () => {
-    await setSubmitLoader(true)
-    delete form["jhaAssessmentAttachment"]
-    if (form["anyLessonsLearnt"] == null) {
-      form["anyLessonsLearnt"] = ""
+    if (form.anyLessonsLearnt == "Yes" || form.anyLessonsLearnt == "No") {
+      await setSubmitLoader(true)
+      delete form["jhaAssessmentAttachment"]
+      if (form["anyLessonsLearnt"] == null) {
+        form["anyLessonsLearnt"] = ""
+      }
+      form["jhaStage"] = "Lesson learned"
+      form["jhaStatus"] = "Close"
+      const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      history.push(SUMMARY_FORM["Summary"])
     }
-    const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
-    history.push(SUMMARY_FORM["Summary"])
+    else {
+      setError({ LessonDecide: "Please select any one." })
+    }
   }
 
   const classes = useStyles();
 
-  const handelCallback = () => {
-    handelJobDetails()
-    handelUserName()
-    handelActionTracker()
+  const handelCallback = async () => {
+    await handelJobDetails()
+    await handelUserName()
+    await handelActionTracker()
+    await setIsLoading(true)
   }
 
   useEffect(() => {

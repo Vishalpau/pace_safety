@@ -707,7 +707,7 @@ export const Comments = loadable(() => import("./Comments/Comments"), {
 
 // Jha
 
-export const Jha = loadable(() => import("./Pages/Jha/JhaMain"), {
+export const JhaMain = loadable(() => import("./Pages/Jha/JhaMain"), {
   fallback: <Loading />,
 });
 
@@ -761,6 +761,17 @@ export const ShowCheckList = loadable(() =>
   import("./Pages/CheckList/ShowCheckList"), {
   fallback: <Loading />,
 });
+
+// Picklist
+
+export const Picklist = loadable(() => import("./Pages/Picklist/index "), {
+  fallback: <Loading />,
+});
+export const PicklistValue = loadable(() => import("./Pages/Picklist/values"), {
+  fallback: <Loading />,
+});
+
+
 // XFLHA
 
 export const Xflha = loadable(() => import("./Pages/Assesments/Xflha"), {

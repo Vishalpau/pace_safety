@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { IconButton } from "@material-ui/core";
 
-// import pdfIcon from 'dan-images/pdfIcon.png';
-// import excelIcon from 'dan-images/excelIcon.png';
-// import wordIcon from 'dan-images/wordIcon.png';
-// import pptIcon from 'dan-images/pptIcon.png';
+import pdfIcon from 'dan-images/pdfIcon.png';
+import excelIcon from 'dan-images/excelIcon.png';
+import wordIcon from 'dan-images/wordIcon.png';
+import pptIcon from 'dan-images/pptIcon.png';
 
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";

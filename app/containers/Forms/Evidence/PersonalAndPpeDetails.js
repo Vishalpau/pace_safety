@@ -63,7 +63,7 @@ const PersonalAndPpeDetails = () => {
     {
       questionCode: "PPE-09",
       question: "PPE in good shape?",
-      answer: "",
+      answer: "N/A",
       activityGroup: "Evidence",
       status: "Active",
       updatedBy: 0,
@@ -74,7 +74,7 @@ const PersonalAndPpeDetails = () => {
     {
       questionCode: "PPE-10",
       question: "PPE proper fit?",
-      answer: "",
+      answer: "N/A",
       activityGroup: "Evidence",
       status: "Active",
       updatedBy: 0,
@@ -85,7 +85,7 @@ const PersonalAndPpeDetails = () => {
     {
       questionCode: "PPE-11",
       question: " PPE appropriate for task?",
-      answer: "",
+      answer: "N/A",
       activityGroup: "Evidence",
       status: "Active",
       updatedBy: 0,
@@ -139,7 +139,7 @@ const PersonalAndPpeDetails = () => {
     },
     {
       questionCode: "PPE-16",
-      question: "Did supervisor conduct I-Care observation?",
+      question: "Did supervisor conduct iCare observation?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -162,7 +162,7 @@ const PersonalAndPpeDetails = () => {
     {
       questionCode: "PPE-18",
       question: "Flag person trained/competent?",
-      answer: "",
+      answer: "N/A",
       activityGroup: "Evidence",
       status: "Active",
       updatedBy: 0,
@@ -173,7 +173,7 @@ const PersonalAndPpeDetails = () => {
     {
       questionCode: "PPE-19",
       question: "Was flag person present?",
-      answer: "",
+      answer: "N/A",
       activityGroup: "Evidence",
       status: "Active",
       updatedBy: 0,
@@ -204,15 +204,16 @@ const PersonalAndPpeDetails = () => {
       error: "",
     },
   ]);
+  const [checkPut, setCheckPut] = useState(false)
 
   const handleNext = async () => {
     setIsNext(false)
-    if (id && ppeList.length > 19) {
+    if (checkPut) {
       try {
-        const res = await api.put(`api/v1/incidents/${id}/activities/`, ppeList);
+        const res = await api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`, ppeList);
         if (res.status === 200) {
           history.push(
-            `/app/incident-management/registration/evidence/additional-details/${id}`
+            `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem("fkincidentId")}`
           );
         }
       } catch (err) {
@@ -257,36 +258,37 @@ const PersonalAndPpeDetails = () => {
 
   const handlePpeData = async (e, index) => {
     let TempPpeData = [...ppeData];
+    console.log(TempPpeData[index]["question"])
     TempPpeData[index].answer = e.target.value;
     await setPpeData(TempPpeData);
   };
 
-  const handleUpdatePpeList = (e, index) => {
-    const TempPpe = ppeList;
-    const TempIndexData = ppeList[index];
-    TempIndexData.answer = e.target.value;
-    TempPpe[index] = TempIndexData;
-    setPpeList(TempPpe);
-  };
 
   const fetchPpeList = async () => {
-    const res = await api.get(`api/v1/incidents/${id}/activities/`);
+    const res = await api.get(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`);
     const result = res.data.data.results;
-    if (result.length) {
-      await setPpeList(result);
+    let allPpeQuestion = ["PPE worn properly?", "PPE in good shape?", "PPE proper fit?", "PPE appropriate for task?",
+      "Employee self supervised?", "Supervisor present at site?", "Supervisor provided clear detail of work?",
+      "Supervisor provided detail work package?", "Did supervisor conduct iCare observation?", "Was flag person required for this job?",
+      "Flag person trained/competent?", "Was flag person present?", "Metal on metal incident?", "Was person in the line of fire?"]
+    let PpeQuestions = []
+    result.map((value) => {
+      if (allPpeQuestion.includes(value["question"])) {
+        PpeQuestions.push(value)
+      }
+    })
+    let temp = [...ppeData]
+    if (result.length > 20) {
+      setCheckPut(true)
+      PpeQuestions.map((value, index) => {
+        temp[index]["answer"] = value["answer"]
+        temp[index]["id"] = value["id"]
+      })
     }
-    await setIsLoading(true);
+    setPpeData(temp)
+    setPpeList(temp)
   };
-  const fetchppeDetails = async () => {
-    const res = await api.get(
-      `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-    );
-    const result = res.data.data.results;
 
-    await setPpeList(result);
-
-    await setIsLoading(true);
-  };
 
   const fetchIncidentDetails = async () => {
     const res = await api.get(
@@ -295,14 +297,15 @@ const PersonalAndPpeDetails = () => {
     const result = res.data.data.results;
     await setIncidentDetail(result);
   };
+
+  const handelCallBack = async () => {
+    await fetchPpeList();
+    await fetchIncidentDetails();
+    await setIsLoading(true);
+  }
+
   useEffect(() => {
-    fetchppeDetails();
-    fetchIncidentDetails();
-    if (id) {
-      fetchPpeList();
-    } else {
-      setIsLoading(true);
-    }
+    handelCallBack()
   }, []);
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
@@ -310,6 +313,7 @@ const PersonalAndPpeDetails = () => {
       {isLoading ? (
         <Row>
           <Col md={9}>
+
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Typography
@@ -323,86 +327,45 @@ const PersonalAndPpeDetails = () => {
                   {incidentDetail.incidentNumber}
                 </Typography>
               </Grid>
-              {ppeList.length < 8 ? (
+
+              {ppeData.slice(0, 1).map((value, index) => (
                 <>
-                  {ppeData.slice(0, 4).map((value, index) => (
-                    <>
-                      <Grid item xs={12} md={6}>
-                        <FormControl
-                          component="fieldset"
-                          className={classes.formControl}
-                          required
-                          error={value.error}
-                        >
-                          <FormLabel component="legend">
-                            {value.question}
-                          </FormLabel>
-                          <RadioGroup
-                            className={classes.inlineRadioGroup}
-                            onChange={(e) => {
-                              handlePpeData(e, index);
-                            }}
-                          >
-                            {radioDecide.map((value) => (
-                              <FormControlLabel
-                                value={value}
-                                control={<Radio />}
-                                label={value}
-                              />
-                            ))}
-                          </RadioGroup>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      component="fieldset"
+                      className={classes.formControl}
+                      required
+                      error={value.error}
+                    >
+                      <FormLabel component="legend">
+                        {value.question}
+                      </FormLabel>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        onChange={(e) => {
+                          handlePpeData(e, index);
+                        }}
+                      >
+                        {radioDecide.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            checked={ppeData[index]["answer"] === value}
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
 
-                          {value.error ? (
-                            <FormHelperText>{value.error}</FormHelperText>
-                          ) : null}
-                        </FormControl>
-                      </Grid>
-                    </>
-                  ))}
-                  <Grid item xs={12}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">Supervisor</Typography>
-                    </Box>
+                      {value.error ? (
+                        <FormHelperText>{value.error}</FormHelperText>
+                      ) : null}
+                    </FormControl>
                   </Grid>
-                  {ppeData.slice(4, 9).map((value, index) => (
-                    <>
-                      <Grid item xs={12} md={6}>
-                        <FormControl
-                          component="fieldset"
-                          required
-                          className={classes.formControl}
-                          error={value.error}
-                        >
-                          <FormLabel component="legend">
-                            {value.question}
-                          </FormLabel>
-                          <RadioGroup
-                            className={classes.inlineRadioGroup}
-                            onChange={(e) => {
-                              handlePpeData(e, index + 4);
-                            }}
-                          >
-                            {radioDecide.map((value) => (
-                              <FormControlLabel
-                                value={value}
-                                control={<Radio />}
-                                label={value}
-                              />
-                            ))}
-                          </RadioGroup>
-                          {value.error ? (
-                            <FormHelperText>{value.error}</FormHelperText>
-                          ) : null}
-                        </FormControl>
-                      </Grid>
-                    </>
-                  ))}
-                  <Grid item xs={12}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">Flag Person</Typography>
-                    </Box>
-                  </Grid>
-                  {ppeData.slice(9, 12).map((value, index) => (
+                </>
+              ))}
+              {ppeData[0]["answer"] === "Yes" ?
+                <>
+                  {ppeData.slice(1, 4).map((value, index) => (
                     <>
                       <Grid item xs={12} md={6}>
                         <FormControl
@@ -417,52 +380,13 @@ const PersonalAndPpeDetails = () => {
                           <RadioGroup
                             className={classes.inlineRadioGroup}
                             onChange={(e) => {
-                              handlePpeData(e, index + 9);
+                              handlePpeData(e, index + 1);
                             }}
                           >
                             {radioDecide.map((value) => (
                               <FormControlLabel
                                 value={value}
-                                control={<Radio />}
-                                label={value}
-                              />
-                            ))}
-                          </RadioGroup>
-
-                          {value.error ? (
-                            <FormHelperText>{value.error}</FormHelperText>
-                          ) : null}
-                        </FormControl>
-                      </Grid>
-                    </>
-                  ))}
-
-                  <Grid item xs={12}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">Other</Typography>
-                    </Box>
-                  </Grid>
-                  {ppeData.slice(12, 14).map((value, index) => (
-                    <>
-                      <Grid item xs={12} md={6}>
-                        <FormControl
-                          component="fieldset"
-                          required
-                          className={classes.formControl}
-                          error={value.error}
-                        >
-                          <FormLabel component="legend">
-                            {value.question}
-                          </FormLabel>
-                          <RadioGroup
-                            className={classes.inlineRadioGroup}
-                            onChange={(e) => {
-                              handlePpeData(e, index + 12);
-                            }}
-                          >
-                            {radioDecide.map((value) => (
-                              <FormControlLabel
-                                value={value}
+                                checked={ppeData[index + 1]["answer"] === value}
                                 control={<Radio />}
                                 label={value}
                               />
@@ -477,403 +401,166 @@ const PersonalAndPpeDetails = () => {
                     </>
                   ))}
                 </>
-              ) : (
+                :
+                null
+              }
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Supervisor</Typography>
+                </Box>
+              </Grid>
+              {ppeData.slice(4, 9).map((value, index) => (
                 <>
                   <Grid item xs={12} md={6}>
                     <FormControl
                       component="fieldset"
                       required
                       className={classes.formControl}
+                      error={value.error}
                     >
                       <FormLabel component="legend">
-                        PPE worn properly?
+                        {value.question}
                       </FormLabel>
                       <RadioGroup
                         className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[7].answer}
                         onChange={(e) => {
-                          handleUpdatePpeList(e, 7);
+                          handlePpeData(e, index + 4);
                         }}
                       >
                         {radioDecide.map((value) => (
                           <FormControlLabel
                             value={value}
+                            checked={ppeData[index + 4]["answer"] === value}
                             control={<Radio />}
                             label={value}
                           />
                         ))}
                       </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        PPE in Good Shape?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[8].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 8);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">PPE Proper Fit?</FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[9].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 9);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                      required
-                    >
-                      <FormLabel component="legend">
-                        PPE appropriate for task?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[10].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 10);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                  <Grid item md={12}>
-                    <Typography variant="h6">Supervision</Typography>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Employee self supervised
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[11].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 11);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Supervisor present at site?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[12].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 12);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Supervisor provided clear detail of work?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[13].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 13);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      required
-                      component="fieldset"
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Supervisor provided detail work package?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[14].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 14);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Did supervisor conduct I-Care observation?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[15].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 15);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">Flag person</Typography>
-                    </Box>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Was flag person required for this job?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[16].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 16);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Flag person trained competent
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[17].answer}
-                        onChange={(e) => {
-                          {
-                            handleUpdatePpeList(e, 17);
-                          }
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Was flag person present?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[18].answer}
-                        onChange={(e) => {
-                          {
-                            handleUpdatePpeList(e, 18);
-                          }
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box borderTop={1} paddingTop={2} borderColor="grey.300">
-                      <Typography variant="h6">Other</Typography>
-                    </Box>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      required
-                      className={classes.formControl}
-                    >
-                      <FormLabel component="legend">
-                        Metal on metal incident
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[19].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 19);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} md={6}>
-                    <FormControl
-                      component="fieldset"
-                      className={classes.formControl}
-                      required
-                    >
-                      <FormLabel component="legend">
-                        Was person in the line of fire?
-                      </FormLabel>
-                      <RadioGroup
-                        className={classes.inlineRadioGroup}
-                        defaultValue={ppeList[20].answer}
-                        onChange={(e) => {
-                          handleUpdatePpeList(e, 20);
-                        }}
-                      >
-                        {radioDecide.map((value) => (
-                          <FormControlLabel
-                            value={value}
-                            control={<Radio />}
-                            label={value}
-                          />
-                        ))}
-                      </RadioGroup>
+                      {value.error ? (
+                        <FormHelperText>{value.error}</FormHelperText>
+                      ) : null}
                     </FormControl>
                   </Grid>
                 </>
-              )}
+              ))}
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Flag Person</Typography>
+                </Box>
+              </Grid>
+              {ppeData.slice(9, 10).map((value, index) => (
+                <>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      component="fieldset"
+                      className={classes.formControl}
+                      required
+                      error={value.error}
+                    >
+                      <FormLabel component="legend">
+                        {value.question}
+                      </FormLabel>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        onChange={(e) => {
+                          handlePpeData(e, index + 9);
+                        }}
+                      >
+                        {radioDecide.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            checked={ppeData[index + 9]["answer"] === value}
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
+
+                      {value.error ? (
+                        <FormHelperText>{value.error}</FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                </>
+              ))}
+              {ppeData[9]["answer"] === "Yes" ? <>
+                {ppeData.slice(10, 12).map((value, index) => (
+                  <>
+                    <Grid item xs={12} md={6}>
+                      <FormControl
+                        component="fieldset"
+                        className={classes.formControl}
+                        required
+                        error={value.error}
+                      >
+                        <FormLabel component="legend">
+                          {value.question}
+                        </FormLabel>
+                        <RadioGroup
+                          className={classes.inlineRadioGroup}
+                          onChange={(e) => {
+                            handlePpeData(e, index + 10);
+                          }}
+                        >
+                          {radioDecide.map((value) => (
+                            <FormControlLabel
+                              value={value}
+                              checked={ppeData[index + 10]["answer"] === value}
+                              control={<Radio />}
+                              label={value}
+                            />
+                          ))}
+                        </RadioGroup>
+
+                        {value.error ? (
+                          <FormHelperText>{value.error}</FormHelperText>
+                        ) : null}
+                      </FormControl>
+                    </Grid>
+                  </>
+                ))}
+              </> : null}
+              <Grid item xs={12}>
+                <Box borderTop={1} paddingTop={2} borderColor="grey.300">
+                  <Typography variant="h6">Other</Typography>
+                </Box>
+              </Grid>
+              {ppeData.slice(12, 14).map((value, index) => (
+                <>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      component="fieldset"
+                      required
+                      className={classes.formControl}
+                      error={value.error}
+                    >
+                      <FormLabel component="legend">
+                        {value.question}
+                      </FormLabel>
+                      <RadioGroup
+                        className={classes.inlineRadioGroup}
+                        onChange={(e) => {
+                          handlePpeData(e, index + 12);
+                        }}
+                      >
+                        {radioDecide.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            checked={ppeData[index + 12]["answer"] === value}
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
+
+                      {value.error ? (
+                        <FormHelperText>{value.error}</FormHelperText>
+                      ) : null}
+                    </FormControl>
+                  </Grid>
+                </>
+              ))}
+
               <Grid item xs={12}>
                 <Button
                   variant="contained"

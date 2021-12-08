@@ -30,6 +30,9 @@ import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId
 import { handelJhaId } from "../Utils/checkValue";
 import { JHA_FORM } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
+import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+import Loader from "../../Loader"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -203,6 +206,7 @@ const JobDetails = (props) => {
   const [workArea, setWorkArea] = useState("")
   const [departmentName, setDepartmentName] = useState([])
   const [isDateShow, setIsDateShow] = useState(false)
+  const [pertmiType, setPermitType] = useState([])
 
   // fecth jha data
   const fetchJhaData = async () => {
@@ -228,9 +232,7 @@ const JobDetails = (props) => {
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-
     const value = e.target.value;
-
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
     // let removeTemp = temp.slice(0, index)
@@ -366,7 +368,6 @@ const JobDetails = (props) => {
   };
 
   const handelRemove = async (e, index) => {
-
     if (Teamform.length > 1) {
       if (Teamform[index].id !== undefined) {
         const res = await api.delete(
@@ -380,10 +381,11 @@ const JobDetails = (props) => {
   }
 
   const fetchDepartment = () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId
     let filterDepartmentName = []
     const config = {
       method: "get",
-      url: `${ACCOUNT_API_URL}api/v1/companies/1/departments/`,
+      url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/departments/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -461,7 +463,11 @@ const JobDetails = (props) => {
     }
     await setSubmitLoader(true)
     await handelProjectData()
+    if (form['notifyTo'] == null) {
+      form['notifyTo'] = "null"
+    }
     delete form["jhaAssessmentAttachment"]
+    form["jhaStage"] = "Assessment"
     if (form.id != null && form.id != undefined) {
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
         .then(res => handelApiError(res))
@@ -476,17 +482,20 @@ const JobDetails = (props) => {
     await setSubmitLoader(false)
   }
   const [typeOfPremit,setTypeOfPremit] = useState([])
+
+
+  const classes = useStyles();
+
   let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const pickListValue = async () => {
-    setTypeOfPremit(await pickListValues["80"])
+    setPermitType(await pickListValues["80"])
   }
-
-  const classes = useStyles();
 
   const handelCallBack = async () => {
     await setLoading(true)
     await fetchJhaData()
+    await pickListValue()
     await fetchTeamData()
     await fetchDepartment()
     await pickListValue()
@@ -578,7 +587,32 @@ const JobDetails = (props) => {
                   helperText={error.jobTitle ? error.jobTitle : ""}
                   fullWidth
                   onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
+                  required
                   variant="outlined"
+                  className={classes.formControl}
+                />
+              </Grid>
+
+              {/* scope work */}
+              <Grid
+                item
+                md={12}
+                xs={12}
+                className={classes.formBox}
+              >
+                <TextField
+                  label="Scope of work (Describe all tasks)"
+                  name="scopeofwork"
+                  id="scopeofwork"
+                  multiline
+                  rows={4}
+                  value={form.description ? form.description : ""}
+                  error={error.description}
+                  helperText={error.description ? error.description : ""}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  fullWidth
+                  variant="outlined"
+                  required
                   className={classes.formControl}
                 />
               </Grid>
@@ -600,6 +634,7 @@ const JobDetails = (props) => {
                   helperText={error.location ? error.location : ""}
                   fullWidth
                   onChange={(e) => setForm({ ...form, location: e.target.value })}
+                  required
                   variant="outlined"
                   className={classes.formControl}
                 />
@@ -651,6 +686,7 @@ const JobDetails = (props) => {
                   <FormLabel
                     error={error.permitToPerform}
                     component="legend"
+                    required
                   >
                     Permit to Work
                   </FormLabel>
@@ -678,53 +714,74 @@ const JobDetails = (props) => {
 
               {/* permit type */}
               {form.permitToPerform == "Yes" ?
-                <Grid item md={6} xs={11}>
-                  <TextField
-                    label="Type of permit"
-                    name="typeOfPermit"
-                    id="typeOfPermit"
-                    select
-                    fullWidth
-                    value={form.typeOfPermit ? form.typeOfPermit : ""}
-                    onChange={(e) => setForm({ ...form, typeOfPermit: e.target.value })}
-                    variant="outlined"
+                <>
+                  <Grid item md={6} xs={11}>
+                    <TextField
+                      label="Type of permit"
+                      name="typeOfPermit"
+                      id="typeOfPermit"
+                      select
+                      fullWidth
+                      value={form.typeOfPermit ? form.typeOfPermit : ""}
+                      onChange={(e) => setForm({ ...form, typeOfPermit: e.target.value })}
+                      variant="outlined"
+                    >
+
+                      {pertmiType.map((selectValues) => (
+                        <MenuItem
+                          value={selectValues.value}
+                        >
+                          {selectValues.label}
+                        </MenuItem>
+                      ))}
+
+                    </TextField>
+                  </Grid>
+
+
+                  {/* permit number       */}
+                  <Grid
+                    item
+                    md={6}
+                    xs={11}
                   >
-                    {typeOfPremit.map((option) => (
-                      <MenuItem key={option}
-                        value={option}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
+                    <TextField
+                      label="Permit number"
+                      name="permitnumber"
+                      id="permitnumber"
+                      value={form.permitNumber ? form.permitNumber : ""}
+                      onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
+                      fullWidth
+                      variant="outlined"
+                      className={classes.formControl}
+                    />
+                  </Grid>
+                </>
                 :
                 null
               }
 
-              {/* scope work */}
-              <Grid
-                item
-                md={12}
-                xs={12}
-                className={classes.formBox}
-              >
+              {/* department */}
+              <Grid item md={6} xs={11}>
                 <TextField
-                  label="Scope of work (Describe all tasks)"
-                  name="scopeofwork"
-                  id="scopeofwork"
-                  multiline
-                  rows={4}
-                  value={form.description ? form.description : ""}
-                  error={error.description}
-                  helperText={error.description ? error.description : ""}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  label="Department"
+                  name="department"
+                  id="department"
+                  select
                   fullWidth
+                  value={form.department ? form.department : ""}
+                  onChange={(e) => setForm({ ...form, department: e.target.value })}
                   variant="outlined"
-                  className={classes.formControl}
-                />
+                >
+                  {departmentName.map((option) => (
+                    <MenuItem key={option}
+                      value={option}
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
-
               {/* team */}
               <Grid
                 item
@@ -744,7 +801,7 @@ const JobDetails = (props) => {
                 >
 
                   <TextField
-                    label="Team Name"
+                    label={`Name ${index + 1}`}
                     margin="dense"
                     name="arename"
                     id="arename"
@@ -811,28 +868,6 @@ const JobDetails = (props) => {
                 />
               </Grid>
 
-              {/* department */}
-              <Grid item md={6} xs={11}>
-                <TextField
-                  label="Department"
-                  name="department"
-                  id="department"
-                  select
-                  fullWidth
-                  value={form.department ? form.department : ""}
-                  onChange={(e) => setForm({ ...form, department: e.target.value })}
-                  variant="outlined"
-                >
-                  {departmentName.map((option) => (
-                    <MenuItem key={option}
-                      value={option}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-
               {/* emergency number */}
               <Grid
                 item
@@ -863,24 +898,6 @@ const JobDetails = (props) => {
                   id="evacuationassemblypoint"
                   value={form.evacuationAssemblyPoint ? form.evacuationAssemblyPoint : ""}
                   onChange={(e) => setForm({ ...form, evacuationAssemblyPoint: e.target.value })}
-                  fullWidth
-                  variant="outlined"
-                  className={classes.formControl}
-                />
-              </Grid>
-
-              {/* permit number       */}
-              <Grid
-                item
-                md={6}
-                xs={11}
-              >
-                <TextField
-                  label="Permit number"
-                  name="permitnumber"
-                  id="permitnumber"
-                  value={form.permitNumber ? form.permitNumber : ""}
-                  onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                   fullWidth
                   variant="outlined"
                   className={classes.formControl}
@@ -943,7 +960,9 @@ const JobDetails = (props) => {
           </Col>
 
         </Row>
-        : "Loading"}
+        :
+        "Loading..."
+      }
     </PapperBlock >
   );
 };

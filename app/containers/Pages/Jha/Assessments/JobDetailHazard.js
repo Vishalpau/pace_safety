@@ -1284,6 +1284,7 @@ const JobDetails = (props) => {
                                     variant="contained"
                                     color="secondary"
                                     className="buttonStyle custmCancelBtn"
+                                    onClick={(e) => history.goBack()}
                                 >
                                     Cancel
                                 </Button>

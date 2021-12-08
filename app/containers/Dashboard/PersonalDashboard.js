@@ -15,7 +15,6 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -29,7 +28,6 @@ import Avatar from "@material-ui/core/Avatar";
 import ImageIcon from "@material-ui/icons/Image";
 
 import ProjectImg from "dan-images/projectImages/projectimg.jpg";
-import ProjectImgOne from "dan-images/projectImages/projectimgone.jpg";
 import cTower from "dan-images/projectImages/cTower.png";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import CardActions from "@material-ui/core/CardActions";
@@ -47,10 +45,8 @@ import api from "../../utils/axios";
 import {
   ACCOUNT_API_URL,
   HEADER_AUTH,
-  LOCAL_LOGIN_URL,
   API_VERSION,
-  SELF_API,
-  LOGOUT_URL,
+  SELF_API
 } from "../../utils/constants";
 
 // Styles
@@ -63,9 +59,10 @@ import { async } from "fast-glob";
 import { useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { projectName, company } from "../../redux/actions/initialDetails";
-import Hexagon from "./Hexagon";
-import './style.css';
+// import Hexagon from "./Hexagon";
+import { allPickListData } from "../../redux/actions/initialDetails";
 
+import './style.css';
 const useStyles = makeStyles((theme) => ({
   //Project selections
   cardContentBox: {
@@ -201,45 +198,55 @@ function PersonalDashboard(props) {
   const [applications, setApplications] = useState([]);
   const [modules, setModules] = useState([]);
   const [codes, setCode] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-
+  const [isLoading, setIsLoading] = useState(false)
   const getSubscriptions = async (compId) => {
 
     const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
-    if(companyId){
+    if (companyId) {
 
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
-            
-  
+
+
             return res.data.data.results.data.companies[0].subscriptions;
-          
+
           })
           .catch(function (error) {
             console.log(error);
           });
-        
-  
+
+
         await setSubscriptions(data)
-  
-  
-        const apps = data.map(app => app.appId)
-      
-        let app = data.filter(app => app.appCode === "safety")
-      
-        let module = app[0].modules.map(item => {
-          if (item.subscriptionStatus == "active") {
-            
-            return item.moduleCode
+
+        const modules = data.map(subscription => subscription.modules)
+        var modulesState = []
+        var temp = []
+        modules.map(module => {
+          modulesState = [...modulesState]
+          temp = [...temp]
+          if (module.length > 0) {
+            module.map(mod => {
+              modulesState.push(mod)
+              // this.setState({modules: module})
+              if (mod.subscriptionStatus == 'active') {
+                temp.push(mod.moduleCode)
+                // this.setState({ codes: temp })
+                return temp
+              }
+            }
+            )
+
+            // this.setState({ codes: codes })
+
           }
         })
-  
-        setCode(module)
+        let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
+        setCode(temp)
         getModules(apps)
       } catch (error) { }
     }
-
+    // getAllPickList()
   }
 
   const getModules = async (apps) => {
@@ -252,53 +259,42 @@ function PersonalDashboard(props) {
         console.log(error);
       });
     await setModules(data)
-    let data1 = apps.filter(item => item.appId === 1)
-    
-    const codes = data.map(module => module.subscriptionStatus)
-    
-    // setCode(codes)
+    // let data1 = apps.filter(item => item.appId === 1)
 
+    const codes = data.map(module => module.moduleCode)
 
-
+    await setCode(codes)
   }
 
-  const handleClick = (appCode) => {
-    let fkAppId = ""
+  const handleClick = async (appCode) => {
 
-    let fkApp = modules.map(module => {
-      if (module.moduleCode === appCode) {
-        fkAppId = module.fkAppId
-        return module.fkAppId && module.fkAppId;
-      }
-    })
+    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
 
-    let targetPage = modules.map(module => {
-      if (module.moduleCode == appCode) {
-        return module.targetPage;
-      }
-    }).join(' ')
-    // console.log({targetPage:apps.appId})
+    let data = await api
+      .get(ACCOUNT_API_URL + API_VERSION + 'applications/modules/' + appCode + '/' + companyId + '/')
+      .then(function (res) {
 
-    let clientId = ''
-    let hostings = subscriptions.map(apps => {
+        return res.data.data.results;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
-      if (fkAppId === apps.appId) {
-        clientId = apps.hostings[0].clientId
-        return apps.hostings;
-      }
-    })[0];
+    if (data.hostings != undefined) {
+      const targetPage = (data.modules ? data.modules.targetPage : "")
+      // alert(localStorage.getItem('companyId'))
+      const clientId = data.hostings.clientId
 
-    
-    if (clientId) {
+      window.open(ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + companyId + '&projectId=' + projectId,
+      ) // <- This is what makes it open in a new window.
 
-      window.location.href =  ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId
-      
     }
 
   }
 
   const handleDisableModule = (appcode) => {
-    alert(appcode)
+
     let moduleDisable = modules.map(module => {
       if (module.moduleCode == appCode) {
         return false;
@@ -315,12 +311,12 @@ function PersonalDashboard(props) {
   const handleClose = () => {
     setOpen(false);
   };
-// multi tenant architecture, fetch company
-  const fetchCompany = async(url)=>{
+  // multi tenant architecture, fetch company
+  const fetchCompany = async (url) => {
     let config = {
-      method:'get',
-      url:url,
-      headers:HEADER_AUTH,
+      method: 'get',
+      url: url,
+      headers: HEADER_AUTH,
     }
     await (config)
   }
@@ -328,9 +324,9 @@ function PersonalDashboard(props) {
   // compney name get
   const handleCompanyName = async (e, key, name) => {
     let hosting = companyListData.filter(company => company.companyId === e)[0]
-    .subscriptions
-    .filter(subscription => subscription.appCode == "safety")[0]
-    .hostings[0].apiDomain
+      .subscriptions
+      .filter(subscription => subscription.appCode == "safety")[0]
+      .hostings[0].apiDomain
     let config = {
       method: "get",
       url: `${hosting}/api/v1/core/companies/select/${e}/`,
@@ -389,12 +385,12 @@ function PersonalDashboard(props) {
     };
     await axios(config)
       .then(function (response) {
-
+        setIsLoading(true)
         if (response.status === 200) {
           if (comId != 0) {
             response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
           }
-          
+
           if (response.data.data.results.data.companies.length > 1) {
             const companey = JSON.parse(localStorage.getItem("company"));
             if (companey === null) {
@@ -404,9 +400,9 @@ function PersonalDashboard(props) {
           }
           if (response.data.data.results.data.companies.length === 1) {
             let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
-            .subscriptions
-            .filter(subscription => subscription.appCode == "safety")[0]
-            .hostings[0].apiDomain
+              .subscriptions
+              .filter(subscription => subscription.appCode == "safety")[0]
+              .hostings[0].apiDomain
             let config = {
               method: "get",
               url: `${hosting}/api/v1/core/companies/select/${response.data.data.results.data.companies[0].companyId}/`,
@@ -416,7 +412,7 @@ function PersonalDashboard(props) {
             let companeyDetails = {};
             companeyDetails.fkCompanyId =
               response.data.data.results.data.companies[0].companyId;
-              console.log({userDetails:response.data.data.results.data.companies})
+
             // const subscriptionData = 
             getSubscriptions(response.data.data.results.data.companies[0].companyId)
             setCompanyId(response.data.data.results.data.companies[0].companyId)
@@ -437,11 +433,11 @@ function PersonalDashboard(props) {
                 );
               }
               if (newData.projects.length > 1) {
-                if(JSON.parse(localStorage.getItem('projectName')===null)){
+                if (JSON.parse(localStorage.getItem('projectName') === null)) {
                   setProjectListData(newData.projects);
                   setProjectOpen(true);
                 }
-               
+
                 // setOpen(true);
               }
             }
@@ -450,37 +446,108 @@ function PersonalDashboard(props) {
         }
       })
       .catch(function (error) {
-      
+
       });
   };
+  const fetchUserDetails = async (compId, proId, targetPage) => {
+    console.log("welcome user details")
+    // window.location.href = `/${tagetPage}`
+    try {
+      if (compId) {
+        let config = {
+          method: "get",
+          url: `${SELF_API}`,
+          headers: HEADER_AUTH,
+        };
+        console.log(config)
+        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
-  useEffect(() => {
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
+        await api(config)
+          .then(function (response) {
+            console.log(response)
+            if (response.status === 200) {
+              // setIsLoading(true)
+              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === "safety")[0]
+                .hostings[0].apiDomain
+
+              console.log(hosting)
+              let data1 = {
+                method: "get",
+                url: `${hosting}/api/v1/core/companies/select/${compId}/`,
+                headers: HEADER_AUTH,
+              };
+              axios(data1).then((res) => {
+                console.log(response)
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+
+                if (compId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+
+                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
+                  localStorage.setItem('company', JSON.stringify(companeyData))
+
+                  dispatch(company(companeyData))
+                }
+                if (proId) {
+                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  let project = companies[0].projects.filter(item => item.projectId == proId)
+
+                  localStorage.setItem("projectName", JSON.stringify(project[0]))
+                  dispatch(projectName(project[0]))
+                }
+                // fetchPermissionData();
+                history.push('/app/' + targetPage)
+                localStorage.removeItem("direct_loading")
+              })
+
+
+
+
+
+            }
+          })
+          .catch(function (error) {
+          });
+      }
+    } catch (error) {
+    }
+  }
+
+  const handelCallBack = async () => {
+    // await setIsLoading(true)
+    let state = JSON.parse(localStorage.getItem('direct_loading'));
     let comId = 0
     let proId = 0
     let redback = ''
     let tarPage = ''
     let tarId = 0
-    if(state!==null){
-      setIsLoading(false)
+    if (state !== null) {
+      console.log("state is not null")
+      await fetchUserDetails(state.comId, state.proId, state.tarPage)
+    } else {
+      await userDetails(comId, proId, redback, tarPage, tarId);
     }
-    userDetails(comId, proId, redback, tarPage, tarId);
-  
-    getSubscriptions();
+    await getSubscriptions();
+  }
+
+  useEffect(() => {
+    handelCallBack()
     
   }, [props.initialValues.companyListData]);
-  if(isLoading){
-    return (
-      <PapperBlock title="Home" icon="ion-md-list-box">
-        {isLoading&&<>
+
+  return (
+    <PapperBlock title="Home" icon="ion-md-list-box">
+      {isLoading && <>
+
         <div className="seven_hexagon_row">
           <div className="honeycomb">
             <div className="ibws-fix hexagon_row1">
-  
+
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
                   <a
@@ -491,143 +558,146 @@ function PersonalDashboard(props) {
                   </a>
                 </div>
               </div>
-  
+
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
-              <div className={!(codes.includes('compliance')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
+
+              <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_compliance_protocols" onClick={() => handleClick('compliance')}>
-                    <p>Compliance Protocols</p>
+                  <a className="hse_hse_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
+                    <p>Control Tower</p>
                   </a>
                 </div>
               </div>
-  
+
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                <div className="hexagontent hexagon_content_box" >
+                <div className="hexagontent hexagon_content_box">
                   <a
                     className="hse_incident_reporting_management"
-                    onClick={() => handleClick('incidents')}
+                    onClick={() => history.push('/incidents/')}
                   >
-                    <p >Incident Management</p>
+                    <p>Incident Management</p>
                   </a>
                 </div>
               </div>
-  
+
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
             </div>
-  
-            {/* Action Tracker
-  
-            Permit Management */}
-  
+
             <div className="ibws-fix hexagon_row2">
               <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
                   <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
-                    <p>Project Information Hub </p>
+                    <p>Project Information Hub</p>
                   </a>
                 </div>
               </div>
-  
-              <div className="hexagon hide_responsiv">
-                <div className="hexagontent hexagon_content_box" />
+
+              {/* <div className="hexagon hide_responsiv">
+              <div className="hexagontent hexagon_content_box" />
+            </div> */}
+              <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
+                <div className="hexagontent hexagon_content_box">
+                  <a className="hse_compliance_protocols" onClick={() => handleClick('compliances')}>
+                    <p>Compliance</p>
+                  </a>
+                </div>
               </div>
-  
+
+
+              <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                <div className="hexagontent hexagon_content_box">
+                  <a className="hse_observations" onClick={() => history.push('/app/icare')}>
+                    <p>iCare</p>
+                  </a>
+                </div>
+              </div>
               <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_smart_permit_management" onClick={() => handleClick('assessments')}>
+                  <a className="hse_smart_permit_management" onClick={() => history.push('/app/pages/assesments/xflha')}>
                     <p>Assessments</p>
                   </a>
                 </div>
               </div>
-  
-              <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+
+              <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a className="hse_observations" onClick={() => handleClick('observations')}>
-                    <p>Observations</p>
+                  <a className="hse_action_tracker"
+                    onClick={() => handleClick('actions')}
+                  >
+                    <p>Action Tracker</p>
                   </a>
                 </div>
               </div>
-  
-              <div className={!(codes.includes('intelligent_permit_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+              <div className={!(codes.includes('permits')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
                   <a
                     className="hse_intelligent_permit_management_new"
-                    onClick={() => handleClick('intelligent_permit_management')}
+                    onClick={() => handleClick('permits')}
                   >
                     <p>Permit Management</p>
                   </a>
                 </div>
               </div>
-  
-              {/* <div className="hexagon hide_responsiv">
-              <div className="hexagontent hexagon_content_box" />
-            </div> */}
-  
-              <div className={!(codes.includes('env_management')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+
+              <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                 <div className="hexagontent hexagon_content_box">
-                  <a
-                    className="hse_environment_development"
-                    onClick={() => handleClick('env_management')}
+                  <a className="hse_rapid_knowledge_collaboration"
+                    onClick={() => handleClick('knowledge')}
                   >
-                    <p>Environment Management</p>
+                    <p>Rapid Knowledge &amp; Collaboration</p>
                   </a>
                 </div>
               </div>
-              <div className={!(codes.includes('collaboration')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                <div className="hexagontent hexagon_content_box">
-                  <a
-                    className="hse_rapid_knowledge_collaboration"
-                    onClick={() => handleClick('collaboration')}
-                  >
-                    <p>Rapid Knowledge & Collaboration</p>
-                  </a>
-                </div>
-              </div>
+
+
+
+
             </div>
-  
+
+
+
+
             <div className="ibws-fix hexagon_row1">
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className="hexagon bghide_in_view hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className="hexagon hide_responsiv hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className="hexagon bghide_in_view hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className="hexagon bghide_in_view hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
-  
+
               <div className="hexagon hide_responsiv">
                 <div className="hexagontent hexagon_content_box" />
               </div>
             </div>
           </div>
         </div>
-  
-      
-  
+
+
         <Dialog
           className={classes.projectDialog}
           open={open}
@@ -690,7 +760,7 @@ function PersonalDashboard(props) {
           onClose={handleProjectClose}
         >
           <DialogTitle onClose={handleProjectClose}>
-          Select a Project
+            Select a Project
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -706,15 +776,15 @@ function PersonalDashboard(props) {
                       key={key}
                     >
                       <Card
-                        
-                    
+
+
                         onClick={() => handleProjectName(key)}
                       >
                         <CardActionArea className={classesm.cardActionAreaBox}>
                           <div className={classesm.cardMediaBox}>
                             <CardMedia
                               className={classesm.media}
-                              image={ProjectImg}
+                              image={selectValues.projectImage === null ? ProjectImg : selectValues.projectImage}
                             //title=""
                             />
                           </div>
@@ -761,16 +831,11 @@ function PersonalDashboard(props) {
             </DialogContentText>
           </DialogContent>
         </Dialog>
-  </>}
-      </PapperBlock>
-    );
-  }else{
-    return(
-      <Loading/>
-    )
-  }
- 
+      </>}
+    </PapperBlock>
+  );
 }
+
 
 PersonalDashboard.propTypes = {
   classes: PropTypes.object.isRequired,

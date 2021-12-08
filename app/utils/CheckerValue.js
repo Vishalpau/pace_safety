@@ -1,5 +1,10 @@
-import apiAction from "./axiosActionTracker"
+import axios from "axios";
 import moment from 'moment';
+import apiAction from "./axiosActionTracker";
+import {
+    access_token,
+    ACCOUNT_API_URL,
+} from "./constants";
 
 export const checkValue = (value) => {
     let noValue = "-"
@@ -10,7 +15,6 @@ export const checkValue = (value) => {
     }
 }
 
-
 export const handelApiValue = (value) => {
     if (value !== null && value !== undefined && value !== "") {
         return value
@@ -18,7 +22,6 @@ export const handelApiValue = (value) => {
         return []
     }
 }
-
 
 export const handelConvert = (value) => {
     let wordArray = value.split(/(?=[A-Z])/);
@@ -30,7 +33,6 @@ export const handelConvert = (value) => {
         });
     return newString;
 };
-
 
 export const handelIncidentId = () => {
     let page_url = window.location.href;
@@ -73,8 +75,7 @@ export const handelCommonObject = (objName, mainKey, subKey, subValue) => {
     }
 }
 
-export const handleTimeOutError = (res) => {
-}
+export const handleTimeOutError = (res) => { }
 
 export const handelActionData = async (incidentId, apiData, type = "all") => {
     const fkCompanyId =
@@ -130,9 +131,7 @@ export const handelActionWithEntity = async (incidentId, actionContextValue) => 
     return allAction
 }
 
-
 export const handelActionDataAssessment = async (incidentId, apiData, type = "all", actionContext) => {
-    console.log(actionContext)
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -194,3 +193,69 @@ export const handelValueToLabel = (value) => {
     }
     return label
 }
+
+export const handelActionIcare = async (incidentId, apiData, type = "all", actionContext) => {
+    const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+
+    const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
+
+    if (actionSelect.status === 200) {
+        const allActionData = await apiAction.get(`api/v1/actions/?enitityReferenceId=${incidentId}&actionContext=${actionContext}`)
+        const allAction = allActionData.data.data.results.results
+
+        if (type == "all") {
+            let apiAllData = Array.isArray(apiData) ? apiData : [apiData]
+            apiAllData.map((value) => {
+                allAction.map((valueAction) => {
+                    if (value.id == valueAction.enitityReferenceId.split(":")[1]) {
+                        const tempAction = {
+                            "number": valueAction.actionNumber,
+                            "id": valueAction.id,
+                            "title": valueAction.actionTitle
+                        };
+                        if (value["action"] == undefined) {
+                            value["action"] = [tempAction]
+                        } else if (value["action"] !== undefined) {
+                            value["action"].push(tempAction)
+                        }
+                    }
+                })
+                if (value["action"] == undefined) {
+                    value["action"] = []
+                }
+            })
+            return apiAllData
+        } else {
+            return allAction
+        }
+    }
+
+}
+
+export const fetchReportedBy = async () => {
+    let allUser;
+    let appId = JSON.parse(localStorage.getItem("BaseUrl"))["appId"]
+    let companyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+    const config = {
+        method: "get",
+        url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/application/${appId}/users/`,
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+    try {
+        let allData = await axios(config)
+        let allUsers = allData.data.data.results[0]["users"]
+        allUser = allUsers
+    } catch {
+        let allUsers = ["No users found"]
+        allUser = allUsers
+    }
+    return allUser;
+};

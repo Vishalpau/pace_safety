@@ -38,6 +38,8 @@ import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import WorkerDetailValidator from "../../Validator/InvestigationValidation/WorkerDetailsValidation";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import allPickListDataValue from "../../../utils/Picklist/allPickList";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -115,6 +117,7 @@ const WorkerDetails = () => {
   const TextFieldComponent = (props) => {
     return <TextField {...props} inputProps={{ readOnly: true }} />
   }
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   let [workerData, setworkerData] = useState({
     name: "",
@@ -460,25 +463,25 @@ const WorkerDetails = () => {
   const handelCallBack = async () => {
     await setIsLoading(true);
     await handelUpdateCheck();
-    workerType.current = await PickListData(71);
-    setDepartmentName(await PickListData(10));
-    setworkHours(await PickListData(70));
-    setShiftType(await PickListData(47));
-    setOccupation(await PickListData(48));
-    setShiftCycle(await PickListData(49));
-    setNoOfDaysIntoShift(await PickListData(50));
-    setTimeInCompany(await PickListData(51));
-    setTimeOnProject(await PickListData(52));
-    setTimeInIndustry(await PickListData(53));
-    setPrimaryBodyPartWithSide(await PickListData(57));
-    setSecondaryBodyPartWithSide(await PickListData(58));
-    setTypeOfInjury(await PickListData(59));
-    setHigherMedicalResponder(await PickListData(60));
-    setTreatmentType(await PickListData(61));
-    setMechanismOfInjury(await PickListData(62));
-    setSupervisorTimeInIndustry(await PickListData(54));
-    setSupervisorTimeOnProject(await PickListData(55));
-    setSupervisorTimeInCompany(await PickListData(56));
+    workerType.current = await pickListValues["71"];
+    setDepartmentName(await pickListValues["10"]);
+    setworkHours(await pickListValues["70"]);
+    setShiftType(await pickListValues["47"]);
+    setOccupation(await pickListValues["48"]);
+    setShiftCycle(await pickListValues["49"]);
+    setNoOfDaysIntoShift(await pickListValues["50"]);
+    setTimeInCompany(await pickListValues["51"]);
+    setTimeOnProject(await pickListValues["52"]);
+    setTimeInIndustry(await pickListValues["53"]);
+    setPrimaryBodyPartWithSide(await pickListValues["57"]);
+    setSecondaryBodyPartWithSide(await pickListValues["58"]);
+    setTypeOfInjury(await pickListValues["59"]);
+    setHigherMedicalResponder(await pickListValues["60"]);
+    setTreatmentType(await pickListValues["61"]);
+    setMechanismOfInjury(await pickListValues["62"]);
+    setSupervisorTimeInIndustry(await pickListValues["54"]);
+    setSupervisorTimeOnProject(await pickListValues["55"]);
+    setSupervisorTimeInCompany(await pickListValues["56"]);
     await setIsLoading(false);
   };
 
@@ -725,9 +728,10 @@ const WorkerDetails = () => {
                   <FormControl
                     variant="outlined"
                     className={classes.formControl}
+                    error={error && error.noOfDaysIntoShift}
                   >
                     <InputLabel id="unit-name-label">
-                      Number of days into shift
+                      Number of days into shift*
                     </InputLabel>
                     <Select
                       labelId="unit-name-label"
@@ -742,6 +746,37 @@ const WorkerDetails = () => {
                       }}
                     >
                       {noOfDaysIntoShift.map((value) => (
+                        <MenuItem value={value.value}>{value.label}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {error && error.noOfDaysIntoShift && (
+                    <FormHelperText style={{ color: "red" }}>{error.noOfDaysIntoShift}</FormHelperText>
+                  )}
+                </Grid>
+
+                {/* time in industry */}
+                <Grid item xs={12} md={6}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="unit-name-label">
+                      Time in industry
+                    </InputLabel>
+                    <Select
+                      labelId="unit-name-label"
+                      id="unit-name"
+                      label="Time in Industry"
+                      value={form.timeInIndustry}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          timeInIndustry: e.target.value,
+                        });
+                      }}
+                    >
+                      {timeInIndustry.map((value) => (
                         <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
@@ -783,7 +818,7 @@ const WorkerDetails = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="unit-name-label">
-                      Time on project
+                      Time on project/plant
                     </InputLabel>
                     <Select
                       labelId="unit-name-label"
@@ -798,34 +833,6 @@ const WorkerDetails = () => {
                       }}
                     >
                       {timeOnProject.map((value) => (
-                        <MenuItem value={value.value}>{value.label}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                {/* time in industry */}
-                <Grid item xs={12} md={6}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="unit-name-label">
-                      Time in industry
-                    </InputLabel>
-                    <Select
-                      labelId="unit-name-label"
-                      id="unit-name"
-                      label="Time in Industry"
-                      value={form.timeInIndustry}
-                      onChange={(e) => {
-                        setForm({
-                          ...form,
-                          timeInIndustry: e.target.value,
-                        });
-                      }}
-                    >
-                      {timeInIndustry.map((value) => (
                         <MenuItem value={value.value}>{value.label}</MenuItem>
                       ))}
                     </Select>
@@ -1442,7 +1449,7 @@ const WorkerDetails = () => {
                     className={classes.formControl}
                   >
                     <InputLabel id="unit-name-label">
-                      Supervisor time on project
+                      Supervisor time on project/plant
                     </InputLabel>
                     <Select
                       labelId="unit-name-label"
@@ -1533,7 +1540,7 @@ const WorkerDetails = () => {
                     onClick={() => handleNext()}
                     disabled={buttonLoading}
                   >
-                    Next
+                    Next{buttonLoading && <CircularProgress size={20} />}
                   </Button>
                 </Grid>
               </Grid>

@@ -1,21 +1,21 @@
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button, Grid, TextField, Typography
 } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import MuiAlert from '@material-ui/lab/Alert';
 import { PapperBlock } from 'dan-components';
-import React, { useEffect, useRef, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
+
 import api from '../../../../utils/axios';
 import { handelCommonObject, handelFileName } from '../../../../utils/CheckerValue';
 import {
@@ -66,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     lineHeight: '30px',
     border: 'none',
-    marginTop: '12px',
     '&:hover': {
       backgroundColor: '#ff8533',
       border: 'none',
@@ -77,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
     '& .dropzone': {
       flex: '1',
       display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
       padding: '35px',
       borderWidth: '2px',
@@ -139,8 +137,8 @@ const useStyles = makeStyles((theme) => ({
 const DocumentNotification = () => {
   const [formDocument, setFormDocument] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
-  // const history = useHistory();
-
+  const history = useHistory();
+  const [notifyToList, setNotifyToList] = useState([]);
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('');
@@ -151,20 +149,19 @@ const DocumentNotification = () => {
     const jhaId = handelJhaId();
     const res = await api.get(`/api/v1/jhas/${jhaId}/`);
     const apiData = res.data.data.results;
-    apiData.notifyTo == null ? apiData.notifyTo = '' : apiData.notifyTo = apiData.notifyTo.split(',');
-    setFormDocument(apiData);
+    console.log(apiData)
+    setForm(apiData);
     handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
 
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
     const config = {
       method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/`,
+      url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
       headers: HEADER_AUTH,
     };
     const notify = await api(config);
     if (notify.status === 200) {
-      console.log(notify.data.data.results);
       const result = notify.data.data.results;
       setNotificationSentValue(result);
     }
@@ -224,18 +221,24 @@ const DocumentNotification = () => {
   };
 
   const handelNotifyTo = async (e, value) => {
-    if (e.target.checked === false) {
-      const newData = formDocument.notifyTo.filter((item) => item !== value);
-      setFormDocument({
-        ...formDocument,
-        notifyTo: newData
-      });
+    if (e.target.checked === true) {
+      let temp = [...notifyToList];
+
+      temp.push(value)
+      let uniq = [...new Set(temp)];
+      setNotifyToList(uniq)
+
+      setForm({ ...form, notifyTo: temp.toString() });
     } else {
-      setFormDocument({
-        ...formDocument,
-        notifyTo: [...formDocument.notifyTo, value]
-      });
+      let temp = [...notifyToList];
+
+      let newData = temp.filter((item) => item !== value);
+
+      setNotifyToList(newData);
+      setForm({ ...form, notifyTo: newData.toString() });
+
     }
+
   };
 
   const handelApiErrorDocument = () => {
@@ -243,27 +246,33 @@ const DocumentNotification = () => {
     history.push('/app/pages/error');
   };
 
-  const handelNextDocument = async () => {
-    setsubmitLoaderDocumentDocument(true);
-    if (typeof formDocument.jhaAssessmentAttachment === 'object' && formDocument.jhaAssessmentAttachment != null) {
+
+  const handelNext = async () => {
+    setSubmitLoader(true);
+    if (typeof form.jhaAssessmentAttachment === 'object' && form.jhaAssessmentAttachment != null) {
       const data = new FormData();
-      data.append('fkCompanyId', formDocument.fkCompanyId);
-      data.append('fkProjectId', formDocument.fkProjectId);
-      data.append('location', formDocument.location);
-      data.append('jhaAssessmentDate', formDocument.jhaAssessmentDate);
-      data.append('permitToPerform', formDocument.permitToPerform);
-      data.append('jobTitle', formDocument.jobTitle);
-      data.append('description', formDocument.description);
-      data.append('classification', formDocument.classification);
-      data.append('workHours', formDocument.workHours);
-      data.append('notifyTo', formDocument.notifyTo.toString());
-      data.append('link', formDocument.link);
-      data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
-      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
+      data.append('fkCompanyId', form.fkCompanyId);
+      data.append('fkProjectId', form.fkProjectId);
+      data.append('location', form.location);
+      data.append('jhaAssessmentDate', form.jhaAssessmentDate);
+      data.append('permitToPerform', form.permitToPerform);
+      data.append('jobTitle', form.jobTitle);
+      data.append('description', form.description);
+      data.append('classification', form.classification);
+      data.append('workHours', form.workHours);
+      data.append('notifyTo', form.notifyTo !== null ? form.notifyTo.toString() : null);
+      data.append('link', form.link);
+      data.append('jhaAssessmentAttachment', form.jhaAssessmentAttachment);
+      data.append('jhaStatus', "Close")
+      data.append("jhaStage", "Assessment")
+      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiError());
     } else {
-      delete formDocument.jhaAssessmentAttachment;
-      formDocument.notifyTo = formDocument.notifyTo.toString();
-      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
+      delete form.jhaAssessmentAttachment;
+      form["jhaStatus"] = "Close"
+      form["jhaStage"] = "Assessment"
+      form["link"] = ""
+      form.notifyTo = form.notifyTo !== undefined && form.notifyTo.toString();
+      await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, form).catch(() => handelApiError());
     }
     history.push(SUMMARY_FORM.Summary);
     localStorage.setItem('Jha Status', JSON.stringify({ assessment: 'done' }));
@@ -307,10 +316,10 @@ const DocumentNotification = () => {
                     handleFile(e);
                   }}
                 />
-                <Typography title={handelFileName(formDocument.jhaAssessmentAttachment)}>
-                  {formDocument.jhaAssessmentAttachment !== ''
-                    && typeof formDocument.jhaAssessmentAttachment === 'string' ? (
-                    <Attachment value={formDocument.jhaAssessmentAttachment} />
+                <Typography title={handelFileName(form.jhaAssessmentAttachment)}>
+                  {form.jhaAssessmentAttachment !== ''
+                    && typeof form.jhaAssessmentAttachment === 'string' ? (
+                    <Attachment value={form.jhaAssessmentAttachment} />
                   ) : (
                     <p />
                   )}
@@ -340,22 +349,32 @@ const DocumentNotification = () => {
 
             {notificationSentValue.length > 0
               ? (
-                <Grid item md={12}>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">Notifications to be sent to</FormLabel>
-                    <FormGroup>
-                      {notificationSentValue.map((value) => (
-                        <FormControlLabel
-                          control={<Checkbox name={value.roleName} />}
-                          label={value.roleName}
-                          checked={formDocument.notifyTo && formDocument.notifyTo !== null && formDocument.notifyTo.includes(value.id.toString())}
-                          onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                  className={classes.formBox}
+                >
+                  <FormLabel className={classes.labelName} component="legend">Notifications to be sent to</FormLabel>
+                  <FormGroup>{notificationSentValue.map((value) => (
+                    <FormControlLabel
+                      className={classes.labelValue}
+                      control={(
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          name="checkedI"
+                          checked={form.notifyTo !== null ? form.notifyTo.includes(value.id) : ""}
+                          onChange={(e) => handelNotifyTo(e, value.id)}
                         />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  <Box borderTop={1} marginTop={2} borderColor="grey.300" />
+                      )}
+                      label={value.roleName}
+                    />
+
+                  ))}
+                  </FormGroup>
                 </Grid>
+
               )
               : null}
 

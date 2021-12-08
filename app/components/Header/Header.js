@@ -1,73 +1,57 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import classNames from "classnames";
-import Typography from "@material-ui/core/Typography";
-import Hidden from "@material-ui/core/Hidden";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import UserMenu from "./UserMenu";
-import SearchUi from "../Search/SearchUi";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import Popover from "@material-ui/core/Popover";
 import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 import Chip from "@material-ui/core/Chip";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Dialog from "@material-ui/core/Dialog";
+import MuiDialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-
-import styles from "./header-jss";
-import logos from "dan-api/images/logos";
-import ImageIcon from "@material-ui/icons/Image";
-
-import ProjectImg from "dan-images/projectImages/projectimg.jpg";
-import ProjectImgOne from "dan-images/projectImages/projectimgone.jpg";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
-import CardActions from "@material-ui/core/CardActions";
 import Divider from "@material-ui/core/Divider";
+import Fab from "@material-ui/core/Fab";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Popover from "@material-ui/core/Popover";
+import Select from "@material-ui/core/Select";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import CloseIcon from "@material-ui/icons/Close";
 import EditIcon from "@material-ui/icons/Edit";
-import PACE_white from 'dan-images/PACE_white.png';
-
-import Headerbox from "./headerbox";
-import "../../styles/custom/customheader.css";
-
-import { useParams } from "react-router";
-
-// redux
-import { connect } from "react-redux";
-import { useDispatch } from "react-redux";
-import { projectName, breakDownDetails, levelBDownDetails } from "../../redux/actions/initialDetails";
-import Topbar from "./Topbar";
-
-import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import MenuIcon from "@material-ui/icons/Menu";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 import Axios from "axios";
-import api from "../../utils/axios";
+import classNames from "classnames";
+import PACE_white from 'dan-images/PACE_white.png';
+import ProjectImg from "dan-images/projectImages/projectimg.jpg";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+// redux
+import { connect, useDispatch } from "react-redux";
+import { useParams } from "react-router";
+import { breakDownDetails, levelBDownDetails, projectName } from "../../redux/actions/initialDetails";
+import "../../styles/custom/customheader.css";
+import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
+import styles from "./header-jss";
+import UserMenu from "./UserMenu";
+
+
+
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -454,7 +438,7 @@ function Header(props) {
               }
             })
             .catch(function (error) {
-                console.log(error)
+              console.log(error)
             });
         }
       }
@@ -466,7 +450,7 @@ function Header(props) {
 
   const fetchCallBack = async () => {
     // setSelectBreakDown([])
-    try{
+    try {
       let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
       for (var key in projectData.projectName.breakdown) {
         if (key == 0) {
@@ -477,17 +461,18 @@ function Header(props) {
             headers: HEADER_AUTH,
           };
           const res = await Axios(config)
-          .then((res)=>{
-            if (res.status === 200) {
-              labellist[0].breakdownValue = res.data.data.results
-              setLabelList(labellist)
-              setIsLoading(true)
-            }
-          })
-          .catch(err=>console.log(err.message))       
+            .then((res) => {
+              if (res.status === 200) {
+                labellist[0].breakdownValue = res.data.data.results
+                setLabelList(labellist)
+                setIsLoading(true)
+                localStorage.setItem('allBreakdown', JSON.stringify(labellist))
+              }
+            })
+            .catch(err => console.log(err.message))
         }
       }
-    }catch(err){
+    } catch (err) {
       console.log(err.message)
     }
 
@@ -604,7 +589,7 @@ function Header(props) {
               onClose={handleProjectClose}
             >
               <DialogTitle onClose={handleProjectClose}>
-              Select a Project
+                Select a Project
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
@@ -629,7 +614,7 @@ function Header(props) {
                               <div className={classesm.cardMediaBox}>
                                 <CardMedia
                                   className={classesm.media}
-                                  image={ProjectImg}
+                                  image={value.projectImage === null ? ProjectImg : value.projectImage}
 
                                 //title=""
                                 />

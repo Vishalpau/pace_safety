@@ -26,6 +26,7 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
@@ -242,6 +243,8 @@ const PeoplesAffected = () => {
             `/incident/${id}/modify/reporting-and-notification/`
           );
         }
+      } else {
+        setIsNext(false)
       }
 
       // Case when form has No option selected.
@@ -345,10 +348,14 @@ const PeoplesAffected = () => {
     try {
       await api.get("api/v1/lists/71/value")
         .then((res) => {
-          const result = res.data.data.results;
+          let data=[];
+          data = res.data.data.results;
+          let result = [...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]
+          console.log(result)
           setPersonTypeValue(result);
         }).catch(error => {
-          history.push("/app/pages/error")
+          console.log(error)
+          // history.push("/app/pages/error")
         })
 
     } catch (error) {
@@ -361,7 +368,10 @@ const PeoplesAffected = () => {
     try {
       const res = await api.get("api/v1/lists/10/value")
         .then((res) => {
-          const result = res.data.data.results;
+          let data=[];
+          data = res.data.data.results;
+          const result = [...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]
+          
           setDepartmentValue(result);
         }).catch(error => {
           history.push("/app/pages/error")
@@ -719,7 +729,7 @@ const PeoplesAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Details of people affected"
+                    label={COMMENT}
                     className={classes.fullWidth}
                     onChange={(e) => setPersonAffectedComments(e.target.value)}
                     value={personAffectedComments || ""}

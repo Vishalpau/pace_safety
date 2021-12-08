@@ -1,55 +1,37 @@
-import React, { useEffect, useState, Component } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
+import DateFnsUtils from '@date-io/date-fns';
+import { Button, CircularProgress, FormHelperText, Grid, TextField, Typography } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from '@material-ui/core/FormGroup';
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import { FormHelperText } from "@material-ui/core";
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import moment from "moment";
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
+import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams, useHistory } from 'react-router';
-import { CircularProgress } from '@material-ui/core';
-
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import axios from "axios";
+import { PapperBlock } from 'dan-components';
+import moment from "moment";
+import React, { useEffect, useRef, useState } from 'react';
+import { useHistory, useParams } from 'react-router';
+import FormSideBar from "../../../../containers/Forms/FormSideBar";
 import api from "../../../../utils/axios";
-
-import { handelCommonObject } from "../../../../utils/CheckerValue"
+import { handelCommonObject } from "../../../../utils/CheckerValue";
+import {
+  HEADER_AUTH, SSO_URL
+} from "../../../../utils/constants";
+import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
+import Loader from "../../../Forms/Loader";
+import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import { AHA } from "../constants";
 import ProjectDetailsValidator from "../Validator/ProjectDetailsValidation";
 
-import { AHA } from "../constants";
-import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 
-import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
-} from "../../../../utils/constants";
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -209,7 +191,7 @@ const ProjectDetails = () => {
   const [selectBreakDown, setSelectBreakDown] = useState([]);
   const radioDecide = ['Yes', 'No']
   const [error, setError] = useState({});
-  const permitType = ["Permit 1" , "Permit 2" , "Permit 3" , "Permit 4"]
+  const permitType = useRef([])
 
   const handleTeamName = (e, key) => {
     const temp = [...Teamform];
@@ -228,22 +210,18 @@ const ProjectDetails = () => {
       }]);
     }
   };
-  const handelRemove = async (e, index) => {
 
+  const handelRemove = async (e, index) => {
     if (Teamform.length > 1) {
       if (Teamform[index].id !== undefined) {
         const res = await api.delete(
           `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
         );
       }
-
       let temp = Teamform;
       let newData = Teamform.filter((item, key) => key !== index);
-
       await setTeamForm(newData);
-
     };
-
   }
 
 
@@ -263,7 +241,7 @@ const ProjectDetails = () => {
       "department": "",
       "additionalRemarks": "",
       "classification": "string",
-      "wrpApprovalUser": "",
+      "wrpApprovalUser": null,
       "wrpApprovalDateTime": null,
       "picApprovalUser": "",
       "picApprovalDateTime": null,
@@ -274,7 +252,7 @@ const ProjectDetails = () => {
       "lessonLearntUserName": "",
       "ahaStatus": "",
       "ahaStage": "",
-      "typeOfPermit" : "",
+      "typeOfPermit": "",
       "badgeNumber": "",
       "status": "Active",
       "createdBy": parseInt(userId),
@@ -283,14 +261,18 @@ const ProjectDetails = () => {
       "vendorReferenceId": "string"
     }
   )
-
   const handleSubmit = async (e) => {
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
-
+    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
+    await setError(error);
+    if (!isValid) {
+      return "Data is not valid";
+    }
+    await setLoading(true);
     let structName = []
     let projectStructId = fkProjectStructureId.split(":")
 
@@ -304,35 +286,45 @@ const ProjectDetails = () => {
       structName.push(workArea.data.data.results[0]["structureName"])
     }
     form["workArea"] = structName[structName.length - 1]
-    const { error, isValid } = ProjectDetailsValidator(form, selectDepthAndId);
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
-    }
-    await setLoading(true);
+    // form["assessmentDate"] = new Date().toISOString().split('T')[0]
     if (form.id) {
+      form["assessmentDate"] = form['assessmentDate'].split('T')[0]
       delete form["ahaAssessmentAttachment"]
+      if (form['notifyTo'] === null) {
+        form['notifyTo'] = "null"
+      }
       // form['updatedBy'] = form['createdBy']
-      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
-      for (let i = 0; i < Teamform.length; i++) {
-        if (Teamform[i].id) {
-          const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
-        } else {
-          Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
-          if (Teamform[i].teamName !== "") {
-            const res = await api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+      const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form).then(res => {
+        for (let i = 0; i < Teamform.length; i++) {
+          if (Teamform[i].id) {
+            const res = api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[i].id}/`, Teamform[i]);
+          } else {
+            Teamform[i]["fkAhaId"] = localStorage.getItem("fkAHAId");
+            if (Teamform[i].teamName !== "") {
+              const res = api.post(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/`, Teamform[i]);
+            }
+            if (res.status === 200) {
+              history.push("/app/pages/aha/assessments/project-area-hazards")
+            }
           }
-          if (res.status === 200) {
-            history.push("/app/pages/aha/assessments/project-area-hazards")
-          }
-        }
 
-      }
-      if (res.status === 200) {
-        history.push(`/app/pages/aha/assessments/project-area-hazards/`)
-      }
+        }
+        if (res.status === 200) {
+          history.push(`/app/pages/aha/assessments/project-area-hazards/`)
+        }
+      }).catch(err => {
+        setLoading(false);
+      })
+
+
 
     } else {
+      if (form['permitToPerform'] === "No") {
+        form['typeOfPermit'] = ""
+        form['permitNumber'] = ""
+      }
+      form["ahaStage"] = "Assessments"
+      form["ahaStatus"] = "Pending"
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
@@ -347,8 +339,11 @@ const ProjectDetails = () => {
           }
         }
         history.push("/app/pages/aha/assessments/project-area-hazards")
+      } else {
+        await setLoading(false);
       }
     }
+
   }
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -361,6 +356,7 @@ const ProjectDetails = () => {
   const projectData = JSON.parse(localStorage.getItem("projectName"));
 
   const fetchCallBack = async () => {
+
     setSelectBreakDown([])
     for (var key in projectData.projectName.breakdown) {
 
@@ -513,15 +509,21 @@ const ProjectDetails = () => {
     await setTeamForm(result)
   }
 
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
+  const pickListValue = async () => {
+    permitType.current = await pickListValues["81"]
+  }
+  console.log(permitType.current, "AASAS")
   const classes = useStyles();
-  console.log(form)
+
   useEffect(() => {
     fetchCallBack()
-    if(id){
-    fetchAhaData()
-    fetchTeamData()
+    pickListValue()
+    if (id) {
+      fetchAhaData()
+      fetchTeamData()
     }
-    
   }, []);
   return (
     <>
@@ -586,6 +588,7 @@ const ProjectDetails = () => {
                   setWorkArea={setWorkArea}
                   setSelectDepthAndId={setSelectDepthAndId} />
               }
+
               <Grid
                 item
                 md={6}
@@ -606,6 +609,7 @@ const ProjectDetails = () => {
                   className={classes.formControl}
                 />
               </Grid>
+
               <Grid
                 item
                 md={6}
@@ -617,14 +621,13 @@ const ProjectDetails = () => {
                     className={classes.formControl}
                     // margin="dense"
                     fullWidth
-                    label="Date & Time*"
-                    value={selectedDate}
-                    // onChange={handleDateChange}
+                    label="Date*"
                     value={form.assessmentDate || null}
                     error={error.assessmentDate}
                     helperText={error.assessmentDate ? error.assessmentDate : null}
                     inputVariant="outlined"
                     disableFuture="true"
+                    format="MM/dd/yyyy"
                     onClick={(e) => setIsDateShow(true)}
                     open={isDateShow}
                     onClose={(e) => handelClose()}
@@ -633,12 +636,12 @@ const ProjectDetails = () => {
                         ...form,
                         assessmentDate: moment(e).format("YYYY-MM-DD"),
                       });
-                      // console.log(e.target.value)
                     }}
                     InputProps={{ readOnly: true }}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
+
               <Grid
                 item
                 md={12}
@@ -664,54 +667,55 @@ const ProjectDetails = () => {
                     </FormHelperText>
                   )}
                 </FormControl>
-              </Grid>{form.permitToPerform === "Yes" || form.permitToPerform === "" ? 
-              <Grid item md={6} sm={12} xs={12}>
-                            <FormControl
-                              variant="outlined"
-                              requirement
-                              className={classes.formControl}
-                            >
-                              <InputLabel id="demo-simple-select-label">
-                                Type of permit
-                              </InputLabel>
-                              <Select
-                                label="Type of permit"
-                                value={form.typeOfPermit ? form.typeOfPermit : ""}
-                              >
-                                {permitType.map(
-                                  (value) => (
-                                    <MenuItem
-                                      value={value}
-                                      onClick={(e) => {setForm({...form,typeOfPermit:value})}}
-                                    >
-                                      {value}
-                                    </MenuItem>
-                                  )
-                                )}
-                              </Select>
-                            </FormControl>
-                          </Grid>: null}
-              <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <TextField
-                  label="Permit Reference"
-                  // margin="dense"
-                  name="reference"
-                  id="reference"
-                  multiline
-                  value={form.permitNumber ? form.permitNumber : ""}
-                  fullWidth
-                  onChange={(e) => {
-                    { setForm({ ...form, permitNumber: e.target.value }) };
-                  }}
-                  variant="outlined"
-                  className={classes.formControl}
-                />
               </Grid>
+              {form.permitToPerform === "Yes" || form.permitToPerform === "" ? <>
+                <Grid item md={6} sm={12} xs={12}>
+                  <FormControl
+                    variant="outlined"
+                    requirement
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="demo-simple-select-label">
+                      Type of permit
+                    </InputLabel>
+                    <Select
+                      label="Type of permit"
+                      value={form.typeOfPermit ? form.typeOfPermit : ""}
+                    >
+                      {permitType.current.map(
+                        (value) => (
+                          <MenuItem
+                            value={value.label}
+                            onClick={(e) => { setForm({ ...form, typeOfPermit: value.label }) }}
+                          >
+                            {value.label}
+                          </MenuItem>
+                        )
+                      )}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid
+                  item
+                  md={6}
+                  xs={12}
+                  className={classes.formBox}
+                >
+                  <TextField
+                    label="Permit Reference"
+                    // margin="dense"
+                    name="reference"
+                    id="reference"
+                    multiline
+                    value={form.permitNumber ? form.permitNumber : ""}
+                    fullWidth
+                    onChange={(e) => {
+                      { setForm({ ...form, permitNumber: e.target.value }) };
+                    }}
+                    variant="outlined"
+                    className={classes.formControl}
+                  />
+                </Grid> </> : null}
               <Grid
                 item
                 md={12}
@@ -719,7 +723,7 @@ const ProjectDetails = () => {
                 className={classes.formBox}
               >
                 <TextField
-                  label="Description*"
+                  label="Description of area*"
                   // margin="dense"
                   name="description"
                   id="description"
@@ -736,6 +740,7 @@ const ProjectDetails = () => {
                   className={classes.formControl}
                 />
               </Grid>
+
               <Grid
                 item
                 md={12}
@@ -754,7 +759,7 @@ const ProjectDetails = () => {
                 >
 
                   <TextField
-                    label="Team Name"
+                    label={`Name ${index + 1}`}
                     // margin="dense"
                     name="arename"
                     id="arename"
@@ -798,7 +803,7 @@ const ProjectDetails = () => {
                 xs={12}
                 style={{ marginTop: '15px' }}
               >
-                            <div className={classes.loadingWrapper}>
+                <div className={classes.loadingWrapper}>
 
                   <Button
                     variant="outlined"
@@ -811,13 +816,13 @@ const ProjectDetails = () => {
                     Next
                   </Button>
                   {loading && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
                 </div>
-                  
+
               </Grid>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -827,7 +832,11 @@ const ProjectDetails = () => {
                 selectedItem="Project Details"
               />
             </Grid>
-          </Grid> : <> loading...</>}
+          </Grid> :
+          <>
+            <Loader />
+          </>
+        }
       </PapperBlock>
     </>
   );

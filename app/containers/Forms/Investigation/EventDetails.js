@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
@@ -100,6 +101,7 @@ const EventDetails = () => {
   const [errorCost, setErrorCost] = useState({});
   const [loading, setLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   // check upadte 
   const handelUpdateCheck = async (e) => {
@@ -239,9 +241,9 @@ const EventDetails = () => {
     await setError(error);
     await setErrorWeather(errorWeather);
     await setErrorCost(errorCost)
-    setButtonLoading(true)
     const temp = incidentsListData
     temp.updatedAt = new Date().toISOString();
+    setButtonLoading(true)
     if (incidentsListData.incidentStage === "Investigation") {
       temp.incidentStatus = "Done"
       try {
@@ -382,13 +384,13 @@ const EventDetails = () => {
   };
 
   const PickListCall = async () => {
-    activityListValues.current = await PickListData(63);
-    jobTaskValues.current = await PickListData(64);
-    weatherValues.current = await PickListData(65);
-    lightningValues.current = await PickListData(66);
-    fluidTypeValues.current = await PickListData(67);
-    costTypeValues.current = await PickListData(68);
-    casualFactorTypeValues.current = await PickListData(69);
+    activityListValues.current = await pickListValues["63"];
+    jobTaskValues.current = await pickListValues["64"];
+    weatherValues.current = await pickListValues["65"];
+    lightningValues.current = await pickListValues["66"];
+    fluidTypeValues.current = await pickListValues["67"];
+    costTypeValues.current = await pickListValues["68"];
+    casualFactorTypeValues.current = await pickListValues["69"];
     await handelUpdateCheck();
     await setLoading(true)
   };
@@ -417,45 +419,6 @@ const EventDetails = () => {
         <>
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
-              {/* activity */}
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  error={
-                    error && error.activity
-                  }
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="project-name-label">Activity</InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Activity"
-                    value={form.activity}
-                  >
-                    {activityListValues.current.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues.value}
-                        onClick={(e) => {
-                          setForm({
-                            ...form,
-                            activity: selectValues.value,
-                          });
-                        }}
-                      >
-                        {selectValues.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {error && error.activity && (
-                  <FormHelperText style={{ color: "red" }}>
-                    {error.activity}
-                  </FormHelperText>
-                )}
-              </Grid>
-
               {/* job task */}
               <Grid item xs={12} md={6}>
                 <FormControl
@@ -491,6 +454,45 @@ const EventDetails = () => {
                 {error && error.jobTask && (
                   <FormHelperText style={{ color: "red" }}>
                     {error.jobTask}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {/* activity */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  error={
+                    error && error.activity
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Activity</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Activity"
+                    value={form.activity}
+                  >
+                    {activityListValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues.value}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            activity: selectValues.value,
+                          });
+                        }}
+                      >
+                        {selectValues.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {error && error.activity && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error.activity}
                   </FormHelperText>
                 )}
               </Grid>
@@ -659,11 +661,7 @@ const EventDetails = () => {
 
               <Grid item xs={12} md={6}>
                 <FormControl
-                  error={
-                    error && error.spillsFluidType
-                  }
                   variant="outlined"
-                  required
                   className={classes.formControl}
                 >
                   <InputLabel id="project-name-label">Fluid type</InputLabel>
@@ -688,11 +686,6 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {error && error.spillsFluidType && (
-                  <FormHelperText style={{ color: "red" }}>
-                    {error.spillsFluidType}
-                  </FormHelperText>
-                )}
               </Grid>
 
               <Grid item xs={12} md={6}>
@@ -948,7 +941,7 @@ const EventDetails = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

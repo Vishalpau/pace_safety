@@ -1,10 +1,16 @@
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from "@material-ui/core/Tooltip";
+import Close from '@material-ui/icons/Close';
 import { PapperBlock } from 'dan-components';
 import moment from "moment";
-import React, { useEffect, useState } from 'react';
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
+
 import api from "../../../../utils/axios";
 import { handelActionData, handelActionDataAssessment } from "../../../../utils/CheckerValue";
 import Paper from '@material-ui/core/Paper';
@@ -15,7 +21,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { APPROVAL_FORM, SUMMARY_FORM } from "../Utils/constants";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 
@@ -24,9 +29,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from '@material-ui/core/IconButton';
-import Close from '@material-ui/icons/Close';
+
 import ApprovalValidator from '../Validation/ApprovalsValidation';
 
 import Table from "@material-ui/core/Table";
@@ -183,9 +186,9 @@ const Approvals = () => {
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
-  const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
 
   const [open, setOpen] = useState(false);
+  const [openSeniorAuthorized, setOpenSeniorAuthorized] = useState(false);
   const [loading, setLoading] = useState(false)
 
   const handelJobDetails = async () => {
@@ -228,9 +231,6 @@ const Approvals = () => {
     setActionData(temp !== null ? temp : [])
   };
 
-  const handleCloseSenirorAuthorized = () => {
-    setOpenSeniorAuthorized(false)
-  }
 
   const handelActionLink = () => {
     const projectId =
@@ -281,6 +281,10 @@ const Approvals = () => {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleCloseSenirorAuthorized = () => {
+    setOpenSeniorAuthorized(false)
   }
 
   useEffect(() => {
@@ -535,6 +539,7 @@ const Approvals = () => {
                     </Grid>
                   </Paper>
                 </Grid>
+
                 {/* submitLoader */}
                 <Grid
                   item
@@ -564,6 +569,7 @@ const Approvals = () => {
                     Cancel
                   </Button>
                 </Grid>
+
               </Grid>
             </Col>
             <Col md={3}>

@@ -20,9 +20,8 @@ import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { APPROVAL_FORM } from "../constants";
-
-
-
+import Loader from "../../../Forms/Loader";
+import ApprovalValidator from "../Validator/ApprovalValidation"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -112,12 +111,14 @@ const Approvals = () => {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [person, setPerson] = useState("")
   const [projectData, setProjectData] = useState({
     companyId: "",
     projectId: "",
     createdBy: "",
     ProjectStructId: "",
   })
+  const [error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const user =
@@ -131,6 +132,7 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const apiData = res.data.data.results;
+    console.log(apiData)
     setForm(apiData);
     setIsLoading(true)
   };
@@ -168,25 +170,41 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
-    if (type == "work") {
+    if (type == "Competent Person (CP)") {
       setForm({
         ...form,
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
       setOpen(false)
-    } else if (type == "pic") {
+    } else if (type == "Senior Authorized Person (SAP)") {
       setForm({
         ...form,
-        picApprovalUser: name,
-        picApprovalDateTime: new Date(),
+        sapApprovalUser: name,
+        sapApprovalDateTime: new Date(),
       });
+      setOpen(false)
     }
   };
+
   const handleClose = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
+    if (form.notifyTo === null) {
+      form['notifyTo'] = "null"
+    }
+    form["ahaStage"] = "Approval"
+    if (form['wrpApprovalUser'] === null) {
+      form["ahaStatus"] = "Pending"
+    } else {
+      form["ahaStatus"] = "Done"
+    }
+    const { error, isValid } = ApprovalValidator(form, actionData)
+    await setError(error)
+    if (!isValid) {
+      return "data not valid"
+    }
     await setSubmitLoader(true)
 
     delete form["ahaAssessmentAttachment"];
@@ -253,21 +271,45 @@ const Approvals = () => {
                 <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Work Responsible Person (WRP)
+                    Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"
-                    color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
+                    color={form.wrpApprovalUser == null ? "primary" : "secondary"}
                     className={classes.approvalButton}
-                    onClick={(e) => setOpen(true)}
+                    onClick={(e) => { setOpen(true), setPerson("Competent Person (CP)") }}
+                    disabled={form.wrpApprovalUser !== null}
                   >
-                    {form.wrpApprovalUser == "" ? "Approve Now" : "Approved"}
+                    {form.wrpApprovalUser == null ? "Approve Now" : "Approved"}
                   </Button>
                   <div>
                     {form.wrpApprovalDateTime !== undefined
                       &&
                       form.wrpApprovalDateTime !== null ?
                       `Approved By: ${form.wrpApprovalUser} on Date: ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
+                      : null
+                    }
+                  </div>
+                </Grid>
+                <Grid item md={8} xs={12} className={classes.formBox}>
+
+                  <Typography variant="h6" gutterBottom className={classes.labelName}>
+                    Senior Authorized Person (SAP)
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color={form.sapApprovalUser === null ? "primary" : "secondary"}
+                    className={classes.approvalButton}
+                    onClick={(e) => { setOpen(true), setPerson("Senior Authorized Person (SAP)") }}
+                    disabled={form.sapApprovalUser !== null}
+                  >
+                    {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
+                  </Button>
+                  <div>
+                    {form.sapApprovalUser !== undefined
+                      &&
+                      form.sapApprovalDateTime !== null ?
+                      `Approved By: ${form.sapApprovalUser} on Date: ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
                       : null
                     }
                   </div>
@@ -296,7 +338,7 @@ const Approvals = () => {
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving work responsible person.
+                        You are approving as {person}.
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
@@ -314,20 +356,22 @@ const Approvals = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={(e) => handelWorkAndPic("work")}
+                        onClick={(e) => handelWorkAndPic(person)}
                       >
                         Ok
                       </Button>
                     </Tooltip>
                   </DialogActions>
                 </Dialog>
-                <Grid item md={8} xs={12} className={classes.formBox}>
+                {/* <Grid item md={8} xs={12} className={classes.formBox}>
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
 
                     If not approved then create a action.
                   </Typography>
-                </Grid>
+                </Grid> */}
+                {actionData.length == 0 ? <Grid item md={8}>
+                  <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
                 <Grid item md={6} xs={12}>
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -384,7 +428,8 @@ const Approvals = () => {
                 selectedItem={"Approval"}
               />
             </Col>
-          </Row> </> : <h1>Loading...</h1>}
+          </Row> </> : <Loader />}
+
       </PapperBlock>
     </>
   );

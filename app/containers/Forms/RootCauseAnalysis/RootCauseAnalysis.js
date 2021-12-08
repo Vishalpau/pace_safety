@@ -33,6 +33,8 @@ import RootCauseValidation from "../../Validator/RCAValidation/RootCauseAnalysis
 import ActionShow from "../ActionShow";
 import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -79,6 +81,7 @@ const RootCauseAnalysis = () => {
   const [buttonLoading, setButtonLoading] = useState(false)
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([])
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const handelUpdateCheck = async () => {
     const page_url = window.location.href;
@@ -128,7 +131,7 @@ const RootCauseAnalysis = () => {
       putId.current = incidentId;
       checkPost.current = false;
     }
-    classificationValues.current = await PickListData(40);
+    classificationValues.current = await pickListValues["40"];
     2;
   };
 
@@ -452,7 +455,7 @@ const RootCauseAnalysis = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Submit
+                  Submit{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

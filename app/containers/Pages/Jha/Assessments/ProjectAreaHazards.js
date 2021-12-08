@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
-import Box from "@material-ui/core/Box";
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormControl from '@material-ui/core/FormControl';
@@ -12,13 +12,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { PapperBlock } from 'dan-components';
-import React, { useEffect, useState } from 'react';
+
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
 import api from "../../../../utils/axios";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { handelJhaId } from "../Utils/checkValue";
 import { JHA_FORM } from "../Utils/constants";
+
 
 
 

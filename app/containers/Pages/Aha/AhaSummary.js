@@ -1,77 +1,62 @@
-import React, { useState, useEffect } from "react";
-import { PapperBlock } from "dan-components";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import React, { useEffect, useState, lazy } from "react";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Box from "@material-ui/core/Box";
-import CheckCircle from "@material-ui/icons/CheckCircle";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import AccessTime from "@material-ui/icons/AccessTime";
+import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import classNames from "classnames";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-
+import Grid from "@material-ui/core/Grid";
 // List
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
-import { useHistory, useParams } from "react-router";
-
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import AccessTime from "@material-ui/icons/AccessTime";
+import Add from "@material-ui/icons/Add";
+import CheckCircle from "@material-ui/icons/CheckCircle";
+import Close from "@material-ui/icons/Close";
+import Comment from "@material-ui/icons/Comment";
+import Edit from "@material-ui/icons/Edit";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import History from "@material-ui/icons/History";
+import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
 // Icons
 import Print from "@material-ui/icons/Print";
 import Share from "@material-ui/icons/Share";
-import Close from "@material-ui/icons/Close";
-import Comment from "@material-ui/icons/Comment";
-import History from "@material-ui/icons/History";
-import Edit from "@material-ui/icons/Edit";
-import Add from "@material-ui/icons/Add";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
-import Styles from "dan-styles/Summary.scss";
+import axios from "axios";
+import { PapperBlock } from "dan-components";
 import Fonts from "dan-styles/Fonts.scss";
-
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-
-import ImageIcon from "@material-ui/icons/Image";
-import Avatar from "@material-ui/core/Avatar";
-import Link from "@material-ui/core/Link";
-
-import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
+import MuiAlert from '@material-ui/lab/Alert';
+import Styles from "dan-styles/Summary.scss";
+import moment from "moment";
+import { useHistory, useParams } from "react-router";
 
 import api from "../../../utils/axios";
-import moment from "moment";
-
-import Attachment from "../../Attachment/Attachment";
-import axios from "axios";
-import { Comments } from "../../pageListAsync";
-import ActionShow from '../../Forms/ActionShow';
-import { handelActionData } from "../../../utils/CheckerValue"
-
-// import AhaSummary from "../../../containers/Activity/Activity" ;
-
+import { handelActionWithEntity, handelActionDataAssessment } from "../../../utils/CheckerValue";
 import {
-  access_token,
-  ACCOUNT_API_URL,
-  HEADER_AUTH,
-  INITIAL_NOTIFICATION_FORM,
-  LOGIN_URL,
-  SSO_URL,
+  HEADER_AUTH, SSO_URL
 } from "../../../utils/constants";
+import Attachment from "../../Attachment/Attachment";
+import ActionShow from '../../Forms/ActionShow';
+import Loader from "../../Forms/Loader";
+import { Comments } from "../../pageListAsync";
+import { checkValue } from "../Jha/Utils/checkValue";
+import Snackbar from '@material-ui/core/Snackbar';
+
+
 
 // Sidebar Links Helper Function
 
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -87,16 +72,11 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium,
   },
   aLabelValue: {
-    fontSize: "1rem",
-    fontWeight: "600",
-    color: "#063d55",
-    float: "left",
-    width: "100%",
-    paddingRight: "40px",
-    "& div": {
-      display: "inline-block",
-      float: "right",
-    },
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#063d55',
+    float: 'left',
+    width: '100%',
   },
   updateLink: {
     float: "left",
@@ -131,11 +111,12 @@ const useStyles = makeStyles((theme) => ({
   },
   ratioColororange: {
     backgroundColor: "orange",
-    padding: "16px!important",
-    height: "56px",
-    marginTop: "7px",
+    padding: "7px!important",
+    height: "50px",
+    marginTop: "0px",
     borderRadius: "5px",
     color: "#ffffff",
+    width: "100%",
   },
   labelValue: {
     fontSize: "1rem",
@@ -153,34 +134,41 @@ function AhaSummary() {
   const [closeOut, setCloseOut] = useState(false);
   const [comments, setComments] = useState(false);
   const [activity, setActivity] = useState(false);
-  //const [summary, setSummary] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel5"
   );
-
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   const { id } = useParams();
-  //const [summary, setSummary] = useState(false);
   const [ahaData, setAHAData] = useState({});
   const [Teamform, setTeamForm] = useState([]);
   const [projectSturcturedData, setProjectSturcturedData] = useState([]);
-  const [actionTakenData, setActionTakenData] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
   const [isNext, setIsNext] = useState(false)
   const [approvalActionData, setApprovalactionData] = useState([])
-
-
+  const [lessionAction, setLessionAction] = useState([])
+  const [notificationSentValue, setNotificationSentValue] = useState([])
+  const [projectStructName, setProjectStructName] = useState([])
+  const [form, setForm] = useState([]);
+  const [checkListAssessment, setCheckListAssessment] = useState({})
+  const [messageSnackBar, setMessageSnackbar] = useState("")
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const user = JSON.parse(localStorage.getItem("userDetails"));
+  const projectData = JSON.parse(localStorage.getItem('projectName'));
 
   const handleNewAhaPush = async () => {
     history.push(
@@ -189,35 +177,53 @@ function AhaSummary() {
       )}`
     );
   };
+
   const handleAhaApprovalsPush = async () => {
     history.push("/app/pages/aha/approvals/approvals");
   };
+
   const handleAhaLessonLearnPush = async () => {
     history.push("/app/pages/aha/lessons-learned/lessons-learned");
   };
 
   const handleCloseOutPush = async () => {
-
     history.push("/app/pages/aha/close-out");
   };
 
+  const handleClickSnackBar = () => {
+    setOpenSnackBar(true);
+  };
 
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
-  const viewSwitch = (viewName) => {
-    if (viewName == "assessment") {
-      if (ahaData.notifyTo !== "") {
-        setAssessments(true);
-      } else {
-        history.push(`/app/pages/aha/assessments/project-details/`)
-      }
-      setApprovals(false);
-      setCloseOut(false);
-      setLessonsLearned(false);
-      setComments(false);
-      setActivity(false);
-    } else if (viewName == "approval") {
+  let errorMessage = "Please fill"
+  let errorAssessment = "assessments"
+  let errorApproval = "approvals"
+  let errorLession = "lession learned"
+  let errorCloseOut = "close out"
+
+  const handleAssessmentViewChanges = () => {
+    if (ahaData.notifyTo !== "") {
+      setAssessments(true);
+    } else {
+      history.push(`/app/pages/aha/assessments/project-details/`)
+    }
+    setApprovals(false);
+    setCloseOut(false);
+    setLessonsLearned(false);
+    setComments(false);
+    setActivity(false);
+  }
+
+  const handelApprovalViewChange = () => {
+    if (ahaData.notifyTo !== "") {
       setAssessments(false);
-      if (ahaData.wrpApprovalUser !== "") {
+      if (ahaData.wrpApprovalUser !== null) {
         setApprovals(true);
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
@@ -226,7 +232,14 @@ function AhaSummary() {
       setLessonsLearned(false);
       setComments(false);
       setActivity(false);
-    } else if (viewName == "lession") {
+    } else {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment}`)
+      handleClickSnackBar()
+    }
+  }
+
+  const handelLessionLearnedChanges = () => {
+    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName !== null) {
       setAssessments(false);
       setApprovals(false);
       setCloseOut(false);
@@ -237,7 +250,23 @@ function AhaSummary() {
       }
       setComments(false);
       setActivity(false);
-    } else if (viewName = "closeOut") {
+    } else {
+      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
+        setMessageSnackbar(`${errorMessage} ${errorAssessment} , ${errorApproval} and  ${errorCloseOut}`)
+        handleClickSnackBar()
+      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
+        setMessageSnackbar(`${errorMessage}  ${errorApproval} and  ${errorCloseOut}`)
+        handleClickSnackBar()
+      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName == null) {
+        setMessageSnackbar(`${errorMessage}  ${errorCloseOut}`)
+        handleClickSnackBar()
+      }
+    }
+
+  }
+
+  const handelCloseOutViewChanges = () => {
+    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) {
       setAssessments(false);
       setApprovals(false);
       if (ahaData.closedByName !== null) {
@@ -248,9 +277,29 @@ function AhaSummary() {
       setLessonsLearned(false);
       setComments(false);
       setActivity(false);
+    } else {
+      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null) {
+        setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval}`)
+        handleClickSnackBar()
+      } else {
+        setMessageSnackbar(`${errorMessage} ${errorApproval} `)
+        handleClickSnackBar()
+      }
     }
+
   }
 
+  const viewSwitch = (viewName) => {
+    if (viewName == "assessment") {
+      handleAssessmentViewChanges()
+    } else if (viewName == "approval") {
+      handelApprovalViewChange()
+    } else if (viewName == "lession") {
+      handelLessionLearnedChanges()
+    } else if (viewName = "closeOut") {
+      handelCloseOutViewChanges()
+    }
+  }
 
   const handleCommentsPush = async () => {
     await setAssessments(false);
@@ -259,9 +308,8 @@ function AhaSummary() {
     await setCloseOut(false);
     await setComments(true);
     await setActivity(false);
-
-    // history.push("/app/comments/comments");
   };
+
   const handleActivityPush = async () => {
     await setAssessments(false);
     await setApprovals(false);
@@ -269,27 +317,18 @@ function AhaSummary() {
     await setCloseOut(false);
     await setComments(false);
     await setActivity(true);
-    // history.push("/app/activity/activity");
   };
 
-  const user = JSON.parse(localStorage.getItem("userDetails"));
-
-  const handelFileName = (value) => {
-    const fileNameArray = value.split("/");
-    const fileName = fileNameArray[fileNameArray.length - 1].split("-");
-    const lastNameArray = fileName[fileName.length - 1];
-    // const lastName = fileName.split("-");
-    return lastNameArray;
-  };
-  const [projectStructName, setProjectStructName] = useState([])
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
+    console.log(result)
     await setAHAData(result);
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
-
+    await fetchNotificationSent(result.notifyTo)
   };
+
   const handelWorkArea = async (assessment) => {
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -302,7 +341,6 @@ function AhaSummary() {
         : null;
     let structName = []
     let projectStructId = assessment.fkProjectStructureIds.split(":")
-    console.log(projectStructId, "PPPPP")
     for (let key in projectStructId) {
       let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
       const api_work_area = axios.create({
@@ -310,14 +348,10 @@ function AhaSummary() {
         headers: HEADER_AUTH
       });
       const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
-      console.log(workArea, "!@#$")
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName, "@@@@@@")
     setProjectStructName(structName)
   }
-
-  console.log(projectStructName, "LLL")
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -326,8 +360,8 @@ function AhaSummary() {
     const result = res.data.data.results;
     await setTeamForm(result);
   };
+
   const fetchBreakDownData = async (projectBreakdown) => {
-    const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
     let selectBreakDown = [];
     const breakDown = projectBreakdown.split(':');
@@ -403,102 +437,121 @@ function AhaSummary() {
     }
   };
 
-
-
-  // console.log(projectSturcturedData,"lkklklklkl")
-  const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
+    let ahaID = localStorage.getItem("fkAHAId")
     const res = await api.get(
-      `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/`
+      `/api/v1/ahas/${ahaID}/areahazards/`
     );
     const result = res.data.data.results;
-
-    let zzz = [...result]
-
+    let colorAssessmment = [...result]
     for (var i = 0; i < result.length; i++) {
       if (result[i].riskRating !== "") {
-        if (result[i].riskRating === "25%") {
-          zzz[i].riskRatingColour = '#1EBD10'
-        } else if (result[i].riskRating === "50%") {
-          zzz[i].riskRatingColour = '#FFEB13'
+        if (result[i].riskRating === "2 Trivial" || result[i].riskRating === "4 Trivial") {
+          colorAssessmment[i].riskRatingColour = '#009933'
+        } else if (result[i].riskRating === "6 Tolerable" || result[i].riskRating === "8 Tolerable") {
+          colorAssessmment[i].riskRatingColour = '#8da225'
 
-        } else if (result[i].riskRating === "75%") {
-          zzz[i].riskRatingColour = '#F3C539'
+        } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
+          colorAssessmment[i].riskRatingColour = '#fff82e'
 
-        } else {
-          zzz[i].riskRatingColour = '#FF0000'
-
+        } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
+          colorAssessmment[i].riskRatingColour = '#990000'
+        }
+        else {
+          colorAssessmment[i].riskRatingColour = '#ff0000'
         }
       }
     }
-    await setForm(zzz);
+
+    let resAction = await handelActionDataAssessment(ahaID, colorAssessmment, "all", "aha:hazard")
+    await setForm(resAction);
     await handelActionTracker(result)
+
   };
 
   const handelActionTracker = async (resultHazard) => {
     let ahaId = localStorage.getItem("fkAHAId")
-
-    let actionData = await handelActionData(ahaId, resultHazard)
-    await setForm(actionData);
-
-    let allAction = await handelActionData(ahaId, [], "title")
-    let temp = []
-    allAction.map((value) => {
-      if (value.enitityReferenceId.split(":")[1] == "00") {
-        temp.push(value)
-      }
-    })
-    setApprovalactionData(temp !== null ? temp : [])
+    const allAction = await handelActionWithEntity(ahaId, "aha:approval");
+    setApprovalactionData(allAction)
   };
-  const handelShowData = () => {
 
+  const handelShowData = () => { }
+
+  const handelLessionActionTracker = async () => {
+    let ahaId = localStorage.getItem("fkAHAId")
+    let allAction = await handelActionWithEntity(ahaId, "aha:lessionLearned")
+    setLessionAction(allAction)
+  };
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const assessmentDataValues = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    var tempPerformance = {}
+
+
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/aha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+
+
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })
+    setCheckListAssessment(tempPerformance)
   }
 
-
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
-
-  const fetchactionTrackerData = async () => {
-    let API_URL_ACTION_TRACKER = "https://dev-actions-api.paceos.io/";
-    const api_action = axios.create({
-      baseURL: API_URL_ACTION_TRACKER,
-    });
-    let ActionToCause = {};
-    const allActionTrackerData = await api_action.get("/api/v1/actions/");
-    const allActionTracker = allActionTrackerData.data.data.results.results;
-    const newData = allActionTracker.filter(
-      (item) => item.enitityReferenceId === localStorage.getItem("fkAHAId")
-    );
-    let sorting = newData.sort((a, b) => a.id - b.id);
-
-    await setActionTakenData(sorting);
-    // await setIsLoading(true);
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { }
   };
+
 
   useEffect(() => {
     if (id) {
       fetchAHASummary();
       fetchTeamData();
       fetchHzardsData();
-      // fetchactionTrackerData();
+      handelLessionActionTracker();
+      assessmentDataValues();
     }
   }, []);
-
-  const handleExpand = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
 
   const classes = useStyles();
   return (
     <PapperBlock
-      title={`Assesment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
+      title={`Assessment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
       icon="ion-md-list-box"
     >{isLoading ? <>
       <Box paddingBottom={1}>
         <div className={Styles.incidents}>
           <div className={Styles.item}>
+
             <Button
               color={assessments == true ? "secondary" : "primary"}
               variant="contained"
@@ -511,44 +564,43 @@ function AhaSummary() {
             >
               Assessments
             </Button>
+
             <Typography variant="caption" display="block">
               {ahaData.notifyTo !== "" ? "Done" : "Pending"}
+
             </Typography>
+
           </div>
 
           <div className={Styles.item}>
             <Button
               color={approvals == true ? "secondary" : "primary"}
-              variant={ahaData.wrpApprovalUser !== "" ? "contained" : "outlined"}
+              variant={(ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) ? "contained" : "outlined"}
               size="small"
-              endIcon={ahaData.wrpApprovalUser !== "" ? <CheckCircle /> : <AccessTime />}
+              endIcon={(ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("approval")}
-
             >
               Approvals
             </Button>
             <Typography variant="caption" display="block">
-              {ahaData.wrpApprovalUser !== "" ? "Done" : "Pending"}
+              {(ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) ? "Done" : "Pending"}
             </Typography>
           </div>
 
           <div className={Styles.item}>
             <Button
               color={closeOut == true ? "secondary" : "primary"}
-
               size="small"
               variant={ahaData.closedByName !== null ? "contained" : "outlined"}
               endIcon={ahaData.closedByName !== null ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("closeOut")}
-
             >
               Close Out
             </Button>
             <Typography variant="caption" display="block">
               {ahaData.closedByName !== null ? "Done" : "Pending"}
-
             </Typography>
           </div>
 
@@ -560,13 +612,11 @@ function AhaSummary() {
               endIcon={ahaData.anyLessonsLearnt !== "" ? <CheckCircle /> : <AccessTime />}
               className={classes.statusButton}
               onClick={(e) => viewSwitch("lession")}
-
             >
               Lessons Learned
             </Button>
             <Typography variant="caption" display="block">
               {ahaData.anyLessonsLearnt !== "" ? "Done" : "Pending"}
-
             </Typography>
           </div>
 
@@ -578,8 +628,6 @@ function AhaSummary() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={9}>
             <Grid container spacing={3}>
-
-
               {/* summary and part */}
               <>
                 {(() => {
@@ -612,9 +660,9 @@ function AhaSummary() {
                                     </Typography>
                                     <Typography className={Fonts.labelValue}>
                                       {project.projectName}  {projectStructName.map((value) => ` - ${value}`)}
-
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -630,6 +678,7 @@ function AhaSummary() {
                                       {ahaData.workArea ? ahaData.workArea : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -645,6 +694,7 @@ function AhaSummary() {
                                       {ahaData.location ? ahaData.location : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -660,6 +710,7 @@ function AhaSummary() {
                                       {ahaData.username ? ahaData.username : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -673,10 +724,11 @@ function AhaSummary() {
                                       className={Fonts.labelValue}
                                     >
                                       {moment(ahaData["assessmentDate"]).format(
-                                        "Do MMMM YYYY"
+                                        "Do MMM YYYY"
                                       )}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -692,6 +744,7 @@ function AhaSummary() {
                                       {ahaData.permitToPerform ? ahaData.permitToPerform : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -707,6 +760,7 @@ function AhaSummary() {
                                       {ahaData.permitNumber ? ahaData.permitNumber : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={12}>
                                     <Typography
                                       variant="h6"
@@ -722,6 +776,7 @@ function AhaSummary() {
                                       {ahaData.description ? ahaData.description : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={6}>
                                     <Typography
                                       variant="h6"
@@ -730,22 +785,24 @@ function AhaSummary() {
                                     >
                                       Risk Assessment team
                                     </Typography>
-                                    {Teamform.map((value, index) => (
-                                      <ul
-                                        className={Fonts.labelValue}
-                                        key={index}
-                                      >
-                                        {value.teamName !== "" ? (
+                                    {Teamform.length > 0 ?
+                                      Teamform.map((value, index) => (
+                                        <ul
+                                          className={Fonts.labelValue}
+                                          key={index}
+                                        >
+
                                           <li>{value.teamName}</li>
-                                        ) : "-"}
-                                      </ul>
-                                    ))}
+                                        </ul>
+                                      )) : "-"}
                                   </Grid>
+
                                 </>
                               </Grid>
                             </AccordionDetails>
                           </Accordion>
                         </Grid>
+
                         <Grid item xs={12}>
                           <Accordion
                             expanded={expanded === "panel2"}
@@ -770,15 +827,13 @@ function AhaSummary() {
                                         </ul>
                                       </>
                                     )) : "-"}
-                                    {/* <Typography variant="body" className={Fonts.labelValue}>
-                                        {item.risk}
-                                      </Typography> */}
                                   </Grid>
                                 </>
                               </Grid>
                             </AccordionDetails>
                           </Accordion>
                         </Grid>
+
                         <Grid item xs={12}>
                           <Accordion
                             expanded={expanded === "panel3"}
@@ -920,7 +975,7 @@ function AhaSummary() {
                                                       style={{ backgroundColor: item.riskRatingColour }}
                                                     >
                                                       {item.riskRating
-                                                        ? `${item.riskRating} risk`
+                                                        ? item.riskRating
                                                         : "-"}
                                                     </div>
                                                   </Grid>
@@ -1073,7 +1128,12 @@ function AhaSummary() {
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.workStopCondition ? ahaData.workStopCondition : "-"}
+                                      {ahaData.workStopCondition !== "" ? checkValue(ahaData.workStopCondition).split(",").map((value) => (
+                                        <p>
+                                          {checkListAssessment[value]}
+                                        </p>
+                                      )) : "-"}
+                                      {/* {ahaData.workStopCondition ? ahaData.workStopCondition : "-"} */}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1151,7 +1211,7 @@ function AhaSummary() {
                                       variant="body"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.link ? ahaData.link : "-"}
+                                      {ahaData.link !== "null" ? ahaData.link : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -1167,9 +1227,8 @@ function AhaSummary() {
                                       display="block"
                                       className={Fonts.labelValue}
                                     >
-                                      {ahaData.notifyTo ? ahaData.notifyTo : "-"}
+                                      {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
                                     </Typography>
-                                    {/* <Typography variant="body" display="block" className={Fonts.labelValue}>Role Two</Typography> */}
                                   </Grid>
                                 </>
                               </Grid>
@@ -1184,7 +1243,7 @@ function AhaSummary() {
                       <>
                         <Grid item xs={12} style={{ padding: "0px 12px" }}>
                           <Typography className={classes.heading}>
-                            Work Responsible Person
+                            Competent person
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -1201,7 +1260,7 @@ function AhaSummary() {
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.username ? ahaData.username : "-"}
+                                {ahaData.wrpApprovalUser ? ahaData.wrpApprovalUser : "-"}
                               </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -1217,14 +1276,55 @@ function AhaSummary() {
                                 className={Fonts.labelValue}
                               >
                                 {ahaData.wrpApprovalDateTime ? moment(ahaData["wrpApprovalDateTime"]).format(
-                                  "Do MMMM YYYY"
+                                  "Do MMM YYYY"
+                                ) : "-"}
+                              </Typography>
+                            </Grid>
+
+                          </Grid>
+                        </Grid><Grid item xs={12} style={{ padding: "0px 12px" }}>
+                          <Typography className={classes.heading}>
+                            Senior Authorized Person
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved by
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {ahaData.sapApprovalUser ? ahaData.sapApprovalUser : "-"}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                className={Fonts.labelName}
+                              >
+                                Approved on
+                              </Typography>
+                              <Typography
+                                variant="body"
+                                className={Fonts.labelValue}
+                              >
+                                {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
+                                  "Do MMM YYYY"
                                 ) : "-"}
                               </Typography>
                             </Grid>
 
                           </Grid>
                         </Grid>
-                        <Grid item md={12}>
+                        <Grid item md={12}>{approvalActionData.length > 0 &&
                           <Grid item md={6}>
                             <Typography className={Fonts.heading}>
                               Actions
@@ -1232,8 +1332,9 @@ function AhaSummary() {
                             <Typography>
                               {approvalActionData.map((value) => (
                                 <>
+                                  {console.log(value)}
                                   <ActionShow
-                                    action={{ id: value.actionId, number: value.actionNumber }}
+                                    action={{ id: value.id, number: value.actionNumber }}
                                     title={value.actionTitle}
                                     companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
                                     projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
@@ -1243,11 +1344,7 @@ function AhaSummary() {
                                 </>
                               ))}
                             </Typography>
-                          </Grid>
-
-
-
-
+                          </Grid>}
                         </Grid>
                       </>
                     );
@@ -1281,7 +1378,7 @@ function AhaSummary() {
                           className={Fonts.labelValue}
                         >
                           {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                            "Do MMMM YYYY"
+                            "Do MMM YYYY"
                           ) : "-"}
 
                         </Typography>
@@ -1299,30 +1396,48 @@ function AhaSummary() {
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Work Responsible Person
+                                Competent person
                               </Typography>
                               <Typography
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {user.name}, {user.badgeNo}
+                                {user.name}, {user.badgeNo ? user.badgeNo : "-"}
                               </Typography>
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={12}>
                               <Typography
                                 variant="h6"
                                 gutterBottom
                                 className={Fonts.labelName}
                               >
-                                Lessons learnt
+                                Lessons learned
                               </Typography>
                               <Typography
                                 variant="body"
                                 className={Fonts.labelValue}
                               >
-                                {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
+                                {ahaData.lessonLearntDetails ? ahaData.lessonLearntDetails : "-"}
                               </Typography>
                             </Grid>
+
+                            <Grid item xs={12} md={12}>
+                              <Typography className={classes.aLabelValue}>
+                                {lessionAction.map((value) => (
+                                  <>
+                                    <ActionShow
+                                      action={{ id: value.id, number: value.actionNumber }}
+                                      title={value.actionTitle}
+                                      companyId={projectData.companyId}
+                                      projectId={projectData.projectId}
+                                      handelShowData={handelShowData}
+                                    />
+
+                                  </>
+                                ))}
+                              </Typography>
+                            </Grid>
+
                           </Grid>
                         </Grid>
                       </>
@@ -1336,11 +1451,6 @@ function AhaSummary() {
                       />
                     </div>)
                   }
-                  // if (summary == true) {
-                  //   return (
-                  //       <div>Summary Section</div>
-                  //       );
-                  // }
                 })()}
               </>
             </Grid>
@@ -1387,7 +1497,7 @@ function AhaSummary() {
                 </ListItemLink>)}
 
                 {ahaData.anyLessonsLearnt !== "" ? (<ListItemLink
-                  disabled={ahaData.closedByName !== null}
+                  // disabled={ahaData.closedByName !== null}
                   onClick={(e) => handleAhaLessonLearnPush(e)}>
                   <ListItemIcon>
                     <Edit />
@@ -1395,14 +1505,15 @@ function AhaSummary() {
                   <ListItemText primary="Update Lessons Learned" />
                 </ListItemLink>) :
                   (<ListItemLink
-                    disabled={ahaData.closedByName !== null}
+                    // disabled={ahaData.closedByName !== null}
                     onClick={(e) => handleAhaLessonLearnPush(e)}>
                     <ListItemIcon>
                       <Add />
                     </ListItemIcon>
                     <ListItemText primary="Add Lessons Learned" />
                   </ListItemLink>)}
-                <ListItemLink onClick={(e) => handleCloseOutPush(e)}>
+                <ListItemLink disabled={ahaData.closedByName !== null}
+                  onClick={(e) => handleCloseOutPush(e)}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
@@ -1410,40 +1521,61 @@ function AhaSummary() {
                 </ListItemLink>
 
 
-                <ListItem button onClick={(e) => handleCommentsPush(e)}>
-                  <ListItemIcon>
-                    <Comment />
-                  </ListItemIcon>
-                  <ListItemText primary="Comments" />
-                </ListItem>
+                {false &&
+                  <>
+                    <ListItem button onClick={(e) => handleCommentsPush(e)}>
+                      <ListItemIcon>
+                        <Comment />
+                      </ListItemIcon>
+                      <ListItemText primary="Comments" />
+                    </ListItem>
 
-                <ListItem button onClick={(e) => handleActivityPush(e)}>
-                  <ListItemIcon>
-                    <History />
-                  </ListItemIcon>
-                  <ListItemText primary="Activity History" />
-                </ListItem>
+                    <ListItem button onClick={(e) => handleActivityPush(e)}>
+                      <ListItemIcon>
+                        <History />
+                      </ListItemIcon>
+                      <ListItemText primary="Activity History" />
+                    </ListItem>
+                  </>
+                }
+
               </List>
               <Divider />
               <List dense>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  <ListItemText primary="Print" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Share />
-                  </ListItemIcon>
-                  <ListItemText primary="Share" />
-                </ListItem>
+                {false && <>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Print />
+                    </ListItemIcon>
+                    <ListItemText primary="Print" />
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Share />
+                    </ListItemIcon>
+                    <ListItemText primary="Share" />
+                  </ListItem>
+                </>
+                }
               </List>
             </Paper>
           </Grid>
         </Grid>
       </Box>
-    </> : <h1>Loading...</h1>}
+    </> :
+      <>
+        <Loader />
+      </>
+      }
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="warning">
+          {messageSnackBar}
+        </Alert>
+      </Snackbar>
     </PapperBlock>
   );
 }

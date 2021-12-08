@@ -29,6 +29,7 @@ import obsIcon from 'dan-images/obsIcon.png';
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import Avatar from '@material-ui/core/Avatar';
 import { useHistory, useParams } from "react-router";
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
@@ -219,6 +220,7 @@ const ObservationInitialNotification = (props) => {
   const [attachment, setAttachment] = useState();
   const [departmentName, setDepartmentName] = useState([]);
   const [shiftType, setShiftType] = useState([]);
+  const [classification, setClassification] = useState([]);
   const [superVisorId, setSuperVisorId] = useState("");
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [notifyToList, setNotifyToList] = useState([]);
@@ -309,25 +311,19 @@ const ObservationInitialNotification = (props) => {
       .then((response) => {
         if (response.status === 200) {
           const result = response.data.data.results;
+          console.log(result,"LLLLL");
           const userDetails =
             JSON.parse(localStorage.getItem("userDetails")) !== null
               ? JSON.parse(localStorage.getItem("userDetails"))
               : null;
-          let us = {
-            inputValue: userDetails.name,
-            reportedById: userDetails.id,
-            badgeNo: userDetails.badgeNo,
-          };
+        
           let user = [];
 
-          let data = result.filter((item) =>
-            item['companyId'] == fkCompanyId
-          )
-          for (var i in data[0].users) {
+          for (var i in result.users) {
             let temp = {};
-            temp["inputValue"] = data[0].users[i].name;
-            temp["reportedById"] = data[0].users[i].id;
-            temp["badgeNo"] = data[0].users[i].badgeNo;
+            temp["inputValue"] = result.users[i].name;
+            temp["reportedById"] = result.users[i].id;
+            temp["badgeNo"] = result.users[i].badgeNo;
             user.push(temp);
           }
           setReportedByDetails(user);
@@ -661,7 +657,7 @@ const ObservationInitialNotification = (props) => {
     const res = await api.get(
       `/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`
     );
-    const result = res.data.data.results.results;
+    const result = res.data.data.results;
     let temp = [];
     result.map((value) => {
       if (value.status === "Active") {
@@ -677,12 +673,11 @@ const ObservationInitialNotification = (props) => {
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
     const attachment = await api.get(
-      `/api/v1/corepatterns/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
+      `/api/v1/settings/?companyId=${companyId}&projectId=${projectId}&key=observation_pledge`
     );
     const result = attachment.data.data.results[0];
     if (result !== undefined) {
       let ar = result.attachment;
-
       await setAttachment(ar);
     }
   };
@@ -731,8 +726,10 @@ const ObservationInitialNotification = (props) => {
 
   const PickList = async () => {
     setShiftType(await PickListData(47));
+    setClassification(await PickListData(82));
     await setIsLoading(true);
   };
+  
   useEffect(() => {
     fetchTags();
     fetchDepartment();
@@ -740,6 +737,7 @@ const ObservationInitialNotification = (props) => {
     fetchSuperVisorName();
     fetchReportedBy();
     PickList();
+    fetchAttachment()
   }, [props.initialValues.breakDown]);
 
   return (
@@ -1367,12 +1365,12 @@ const ObservationInitialNotification = (props) => {
                         }} className={classNames(classes.formControl, classes.boldHelperText)}
 
                       >
-                        {radioClassification.map((value) => (
+                        {classification.map((value) => (
                           <FormControlLabel
-                            value={value}
+                            value={value.value}
                             className="selectLabel"
                             control={<Radio />}
-                            label={value}
+                            label={value.value}
                           />
                         ))}
                       </RadioGroup>
@@ -1384,7 +1382,7 @@ const ObservationInitialNotification = (props) => {
                       component="fieldset"
                     >
                       <FormLabel component="legend" className="checkRadioLabel" error={error && error["observationType"]}>
-                        Type of iCare*
+                        Type of observation*
                       </FormLabel>
                       <RadioGroup
                         aria-label="gender"
@@ -1469,12 +1467,12 @@ const ObservationInitialNotification = (props) => {
                       <FormGroup className={classes.customCheckBoxList}>
                         {tagData.map((value, index) => (
                           <FormControlLabel
-                            className="selectLabel"
                             control={
                               <Checkbox
                                 icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                                 checkedIcon={<CheckBoxIcon fontSize="small" />}
                                 name={value}
+                                className="selectLabel"
                                 onChange={(e) => handleChange(e, index, value)}
                               />
                             }
@@ -1628,6 +1626,15 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
+                  {attachment !== "" ?
+            <Grid
+            item
+            md={12}
+            xs={12}
+            className={classes.formBBanner}
+          >
+            <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
+          </Grid> :null}
 
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>

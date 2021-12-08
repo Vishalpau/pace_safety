@@ -1,38 +1,25 @@
-import React, { useEffect, useState, Component, useRef } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { PapperBlock } from 'dan-components';
+import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import {
-  Grid, Typography, TextField, Button
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import DateFnsUtils from '@date-io/date-fns';
-import { useDropzone } from 'react-dropzone';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@material-ui/core/styles';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { PapperBlock } from 'dan-components';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useHistory, useParams } from 'react-router';
 import FormSideBar from "../../../../containers/Forms/FormSideBar";
-import { useParams, useHistory } from 'react-router';
 import api from "../../../../utils/axios";
-import { CircularProgress } from '@material-ui/core';
-
+import Loader from "../../../Forms/Loader";
+import CheckListData from "../CheckList";
 import { AHA } from "../constants";
 
-import CheckListData from "../CheckList"
+
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -179,8 +166,10 @@ const ProjectAreaHazards = () => {
 
   const [checkGroups, setCheckListGroups] = useState([])
   const checkList = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const temp = {}
-    const res = await api.get("/api/v1/core/checklists/aha-hazards/1/")
+    const res = await api.get(`/api/v1/core/checklists/aha-hazards/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
@@ -199,25 +188,12 @@ const ProjectAreaHazards = () => {
   }
 
   const handlePhysicalHazards = (e, index, value, checkListID) => {
-    console.log(form, "''''''''")
     let temp = [...form]
-    console.log(temp, "<<<<<<")
     let tempRemove = []
     if (e.target.checked == false) {
       temp.map((ahaValue, index) => {
-        console.log(ahaValue.fkChecklistId)
-        console.log(temp[index]['fkChecklistId'])
-        console.log(checkListID)
+
         if (ahaValue['fkChecklistId'] === checkListID) {
-          console.log(temp, "LLLLLLLLLL")
-
-          // if(temp[index].id){
-          //   console.log(temp[index].id)
-          //   const res =  api.delete(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/areahazards/${temp[index].id}/`)
-
-          // }
-
-
           temp.splice(index, 1);
           fetchOption.splice(index, 1);
 
@@ -418,6 +394,7 @@ const ProjectAreaHazards = () => {
     checkList()
     handelUpdate()
 
+
   }, []);
   return (
     <>
@@ -558,13 +535,13 @@ const ProjectAreaHazards = () => {
                     Next
                   </Button>
                   {submitLoader && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-                  </div>
-                  
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+
               </Grid>
 
             </Grid>
@@ -575,7 +552,12 @@ const ProjectAreaHazards = () => {
                 selectedItem="Project Area Hazards"
               />
             </Grid>
-          </Grid>) : (<h1>Loading...</h1>)}
+          </Grid>) : (
+          <>
+            <Loader />
+          </>
+        )
+        }
       </PapperBlock>
 
     </>

@@ -16,7 +16,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Col, Row } from "react-grid-system";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { INITIAL_NOTIFICATION_FORM, INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants";
+import { INITIAL_NOTIFICATION_FORM, INITIAL_NOTIFICATION_FORM_NEW, COMMENT } from "../../../utils/constants";
 import EnvironmentValidate from "../../Validator/EnvironmetValidation";
 import FormSideBar from "../FormSideBar";
 import api from "../../../utils/axios";
@@ -156,7 +156,7 @@ const EnvironmentAffected = () => {
             `/incident/${id}/modify/reporting-and-notification/`
           );
         } catch (error) { setIsNext(true) }
-      }
+      } else { setIsNext(true) }
     } else {
       const { error, isValid } = EnvironmentValidate(form);
       setError(error);
@@ -186,7 +186,7 @@ const EnvironmentAffected = () => {
             );
           }
         } catch (error) { setIsNext(true) }
-      }
+      } else { setIsNext(true) }
     }
 
   };
@@ -627,7 +627,7 @@ const EnvironmentAffected = () => {
                   multiline
                   variant="outlined"
                   rows="3"
-                  label="Comment if any"
+                  label={COMMENT}
                   className={classes.fullWidth}
                   value={envComments || ""}
                   onChange={(e) => setEnvComments(e.target.value)}

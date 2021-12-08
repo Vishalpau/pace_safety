@@ -264,9 +264,10 @@ const EvidenceSummary = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.slice(0, 21).map((ad, key) => (
+                    ? activity.slice(0, 7).map((ad, key) => (
                       <Grid item xs={12} md={6} key={key}>
                         <Typography
                           variant="h6"
@@ -285,9 +286,124 @@ const EvidenceSummary = () => {
                     ))
                     : null}
                 </Grid>
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.slice(21, 25).map((ad, key) => (
+                    ? activity.slice(7, 8).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                {activity[7] !== undefined && activity[7]["answer"] === "Yes" ?
+                  <Grid container spacing={3}>
+                    {activity.length !== 0
+                      ? activity.slice(8, 11).map((ad, key) => (
+                        <Grid item xs={12} md={6} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer}
+                          </Typography>
+                        </Grid>
+                      ))
+                      : null}
+                  </Grid>
+                  : null}
+
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(11, 16).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(16, 17).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                {activity[16] !== undefined && activity[16]["answer"] === "Yes" ?
+                  <Grid container spacing={3}>
+                    {activity.length !== 0
+                      ? activity.slice(17, 20).map((ad, key) => (
+                        <Grid item xs={12} md={6} key={key}>
+                          <Typography
+                            variant="h6"
+                            gutterBottom
+                            className={Fonts.labelName}
+                          >
+                            {ad.question}
+                          </Typography>
+                          <Typography
+                            variant="body"
+                            className={Fonts.labelValue}
+                          >
+                            {ad.answer}
+                          </Typography>
+                        </Grid>
+                      ))
+                      : null}
+                  </Grid>
+                  : null}
+
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(20, 25).map((ad, key) => (
                       <Grid item xs={12} key={key}>
                         <Typography
                           variant="h6"

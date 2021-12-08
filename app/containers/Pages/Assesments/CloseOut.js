@@ -1,41 +1,26 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import React, { useEffect, useState } from 'react';
+import { FormHelperText } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from '@date-io/moment';
-import {
-  TimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import { PapperBlock } from 'dan-components';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import BookIcon from '@material-ui/icons/Book';
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import RemoveCircleOutlinedIcon from '@material-ui/icons/RemoveCircleOutlined';
-import { useDropzone } from 'react-dropzone';
-import { useHistory, useParams } from 'react-router';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from "@material-ui/core/Typography";
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
+
+import { useHistory } from 'react-router';
 import api from '../../../utils/axios';
+import CloseOutFlhaValidation from "./validation/CloseOutValidation";
+import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants"
+
+
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: '.5rem 0',
@@ -100,54 +85,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-// Top 100 films as rated by IMDb users.
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Pulp Fiction', year: 1994 },
-  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
-  { title: 'The Good, the Bad and the Ugly', year: 1966 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-];
+
 const CloseOut = (props) => {
   const history = useHistory();
   const classes = useStyles();
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date('2014-08-18T21:11:54')
-  );
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const [value, setValue] = React.useState('female');
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-  const [showRadioUnplanned, setRadioUnplanned] = React.useState(false);
-  const onClick = () => setRadioUnplanned(true);
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path}
-      {' '}
--
-      {file.size}
-      {' '}
-bytes
-    </li>
-  ));
   const [jobForm, setJobForm] = React.useState({
     preUseInspection: '',
     warningRibbon: '',
@@ -162,12 +104,13 @@ bytes
     jobTitle: '',
     jobDetails: '',
     fkCompanyId: '',
-    fkProjectId: ''
+    fkProjectId: '',
+    flhaStage: ""
   });
 
-  React.useEffect(() => {
-    setFlhaDetails();
-  }, [open]);
+  const [loading, setLoading] = useState(false)
+  const { id } = props.match.params;
+  const [error, setError] = useState({})
 
   const setFlhaDetails = async () => {
     const { id } = props.match.params;
@@ -176,194 +119,366 @@ bytes
     const temp = { ...jobForm };
     temp.fkCompanyId = fkCompanyId;
     temp.fkProjectId = fkProjectId;
-
-    const res = await api.get(
-      '/api/v1/flhas/' + id + '/'
-    );
-
+    const res = await api.get('/api/v1/flhas/' + id + '/')
     const flha = res.data.data.results;
-    temp.jobTitle = flha.jobTitle;
-    temp.jobDetails = flha.jobDetails;
-    console.log({ temp });
-    console.log({ res: res.data.data.results });
-    await setJobForm(temp);
-    console.log({ jobForm });
+    setJobForm({
+      preUseInspection: flha.preUseInspection,
+      warningRibbon: flha.warningRibbon,
+      workerWorking: flha.workerWorking,
+      workerRemarks: flha.workerRemarks,
+      permitClosedOut: flha.permitClosedOut,
+      hazardsRemaining: flha.hazardsRemaining,
+      endOfJob: flha.endOfJob,
+      anyIncidents: flha.anyIncidents,
+      jobCompletionRemarks: flha.jobCompletionRemarks,
+      creatingIncident: flha.creatingIncident,
+      jobTitle: flha.jobTitle,
+      jobDetails: flha.jobDetails,
+      fkCompanyId: flha.fkCompanyId,
+      fkProjectId: flha.fkProjectId,
+      flhaStage: flha.flhaStage
+    })
   };
 
   const handleJobFormChange = async (e, fieldname) => {
-    console.log(jobForm);
-
     const temp = { ...jobForm };
     const { value } = e.target;
-
-    console.log({ value });
     temp[fieldname] = value;
-
-
-    console.log({ temp });
     await setJobForm(temp);
-    // await console.log({jobForm: jobForm})
   };
 
   const handleFormSubmit = async () => {
-    const { id } = props.match.params;
-    console.log({ jobForm });
-    const res = await api.put(
-      '/api/v1/flhas/' + id + '/',
-      jobForm
-    );
-    console.log(res.data);
-    history.push('/app/pages/assesments/flhasummary/' + id);
+    const { error, isValid } = CloseOutFlhaValidation(jobForm);
+    setError(error)
+    if (Object.keys(error).length === 0) {
+      jobForm["flhaStage"] = "Close"
+      jobForm["flhaStatus"] = "Close"
+      const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
+      if (jobForm.creatingIncident === "Yes") {
+        history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
+      } else {
+        history.push('/app/pages/assesments/flhasummary/' + id);
+      }
+    }
   };
-  return (
-    <div>
-      <PapperBlock title="XFLHA - Close Out" icon="ion-ios-create-outline" desc="" color="primary">
-        <Paper elevation={3}>
-          <Grid container spacing={1}>
-            <Grid item md={12} xs={12}>
-              <Box padding={3}>
-                <Grid container spacing={3}>
-                  <Grid item md={12} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Has a pre-use inspection of tools/equipment been completed?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="preUseInspection" name="preUseInspection" value={jobForm.preUseInspection} onChange={(e) => handleJobFormChange(e, 'preUseInspection')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Is a warning ribbon need?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="warningRibbon" name="warningRibbon" value={jobForm.warningRibbon} onChange={(e) => handleJobFormChange(e, 'warningRibbon')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Is the worker working alone?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="workerWorking" name="workerWorking" value={jobForm.workerWorking} onChange={(e) => handleJobFormChange(e, 'workerWorking')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                  <Grid item md={12} xs={12}>
-                    <FormLabel component="legend">If yes, explain</FormLabel>
-                    <TextField
-                      variant="outlined"
-                      id="immediate-actions"
-                      multiline
-                      rows="4"
-                      label="Emergency Phone Number"
-                      className={classes.fullWidth}
-                      value={jobForm.workerRemarks}
-                      onChange={(e) => handleJobFormChange(e, 'workerRemarks')}
-                    />
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Are all permit(s) closed out?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="permitClosedOut" name="permitClosedOut" value={jobForm.permitClosedOut} onChange={(e) => handleJobFormChange(e, 'permitClosedOut')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Are there Hazards remaining?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="hazardsRemaining" name="hazardsRemaining" value={jobForm.hazardsRemaining} onChange={(e) => handleJobFormChange(e, 'hazardsRemaining')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Was the area cleaned up at the end of job/shift?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="endOfJob" name="endOfJob" value={jobForm.endOfJob} onChange={(e) => handleJobFormChange(e, 'endOfJob')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Were there any incidents/injuries?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="anyIncidents" name="anyIncidents" value={jobForm.anyIncidents} onChange={(e) => handleJobFormChange(e, 'anyIncidents')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
 
-                  <Grid item md={12} xs={12}>
-                    <FormLabel component="legend">If Yes, please provide details</FormLabel>
-                    <TextField
-                      variant="outlined"
-                      id="jobCompletionRemarks"
-                      multiline
-                      rows="4"
-                      label="Enter the details"
-                      value={jobForm.jobCompletionRemarks}
-                      onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
-                      className={classes.fullWidth}
-                    />
-                  </Grid>
-                  <Grid item md={6} sm={6} xs={12}>
-                    <div className={classes.spacer}>
-                      <FormControl component="fieldset">
-                        <FormLabel component="legend">Do you want to continue to creating an Incident?</FormLabel>
-                        <RadioGroup className={classes.radioInline} aria-label="creatingIncident" name="creatingIncident" value={jobForm.creatingIncident} onChange={(e) => handleJobFormChange(e, 'creatingIncident')}>
-                          <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                          <FormControlLabel value="No" control={<Radio />} label="No" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-                  </Grid>
-                </Grid>
-                <Grid item md={12} xs={12}>
-                  <Box marginTop={4}>
-                    <Button size="medium" variant="outlined" color="primary" className={classes.spacerRight}>
-                  Acknowledge
-                    </Button>
-                  </Box>
-                </Grid>
-                <Grid item md={12} xs={12}>
-                  <Box marginTop={4}>
-                    <Button size="medium" variant="contained" color="primary" className={classes.spacerRight}>
-                  Submit and confirm with an incident
-                    </Button>
-                  </Box>
-                  <Box marginTop={4}>
-                    <Button size="medium" variant="contained" color="primary" onClick={() => handleFormSubmit()} className={classes.spacerRight}>
-                  Submit
-                    </Button>
-                  </Box>
-                </Grid>
-              </Box>
-            </Grid>
+  const handelCallBack = async () => {
+    await setLoading(true)
+    await setFlhaDetails()
+    await setLoading(false)
+  }
+
+  useEffect(() => {
+    handelCallBack()
+  }, [open]);
+
+  return (
+    <CustomPapperBlock title="FLHA - Close Out" icon={flhaLogoSymbol} whiteBg>
+      {loading == false ?
+        <Grid container spacing={3}>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg id="baseline-cancel-24px" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                <path id="Path_1990" data-name="Path 1990" d="M12,2A10,10,0,1,0,22,12,9.991,9.991,0,0,0,12,2Zm5,13.59L15.59,17,12,13.41,8.41,17,7,15.59,10.59,12,7,8.41,8.41,7,12,10.59,15.59,7,17,8.41,13.41,12Z" fill="#06425c" />
+                <path id="Path_1991" data-name="Path 1991" d="M0,0H24V24H0Z" fill="none" />
+              </svg> Close out
+            </Typography>
           </Grid>
-        </Paper>
-      </PapperBlock>
-    </div>
+
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid item md={12} xs={12}>
+                <FormControl
+                  component="fieldset"
+                  error={true}
+                >
+                  <FormLabel
+                    component="legend"
+                    className="checkRadioLabel"
+                  >
+                    Has a pre-use inspection of tools/equipment been completed?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.radioInline}
+                    aria-label="preUseInspection"
+                    name="preUseInspection"
+                    value={jobForm.preUseInspection}
+                    onChange={(e) => handleJobFormChange(e, 'preUseInspection')}
+                  >
+                    <FormControlLabel
+                      value="Yes"
+                      control={<Radio />}
+                      label="Yes"
+                    />
+                    <FormControlLabel
+                      value="No"
+                      control={<Radio />}
+                      label="No"
+                    />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["preUseInspection"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["preUseInspection"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              <Grid
+                item
+                md={6}
+                sm={6}
+                xs={12}
+              >
+                <FormControl
+                  component="fieldset"
+                >
+                  <FormLabel
+                    component="legend"
+                    className="checkRadioLabel"
+                  >
+                    Is a warning ribbon need?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.radioInline}
+                    aria-label="warningRibbon"
+                    name="warningRibbon"
+                    value={jobForm.warningRibbon}
+                    onChange={(e) => handleJobFormChange(e, 'warningRibbon')}
+                  >
+                    <FormControlLabel
+                      value="Yes"
+                      control={<Radio />}
+                      label="Yes"
+                    />
+                    <FormControlLabel
+                      value="No"
+                      control={<Radio />}
+                      label="No"
+                    />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["warningRibbon"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["warningRibbon"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              <Grid
+                item
+                md={6}
+                sm={6}
+                xs={12}
+              >
+                <FormControl
+                  component="fieldset"
+                >
+                  <FormLabel
+                    component="legend"
+                    className="checkRadioLabel"
+                  >
+                    Is the worker working alone?
+                  </FormLabel>
+                  <RadioGroup
+                    className={classes.radioInline}
+                    aria-label="workerWorking"
+                    name="workerWorking"
+                    value={jobForm.workerWorking}
+                    onChange={(e) => handleJobFormChange(e, 'workerWorking')}
+                  >
+                    <FormControlLabel
+                      value="Yes"
+                      control={<Radio />}
+                      label="Yes"
+                    />
+                    <FormControlLabel
+                      value="No"
+                      control={<Radio />}
+                      label="No"
+                    />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["workerWorking"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["workerWorking"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {jobForm.workerWorking === "Yes" || jobForm.workerWorking == null ?
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <FormLabel
+                    component="legend"
+                    className="checkRadioLabel"
+                  >
+                    If yes, explain
+                  </FormLabel>
+                  <TextField
+                    variant="outlined"
+                    id="immediate-actions"
+                    multiline
+                    rows="4"
+                    label="Enter the details"
+                    className={classes.fullWidth}
+                    value={jobForm.workerRemarks}
+                    onChange={(e) => handleJobFormChange(e, 'workerRemarks')}
+                  />
+                  {error && error["workerRemarks"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["workerRemarks"]}
+                    </FormHelperText>
+                  )}
+                </Grid>
+                :
+                null
+              }
+
+              <Grid item md={6} sm={6} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">Are all permit(s) closed out?</FormLabel>
+                  <RadioGroup className={classes.radioInline} aria-label="permitClosedOut" name="permitClosedOut" value={jobForm.permitClosedOut} onChange={(e) => handleJobFormChange(e, 'permitClosedOut')}>
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["permitClosedOut"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["permitClosedOut"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              <Grid item md={6} sm={6} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">Are there Hazards remaining?</FormLabel>
+                  <RadioGroup className={classes.radioInline} aria-label="hazardsRemaining" name="hazardsRemaining" value={jobForm.hazardsRemaining} onChange={(e) => handleJobFormChange(e, 'hazardsRemaining')}>
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["hazardsRemaining"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["hazardsRemaining"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              <Grid item md={6} sm={6} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">Was the area cleaned up at the end of job/shift?</FormLabel>
+                  <RadioGroup className={classes.radioInline} aria-label="endOfJob" name="endOfJob" value={jobForm.endOfJob} onChange={(e) => handleJobFormChange(e, 'endOfJob')}>
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["endOfJob"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["endOfJob"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              <Grid item md={6} sm={6} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">Were there any incidents/injuries?</FormLabel>
+                  <RadioGroup className={classes.radioInline} aria-label="anyIncidents" name="anyIncidents" value={jobForm.anyIncidents} onChange={(e) => handleJobFormChange(e, 'anyIncidents')}>
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["anyIncidents"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["anyIncidents"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {jobForm.anyIncidents === "Yes" || jobForm.anyIncidents == null ?
+                <Grid item md={12} xs={12}>
+                  <FormLabel component="legend" className="checkRadioLabel">If Yes, please provide details</FormLabel>
+                  <TextField
+                    variant="outlined"
+                    id="jobCompletionRemarks"
+                    multiline
+                    rows="4"
+                    label="Enter the details"
+                    value={jobForm.jobCompletionRemarks}
+                    onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
+                    className={classes.fullWidth}
+                  />
+                  {error && error["jobCompletionRemarks"] && (
+                    <FormHelperText style={{ color: "red" }}>
+                      {error["jobCompletionRemarks"]}
+                    </FormHelperText>
+                  )}
+                </Grid>
+                :
+                null
+              }
+
+              <Grid item md={6} sm={6} xs={12}>
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">Do you want to continue to creating an Incident?</FormLabel>
+                  <RadioGroup className={classes.radioInline} aria-label="creatingIncident" name="creatingIncident" value={jobForm.creatingIncident} onChange={(e) => handleJobFormChange(e, 'creatingIncident')}>
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                  </RadioGroup>
+                </FormControl>
+                {error && error["creatingIncident"] && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error["creatingIncident"]}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {false &&
+                <Grid item md={12} sm={12} xs={12} className="paddTRemove formFieldBTNSection">
+                  <Button className="marginT0" variant="outlined">Acknowledge </Button>
+                </Grid>
+              }
+            </Paper>
+
+            {false &&
+              <Grid item md={12} xs={12} className="buttonActionArea marginT10">
+                <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                  Submit and confirm with an incident
+                </Button>
+              </Grid>
+            }
+
+            <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                disabled={jobForm.flhaStage === "Close" ? true : false}
+                className="spacerRight buttonStyle"
+                onClick={() => handleFormSubmit()}
+              >
+                Closeout
+              </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                color="secondary"
+                className="buttonStyle custmCancelBtn"
+                onClick={() => history.push('/app/pages/assesments/flhasummary/' + id)}
+              >
+                Cancel
+              </Button>
+            </Grid>
+
+          </Grid>
+        </Grid>
+
+        // </Paper>
+        : "Loading..."}
+    </CustomPapperBlock>
   );
 };
 

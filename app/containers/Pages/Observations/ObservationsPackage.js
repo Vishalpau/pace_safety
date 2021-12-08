@@ -1,76 +1,51 @@
-import Avatar from '@material-ui/core/Avatar';
+import React, { useEffect, useState, lazy } from "react";
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Chip from '@material-ui/core/Chip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AttachmentIcon from '@material-ui/icons/Attachment';
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-import Print from '@material-ui/icons/Print';
-import PrintOutlinedIcon from '@material-ui/icons/PrintOutlined';
-import Share from '@material-ui/icons/Share';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Pagination from '@material-ui/lab/Pagination';
-import in_progress_small from 'dan-images/in_progress_small.png';
-import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import axios from "axios";
 import completed_small from 'dan-images/completed-small.png';
+import in_progress_small from 'dan-images/in_progress_small.png';
 import preplanning from 'dan-images/preplanning.png';
-import progress from 'dan-images/progress.png';
-import completed from 'dan-images/completed.png';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from "moment";
 import MUIDataTable from 'mui-datatables';
-import React, { useEffect, useState } from "react";
 // react-redux
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { projectName, company } from '../../../redux/actions/initialDetails';
-import { useDispatch } from 'react-redux';
+import { company, projectName } from '../../../redux/actions/initialDetails';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
-import UserDetailsView from '../../UserDetails/UserDetail';
-import StarsIcon from '@material-ui/icons/Stars';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import axios from "axios"
-import TextField from '@material-ui/core/TextField';
-import Menu from '@material-ui/core/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import InsertCommentOutlinedIcon from '@material-ui/icons/InsertCommentOutlined';
-import projectpj from 'dan-images/projectpj.png';
-import Loader from "../Loader"
+import { HEADER_AUTH, SELF_API, userId } from '../../../utils/constants';
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
+const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
+const Loader = lazy(() => import('../Loader'));
 
 const useStyles = makeStyles((theme) => ({
   pagination: {
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '-10px',
+    marginTop: '-10px',
   },
   root: {
     flexGrow: 1,
@@ -383,18 +358,13 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '12px !important',
       },
     },
-    // '& p': {
-    //   ['@media (max-width:375px)']: { 
-    //     fontSize: '12px !important',
-    //   },
-    // },
   },
   cardActionBottomBox: {
     ['@media (max-width:480px)']: {
       padding: '8px !important',
     },
   },
-  smallImage:{
+  smallImage: {
     height: '30px',
     width: '30px',
   },
@@ -402,14 +372,14 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiDialogContent-root': {
       overflowY: 'hidden !important',
       height: '90px !important',
-  
-  },
+
+    },
   },
   imageSectionHeight: {
-    '& .MuiDialogContent-root':  {
+    '& .MuiDialogContent-root': {
       height: '90px !important',
       minHeight: '90px !important',
-  },
+    },
   },
   viewattch1: {
     padding: '12px 30px',
@@ -430,22 +400,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Actions(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const type = localStorage.getItem("type")
 
   const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).name
     : null;
   const dispatch = useDispatch();
-  const [incidents] = useState([]);
   const [listToggle, setListToggle] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
@@ -453,40 +414,25 @@ function Actions(props) {
   const [page, setPage] = useState(1)
   const [userInfo, setUserInfo] = useState({})
   const history = useHistory();
+  const [allInitialData, setAllInitialData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const searchIncident = props.searchIncident
+  const status = props.status;
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
-
-const handleMyUserPClickOpen = (item) => {
-  setUserInfo({name : item[1].createdByName,userIcon : item[1].avatar})
-  setMyUserPOpen(true);
-};
 
   const handleMyUserPClose = () => {
     setMyUserPOpen(false);
   };
 
-  const handelView = (e) => {
-    setListToggle(false);
-  };
-  const handelViewTabel = (e) => {
-    setListToggle(true);
-  };
-
-  const [value, setValue] = React.useState(2);
-
-  // const handleChange = (event, newValue) => {
-  //   setValue(newValue);
-  // };
-
-  //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Date submitted', 'Date approved', 'Approved by'];
-
   const data = [
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
     ['AT-125-256-251', 'Action', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ];
+
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -503,20 +449,8 @@ const handleMyUserPClickOpen = (item) => {
     rowsPerPage: 10,
     page: 0,
   };
-  //dialog
-  const [MyFavopen, setMyFavOpen] = React.useState(false);
 
-  const handleMyFavClickOpen = () => {
-    setMyFavOpen(true);
-  };
-
-  const handleMyFavClose = () => {
-    setMyFavOpen(false);
-  };
-
-  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
+  const createdBy = userId
 
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
@@ -529,10 +463,6 @@ const handleMyUserPClickOpen = (item) => {
     history.push(`/app/icare/details/${id}`);
   };
 
-  const [allInitialData, setAllInitialData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const searchIncident = props.searchIncident
-  const status = props.status;
   const fetchInitialiObservation = async () => {
     await setPage(1)
 
@@ -709,66 +639,47 @@ const handleMyUserPClickOpen = (item) => {
   };
 
   const [openAttachment, setopenAttachment] = React.useState(false);
+  const [openAtt, setopenAtt] = React.useState('')
 
-  const handleClickOpenAttachment = () => {
+  const handleClickOpenAttachment = (value) => {
+    setopenAtt(value)
     setopenAttachment(true);
   };
 
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [attachIndex, setAttachIndex] = useState("");
+  const [hidden, setHidden] = useState(false);
+
+
+  const handleAttachClick = () => {
+    setAttachOpen(!open);
+  };
+  const handleAttachOpen = () => {
+    if (!hidden) {
+      setAttachOpen(true);
+    }
+  };
+  const handleAttachClose = () => {
+    setAttachOpen(false);
   };
 
-  
-const [attachOpen, setAttachOpen] = useState(false);
-const [attachIndex , setAttachIndex] = useState("");
-const [hidden, setHidden] = useState(false);
+  //view comments
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [hiddenn, setHiddenn] = useState(false);
 
-const handleVisibility = (index) => {
-  console.log(index,"LLLL");
-  setAttachIndex(index);
-  setAttachOpen(true);
-  setHidden(!hidden);
-};
-const handleAttachClick = () => {
-  setAttachOpen(!open);
-};
-const handleAttachOpen = () => {
-  if (!hidden) {
-    setAttachOpen(true);
-  }
-};
-const handleAttachClose = () => {
-  setAttachOpen(false);
-};
-
-//view comments
-const [commentsOpen, setCommentsOpen] = useState(false);
-const [hiddenn, setHiddenn] = useState(false);
-
-const handleVisibilityComments = (id) => {
-  setCommentsOpen(true);
-  setHiddenn(!hiddenn);
-  history.push(`/app/icare/comments/${id}`);
-};
-const handleCommentsClick = () => {
-  setCommentsOpen(!open);
-};
-const handleCommentsOpen = () => {
-  if (!hiddenn) {
-    setCommentsOpen(true);
-  }
-};
-const handleCommentsClose = () => {
-  setCommentsOpen(false);
-};
-
-  const handlePrintPush = async (index) => {
-    const id = allInitialData[index].id;
-    localStorage.setItem("fkobservationId", id);
-    history.push(`/app/prints/${id}`);
+  const handleCommentsClick = () => {
+    setCommentsOpen(!open);
   };
+  const handleCommentsOpen = () => {
+    if (!hiddenn) {
+      setCommentsOpen(true);
+    }
+  };
+  const handleCommentsClose = () => {
+    setCommentsOpen(false);
+  };
+
   const userDetails = async (compId, proId) => {
-    // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
 
@@ -777,8 +688,6 @@ const handleCommentsClose = () => {
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
-        // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
-
         await api(config)
           .then(function (response) {
             if (response.status === 200) {
@@ -830,13 +739,13 @@ const handleCommentsClose = () => {
   const handleDelete = async (item) => {
     console.log(item[1].id)
     let data = item[1]
-    // let id = item[1].id
     data.status = "Delete"
     delete data.attachment
     console.log(data, "!!!!!!!!!")
     await setIsLoading(false)
     const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
   }
+
   useEffect(() => {
     let state = JSON.parse(localStorage.getItem('direct_loading'))
     if (state !== null) {
@@ -844,7 +753,6 @@ const handleCommentsClose = () => {
     } else {
       fetchInitialiObservation();
     }
-    // fetchInitialiObservation();
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
 
   return (
@@ -857,38 +765,39 @@ const handleCommentsClose = () => {
                 <div className="gridView">
                   {Object.keys(allInitialData).length > 0 ?
                     Object.entries(allInitialData)
-                      .map((item, index) => ( <>
+                      .map((item, index) => (<>
                         <Card variant="outlined" className={classes.card}>
                           <CardContent>
                             <Grid container spacing={3} className={classes.cardContentSection}>
-                               <Grid item md={2} sm={4} xs={12} 
-                                  className={classes.userPictureBox}
+                              <Grid item md={2} sm={4} xs={12}
+                                className={classes.userPictureBox}
+                              >
+                                <Button className={classes.floatR}
                                 >
-                                  <Button  className={classes.floatR} onClick={(e) => handleMyUserPClickOpen(item)} >
-                                    <img src={item[1].avatar} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
-                                  </Button>
-                                </Grid>
-                                  <Link
-                                  onClick={() => handleSummaryPush(index)}
-                                  className={classes.cardLinkAction}
-                                >
-                              <Grid item xs={12} >
-                                <Grid container spacing={3} alignItems="flex-start">
-                                  <Grid item sm={12} xs={12} className={classes.listHeadColor}>
-                                    <Grid container spacing={3} alignItems="flex-start">
-                                      <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
-                                        <Typography
-                                          className={classes.title}
-                                          variant="h6"
-                                        >
-                                          {item[1]["observationDetails"]}
-                                        </Typography>
-                                        <Typography
-                                          display="inline"
-                                          className={classes.listingLabelName}
-                                        >
-                                          Number: <span><Link
-                                            onClick={() => handleSummaryPush(index)}
+                                  <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username ? item[1].username : "Admin"}
+                                </Button>
+                              </Grid>
+                              <Link
+                                onClick={() => handleSummaryPush(index)}
+                                className={classes.cardLinkAction}
+                              >
+                                <Grid item xs={12} >
+                                  <Grid container spacing={3} alignItems="flex-start">
+                                    <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                                      <Grid container spacing={3} alignItems="flex-start">
+                                        <Grid item md={10} sm={8} xs={12} className={classes.pr0}>
+                                          <Typography
+                                            className={classes.title}
+                                            variant="h6"
+                                          >
+                                            {item[1]["observationDetails"]}
+                                          </Typography>
+                                          <Typography
+                                            display="inline"
+                                            className={classes.listingLabelName}
+                                          >
+                                            Number: <span><Link
+                                              onClick={() => handleSummaryPush(index)}
                                               variant="h6"
                                               className={classes.mLeftfont}
                                             >
@@ -906,18 +815,18 @@ const handleCommentsClose = () => {
                               </Typography> */}
                                           <span item xs={1} className={classes.sepHeightOne}></span>
                                           <Typography
-                                          variant="body1"
-                                          gutterBottom
-                                          display="inline"
-                                          color="textPrimary"
-                                          className={classes.listingLabelName}
-                                        >
-                                          Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} /> }{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          Status: <span className="listingLabelValue statusColor_complete">{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
-                                        </Typography>
+                                            variant="body1"
+                                            gutterBottom
+                                            display="inline"
+                                            color="textPrimary"
+                                            className={classes.listingLabelName}
+                                          >
+                                            Assignee: <span className={classes.listingLabelValue}>{item[1]["assigneeName"] ? item[1]["assigneeName"] : "-"}</span>
+                                            <span item xs={1} className={classes.sepHeightOne}></span>
+                                            Stage: <span className={classes.listingLabelValue}>{item[1]["observationStage"] ? item[1]["observationStage"] : "-"} {item[1]["observationStage"] === "Completed" && <img src={completed_small} className={classes.smallImage} />}{item[1]["observationStage"] === "Planned" && <img src={in_progress_small} className={classes.smallImage} />} {item[1]["observationStage"] === "Open" && <img src={preplanning} className={classes.smallImage} />} </span>
+                                            <span item xs={1} className={classes.sepHeightOne}></span>
+                                            Status: <span className={classes.listingLabelValue}>{item[1]["observationStatus"] ? item[1]["observationStatus"] : "-"}</span>
+                                          </Typography>
 
                                         </Grid>
 
@@ -1046,10 +955,10 @@ const handleCommentsClose = () => {
                                   Attachments:
                                 </Typography>
                                 <Typography variant="body2" display="inline">
-                                  <Link color="secondary" className={classes.mLeftR5} 
+                                  <Link color="secondary" className={classes.mLeftR5}
                                   // onClick={() => handleVisibility(index)}
                                   >
-                                  {item[1]['attachmentCount']}</Link>
+                                    {item[1]['attachmentCount']}</Link>
                                 </Typography>
                                 {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                 <Typography
@@ -1094,63 +1003,63 @@ const handleCommentsClose = () => {
                             </Grid>
                           </CardActions>
                         </Card>
-                        {attachIndex === index  && item[1]['attachmentCount'] !== 0 ?  
-                        <Grid
-                          item
-                          md={12}
-                          sm={12}
-                          xs={12}
-                          hidden={!hidden}
-                          onBlur={handleAttachClose}
-                          onClick={handleAttachClick}
-                          onClose={handleAttachClose}
-                          onFocus={handleAttachOpen}
-                          onMouseEnter={handleAttachOpen}
-                          onMouseLeave={handleAttachClose}
-                          open={attachOpen}
-                          className="paddTBRemove attactmentShowSection"
-                        >
-                          <Paper elevation={1} className="paperSection">
-                            <Grid container spacing={3}>
-                              <Grid item md={12} sm={12} xs={12}>
-                                <List>
-                                  <ListItem>
-                                  <img src={allInitialData[index].attachment}  onClick={handleClickOpenAttachment}  className="hoverIcon" />                          
-                                  </ListItem>
-                                </List>
+                        {attachIndex === index && item[1]['attachmentCount'] !== 0 ?
+                          <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            hidden={!hidden}
+                            onBlur={handleAttachClose}
+                            onClick={handleAttachClick}
+                            onClose={handleAttachClose}
+                            onFocus={handleAttachOpen}
+                            onMouseEnter={handleAttachOpen}
+                            onMouseLeave={handleAttachClose}
+                            open={attachOpen}
+                            className="paddTBRemove attactmentShowSection"
+                          >
+                            <Paper elevation={1} className="paperSection">
+                              <Grid container spacing={3}>
+                                <Grid item md={12} sm={12} xs={12}>
+                                  <List>
+                                    <ListItem>
+                                      <img src={allInitialData[index].attachment} onClick={() => handleClickOpenAttachment(allInitialData[index].attachment)} className="hoverIcon" />
+                                    </ListItem>
+                                  </List>
+                                </Grid>
                               </Grid>
-                            </Grid>
-                          </Paper>
-                        </Grid> : null}
-                        
-                    </>  )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                            </Paper>
+                          </Grid> : null}
+
+                      </>)) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
                       Sorry, no matching records found
                     </Typography>}
 
                 </div>
                 <div>
-            <Grid
-                item
-                md={12}
-                sm={12}
-                xs={12}
-                hidden={!hiddenn}
-                onBlur={handleCommentsClose}
-                onClick={handleCommentsClick}
-                onClose={handleCommentsClose}
-                onFocus={handleCommentsOpen}
-                onMouseEnter={handleCommentsOpen}
-                onMouseLeave={handleCommentsClose}
-                open={commentsOpen}
-                className="commentsShowSection"
-              >
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} xs={12}>
-                      <Box padding={3}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                              <TextField
+                  <Grid
+                    item
+                    md={12}
+                    sm={12}
+                    xs={12}
+                    hidden={!hiddenn}
+                    onBlur={handleCommentsClose}
+                    onClick={handleCommentsClick}
+                    onClose={handleCommentsClose}
+                    onFocus={handleCommentsOpen}
+                    onMouseEnter={handleCommentsOpen}
+                    onMouseLeave={handleCommentsClose}
+                    open={commentsOpen}
+                    className="commentsShowSection"
+                  >
+                    <Paper elevation={1} className="paperSection">
+                      <Grid container spacing={3}>
+                        <Grid item md={12} xs={12}>
+                          <Box padding={3}>
+                            <Grid container spacing={2}>
+                              <Grid item xs={12}>
+                                <TextField
                                   multiline
                                   variant="outlined"
                                   rows="1"
@@ -1158,58 +1067,61 @@ const handleCommentsClose = () => {
                                   label="Add your comments here"
                                   className="formControl"
                                 />
+                              </Grid>
+                              <Grid item xs={3}>
+                                <input type="file" />
+                              </Grid>
+                              <Grid item xs={9}>
+                                <AddCircleOutlineIcon className={classes.plusIcon} />
+                                <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  size="small"
+                                  className="spacerRight buttonStyle"
+                                  disableElevation
+
+                                >
+                                  Respond
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="secondary"
+                                  size="small"
+                                  className="custmCancelBtn buttonStyle"
+                                  disableElevation
+
+                                >
+                                  Cancel
+                                </Button>
+                              </Grid>
                             </Grid>
-                            <Grid item xs={3}>
-                              <input type="file" />
-                            </Grid>
-                            <Grid item xs={9}>
-                              <AddCircleOutlineIcon className={classes.plusIcon} /> 
-                              <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                            </Grid>
-                            <Grid item xs={12}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              size="small"
-                              className="spacerRight buttonStyle"
-                              disableElevation
-                              
-                            >
-                              Respond
-                            </Button> 
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              size="small"
-                              className="custmCancelBtn buttonStyle"
-                              disableElevation
-                              
-                            >
-                              Cancel
-                            </Button>
-                            </Grid>
+                          </Box>
                         </Grid>
-                      </Box>              
-                    </Grid>
+                      </Grid>
+                    </Paper>
                   </Grid>
-                </Paper>
-              </Grid>
-             </div>
-             <div>
-            <Dialog
+                </div>
+                <div>
+
+                  {/* {openAtt !== "" && <Attachment value={openAtt} /> } */}
+
+                  {/* <Dialog
                 open={openAttachment}
                 onClose={handleCloseAttachment}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 classNames={classes.viewAttachmentDialog}
-              >
-                <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+              > */}
+                  {/* <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
                 <DialogContent classNames={classes.imageSectionHeight}>
                 <Grid container spacing={3} classNames={classes.viewImageSection}>                                  
                   <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
                     <ul classNames={classes.viewImageSection}>
                       <li className={classes.viewattch1}>View Attachment</li>
-                      <li className={classes.viewattch2}>Download Attachment</li>
+                      <li className={classes.viewattch2}>Download  444 Attachment</li>
                     </ul>  
                   </Grid>
                 </Grid>  
@@ -1218,30 +1130,31 @@ const handleCommentsClose = () => {
                   <Button onClick={handleCloseAttachment} color="primary" autoFocus>
                     Close
                   </Button>
-                </DialogActions>
-              </Dialog>
-            </div>
-                <div>
-                <Dialog
-                  open={myUserPOpen}
-                  onClose={handleMyUserPClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  fullWidth={true}
-                  maxWidth={'sm'}
-                >
-                  
-                      <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon}/>
-                    
-                  <DialogActions>
-                    <Button onClick={handleMyUserPClose}  color="primary" variant="contained" autoFocus>
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
+                </DialogActions> */}
 
-                
+                  {/* </Dialog> */}
+                </div>
+                <div>
+                  <Dialog
+                    open={myUserPOpen}
+                    onClose={handleMyUserPClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    fullWidth={true}
+                    maxWidth={'sm'}
+                  >
+
+                    <UserDetailsView userName={userInfo.name} userIcon={userInfo.userIcon} />
+
+                    <DialogActions>
+                      <Button onClick={handleMyUserPClose} color="primary" variant="contained" autoFocus>
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+
+
               </div>
               // listview end
 

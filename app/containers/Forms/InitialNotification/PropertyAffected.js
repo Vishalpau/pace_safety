@@ -27,6 +27,7 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import PropertyValidate from "../../Validator/PropertyValidation";
@@ -279,6 +280,7 @@ const PropertyAffected = () => {
       .then((res) => {
         const result = res.data.data.results;
         result.push({ inputValue: "Other", inputLabel: "Other" });
+        result.push({ inputValue: "NA", inputLabel: "NA" });
         setPropertyTypeValue(result);
       })
       .catch((err) => history.push("/app/pages/error"))
@@ -341,14 +343,14 @@ const PropertyAffected = () => {
   }, []);
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
-    <PapperBlock title="Details of Properties Affected" icon="ion-md-list-box">
+    <PapperBlock title="Details of Property/Material Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  Do you have details to share about the properties affected?
+                  Do you have details to share about the property/material affected?
                 </Typography>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
@@ -375,7 +377,7 @@ const PropertyAffected = () => {
                   <Grid item xs={12}>
                     <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                       <Typography variant="h6">
-                        Details of properties affected
+                        Details of property/material affected
                       </Typography>
                     </Box>
                   </Grid>
@@ -490,7 +492,7 @@ const PropertyAffected = () => {
                       startIcon={<PersonAddIcon />}
                       onClick={() => addNewPropertyDetails()}
                     >
-                      Add details of another property affected
+                      Add details of another property/material affected
                     </TextButton>
                   </Grid>
                 </>
@@ -503,7 +505,7 @@ const PropertyAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Describe property affected"
+                    label={COMMENT}
                     fullWidth
                     value={propertyDamagedComments || ""}
                     onChange={(e) => {
@@ -540,7 +542,7 @@ const PropertyAffected = () => {
             <Col md={3}>
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
-                selectedItem={"Property affected"}
+                selectedItem={"Property/Material affected"}
                 id={id}
               />
             </Col>

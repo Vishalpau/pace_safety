@@ -6,6 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
@@ -352,7 +354,7 @@ const WhyAnalysis = () => {
                   onClick={(e) => handelApiCall(e)}
                   disabled={buttonLoading}
                 >
-                  Submit
+                  Submit{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

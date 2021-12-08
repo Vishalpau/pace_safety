@@ -23,6 +23,8 @@ import {
   handelCommonObject,
   handelValueToLabel
 } from "../../../utils/CheckerValue";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import {
   DETAILS,
   FIVEWHYHIDE,
@@ -448,7 +450,7 @@ const Details = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>

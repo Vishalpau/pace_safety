@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -30,17 +31,20 @@ import axios from "axios";
 import { PapperBlock } from 'dan-components';
 import Fonts from 'dan-styles/Fonts.scss';
 import Styles from 'dan-styles/Summary.scss';
+import MuiAlert from '@material-ui/lab/Alert';
 import moment from "moment";
-import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
-import { handelActionData, handelActionWithEntity, handelActionDataAssessment } from "../../../utils/CheckerValue";
+import { handelActionData } from "../../../utils/CheckerValue";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
+import Snackbar from '@material-ui/core/Snackbar';
 import { Comments } from "../../pageListAsync";
 import { checkValue, handelFileName, handelJhaId } from "../Jha/Utils/checkValue";
-
 
 
 
@@ -60,18 +64,6 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
-  },
-  aLabelValue: {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#063d55',
-    float: 'left',
-    width: '100%',
-    paddingRight: '40px',
-    '& div': {
-      display: 'inline-block',
-      float: 'right',
-    },
   },
   updateLink: {
     float: 'left',
@@ -136,6 +128,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function JhaSummary() {
   const [assessmentsView, setAssessmentsView] = useState(true);
   const [approvalsView, setApprovalsView] = useState(false);
@@ -145,12 +141,12 @@ function JhaSummary() {
   const history = useHistory();
   const [assessment, setAssessment] = useState({})
   const [expanded, setExpanded] = useState(false);
-  const [expandedHazard, setExpandedHazard] = useState(false);
   const [projectStructure, setProjectStructure] = useState({})
   const [team, setTeam] = useState([])
   const [hazard, setHazard] = useState([])
   const [user, setUser] = useState({ name: "", badgeNumber: "" })
   const [loader, setLoader] = useState(false)
+  const [notificationSentValue, setNotificationSentValue] = useState([])
   const [formStatus, setFormStatus] = useState({
     assessmentStatus: false,
     approvalStatus: false,
@@ -163,8 +159,10 @@ function JhaSummary() {
     companyId: "",
   })
   const [projectStructName, setProjectStructName] = useState([])
-  const [lessionAction, setLessionAction] = useState([])
-  const [approvalAction, setApprovalAction] = useState([])
+  const [allActionType, setAllActionType] = useState({})
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [messageSnackBar, setMessageSnackbar] = useState("")
+  const [checkListAssessment, setCheckListAssessment] = useState({})
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
@@ -172,15 +170,16 @@ function JhaSummary() {
     const result = res.data.data.results;
     await setAssessment(result)
     await handelWorkArea(result)
+    await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
-    const resultTeam = resTeam.data.data.results.results
+    const resultTeam = resTeam.data.data.results
     await setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
-    let assessmentDecider = result.notifyTo !== null
-    let approvalDecider = result.wrpApprovalUser !== null
+    let assessmentDecider = result.link !== null
+    let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
     await setFormStatus({
@@ -191,6 +190,17 @@ function JhaSummary() {
       lessionLeranedStatus: lessionDecider
     })
   }
+
+  const handleClickSnackBar = () => {
+    setOpenSnackBar(true);
+  };
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
   const handelProjectStructre = () => {
     const project = JSON.parse(localStorage.getItem("projectName"))
@@ -217,41 +227,58 @@ function JhaSummary() {
       "/app/pages/jha/assessments/Job-hazards"
     );
   };
+
   const handleJhaApprovalsPush = async () => {
     history.push(
       "/app/pages/jha/approvals/approvals"
     );
   };
+
   const handleJhaLessonLearnPush = async () => {
     history.push(
       "/app/pages/jha/lessons-learned/lessons-learned"
     );
   };
+
   const handleClosePush = async () => {
     history.push("/app/pages/jha/close-out");
-  };
-
-  const [expandedTableDetail, setExpandedTableDetail] = useState('panel5');
-
-  const handleTDChange = (panel) => (event, isExpanded) => {
-    setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleHazardExpand = (panel) => (event, isExpanded) => {
-    setExpandedHazard(isExpanded ? panel : false);
-  };
-
   const handelActionTracker = async (resultHazard) => {
+    let actionType = { "jha:hazard": [], "jha:lessonLearned": [], "jha:approval": [] }
     let jhaId = localStorage.getItem("fkJHAId")
-
-    let actionData = await handelActionData(jhaId, resultHazard)
-    await setHazard(actionData)
-
     let allAction = await handelActionData(jhaId, [], "title")
+
+    allAction.map((value) => {
+      if (Object.keys(actionType).includes(value["actionContext"])) {
+        actionType[value["actionContext"]].push(value)
+      }
+    })
+    setAllActionType(actionType)
+    let allHazardActions = actionType["jha:hazard"]
+    let actionHazard = {}
+
+    allHazardActions.map((value) => {
+      let hazardId = value["enitityReferenceId"].split(":")[1]
+      let hazarAction = { "number": value["actionNumber"], "id": value["id"], "title": value["actionTitle"] }
+      if (Object.keys(actionHazard).includes(hazardId)) {
+        actionHazard[hazardId].push(hazarAction)
+      } else {
+        actionHazard[hazardId] = [hazarAction]
+      }
+    })
+
+    resultHazard.map((value) => {
+      if (Object.keys(actionHazard).includes(value["id"].toString())) {
+        value["action"] = actionHazard[value["id"]]
+      }
+    })
+    await setHazard(resultHazard)
+
     let temp = []
     allAction.map((value) => {
       if (value.enitityReferenceId.split(":")[1] == "00") {
@@ -260,18 +287,6 @@ function JhaSummary() {
     })
     setApprovalactionData(temp !== null ? temp : [])
   };
-
-  const handelLessionActionTracker = async () => {
-    let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionWithEntity(jhaId, "jha:lessionLearned")
-    setLessionAction(allAction)
-  };
-
-  const handelApprovalActions = async () => {
-    let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
-    setApprovalAction(allAction)
-  }
 
   const handelActionLink = async () => {
     const projectId =
@@ -286,8 +301,28 @@ function JhaSummary() {
 
     await setProjectData({ ...projectData, projectId: projectId, companyId: fkCompanyId })
   }
-  const handelShowData = () => {
+  const handelShowData = () => { }
 
+  const assessmentDataValues = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
+    const baseUrl = localStorage.getItem("apiBaseUrl")
+    var tempPerformance = {}
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ? specificPerformance.data.data.results[0].checklistGroups : [];
+
+    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
+    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
+
+    apiDataPerformance.map((value) => {
+      value.checkListValues.map((checkValue) => {
+        tempPerformance[checkValue.inputValue] = checkValue.inputLabel
+      });
+    });
+    apiCondition.map((value) => {
+      tempPerformance[value.inputValue] = value.inputLabel
+    })
+    setCheckListAssessment(tempPerformance)
   }
 
   const handelWorkArea = async (assessment) => {
@@ -306,37 +341,66 @@ function JhaSummary() {
       structName[result["structure_name"]] = result["structureName"]
     }
     setProjectStructName(structName)
+
   }
 
-  const handelInputValue = async () => {
-    const project = JSON.parse(localStorage.getItem("projectName"))
-    const projectId = project.projectName.projectId
-    const baseUrl = localStorage.getItem("apiBaseUrl")
-    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
-    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ?  specificPerformance.data.data.results[0].checklistGroups :[];
-    const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
-    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
-    console.log(apiCondition)
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { }
+  };
+
+  const handelApprovalTabStatus = () => {
+    let approvalStatusDecide;
+    assessment["wrpApprovalUser"] !== null &&
+      assessment["sapApprovalDateTime"] !== null ? approvalStatusDecide = true : approvalStatusDecide = false
+    return approvalStatusDecide
   }
+
 
   let errorMessage = "Please fill"
-  let errorApproval = "approval"
+  let errorAssessment = "assessments"
+  let errorApproval = "approvals"
   let errorLession = "lession learned"
+  let errorCloseOut = "close out"
 
-  const viewSwitch = (viewName) => {
-    if (viewName == "assessment") {
-      if (formStatus.assessmentStatus) {
-        setAssessmentsView(true);
-      } else {
-        history.push(`/app/pages/Jha/assessments/project-details/`)
-      }
-      setApprovalsView(false);
-      setCloseOutView(false);
-      setLessonsLearnedView(false);
-      setCommentsView(false)
-    } else if (viewName == "approval") {
+  const handleAssessmentViewChanges = () => {
+    if (formStatus.assessmentStatus) {
+      setAssessmentsView(true);
+    } else {
+      history.push(`/app/pages/Jha/assessments/project-details/`)
+    }
+    setApprovalsView(false);
+    setCloseOutView(false);
+    setLessonsLearnedView(false);
+    setCommentsView(false)
+  }
+
+  const handelApprovalViewChange = () => {
+    if (formStatus.assessmentStatus === true) {
       setAssessmentsView(false);
-      if (formStatus.approvalStatus) {
+      if (handelApprovalTabStatus()) {
         setApprovalsView(true);
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
@@ -344,7 +408,15 @@ function JhaSummary() {
       setCloseOutView(false);
       setLessonsLearnedView(false);
       setCommentsView(false)
-    } else if (viewName == "lession") {
+    } else {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment}`)
+      handleClickSnackBar()
+    }
+
+  }
+
+  const handelLessionLearnedChanges = () => {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === true) {
       setAssessmentsView(false);
       setApprovalsView(false);
       setCloseOutView(false);
@@ -354,13 +426,20 @@ function JhaSummary() {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
       }
       setCommentsView(false)
-    } else if (viewName == "comments") {
-      setAssessmentsView(false);
-      setApprovalsView(false);
-      setCloseOutView(false);
-      setLessonsLearnedView(false);
-      setCommentsView(true)
-    } else if (viewName = "closeOut") {
+    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval} and ${errorCloseOut}`)
+      handleClickSnackBar()
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorApproval} and ${errorCloseOut}`)
+      handleClickSnackBar()
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorCloseOut}`)
+      handleClickSnackBar()
+    }
+  }
+
+  const handelCloseOutViewChanges = () => {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true) {
       setAssessmentsView(false);
       setApprovalsView(false);
       if (formStatus.closeOutStatus) {
@@ -370,17 +449,56 @@ function JhaSummary() {
       }
       setLessonsLearnedView(false);
       setCommentsView(false)
+    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval}`)
+      handleClickSnackBar()
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false) {
+      setMessageSnackbar(`${errorMessage} ${errorApproval}`)
+      handleClickSnackBar()
     }
   }
+
+  const handelCommentsViewChange = () => {
+    setAssessmentsView(false);
+    setApprovalsView(false);
+    setCloseOutView(false);
+    setLessonsLearnedView(false);
+    setCommentsView(true)
+  }
+
+  const viewSwitch = (viewName) => {
+    if (viewName == "assessment") {
+      handleAssessmentViewChanges()
+    } else if (viewName == "approval") {
+      handelApprovalViewChange()
+    } else if (viewName == "lession") {
+      handelLessionLearnedChanges()
+    } else if (viewName == "comments") {
+      handelCommentsViewChange()
+    } else if (viewName = "closeOut") {
+      handelCloseOutViewChanges()
+    }
+  }
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackBar}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   const handelCallBack = async () => {
     await setLoader(true)
     await handelAsessment()
     await handelProjectStructre()
     await handelActionLink()
-    await handelInputValue()
-    await handelLessionActionTracker()
-    await handelApprovalActions()
+    await assessmentDataValues()
     await setLoader(false)
   }
 
@@ -415,7 +533,7 @@ function JhaSummary() {
                   Assessments
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.assessmentStatus ? "Done" : ""}
+                  {formStatus.assessmentStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -424,9 +542,9 @@ function JhaSummary() {
                   color={approvalsView ? "secondary" : "primary"}
                   variant="outlined"
                   size="large"
-                  variant={formStatus.approvalStatus ? "contained" : "outlined"}
+                  variant={handelApprovalTabStatus() ? "contained" : "outlined"}
                   endIcon={
-                    formStatus.approvalStatus ? <CheckCircle /> : <AccessTime />
+                    handelApprovalTabStatus() ? <CheckCircle /> : <AccessTime />
                   }
                   className={classes.statusButton}
                   onClick={(e) => viewSwitch("approval")}
@@ -434,7 +552,7 @@ function JhaSummary() {
                   Approvals
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.approvalStatus ? "Done" : ""}
+                  {handelApprovalTabStatus() ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -453,7 +571,7 @@ function JhaSummary() {
                   Close out
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.closeOutStatus ? "Done" : ""}
+                  {formStatus.closeOutStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -472,7 +590,7 @@ function JhaSummary() {
                   Lessons Learned
                 </Button>
                 <Typography variant="caption" display="block">
-                  {formStatus.lessionLeranedStatus ? "Done" : ""}
+                  {formStatus.lessionLeranedStatus ? "Done" : "Pending"}
                 </Typography>
               </div>
 
@@ -519,22 +637,9 @@ function JhaSummary() {
                                           {projectStructure.projectName} -
                                           {Object.entries(projectStructName).map(([key, value], index) => (
                                             <>
-                                              {!key.includes("Work") ? Object.keys(projectStructName)[index + 2] !== undefined ? `${value} - ` : `${value}` : ""}
+                                              {Object.keys(projectStructName)[index + 1] !== undefined ? `${value} - ` : `${value}`}
                                             </>
                                           ))}
-                                        </Typography>
-                                      </Grid>
-                                      {/* work area */}
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Work Area
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          {checkValue(projectStructName["Work Area(s)"])}
                                         </Typography>
                                       </Grid>
 
@@ -553,7 +658,7 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* job title */}
-                                      <Grid item xs={12} md={12}>
+                                      <Grid item xs={12} md={6}>
                                         <Typography
                                           variant="h6"
                                           gutterBottom
@@ -567,7 +672,7 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* job description */}
-                                      <Grid item xs={12} md={12}>
+                                      <Grid item xs={12} md={6}>
                                         <Typography
                                           variant="h6"
                                           gutterBottom
@@ -581,18 +686,21 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* assessment performed by */}
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Assessment performed by
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
+
+                                      {false &&
+                                        <Grid item xs={12} md={6}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Assessment performed by
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            NA
+                                          </Typography>
+                                        </Grid>
+                                      }
 
                                       {/* assessment start date */}
                                       <Grid item xs={12} md={6}>
@@ -615,7 +723,7 @@ function JhaSummary() {
                                           gutterBottom
                                           className={Fonts.labelName}
                                         >
-                                          Permit to perform
+                                          Permit to work
                                         </Typography>
                                         <Typography variant="body" className={Fonts.labelValue}>
                                           {checkValue(assessment.permitToPerform)}
@@ -623,18 +731,21 @@ function JhaSummary() {
                                       </Grid>
 
                                       {/* permit refrence */}
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Permit reference
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          Yes
-                                        </Typography>
-                                      </Grid>
+
+                                      {false &&
+                                        <Grid item xs={12} md={6}>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Permit reference
+                                          </Typography>
+                                          <Typography variant="body" className={Fonts.labelValue}>
+                                            Yes
+                                          </Typography>
+                                        </Grid>
+                                      }
 
                                       {/* risk assessment team */}
                                       <Grid item xs={12} md={6}>
@@ -646,7 +757,7 @@ function JhaSummary() {
                                           Risk Assessment team
                                         </Typography>
                                         {team !== undefined && team.map((value) => (
-                                          <Typography variant="body" display="block" className={Fonts.labelValue}>Team one</Typography>
+                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value.teamName}</Typography>
                                         ))}
 
                                       </Grid>
@@ -759,23 +870,25 @@ function JhaSummary() {
                                 <AccordionDetails>
                                   <Grid container item xs={12} spacing={3}>
                                     <>
-                                      <Grid item xs={12} md={6}>
-                                        <Typography
-                                          variant="h6"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Hazards Group
-                                        </Typography>
-                                        {hazard !== undefined && hazard.map((value) => (
-                                          <div>
-
-                                            <Typography variant="body" className={Fonts.labelValue} style={{ marginLeft: "10px" }}>
-                                              {checkValue(value.hazard)}
-                                            </Typography>
-                                          </div>
-                                        ))}
-
+                                      <Grid item xs={12} md={12}>
+                                        {false &&
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            className={Fonts.labelName}
+                                          >
+                                            Hazards Group
+                                          </Typography>
+                                        }
+                                        {
+                                          hazard !== undefined && hazard.map((value, index) => (
+                                            <div>
+                                              <Typography variant="body" style={{ marginLeft: "10px" }}>
+                                                {checkValue(value.hazard)}
+                                              </Typography>
+                                            </div>
+                                          ))
+                                        }
                                       </Grid>
                                     </>
                                   </Grid>
@@ -803,8 +916,6 @@ function JhaSummary() {
                                         <div>
                                           {hazard !== undefined && hazard.map((value, index) => (
                                             <Accordion
-                                              expanded={expandedHazard === `panel${index}`}
-                                              onChange={handleHazardExpand(`panel${index}`)}
                                               defaultExpanded
                                               className={classes.backPaper}
                                               key={index}
@@ -858,7 +969,7 @@ function JhaSummary() {
 
                                                 </Grid>
                                                 <Grid>
-                                                  {value.action.map((valueAction) => (
+                                                  {value.action !== undefined && value.action.map((valueAction) => (
                                                     <ActionShow
                                                       action={valueAction}
                                                       companyId={projectData.companyId}
@@ -880,7 +991,6 @@ function JhaSummary() {
                                         assessment.workStopCondition !== null &&
                                         assessment.workStopCondition.split(",").length > 0 ?
                                         <Grid item xs={12} md={12}>
-                                          {console.log(assessment.workStopCondition.split(","))}
                                           <Typography
                                             variant="h6"
                                             gutterBottom
@@ -891,7 +1001,7 @@ function JhaSummary() {
 
                                           {checkValue(assessment.workStopCondition).split(",").map((value) => (
                                             <p>
-                                              {value.replace("-", " ")}
+                                              {checkListAssessment[value]}
                                             </p>
                                           ))}
                                         </Grid>
@@ -912,7 +1022,7 @@ function JhaSummary() {
                                           <Typography variant="body" className={Fonts.labelValue}>
                                             {checkValue(assessment.humanPerformanceAspects).split(",").map((value) => (
                                               <p>
-                                                {value.replace("-", " ")}
+                                                {checkListAssessment[value]}
                                               </p>
                                             ))}
                                           </Typography>
@@ -986,9 +1096,11 @@ function JhaSummary() {
                                         >
                                           Notifications sent to
                                         </Typography>
-                                        {checkValue(assessment.notifyTo).split(",").map((value) => (
-                                          <Typography variant="body" display="block" className={Fonts.labelValue}>{value}</Typography>
-                                        ))}
+
+                                        <Typography variant="body" display="block" className={Fonts.labelValue}>
+                                          {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
+                                        </Typography>
+
                                       </Grid>
                                     </>
                                   </Grid>
@@ -1003,7 +1115,7 @@ function JhaSummary() {
                           <>
                             <Grid item xs={12} style={{ padding: '0px 12px' }}>
                               <Typography className={classes.heading}>
-                                Work Responsible Person
+                                Competent Person
                               </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -1029,8 +1141,51 @@ function JhaSummary() {
                                     Approved on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.wrpApprovalDateTime)).format("DD-MM-YY")}
+                                    {assessment.wrpApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.wrpApprovalDateTime)).format("Do MMM YYYY")}
+                                      </>
+                                      : "-"
+                                    }
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Grid>
 
+                            <Grid item xs={12} style={{ padding: '0px 12px' }}>
+                              <Typography className={classes.heading}>
+                                Senior authorized Person
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved by
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {checkValue(assessment.sapApprovalUser)}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                  <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    className={Fonts.labelName}
+                                  >
+                                    Approved on
+                                  </Typography>
+                                  <Typography variant="body" className={Fonts.labelValue}>
+                                    {assessment.sapApprovalDateTime !== null ?
+                                      <>
+                                        {moment(checkValue(assessment.sapApprovalDateTime)).format("Do MMM YYYY")}
+                                      </>
+                                      : "-"
+                                    }
                                   </Typography>
                                 </Grid>
                               </Grid>
@@ -1045,11 +1200,11 @@ function JhaSummary() {
                               <Grid container spacing={3}>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {approvalAction.map((value) => (
+                                    {allActionType["jha:approval"].map((value) => (
                                       <>
-
+                                        {/* {console.log(value, 'here')} */}
                                         <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
                                           companyId={projectData.companyId}
                                           projectId={projectData.projectId}
@@ -1075,10 +1230,10 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Work Responsible Person
+                                    Competent person
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {user.name} {user.badgeNumber}
+                                    {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
@@ -1087,7 +1242,7 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Lessons learnt
+                                    Lessons learned
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
                                     {checkValue(assessment.lessonLearntDetails)}
@@ -1095,10 +1250,10 @@ function JhaSummary() {
                                 </Grid>
                                 <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
-                                    {lessionAction.map((value) => (
+                                    {allActionType["jha:lessonLearned"].map((value) => (
                                       <>
                                         <ActionShow
-                                          action={{ id: value.actionId, number: value.actionNumber }}
+                                          action={{ id: value.id, number: value.actionNumber }}
                                           title={value.actionTitle}
                                           companyId={projectData.companyId}
                                           projectId={projectData.projectId}
@@ -1139,16 +1294,15 @@ function JhaSummary() {
                                     gutterBottom
                                     className={Fonts.labelName}
                                   >
-                                    Closed Data
+                                    Closed on
                                   </Typography>
                                   <Typography variant="body" className={Fonts.labelValue}>
-                                    {moment(checkValue(assessment.closedDate)).format("DD-MM-YY")}
+                                    {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
 
                                   </Typography>
                                 </Grid>
                               </Grid>
                             </Grid>
-
 
                           </>
                         )
@@ -1184,7 +1338,7 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.assessmentStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Assessments" />
+                      <ListItemText primary={formStatus.assessmentStatus ? "Update assessment" : "Add assessment"} />
                     </ListItemLink>
 
                     <ListItemLink
@@ -1194,7 +1348,7 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.approvalStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Approvals" />
+                      <ListItemText primary={formStatus.approvalStatus ? "Update approval" : "Add approval"} />
                     </ListItemLink>
 
                     <ListItemLink
@@ -1203,12 +1357,14 @@ function JhaSummary() {
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary="Lessons Learned" />
+                      {/* Lessons Learned */}
+                      <ListItemText primary={formStatus.lessionLeranedStatus ? "Update lessons learned" : "Add lessons learned"} />
                     </ListItemLink>
 
                     <ListItem
                       button
                       divider
+                      disabled={formStatus.closeOutStatus}
                       onClick={(e) => handleClosePush(e)}
                     >
                       <ListItemIcon>
@@ -1217,36 +1373,45 @@ function JhaSummary() {
                       <ListItemText primary="Close Out" />
                     </ListItem>
 
-                    <ListItemLink onClick={(e) => viewSwitch("comments")}>
-                      <ListItemIcon>
-                        <Comment />
-                      </ListItemIcon>
-                      <ListItemText primary="Comments" />
-                    </ListItemLink>
+                    {false &&
+                      <>
+                        <ListItemLink onClick={(e) => viewSwitch("comments")}>
+                          <ListItemIcon>
+                            <Comment />
+                          </ListItemIcon>
+                          <ListItemText primary="Comments" />
+                        </ListItemLink>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <History />
-                      </ListItemIcon>
-                      <ListItemText primary="Activity History" />
-                    </ListItem>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <History />
+                          </ListItemIcon>
+                          <ListItemText primary="Activity History" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                   <Divider />
                   <List dense>
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Print />
-                      </ListItemIcon>
-                      <ListItemText primary="Print" />
-                    </ListItem>
 
-                    <ListItem button>
-                      <ListItemIcon>
-                        <Share />
-                      </ListItemIcon>
-                      <ListItemText primary="Share" />
-                    </ListItem>
+                    {false &&
+                      <>
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Print />
+                          </ListItemIcon>
+                          <ListItemText primary="Print" />
+                        </ListItem>
+
+                        <ListItem button>
+                          <ListItemIcon>
+                            <Share />
+                          </ListItemIcon>
+                          <ListItemText primary="Share" />
+                        </ListItem>
+                      </>
+                    }
 
                   </List>
                 </Paper>
@@ -1256,6 +1421,15 @@ function JhaSummary() {
         </>
         : "Loading..."
       }
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="warning">
+          {messageSnackBar}
+        </Alert>
+      </Snackbar>
     </PapperBlock >
 
   );

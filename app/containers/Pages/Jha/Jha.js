@@ -34,7 +34,9 @@ import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
-import { handelCommonObject } from "../../../utils/CheckerValue";
+import { handelCommonObject, fetchReportedBy } from "../../../utils/CheckerValue";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -170,7 +172,7 @@ function Jha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/jhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
     const result = res.data.data.results.results !== undefined && res.data.data.results.results
     await setAllJHAData(result)
     await setTotalData(res.data.data.results.count)
@@ -178,7 +180,6 @@ function Jha(props) {
     let pageCount = Math.ceil(res.data.data.results.count / 25)
     await setPageCount(pageCount)
     handelTableView(result)
-
     await setIsLoading(true)
   }
 
@@ -196,7 +197,7 @@ function Jha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await setPage(value)
     await handelTableView(res.data.data.results.results)
@@ -216,7 +217,7 @@ function Jha(props) {
 
   //   Data for the table view
 
-  const columns = ['Jha number', 'Location', 'Work area', 'Created by', 'Created on'];
+  const columns = ['Jha number', 'Location', 'Created by', 'Created on'];
 
   const handelTableView = (result) => {
     const temp = []
@@ -224,9 +225,8 @@ function Jha(props) {
       temp.push([
         value.jhaNumber,
         value.location,
-        value.workArea,
         value.username,
-        moment(value.createdAt).format('DD MM YYYY')
+        moment(value.createdAt).format('Do MMM YYYY, h:mm:ss a')
       ])
     })
     setData(temp)
@@ -238,10 +238,11 @@ function Jha(props) {
     print: false,
     rowsPerPage: 100,
     page: 100,
-    search: true,
+    search: false,
     filter: false,
     viewColumns: false,
-    download: false
+    download: false,
+    pagination: false
   };
 
   const handleSummaryPush = async (e, index) => {
@@ -260,12 +261,13 @@ function Jha(props) {
 
   useEffect(() => {
     fetchData()
-  }, [props.projectName.breakDown])
+    allPickListDataValue()
+  }, [props.projectName.breakDown, searchIncident])
 
   //   Assigning 'classes' to useStyles()
   const classes = useStyles();
   return (
-    <PapperBlock title="JHA" icon="ion-md-list-box">
+    <PapperBlock title="JSA" icon="ion-md-list-box">
       {isLoading ? <>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
@@ -295,7 +297,7 @@ function Jha(props) {
                       className={classes.filterIcon}
                       onClick={handleView}
                     >
-                      <FormatListBulleted />
+                      <ViewAgendaIcon />
                     </IconButton>
 
                     <IconButton
@@ -303,7 +305,7 @@ function Jha(props) {
                       className={classes.filterIcon}
                       onClick={handleTabelView}
                     >
-                      <ViewAgendaIcon />
+                      <FormatListBulleted />
                     </IconButton>
                   </div>
                 </Grid>
@@ -317,7 +319,7 @@ function Jha(props) {
                     disableElevation
                     onClick={(e) => handleNewJhaPush(e)}
                   >
-                    New JHA
+                    New JSA
                   </Button>
                 </Grid>
               </Grid>
@@ -326,78 +328,77 @@ function Jha(props) {
         </div>
 
         {cardView ? (<>
-          {allJHAData.length > 0 && Object.entries(allJHAData).filter((item) => item[1]["jhaNumber"].includes(searchIncident.toUpperCase()) ||
-            item[1]["description"].toLowerCase().includes(
-              searchIncident.toLowerCase()
-            )).map((item, index) => (
-              <Card variant="outlined" className={Incidents.card}>
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid container spacing={3} alignItems="flex-start">
-                        <Grid item xs={11}>
-                          <Typography variant="h6">
-                            {item[1]["description"]}
-                          </Typography>
-                        </Grid>
 
-                        <Grid item xs={1} justifyContent="flex-end">
-                          <Chip
-                            avatar={<Avatar src={item[1]["avatar"]} />}
-                            label={item[1]["username"]}
-                          />
-                        </Grid>
+          {allJHAData.length > 0 ? Object.entries(allJHAData).map((item, index) => (
+            <Card variant="outlined" className={Incidents.card}>
+              <CardContent>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <Grid container spacing={3} alignItems="flex-start">
+                      <Grid item xs={10}>
+                        <Typography variant="h6">
+                          {item[1]["description"]}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={2} justifyContent="flex-end">
+                        <Chip
+                          avatar={<Avatar src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} />}
+                          label={item[1]["username"]}
+                        />
                       </Grid>
                     </Grid>
+                  </Grid>
 
-                    <Grid item xs={12}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6} md={3}>
-                          <Typography
-                            display="inline"
-                            className={Fonts.listingLabelName}
+                  <Grid item xs={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={6} md={3}>
+                        <Typography
+                          display="inline"
+                          className={Fonts.listingLabelName}
+                        >
+                          Number:
+                          <Link
+                            onClick={(e) => handleSummaryPush(e, index)}
+                            variant="subtitle2"
+                            className={Fonts.listingLabelValue}
+                            style={{
+                              textDecoration: 'underline',
+                              display: 'inline-block',
+                              marginLeft: '8px',
+                            }}
                           >
-                            Number:
-                            <Link
-                              onClick={(e) => handleSummaryPush(e, index)}
-                              variant="subtitle2"
-                              className={Fonts.listingLabelValue}
-                              style={{
-                                textDecoration: 'underline',
-                                display: 'inline-block',
-                                marginLeft: '8px',
-                              }}
-                            >
-                              {item[1]["jhaNumber"]}
-                            </Link>
-                          </Typography>
-                        </Grid>
+                            {item[1]["jhaNumber"]}
+                          </Link>
+                        </Typography>
+                      </Grid>
 
-                        <Grid item xs={6} md={3}>
-                          <Chip
-                            variant="outlined"
-                            label="JHA"
-                            color="primary"
-                            size="small"
-                          />
-                        </Grid>
+                      <Grid item xs={6} md={3}>
+                        <Chip
+                          variant="outlined"
+                          label={item[1]["jhaStage"] || "JSA"}
+                          color="primary"
+                          size="small"
+                        />
+                      </Grid>
 
-                        <Grid item xs={12} md={3}>
-                          <Typography
-                            display="inline"
-                            className={Fonts.listingLabelName}
-                          >
-                            <CalendarTodayIcon fontSize="small" />
-                            <span className={Fonts.listingLabelValue}>
-                              {moment(item[1]["assessmentDate"]).format(
-                                "Do MMMM YYYY"
-                              )}
-                            </span>
-                          </Typography>
-                        </Grid>
+                      <Grid item xs={12} md={3}>
+                        <Typography
+                          display="inline"
+                          className={Fonts.listingLabelName}
+                        >
+                          <CalendarTodayIcon fontSize="small" />
+                          <span className={Fonts.listingLabelValue}>
+                            {moment(item[1]["assessmentDate"]).format(
+                              "Do MMM YYYY"
+                            )}
+                          </span>
+                        </Typography>
                       </Grid>
                     </Grid>
+                  </Grid>
 
+                  {false &&
                     <Grid item xs={6} lg={3}>
                       <Typography className={Fonts.listingLabelName} gutterBottom>
                         Work Area
@@ -407,113 +408,127 @@ function Jha(props) {
                         {item[1]["workArea"]}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6} lg={3}>
-                      <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Location
-                      </Typography>
-                      <Typography className={Fonts.listingLabelValue}>
-                        {item[1]["location"]}
-                      </Typography>
-                    </Grid>
+                  }
 
-                    <Grid item xs={6} lg={3}>
-                      <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Created on
-                      </Typography>
-
-                      <Typography variant="body1" className={Fonts.listingLabelValue}>
-                        {moment(item[1]["createdAt"]).format(
-                          "Do MMMM YYYY, h:mm:ss a"
-                        )}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item xs={6} lg={3}>
-                      <Typography className={Fonts.listingLabelName} gutterBottom>
-                        Created By
-                      </Typography>
-
-                      <Typography className={Fonts.listingLabelValue}>
-                        {item[1]["username"]}
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={6} lg={3}>
+                    <Typography className={Fonts.listingLabelName} gutterBottom>
+                      Location
+                    </Typography>
+                    <Typography className={Fonts.listingLabelValue}>
+                      {item[1]["location"]}
+                    </Typography>
                   </Grid>
-                </CardContent>
-                <Divider />
-                <CardActions className={Incidents.cardActions}>
-                  <Grid
-                    container
-                    spacing={2}
-                    // justify="flex-end"
-                    alignItems="center"
-                  >
-                    <Grid item xs={6} md={3}>
-                      <Typography display="inline" className={Fonts.listingLabelName}>
-                        <MessageIcon fontSize="small" />
-                        {' '}
-                        Comments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["commentsCount"]}</ILink>
-                      </Typography>
-                    </Grid>
 
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <BuildIcon fontSize="small" />
-                        {' '}
-                        Actions:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["actionCount"]}</ILink>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6} md={3}>
-                      <Typography
-                        variant="body2"
-                        display="inline"
-                        className={Fonts.listingLabelName}
-                      >
-                        <AttachmentIcon fontSize="small" />
-                        {' '}
-                        Attachments:
-                      </Typography>
-                      <Typography variant="body2" display="inline">
-                        <ILink href="#">{item[1]["attachmentCount"]}</ILink>
-                      </Typography>
-                    </Grid>
+                  <Grid item xs={6} lg={3}>
+                    <Typography className={Fonts.listingLabelName} gutterBottom>
+                      Created on
+                    </Typography>
 
-                    <Grid item xs={6} md={3}>
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Print />}
-                        className={Incidents.actionButton}
-                      >
-                        Print
-                      </Button>
-
-                      <Button
-                        disabled
-                        size="small"
-                        color="primary"
-                        startIcon={<Share />}
-                        className={Incidents.actionButton}
-                      >
-                        Share
-                      </Button>
-                    </Grid>
+                    <Typography variant="body1" className={Fonts.listingLabelValue}>
+                      {moment(item[1]["createdAt"]).format(
+                        "Do MMM YYYY, h:mm:ss a"
+                      )}
+                    </Typography>
                   </Grid>
-                </CardActions>
-              </Card>))}</>)
+
+                  <Grid item xs={6} lg={3}>
+                    <Typography className={Fonts.listingLabelName} gutterBottom>
+                      Created By
+                    </Typography>
+
+                    <Typography className={Fonts.listingLabelValue}>
+                      {item[1]["username"]}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+              <Divider />
+              <CardActions className={Incidents.cardActions}>
+                <Grid
+                  container
+                  spacing={2}
+                  // justify="flex-end"
+                  alignItems="center"
+                >
+                  <Grid item xs={6} md={3}>
+                    <Typography display="inline" className={Fonts.listingLabelName}>
+                      <MessageIcon fontSize="small" />
+                      {' '}
+                      Comments:
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                      {item[1]["commentsCount"]}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6} md={3}>
+                    <Typography
+                      variant="body2"
+                      display="inline"
+                      className={Fonts.listingLabelName}
+                    >
+                      <BuildIcon fontSize="small" />
+                      {' '}
+                      Actions:
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                      {item[1]["actionCount"] || 0}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <Typography
+                      variant="body2"
+                      display="inline"
+                      className={Fonts.listingLabelName}
+                    >
+                      <AttachmentIcon fontSize="small" />
+                      {' '}
+                      Attachments:
+                    </Typography>
+                    <Typography variant="body2" display="inline">
+                      {/* <ILink href="#">{item[1]["attachmentCount"]}</ILink> */}
+                      {item[1]["attachmentCount"]}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={6} md={3}>
+                    <Button
+                      disabled
+                      size="small"
+                      color="primary"
+                      startIcon={<Print />}
+                      className={Incidents.actionButton}
+                    >
+                      Print
+                    </Button>
+
+                    <Button
+                      disabled
+                      size="small"
+                      color="primary"
+                      startIcon={<Share />}
+                      className={Incidents.actionButton}
+                    >
+                      Share
+                    </Button>
+                  </Grid>
+                </Grid>
+              </CardActions>
+            </Card>))
+            :
+            <Card variant="outlined" className={Incidents.card}>
+              <CardContent>
+                <Grid container spacing={3} justify="center">
+                  Sorry, no matching records found
+                </Grid>
+              </CardContent>
+            </Card>
+          }
+        </>
+        )
           : (
             <MUIDataTable
-              title="Incidents List"
+              title="JSA List"
               data={data}
               columns={columns}
               options={options}
@@ -524,7 +539,11 @@ function Jha(props) {
           {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
           <Pagination count={pageCount} page={page} onChange={handleChange} />
         </div>
-      </> : <h1>Loading...</h1>}
+      </> :
+        <>
+          Loading...
+        </>
+      }
     </PapperBlock>
   );
 }

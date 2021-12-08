@@ -317,7 +317,7 @@ const ObservationInitialNotificationUpdate = () => {
     let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem('projectName')).projectName.projectId
     const res = await api.get(`/api/v1/tags/?companyId=${companyId}&projectId=${projectId}`);
-    const result = res.data.data.results.results;
+    const result = res.data.data.results;
     let temp = []
     result.map((value) => {
       if (value.status === "Active") {
@@ -384,7 +384,7 @@ const ObservationInitialNotificationUpdate = () => {
               let assigneeData = {};
 
               assigneeData["inputValue"] = fetchingDepartments[i].userName;
-              assigneeData["reportedById"] = fetchingDepartments[i].id;
+              assigneeData["reportedById"] = fetchingDepartments[i].fkUserId;
 
               fetchingAssignee.push(assigneeData);
             }
@@ -478,7 +478,7 @@ const ObservationInitialNotificationUpdate = () => {
       let tempss = {};
 
       tempss["inputValue"] = LL[i].userName;
-      tempss["reportedById"] = LL[i].id;
+      tempss["reportedById"] = LL[i].fkUserId;
 
       user.push(tempss);
       // filterReportedById.push(result[i].id);
@@ -501,6 +501,8 @@ const ObservationInitialNotificationUpdate = () => {
 
     await setInitialData(tempData)
   }
+
+  console.log(initialData,"AAA")
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
@@ -608,7 +610,7 @@ const ObservationInitialNotificationUpdate = () => {
       > */}
       {isLoading ?
         <Grid container spacing={3} className={classes.observationNewSection}>
-
+        {tagData.length > 0 ? (<>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg xmlns="http://www.w3.org/2000/svg" width="30.334" height="24.972" viewBox="0 0 34.334 30.972">
@@ -621,18 +623,18 @@ const ObservationInitialNotificationUpdate = () => {
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
 
-                {tagData.length > 0 ? (
+                
                   <Grid item md={12} xs={12} className={classes.formBox}>
 
                     <FormGroup className={classes.customCheckBoxList}>
                       {tagData.map((value, index) => (
                         <FormControlLabel
-                          className={classes.labelValue}
                           control={
                             <Checkbox
                               icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                               checkedIcon={<CheckBoxIcon fontSize="small" />}
                               name={value}
+                              className="selectLabel"
                               // checked={catagoryName.includes(value.tagName)}
                               checked={handelSelectOption(value.tagName)}
                               // checked={catagory[index] !== undefined ? catagory[index]['observationTag'] == value.tagName ? true : false : false }
@@ -644,10 +646,10 @@ const ObservationInitialNotificationUpdate = () => {
                       ))}
                     </FormGroup>
 
-                  </Grid>) : null}
+                  </Grid>
               </Grid>
             </Paper>
-          </Grid>
+          </Grid></>) : null}
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
