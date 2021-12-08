@@ -639,7 +639,7 @@ const FlhaDetails = (props) => {
                           </Typography>
                           <Typography className="viewLabelValue">
 
-                            {flha.jhaReviewed !== 'undefined' ? flha.jhaReviewed : '-'}
+                            {flha.jhaReviewed ? flha.jhaReviewed : '-'}
                           </Typography>
 
                         </Grid>
@@ -675,7 +675,7 @@ const FlhaDetails = (props) => {
                             Do you have access to job procedure?
                           </Typography>
                           <Typography className="viewLabelValue">
-                            {flha.accessToJobProcedure}
+                            {flha.accessToJobProcedure ? flha.accessToJobProcedure: '-'}
                           </Typography>
 
                         </Grid>
