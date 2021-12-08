@@ -34,7 +34,7 @@ import { useHistory } from "react-router";
 import { company, projectName } from '../../../redux/actions/initialDetails';
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
-import { HEADER_AUTH, SELF_API, userId } from '../../../utils/constants';
+import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
@@ -450,7 +450,9 @@ function Actions(props) {
     page: 0,
   };
 
-  const createdBy = userId
+  const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
 
   const handleSummaryPush = async (index) => {
     const id = allInitialData[index].id;
@@ -483,6 +485,7 @@ function Actions(props) {
       // await setAllInitialData(result)
       if (props.observation == "My Observations") {
         const allLogInUserData = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&observationStage=${status}`)
+        console.log(allLogInUserData)
         const result = allLogInUserData.data.data.results.results
         await setAllInitialData(result)
         await setTotalData(allLogInUserData.data.data.results.count)

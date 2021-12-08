@@ -15,7 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';  
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Link from '@material-ui/core/Link';
@@ -447,7 +447,7 @@ const FlhaDetails = () => {
   const [buttonLoading, setButtonLoading] = useState(false)
 
   let taskUrl = `/api/v1/flhas/${flhaNumber}/criticaltasks/`
-  const radioDecide = ["Yes", "No", "NA"]
+  const radioDecide = ["Yes", "No", "N/A"]
   let visualType = ["Site pictures", "Team pictures", "Tools and tackles"]
   const history = useHistory();
 
@@ -1474,6 +1474,7 @@ const FlhaDetails = () => {
                                     <div className={classes.spacer}>
                                       <FormControl component="fieldset">
                                         <RadioGroup className={classes.radioInline}>
+                                          {console.log(value, 'value')}
                                           {radioDecide.map((value) => (
                                             <FormControlLabel
                                               value={value}
@@ -1539,39 +1540,39 @@ const FlhaDetails = () => {
                           </RadioGroup>
                         </FormControl>
                       </Grid>
-
-                      <Grid item md={12} sm={12} xs={12}>
-                        <Grid container spacing={3}>
-                          <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                            <FormLabel component="legend" className="checkRadioLabel">Enter permit number</FormLabel>
+                      {flhaForm.permitToWork === 'Yes' || flhaForm.permitToWork === 'yes' ? 
+                          <Grid item md={12} sm={12} xs={12}>
+                            <Grid container spacing={3}>
+                              <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                                <FormLabel component="legend" className="checkRadioLabel">Enter permit number</FormLabel>
+                              </Grid>
+                              <Grid item md={4} sm={4} xs={12}>
+                                <TextField
+                                  multiline
+                                  variant="outlined"
+                                  rows="1"
+                                  id="description"
+                                  label="Permit number"
+                                  className="formControl"
+                                  value={handelValue(flhaForm.permitToWorkNumber)}
+                                  onChange={(e) => setFlhaForm({ ...flhaForm, permitToWorkNumber: e.target.value })}
+                                />
+                              </Grid>
+                              <Grid item md={4} sm={4} xs={12}>
+                                <TextField
+                                  multiline
+                                  variant="outlined"
+                                  rows="1"
+                                  id="permitreference"
+                                  label="Permit reference"
+                                  className="formControl"
+                                  value={handelValue(flhaForm.referenceNumber)}
+                                  onChange={(e) => setFlhaForm({ ...flhaForm, referenceNumber: e.target.value })}
+                                />
+                              </Grid>
+                            </Grid>
                           </Grid>
-                          <Grid item md={4} sm={4} xs={12}>
-                            <TextField
-                              multiline
-                              variant="outlined"
-                              rows="1"
-                              id="description"
-                              label="Permit number"
-                              className="formControl"
-                              value={handelValue(flhaForm.permitToWorkNumber)}
-                              onChange={(e) => setFlhaForm({ ...flhaForm, permitToWorkNumber: e.target.value })}
-                            />
-                          </Grid>
-                          <Grid item md={4} sm={4} xs={12}>
-                            <TextField
-                              multiline
-                              variant="outlined"
-                              rows="1"
-                              id="permitreference"
-                              label="Permit reference"
-                              className="formControl"
-                              value={handelValue(flhaForm.referenceNumber)}
-                              onChange={(e) => setFlhaForm({ ...flhaForm, referenceNumber: e.target.value })}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-
+                          : null}
                       <Grid item md={6} sm={6} xs={6}>
                         <MuiPickersUtilsProvider
                           variant="outlined"

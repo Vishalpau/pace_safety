@@ -16,7 +16,6 @@ const styles = (theme) => ({
   root:{
     backgroundColor: 'transparent',
     marginBottom: '20px',
-    marginTop: '20px',
   },
 
   descBlock: {
