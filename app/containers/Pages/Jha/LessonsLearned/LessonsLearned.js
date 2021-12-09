@@ -315,7 +315,7 @@ console.log("sagar")
                             <Grid item md={6} xs={12}>
                               <Typography variant="h6" gutterBottom className={classes.labelName}>
                                 <ActionTracker
-                                  actionContext="jha:lessionLearned"
+                                  actionContext="jha:lessonLearned"
                                   enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                                   setUpdatePage={setUpdatePage}
                                   updatePage={updatePage}

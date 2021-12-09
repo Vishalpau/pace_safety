@@ -56,6 +56,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Loader from "../Loader";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -836,11 +837,8 @@ function JhaSummary() {
                                         md={12}
                                         xs={12}
                                       >
-                                        
                                           {hazard !== undefined && hazard.map((value, index) => (
-                                            <Accordion expanded={expandedTableDetail === 'panel5'} onChange={handleExpand('panel5')} defaultExpanded className="backPaperSubAccordianWithMargin"
-                                              
-                                              // key={index}
+                                            <Accordion expanded={expandedTableDetail === `panel5${index}`} onChange={handleExpand(`panel5${index}`)} defaultExpanded className="backPaperSubAccordianWithMargin"
                                             >
                                               <AccordionSummary
                                                 expandIcon={<ExpandMoreIcon />}
@@ -899,8 +897,6 @@ function JhaSummary() {
                                               </AccordionDetails>
                                             </Accordion>
                                           ))}
-                                        
-
                                       </Grid>
 
                                       {assessment.workStopCondition !== undefined &&
@@ -1074,7 +1070,7 @@ function JhaSummary() {
                             
                                 <Grid item xs={12} md={6}>
                                 <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
-                                  <Typography variant="body" className={Fonts.labelValue}>
+                                <Typography className="viewLabelValue">
                                     {checkValue(assessment.sapApprovalUser)}
                                   </Typography>
                                 </Grid>
@@ -1152,30 +1148,53 @@ function JhaSummary() {
                                 <Paper elevation={1} className="paperSection">
                                   <Grid container spacing={3}>
                                 <Grid item xs={12} md={12}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
+                                <FormLabel component="legend" className="viewLabel">
                                     Competent person
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
+                                  </FormLabel>
+                                  <Typography className="viewLabelValue">
                                     {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={12} md={6}>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    className={Fonts.labelName}
-                                  >
+                                <FormLabel component="legend" className="viewLabel">
                                     Lessons learned
-                                  </Typography>
-                                  <Typography variant="body" className={Fonts.labelValue}>
+                                  </FormLabel>
+                                  <Typography className="viewLabelValue">
                                     {checkValue(assessment.lessonLearntDetails)}
                                   </Typography>
                                 </Grid>
-                                <Grid item xs={12} md={8}>
+                                {allActionType["jha:lessonLearned"].length > 0 ? 
+                                  <Grid item md={12} xs={12}>
+                                    <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                                    <Table component={Paper}>
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                          <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      {/* Action show */}
+                                      <TableBody>
+                                      {allActionType["jha:lessonLearned"].map((action, index) => (<>
+                                      <TableRow>
+                                        <TableCell style={{ width: 50 }}>
+                                          <a
+                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                            target="_blank"
+                                          >{action.actionNumber}</a>
+
+                                        </TableCell>
+                                        <TableCell style={{ width: 50 }}>
+                                          {action.actionTitle}
+                                        </TableCell>
+                                        
+                                      </TableRow></>))
+                                    }
+                                        
+                                      </TableBody>
+                                    </Table>
+                                  </Grid> : null}
+                                {/* <Grid item xs={12} md={8}>
                                   <Typography className={classes.aLabelValue}>
                                     {allActionType["jha:lessonLearned"].map((value) => (
                                       <>
@@ -1190,7 +1209,7 @@ function JhaSummary() {
                                       </>
                                     ))}
                                   </Typography>
-                                </Grid>
+                                </Grid> */}
                                 </Grid>
                                 </Paper>
                                 </Grid>
@@ -1290,6 +1309,7 @@ function JhaSummary() {
                     </ListItem>
 
                     <ListItem button
+                      disabled={formStatus.closeOutStatus}
                     >
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
@@ -1365,7 +1385,7 @@ function JhaSummary() {
           
           </Grid>
         
-        : "Loading..."
+        : <Loader/>
       }
       <Snackbar
         open={openSnackBar}
