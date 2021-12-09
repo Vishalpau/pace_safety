@@ -259,3 +259,33 @@ export const fetchReportedBy = async () => {
     }
     return allUser;
 };
+
+
+export const fetchDepartmentName = async () => {
+    let alldept;
+    let companyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+
+    const config = {
+        method: "get",
+        url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/departments/`,
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+    try {
+        let filterDepartmentName = [];
+        let allData = await axios(config)
+        const result = allData.data.data.results;
+        for (var i in result) {
+            filterDepartmentName.push(result[i].departmentName);
+        }
+        alldept = filterDepartmentName;
+    } catch {
+        let allData = ["No deptartmetn found"]
+        alldept = allData
+    }
+    return alldept;
+};

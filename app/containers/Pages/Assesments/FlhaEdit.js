@@ -15,7 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import Grid from '@material-ui/core/Grid';  
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Link from '@material-ui/core/Link';
@@ -39,7 +39,8 @@ import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import RemoveIcon from '@material-ui/icons/Remove';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+
 import {
   KeyboardDateTimePicker, MuiPickersUtilsProvider
 } from '@material-ui/pickers';
@@ -1187,7 +1188,7 @@ const FlhaDetails = () => {
                                 <Typography className={classes.heading}>Task#{index + 1} - {taskForm[index]["taskIdentification"]}</Typography>
                                 <Grid container justify="flex-end">
                                   <Button>
-                                    <RemoveIcon onClick={(e) => handelTaskRemove(index)} />
+                                    <DeleteForeverOutlinedIcon onClick={(e) => handelTaskRemove(index)} />
                                   </Button>
                                 </Grid>
                               </AccordionSummary>
@@ -1222,7 +1223,7 @@ const FlhaDetails = () => {
                                       >
                                         <Typography className={classes.heading}>Hazard#{indexHazard + 1} - {taskForm[index]["hazards"][indexHazard]["hazards"]}</Typography>
                                         <Button>
-                                          <RemoveIcon onClick={(e) => handelRemoveHazards(index, indexHazard)} />
+                                          <DeleteForeverOutlinedIcon onClick={(e) => handelRemoveHazards(index, indexHazard)} />
                                         </Button>
                                       </AccordionSummary>
                                       <AccordionDetails>
@@ -1540,39 +1541,39 @@ const FlhaDetails = () => {
                           </RadioGroup>
                         </FormControl>
                       </Grid>
-                      {flhaForm.permitToWork === 'Yes' || flhaForm.permitToWork === 'yes' ? 
-                          <Grid item md={12} sm={12} xs={12}>
-                            <Grid container spacing={3}>
-                              <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                <FormLabel component="legend" className="checkRadioLabel">Enter permit number</FormLabel>
-                              </Grid>
-                              <Grid item md={4} sm={4} xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="1"
-                                  id="description"
-                                  label="Permit number"
-                                  className="formControl"
-                                  value={handelValue(flhaForm.permitToWorkNumber)}
-                                  onChange={(e) => setFlhaForm({ ...flhaForm, permitToWorkNumber: e.target.value })}
-                                />
-                              </Grid>
-                              <Grid item md={4} sm={4} xs={12}>
-                                <TextField
-                                  multiline
-                                  variant="outlined"
-                                  rows="1"
-                                  id="permitreference"
-                                  label="Permit reference"
-                                  className="formControl"
-                                  value={handelValue(flhaForm.referenceNumber)}
-                                  onChange={(e) => setFlhaForm({ ...flhaForm, referenceNumber: e.target.value })}
-                                />
-                              </Grid>
+                      {flhaForm.permitToWork === 'Yes' || flhaForm.permitToWork === 'yes' ?
+                        <Grid item md={12} sm={12} xs={12}>
+                          <Grid container spacing={3}>
+                            <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                              <FormLabel component="legend" className="checkRadioLabel">Enter permit number</FormLabel>
+                            </Grid>
+                            <Grid item md={4} sm={4} xs={12}>
+                              <TextField
+                                multiline
+                                variant="outlined"
+                                rows="1"
+                                id="description"
+                                label="Permit number"
+                                className="formControl"
+                                value={handelValue(flhaForm.permitToWorkNumber)}
+                                onChange={(e) => setFlhaForm({ ...flhaForm, permitToWorkNumber: e.target.value })}
+                              />
+                            </Grid>
+                            <Grid item md={4} sm={4} xs={12}>
+                              <TextField
+                                multiline
+                                variant="outlined"
+                                rows="1"
+                                id="permitreference"
+                                label="Permit reference"
+                                className="formControl"
+                                value={handelValue(flhaForm.referenceNumber)}
+                                onChange={(e) => setFlhaForm({ ...flhaForm, referenceNumber: e.target.value })}
+                              />
                             </Grid>
                           </Grid>
-                          : null}
+                        </Grid>
+                        : null}
                       <Grid item md={6} sm={6} xs={6}>
                         <MuiPickersUtilsProvider
                           variant="outlined"

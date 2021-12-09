@@ -427,8 +427,12 @@ const FlhaDetails = (props) => {
     })
 
   }
+  const select = async () => {
+    await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
+  }
 
   const handelCallBack = async () => {
+    await select()
     await auditUserList()
     await auditData()
     await setActions()
@@ -436,6 +440,7 @@ const FlhaDetails = (props) => {
   }
 
   React.useEffect(() => {
+
     handelCallBack()
   }, [updatePage]);
 
