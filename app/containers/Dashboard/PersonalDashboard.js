@@ -507,7 +507,9 @@ function PersonalDashboard(props) {
   }
 
   useEffect(() => {
-    handelCallBack()
+    setTimeout(() => {
+      handelCallBack()
+    }, 2000);
   }, [props.initialValues.companyListData]);
 
   return (
