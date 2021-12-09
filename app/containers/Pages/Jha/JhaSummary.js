@@ -36,7 +36,7 @@ import moment from "moment";
 import { useHistory } from 'react-router';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-
+import Link from '@material-ui/core/Link';
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
 import { handelActionData } from "../../../utils/CheckerValue";
@@ -49,6 +49,13 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import FormLabel from '@material-ui/core/FormLabel';
 
+// Table
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -166,6 +173,14 @@ function JhaSummary() {
   const [messageSnackBar, setMessageSnackbar] = useState("")
   const [checkListAssessment, setCheckListAssessment] = useState({})
   const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel5');
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
   const handelAsessment = async () => {
     const jhaId = handelJhaId()
@@ -1076,32 +1091,38 @@ function JhaSummary() {
                                   </Typography>
                                 
                             </Grid>
+                            {allActionType["jha:approval"].length > 0 ? 
+                                  <Grid item md={12} xs={12}>
+                                    <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                                    <Table component={Paper}>
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                          <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      {/* Action show */}
+                                      <TableBody>
+                                      {allActionType["jha:approval"].map((action, index) => (<>
+                                      <TableRow>
+                                        <TableCell style={{ width: 50 }}>
+                                          <a
+                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                            target="_blank"
+                                          >{action.actionNumber}</a>
 
-                            <Grid item xs={12}>
-                              <Typography className={classes.heading}>
-                                Actions
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Grid container spacing={3}>
-                                <Grid item xs={12} md={8}>
-                                  <Typography className={classes.aLabelValue}>
-                                    {allActionType["jha:approval"].map((value) => (
-                                      <>
-                                        {/* {console.log(value, 'here')} */}
-                                        <ActionShow
-                                          action={{ id: value.id, number: value.actionNumber }}
-                                          title={value.actionTitle}
-                                          companyId={projectData.companyId}
-                                          projectId={projectData.projectId}
-                                          handelShowData={handelShowData}
-                                        />
-                                      </>
-                                    ))}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
+                                        </TableCell>
+                                        <TableCell style={{ width: 50 }}>
+                                          {action.actionTitle}
+                                        </TableCell>
+                                        
+                                      </TableRow></>))
+                                    }
+                                        
+                                      </TableBody>
+                                    </Table>
+                                  </Grid> : null}
+
                             </Grid>
                             </Paper>
                             </Grid>
@@ -1233,53 +1254,68 @@ function JhaSummary() {
               </Grid>
 
               <Grid item xs={12} md={3}>
-                <Paper>
-                  <List
-                    dense
-                    subheader={
-                      <ListSubheader component="div">Actions</ListSubheader>
-                    }
-                  >
-                    <ListItemLink
-                      onClick={(e) => handleNewJhaPush(e)}
+              <div className="quickActionSection">
+              <Typography variant="h5" className="rightSectiondetail">
+                Quick Actions
+              </Typography>
+              <List component="nav" aria-label="main mailbox folders">
+                    <ListItem
+                      button
                       disabled={formStatus.closeOutStatus}
                     >
                       <ListItemIcon>
                         {formStatus.assessmentStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
-                      <ListItemText primary={formStatus.assessmentStatus ? "Update assessment" : "Add assessment"} />
-                    </ListItemLink>
+                      <Link
+                      variant="subtitle"
+                      onClick={(e) => handleNewJhaPush(e)}
+                        >
+                        <ListItemText primary={formStatus.assessmentStatus ? "Update assessment" : "Add assessment"} />
+                        </Link>
+                      </ListItem>
 
-                    <ListItemLink
-                      onClick={(e) => handleJhaApprovalsPush(e)}
+                    <ListItem
+                      button
                       disabled={formStatus.closeOutStatus}
                     >
                       <ListItemIcon>
                         {formStatus.approvalStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
+                      <Link
+                        variant="subtitle"
+                        onClick={(e) => handleJhaApprovalsPush(e)}
+                      >
                       <ListItemText primary={formStatus.approvalStatus ? "Update approval" : "Add approval"} />
-                    </ListItemLink>
+                      </Link>
+                    </ListItem>
 
-                    <ListItemLink
-                      onClick={(e) => handleJhaLessonLearnPush(e)}
+                    <ListItem button
                     >
                       <ListItemIcon>
                         {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
                       </ListItemIcon>
                       {/* Lessons Learned */}
+                      <Link
+                        variant="subtitle"
+                        onClick={(e) => handleJhaLessonLearnPush(e)}
+                      >
                       <ListItemText primary={formStatus.lessionLeranedStatus ? "Update lessons learned" : "Add lessons learned"} />
-                    </ListItemLink>
+                      </Link>
+                    </ListItem>
 
                     <ListItem
                       button
                       divider
                       disabled={formStatus.closeOutStatus}
-                      onClick={(e) => handleClosePush(e)}
                     >
                       <ListItemIcon>
                         <Close />
                       </ListItemIcon>
+                      <Link variant="subtitle"
+                      onClick={(e) => handleClosePush(e)}
+                      >
                       <ListItemText primary="Close Out" />
+                      </Link>
                     </ListItem>
 
                     {false &&
@@ -1323,7 +1359,7 @@ function JhaSummary() {
                     }
 
                   </List>
-                </Paper>
+                </div>
               </Grid>
             
           

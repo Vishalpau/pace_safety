@@ -337,6 +337,7 @@ const Approvals = () => {
                         color={check.wrp ? "secondary" : "primary"}
                         className="marginT0"
                         onClick={(e) => setOpen(true)}
+                        disabled={check.wrp || form.wrpApprovalUser !== null}
                       >
                         {check.wrp ? "Approved" : "Approve Now"}
                       </Button>
@@ -368,6 +369,7 @@ const Approvals = () => {
                         variant="contained"
                         color={check.sap ? "secondary" : "primary"}
                         className="marginT0"
+                        disabled={check.pic || form.sapApprovalUser !== null}
                         onClick={(e) => setOpenSeniorAuthorized(true)}
                       >
                         {check.sap ? "Approved" : "Approve Now"}
@@ -410,7 +412,7 @@ const Approvals = () => {
                             component="h2"
                             className={classes.projectSelectionTitle}
                           >
-                            You are approving competent person.
+                            You are approving as Competent Person (CP).
                           </Typography>
                         </DialogContentText>
                       </DialogContent>
@@ -460,7 +462,7 @@ const Approvals = () => {
                             component="h2"
                             className={classes.projectSelectionTitle}
                           >
-                            You are approving senior authorized person.
+                            You are approving as Senior Authorized Person (SAP).
                           </Typography>
                         </DialogContentText>
                       </DialogContent>
