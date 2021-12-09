@@ -28,7 +28,8 @@ import {
   access_token,
   ACCOUNT_API_URL,
 } from "../../utils/constants";
-import { handelCommonObject, fetchReportedBy } from "../../utils/CheckerValue";
+import { handelCommonObject, fetchReportedBy, fetchDepartmentName } from "../../utils/CheckerValue";
+import { values } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -83,6 +84,7 @@ export default function ActionTracker(props) {
     assignToName: "",
     deligateTo: 0,
     plannedStartDate: new Date(),
+    department: "",
     actualStartDate: null,
     plannedEndDate: null,
     actualEndDate: null,
@@ -111,7 +113,8 @@ export default function ActionTracker(props) {
   const [reportedByName, setReportedByName] = useState([]);
   const [isLoading, setLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
-
+  const [assigneeValue, setAssigneeValue] = useState("")
+  const [allDepartment, setallDepartment] = useState([])
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
@@ -137,8 +140,21 @@ export default function ActionTracker(props) {
       handelCommonObject("commonObject", "action", "actionUser", allUsers)
       setReportedByName(allUsers)
     }
-
   };
+
+  const fetchDepartment = async () => {
+    try {
+      let commentObjectAction = JSON.parse(localStorage.getItem("commonObject"))["ActionDept"]["department"]
+      setallDepartment(commentObjectAction)
+    }
+    catch {
+      let allDepartment = await fetchDepartmentName()
+      handelCommonObject("commonObject", "ActionDept", "department", allDepartment)
+      setallDepartment(allDepartment)
+    }
+  };
+
+
 
   const select = async () => {
     await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
@@ -150,7 +166,7 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });
+    await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "", department: "" });
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
   };
@@ -171,7 +187,7 @@ export default function ActionTracker(props) {
       let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });
+        await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "", department: "" });
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
         await props.handelShowData()
@@ -180,11 +196,48 @@ export default function ActionTracker(props) {
     }
   };
 
+  const handelAssigne = () => {
+    let assigneName;
+    if (form["department"] == "") {
+      assigneName = reportedByName
+    } else {
+      let deptAssigneName = []
+      reportedByName.map((value) => {
+        if (value["department"].length > 0) {
+          value["department"].map((valueDept) => {
+            if (form["department"] === valueDept["departmentName"]) {
+              deptAssigneName.push(value)
+            }
+          })
+        }
+      })
+      assigneName = deptAssigneName
+    }
+    return assigneName
+  }
+
+  const handelDeparment = (value = "") => {
+    setForm({
+      ...form,
+      department: value,
+      assignTo: userId,
+      assignToName: "",
+    })
+    if (form["department"] == "") {
+      setAssigneeValue(userName)
+    } else {
+      console.log("here1")
+      let firstAssigneeName = handelAssigne()
+      setAssigneeValue("");
+    }
+  }
+
   let severity = ["Normal", "Critical", "Blocker"];
   const classes = useStyles();
 
   const handelCallBack = async () => {
     await handelUpdate()
+    await fetchDepartment()
     await fetchReported()
   }
 
@@ -213,7 +266,7 @@ export default function ActionTracker(props) {
           Actions<FlashOnIcon />
         </Button>
       }
-      {/* {console.log(reportedByName)} */}
+      {console.log(form)}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
         <IconButton
@@ -241,12 +294,40 @@ export default function ActionTracker(props) {
               />
             </Grid>
 
+            {/* department */}
+            <Grid item xs={12}>
+              <FormControl
+                variant="outlined"
+                requirement
+                className="formControl"
+              >
+                <InputLabel id="Department">
+                  Department
+                </InputLabel>
+                <Select
+                  labelId="Department"
+                  id="Department"
+                  label="Department"
+                  defaultValue=""
+                >
+                  {allDepartment.map((value) => (
+                    <MenuItem
+                      value={value}
+                      onClick={(e) => handelDeparment(value)}
+                    >
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
             {/* assigen */}
             <Grid item xs={12}>
-              {reportedByName[0] !== "No users found" ?
+              {reportedByName !== undefined && reportedByName[0] !== "No users found" ?
                 <Autocomplete
                   id="combo-box-demo"
-                  options={reportedByName}
+                  options={handelAssigne()}
                   className={classes.mT30}
                   getOptionLabel={(option) => option.name}
                   onChange={(e, option) =>
@@ -258,7 +339,7 @@ export default function ActionTracker(props) {
                   }
                   renderInput={(params) => <TextField {...params}
                     label="Assignee" variant="outlined" />}
-                  defaultValue={reportedByName.find(value => value.name == userName)}
+                  value={form.department == "" ? reportedByName.find(value => value.name == userName) : reportedByName.find(value => value.name == form.assignToName)}
                   error={error.assignTo}
                 />
                 :
@@ -320,7 +401,7 @@ export default function ActionTracker(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {reportedByName[0] !== "No users found" ?
+          {reportedByName !== undefined && reportedByName[0] !== "No users found" ?
             <>
               <div className={classes.loadingWrapper}>
                 <Button
