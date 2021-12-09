@@ -28,7 +28,7 @@ import {
   access_token,
   ACCOUNT_API_URL,
 } from "../../utils/constants";
-import { handelCommonObject, fetchReportedBy } from "../../utils/CheckerValue";
+import { handelCommonObject, fetchReportedBy, fetchDepartmentName } from "../../utils/CheckerValue";
 import { values } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
@@ -113,8 +113,8 @@ export default function ActionTracker(props) {
   const [reportedByName, setReportedByName] = useState([]);
   const [isLoading, setLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
-  const allDepartment = JSON.parse(localStorage.getItem("commonObject"))["ActionDept"]["department"]
   const [assigneeValue, setAssigneeValue] = useState("")
+  const [allDepartment, setallDepartment] = useState([])
 
   const handelUpdate = async () => {
     if (props.actionID !== undefined && props.actionID !== undefined) {
@@ -142,6 +142,20 @@ export default function ActionTracker(props) {
     }
   };
 
+  const fetchDepartment = async () => {
+    try {
+      let commentObjectAction = JSON.parse(localStorage.getItem("commonObject"))["ActionDept"]["department"]
+      setallDepartment(commentObjectAction)
+    }
+    catch {
+      let allDepartment = await fetchDepartmentName()
+      handelCommonObject("commonObject", "ActionDept", "department", allDepartment)
+      setallDepartment(allDepartment)
+    }
+  };
+
+
+
   const select = async () => {
     await apiAction.get(`api/v1/core/companies/select/${props.fkCompanyId}/`)
   }
@@ -152,7 +166,7 @@ export default function ActionTracker(props) {
 
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });
+    await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "", department: "" });
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
   };
@@ -173,7 +187,7 @@ export default function ActionTracker(props) {
       let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "" });
+        await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "", department: "" });
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
         await props.handelShowData()
@@ -206,7 +220,7 @@ export default function ActionTracker(props) {
     setForm({
       ...form,
       department: value,
-      assignTo: "",
+      assignTo: userId,
       assignToName: "",
     })
     if (form["department"] == "") {
@@ -223,6 +237,7 @@ export default function ActionTracker(props) {
 
   const handelCallBack = async () => {
     await handelUpdate()
+    await fetchDepartment()
     await fetchReported()
     await handelDeparment()
   }
@@ -253,7 +268,7 @@ export default function ActionTracker(props) {
           Actions<FlashOnIcon />
         </Button>
       }
-      {/* {console.log(reportedByName)} */}
+      {console.log(form)}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
         <IconButton
@@ -326,7 +341,7 @@ export default function ActionTracker(props) {
                   }
                   renderInput={(params) => <TextField {...params}
                     label="Assignee" variant="outlined" />}
-                  value={form.assignToName}
+                  value={form.department == "" ? reportedByName.find(value => value.name == userName) : ""}
                   error={error.assignTo}
                 />
                 :
