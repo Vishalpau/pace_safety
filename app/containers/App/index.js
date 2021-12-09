@@ -77,6 +77,7 @@ function App() {
     let tarPage = ''
     let tarId = 0
     let jsonCode = ""
+    let tarProjectStruct;
     if (window.location.search !== "") {
       // let state = localStorage.getItem('direct_landing')
       var search = location.search.substring(1);
@@ -85,16 +86,15 @@ function App() {
       if (state) {
         jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
         let newArr = (0, eval)('(' + jsonCode + ')')
-
         state = newArr;
-
         comId = state.companyId;
         proId = state.projectId;
         redback = state.redirect_back;
         tarPage = state.targetPage.trim();
         tarId = state.targetId;
+        tarProjectStruct = state.projectStructure
         if (comId !== "") {
-          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage }))
+          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
         }
       }
     }
@@ -106,6 +106,7 @@ function App() {
     const projectId = searchParams.get('projectId') || proId
 
     let data = {}
+    console.log(code)
     if (code) {
       if (window.location.hostname === 'localhost') {
 
@@ -141,8 +142,7 @@ function App() {
         .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
-            
-              window.location.href = "/"
+            window.location.href = "/"
           }
         })
         .catch(function (error) {
