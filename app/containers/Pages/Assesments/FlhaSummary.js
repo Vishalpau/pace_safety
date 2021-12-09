@@ -138,7 +138,7 @@ class SimpleTabs extends React.Component {
     criticalTasks: {},
     visualConfirmations: {},
     versions: ["1.0",],
-    selectedVersion: "",
+    selectedVersion: "1.0",
 
   };
 
@@ -167,7 +167,7 @@ class SimpleTabs extends React.Component {
     const flhaId = this.props.match.params.id;
     let taskUrl = `api/v1/flhas/${flhaId}/criticaltasks/`
     var res = await api.get(`${taskUrl}?version=${value}`);
-    await this.setState({ criticalTasks: res.data.data.results });
+    await this.setState({ criticalTasks: res.data.data.results, selectedVersion: value });
   }
 
   getJobVisualConfirmation = async () => {
@@ -180,10 +180,6 @@ class SimpleTabs extends React.Component {
     if (history) {
       history.push(Path);
     }
-  }
-
-  handleChangeTab = (version) => {
-    this.setState({ selectedVersion: version })
   }
 
   render() {
@@ -264,22 +260,20 @@ class SimpleTabs extends React.Component {
               </Grid>
             </Paper>
             <div className={classes.root}>
-              <AppBar position="static" className={classes.headerBackground}>
-                {versions.map((version) => (
-                  <Tabs
-                    value={value}
-                    onClick={() => this.handleChangeTab(version)}
-                  >
-                    <Tab
-                      value={version}
-                      color={this.state.selectedVersion !== "" && this.state.selectedVersion == version ? "secondary" : ""}
-                      key={version}
-                      label={(version == "1.0") ? "Initial Revision" : version}
-                      onClick={(e) => this.getPreventiveControls(version)}
-                    />
-                  </Tabs>
-                ))}
-              </AppBar>
+
+              <List component="nav" className="inlineListBTN" aria-label="main mailbox folders">
+                <ListItem button className={this.state.selectedVersion == 1.0 ? "active" : ""}>
+                  <ListItemText primary="Initial assessment" onClick={(e) => this.getPreventiveControls("1.0")} />
+                </ListItem>
+                {this.state.versions !== undefined
+                  && this.state.versions.length > 0
+                  && this.state.versions.slice(1, this.state.versions.length).map((version) => (
+                    <ListItem button className={this.state.selectedVersion == version ? "active" : ""}>
+                      <ListItemText primary={`${version}`} onClick={(e) => this.getPreventiveControls(version)} />
+                    </ListItem>
+                  ))}
+
+              </List>
 
               <TabContainer className={classes.paddZero}>
                 <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />

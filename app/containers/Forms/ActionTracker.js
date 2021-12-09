@@ -81,7 +81,7 @@ export default function ActionTracker(props) {
     approver: props.createdBy,
     approverName: JSON.parse(localStorage.getItem('userDetails'))["name"],
     assignTo: userId,
-    assignToName: userName,
+    assignToName: "",
     deligateTo: 0,
     plannedStartDate: new Date(),
     department: "",
@@ -239,12 +239,10 @@ export default function ActionTracker(props) {
     await handelUpdate()
     await fetchDepartment()
     await fetchReported()
-    await handelDeparment()
   }
 
   useEffect(() => {
     handelCallBack()
-
   }, [])
 
   return (
@@ -341,7 +339,7 @@ export default function ActionTracker(props) {
                   }
                   renderInput={(params) => <TextField {...params}
                     label="Assignee" variant="outlined" />}
-                  value={form.department == "" ? reportedByName.find(value => value.name == userName) : ""}
+                  value={form.department == "" ? reportedByName.find(value => value.name == userName) : reportedByName.find(value => value.name == form.assignToName)}
                   error={error.assignTo}
                 />
                 :
