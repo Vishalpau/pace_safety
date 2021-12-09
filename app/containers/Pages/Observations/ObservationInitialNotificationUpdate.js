@@ -384,7 +384,7 @@ const ObservationInitialNotificationUpdate = () => {
               let assigneeData = {};
 
               assigneeData["inputValue"] = fetchingDepartments[i].userName;
-              assigneeData["reportedById"] = fetchingDepartments[i].id;
+              assigneeData["reportedById"] = fetchingDepartments[i].fkUserId;
 
               fetchingAssignee.push(assigneeData);
             }
@@ -478,7 +478,7 @@ const ObservationInitialNotificationUpdate = () => {
       let tempss = {};
 
       tempss["inputValue"] = LL[i].userName;
-      tempss["reportedById"] = LL[i].id;
+      tempss["reportedById"] = LL[i].fkUserId;
 
       user.push(tempss);
       // filterReportedById.push(result[i].id);
@@ -501,6 +501,8 @@ const ObservationInitialNotificationUpdate = () => {
 
     await setInitialData(tempData)
   }
+
+  console.log(initialData,"AAA")
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
     let breakdownLength = projectData.projectName.breakdown.length
