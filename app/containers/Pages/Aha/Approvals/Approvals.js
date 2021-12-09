@@ -176,14 +176,14 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
-    if (type == "competent person") {
+    if (type == "Competent Person (CP)") {
       setForm({
         ...form,
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
       setProjectOpen(false)
-    } else if (type == "senior authorized person") {
+    } else if (type == "Senior Authorized Person (SAP)") {
       setForm({
         ...form,
         sapApprovalUser: name,
@@ -274,7 +274,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                     variant="contained"
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className="marginT0"
-                    onClick={(e) => { setProjectOpen(true), setPerson("competent person") }}
+                    onClick={(e) => { setProjectOpen(true), setPerson("Competent Person (CP)") }}
                   >
                     {form.wrpApprovalUser == null ? "Approve Now" : "Approved"}
                   </Button>
@@ -298,7 +298,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                       variant="contained"
                       color={form.sapApprovalUser === null ? "primary" : "secondary"}
                       className="marginT0"
-                      onClick={(e) => { setProjectOpen(true), setPerson("senior authorized person") }}
+                      onClick={(e) => { setProjectOpen(true), setPerson("Senior Authorized Person (SAP)") }}
                     >
                       {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
                     </Button>
@@ -371,7 +371,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                         component="h2"
                         className={classes.projectSelectionTitle}
                       >
-                        You are approving {person}.
+                        You are approving as {person}.
                       </Typography>
                     </DialogContentText>
                   </DialogContent>
