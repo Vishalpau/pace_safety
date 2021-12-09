@@ -264,44 +264,7 @@ const [projectOpen , setProjectOpen] = useState(false)
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={classes.labelName} gutterBottom>
-                    Aha number
-                  </Typography>
-
-                  <Typography varint="body1" className={Type.labelValue}>
-                    {form.ahaNumber ? form.ahaNumber : "-"}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={classes.labelName} gutterBottom>
-                    Aha assessment data
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {moment(form.ahaAssessmentDate).format(
-                      "Do MMMM YYYY"
-                    )}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={classes.labelName} gutterBottom>
-                    Aha description
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {form.description ? form.description : "-"}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={classes.labelName} gutterBottom>
-                    Aha location
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {form.location ? form.location : "-"}
-                  </Typography>
-                </Grid>
+                
                 <Grid item md={8} xs={12} className="formFieldBTNSection">
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>

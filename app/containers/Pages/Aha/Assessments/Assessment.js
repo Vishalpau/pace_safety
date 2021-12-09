@@ -458,7 +458,6 @@ const Assessment = () => {
       data.append("link", ahaform.link),
       data.append("notifyTo", ahaform.notifyTo),
       data.append("permitToPerform", ahaform.permitToPerform),
-      data.append("wrpApprovalUser", ahaform.wrpApprovalUser),
       data.append("picApprovalUser", ahaform.picApprovalUser),
       data.append("signedUser", ahaform.signedUser),
       data.append("signedDateTime", ahaform.signedDateTime),
@@ -491,6 +490,13 @@ const Assessment = () => {
       );
     }
   };
+
+  const handleCancle = () => {
+    history.push(
+      `/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`
+    );
+
+  }
 
   const [notifyToList, setNotifyToList] = useState([]);
 
@@ -612,7 +618,6 @@ const Assessment = () => {
     setForm(temp);
   };
   const fetchNotificationSent = async () => {
-    console.log('sagar')
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
@@ -1275,26 +1280,11 @@ const Assessment = () => {
                 ) : null}
 
                 <Grid item md={12} xs={12}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={() =>
-                      history.push(
-                        `/app/pages/aha/assessments/project-details/${localStorage.getItem(
-                          "fkAHAId"
-                        )}`
-                      )
-                    }
-                  >
-                    Previous
-                  </Button>
+               
                   <div className={classes.loadingWrapper}>
                     <Button
-                      variant="contained"
-                      onClick={(e) => handleSubmit()}
-                      className={classes.button}
-                      style={{ marginLeft: "10px" }}
+                      size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
+                      onClick={(e) => handleSubmit()}   
                       disabled={submitLoader}
                     >
                       Submit
@@ -1306,6 +1296,10 @@ const Assessment = () => {
                       />
                     )}
                   </div>
+                  <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+                  onClick={() => handleCancle()}>
+                    Cancel
+                  </Button>
                 </Grid>
               </Grid>
 

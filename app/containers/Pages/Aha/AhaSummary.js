@@ -78,7 +78,7 @@ import ActionShow from '../../Forms/ActionShow';
 import Loader from "../Loader"
 import { checkValue } from "../Jha/Utils/checkValue";
 import Snackbar from '@material-ui/core/Snackbar';
-
+import MuiAlert from '@material-ui/lab/Alert';
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -236,7 +236,8 @@ function AhaSummary() {
   const [notificationSentValue, setNotificationSentValue] = useState([])
   const [approvalActionData, setApprovalactionData] = useState([])
   const [lessionAction, setLessionAction] = useState([])
-
+  const [messageSnackBar, setMessageSnackbar] = useState("")
+  const [openSnackBar, setOpenSnackBar] = useState(false);
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
@@ -1244,7 +1245,7 @@ function AhaSummary() {
                       <ListItemText primary="Assessments" />
                     </Link>
                   </ListItem>}
-                {ahaData.wrpApprovalUser !== "" ?
+                {ahaData.wrpApprovalUser !== null ?
                   <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                     <ListItemIcon>
                       <Edit />
@@ -1347,6 +1348,15 @@ function AhaSummary() {
         :
         <Loader />
         }
+        <Snackbar
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="warning">
+          {messageSnackBar}
+        </Alert>
+      </Snackbar>
       </CustomPapperBlock>
     </>
   );
