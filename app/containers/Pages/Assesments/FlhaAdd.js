@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { CircularProgress } from "@material-ui/core";
 import Accordion from '@material-ui/core/Accordion';
@@ -37,6 +37,7 @@ import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -44,10 +45,9 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 import FormObservationbanner from 'dan-images/addFormObservationbanner.jpg';
 import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import moment from "moment";
+
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router';
-import RemoveIcon from '@material-ui/icons/Remove';
-
 import api from '../../../utils/axios';
 import {
   HEADER_AUTH, SSO_URL, userId
@@ -55,6 +55,8 @@ import {
 import { getPicklistvalues } from '../../../utils/helper';
 import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import validate from '../../Validator/jobFormValidation';
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -1118,7 +1120,7 @@ const FlhaDetails = (props) => {
                         </Typography>
                         <Grid container justify="flex-end">
                           <Button>
-                            <RemoveIcon onClick={(e) => handelTaskRemove(taskIndex)} />
+                            <DeleteForeverOutlinedIcon onClick={(e) => handelTaskRemove(taskIndex)} />
                           </Button>
                         </Grid>
                       </AccordionSummary>
@@ -1151,7 +1153,7 @@ const FlhaDetails = (props) => {
                               </Typography>
                               <Grid container justify="flex-end">
                                 <Button>
-                                  <RemoveIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
+                                  <DeleteForeverOutlinedIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
                                 </Button>
                               </Grid>
                             </AccordionSummary>
@@ -1198,7 +1200,7 @@ const FlhaDetails = (props) => {
                                   </FormControl>
                                 </Grid>
                                 <Grid item md={8} sm={8} xs={8}>
-                                    {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                  {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
                                 </Grid>
                                 <Grid item md={12} sm={12} xs={12}>
                                   <div className={classes.spacer} id="myCode" >
@@ -1216,95 +1218,95 @@ const FlhaDetails = (props) => {
                                 </Grid>
 
                                 {/* <Grid container spacing={3}> */}
-                                  {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
+                                {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
 
-                                    <Grid item sm={12} xs={12}>
+                                  <Grid item sm={12} xs={12}>
 
-                                      <TextField
-                                        multiline
-                                        variant="outlined"
-                                        rows="1"
-                                        label="Control"
-                                        className="formControl"
-                                        value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
-                                        onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
-                                        }
-                                      />
-                                    </Grid>
-                                    <Grid item sm={12} xs={12}>
-                                        <FormControl component="fieldset">
-                                          <FormLabel component="legend" className="checkRadioLabel">
-                                            Has this control been put in place?
-                                          </FormLabel>
-                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
-                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                                            <FormControlLabel value="NA" control={<Radio />} label="N/A" />
-                                          </RadioGroup>
-                                        </FormControl>
-                                    </Grid>
-                                  </> : null}
+                                    <TextField
+                                      multiline
+                                      variant="outlined"
+                                      rows="1"
+                                      label="Control"
+                                      className="formControl"
+                                      value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
+                                      onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
+                                      }
+                                    />
+                                  </Grid>
+                                  <Grid item sm={12} xs={12}>
+                                    <FormControl component="fieldset">
+                                      <FormLabel component="legend" className="checkRadioLabel">
+                                        Has this control been put in place?
+                                      </FormLabel>
+                                      <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                        <FormControlLabel value="No" control={<Radio />} label="No" />
+                                        <FormControlLabel value="NA" control={<Radio />} label="N/A" />
+                                      </RadioGroup>
+                                    </FormControl>
+                                  </Grid>
+                                </> : null}
 
                                 {/* </Grid> */}
                                 {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
                                   {/* <Grid container spacing={1}> */}
-                                    <Grid item md={4} sm={4} xs={12}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className="formControl"
-                                      >
-                                        <InputLabel id="demo-simple-select-label">
-                                          Risk severity
+                                  <Grid item md={4} sm={4} xs={12}>
+                                    <FormControl
+                                      variant="outlined"
+                                      requirement
+                                      className="formControl"
+                                    >
+                                      <InputLabel id="demo-simple-select-label">
+                                        Risk severity
 
-                                        </InputLabel>
-                                        <Select
-                                          labelId="incident-type-label"
-                                          id="riskSeverityValue"
-                                          label="Risk severity"
-                                          name="riskSeverityValue"
-                                          value={item.riskSeverityValue}
+                                      </InputLabel>
+                                      <Select
+                                        labelId="incident-type-label"
+                                        id="riskSeverityValue"
+                                        label="Risk severity"
+                                        name="riskSeverityValue"
+                                        value={item.riskSeverityValue}
 
-                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
-                                          }
-                                        >
-                                          <MenuItem value={2}>Sightly harmful</MenuItem>
-                                          <MenuItem value={4}>Harmful</MenuItem>
-                                          <MenuItem value={6}>Very harmful</MenuItem>
-                                          <MenuItem value={8}>Extremely harmful</MenuItem>
-                                        </Select>
-                                      </FormControl>
-                                    </Grid>
-                                    <Grid item md={4} sm={4} xs={12}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className="formControl"
+                                        onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
+                                        }
                                       >
-                                        <InputLabel id="demo-simple-select-label">
-                                          Risk probability
-                                        </InputLabel>
-                                        <Select
-                                          labelId="incident-type-label"
-                                          id="riskProbabilityValue"
-                                          label="Risk probability"
-                                          value={item.riskProbabilityValue}
-                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
-                                          }
-                                        >
-                                          <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
-                                          <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
-                                          <MenuItem value={3} selected={item.riskProbability == 3}>Likely</MenuItem>
-                                          <MenuItem value={4} selected={item.riskProbability == 4}>Very likely</MenuItem>
-                                        </Select>
-                                      </FormControl>
-                                    </Grid>
-                                    <Grid item md={4} sm={4} xs={12} >
-                                      <div className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
+                                        <MenuItem value={2}>Sightly harmful</MenuItem>
+                                        <MenuItem value={4}>Harmful</MenuItem>
+                                        <MenuItem value={6}>Very harmful</MenuItem>
+                                        <MenuItem value={8}>Extremely harmful</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </Grid>
+                                  <Grid item md={4} sm={4} xs={12}>
+                                    <FormControl
+                                      variant="outlined"
+                                      requirement
+                                      className="formControl"
+                                    >
+                                      <InputLabel id="demo-simple-select-label">
+                                        Risk probability
+                                      </InputLabel>
+                                      <Select
+                                        labelId="incident-type-label"
+                                        id="riskProbabilityValue"
+                                        label="Risk probability"
+                                        value={item.riskProbabilityValue}
+                                        onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
+                                        }
+                                      >
+                                        <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
+                                        <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
+                                        <MenuItem value={3} selected={item.riskProbability == 3}>Likely</MenuItem>
+                                        <MenuItem value={4} selected={item.riskProbability == 4}>Very likely</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </Grid>
+                                  <Grid item md={4} sm={4} xs={12} >
+                                    <div className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
                                       {item.riskRatingLevel}
                                     </div>
-                                     
-                                    </Grid>
+
+                                  </Grid>
                                   {/* </Grid> */}
                                 </> : null}
                               </Grid>

@@ -97,6 +97,12 @@ const styles = theme => ({
   headerBackground: {
     backgroundColor: '#ffffff',
     color: '#06425c',
+    display: '-webkit-inline-box',
+    '& MuiTab-root': {
+      minWidth: '25px !important',
+      paddingLeft: '0px',
+      paddingRight: '0px',
+    },
   },
   pTopandRight: {
     paddingLeft: '20px',
@@ -131,10 +137,11 @@ class SimpleTabs extends React.Component {
     flha: {},
     criticalTasks: {},
     visualConfirmations: {},
-    versions: ["1.0",]
-    
+    versions: ["1.0",],
+    selectedVersion: "",
+
   };
-  
+
   componentDidMount() {
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
@@ -168,12 +175,16 @@ class SimpleTabs extends React.Component {
     const res = await api.get('api/v1/flhas/' + flhaId + '/visualconfirmations/');
     await this.setState({ visualConfirmations: res.data.data.results });
   }
-  redirectToHome = (Path) => { 
-    const { history } = this.props; 
-  if(history){
-   history.push(Path);
- }
-}
+  redirectToHome = (Path) => {
+    const { history } = this.props;
+    if (history) {
+      history.push(Path);
+    }
+  }
+
+  handleChangeTab = (version) => {
+    this.setState({ selectedVersion: version })
+  }
 
   render() {
     const { classes } = this.props;
@@ -254,18 +265,20 @@ class SimpleTabs extends React.Component {
             </Paper>
             <div className={classes.root}>
               <AppBar position="static" className={classes.headerBackground}>
-                <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
-                  {(this.state.versions !== undefined && this.state.versions.length > 0) ?
-
-                    (versions.map((version) => (
-                      <Tab
-                        value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version}
-                        onClick={(e) => this.getPreventiveControls(version)}
-                      />
-                    )))
-                    : "Initial Revision"
-                  }
-                </Tabs>
+                {versions.map((version) => (
+                  <Tabs
+                    value={value}
+                    onClick={() => this.handleChangeTab(version)}
+                  >
+                    <Tab
+                      value={version}
+                      color={this.state.selectedVersion !== "" && this.state.selectedVersion == version ? "secondary" : ""}
+                      key={version}
+                      label={(version == "1.0") ? "Initial Revision" : version}
+                      onClick={(e) => this.getPreventiveControls(version)}
+                    />
+                  </Tabs>
+                ))}
               </AppBar>
 
               <TabContainer className={classes.paddZero}>
@@ -293,10 +306,10 @@ class SimpleTabs extends React.Component {
                       </ListItemIcon>
                       <Link
                         // onClick={()=>.push('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
-                        onClick={()=> this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
+                        onClick={() => this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
                         variant="subtitle"
                       >
-                        <ListItemText  primary="Revise FLHA" />
+                        <ListItemText primary="Revise FLHA" />
                       </Link>
                     </ListItem>
                     <Divider />
@@ -308,7 +321,7 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        onClick={()=> this.redirectToHome('/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds)}
+                        onClick={() => this.redirectToHome('/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds)}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
@@ -320,7 +333,7 @@ class SimpleTabs extends React.Component {
                         <CloseIcon />
                       </ListItemIcon>
                       <Link
-                        onClick={()=> this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/close-out')}
+                        onClick={() => this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/close-out')}
                         variant="subtitle"
                       >
                         <ListItemText primary="Close out" />
