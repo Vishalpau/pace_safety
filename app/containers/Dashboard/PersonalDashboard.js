@@ -479,8 +479,10 @@ function PersonalDashboard(props) {
                   dispatch(projectName(project[0]))
                 }
                 // fetchPermissionData();
-                history.push('/app/' + targetPage)
-                localStorage.removeItem("direct_loading")
+                if (res.status === 200) {
+                  history.push('/app/' + targetPage)
+                  localStorage.removeItem("direct_loading")
+                }
               })
             }
           })

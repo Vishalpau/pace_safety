@@ -753,7 +753,10 @@ function Actions(props) {
     if (state !== null) {
       userDetails(state.comId, state.proId)
     } else {
-      fetchInitialiObservation();
+      let baseUrl = JSON.parse(localStorage.getItem('BaseUrl'))
+      if (baseUrl["safety"] !== null && baseUrl["safety"] !== undefined) {
+        fetchInitialiObservation();
+      }
     }
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
 
