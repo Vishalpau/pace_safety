@@ -276,10 +276,8 @@ function Aha(props) {
   const classes = useStyles();
 
   useEffect(() => {
-    setTimeout(() => {
-      fetchAllAHAData()
-      allPickListDataValue()
-    }, 4000);
+    fetchAllAHAData()
+    allPickListDataValue()
   }, [props.projectName.breakDown, searchIncident])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">

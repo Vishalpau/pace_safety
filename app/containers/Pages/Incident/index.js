@@ -202,6 +202,7 @@ function BlankPage(props) {
         await setPageCount(pageCount)
       }
       catch (err) {
+
         history.push("/app/pages/error")
       }
     } else {
@@ -406,9 +407,7 @@ function BlankPage(props) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      handelCallBack()
-    }, 3000);
+    handelCallBack()
   }, [props.projectName.breakDown, props.projectName.projectName]);
 
   const classes = useStyles();
