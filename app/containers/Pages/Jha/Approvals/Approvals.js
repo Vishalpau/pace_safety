@@ -208,6 +208,7 @@ const Approvals = () => {
   const handelWorkAndsap = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.name
+    let id = user.id
     if (type == "work") {
       setOpen(false)
       setCheck({ ...check, wrp: !check.wrp })
@@ -215,7 +216,7 @@ const Approvals = () => {
     } else if (type == "sap") {
       setOpenSeniorAuthorized(false)
       setCheck({ ...check, sap: !check.sap })
-      setForm({ ...form, sapApprovalUser: name, sapApprovalDateTime: new Date() })
+      setForm({ ...form, sapApprovalUser: name, sapApprovalDateTime: new Date(),closedByName : name, closedById : id,closedDate : new Date() })
     }
   }
 

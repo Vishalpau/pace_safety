@@ -585,7 +585,7 @@ function JhaSummary() {
                               {handelApprovalTabStatus() ? "Done" : "Pending"}
                             </Typography>
                           </li>
-                          <li>
+                          {/* <li>
                             <Button
                               color={closeOutView ? "secondary" : "primary"}
                               variant="outlined"
@@ -602,7 +602,7 @@ function JhaSummary() {
                             <Typography variant="caption" display="block">
                               {formStatus.closeOutStatus ? "Done" : "Pending"}
                             </Typography>
-                          </li>
+                          </li> */}
                           <li>
                             <Button
                               color={lessonsLearnedView ? "secondary" : "primary"}
@@ -1281,7 +1281,6 @@ function JhaSummary() {
                 </ListItem>
 
                 <ListItem button
-                  disabled={formStatus.closeOutStatus}
                 >
                   <ListItemIcon>
                     {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
@@ -1295,7 +1294,7 @@ function JhaSummary() {
                   </Link>
                 </ListItem>
 
-                <ListItem
+                {/* <ListItem
                   button
                   divider
                   disabled={formStatus.closeOutStatus}
@@ -1308,7 +1307,7 @@ function JhaSummary() {
                   >
                   <ListItemText primary="Close Out" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
 
                 {false &&
                   <>
