@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuData from './MenuData';
+import MenuData from './menuData';
 import AhaPackage from './AhaPackage';
 import Button from '@material-ui/core/Button';
 import '../../../styles/custom/customheader.css';
@@ -59,7 +59,7 @@ const styles = theme => ({
   },
   'appBarShift-right': {
     marginRight: drawerWidth,
-    ['@media (max-width:480px)']: { 
+    ['@media (max-width:480px)']: {
       marginRight: '0px',
       width: '100%',
     }
@@ -75,24 +75,24 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     width: drawerWidth,
-  marginLeft: '10px',
-  backgroundColor: '#06425c',
-  color: '#ffffff',
-  borderRadius: '10px',
-  height:' auto',
-  //minHeight: '392px',
-  
-  '& .MuiIconButton-root': {
+    marginLeft: '10px',
+    backgroundColor: '#06425c',
     color: '#ffffff',
-  },
-  
-  '& .MuiListItem-gutters': {
-    borderBottom: '1px solid #688ca0',
-  },
-  '& .MuiListItem-button:hover': {
-    borderBottom: '1px solid #688ca0',
-    backgroundColor: '#f47607',
-  },
+    borderRadius: '10px',
+    height: ' auto',
+    //minHeight: '392px',
+
+    '& .MuiIconButton-root': {
+      color: '#ffffff',
+    },
+
+    '& .MuiListItem-gutters': {
+      borderBottom: '1px solid #688ca0',
+    },
+    '& .MuiListItem-button:hover': {
+      borderBottom: '1px solid #688ca0',
+      backgroundColor: '#f47607',
+    },
   },
   drawerHeader: {
     display: 'flex',
@@ -100,9 +100,9 @@ const styles = theme => ({
     padding: '0 8px',
     borderBottom: '1px solid #608296',
     ...theme.mixins.toolbar,
-    '& .MuiList-padding': {paddingTop: '0px!important'},
-    '& .floatR': {float: 'right'},
-    ['@media (max-width:800px)']: { 
+    '& .MuiList-padding': { paddingTop: '0px!important' },
+    '& .floatR': { float: 'right' },
+    ['@media (max-width:800px)']: {
       border: 'none',
       minHeight: '52px',
     }
@@ -124,14 +124,14 @@ const styles = theme => ({
   },
   contentRightBox: {
     '& .MuiBox-root': {
-      ['@media (max-width:800px)']: { 
+      ['@media (max-width:800px)']: {
         paddingTop: '56px !important',
       },
-      ['@media (max-width:480px)']: { 
+      ['@media (max-width:480px)']: {
         paddingTop: '80px !important',
       },
     },
-    ['@media (max-width:1280px)']: { 
+    ['@media (max-width:1280px)']: {
       marginRight: '0px !important',
     },
   },
@@ -174,70 +174,70 @@ const styles = theme => ({
     fontFamily: 'Xolonium !important',
     float: 'right',
   },
-  
-pLtenPRten: {padding: '0px 10px 0px 10px',},
-buttonsNewDays: {
-  padding: '6px 5px 5px 6px', 
-  margin: '0px 10px',
-  minWidth: '38px',
-  backgroundColor: '#ffffff',
-  color: '#23343e',
-  borderRadius: '0px',
-  fontFamily: 'Montserrat-Medium',
-},
-activeFont: {
-  backgroundColor: '#f47607',
-  borderRadius: '5px',
-  color: '#ffffff',
-  margin: '0px 10px',
-  minWidth: '38px',
-  padding: '4px 5px 5px 4px',
-},
-textLeftone: {
-  textAlign: 'left',
-  verticalAlign: 'middle',
-  padding: '16px!important',
-  minWidth: '19% !important',
-},
-listingLabelName: {
-  color: '#7692a4',
-  fontSize: '0.88rem',
-  fontFamily: 'Montserrat-Regular',
-  '& .MuiButton-containedPrimary:hover': {
+
+  pLtenPRten: { padding: '0px 10px 0px 10px', },
+  buttonsNewDays: {
+    padding: '6px 5px 5px 6px',
+    margin: '0px 10px',
+    minWidth: '38px',
+    backgroundColor: '#ffffff',
+    color: '#23343e',
+    borderRadius: '0px',
+    fontFamily: 'Montserrat-Medium',
+  },
+  activeFont: {
     backgroundColor: '#f47607',
     borderRadius: '5px',
-    color: '#fff',
-},
-},
-textRight: {
-  textAlign: 'right',
-},
-drawerList : {
-  borderBottom: '1px solid #608296',
-  backgroundColor: '#608296',
-  padding: '0px',
-},
-floatR: {float: 'right',},
-catSectionArea: {
-  zIndex: '-9999',
-},
-packageTitleBox: {
-  ['@media (max-width:480px)']: { 
-    padding: '5px 12px !important',
+    color: '#ffffff',
+    margin: '0px 10px',
+    minWidth: '38px',
+    padding: '4px 5px 5px 4px',
   },
-},
-daysFilterBox: {
-  ['@media (max-width:480px)']: { 
-    padding: '0px 12px !important',
+  textLeftone: {
+    textAlign: 'left',
+    verticalAlign: 'middle',
+    padding: '16px!important',
+    minWidth: '19% !important',
   },
-},
+  listingLabelName: {
+    color: '#7692a4',
+    fontSize: '0.88rem',
+    fontFamily: 'Montserrat-Regular',
+    '& .MuiButton-containedPrimary:hover': {
+      backgroundColor: '#f47607',
+      borderRadius: '5px',
+      color: '#fff',
+    },
+  },
+  textRight: {
+    textAlign: 'right',
+  },
+  drawerList: {
+    borderBottom: '1px solid #608296',
+    backgroundColor: '#608296',
+    padding: '0px',
+  },
+  floatR: { float: 'right', },
+  catSectionArea: {
+    zIndex: '-9999',
+  },
+  packageTitleBox: {
+    ['@media (max-width:480px)']: {
+      padding: '5px 12px !important',
+    },
+  },
+  daysFilterBox: {
+    ['@media (max-width:480px)']: {
+      padding: '0px 12px !important',
+    },
+  },
 });
 
 class AhaFilter extends React.Component {
   state = {
     open: false,
     anchor: 'right',
-    button:true
+    button: true
   };
 
   handleDrawerOpen = () => {
@@ -253,8 +253,8 @@ class AhaFilter extends React.Component {
       anchor: event.target.value,
     });
   };
-  handleClickButton=()=>{
-    this.setState({button:!this.state.button})
+  handleClickButton = () => {
+    this.setState({ button: !this.state.button })
   }
 
   render() {
@@ -263,32 +263,32 @@ class AhaFilter extends React.Component {
 
     const drawer = (
       <div className="catDrawerSection">
-      <Drawer
-        variant="persistent"
-        anchor={anchor}
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        className={classes.catSectionArea}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={this.handleDrawerClose} classNames={classes.floatR}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronRightIcon />}
-          </IconButton>
-          <Typography
-          variant="h5"
-          classNames={classes.floatL}
-          >
-          Categories
-          </Typography>
-		
-          
-        </div>
-        <Divider />
-        {/* <List className={classes.drawerList}>{MenuData}</List> */}
-        <MenuData />
-      </Drawer>
+        <Drawer
+          variant="persistent"
+          anchor={anchor}
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          className={classes.catSectionArea}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={this.handleDrawerClose} classNames={classes.floatR}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronRightIcon />}
+            </IconButton>
+            <Typography
+              variant="h5"
+              classNames={classes.floatL}
+            >
+              Categories
+            </Typography>
+
+
+          </div>
+          <Divider />
+          {/* <List className={classes.drawerList}>{MenuData}</List> */}
+          <MenuData />
+        </Drawer>
       </div>
     );
 
@@ -308,7 +308,7 @@ class AhaFilter extends React.Component {
     let beforeBtn = null;
     let afterBtn = null;
 
-   
+
 
     if (anchor === 'left') {
       before = drawer;
@@ -320,54 +320,54 @@ class AhaFilter extends React.Component {
 
     return (
       <div className={classes.root}>
-              {this.props.value === 0 &&
-        
-        <div className={classes.appFrame}>
-          <AppBar
-            className={classNames(classes.appBar, classes.MuiAppBarColor, {
-              [classes.appBarShift]: open,
-              [classes[`appBarShift-${anchor}`]]: open,
-            })}
-			>
-            <Toolbar disableGutters className={classes.MuiAppBarColor}>
-              {beforeBtn}
-              <Grid container spacing={3}>
-              <Grid item md={8} sm={12} xs={12} className={classes.packageTitleBox}>
-                <Typography className={classes.title} variant="h5" color="inherit" noWrap>
-                {this.props.assessments === "My Assessments" ? "My Assessments" : "All Assessments"}
-                </Typography>
-              </Grid>
+        {this.props.value === 0 &&
 
-              <Grid item md={4} sm={12} xs={12}>  
-              <Typography className={classes.textRight} variant="h5" color="inherit" noWrap>
-              </Typography>            
-              
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.catButton}
-                onClick={()=>{this.handleClickButton()}}
-              >
-                {!this.state.open&&<Typography variant="h5">Categories</Typography>}{afterBtn}
-              
-              </Button>
-              </Grid>
-              </Grid>         
-             
-            </Toolbar>
-          </AppBar>
-          {before}
-          <main
-            className={classNames(classes.content, classes.contentRightBox, classes.padd0, classes[`content-${anchor}`], {
-              [classes.contentShift]: open,
-              [classes[`contentShift-${anchor}`]]: open,
-            })}
-          >
-            <div className={classes.drawerHeader} />
-            <AhaPackage search={this.props.search} assessments={this.props.assessments} />
-          </main>
-          {after}
-        </div>}
+          <div className={classes.appFrame}>
+            <AppBar
+              className={classNames(classes.appBar, classes.MuiAppBarColor, {
+                [classes.appBarShift]: open,
+                [classes[`appBarShift-${anchor}`]]: open,
+              })}
+            >
+              <Toolbar disableGutters className={classes.MuiAppBarColor}>
+                {beforeBtn}
+                <Grid container spacing={3}>
+                  <Grid item md={8} sm={12} xs={12} className={classes.packageTitleBox}>
+                    <Typography className={classes.title} variant="h5" color="inherit" noWrap>
+                      {this.props.assessments === "My Assessments" ? "My Assessments" : "All Assessments"}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item md={4} sm={12} xs={12}>
+                    <Typography className={classes.textRight} variant="h5" color="inherit" noWrap>
+                    </Typography>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.catButton}
+                      onClick={() => { this.handleClickButton() }}
+                    >
+                      {!this.state.open && <Typography variant="h5">Categories</Typography>}{afterBtn}
+
+                    </Button>
+                  </Grid>
+                </Grid>
+
+              </Toolbar>
+            </AppBar>
+            {before}
+            <main
+              className={classNames(classes.content, classes.contentRightBox, classes.padd0, classes[`content-${anchor}`], {
+                [classes.contentShift]: open,
+                [classes[`contentShift-${anchor}`]]: open,
+              })}
+            >
+              <div className={classes.drawerHeader} />
+              <AhaPackage search={this.props.search} assessments={this.props.assessments} />
+            </main>
+            {after}
+          </div>}
         {this.props.value === 1 &&
           <div className={classes.appFrame}>
 
@@ -385,7 +385,7 @@ class AhaFilter extends React.Component {
               <AhaList
                 assessments={this.props.assessments}
                 search={this.props.search}
-                // status={this.props.status}
+              // status={this.props.status}
               />
             </main>
             {after}
