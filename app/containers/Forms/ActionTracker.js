@@ -164,9 +164,22 @@ export default function ActionTracker(props) {
     await setOpen(true);
   };
 
+  const handelCloseAndSubmit = () => {
+    setForm(
+      {
+        ...form,
+        plannedEndDate: null,
+        actionTitle: "",
+        severity: "",
+        department: "",
+        assignToName: ""
+      }
+    );
+  }
+
   const handleClose = async () => {
     await setError({ actionTitle: "" });
-    await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "", department: "" });
+    await handelCloseAndSubmit()
     await setOpen(false);
     await props.setUpdatePage(!props.updatePage)
   };
@@ -187,7 +200,7 @@ export default function ActionTracker(props) {
       let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
       if (res.status == 201) {
         await setError({ actionTitle: "" });
-        await setForm({ ...form, plannedEndDate: null, actionTitle: "", severity: "", department: "" });
+        await handelCloseAndSubmit()
         await setOpen(false);
         await props.setUpdatePage(!props.updatePage)
         await props.handelShowData()
@@ -280,7 +293,7 @@ export default function ActionTracker(props) {
           </svg>
         </Button>
       }
-      {console.log(form)}
+      {/* {console.log(form)} */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle id="form-dialog-title">Action tracker</DialogTitle>
         <IconButton
@@ -353,7 +366,7 @@ export default function ActionTracker(props) {
                   }
                   renderInput={(params) => <TextField {...params}
                     label="Assignee" variant="outlined" />}
-                  value={form.department == "" ? reportedByName.find(value => value.name == userName) : reportedByName.find(value => value.name == form.assignToName)}
+                  value={form.department == "" && form.assignToName == "" ? reportedByName.find(value => value.name == userName) : reportedByName.find(value => value.name == form.assignToName)}
                   error={error.assignTo}
                 />
                 :
