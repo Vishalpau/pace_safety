@@ -103,8 +103,8 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  appDrawerImage:{
-    paddingRight:'10px'
+  appDrawerImage: {
+    paddingRight: '10px'
   }
 }));
 function UserMenu(props) {
@@ -190,8 +190,9 @@ function UserMenu(props) {
     setIsLoading(true)
   }
   const getSubscribedApps = async () => {
-    const companyId = props.initialValues.companyDataList.fkCompanyId || JSON.parse(localStorage.getItem('company')).fkCompanyId
-    
+    const companyId = props.initialValues.companyDataList.fkCompanyId ||
+      JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
+
     if (companyId) {
       let subscriptionData = {}
       let data = await api.get(`${SELF_API}${companyId}/`).then(function (res) {
@@ -200,17 +201,17 @@ function UserMenu(props) {
         let appId = subscriptionData.filter(item => item.appCode === "safety")[0].appId
         let subscriptionAction = subscriptionData.filter(item => item.appCode === "actions")
         let apiUrlDomain = {}
-        
+
         if (subscriptionAction.length > 0) {
           let actionHosting = subscriptionAction[0].hostings[0].apiDomain
           let actionUI = subscriptionAction[0].hostings[0].appDomain
           let actionClientId = subscriptionAction[0].hostings[0].clientId
-          
-          apiUrlDomain = { "safety": hostings, "actions": actionHosting, "actionsUI": actionUI, "actionClientID": actionClientId , "appId" : appId}
+
+          apiUrlDomain = { "safety": hostings, "actions": actionHosting, "actionsUI": actionUI, "actionClientID": actionClientId, "appId": appId }
         } else {
           apiUrlDomain = { "safety": hostings }
         }
-        
+
         localStorage.setItem("apiBaseUrl", hostings)
         localStorage.setItem("BaseUrl", JSON.stringify(apiUrlDomain))
         setUserImageLink(res.data.data.results.data.avatar)
@@ -227,7 +228,7 @@ function UserMenu(props) {
       await setApps(data.map(app => app.appId))
     }
   }
- 
+
   const handleClosea = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -237,7 +238,7 @@ function UserMenu(props) {
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
-  const handleClick = (clientId,targetPage) => {
+  const handleClick = (clientId, targetPage) => {
     if (clientId) {
 
       window.open(
@@ -261,7 +262,7 @@ function UserMenu(props) {
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <div>
-     
+
       <Tooltip title="Apps" placement="bottom">
         <IconButton
           aria-controls="apps-menu"
@@ -280,8 +281,8 @@ function UserMenu(props) {
         {isLoading ?
           <div elevation={3} className={classnames.list}>
             <List component="nav">
-        {/* https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=6PZZ5hTD0cV7TLTE15GqQU5hucV6PV88VSxNv3NT&response_type=code&targetPage=actions&companyId=1&projectId=undefined */}
-              {subscriptions.map((subscription,key) => (
+              {/* https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=6PZZ5hTD0cV7TLTE15GqQU5hucV6PV88VSxNv3NT&response_type=code&targetPage=actions&companyId=1&projectId=undefined */}
+              {subscriptions.map((subscription, key) => (
                 (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div key={key}>
                     <ListItemText
@@ -290,10 +291,10 @@ function UserMenu(props) {
                     />
                     <Divider />
                     <List>
-                      {subscription.modules.map((module,mIndex) => (
+                      {subscription.modules.map((module, mIndex) => (
                         <div key={mIndex}>
-                    
-                          <ListItemLink  disabled={!apps.includes(subscription.appId)} onClick={()=>handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting=>hosting.fkCompanyId ===JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "",module.targetPage,)} className={classnames.appDrawerLink}>
+
+                          <ListItemLink disabled={!apps.includes(subscription.appId)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <img className={classnames.appDrawerImage} src={module.moduleIcon} />
                             <ListItemText primary={module.moduleWebName} />

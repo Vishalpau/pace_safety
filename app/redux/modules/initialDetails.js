@@ -16,7 +16,8 @@ const INITIAL_STATE = {
   },
   companyDataList: {},
   levelBreakDown: [],
-  apiDomain: null
+  apiDomain: null,
+  baseUrl: "",
 }
 
 const InitialDetailsReducer = (state = INITIAL_STATE, action) => {
@@ -38,6 +39,8 @@ const InitialDetailsReducer = (state = INITIAL_STATE, action) => {
       return { ...state, apiDomain: action.payload }
     case actionType.ALLPICKLISTDATA:
       return { ...state, allPickListData: action.payload }
+    case actionType.BASEURL:
+      return { ...state, baseUrl: action.payload }
     default:
       return state
   }

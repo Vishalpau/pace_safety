@@ -202,6 +202,7 @@ function BlankPage(props) {
         await setPageCount(pageCount)
       }
       catch (err) {
+
         history.push("/app/pages/error")
       }
     } else {
@@ -289,22 +290,6 @@ function BlankPage(props) {
   const handlePush = async () => {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
-
-  const handelCallBack = async () => {
-    await setIsLoading(true)
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
-    if (state !== null) {
-      await userDetails(state.comId, state.proId)
-    } else {
-      await fetchData();
-    }
-    await setIsLoading(false)
-  }
-
-  useEffect(() => {
-    handelCallBack()
-    allPickListDataValue()
-  }, [props.projectName.breakDown, props.projectName.projectName]);
 
   const columns = [
     {
@@ -408,6 +393,22 @@ function BlankPage(props) {
         setPageCount(pageCount)
       })
   }
+
+  const handelCallBack = async () => {
+    await setIsLoading(true)
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    if (state !== null) {
+      await userDetails(state.comId, state.proId)
+    } else {
+      await fetchData();
+    }
+    await setIsLoading(false)
+    await allPickListDataValue()
+  }
+
+  useEffect(() => {
+    handelCallBack()
+  }, [props.projectName.breakDown, props.projectName.projectName]);
 
   const classes = useStyles();
 

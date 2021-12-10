@@ -749,14 +749,12 @@ function Actions(props) {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      let state = JSON.parse(localStorage.getItem('direct_loading'))
-      if (state !== null) {
-        userDetails(state.comId, state.proId)
-      } else {
-        fetchInitialiObservation();
-      }
-    }, 4000);
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    if (state !== null) {
+      userDetails(state.comId, state.proId)
+    } else {
+      fetchInitialiObservation();
+    }
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
 
   return (
