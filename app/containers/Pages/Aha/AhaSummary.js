@@ -391,7 +391,6 @@ function AhaSummary() {
   const fetchAHASummary = async () => {
     const res = await api.get(`/api/v1/ahas/${id}/`);
     const result = res.data.data.results;
-    console.log(result)
     await setAHAData(result);
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);

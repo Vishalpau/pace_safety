@@ -400,6 +400,7 @@ const JobDetails = (props) => {
             filterDepartmentName.push(result[i].departmentName);
           }
           setDepartmentName([...filterDepartmentName, "Others"])
+          handelCommonObject("commonObject", "ActionDept", "department", filterDepartmentName)
         }
       })
       .catch((error) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { CircularProgress } from "@material-ui/core";
 import Accordion from '@material-ui/core/Accordion';
@@ -37,6 +37,7 @@ import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -44,10 +45,9 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 import FormObservationbanner from 'dan-images/addFormObservationbanner.jpg';
 import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 import moment from "moment";
+
 import { useDropzone } from 'react-dropzone';
 import { useHistory } from 'react-router';
-import RemoveIcon from '@material-ui/icons/Remove';
-
 import api from '../../../utils/axios';
 import {
   HEADER_AUTH, SSO_URL, userId
@@ -55,6 +55,8 @@ import {
 import { getPicklistvalues } from '../../../utils/helper';
 import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import validate from '../../Validator/jobFormValidation';
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -196,8 +198,7 @@ const useStyles = makeStyles((theme) => ({
   ratioColororange: {
     backgroundColor: 'orange',
     padding: '15px!important',
-    height: '70%',
-    marginTop: '12px',
+    height: '55px',
     borderRadius: '5px',
     color: '#ffffff'
   },
@@ -642,10 +643,10 @@ const FlhaDetails = (props) => {
     }).join(':');
 
     jobForm["notifyTo"] == null ?
-    jobForm["notifyTo"] = "null" :
-    jobForm["notifyTo"].length > 0 ?
-    jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
-    jobForm["notifyTo"] = "null"
+      jobForm["notifyTo"] = "null" :
+      jobForm["notifyTo"].length > 0 ?
+        jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
+        jobForm["notifyTo"] = "null"
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -1106,12 +1107,12 @@ const FlhaDetails = (props) => {
                 <div>
                   {taskForm.map((taskValue, taskIndex) => (
 
-                    <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaperAccordian}>
+                    <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className="backPaperAccordian">
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1bh-content"
                         id="panel1bh-header"
-                        className={classes.headingColor}
+                        className="accordionHeaderSection"
                       >
                         <Typography className={classes.heading}>
                           {' '}
@@ -1119,7 +1120,7 @@ const FlhaDetails = (props) => {
                         </Typography>
                         <Grid container justify="flex-end">
                           <Button>
-                            <RemoveIcon onClick={(e) => handelTaskRemove(taskIndex)} />
+                            <DeleteForeverOutlinedIcon onClick={(e) => handelTaskRemove(taskIndex)} />
                           </Button>
                         </Grid>
                       </AccordionSummary>
@@ -1131,19 +1132,19 @@ const FlhaDetails = (props) => {
                             rows="1"
                             id="taskIdentification"
                             label="Task name"
-                            className={classes.fullWidth}
+                            className="formControl"
                             value={taskForm[taskIndex]["taskIdentification"]}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
                           />
                         </Grid>
                         {taskValue.hazards.map((item, indexHazard) => (
-                          <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.backPaperSubAccordian}>
+                          <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className="backPaperSubAccordian">
                             <AccordionSummary
                               expandIcon={<ExpandMoreIcon />}
                               aria-controls="panel2bh-content"
                               id="panel2bh-header"
-                              className={classes.accordionSubHeaderSection}
+                              className="accordionSubHeaderSection"
                             >
                               <Typography className={classes.heading}>
                                 Hazard#{indexHazard + 1} - {taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
@@ -1152,17 +1153,17 @@ const FlhaDetails = (props) => {
                               </Typography>
                               <Grid container justify="flex-end">
                                 <Button>
-                                  <RemoveIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
+                                  <DeleteForeverOutlinedIcon onClick={(e) => handelRemoveHazards(taskIndex, indexHazard)} />
                                 </Button>
                               </Grid>
                             </AccordionSummary>
                             <AccordionDetails>
                               <Grid container spacing={2}>
-                                <Grid item sm={12} xs={12}>
+                                <Grid item sm={4} xs={4}>
                                   <FormControl
                                     variant="outlined"
                                     requirement
-                                    className={classes.formControl}
+                                    className="formControl"
                                   >
                                     {(taskForm[taskIndex]["hazards"][indexHazard]["hazard"]) && indexHazard === 0 && isSelectedJob ?
                                       <TextField
@@ -1171,7 +1172,7 @@ const FlhaDetails = (props) => {
                                         rows="1"
                                         id="taskIdentification"
                                         label="Hazards"
-                                        className={classes.fullWidth}
+                                        className="formControl"
                                         value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
 
                                       />
@@ -1186,7 +1187,7 @@ const FlhaDetails = (props) => {
                                           variant="outlined"
                                           rows="3"
                                           id="hazards"
-                                          className={classes.fullWidth}
+                                          className="formControl"
                                           value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
                                           // disabled={(item.hazard != undefined) ? item.hazard : ''}
                                           onChange={(e) => { handleHazardForm(e, indexHazard, taskIndex, 'hazard'), setHazardType }
@@ -1197,9 +1198,11 @@ const FlhaDetails = (props) => {
                                         </Select>
                                       </>}
                                   </FormControl>
-                                  <Grid item sm={1} xs={4}>
-                                    {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                  </Grid>
+                                </Grid>
+                                <Grid item md={8} sm={8} xs={8}>
+                                  {(item.hazardImage) ? <img src={item.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                </Grid>
+                                <Grid item md={12} sm={12} xs={12}>
                                   <div className={classes.spacer} id="myCode" >
                                     <FormControl component="fieldset">
                                       <FormLabel component="legend" className="checkRadioLabel">
@@ -1214,101 +1217,103 @@ const FlhaDetails = (props) => {
                                   </div>
                                 </Grid>
 
-                                <Grid container spacing={2}>
-                                  {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
-
-                                    <Grid item sm={12} xs={12}>
-
-                                      <TextField
-                                        multiline
-                                        variant="outlined"
-                                        rows="1"
-                                        label="Control"
-                                        className="formControl"
-                                        value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
-                                        onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
-                                        }
-                                      />
-
-                                      <div className={classes.spacer}>
-                                        <FormControl component="fieldset">
-                                          <FormLabel component="legend" className="checkRadioLabel">
-                                            Has this control been put in place?
-                                          </FormLabel>
-                                          <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
-                                            <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="No" control={<Radio />} label="No" />
-                                            <FormControlLabel value="NA" control={<Radio />} label="N/A" />
-                                          </RadioGroup>
-                                        </FormControl>
-                                      </div>
-                                    </Grid>
-                                  </> : null}
-
-                                </Grid>
+                                {/* <Grid container spacing={3}> */}
                                 {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
-                                  <Grid container spacing={1}>
-                                    <Grid item md={4} sm={4} xs={12}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className={classes.formControl}
-                                      >
-                                        <InputLabel id="demo-simple-select-label">
-                                          Risk severity
 
-                                        </InputLabel>
-                                        <Select
-                                          labelId="incident-type-label"
-                                          id="riskSeverityValue"
-                                          label="Risk severity"
-                                          name="riskSeverityValue"
-                                          value={item.riskSeverityValue}
+                                  <Grid item sm={12} xs={12}>
 
-                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
-                                          }
-                                        >
-                                          <MenuItem value={2}>Sightly harmful</MenuItem>
-                                          <MenuItem value={4}>Harmful</MenuItem>
-                                          <MenuItem value={6}>Very harmful</MenuItem>
-                                          <MenuItem value={8}>Extremely harmful</MenuItem>
-                                        </Select>
-                                      </FormControl>
-                                    </Grid>
-                                    <Grid item md={4} sm={4} xs={12}>
-                                      <FormControl
-                                        variant="outlined"
-                                        requirement
-                                        className={classes.formControl}
-                                      >
-                                        <InputLabel id="demo-simple-select-label">
-                                          Risk probability
-                                        </InputLabel>
-                                        <Select
-                                          labelId="incident-type-label"
-                                          id="riskProbabilityValue"
-                                          label="Risk probability"
-                                          value={item.riskProbabilityValue}
-                                          onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
-                                          }
-                                        >
-                                          <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
-                                          <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
-                                          <MenuItem value={3} selected={item.riskProbability == 3}>Likely</MenuItem>
-                                          <MenuItem value={4} selected={item.riskProbability == 4}>Very likely</MenuItem>
-                                        </Select>
-                                      </FormControl>
-                                    </Grid>
-                                    <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
-                                      {item.riskRatingLevel}
-                                    </Grid>
+                                    <TextField
+                                      multiline
+                                      variant="outlined"
+                                      rows="1"
+                                      label="Control"
+                                      className="formControl"
+                                      value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
+                                      onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
+                                      }
+                                    />
                                   </Grid>
+                                  <Grid item sm={12} xs={12}>
+                                    <FormControl component="fieldset">
+                                      <FormLabel component="legend" className="checkRadioLabel">
+                                        Has this control been put in place?
+                                      </FormLabel>
+                                      <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
+                                        <FormControlLabel value="No" control={<Radio />} label="No" />
+                                        <FormControlLabel value="NA" control={<Radio />} label="N/A" />
+                                      </RadioGroup>
+                                    </FormControl>
+                                  </Grid>
+                                </> : null}
+
+                                {/* </Grid> */}
+                                {item.hazardStatus === "Yes" || item.hazardStatus === "" || item.hazardStatus === undefined ? <>
+                                  {/* <Grid container spacing={1}> */}
+                                  <Grid item md={4} sm={4} xs={12}>
+                                    <FormControl
+                                      variant="outlined"
+                                      requirement
+                                      className="formControl"
+                                    >
+                                      <InputLabel id="demo-simple-select-label">
+                                        Risk severity
+
+                                      </InputLabel>
+                                      <Select
+                                        labelId="incident-type-label"
+                                        id="riskSeverityValue"
+                                        label="Risk severity"
+                                        name="riskSeverityValue"
+                                        value={item.riskSeverityValue}
+
+                                        onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
+                                        }
+                                      >
+                                        <MenuItem value={2}>Sightly harmful</MenuItem>
+                                        <MenuItem value={4}>Harmful</MenuItem>
+                                        <MenuItem value={6}>Very harmful</MenuItem>
+                                        <MenuItem value={8}>Extremely harmful</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </Grid>
+                                  <Grid item md={4} sm={4} xs={12}>
+                                    <FormControl
+                                      variant="outlined"
+                                      requirement
+                                      className="formControl"
+                                    >
+                                      <InputLabel id="demo-simple-select-label">
+                                        Risk probability
+                                      </InputLabel>
+                                      <Select
+                                        labelId="incident-type-label"
+                                        id="riskProbabilityValue"
+                                        label="Risk probability"
+                                        value={item.riskProbabilityValue}
+                                        onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
+                                        }
+                                      >
+                                        <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
+                                        <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
+                                        <MenuItem value={3} selected={item.riskProbability == 3}>Likely</MenuItem>
+                                        <MenuItem value={4} selected={item.riskProbability == 4}>Very likely</MenuItem>
+                                      </Select>
+                                    </FormControl>
+                                  </Grid>
+                                  <Grid item md={4} sm={4} xs={12} >
+                                    <div className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
+                                      {item.riskRatingLevel}
+                                    </div>
+
+                                  </Grid>
+                                  {/* </Grid> */}
                                 </> : null}
                               </Grid>
                             </AccordionDetails>
                           </Accordion>
                         ))}
-                        <Grid item xs={12} className={classes.createHazardbox}>
+                        <Grid item xs={12} className="formFieldBTNSection">
                           <Button
                             variant="contained"
                             color="primary"
@@ -1423,7 +1428,7 @@ const FlhaDetails = (props) => {
                             </div>
                           </TableCell>
                           <TableCell align="left">
-                            <input accept="image/*" disabled={jobConfirmation[0].visualConfirmationStatus === "No" || jobConfirmation[0].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 0)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
+                            <input accept="image/*" disabled={jobConfirmation[0].visualConfirmationStatus === "" || jobConfirmation[0].visualConfirmationStatus === "No" || jobConfirmation[0].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 0)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
                           </TableCell>
                         </TableRow>
                         <TableRow className={classes.cellHeight}>
@@ -1440,7 +1445,7 @@ const FlhaDetails = (props) => {
                             </div>
                           </TableCell>
                           <TableCell align="left">
-                            <input accept="image/*" disabled={jobConfirmation[1].visualConfirmationStatus === "No" || jobConfirmation[1].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 1)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
+                            <input accept="image/*" disabled={jobConfirmation[1].visualConfirmationStatus === "" || jobConfirmation[1].visualConfirmationStatus === "No" || jobConfirmation[1].visualConfirmationStatus === "N/A" ? true : false} value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 1)} onChangeclassName="tableFileAttach" id="icon-button-file" name="visualConfirmationAttachment" type="file" />
                           </TableCell>
                         </TableRow>
                         <TableRow className={classes.cellHeight}>
@@ -1457,7 +1462,7 @@ const FlhaDetails = (props) => {
                             </div>
                           </TableCell>
                           <TableCell align="left">
-                            <input accept="image/*" disabled={jobConfirmation[2].visualConfirmationStatus === "No" || jobConfirmation[2].visualConfirmationStatus === "N/A" ? true : false} type="file" value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 2)} onChangeclassName="tableFileAttach" id="icon-button-file" />
+                            <input accept="image/*" disabled={jobConfirmation[2].visualConfirmationStatus === "" || jobConfirmation[2].visualConfirmationStatus === "No" || jobConfirmation[2].visualConfirmationStatus === "N/A" ? true : false} type="file" value={jobConfirmation.visualConfirmationAttachment} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationAttachment', 2)} onChangeclassName="tableFileAttach" id="icon-button-file" />
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -1478,8 +1483,8 @@ const FlhaDetails = (props) => {
                       });
                     }}>
                       <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="no" control={<Radio />} label="No" />
-                      <FormControlLabel value="na" control={<Radio />} label="N/A" />
+                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                      <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.permitToWork ? '' : error.permitToWork}</div>
                   </FormControl>
