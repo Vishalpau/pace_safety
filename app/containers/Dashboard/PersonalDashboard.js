@@ -41,7 +41,7 @@ import {
 } from "../../utils/constants";
 import styles from "./dashboard-jss";
 import './style.css';
-import Loader from "../Pages/Loader";
+import Loading from 'dan-components/Loading';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -814,7 +814,7 @@ function PersonalDashboard(props) {
         </PapperBlock>
       </>
         :
-        <Loader />
+        <Loading />
       }
     </>
   );

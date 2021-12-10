@@ -749,15 +749,14 @@ function Actions(props) {
   }
 
   useEffect(() => {
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
-    if (state !== null) {
-      userDetails(state.comId, state.proId)
-    } else {
-      let baseUrl = JSON.parse(localStorage.getItem('BaseUrl'))
-      if (baseUrl["safety"] !== null && baseUrl["safety"] !== undefined) {
+    setTimeout(() => {
+      let state = JSON.parse(localStorage.getItem('direct_loading'))
+      if (state !== null) {
+        userDetails(state.comId, state.proId)
+      } else {
         fetchInitialiObservation();
       }
-    }
+    }, 4000);
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
 
   return (
