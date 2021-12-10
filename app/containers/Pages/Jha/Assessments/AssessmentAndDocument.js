@@ -535,6 +535,7 @@ const AssessmentAndDocument = () => {
             delete formDocument.jhaAssessmentAttachment;
             formDocument.link = ""
             formDocument.notifyTo = formDocument.notifyTo.toString();
+            console.log(formDocument,">>>>>")
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
         }
         history.push(SUMMARY_FORM.Summary);
