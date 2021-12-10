@@ -255,7 +255,14 @@ export default function ActionTracker(props) {
           onClick={handleClickOpen}
           disabled={props.isCorrectiveActionTaken === null ? true : false}
         >
-          Actions<FlashOnIcon />
+          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
+            <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
+              <g id="baseline-flash_auto-24px" transform="translate(364 871)">
+                <path id="Path_1634" data-name="Path 1634" d="M0,0H24V24H0Z" fill="none" />
+                <path id="Path_1635" data-name="Path 1635" d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z" fill="#ffffff" />
+              </g>
+            </g>
+          </svg>
         </Button>
         :
         <Button
@@ -263,7 +270,14 @@ export default function ActionTracker(props) {
           color="primary"
           onClick={handleClickOpen}
         >
-          Actions<FlashOnIcon />
+          <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
+            <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
+              <g id="baseline-flash_auto-24px" transform="translate(364 871)">
+                <path id="Path_1634" data-name="Path 1634" d="M0,0H24V24H0Z" fill="none" />
+                <path id="Path_1635" data-name="Path 1635" d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z" fill="#ffffff" />
+              </g>
+            </g>
+          </svg>
         </Button>
       }
       {console.log(form)}
