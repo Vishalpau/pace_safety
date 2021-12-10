@@ -290,22 +290,6 @@ function BlankPage(props) {
     history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
   };
 
-  const handelCallBack = async () => {
-    await setIsLoading(true)
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
-    if (state !== null) {
-      await userDetails(state.comId, state.proId)
-    } else {
-      await fetchData();
-    }
-    await setIsLoading(false)
-  }
-
-  useEffect(() => {
-    handelCallBack()
-    allPickListDataValue()
-  }, [props.projectName.breakDown, props.projectName.projectName]);
-
   const columns = [
     {
       name: "Incident Number",
@@ -408,6 +392,24 @@ function BlankPage(props) {
         setPageCount(pageCount)
       })
   }
+
+  const handelCallBack = async () => {
+    await setIsLoading(true)
+    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    if (state !== null) {
+      await userDetails(state.comId, state.proId)
+    } else {
+      await fetchData();
+    }
+    await setIsLoading(false)
+    await allPickListDataValue()
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      handelCallBack()
+    }, 3000);
+  }, [props.projectName.breakDown, props.projectName.projectName]);
 
   const classes = useStyles();
 

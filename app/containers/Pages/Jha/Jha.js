@@ -260,8 +260,10 @@ function Jha(props) {
   };
 
   useEffect(() => {
-    fetchData()
-    allPickListDataValue()
+    setTimeout(() => {
+      fetchData()
+      allPickListDataValue()
+    }, 4000);
   }, [props.projectName.breakDown, searchIncident])
 
   //   Assigning 'classes' to useStyles()
