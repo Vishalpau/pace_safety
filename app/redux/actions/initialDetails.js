@@ -127,3 +127,11 @@ export const allPickListData = data => {
     payload: data
   }
 }
+
+export const baseUrl = data => {
+
+  return {
+    type: actionsType.BASEURL,
+    payload: data
+  }
+}

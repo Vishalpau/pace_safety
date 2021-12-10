@@ -182,7 +182,9 @@ function PersonalDashboard(props) {
   const [isLoading, setIsLoading] = useState(false)
   const getSubscriptions = async (compId) => {
 
-    const companyId = compId || JSON.parse(localStorage.getItem('company')).fkCompanyId
+    const companyId = compId ||
+      JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
+
     if (companyId) {
 
       try {
@@ -455,6 +457,8 @@ function PersonalDashboard(props) {
               let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
                 .subscriptions.filter(subs => subs.appCode === "safety")[0]
                 .hostings[0].apiDomain
+
+              localStorage.setItem("apiBaseUrl", hosting)
               let data1 = {
                 method: "get",
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
