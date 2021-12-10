@@ -176,6 +176,7 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
+    let id = user.id;
     if (type == "Competent Person (CP)") {
       setForm({
         ...form,
@@ -188,6 +189,9 @@ const Approvals = () => {
         ...form,
         sapApprovalUser: name,
         sapApprovalDateTime: new Date(),
+        closeDate:new Date(),
+        closedByName : name, 
+        closedById : id
       });
       setProjectOpen(false)
     }
@@ -206,6 +210,7 @@ const Approvals = () => {
     } else {
       form["ahaStatus"] = "Done"
     }
+   
     const { error, isValid } = ApprovalValidator(form, actionData)
     await setError(error)
     if(!isValid) {

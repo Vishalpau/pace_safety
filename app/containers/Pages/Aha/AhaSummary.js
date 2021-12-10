@@ -421,11 +421,9 @@ function AhaSummary() {
       console.log(workArea, "!@#$")
       structName.push(workArea.data.data.results[0]["structureName"])
     }
-    console.log(structName, "@@@@@@")
     setProjectStructName(structName)
   }
 
-  console.log(projectStructName, "LLL")
 
   const fetchTeamData = async () => {
     const res = await api.get(
@@ -559,7 +557,6 @@ function AhaSummary() {
   };
 
   const handelShowData = () => { }
-  console.log(form,"Eee")
   const handleProjectName = (projectId) => {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
@@ -661,7 +658,7 @@ function AhaSummary() {
                             {(ahaData.wrpApprovalUser !== ""  && ahaData.sapApprovalUser !== null) ? "Done" : "Pending"}{(ahaData.wrpApprovalUser !== ""  && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
                           </Typography>
                         </li>
-                        <li>
+                        {/* <li>
                           <Button
                             color={closeOut == true ? "secondary" : "primary"}
                             variant={ahaData.closedByName !== null ? "contained" : "outlined"}
@@ -674,7 +671,7 @@ function AhaSummary() {
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
                             {ahaData.closedByName !== null ? "Done" : "Pending"}{ahaData.closedByName !== null ? <CheckCircle /> : <AccessTime />}
                           </Typography>
-                        </li>
+                        </li> */}
                         <li>
                           <Button
                             color={lessonsLearned == true ? "secondary" : "primary"}
@@ -1269,7 +1266,7 @@ function AhaSummary() {
                   </ListItem>
                 }
                 {ahaData.anyLessonsLearnt !== "" ? (
-                  <ListItem button disabled={ahaData.closedByName !== null ? true : false} >
+                  <ListItem button>
                     <ListItemIcon>
                       <Edit />
                     </ListItemIcon>
@@ -1282,7 +1279,7 @@ function AhaSummary() {
                   </ListItem>
                 ) :
                   (
-                    <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
+                    <ListItem button>
                       <ListItemIcon>
                         <Add />
                       </ListItemIcon>
@@ -1294,7 +1291,7 @@ function AhaSummary() {
                       </Link>
                     </ListItem>
                   )}
-                <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
+                {/* <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                   <ListItemIcon>
                     <Close />
                   </ListItemIcon>
@@ -1305,7 +1302,7 @@ function AhaSummary() {
                   >
                     <ListItemText primary="Close out" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                 {/* <ListItem button>
                   <ListItemIcon>
                     <Comment />
