@@ -199,7 +199,6 @@ const JobDetails = (props) => {
     const [submitLoader, setSubmitLoader] = useState(false)
 
     // getting breakdown values form header
-    const [headerSelectValue, setHeaderSelectValue] = useState([])
     // getting breakdown value form page
     const [levelLenght, setLevelLenght] = useState("")
 
@@ -278,8 +277,6 @@ const JobDetails = (props) => {
         if (projectData.projectName.breakdown.length !== index + 1) {
             for (var key in projectData.projectName.breakdown) {
                 if (key == index + 1) {
-
-
                     await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
                         }${value}`)
                         .then(function (response) {
@@ -290,7 +287,6 @@ const JobDetails = (props) => {
                             }
                         })
                         .catch(function (error) {
-
                         });
                 }
             }
@@ -648,7 +644,6 @@ const JobDetails = (props) => {
                 }
             })
         })
-        console.log(hazardNew, hazardNew)
         const resUpdate = await api.put(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
         const resNew = await api.post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
         handelNavigateHazard("next")
@@ -695,15 +690,6 @@ const JobDetails = (props) => {
                         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                             <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
-                                    {/* {console.log(form)} */}
-                                    {/* <Grid item xs={3} md={3}>
-                                        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                                            Project
-                                        </Typography>
-                                        <Typography style={{ fontSize: "15px" }}>
-                                            {project.projectName}
-                                        </Typography>
-                                    </Grid> */}
 
                                     <Grid item md={12} sm={12} xs={12}>
                                         <Typography gutterBottom className="labelName">
@@ -745,7 +731,7 @@ const JobDetails = (props) => {
                                                                     {selectvalues.structureName}
                                                                 </MenuItem>
                                                             ))
-                                                            : null}
+                                                        : null}
                                                     </Select>
                                                     {error && error[`projectStructure${[key]}`] && (
                                                         <FormHelperText>

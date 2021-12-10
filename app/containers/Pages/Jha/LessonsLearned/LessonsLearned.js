@@ -259,37 +259,37 @@ console.log("sagar")
                         </Grid>
                         {form.anyLessonsLearnt == "Yes" ?
                           <>
-                          <Grid
-                  item
-                  md={12}
-                  xs={12}
-                  className="paddBRemove"
-                >
-                  <FormLabel className="checkRadioLabel" component="legend">Work completion and lessons learned discussion</FormLabel>
-                  <List className="listGapRemove">
-                    <ListItem>
-                        <ListItemText
-                          primary="1. What, where and when?"
-                          //className={classes.fildLableTitle}
-                          className="selectLabel"
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                          primary="2. How could the job have been improved?"
-                          //className={classes.fildLableTitle}
-                          className="selectLabel"
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                          primary="3. Lessons learned"
-                          //className={classes.fildLableTitle}
-                          className="selectLabel"
-                        />
-                    </ListItem>
-                  </List>
-                </Grid>
+                            <Grid
+                              item
+                              md={12}
+                              xs={12}
+                              className="paddBRemove"
+                            >
+                              <FormLabel className="checkRadioLabel" component="legend">Work completion and lessons learned discussion</FormLabel>
+                              <List className="listGapRemove">
+                                <ListItem>
+                                    <ListItemText
+                                      primary="1. What, where and when?"
+                                      //className={classes.fildLableTitle}
+                                      className="selectLabel"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                      primary="2. How could the job have been improved?"
+                                      //className={classes.fildLableTitle}
+                                      className="selectLabel"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                      primary="3. Lessons learned"
+                                      //className={classes.fildLableTitle}
+                                      className="selectLabel"
+                                    />
+                                </ListItem>
+                              </List>
+                            </Grid>
 
                             <Grid
                               item
@@ -328,12 +328,8 @@ console.log("sagar")
                               </Typography>
                             </Grid>
                             <Grid item xs={12} className={classes.createHazardbox}>
-                            
                               {handelActionShow(localStorage.getItem("fkJHAId"))}
                             </Grid>
-
-                            
-
                             <Grid
                               item
                               md={12}
@@ -341,7 +337,7 @@ console.log("sagar")
                               className={classes.formBox}
                               margin="dense"
                             >
-                  <FormLabel component="legend" className="viewLabel">Work responsible Person (WRP)</FormLabel>
+                              <FormLabel component="legend" className="viewLabel">Work responsible Person (WRP)</FormLabel>
                                 {user.name} {user.badgeNumber}
                             </Grid>
                           </>

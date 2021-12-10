@@ -261,7 +261,6 @@ const Approvals = () => {
     const { error, isValid} = ApprovalValidator(form , actionData)
     await setError(error)
     if(!isValid) {
-      console
       return "data not valid"
     }
     await setSubmitLoader(true)
@@ -353,7 +352,8 @@ const Approvals = () => {
                           <Typography className="viewLabelValue">
                           {`${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
                           </Typography>
-                        </Grid> : null}
+                        </Grid>
+                     : null}
 
 
                     <Grid
@@ -386,107 +386,110 @@ const Approvals = () => {
                         </Typography>
                       </Grid> : null}
 
-                      {actionData.length == 0 ? <Grid item md={8}>
-                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+                      {actionData.length == 0 ?
+                        <Grid item md={8}>
+                          <p style={{ color: "red" }}>{error.action}</p>
+                        </Grid>
+                      : null}
 
-                    <Dialog
-                      className={classes.projectDialog}
-                      open={open}
-                      onClose={handleClose}
-                      PaperProps={{
-                        style: {
-                          width: "100%",
-                          maxWidth: 400,
-                        },
-                      }}
-                    >
-                      <DialogTitle onClose={() => handleClose()}>
-                        Confirmation
-                      </DialogTitle>
-                      <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
-                      <DialogContent>
-                        <DialogContentText>
-                          <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="h2"
-                            className={classes.projectSelectionTitle}
-                          >
-                            You are approving as Competent Person (CP).
-                          </Typography>
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Tooltip title="Cancel">
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleClose()}
-                          >
-                            cancel
-                          </Button>
-                        </Tooltip>
-                        <Tooltip title="Ok">
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={(e) => handelWorkAndsap("work")}
-                          >
-                            Ok
-                          </Button>
-                        </Tooltip>
-                      </DialogActions>
-                    </Dialog>
+                      <Dialog
+                        className={classes.projectDialog}
+                        open={open}
+                        onClose={handleClose}
+                        PaperProps={{
+                          style: {
+                            width: "100%",
+                            maxWidth: 400,
+                          },
+                        }}
+                      >
+                        <DialogTitle onClose={() => handleClose()}>
+                          Confirmation
+                        </DialogTitle>
+                        <IconButton className={classes.closeIcon} onClick={() => handleClose()}><Close /></IconButton>
+                        <DialogContent>
+                          <DialogContentText>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              className={classes.projectSelectionTitle}
+                            >
+                              You are approving as Competent Person (CP).
+                            </Typography>
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Tooltip title="Cancel">
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => handleClose()}
+                            >
+                              cancel
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Ok">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={(e) => handelWorkAndsap("work")}
+                            >
+                              Ok
+                            </Button>
+                          </Tooltip>
+                        </DialogActions>
+                      </Dialog>
 
 
-                    <Dialog
-                      className={classes.projectDialog}
-                      open={openSeniorAuthorized}
-                      onClose={handleCloseSenirorAuthorized}
-                      PaperProps={{
-                        style: {
-                          width: "100%",
-                          maxWidth: 400,
-                        },
-                      }}
-                    >
-                      <DialogTitle onClose={() => handleCloseSenirorAuthorized()}>
-                        Confirmation
-                      </DialogTitle>
-                      <IconButton className={classes.closeIcon} onClick={() => handleCloseSenirorAuthorized()}><Close /></IconButton>
-                      <DialogContent>
-                        <DialogContentText>
-                          <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="h2"
-                            className={classes.projectSelectionTitle}
-                          >
-                            You are approving as Senior Authorized Person (SAP).
-                          </Typography>
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Tooltip title="Cancel">
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleCloseSenirorAuthorized()}
-                          >
-                            cancel
-                          </Button>
-                        </Tooltip>
-                        <Tooltip title="Ok">
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={(e) => handelWorkAndsap("sap")}
-                          >
-                            Ok
-                          </Button>
-                        </Tooltip>
-                      </DialogActions>
-                    </Dialog>
+                      <Dialog
+                        className={classes.projectDialog}
+                        open={openSeniorAuthorized}
+                        onClose={handleCloseSenirorAuthorized}
+                        PaperProps={{
+                          style: {
+                            width: "100%",
+                            maxWidth: 400,
+                          },
+                        }}
+                      >
+                        <DialogTitle onClose={() => handleCloseSenirorAuthorized()}>
+                          Confirmation
+                        </DialogTitle>
+                        <IconButton className={classes.closeIcon} onClick={() => handleCloseSenirorAuthorized()}><Close /></IconButton>
+                        <DialogContent>
+                          <DialogContentText>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              className={classes.projectSelectionTitle}
+                            >
+                              You are approving as Senior Authorized Person (SAP).
+                            </Typography>
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Tooltip title="Cancel">
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => handleCloseSenirorAuthorized()}
+                            >
+                              cancel
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Ok">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={(e) => handelWorkAndsap("sap")}
+                            >
+                              Ok
+                            </Button>
+                          </Tooltip>
+                        </DialogActions>
+                      </Dialog>
 
                       <Grid item md={12} xs={12}>
                         <Typography variant="h6" gutterBottom className={classes.labelName}>
@@ -503,42 +506,40 @@ const Approvals = () => {
                             handelShowData={handelActionTracker}
                           />
                         </Typography>
-                       
-
                       </Grid>
                       {actionData.length > 0 ? 
-                                  <Grid item md={12} xs={12}>
-                                    <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
-                                    <Table component={Paper}>
-                                      <TableHead>
-                                        <TableRow>
-                                          <TableCell className="tableHeadCellFirst">Action number</TableCell>
-                                          <TableCell className="tableHeadCellSecond">Action title</TableCell>
-                                        </TableRow>
-                                      </TableHead>
-                                      {/* Action show */}
-                                      <TableBody>
-                                      {actionData.map((action, index) => (<>
-                                      <TableRow>
-                                        <TableCell style={{ width: 50 }}>
-                                          <a
-                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
-                                            target="_blank"
-                                          >{action.actionNumber}</a>
-
-                                        </TableCell>
-                                        <TableCell style={{ width: 50 }}>
-                                          {action.actionTitle}
-                                        </TableCell>
-                                        
-                                      </TableRow></>))
-                                    }
-                                    
-                                    </TableBody>
-                                    </Table>
-                                  </Grid> : null}
-
-                     
+                        <Grid item md={12} xs={12}>
+                          <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                          <Table component={Paper}>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            {/* Action show */}
+                            <TableBody>
+                            {actionData.map((action, index) => (
+                              <>
+                                <TableRow>
+                                  <TableCell style={{ width: 50 }}>
+                                    <a
+                                      href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                      target="_blank"
+                                    >{action.actionNumber}</a>
+                                  </TableCell>
+                                  <TableCell style={{ width: 50 }}>
+                                    {action.actionTitle}
+                                  </TableCell>
+                                </TableRow>
+                              </>
+                            ))
+                          }
+                          
+                          </TableBody>
+                          </Table>
+                        </Grid>
+                       : null}
                     </Grid>
                   </Paper>
                 </Grid>

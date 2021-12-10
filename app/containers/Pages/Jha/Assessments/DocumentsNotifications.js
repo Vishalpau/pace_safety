@@ -308,10 +308,6 @@ const DocumentNotification = () => {
                   name="file"
                   ref={ref}
                   accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                  // style={{
-                  //   color:
-                  //     typeof form.attachments === "string" && "transparent",
-                  // }}
                   onChange={(e) => {
                     handleFile(e);
                   }}

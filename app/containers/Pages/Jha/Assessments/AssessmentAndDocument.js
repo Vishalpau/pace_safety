@@ -436,7 +436,6 @@ const AssessmentAndDocument = () => {
         };
         const notify = await api(config);
         if (notify.status === 200) {
-            console.log(notify.data.data.results);
             const result = notify.data.data.results;
             setNotificationSentValue(result);
         }
@@ -536,7 +535,6 @@ const AssessmentAndDocument = () => {
             delete formDocument.jhaAssessmentAttachment;
             formDocument.link = ""
             formDocument.notifyTo = formDocument.notifyTo.toString();
-            console.log(formDocument)
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
         }
         history.push(SUMMARY_FORM.Summary);
