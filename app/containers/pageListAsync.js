@@ -657,7 +657,7 @@ export const GeneralObservationPrints = loadable(() => import("./SampleApps/Gene
 });
 
 // Aha    
-export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
+export const AhaMain = loadable(() => import("./Pages/Aha/AhaMain"), {
   fallback: <Loading />,
 });
 
@@ -665,15 +665,7 @@ export const AhaSummary = loadable(() => import("./Pages/Aha/AhaSummary"), {
   fallback: <Loading />,
 });
 
-export const AssessmentsForms = loadable(() => import("./Pages/Aha/Assessments/AssessmentsForms"), {
-  fallback: <Loading />,
-});
-
 export const ProjectDetails = loadable(() => import("./Pages/Aha/Assessments/ProjectDetails"), {
-  fallback: <Loading />,
-});
-
-export const ProjectAreaHazards = loadable(() => import("./Pages/Aha/Assessments/ProjectAreaHazards"), {
   fallback: <Loading />,
 });
 
@@ -682,10 +674,6 @@ export const AhaCloseOut = loadable(() => import("./Pages/Aha/CloseOut/CloseOut"
 });
 
 export const Assessment = loadable(() => import("./Pages/Aha/Assessments/Assessment"), {
-  fallback: <Loading />,
-});
-
-export const DocumentNotification = loadable(() => import("./Pages/Aha/Assessments/DocumentsNotifications"), {
   fallback: <Loading />,
 });
 

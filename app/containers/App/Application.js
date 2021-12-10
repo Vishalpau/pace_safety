@@ -135,12 +135,11 @@ import {
   Groups,
   Options,
   Aha,
+  AhaMain,
   AhaSummary,
   AssessmentsForms,
   ProjectDetails,
-  ProjectAreaHazards,
   Assessment,
-  DocumentNotification,
   Approvals,
   LessonsLearned,
   AhaCloseOut,
@@ -543,17 +542,13 @@ function Application(props) {
 
         {/* Aha Routes */}
 
-        <Route path="/app/pages/aha" exact component={Aha} />
+        <Route path="/app/pages/aha" exact component={AhaMain} />
         <Route path="/app/pages/aha/aha-summary/:id" exact component={AhaSummary} />
         <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
         <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />
         <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetails} />
-        <Route path="/app/pages/aha/assessments/project-area-hazards" exact component={ProjectAreaHazards} />
-        <Route path="/app/pages/aha/assessments/project-area-hazards/:id" exact component={ProjectAreaHazards} />
         <Route path="/app/pages/aha/assessments/assessment" exact component={Assessment} />
         <Route path="/app/pages/aha/assessments/assessment/:id" exact component={Assessment} />
-        <Route path="/app/pages/aha/assessments/DocumentsNotifications" exact component={DocumentNotification} />
-        <Route path="/app/pages/aha/assessments/DocumentsNotifications/:id" exact component={DocumentNotification} />
         <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
         <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
         <Route path="/app/pages/aha/close-out" component={AhaCloseOut} />
