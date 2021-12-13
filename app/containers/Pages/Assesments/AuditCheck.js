@@ -531,6 +531,7 @@ const FlhaDetails = (props) => {
                                       rows="1"
                                       label=""
                                       onChange={(e) => setRemark1(e.currentTarget.value)}
+                                      value={remark1}
                                       className={classes.fullWidth}
                                     />
                                   </TableCell>
@@ -579,6 +580,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark2}
                                       onChange={(e) => setRemark2(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />
@@ -626,6 +628,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark3}
                                       onChange={(e) => setRemark3(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />
@@ -674,6 +677,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark4}
                                       onChange={(e) => setRemark4(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />
@@ -722,6 +726,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark5}
                                       onChange={(e) => setRemark5(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />
@@ -770,6 +775,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark6}
                                       onChange={(e) => setRemark6(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />
@@ -818,6 +824,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark7}
                                       onChange={(e) => setRemark7(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />
@@ -866,6 +873,7 @@ const FlhaDetails = (props) => {
                                       multiline
                                       rows="1"
                                       label=""
+                                      value={remark8}
                                       onChange={(e) => setRemark8(e.currentTarget.value)}
                                       className={classes.fullWidth}
                                     />

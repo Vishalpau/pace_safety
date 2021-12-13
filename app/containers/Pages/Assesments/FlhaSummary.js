@@ -97,6 +97,12 @@ const styles = theme => ({
   headerBackground: {
     backgroundColor: '#ffffff',
     color: '#06425c',
+    display: '-webkit-inline-box',
+    '& MuiTab-root': {
+      minWidth: '25px !important',
+      paddingLeft: '0px',
+      paddingRight: '0px',
+    },
   },
   pTopandRight: {
     paddingLeft: '20px',
@@ -131,10 +137,11 @@ class SimpleTabs extends React.Component {
     flha: {},
     criticalTasks: {},
     visualConfirmations: {},
-    versions: ["1.0",]
-    
+    versions: ["1.0",],
+    selectedVersion: "1.0",
+
   };
-  
+
   componentDidMount() {
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
@@ -160,7 +167,7 @@ class SimpleTabs extends React.Component {
     const flhaId = this.props.match.params.id;
     let taskUrl = `api/v1/flhas/${flhaId}/criticaltasks/`
     var res = await api.get(`${taskUrl}?version=${value}`);
-    await this.setState({ criticalTasks: res.data.data.results });
+    await this.setState({ criticalTasks: res.data.data.results, selectedVersion: value });
   }
 
   getJobVisualConfirmation = async () => {
@@ -168,12 +175,12 @@ class SimpleTabs extends React.Component {
     const res = await api.get('api/v1/flhas/' + flhaId + '/visualconfirmations/');
     await this.setState({ visualConfirmations: res.data.data.results });
   }
-  redirectToHome = (Path) => { 
-    const { history } = this.props; 
-  if(history){
-   history.push(Path);
- }
-}
+  redirectToHome = (Path) => {
+    const { history } = this.props;
+    if (history) {
+      history.push(Path);
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -253,20 +260,20 @@ class SimpleTabs extends React.Component {
               </Grid>
             </Paper>
             <div className={classes.root}>
-              <AppBar position="static" className={classes.headerBackground}>
-                <Tabs value={value} onChange={this.handleChangeTab} initialSelectedIndex={1.0}>
-                  {(this.state.versions !== undefined && this.state.versions.length > 0) ?
 
-                    (versions.map((version) => (
-                      <Tab
-                        value={version} key={version} label={(version == "1.0") ? "Initial Revision" : version}
-                        onClick={(e) => this.getPreventiveControls(version)}
-                      />
-                    )))
-                    : "Initial Revision"
-                  }
-                </Tabs>
-              </AppBar>
+              <List component="nav" className="inlineListBTN" aria-label="main mailbox folders">
+                <ListItem button className={this.state.selectedVersion == 1.0 ? "active" : ""}>
+                  <ListItemText primary="Initial assessment" onClick={(e) => this.getPreventiveControls("1.0")} />
+                </ListItem>
+                {this.state.versions !== undefined
+                  && this.state.versions.length > 0
+                  && this.state.versions.slice(1, this.state.versions.length).map((version) => (
+                    <ListItem button className={this.state.selectedVersion == version ? "active" : ""}>
+                      <ListItemText primary={`${version}`} onClick={(e) => this.getPreventiveControls(version)} />
+                    </ListItem>
+                  ))}
+
+              </List>
 
               <TabContainer className={classes.paddZero}>
                 <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
@@ -293,10 +300,10 @@ class SimpleTabs extends React.Component {
                       </ListItemIcon>
                       <Link
                         // onClick={()=>.push('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
-                        onClick={()=> this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
+                        onClick={() => this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
                         variant="subtitle"
                       >
-                        <ListItemText  primary="Revise FLHA" />
+                        <ListItemText primary="Revise FLHA" />
                       </Link>
                     </ListItem>
                     <Divider />
@@ -308,7 +315,7 @@ class SimpleTabs extends React.Component {
                         <HistoryIcon />
                       </ListItemIcon>
                       <Link
-                        onClick={()=> this.redirectToHome('/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds)}
+                        onClick={() => this.redirectToHome('/app/pages/assesments/AuditCheck/' + this.props.match.params.id + '/' + this.state.flha.fkProjectStructureIds)}
                         variant="subtitle"
                       >
                         <ListItemText primary="Complete audit check" />
@@ -320,7 +327,7 @@ class SimpleTabs extends React.Component {
                         <CloseIcon />
                       </ListItemIcon>
                       <Link
-                        onClick={()=> this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/close-out')}
+                        onClick={() => this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/close-out')}
                         variant="subtitle"
                       >
                         <ListItemText primary="Close out" />

@@ -492,7 +492,6 @@ function Actions(props) {
         await setPageData(allLogInUserData.data.data.results.count / 25)
         let pageCount = Math.ceil(allLogInUserData.data.data.results.count / 25)
         await setPageCount(pageCount)
-
       } else {
         const res = await api.get(`api/v1/observations/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&observationStage=${status}`);
         const result = res.data.data.results.results

@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Button, Grid, TextField, Typography
 } from '@material-ui/core';
@@ -18,15 +19,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import { PapperBlock } from 'dan-components';
-import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
+
 import api from '../../../../utils/axios';
 import { handelActionDataAssessment, handelCommonObject } from '../../../../utils/CheckerValue';
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from '../../../Forms/ActionTracker';
 import FormSideBar from '../../../Forms/FormSideBar';
-import { handelJhaId, PickListData } from '../Utils/checkValue';
+import { handelJhaId } from '../Utils/checkValue';
 import { JHA_FORM } from '../Utils/constants';
 
 
@@ -213,7 +214,7 @@ const Assessment = () => {
     const { projectId } = project.projectName;
     const baseUrl = localStorage.getItem('apiBaseUrl');
     const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
-    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ?  specificPerformance.data.data.results[0].checklistGroups :[];
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ? specificPerformance.data.data.results[0].checklistGroups : [];
 
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
     const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
