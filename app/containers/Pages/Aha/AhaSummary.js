@@ -1201,7 +1201,6 @@ function AhaSummary() {
                     </ListItemIcon>
                     <Link
                       variant="subtitle"
-                      
                       onClick={(e) => handleNewAhaPush(e)}
                     >
                       <ListItemText primary="Modify Assessments" />
@@ -1314,7 +1313,6 @@ function AhaSummary() {
                 </ListItem>
               */}
               </List>
-
             </div>
           </Grid>
         </Grid>
