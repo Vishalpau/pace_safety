@@ -26,8 +26,28 @@ import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
 import FormLabel from '@material-ui/core/FormLabel';
 import Loader from "../../Loader"
 import ApprovalValidator from "../Validator/ApprovalValidation"
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import {
+  access_token,
+  ACCOUNT_API_URL,SSO_URL
+} from "../../../../utils/constants";
+import {
+  KeyboardDateTimePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import axios from "axios";
 
-
+// Table
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -107,7 +127,10 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '1rem',
     right: '1rem'
-  }
+  },
+  formControl: {
+    width: "100%",
+},
 }));
 
 const Approvals = () => {
@@ -126,10 +149,18 @@ const Approvals = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [person, setPerson] = useState("")
+  const [isDateShow, setIsDateShow] = useState(false)
+  const [userList, setUserList] = useState([]);
+
 
   const user =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
   const handelJobDetails = async () => {
@@ -138,10 +169,33 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const apiData = res.data.data.results;
-    console.log(apiData)
+    if (apiData["closedDate"] === null) {
+      apiData["closedDate"] = new Date()
+  }
     setForm(apiData);
     setIsLoading(true)
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+}
+console.log('form',form)
+
+  const handleCloseDate = (e) => {
+    if (new Date(e) < new Date()) {
+        setForm({ ...form, closedDate: moment(e).toISOString() });
+        error.closedDate = ""
+        setError(error);
+    }
+    else {
+        setForm({ ...form, closeDate: null })
+        let errorMessage = "Closed time should not be ahead of current time"
+        error.closedDate = errorMessage
+        setError(error);
+
+    }
+}
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkAHAId")
@@ -189,9 +243,6 @@ const Approvals = () => {
         ...form,
         sapApprovalUser: name,
         sapApprovalDateTime: new Date(),
-        closeDate:new Date(),
-        closedByName : name, 
-        closedById : id
       });
       setProjectOpen(false)
     }
@@ -201,23 +252,27 @@ const Approvals = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
+    const { error, isValid } = ApprovalValidator(form, actionData)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
+    await setSubmitLoader(true)
     if (form.notifyTo === null) {
       form['notifyTo'] = "null"
     }
     form["ahaStage"] = "Approval"
     if (form['wrpApprovalUser'] === null) {
-      form["ahaStatus"] = "Pending"
+      
+      if(form['wrpApprovalUser'] === null || form['sapApprovalUser'] === null) {
+        form["ahaStatus"] = "Pending"
+        delete form['closedDate'] 
+        delete form['closedByName'] 
+        delete form['closedById'] 
+      }
     } else {
       form["ahaStatus"] = "Done"
     }
-   
-    const { error, isValid } = ApprovalValidator(form, actionData)
-    await setError(error)
-    if(!isValid) {
-      console
-      return "data not valid"
-    }
-    await setSubmitLoader(true)
 
     delete form["ahaAssessmentAttachment"];
     const res = await api.put(
@@ -231,12 +286,37 @@ const [projectOpen , setProjectOpen] = useState(false)
     setProjectOpen(true);
   };
 
+  const fetchUserList = async () => {
+    let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    var config = {
+        method: 'get',
+        url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+
+    axios(config)
+        .then(function (response) {
+
+            if (response.status === 200) {
+                const result = response.data.data.results.users;
+
+                setUserList(result);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
   const handleProjectClose = () => {
     setProjectOpen(false);
   };
 
   useEffect(() => {
     handelJobDetails();
+    fetchUserList();
     handelWorkAndPic();
     handelActionTracker();
     handelActionLink();
@@ -279,6 +359,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                     variant="contained"
                     color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
                     className="marginT0"
+                    disabled={form.wrpApprovalUser !== null}
                     onClick={(e) => { setProjectOpen(true), setPerson("Competent Person (CP)") }}
                   >
                     {form.wrpApprovalUser == null ? "Approve Now" : "Approved"}
@@ -303,6 +384,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                       variant="contained"
                       color={form.sapApprovalUser === null ? "primary" : "secondary"}
                       className="marginT0"
+                      disabled={form.sapApprovalUser !== null}
                       onClick={(e) => { setProjectOpen(true), setPerson("Senior Authorized Person (SAP)") }}
                     >
                       {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
@@ -337,7 +419,40 @@ const [projectOpen , setProjectOpen] = useState(false)
                     />
                   
                 </Grid>
-                <Grid item md={6} xs={12}>
+                {actionData.length > 0 ? 
+                        <Grid item md={12} xs={12}>
+                          <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                          <Table component={Paper}>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            {/* Action show */}
+                            <TableBody>
+                            {actionData.map((action, index) => (
+                              <>
+                                <TableRow>
+                                  <TableCell style={{ width: 50 }}>
+                                    <a
+                                      href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                      target="_blank"
+                                    >{action.actionNumber}</a>
+                                  </TableCell>
+                                  <TableCell style={{ width: 50 }}>
+                                    {action.actionTitle}
+                                  </TableCell>
+                                </TableRow>
+                              </>
+                            ))
+                          }
+                          
+                          </TableBody>
+                          </Table>
+                        </Grid>
+                       : null}
+                {/* <Grid item md={6} xs={12}>
                 {actionData.map((value) => (
                       <ActionShow
                         action={{ id: value.id, number: value.actionNumber }}
@@ -347,7 +462,70 @@ const [projectOpen , setProjectOpen] = useState(false)
                         updatePage={updatePage}
                       />
                     ))}
-                </Grid>
+                </Grid> */}
+
+                <Grid item xs={12} md={6}>
+                            <FormControl
+                                variant="outlined"
+
+                                className={classes.formControl}
+                                error={error.closedByName}
+
+
+                            >
+                                <InputLabel id="demo-simple-select-label">
+                                    Closed by
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Closed by"
+                                    value={form.closedByName ? form.closedByName : ""}
+
+
+                                >
+                                    {userList.map((selectValues, index) => (
+                                        <MenuItem
+                                            value={selectValues.name}
+                                            key={index}
+                                            onClick={(e) => setForm({ ...form, closedByName: selectValues.name, closedById: selectValues.id })}
+
+                                        >
+                                            {selectValues.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    error={error.closedDate}
+                                    helperText={
+                                        error.closedDate ? error.closedDate : null
+                                    }
+                                    value={form.closedDate ? form.closedDate : null}
+                                    onChange={(e) => handleCloseDate(e)}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Closed on*"
+                                    autoComplete="off"
+                                    onClick={(e) => setIsDateShow(true)}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    InputProps={{ readOnly: true }}
+                                    disableFuture
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
 
                 </Grid>
                 </Paper>
