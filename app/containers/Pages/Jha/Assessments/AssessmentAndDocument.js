@@ -199,7 +199,6 @@ const AssessmentAndDocument = () => {
     const history = useHistory();
     const [preformace, setPerformance] = useState({});
     const [document, setDocument] = useState([]);
-    const [jobDetails, setJobDetails] = useState({});
     const [loading, setLoading] = useState(false);
     const [submitLoader, setSubmitLoader] = useState(false);
     const [additinalJobDetails, setAdditionalJobDetails] = useState({
@@ -289,11 +288,13 @@ const AssessmentAndDocument = () => {
         </Grid>
     );
 
-    const handelJobDetails = async () => {
+
+    const handelJobDetailsDocument = async () => {
         const jhaId = handelJhaId();
         const res = await api.get(`/api/v1/jhas/${jhaId}/`);
         const apiData = res.data.data.results;
-        setJobDetails(apiData);
+        apiData.notifyTo == null ? apiData.notifyTo = '' : apiData.notifyTo = apiData.notifyTo.split(',');
+        setFormDocument(apiData);
 
         setAdditionalJobDetails({
             ...additinalJobDetails,
@@ -301,6 +302,21 @@ const AssessmentAndDocument = () => {
             workStopCondition: apiData.workStopCondition !== null ? apiData.workStopCondition.split(',') : [],
             additionalRemarks: apiData.additionalRemarks
         });
+
+        handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
+
+        const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+        const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
+        const config = {
+            method: 'get',
+            url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
+            headers: HEADER_AUTH,
+        };
+        const notify = await api(config);
+        if (notify.status === 200) {
+            const result = notify.data.data.results;
+            setNotificationSentValue(result);
+        }
     };
 
     const handelPreformance = (e, value) => {
@@ -359,13 +375,7 @@ const AssessmentAndDocument = () => {
     const handelNext = async () => {
         setSubmitLoader(true);
         const res = await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/bulkhazards/`, form).catch(() => handelApiError());
-        delete jobDetails.jhaAssessmentAttachment;
-        jobDetails.humanPerformanceAspects = additinalJobDetails.humanPerformanceAspects.toString();
-        jobDetails.workStopCondition = additinalJobDetails.workStopCondition.toString();
-        jobDetails.additionalRemarks = additinalJobDetails.additionalRemarks;
-        const resJobDetails = await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, jobDetails).catch(() => handelApiError());
-        handelNextDocument()
-        handelNavigate('next');
+        await handelNextDocument()
 
     };
 
@@ -397,7 +407,7 @@ const AssessmentAndDocument = () => {
     const handelCallBack = async () => {
         await setLoading(true);
         await handelCheckList();
-        await handelJobDetails();
+        await handelJobDetailsDocument();
         await handelActionLink();
         setRisk(pickListValues["78"])
         await handelActionTracker();
@@ -419,27 +429,7 @@ const AssessmentAndDocument = () => {
     const [submitLoaderDocument, setsubmitLoaderDocumentDocument] = useState(false);
     const ref = useRef();
 
-    const handelJobDetailsDocument = async () => {
-        const jhaId = handelJhaId();
-        const res = await api.get(`/api/v1/jhas/${jhaId}/`);
-        const apiData = res.data.data.results;
-        apiData.notifyTo == null ? apiData.notifyTo = '' : apiData.notifyTo = apiData.notifyTo.split(',');
-        setFormDocument(apiData);
-        handelCommonObject('commonObject', 'jha', 'projectStruct', apiData.fkProjectStructureIds);
-
-        const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-        const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
-        const config = {
-            method: 'get',
-            url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
-            headers: HEADER_AUTH,
-        };
-        const notify = await api(config);
-        if (notify.status === 200) {
-            const result = notify.data.data.results;
-            setNotificationSentValue(result);
-        }
-    };
+    
 
     const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
     const fielSizeError = 'Size less than 25Mb allowed';
@@ -528,13 +518,19 @@ const AssessmentAndDocument = () => {
             data.append('classification', formDocument.classification);
             data.append('workHours', formDocument.workHours);
             data.append('notifyTo', formDocument.notifyTo.toString());
+            data.append('humanPerformanceAspects', additinalJobDetails.humanPerformanceAspects.toString());
+            data.append('additionalRemarks', additinalJobDetails.additionalRemarks);
+            data.append('workStopCondition', additinalJobDetails.workStopCondition.toString());
             data.append('link', "");
             data.append('jhaAssessmentAttachment', formDocument.jhaAssessmentAttachment);
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
-            formDocument.link = ""
-            formDocument.notifyTo = formDocument.notifyTo.toString();
+            formDocument['link'] = ""
+            formDocument['notifyTo'] = formDocument.notifyTo.toString();
+            formDocument['humanPerformanceAspects'] = additinalJobDetails.humanPerformanceAspects.toString();
+            formDocument['additionalRemarks'] = additinalJobDetails.additionalRemarks;
+            formDocument['workStopCondition'] = additinalJobDetails.workStopCondition.toString();
             console.log(formDocument,">>>>>")
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
         }
@@ -543,11 +539,6 @@ const AssessmentAndDocument = () => {
         setsubmitLoaderDocumentDocument(false);
         setSubmitLoader(false);
     };
-
-    useEffect(() => {
-        handelJobDetailsDocument();
-    }, []);
-
 
     return (
         <CustomPapperBlock title="Assessments" icon={jhaLogoSymbol} whiteBg>

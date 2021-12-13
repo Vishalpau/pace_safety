@@ -192,6 +192,7 @@ function JhaSummary() {
     await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
+    console.log(resultTeam,">>>>")
     await setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
@@ -529,7 +530,7 @@ function JhaSummary() {
   const classes = useStyles();
   return (
 
-    <CustomPapperBlock title="Assessment Number: IR-15415415"
+    <CustomPapperBlock 
       title={`Assessment Number: ${assessment.jhaNumber !== undefined ? assessment.jhaNumber : ""}`}
       icon={jhaLogoSymbol} whiteBg 
       >
@@ -1106,6 +1107,31 @@ function JhaSummary() {
                                       </Table>
                                     </Grid>
                                   : null}
+                                  {assessment.closedByName !== null ? <>
+                                  <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                                  <FormLabel className="checkRadioLabel" component="legend">Close out</FormLabel>
+                                  </Grid>
+
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel"
+                                    >
+                                      Closed by
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.closedByName)}
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel"
+                                    >
+                                      Closed on
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
+                                    </Typography>
+                                  </Grid>
+                                  </>:null}
                                 </Grid>
                               </Paper>
                             </Grid>
