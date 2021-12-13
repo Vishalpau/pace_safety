@@ -29,7 +29,7 @@ import { useDropzone } from 'react-dropzone';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import FormSideBar from "../../../../containers/Forms/FormSideBar";
+import FormSideBar from "../../../Forms/FormSideBar";
 import { useParams, useHistory } from 'react-router';
 import { CircularProgress } from '@material-ui/core';
 import PickListData from "../../../../utils/Picklist/InvestigationPicklist";
@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
   // });
 }));
 
-const ProjectDetails = () => {
+const ProjectDetailsAndHazard = () => {
   // class ObservationInitialNotification extends Component {
   const { id } = useParams();
   const history = useHistory();
@@ -189,11 +189,6 @@ const ProjectDetails = () => {
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0)
-
-  const [positiveObservation, setPositiveObservation] = useState(true);
-  const [riskObservation, setRiskObservation] = useState(true);
-  const [addressSituation, setAddressSituation] = useState(true);
-  const [submitLoader, setSubmitLoader] = useState(false);
   const [isNext, setIsNext] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -239,14 +234,10 @@ const ProjectDetails = () => {
           `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/teams/${Teamform[index].id}/`
         );
       }
-
       let temp = Teamform;
       let newData = Teamform.filter((item, key) => key !== index);
-
       await setTeamForm(newData);
-
     };
-
   }
 
   const checkList = async () => {
@@ -334,15 +325,8 @@ const ProjectDetails = () => {
     
     await setLoading(true);
     if (form.id) {
-      // if(form['notiftTo'] == null){
-      //   form['notiftTo']  = ""
-      // }
-      // if (form['notifyTo'] === null) {
-      //   form['notifyTo'] = "null"
-      // }
       delete form["ahaAssessmentAttachment"]
       form['updatedBy'] = userId
-      console.log(localStorage.getItem("fkAHAId"))
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       for (let i = 0; i < Teamform.length; i++) {
         if (Teamform[i].id) {
@@ -719,10 +703,8 @@ const ProjectDetails = () => {
   return (
     <>
         <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
-
         {isLoading ?
           <Grid container spacing={3} className={classes.observationNewSection}>
-
             <Grid container spacing={3} item xs={12} md={9}>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Typography variant="h6" className="sectionHeading">
@@ -1152,4 +1134,4 @@ const ProjectDetails = () => {
   );
 };
 
-export default ProjectDetails;
+export default ProjectDetailsAndHazard;

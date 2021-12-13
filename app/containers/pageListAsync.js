@@ -665,7 +665,7 @@ export const AhaSummary = loadable(() => import("./Pages/Aha/AhaSummary"), {
   fallback: <Loading />,
 });
 
-export const ProjectDetails = loadable(() => import("./Pages/Aha/Assessments/ProjectDetails"), {
+export const ProjectDetailsAndHazard = loadable(() => import("./Pages/Aha/Assessments/ProjectDetailsAndHazard"), {
   fallback: <Loading />,
 });
 
@@ -673,7 +673,7 @@ export const AhaCloseOut = loadable(() => import("./Pages/Aha/CloseOut/CloseOut"
   fallback: <Loading />,
 });
 
-export const Assessment = loadable(() => import("./Pages/Aha/Assessments/Assessment"), {
+export const AssessmentAndNotification = loadable(() => import("./Pages/Aha/Assessments/AssessmentAndNotification"), {
   fallback: <Loading />,
 });
 

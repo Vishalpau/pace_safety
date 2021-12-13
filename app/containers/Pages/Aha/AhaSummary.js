@@ -674,6 +674,8 @@ function AhaSummary() {
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
+
+                                  {/* Assessment Location */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Assessment Location</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -681,6 +683,7 @@ function AhaSummary() {
                                     </Typography>
                                   </Grid>
 
+                                  {/* Assessment started on */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Assessment started on</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -690,6 +693,7 @@ function AhaSummary() {
                                     </Typography>
                                   </Grid>
 
+                                  {/* Assessment performed by */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Assessment performed by</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -697,12 +701,15 @@ function AhaSummary() {
                                     </Typography>
                                   </Grid>
 
+                                  {/* Type of permit */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Type of permit</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {ahaData.typeOfPermit ? ahaData.typeOfPermit : "-"}
                                     </Typography>
                                   </Grid>
+
+                                  {/* Permit reference number */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Permit reference number</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -710,12 +717,15 @@ function AhaSummary() {
                                     </Typography>
                                   </Grid>
 
+                                  {/* Description of area */}
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Description of area</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {ahaData.description ? ahaData.description : "-"}
                                     </Typography>
                                   </Grid>
+
+                                  {/* Risk assessment team */}
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Risk assessment team</FormLabel>
                                     {Teamform.length > 0 ?  Teamform.map((value, index) => (
@@ -730,6 +740,7 @@ function AhaSummary() {
                                     )) : "-"}
                                   </Grid>
 
+                                  {/* Area hazard */}
                                   <Grid item xs={12} md={12} className="paddBRemove">
                                     <FormLabel className="checkRadioLabel" component="legend">Area hazard</FormLabel>
                                   </Grid>
@@ -786,6 +797,8 @@ function AhaSummary() {
                                         </AccordionSummary>
                                         <AccordionDetails>
                                           <Grid container spacing={2}>
+
+                                            {/* Identify risk */}
                                             <Grid item md={12} sm={12} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Identify risk</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -795,6 +808,7 @@ function AhaSummary() {
                                               </Typography>
                                             </Grid>
 
+                                            {/* Risk severity */}
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Risk severity</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -803,6 +817,8 @@ function AhaSummary() {
                                                   : "-"}
                                               </Typography>
                                             </Grid>
+
+                                            {/* Risk probability */}
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Risk probability</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -811,6 +827,8 @@ function AhaSummary() {
                                                   : "-"}
                                               </Typography>
                                             </Grid>
+
+                                            {/* Risk Color */}
                                             <Grid item md={4} sm={4} xs={12}>
                                               <Typography className="viewLabelValue">
                                                 <div className={classes.ratioColororange} style={{ backgroundColor: item.riskRatingColour }}>
@@ -821,6 +839,7 @@ function AhaSummary() {
                                               </Typography>
                                             </Grid>
 
+                                            {/* Identify controls */}
                                             <Grid item md={12} sm={12} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Identify controls</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -829,6 +848,8 @@ function AhaSummary() {
                                                   : "-"}
                                               </Typography>
                                             </Grid>
+
+                                            {/* Evaluate residual risk */}
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Evaluate residual risk</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -837,6 +858,8 @@ function AhaSummary() {
                                                   : "-"}
                                               </Typography>
                                             </Grid>
+
+                                            {/* Approve to implement */}
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Approve to implement</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -846,6 +869,7 @@ function AhaSummary() {
                                               </Typography>
                                             </Grid>
 
+                                            {/* Monitor */}
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormLabel component="legend" className="viewLabel">Monitor</FormLabel>
                                               <Typography className="viewLabelValue">
@@ -867,6 +891,7 @@ function AhaSummary() {
                                       </Accordion>
                                     </>))}
                                   </Grid>
+
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Conditions when the work must be stopped</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -877,6 +902,7 @@ function AhaSummary() {
                                       )) : "-"}
                                     </Typography>
                                   </Grid>
+
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Additional remarks</FormLabel>
                                     <Typography className="viewLabelValue">
@@ -921,6 +947,7 @@ function AhaSummary() {
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
+                                  {/* Project details */}
                                   <Grid item md={12} sm={12} xs={12}>
                                     <Typography gutterBottom className="labelValue">
                                     {handleProjectName(ahaData.fkProjectId)}
@@ -959,6 +986,8 @@ function AhaSummary() {
                                 <Grid container spacing={3}>
                                   <Grid item xs={12}>
                                     <Grid container spacing={3}>
+
+                                      {/* Competent person */}
                                       <Grid item md={12} sm={12} xs={12} className="paddBRemove">
                                         <FormLabel className="checkRadioLabel" component="legend">Competent person</FormLabel>
                                       </Grid>
@@ -976,6 +1005,8 @@ function AhaSummary() {
                                           ) : "-"}
                                         </Typography>
                                       </Grid>
+
+                                      {/* Senior authorized person */}
                                       <Grid item md={12} sm={12} xs={12} className="paddBRemove">
                                       <FormLabel className="checkRadioLabel" component="legend">
                                           Senior authorized person
@@ -983,21 +1014,21 @@ function AhaSummary() {
                                       </Grid>
                                       <Grid item xs={12}>
                                         <Grid container spacing={3}>
-                                        <Grid item xs={12} md={6}>
-                                        <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
-                                        <Typography className="viewLabelValue">
-                                        {ahaData.sapApprovalUser ? ahaData.sapApprovalUser : "-"}
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={6}>
-                                        <FormLabel component="legend" className="viewLabel">Approved on</FormLabel>
-                                        <Typography className="viewLabelValue">
-                                          {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
-                                            "Do MMMM YYYY"
-                                          ) : "-"}
-                                        </Typography>
-                                      </Grid>
+                                          <Grid item xs={12} md={6}>
+                                            <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
+                                            <Typography className="viewLabelValue">
+                                            {ahaData.sapApprovalUser ? ahaData.sapApprovalUser : "-"}
+                                            </Typography>
                                           </Grid>
+                                          <Grid item xs={12} md={6}>
+                                            <FormLabel component="legend" className="viewLabel">Approved on</FormLabel>
+                                            <Typography className="viewLabelValue">
+                                              {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
+                                                "Do MMMM YYYY"
+                                              ) : "-"}
+                                            </Typography>
+                                          </Grid>
+                                        </Grid>
                                       </Grid>
                                     </Grid>
                                   </Grid>
@@ -1026,43 +1057,46 @@ function AhaSummary() {
                                         <TableCell style={{ width: 50 }}>
                                           {action.actionTitle}
                                         </TableCell>
-                                        
                                       </TableRow></>))
-                                    }
-                                        
+                                    }                                       
                                       </TableBody>
                                     </Table>
                                   </Grid> : null}
 
-                                  {ahaData.closedByName !== null ? <>
+                                  {ahaData.closedByName !== null ?
+                                  <>
+                                  {/* Closed out */}
+                                    <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                                      <FormLabel className="checkRadioLabel" component="legend">
+                                        Closed out
+                                      </FormLabel>
+                                    </Grid>
 
-                                  <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                    <FormLabel className="checkRadioLabel" component="legend">
-                                      Closed out
-                                    </FormLabel>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Closed by</FormLabel>
-                                    <Typography
-                                      variant="body"
-                                      className="viewLabelValue"
-                                    >
-                                      {ahaData.closedByName ? ahaData.closedByName : "-"}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Closed on</FormLabel>
-                                    <Typography
-                                      variant="body"
-                                      className="viewLabelValue"
-                                    >
-                                      {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                                        "Do MMMM YYYY"
-                                      ) : "-"}
-                                    </Typography>
-                                  </Grid>
-                                  </>:null}
+                                    {/* Closed by */}
+                                    <Grid item xs={12} md={6}>
+                                      <FormLabel component="legend" className="viewLabel">Closed by</FormLabel>
+                                      <Typography
+                                        variant="body"
+                                        className="viewLabelValue"
+                                      >
+                                        {ahaData.closedByName ? ahaData.closedByName : "-"}
+                                      </Typography>
+                                    </Grid>
 
+                                    {/* Closed on */}
+                                    <Grid item xs={12} md={6}>
+                                      <FormLabel component="legend" className="viewLabel">Closed on</FormLabel>
+                                      <Typography
+                                        variant="body"
+                                        className="viewLabelValue"
+                                      >
+                                        {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
+                                          "Do MMMM YYYY"
+                                        ) : "-"}
+                                      </Typography>
+                                    </Grid>
+                                  </>
+                                  :null}
                                 </Grid>
                               </Paper>
                             </Grid>
@@ -1092,18 +1126,24 @@ function AhaSummary() {
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
+
+                                {/* Work responsible person */}
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Work responsible person</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {user.name}, {user.badgeNo}
                                     </Typography>
                                   </Grid>
+
+                                  {/* Lessons learnt */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">Lessons learnt</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
                                     </Typography>
                                   </Grid>
+
+                                  {/* Lessons learnt action  */}
                                   {lessionAction.length > 0 ? 
                                   <Grid item md={12} xs={12}>
                                     <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
@@ -1116,22 +1156,22 @@ function AhaSummary() {
                                       </TableHead>
                                       {/* Action show */}
                                       <TableBody>
-                                      {lessionAction.map((action, index) => (<>
-                                      <TableRow>
-                                        <TableCell style={{ width: 50 }}>
-                                          <a
-                                            href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
-                                            target="_blank"
-                                          >{action.actionNumber}</a>
+                                        {lessionAction.map((action, index) => (
+                                          <>
+                                            <TableRow>
+                                              <TableCell style={{ width: 50 }}>
+                                                <a
+                                                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                                  target="_blank"
+                                                >{action.actionNumber}</a>
 
-                                        </TableCell>
-                                        <TableCell style={{ width: 50 }}>
-                                          {action.actionTitle}
-                                        </TableCell>
-                                        
-                                      </TableRow></>))
-                                    }
-                                        
+                                              </TableCell>
+                                              <TableCell style={{ width: 50 }}>
+                                                {action.actionTitle}
+                                              </TableCell>
+                                            </TableRow>
+                                          </>))
+                                        }   
                                       </TableBody>
                                     </Table>
                                   </Grid> : null}
