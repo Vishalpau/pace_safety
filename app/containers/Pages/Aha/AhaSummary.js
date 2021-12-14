@@ -181,19 +181,13 @@ function AhaSummary() {
   };
 
   const handleAhaApprovalsPush = async () => {
-    if (ahaData.closedByName !== null) {
-      return
-    } else {
-      history.push(
-        "/app/pages/aha/approvals/approvals"
-      );
-    }
+   
+    handelApprovalViewChange()
+    
 
   };
   const handleAhaLessonLearnPush = async () => {
-    history.push(
-      "/app/pages/aha/lessons-learned/lessons-learned"
-    );
+    handelLessionLearnedChanges()
   };
 
   const handleCommentsPush = async () => {
@@ -283,7 +277,6 @@ function AhaSummary() {
   let errorAssessment = "assessments"
   let errorApproval = "approvals"
   let errorLession = "lession learned"
-  let errorCloseOut = "close out"
 
   const handleAssessmentViewChanges = () => {
     if (ahaData.notifyTo !== "") {
@@ -317,7 +310,7 @@ function AhaSummary() {
   }
 
   const handelLessionLearnedChanges = () => {
-    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName !== null) {
+    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null ) {
       setAssessments(false);
       setApprovals(false);
       setCloseOut(false);
@@ -329,16 +322,13 @@ function AhaSummary() {
       setComments(false);
       setActivity(false);
     } else {
-      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
-        setMessageSnackbar(`${errorMessage} ${errorAssessment} , ${errorApproval} and  ${errorCloseOut}`)
+      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null ) {
+        setMessageSnackbar(`${errorMessage} ${errorAssessment} , ${errorApproval}`)
         handleClickSnackBar()
-      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
-        setMessageSnackbar(`${errorMessage}  ${errorApproval} and  ${errorCloseOut}`)
+      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser == null || ahaData.sapApprovalUser == null ) {
+        setMessageSnackbar(`${errorMessage}  ${errorApproval} `)
         handleClickSnackBar()
-      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName == null) {
-        setMessageSnackbar(`${errorMessage}  ${errorCloseOut}`)
-        handleClickSnackBar()
-      }
+      } 
     }
 
   }
@@ -626,7 +616,7 @@ function AhaSummary() {
                             Approvals
                           </Button>
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            {(ahaData.wrpApprovalUser !== null  && ahaData.sapApprovalUser !== null) ? "Done" : "Pending"}{(ahaData.wrpApprovalUser !== ""  && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
+                            {(ahaData.wrpApprovalUser !== null  && ahaData.sapApprovalUser !== null) ? "Done" : "Pending"}{(ahaData.wrpApprovalUser !== null  && ahaData.sapApprovalUser !== null) ? <CheckCircle /> : <AccessTime />}
                           </Typography>
                         </li>
                         <li>
