@@ -223,7 +223,7 @@ function AhaSummary() {
   const handelApprovalViewChange = () => {
     if (ahaData.notifyTo !== "") {
       setAssessments(false);
-      if (ahaData.wrpApprovalUser !== null) {
+      if (ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) {
         setApprovals(true);
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
@@ -251,13 +251,13 @@ function AhaSummary() {
       setComments(false);
       setActivity(false);
     } else {
-      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
+      if (ahaData.notifyTo == "" && (ahaData.wrpApprovalUser == null || ahaData.sapApprovalUser == null) && ahaData.closedByName == null) {
         setMessageSnackbar(`${errorMessage} ${errorAssessment} , ${errorApproval} and  ${errorCloseOut}`)
         handleClickSnackBar()
-      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null && ahaData.closedByName == null) {
+      } else if (ahaData.notifyTo !== "" && (ahaData.wrpApprovalUser == null || ahaData.sapApprovalUser == null) && ahaData.closedByName == null) {
         setMessageSnackbar(`${errorMessage}  ${errorApproval} and  ${errorCloseOut}`)
         handleClickSnackBar()
-      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && ahaData.closedByName == null) {
+      } else if (ahaData.notifyTo !== "" && (ahaData.wrpApprovalUser == null || ahaData.sapApprovalUser == null) && ahaData.closedByName == null) {
         setMessageSnackbar(`${errorMessage}  ${errorCloseOut}`)
         handleClickSnackBar()
       }
@@ -1477,7 +1477,7 @@ function AhaSummary() {
                   </ListItemIcon>
                   <ListItemText primary="Add Assessments" />
                 </ListItemLink>)}
-                {ahaData.wrpApprovalUser !== "" ? (<ListItemLink
+                {ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null ? (<ListItemLink
                   disabled={ahaData.closedByName !== null}
                   onClick={(e) => handleAhaApprovalsPush(e)}>
                   <ListItemIcon>
