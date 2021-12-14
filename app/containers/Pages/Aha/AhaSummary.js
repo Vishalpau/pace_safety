@@ -181,13 +181,11 @@ function AhaSummary() {
   };
 
   const handleAhaApprovalsPush = async () => {
-   
-    handelApprovalViewChange()
-    
-
+    handelApprovalViewChange("sidebar")
   };
+
   const handleAhaLessonLearnPush = async () => {
-    handelLessionLearnedChanges()
+    handelLessionLearnedChanges("sidebar")
   };
 
   const handleCommentsPush = async () => {
@@ -291,10 +289,10 @@ function AhaSummary() {
     setActivity(false);
   }
 
-  const handelApprovalViewChange = () => {
+  const handelApprovalViewChange = (side) => {
     if (ahaData.notifyTo !== "") {
       setAssessments(false);
-      if (ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null) {
+      if (ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && side === undefined) {
         setApprovals(true);
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
@@ -309,12 +307,12 @@ function AhaSummary() {
     }
   }
 
-  const handelLessionLearnedChanges = () => {
+  const handelLessionLearnedChanges = (side) => {
     if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null ) {
       setAssessments(false);
       setApprovals(false);
       setCloseOut(false);
-      if (ahaData.anyLessonsLearnt !== "") {
+      if (ahaData.anyLessonsLearnt !== ""  && side === undefined) {
         setLessonsLearned(true);
       } else {
         history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
