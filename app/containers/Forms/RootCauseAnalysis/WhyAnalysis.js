@@ -106,18 +106,6 @@ const WhyAnalysis = () => {
     await setActionData(allAction);
   };
 
-  const handelActionShow = (value) => (
-    <Grid>
-      <ActionShow
-        action={{ id: value.id, number: value.actionNumber }}
-        title={value.actionTitle}
-        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-        updatePage={updatePage}
-      />
-    </Grid>
-  );
-
   const handelInvestigationData = async () => {
     let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
     const investigationpreviousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
@@ -205,7 +193,7 @@ const WhyAnalysis = () => {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
+        await history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
         if (incidents.incidentStage === "Root cause & analysis") {
           try {
@@ -224,7 +212,7 @@ const WhyAnalysis = () => {
           initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
         }
         dispatch(tabViewMode(viewMode))
-        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
+        await history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
     localStorage.setItem("RootCause", "Done");
