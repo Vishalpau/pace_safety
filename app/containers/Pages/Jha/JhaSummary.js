@@ -192,14 +192,13 @@ function JhaSummary() {
     await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
-    console.log(resultTeam,">>>>")
     await setTeam(resultTeam)
 
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.link !== null
-    let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
+    let approvalDecider = result.wrpApprovalUser !== null && result.sapApprovalUser !== null
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
     await setFormStatus({
@@ -249,15 +248,11 @@ function JhaSummary() {
   };
 
   const handleJhaApprovalsPush = async () => {
-    history.push(
-      "/app/pages/jha/approvals/approvals"
-    );
+    handelApprovalViewChange("sideBar")
   };
 
   const handleJhaLessonLearnPush = async () => {
-    history.push(
-      "/app/pages/jha/lessons-learned/lessons-learned"
-    );
+    handelLessionLearnedChanges("sideBar")
   };
 
   const handleClosePush = async () => {
@@ -418,10 +413,10 @@ function JhaSummary() {
     setCommentsView(false)
   }
 
-  const handelApprovalViewChange = () => {
+  const handelApprovalViewChange = (side) => {
     if (formStatus.assessmentStatus === true) {
       setAssessmentsView(false);
-      if (handelApprovalTabStatus()) {
+      if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
@@ -435,27 +430,24 @@ function JhaSummary() {
     }
   }
 
-  const handelLessionLearnedChanges = () => {
-    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === true) {
+  const handelLessionLearnedChanges = (side) => {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true ) {
       setAssessmentsView(false);
       setApprovalsView(false);
       setCloseOutView(false);
-      if (formStatus.lessionLeranedStatus) {
+      if (formStatus.lessionLeranedStatus && side === undefined ) {
         setLessonsLearnedView(true);
       } else {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
       }
       setCommentsView(false)
-    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
-      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval} and ${errorCloseOut}`)
+    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false ) {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval} `)
       handleClickSnackBar()
-    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
-      setMessageSnackbar(`${errorMessage} ${errorApproval} and ${errorCloseOut}`)
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false ) {
+      setMessageSnackbar(`${errorMessage} ${errorApproval} `)
       handleClickSnackBar()
-    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === false) {
-      setMessageSnackbar(`${errorMessage} ${errorCloseOut}`)
-      handleClickSnackBar()
-    }
+    } 
   }
 
   const handelCloseOutViewChanges = () => {

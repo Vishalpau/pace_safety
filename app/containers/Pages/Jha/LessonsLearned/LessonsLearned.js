@@ -131,7 +131,6 @@ const LessonsLearned = () => {
   const [actionData, setActionData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState({})
-console.log("sagar")
   const handelJobDetails = async () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
@@ -148,12 +147,10 @@ console.log("sagar")
     setUser({ ...user, name: user.name, badgeNumber: user.badgeNo })
   }
 
-  console.log(actionData,"AAAAA")
   const handelActionShow = (id) => (
     <Grid>
       {actionData.map((val) => (
         <>
-          {console.log(val)}
           <ActionShow
             action={{ id: val.id, number: val.actionNumber }}
             title={val.actionTitle}
@@ -171,7 +168,6 @@ console.log("sagar")
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
     let allAction = await handelActionWithEntity(jhaId, "jha:lessonLearned")
-    console.log(allAction,">>>>")
     setActionData(allAction)
   };
 

@@ -593,11 +593,10 @@ const Approvals = () => {
                             <FormControl
                                 variant="outlined"
                                 className={classes.formControl}
-                                error={error.closedByName ? error.closedByName : ""}
                                 
                             >
                                 <InputLabel id="demo-simple-select-label">
-                                    Closed by*
+                                    Closed by
                                 </InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
