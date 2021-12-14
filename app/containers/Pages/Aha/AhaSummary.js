@@ -46,6 +46,7 @@ import Loader from "../../Forms/Loader";
 import { Comments } from "../../pageListAsync";
 import { checkValue } from "../Jha/Utils/checkValue";
 import Snackbar from '@material-ui/core/Snackbar';
+import { debug } from "webpack";
 
 
 
@@ -295,6 +296,7 @@ function AhaSummary() {
     } else if (viewName == "approval") {
       handelApprovalViewChange()
     } else if (viewName == "lession") {
+      debugger;
       handelLessionLearnedChanges()
     } else if (viewName = "closeOut") {
       handelCloseOutViewChanges()

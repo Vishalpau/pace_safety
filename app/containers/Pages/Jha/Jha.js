@@ -217,7 +217,7 @@ function Jha(props) {
 
   //   Data for the table view
 
-  const columns = ['Jha number', 'Location', 'Created by', 'Created on'];
+  const columns = ['Jsa number', 'Location', 'Created by', 'Created on'];
 
   const handelTableView = (result) => {
     const temp = []
