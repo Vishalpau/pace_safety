@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState, lazy } from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -17,35 +18,30 @@ import AccessTime from '@material-ui/icons/AccessTime';
 import Add from '@material-ui/icons/Add';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import Close from '@material-ui/icons/Close';
-import Comment from '@material-ui/icons/Comment';
 import Edit from '@material-ui/icons/Edit';
-import History from '@material-ui/icons/History';
-// Icons
-import Print from '@material-ui/icons/Print';
 import MuiAlert from '@material-ui/lab/Alert';
 import { PapperBlock } from 'dan-components';
 import Fonts from 'dan-styles/Fonts.scss';
 // Styles
 import Styles from 'dan-styles/Summary.scss';
-import React, { useEffect, useRef, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 // redux connect
 import { tabViewMode } from '../../../redux/actions/initialDetails';
+
 import api from '../../../utils/axios';
 import apiAction from "../../../utils/axiosActionTracker";
 import { ACCOUNT_API_URL, SELF_API } from '../../../utils/constants';
 import ActivityHistory from '../../Activity/Activity';
 import { Comments } from '../../pageListAsync';
-import CloseOut from '../../SummaryDetails/CloseOut';
-import EvidenceSummary from '../../SummaryDetails/Evidence';
-import IncidentDetailsSummary from '../../SummaryDetails/InitialNotification';
-import InvestigationSummary from '../../SummaryDetails/Investigation';
-import LessionLearnSummary from '../../SummaryDetails/LessionLearn';
-import RootCauseAnalysisSummary from '../../SummaryDetails/RootCauseAndAnalysis';
-import Loader from "../Loader";
 
-
+const CloseOut = lazy(() => import('../../SummaryDetails/CloseOut'));
+const EvidenceSummary = lazy(() => import('../../SummaryDetails/Evidence'));
+const IncidentDetailsSummary = lazy(() => import('../../SummaryDetails/InitialNotification'));
+const InvestigationSummary = lazy(() => import('../../SummaryDetails/Investigation'));
+const LessionLearnSummary = lazy(() => import('../../SummaryDetails/LessionLearn'));
+const RootCauseAnalysisSummary = lazy(() => import('../../SummaryDetails/RootCauseAndAnalysis'));
+const Loader = lazy(() => import("../Loader"));
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -96,7 +92,7 @@ const Summary = (props) => {
   const rootCauseStatus = useRef(false);
   const rcaRecommendedValue = useRef('');
 
-  const CLOSE_OUT_MESSAGE = "Incident is closed out. can't be modified! ";
+  const CLOSE_OUT_MESSAGE = "Incident is closed out. Cannot be modified! ";
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -828,7 +824,7 @@ const Summary = (props) => {
                         </ListItemLink>
                       ) : (
                         <ListItemLink
-                          onClick={(e) => modifyRootCauseAnalysis()}
+                          onClick={(e) => handelRootCauseAnalysisView()}
                         >
                           <ListItemIcon>
                             <Add />
