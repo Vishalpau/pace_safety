@@ -40,6 +40,7 @@ import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
+import { OtherNA } from "../../../utils/CheckerValue"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -118,7 +119,7 @@ const WorkerDetails = () => {
     return <TextField {...props} inputProps={{ readOnly: true }} />
   }
   let pickListValues = JSON.parse(localStorage.getItem("pickList"))
-
+  let ONA = OtherNA("on")
   let [workerData, setworkerData] = useState({
     name: "",
     workerType: "",
@@ -464,7 +465,7 @@ const WorkerDetails = () => {
     await setIsLoading(true);
     await handelUpdateCheck();
     workerType.current = await pickListValues["71"];
-    setDepartmentName(await pickListValues["10"]);
+    setDepartmentName(await [...pickListValues["10"],ONA[0],ONA[1]]);
     setworkHours(await pickListValues["70"]);
     setShiftType(await pickListValues["47"]);
     setOccupation(await pickListValues["48"]);
