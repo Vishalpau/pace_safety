@@ -380,7 +380,7 @@ const EvidenceSummary = () => {
                 {activity[16] !== undefined && activity[16]["answer"] === "Yes" ?
                   <Grid container spacing={3}>
                     {activity.length !== 0
-                      ? activity.slice(17, 20).map((ad, key) => (
+                      ? activity.slice(17, 19).map((ad, key) => (
                         <Grid item xs={12} md={6} key={key}>
                           <Typography
                             variant="h6"
@@ -403,7 +403,7 @@ const EvidenceSummary = () => {
 
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.slice(20, 25).map((ad, key) => (
+                    ? activity.slice(19, 25).map((ad, key) => (
                       <Grid item xs={12} key={key}>
                         <Typography
                           variant="h6"

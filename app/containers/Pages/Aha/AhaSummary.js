@@ -295,6 +295,7 @@ function AhaSummary() {
     } else if (viewName == "approval") {
       handelApprovalViewChange()
     } else if (viewName == "lession") {
+      debugger;
       handelLessionLearnedChanges()
     } else if (viewName = "closeOut") {
       handelCloseOutViewChanges()

@@ -178,7 +178,7 @@ const Approvals = () => {
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
 
-    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jha:approval")
+    let allAction = await handelActionDataAssessment(jhaId, [], "title", "jsa:approval")
     let temp = []
     allAction.map((value) => {
       if (value.enitityReferenceId.split(":")[1] == "00") {
@@ -426,7 +426,7 @@ const Approvals = () => {
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
 
                     <ActionTracker
-                      actionContext="jha:approval"
+                      actionContext="jsa:approval"
                       enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                       setUpdatePage={setUpdatePage}
                       updatePage={updatePage}

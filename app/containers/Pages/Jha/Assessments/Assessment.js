@@ -246,7 +246,7 @@ const Assessment = () => {
   const handelActionTracker = async () => {
     const jhaId = localStorage.getItem('fkJHAId');
     const apiData = JSON.parse(localStorage.getItem('commonObject')).jha.assessmentIds;
-    const allAction = await handelActionDataAssessment(jhaId, apiData, "all", "jha:hazard");
+    const allAction = await handelActionDataAssessment(jhaId, apiData, "all", "jsa:hazard");
     setActionData(allAction);
   };
 
@@ -470,7 +470,7 @@ const Assessment = () => {
 
                             <Grid item md={2} sm={5} xs={5}>
                               <ActionTracker
-                                actionContext="jha:hazard"
+                                actionContext="jsa:hazard"
                                 enitityReferenceId={`${localStorage.getItem('fkJHAId')}:${value.id}`}
                                 setUpdatePage={setUpdatePage}
                                 fkCompanyId={projectData.companyId}

@@ -235,7 +235,7 @@ const BasicCauseAndAction = () => {
                         <TableCell align="right">
 
                           <ActionTracker
-                            actionContext="incidents:Pacacuase"
+                            actionContext="incidents:Pacecause"
                             enitityReferenceId={`${putId.current}:${value.id}`}
                             setUpdatePage={setUpdatePage}
                             updatePage={updatePage}
