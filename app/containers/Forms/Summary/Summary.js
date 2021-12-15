@@ -460,7 +460,7 @@ const Summary = (props) => {
       setMessageType('warning');
     } else if (whyAction.length > 0) {
       setOpen(true);
-      setMessage("Can't modify why analysis as actions added");
+      setMessage("Cannot modify Five why analysis as action(s) are added.");
       setMessageType('warning');
     }
     else {
