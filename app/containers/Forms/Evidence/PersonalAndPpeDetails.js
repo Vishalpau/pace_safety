@@ -362,7 +362,7 @@ const PersonalAndPpeDetails = () => {
                   </Grid>
                 </>
               ))}
-              {ppeData[0]["answer"] === "Yes" ?
+              {ppeData[0]["answer"] === "Yes" || ppeData[0]["answer"] === "" ?
                 <>
                   {ppeData.slice(1, 4).map((value, index) => (
                     <>
@@ -482,7 +482,7 @@ const PersonalAndPpeDetails = () => {
                   </Grid>
                 </>
               ))}
-              {ppeData[9]["answer"] === "Yes" ? <>
+              {ppeData[9]["answer"] === "Yes" || ppeData[9]["answer"] === "" ? <>
                 {ppeData.slice(10, 12).map((value, index) => (
                   <>
                     <Grid item xs={12} md={6}>
