@@ -19,10 +19,10 @@ function PersonalAndPpeDetailValidate(data) {
     }
   }
 
-  if (error[0]["answer"] === "Yes") {
+  if (error[0]["answer"] === "Yes" || error[0]["answer"] === "") {
     error.slice(1, 4).map((value) => {
       if (value["answer"] === "N/A") {
-        value["error"] = "Please select any one either YES or NO"
+        value["error"] = "Please select any one"
         validateCheck.push(false)
       } else {
         value["error"] = ""
@@ -34,10 +34,10 @@ function PersonalAndPpeDetailValidate(data) {
     })
   }
 
-  if (error[9]["answer"] === "Yes") {
+  if (error[9]["answer"] === "Yes" || error[9]["answer"] === "") {
     error.slice(10, 12).map((value) => {
       if (value["answer"] === "N/A") {
-        value["error"] = "Please select any one either YES or NO"
+        value["error"] = "Please select any one"
         validateCheck.push(false)
       } else {
         value["error"] = ""
