@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ActionShow = (props) => {
-    // console.log(props)
+    console.log(localStorage.getItem(""))
     const classes = useStyles();
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
     const link = () => {

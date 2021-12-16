@@ -482,7 +482,7 @@ const styles = theme => ({
 });
 const handleAttachClose = () => {
   setAttachOpen(false);
-  
+
 };
 
 
@@ -504,13 +504,13 @@ function xflha(props) {
   const [attachOpen, setAttachOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
   const [openAttachment, setopenAttachment] = React.useState(false);
-  const [searchIncident , setSeacrhIncident ] = React.useState('');
+  const [searchIncident, setSeacrhIncident] = React.useState('');
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1)
-  const [isLoading , setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(2);
 
@@ -744,13 +744,13 @@ function xflha(props) {
       fetchData();
     }
     allPickListDataValue()
-  }, [props.projectName.breakDown,searchIncident]);
+  }, [props.projectName.breakDown, searchIncident]);
 
   return (
 
     <>
       <PapperBlock title="Field Level Hazard Assessment" icon="ion-md-list-box" desc="">
-        <Box> { isLoading ? <>
+        <Box> {isLoading ? <>
           <div className={classes.root}>
             <AppBar position="static" color="transparent" className={classes.searchHeaderTop}>
               <Toolbar className={classes.paddZero}>
@@ -796,8 +796,8 @@ function xflha(props) {
                 <Grid item xs={12}>
                   <div className={classes.rightSide}>
                     <Tooltip title="Create XFLHA" aria-label="new XFLHA">
-                      <Button size="medium" variant="contained" color="primary" 
-                      onClick={()=>history.push("/app/pages/assesments/flhaadd")} >
+                      <Button size="medium" variant="contained" color="primary"
+                        onClick={() => history.push("/app/pages/assesments/flhaadd")} >
                         <ControlPointIcon className={classes.spacerRight} />
                         {' '}
                         Create XFLHA
@@ -1281,6 +1281,7 @@ function xflha(props) {
                     </Box>
 
                   ))}
+                {Object.keys(flhas).length === 0 && "Sorry, no matching records found"}
               </div>
 
               <div className="gridView">
@@ -1548,11 +1549,11 @@ function xflha(props) {
             </Grid>
           )}
 
-        <div className={classes.pagination}>
+          <div className={classes.pagination}>
             {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-          </>:<Loader />}
+        </> : <Loader />}
         </Box>
         {/* <Loader /> */}
       </PapperBlock>

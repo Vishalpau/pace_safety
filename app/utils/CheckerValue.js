@@ -289,3 +289,24 @@ export const fetchDepartmentName = async () => {
     }
     return alldept;
 };
+
+export const OtherNA = (type) => {
+    let data = [];
+    if(type=="Other"){
+        let temp = {}
+        data.push(temp.label = "Other");
+        data.push(temp.value = "Other");
+       
+    }else if(type=="NA"){
+        let temp = {}
+        data.push(temp.label = "NA");
+        data.push(temp.value = "NA");
+    }else{
+        let temp = {label: "Other", value: "Other"}
+        let temp1 = {label: "NA", value: "NA"}
+        data = [temp, temp1]
+        
+    }
+    return data
+
+}

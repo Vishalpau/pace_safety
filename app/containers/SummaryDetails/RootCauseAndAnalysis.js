@@ -101,7 +101,16 @@ const RootCauseAnalysisSummary = () => {
         temp.push(value);
       }
     });
-    setAdditonalDetails(temp);
+    let additonalDetails = { "Management control": [], "Reasons to support above": [] }
+    temp.map((value) => {
+      if (value["rcaSubType"] === "managementControl") {
+        additonalDetails["Management control"].push(value["rcaRemark"])
+      } else {
+        additonalDetails["Reasons to support above"].push(value["rcaRemark"])
+      }
+    })
+
+    setAdditonalDetails(additonalDetails);
     handelActionTracker(paceData)
   };
 
@@ -455,7 +464,7 @@ const RootCauseAnalysisSummary = () => {
             </Grid>
           ) : null}
 
-          {additionalDetails.length !== 0 ? (
+          {Object.keys(additionalDetails).length !== 0 ? (
             <Grid item xs={12}>
               <Accordion
                 expanded={expanded === "panel5"}
@@ -468,20 +477,21 @@ const RootCauseAnalysisSummary = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Grid item xs={12}>
-                    {additionalDetails.map((value) => (
+                    {Object.entries(additionalDetails).map(([key, value]) => (
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
                           <Typography className={Fonts.labelName}>
-                            {handelConvert(value.rcaSubType)}
+                            {key}
                           </Typography>
-                          {setRemark(value.rcaRemark).map((rcaValue) => (
-                            <Typography className={Fonts.labelValue}>
-                              {rcaValue}
-                            </Typography>
+                          {value.map((valueRcaRemark) => (
+                            <p>
+                              {valueRcaRemark}
+                            </p>
                           ))}
                         </Grid>
                       </Grid>
                     ))}
+
                   </Grid>
                 </AccordionDetails>
               </Accordion>

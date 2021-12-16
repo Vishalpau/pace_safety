@@ -26,7 +26,7 @@ import FormSideBar from "../FormSideBar";
 import Loader from "../Loader";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-
+import { OtherNA } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -193,19 +193,22 @@ const InvestigationOverview = (props) => {
     return newValue
   };
 
+
+  let ONA = OtherNA("on")
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const handelCall = async () => {
     await handelUpdateCheck();
-    classificationValues.current = pickListValues["40"] || [];
-    healthAndSafetyValues.current = pickListValues["42"];
-    environmentValues.current = pickListValues["43"];
-    regulationValues.current = pickListValues["44"];
-    reputaionValues.current = pickListValues["45"];
-    financialValues.current = pickListValues["46"];
+    classificationValues.current = pickListValues["40"];
+    healthAndSafetyValues.current = [...pickListValues["42"],ONA[0],ONA[1]];
+    environmentValues.current = [...pickListValues["43"],ONA[0],ONA[1]];
+    regulationValues.current = [...pickListValues["44"],ONA[0],ONA[1]];
+    reputaionValues.current = [...pickListValues["45"],ONA[0],ONA[1]];
+    financialValues.current = [...pickListValues["46"],ONA[0],ONA[1]];
     highestImpactReceptor.current = pickListValues["72"];
     await setIsLoading(true);
   };
+
 
   const handelClassification = async (value) => {
 

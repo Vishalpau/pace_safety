@@ -167,7 +167,7 @@ const LessonsLearned = () => {
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionWithEntity(jhaId, "jha:lessonLearned")
+    let allAction = await handelActionWithEntity(jhaId, "jsa:lessonLearned")
     setActionData(allAction)
   };
 

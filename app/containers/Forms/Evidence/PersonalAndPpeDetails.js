@@ -207,58 +207,57 @@ const PersonalAndPpeDetails = () => {
   const [checkPut, setCheckPut] = useState(false)
 
   const handleNext = async () => {
-    setIsNext(false)
-    if (checkPut) {
-      try {
-        const res = await api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`, ppeList);
-        if (res.status === 200) {
-          history.push(
-            `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem("fkincidentId")}`
-          );
+
+    const { error, isValid } = PersonalAndPpeDetailValidate(ppeData);
+    await setError(error);
+    if (isValid) {
+      setIsNext(false)
+      if (checkPut) {
+        try {
+          const res = await api.put(`api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`, ppeList);
+          if (res.status === 200) {
+            history.push(
+              `/app/incident-management/registration/evidence/additional-details/${localStorage.getItem("fkincidentId")}`
+            );
+          }
+        } catch (err) {
+          setIsNext(true)
         }
-      } catch (err) {
-        setIsNext(true)
-      }
-
-    } else if (localStorage.getItem("fkincidentId") && ppeList.length > 19) {
-      try {
-        const res = await api.put(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-          ppeList
-        );
-        if (res.status === 200) {
-          history.push(
-            `/app/incident-management/registration/evidence/additional-details/`
+      } else if (localStorage.getItem("fkincidentId") && ppeList.length > 19) {
+        try {
+          const res = await api.put(
+            `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+            ppeList
           );
+          if (res.status === 200) {
+            history.push(
+              `/app/incident-management/registration/evidence/additional-details/`
+            );
+          }
+        } catch (err) { setIsNext(true) }
+      } else {
+
+        if (isValid) {
+          try {
+            const res = await api.post(
+              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+              ppeData
+            );
+
+            history.push(
+              "/app/incident-management/registration/evidence/additional-details/"
+            );
+          } catch (err) { setIsNext(true) }
+        } else {
+          setIsNext(true)
+          return "Data is not valid";
         }
-      } catch (err) { setIsNext(true) }
-    } else {
-      const valdation = ppeData;
-      const { error, isValid } = PersonalAndPpeDetailValidate(valdation);
-      await setError(error);
-      if (!isValid) {
-        setIsNext(true)
-        return "Data is not valid";
       }
-      try {
-        const res = await api.post(
-          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-          ppeData
-        );
-
-        history.push(
-          "/app/incident-management/registration/evidence/additional-details/"
-        );
-
-
-      } catch (err) { setIsNext(true) }
     }
-    // }
   };
 
   const handlePpeData = async (e, index) => {
     let TempPpeData = [...ppeData];
-    console.log(TempPpeData[index]["question"])
     TempPpeData[index].answer = e.target.value;
     await setPpeData(TempPpeData);
   };
@@ -363,7 +362,7 @@ const PersonalAndPpeDetails = () => {
                   </Grid>
                 </>
               ))}
-              {ppeData[0]["answer"] === "Yes" ?
+              {ppeData[0]["answer"] === "Yes" || ppeData[0]["answer"] === "" ?
                 <>
                   {ppeData.slice(1, 4).map((value, index) => (
                     <>
@@ -483,7 +482,7 @@ const PersonalAndPpeDetails = () => {
                   </Grid>
                 </>
               ))}
-              {ppeData[9]["answer"] === "Yes" ? <>
+              {ppeData[9]["answer"] === "Yes" || ppeData[9]["answer"] === "" ? <>
                 {ppeData.slice(10, 12).map((value, index) => (
                   <>
                     <Grid item xs={12} md={6}>

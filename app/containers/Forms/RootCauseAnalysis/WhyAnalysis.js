@@ -106,18 +106,6 @@ const WhyAnalysis = () => {
     await setActionData(allAction);
   };
 
-  const handelActionShow = (value) => (
-    <Grid>
-      <ActionShow
-        action={{ id: value.id, number: value.actionNumber }}
-        title={value.actionTitle}
-        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-        updatePage={updatePage}
-      />
-    </Grid>
-  );
-
   const handelInvestigationData = async () => {
     let incidentId = putId.current == "" ? localStorage.getItem("fkincidentId") : putId.current;
     const investigationpreviousData = await api.get(`api/v1/incidents/${incidentId}/investigations/`);
@@ -173,60 +161,58 @@ const WhyAnalysis = () => {
         if (callObjects[key]["whyId"] == undefined) {
           let postObject = { ...whyData, ...callObjects[key] };
           const res = await api.post(`/api/v1/incidents/${localStorage.getItem("fkincidentId")}/fivewhy/`, postObject);
-          if (res.status == 201) {
-            nextPageLink = res.status;
-          }
+          
         } else if (callObjects[key]["whyId"] !== undefined) {
           let dataID = callObjects[key].whyId;
           let postObject = { ...whyData, ...callObjects[key] };
           if (typeof postObject != "undefined") {
             const res = await api.put(`/api/v1/incidents/${putId.current}/fivewhy/${dataID}/`, postObject);
-            if (res.status == 200) {
-              nextPageLink = res.status;
-            }
+            
           }
         }
-      }
-      if (nextPageLink == 201 && Object.keys(error).length == 0) {
-        if (incidents.incidentStage === "Root cause & analysis") {
-          try {
-            const temp = incidents
-            temp.updatedAt = new Date().toISOString();
-            temp.incidentStatus = "Done"
-            const res = await api.put(
-              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-              temp
-            );
-          } catch (error) {
-            history.push("/app/pages/error")
-          }
-        }
-        let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-        }
-        dispatch(tabViewMode(viewMode))
-        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
-      } else if (nextPageLink == 200 && Object.keys(error).length == 0) {
-        if (incidents.incidentStage === "Root cause & analysis") {
-          try {
-            const temp = incidents
-            temp.updatedAt = new Date().toISOString();
-            temp.incidentStatus = "Done"
-            const res = await api.put(
-              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-              temp
-            );
-          } catch (error) {
-            history.push("/app/pages/error")
-          }
-        }
-        let viewMode = {
-          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
-        }
-        dispatch(tabViewMode(viewMode))
-        history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
       }
     }
+      if (Object.keys(error).length == 0) {
+        if (incidents.incidentStage === "Root cause & analysis") {
+          try {
+            const temp = incidents
+            temp.updatedAt = new Date().toISOString();
+            temp.incidentStatus = "Done"
+            const res = await api.put(
+              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+              temp
+            );
+          } catch (error) {
+            history.push("/app/pages/error")
+          }
+        }
+        let viewMode = {
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+        }
+        dispatch(tabViewMode(viewMode))
+        
+      } else if (Object.keys(error).length == 0) {
+        if (incidents.incidentStage === "Root cause & analysis") {
+          try {
+            const temp = incidents
+            temp.updatedAt = new Date().toISOString();
+            temp.incidentStatus = "Done"
+            const res = await api.put(
+              `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+              temp
+            );
+          } catch (error) {
+            history.push("/app/pages/error")
+          }
+        }
+        let viewMode = {
+          initialNotification: false, investigation: false, evidence: false, rootcauseanalysis: true, lessionlearn: false
+        }
+        dispatch(tabViewMode(viewMode))
+        
+      }
+   
+    await history.push(`${SUMMERY_FORM["Summary"]}${fkid}/`);
     localStorage.setItem("RootCause", "Done");
     setButtonLoading(false)
   };

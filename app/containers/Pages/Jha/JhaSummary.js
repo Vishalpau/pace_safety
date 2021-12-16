@@ -265,7 +265,7 @@ function JhaSummary() {
   };
 
   const handelActionTracker = async (resultHazard) => {
-    let actionType = { "jha:hazard": [], "jha:lessonLearned": [], "jha:approval": [] }
+    let actionType = { "jsa:hazard": [], "jsa:lessonLearned": [], "jsa:approval": [] }
     let jhaId = localStorage.getItem("fkJHAId")
     let allAction = await handelActionData(jhaId, [], "title")
 
@@ -275,7 +275,7 @@ function JhaSummary() {
       }
     })
     setAllActionType(actionType)
-    let allHazardActions = actionType["jha:hazard"]
+    let allHazardActions = actionType["jsa:hazard"]
     let actionHazard = {}
 
     allHazardActions.map((value) => {

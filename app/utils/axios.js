@@ -26,7 +26,7 @@ const api = axios.create({
 
 export const appapi = axios.create({
   baseURL: apiUrl,
-  headers:HEADER_AUTH
+  headers: HEADER_AUTH
 });
 
 api.interceptors.request.use(

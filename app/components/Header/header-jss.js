@@ -576,8 +576,8 @@ const styles = (theme) => ({
     minWidth: 150,
   },
   userLogo: {
-    maxWidth: '110px',
-    minWidth: '110px',
+    maxWidth: '80px',
+    minWidth: '80px',
     marginRight: '16px',
     display: "inline-block",
   },

@@ -134,7 +134,7 @@ const BasicCauseAndAction = () => {
 
   const handelNavigate = (navigateType) => {
     if (navigateType == "next") {
-    
+
       history.push(
         `${ROOT_CAUSE_ANALYSIS_FORM["Basic cause"]}${putId.current}`
       );
@@ -237,7 +237,7 @@ const BasicCauseAndAction = () => {
                         </TableCell>
                         <TableCell align="right">
                           <ActionTracker
-                            actionContext="incidents:Pacacuase"
+                            actionContext="incidents:Pacecause"
                             enitityReferenceId={`${putId.current}:${value.id}`}
                             setUpdatePage={setUpdatePage}
                             updatePage={updatePage}

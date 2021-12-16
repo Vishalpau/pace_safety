@@ -1286,8 +1286,8 @@ const FlhaDetails = () => {
                                             </FormControl>
                                           </Grid>
 
-                                          {taskForm[index]["hazards"][indexHazard]["hazardStatus"] === "Yes"
-
+                                          {taskForm[index]["hazards"][indexHazard]["hazardStatus"] === "Yes" ||
+                                            taskForm[index]["hazards"][indexHazard]["hazardStatus"] === ""
                                             ?
                                             <>
                                               {/* control           */}
