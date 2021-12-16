@@ -198,7 +198,7 @@ function JhaSummary() {
     const resultHazard = resHazards.data.data.results
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.link !== null
-    let approvalDecider = result.wrpApprovalUser !== null && result.wrpApprovalUser !== ""
+    let approvalDecider = result.wrpApprovalUser !== null && result.sapApprovalUser !== null
     let lessionDecider = result.anyLessonsLearnt !== null
     let closeOutDecider = result.closedById !== null
     await setFormStatus({
@@ -248,15 +248,11 @@ function JhaSummary() {
   };
 
   const handleJhaApprovalsPush = async () => {
-    history.push(
-      "/app/pages/jha/approvals/approvals"
-    );
+    handelApprovalViewChange("sideBar")
   };
 
   const handleJhaLessonLearnPush = async () => {
-    history.push(
-      "/app/pages/jha/lessons-learned/lessons-learned"
-    );
+    handelLessionLearnedChanges("sideBar")
   };
 
   const handleClosePush = async () => {
@@ -417,10 +413,10 @@ function JhaSummary() {
     setCommentsView(false)
   }
 
-  const handelApprovalViewChange = () => {
+  const handelApprovalViewChange = (side) => {
     if (formStatus.assessmentStatus === true) {
       setAssessmentsView(false);
-      if (handelApprovalTabStatus()) {
+      if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
@@ -434,27 +430,24 @@ function JhaSummary() {
     }
   }
 
-  const handelLessionLearnedChanges = () => {
-    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === true) {
+  const handelLessionLearnedChanges = (side) => {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true ) {
       setAssessmentsView(false);
       setApprovalsView(false);
       setCloseOutView(false);
-      if (formStatus.lessionLeranedStatus) {
+      if (formStatus.lessionLeranedStatus && side === undefined ) {
         setLessonsLearnedView(true);
       } else {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
       }
       setCommentsView(false)
-    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
-      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval} and ${errorCloseOut}`)
+    } else if (formStatus.assessmentStatus === false && formStatus.approvalStatus === false ) {
+      setMessageSnackbar(`${errorMessage} ${errorAssessment} and ${errorApproval} `)
       handleClickSnackBar()
-    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false && formStatus.closeOutStatus === false) {
-      setMessageSnackbar(`${errorMessage} ${errorApproval} and ${errorCloseOut}`)
+    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === false ) {
+      setMessageSnackbar(`${errorMessage} ${errorApproval} `)
       handleClickSnackBar()
-    } else if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true && formStatus.closeOutStatus === false) {
-      setMessageSnackbar(`${errorMessage} ${errorCloseOut}`)
-      handleClickSnackBar()
-    }
+    } 
   }
 
   const handelCloseOutViewChanges = () => {
@@ -529,7 +522,7 @@ function JhaSummary() {
   const classes = useStyles();
   return (
 
-    <CustomPapperBlock title="Assessment Number: IR-15415415"
+    <CustomPapperBlock 
       title={`Assessment Number: ${assessment.jhaNumber !== undefined ? assessment.jhaNumber : ""}`}
       icon={jhaLogoSymbol} whiteBg 
       >
@@ -585,7 +578,7 @@ function JhaSummary() {
                               {handelApprovalTabStatus() ? "Done" : "Pending"}
                             </Typography>
                           </li>
-                          <li>
+                          {/* <li>
                             <Button
                               color={closeOutView ? "secondary" : "primary"}
                               variant="outlined"
@@ -602,7 +595,7 @@ function JhaSummary() {
                             <Typography variant="caption" display="block">
                               {formStatus.closeOutStatus ? "Done" : "Pending"}
                             </Typography>
-                          </li>
+                          </li> */}
                           <li>
                             <Button
                               color={lessonsLearnedView ? "secondary" : "primary"}
@@ -1106,6 +1099,31 @@ function JhaSummary() {
                                       </Table>
                                     </Grid>
                                   : null}
+                                  {assessment.closedByName !== null ? <>
+                                  <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                                  <FormLabel className="checkRadioLabel" component="legend">Close out</FormLabel>
+                                  </Grid>
+
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel"
+                                    >
+                                      Closed by
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.closedByName)}
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel"
+                                    >
+                                      Closed on
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
+                                    </Typography>
+                                  </Grid>
+                                  </>:null}
                                 </Grid>
                               </Paper>
                             </Grid>
@@ -1281,7 +1299,6 @@ function JhaSummary() {
                 </ListItem>
 
                 <ListItem button
-                  disabled={formStatus.closeOutStatus}
                 >
                   <ListItemIcon>
                     {formStatus.lessionLeranedStatus ? <Edit /> : <Add />}
@@ -1295,7 +1312,7 @@ function JhaSummary() {
                   </Link>
                 </ListItem>
 
-                <ListItem
+                {/* <ListItem
                   button
                   divider
                   disabled={formStatus.closeOutStatus}
@@ -1308,7 +1325,7 @@ function JhaSummary() {
                   >
                   <ListItemText primary="Close Out" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
 
                 {false &&
                   <>

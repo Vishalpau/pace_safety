@@ -459,10 +459,14 @@ const JobDetails = (props) => {
                 const res = await api.put(`${apiEndPoint}/${Teamform[i].id}/`, Teamform[i]).then().catch(() => handelApiError())
             } else {
                 Teamform[i]["fkJhaId"] = CreatedJhaId;
+                if (Teamform[i].teamName !== "") {
                 const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError())
                 if (res.status === 200) {
                     handelNavigate()
                 }
+            }else{
+                handelNavigate()
+            }
             }
         }
     }

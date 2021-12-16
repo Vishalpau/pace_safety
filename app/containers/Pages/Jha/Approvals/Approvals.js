@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -10,7 +13,10 @@ import { PapperBlock } from 'dan-components';
 import moment from "moment";
 import { Col, Row } from "react-grid-system";
 import { useHistory } from 'react-router';
-
+import {
+  KeyboardDateTimePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import api from "../../../../utils/axios";
 import { handelActionData, handelActionDataAssessment } from "../../../../utils/CheckerValue";
 import Paper from '@material-ui/core/Paper';
@@ -39,6 +45,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Loader from "../../Loader"
+import axios from "axios";
 
 import {
   access_token,
@@ -160,6 +167,9 @@ const useStyles = makeStyles((theme) => ({
     color: '#ffffff !important',
     borderRadius: '20px',
   },
+  formControl: {
+    width: "100%",
+},
 }));
 
 const Approvals = () => {
@@ -170,6 +180,7 @@ const Approvals = () => {
   const [submitLoader, setSubmitLoader] = useState(false)
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
+  const [userList, setUserList] = useState([]);
   const [projectData, setProjectData] = useState({
     companyId: "",
     projectId: "",
@@ -177,6 +188,8 @@ const Approvals = () => {
     ProjectStructId: "",
   });
   const [error, setError] = useState({})
+  const [isDateShow, setIsDateShow] = useState(false)
+
 
   const project =
     JSON.parse(localStorage.getItem("projectName")) !== null
@@ -196,7 +209,9 @@ const Approvals = () => {
     const jhaId = handelJhaId()
     const res = await api.get(`/api/v1/jhas/${jhaId}/`)
     const apiData = res.data.data.results
-
+    if (apiData.closedDate == null) {
+      apiData["closedDate"] = new Date()
+    }
     setForm(apiData)
     setCheck({
       ...check,
@@ -208,6 +223,7 @@ const Approvals = () => {
   const handelWorkAndsap = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"))
     let name = user.name
+    let id = user.id
     if (type == "work") {
       setOpen(false)
       setCheck({ ...check, wrp: !check.wrp })
@@ -232,6 +248,10 @@ const Approvals = () => {
     setActionData(temp !== null ? temp : [])
   };
 
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+  }
 
   const handelActionLink = () => {
     const projectId =
@@ -263,6 +283,11 @@ const Approvals = () => {
     if(!isValid) {
       return "data not valid"
     }
+    if(form['wrpApprovalUser'] === null || form['sapApprovalUser'] === null) {
+      form['closedDate'] = null
+      form['closedByName'] = null
+      form['closedById'] = null
+    }
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]
     const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
@@ -276,8 +301,31 @@ const Approvals = () => {
     await handelJobDetails();
     await handelWorkAndsap();
     await handelActionTracker();
+    await fetchUserList();
     await setLoading(false);
   }
+
+  const fetchUserList = async () => {
+    let companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    var config = {
+        method: 'get',
+        url: `${ACCOUNT_API_URL}api/v1/companies/${companyId}/users/`,
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+
+    axios(config)
+        .then(function (response) {
+            if (response.status === 200) {
+                const result = response.data.data.results.users
+                setUserList(result)
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 
   const handleClose = () => {
     setOpen(false)
@@ -540,6 +588,67 @@ const Approvals = () => {
                           </Table>
                         </Grid>
                        : null}
+
+                       <Grid item xs={12} md={6}>
+                            <FormControl
+                                variant="outlined"
+                                className={classes.formControl}
+                                
+                            >
+                                <InputLabel id="demo-simple-select-label">
+                                    Closed by
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Closed by"
+                                    value={form.closedByName ? form.closedByName : ""}
+                                >
+                                    {userList.map((selectValues, index) => (
+                                        <MenuItem
+                                            value={selectValues.name}
+                                            key={index}
+                                            onClick={(e) => setForm({ ...form, closedByName: selectValues.name, closedById: selectValues.id })}
+                                        >
+                                            {selectValues.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                             </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    onClick={(e) => setIsDateShow(true)}
+                                    error={error.closeDate}
+                                    helperText={
+                                        error.closeDate ? error.closeDate : null
+                                    }
+                                    value={form.closedDate ? form.closedDate : null}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Closed on"
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    onChange={(e) => {
+                                        setForm({
+                                            ...form,
+                                            closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
+                                        });
+                                    }}
+                                    disableFuture
+                                    InputProps={{ readOnly: true }}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+
                     </Grid>
                   </Paper>
                 </Grid>
