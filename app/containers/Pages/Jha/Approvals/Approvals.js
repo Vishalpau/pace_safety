@@ -319,10 +319,9 @@ const Approvals = () => {
                     }
                   </div>
                 </Grid>
-
-                <Grid item md={8}>
-                  <p style={{ color: "red" }}>{error.action}</p>
-                </Grid>
+                {actionData.length == 0 ? <Grid item md={8}>
+                  <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+                
 
                 <Dialog
                   className={classes.projectDialog}
