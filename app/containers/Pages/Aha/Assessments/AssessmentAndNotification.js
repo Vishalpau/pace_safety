@@ -28,7 +28,7 @@ import Select from "@material-ui/core/Select";
 import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import Link from "@material-ui/core/Link";
 import Divider from "@material-ui/core/Divider";
-import FormSideBar from "../../../../containers/Forms/FormSideBar";
+import FormSideBar from "../../../Forms/FormSideBar";
 import { useParams, useHistory } from "react-router";
 import ActionTracker from "../../../Forms/ActionTracker";
 import { CircularProgress } from "@material-ui/core";
@@ -48,7 +48,7 @@ import { useDispatch } from "react-redux";
 import { handelFileName } from "../../../../utils/CheckerValue";
 import axios from "axios";
 import api from "../../../../utils/axios";
-import Attachment from "../../../../containers/Attachment/Attachment";
+import Attachment from "../../../Attachment/Attachment";
 import { AHA } from "../constants";
 import { keySeq } from "draft-js/lib/DefaultDraftBlockRenderMap";
 import Loader from "../../Loader";
@@ -222,7 +222,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Assessment = () => {
+const AssessmentAndNotification = () => {
   const dispatch = useDispatch();
   const [form, setForm] = useState([]);
   const history = useHistory();
@@ -1057,14 +1057,6 @@ const Assessment = () => {
                                     xs={6}
                                     className={classes.createHazardbox}
                                   >
-                                    {/* {value.action.length > 0 && value.action.map((valueAction) => (
-                                      <ActionShow
-                                        action={valueAction}
-                                        companyId={projectData.companyId}
-                                        projectId={projectData.projectId}
-                                        updatePage={updatePage}
-                                      />
-                                    ))} */}
                                     {handelActionShow(value.id)}
                                   </Grid>
                                 </Grid>
@@ -1320,4 +1312,4 @@ const Assessment = () => {
   );
 };
 
-export default Assessment;
+export default AssessmentAndNotification;
