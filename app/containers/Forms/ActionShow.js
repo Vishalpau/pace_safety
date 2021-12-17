@@ -26,7 +26,10 @@ const useStyles = makeStyles((theme) => ({
     actionLink: {
         fontSize: "14px",
         lineHeight: "1.7",
-        marginTop: "10px"
+        marginTop: "10px",
+    },
+    actionLinkAudit: {
+        inlineSize: 'max-content',
     },
     actionLinkListSection: {
         paddingBottom: '0px',
@@ -48,14 +51,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ActionShow = (props) => {
-    // console.log(props)
+    console.log(localStorage.getItem(""))
     const classes = useStyles();
     let updatPage = props.updatePage !== undefined ? props.updatePage : ""
-
     const link = () => {
         return (
             <Link
-                className={classes.actionLink}
+                className={classes.actionLinkAudit}
                 display="block"
                 href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${props.companyId
                     }&projectId=${props.projectId

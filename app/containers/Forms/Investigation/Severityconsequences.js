@@ -12,13 +12,21 @@ import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-grid-system";
 import { useHistory } from "react-router";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
 import api from "../../../utils/axios";
 import {
   INVESTIGATION_FORM, RCAOPTION
 } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
-import FormSideBar from "../FormSideBar";
+import allPickListDataValue from "../../../utils/Picklist/allPickList";
 
+import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { OtherNA } from "../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -32,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InvestigationOverview = () => {
+const InvestigationOverview = (props) => {
   const putId = useRef("");
   const investigationId = useRef("");
   const history = useHistory();
@@ -48,6 +56,9 @@ const InvestigationOverview = () => {
   const [buttonLoading, setButtonLoading] = useState(false)
 
   const [form, setForm] = useState({});
+  let allPickListData = props.initialValues.allPickListData
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
 
   const workerForm = useRef({
     name: "",
@@ -182,35 +193,53 @@ const InvestigationOverview = () => {
     return newValue
   };
 
+
+  let ONA = OtherNA("on")
   const radioDecide = ["Yes", "No"];
   const classes = useStyles();
   const handelCall = async () => {
     await handelUpdateCheck();
-    classificationValues.current = await PickListData(40);
-    healthAndSafetyValues.current = await PickListData(42);
-    environmentValues.current = await PickListData(43);
-    regulationValues.current = await PickListData(44);
-    reputaionValues.current = await PickListData(45);
-    financialValues.current = await PickListData(46);
-    highestImpactReceptor.current = await PickListData(77);
-
+    classificationValues.current = pickListValues["40"];
+    healthAndSafetyValues.current = [...pickListValues["42"],ONA[0],ONA[1]];
+    environmentValues.current = [...pickListValues["43"],ONA[0],ONA[1]];
+    regulationValues.current = [...pickListValues["44"],ONA[0],ONA[1]];
+    reputaionValues.current = [...pickListValues["45"],ONA[0],ONA[1]];
+    financialValues.current = [...pickListValues["46"],ONA[0],ONA[1]];
+    highestImpactReceptor.current = pickListValues["72"];
     await setIsLoading(true);
   };
 
+
   const handelClassification = async (value) => {
-    if (value == classificationValues.current[0].value || value == classificationValues.current[1].value) {
+
+    let paceCauseClassification = [
+      "Fatality",
+      "Lost time incident",
+      "Property damage more than Rs 5,00,00,000",
+      "Property damage more than Rs 1,00,00,000"
+    ]
+    let causeClassification = [
+      "Medical incident",
+      "Property damage more than Rs 25,00,000"
+    ]
+    let whyAnalysisClassification = [
+      "Property damage less than Rs 25,00,000",
+      "First aid"
+    ]
+
+    if (paceCauseClassification.includes(value)) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "PACE cause analysis",
       });
-    } else if (value == classificationValues.current[2].value) {
+    } else if (causeClassification.includes(value)) {
       await setForm({
         ...form,
         classification: value,
         rcaRecommended: "Cause analysis",
       });
-    } else if (value == classificationValues.current[3].value) {
+    } else if (whyAnalysisClassification.includes(value)) {
       await setForm({
         ...form,
         classification: value,
@@ -218,6 +247,7 @@ const InvestigationOverview = () => {
       });
     }
   }
+
 
   useEffect(() => {
     handelCall();
@@ -249,7 +279,7 @@ const InvestigationOverview = () => {
                     label="Health & safety - actual consequences"
                     value={handelDeaultValue(form.healthSafetyActual)}
                   >
-                    {healthAndSafetyValues.current.map((selectValues) => (
+                    {healthAndSafetyValues.current !== undefined && healthAndSafetyValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues.value}
                         onClick={(e) => {
@@ -277,7 +307,7 @@ const InvestigationOverview = () => {
                     label=" Health & Safety - Potential Consequences"
                     value={handelDeaultValue(form.healthSafetyPotential)}
                   >
-                    {healthAndSafetyValues.current.map((selectValues) => (
+                    {healthAndSafetyValues.current !== undefined && healthAndSafetyValues.current.map((selectValues) => (
                       <MenuItem
                         value={selectValues.value}
                         onClick={(e) => {
@@ -618,7 +648,7 @@ const InvestigationOverview = () => {
                   onClick={() => handleNext()}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -634,11 +664,21 @@ const InvestigationOverview = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )
       }
     </PapperBlock >
   );
 };
 
-export default InvestigationOverview;
+
+
+InvestigationOverview.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+const investigationOverviewInit = connect((state) => ({
+  initialValues: state.getIn(["InitialDetailsReducer"]),
+}))(InvestigationOverview);
+
+// export default InvestigationOverview;
+export default investigationOverviewInit;

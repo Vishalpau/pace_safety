@@ -6,3 +6,6 @@ export const LEVEL_BREAKDOWN_DETAILS = 'LEVEL_BREAKDOWN_DETAILS';
 export const VIEW_MODE = "VIEW_MODE";
 export const COMPANY_DATA = "COMPANY_DATA";
 export const API_DOMAIN = "API_DOMAIN"
+export const ALLPICKLISTDATA = "ALLPICKLISTDATA"
+export const BASEURL = "BASEURL"
+

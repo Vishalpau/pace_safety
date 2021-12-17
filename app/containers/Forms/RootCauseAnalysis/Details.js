@@ -20,10 +20,11 @@ import { useHistory } from "react-router";
 import Type from "../../../styles/components/Fonts.scss";
 import api from "../../../utils/axios";
 import {
-  checkValue,
   handelCommonObject,
   handelValueToLabel
 } from "../../../utils/CheckerValue";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 import {
   DETAILS,
   FIVEWHYHIDE,
@@ -34,6 +35,7 @@ import {
 } from "../../../utils/constants";
 import DetailValidation from "../../Validator/RCAValidation/DetailsValidation";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -410,7 +412,7 @@ const Details = () => {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControl
                   component="fieldset"
                   required
@@ -439,7 +441,7 @@ const Details = () => {
                     <FormHelperText>{error.evidenceNotSupport}</FormHelperText>
                   )}
                 </FormControl>
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <Button
@@ -448,7 +450,7 @@ const Details = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -472,7 +474,9 @@ const Details = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

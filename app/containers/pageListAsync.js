@@ -657,7 +657,7 @@ export const GeneralObservationPrints = loadable(() => import("./SampleApps/Gene
 });
 
 // Aha    
-export const Aha = loadable(() => import("./Pages/Aha/Aha"), {
+export const AhaMain = loadable(() => import("./Pages/Aha/AhaMain"), {
   fallback: <Loading />,
 });
 
@@ -665,15 +665,7 @@ export const AhaSummary = loadable(() => import("./Pages/Aha/AhaSummary"), {
   fallback: <Loading />,
 });
 
-export const AssessmentsForms = loadable(() => import("./Pages/Aha/Assessments/AssessmentsForms"), {
-  fallback: <Loading />,
-});
-
-export const ProjectDetails = loadable(() => import("./Pages/Aha/Assessments/ProjectDetails"), {
-  fallback: <Loading />,
-});
-
-export const ProjectAreaHazards = loadable(() => import("./Pages/Aha/Assessments/ProjectAreaHazards"), {
+export const ProjectDetailsAndHazard = loadable(() => import("./Pages/Aha/Assessments/ProjectDetailsAndHazard"), {
   fallback: <Loading />,
 });
 
@@ -681,11 +673,7 @@ export const AhaCloseOut = loadable(() => import("./Pages/Aha/CloseOut/CloseOut"
   fallback: <Loading />,
 });
 
-export const Assessment = loadable(() => import("./Pages/Aha/Assessments/Assessment"), {
-  fallback: <Loading />,
-});
-
-export const DocumentNotification = loadable(() => import("./Pages/Aha/Assessments/DocumentsNotifications"), {
+export const AssessmentAndNotification = loadable(() => import("./Pages/Aha/Assessments/AssessmentAndNotification"), {
   fallback: <Loading />,
 });
 
@@ -707,7 +695,7 @@ export const Comments = loadable(() => import("./Comments/Comments"), {
 
 // Jha
 
-export const Jha = loadable(() => import("./Pages/Jha/Jha"), {
+export const JhaMain = loadable(() => import("./Pages/Jha/JhaMain"), {
   fallback: <Loading />,
 });
 
@@ -723,11 +711,20 @@ export const JhaProjectAreaHazards = loadable(() => import("./Pages/Jha/Assessme
   fallback: <Loading />,
 });
 
+export const JhaJobDetailHazard = loadable(() => import("./Pages/Jha/Assessments/JobDetailHazard"), {
+  fallback: <Loading />,
+});
+
+
 export const JhaAssessment = loadable(() => import("./Pages/Jha/Assessments/Assessment"), {
   fallback: <Loading />,
 });
 
 export const JhaDocumentNotification = loadable(() => import("./Pages/Jha/Assessments/DocumentsNotifications"), {
+  fallback: <Loading />,
+});
+
+export const JhaAssessmentAndDocument = loadable(() => import("./Pages/Jha/Assessments/AssessmentAndDocument"), {
   fallback: <Loading />,
 });
 
@@ -752,6 +749,17 @@ export const ShowCheckList = loadable(() =>
   import("./Pages/CheckList/ShowCheckList"), {
   fallback: <Loading />,
 });
+
+// Picklist
+
+export const Picklist = loadable(() => import("./Pages/Picklist/index "), {
+  fallback: <Loading />,
+});
+export const PicklistValue = loadable(() => import("./Pages/Picklist/values"), {
+  fallback: <Loading />,
+});
+
+
 // XFLHA
 
 export const Xflha = loadable(() => import("./Pages/Assesments/Xflha"), {
@@ -822,3 +830,7 @@ export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), 
 // export const FlhaConfigHazard = loadable(() => import("./pages/assesments/FlhaConfigHazard"), {
 //   fallback: <Loading />,
 // });
+
+export const ControlTowerIcare = loadable(() => import('./Pages/ControlTower/ControlTowerIcare'), {
+  fallback: <Loading />,
+});

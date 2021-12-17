@@ -27,10 +27,12 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT
 } from "../../../utils/constants";
 import api from "../../../utils/axios";
 import PropertyValidate from "../../Validator/PropertyValidation";
 import "../../../styles/custom.css";
+import Loader from "../Loader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -104,19 +106,19 @@ const PropertyAffected = () => {
   // hablde Remove property details
 
   const handleRemove = async (key) => {
-    if(form[key].id){
+    if (form[key].id) {
       const res = await api.delete(
         `api/v1/incidents/${id}/properties/${form[key].id}/`
       );
-      if(res.status === 200){
+      if (res.status === 200) {
         const temp = form;
         const newData = temp.filter((item, index) => index !== key);
         await setForm(newData);
       }
-    }else{
+    } else {
       const temp = form;
-    const newData = temp.filter((item, index) => index !== key);
-    await setForm(newData);
+      const newData = temp.filter((item, index) => index !== key);
+      await setForm(newData);
     }
   };
 
@@ -140,14 +142,14 @@ const PropertyAffected = () => {
     // If yes selected.
     await setIsNext(false)
     if (detailsOfPropertyAffect === "Yes") {
-     
+
       // Validate property data.
       const { error, isValid } = PropertyValidate(form);
       setError(error);
       let status = 0;
       for (var i = 0; i < form.length; i++) {
-        if(form[i].id){
-          
+        if (form[i].id) {
+
           const res = await api.put(
             `api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -159,14 +161,14 @@ const PropertyAffected = () => {
               fkIncidentId: localStorage.getItem("fkincidentId"),
               createdBy: parseInt(userId),
             }
-          ).then((res)=>{
+          ).then((res) => {
             status = res.status;
           })
-          .catch(()=>{
-            setIsNext(true)
-          })
-          
-        }else{
+            .catch(() => {
+              setIsNext(true)
+            })
+
+        } else {
           const res = await api.post(
             `api/v1/incidents/${localStorage.getItem(
               "fkincidentId"
@@ -178,15 +180,15 @@ const PropertyAffected = () => {
               fkIncidentId: localStorage.getItem("fkincidentId"),
               createdBy: parseInt(userId),
             }
-          ).then((res)=>{
+          ).then((res) => {
             status = res.status;
           })
-          .catch(()=>{
-            setIsNext(true)
-          })
+            .catch(() => {
+              setIsNext(true)
+            })
         }
-        
-        
+
+
       }
 
       const temp = incidentsListData;
@@ -195,29 +197,29 @@ const PropertyAffected = () => {
       temp["isPropertyDamagedAvailable"] =
         detailsOfPropertyAffect || incidentsListData.isPropertyDamagedAvailable;
       temp["updatedAt"] = new Date().toISOString();
-      try{
-      const res = await api.put(
-        `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-        temp
-      );
-      }catch(err){
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (err) {
         await setIsNext(true)
       }
       // If api success
-      if (status === 201 ||status === 200) {
-          if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/incident/${id}/modify/equipment-affected/`
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/incident/${id}/modify/environment-affected/`
-            );
-          } else {
-            history.push(
-              `/incident/${id}/modify/reporting-and-notification/`
-            );
-          }
+      if (status === 201 || status === 200) {
+        if (nextPath.equipmentAffect === "Yes") {
+          history.push(
+            `/incident/${id}/modify/equipment-affected/`
+          );
+        } else if (nextPath.environmentAffect === "Yes") {
+          history.push(
+            `/incident/${id}/modify/environment-affected/`
+          );
+        } else {
+          history.push(
+            `/incident/${id}/modify/reporting-and-notification/`
+          );
+        }
       }
       // If no is selected on form.
     } else {
@@ -227,7 +229,7 @@ const PropertyAffected = () => {
         for (var i = 0; i < propertyListData.length; i++) {
           const res = await api.delete(
             `api/v1/incidents/${id}/properties/${propertyListData[i].id}/`
-          ).catch(()=> setIsNext(true))
+          ).catch(() => setIsNext(true))
         }
 
         // If that is not the case as if,
@@ -259,59 +261,60 @@ const PropertyAffected = () => {
         );
       }
     }
-  
+
   };
 
   // get peoperty affetct value radio type
   const fetchPropertyAffectedValue = async () => {
     await api.get("api/v1/lists/12/value")
-    .then((res)=>{
-      const result = res.data.data.results;
-      setPropertyAffectedValue(result);
-    })
-    .catch((err)=>history.push("/app/pages/error"))
+      .then((res) => {
+        const result = res.data.data.results;
+        setPropertyAffectedValue(result);
+      })
+      .catch((err) => history.push("/app/pages/error"))
   };
 
   // get property type value for dropdown
   const fetchPropertyTypeValue = async () => {
     await api.get("api/v1/lists/13/value")
-    .then((res)=>{
-      const result = res.data.data.results;
-      result.push({ inputValue: "Other", inputLabel: "Other" });
-      setPropertyTypeValue(result);
-    })
-    .catch((err)=>history.push("/app/pages/error"))
-    
+      .then((res) => {
+        const result = res.data.data.results;
+        result.push({ inputValue: "Other", inputLabel: "Other" });
+        result.push({ inputValue: "NA", inputLabel: "NA" });
+        setPropertyTypeValue(result);
+      })
+      .catch((err) => history.push("/app/pages/error"))
+
   };
 
   // get incident details data
   const fetchIncidentsData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    ).then((res)=>{
+    ).then((res) => {
       const result = res.data.data.results;
-       setIncidentsListdata(result);
-       setPropertyDamagedComments(result.propertyDamagedComments);
+      setIncidentsListdata(result);
+      setPropertyDamagedComments(result.propertyDamagedComments);
       const isAvailable = result.isPropertyDamagedAvailable;
-       setDetailsOfPropertyAffect(isAvailable);
+      setDetailsOfPropertyAffect(isAvailable);
     })
-    .catch((err)=>history.push("/app/pages/error")) 
+      .catch((err) => history.push("/app/pages/error"))
   };
 
   // get property list data
   const fetchPropertyListData = async () => {
     await api.get(`api/v1/incidents/${id}/properties/`)
-    .then((res)=>{
-      const result = res.data.data.results;
-      if (result.length > 0) {
-        let temp = [...form];
-        temp = result;
-         setForm(temp);
-      }
-       setPropertyListData(result);
-       setIsLoading(true);
-    })
-    .catch((err)=>history.push("/app/pages/error"))
+      .then((res) => {
+        const result = res.data.data.results;
+        if (result.length > 0) {
+          let temp = [...form];
+          temp = result;
+          setForm(temp);
+        }
+        setPropertyListData(result);
+        setIsLoading(true);
+      })
+      .catch((err) => history.push("/app/pages/error"))
   };
 
   // handle go back
@@ -340,14 +343,14 @@ const PropertyAffected = () => {
   }, []);
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
-    <PapperBlock title="Details of Properties Affected" icon="ion-md-list-box">
+    <PapperBlock title="Details of Property/Material Affected" icon="ion-md-list-box">
       {isLoading ? (
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  Do you have details to share about the properties affected?
+                  Do you have details to share about the property/material affected?
                 </Typography>
                 <RadioGroup
                   className={classes.inlineRadioGroup}
@@ -360,12 +363,12 @@ const PropertyAffected = () => {
                 >
                   {propertyAffectedValue !== 0
                     ? propertyAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
+                      <FormControlLabel
+                        value={value.inputValue}
+                        control={<Radio />}
+                        label={value.inputLabel}
+                      />
+                    ))
                     : null}
                 </RadioGroup>
               </Grid>
@@ -374,7 +377,7 @@ const PropertyAffected = () => {
                   <Grid item xs={12}>
                     <Box borderTop={1} paddingTop={2} borderColor="grey.300">
                       <Typography variant="h6">
-                        Details of properties affected
+                        Details of property/material affected
                       </Typography>
                     </Box>
                   </Grid>
@@ -409,13 +412,13 @@ const PropertyAffected = () => {
                           >
                             {propertyTypeValue.length !== 0
                               ? propertyTypeValue.map((selectValues, index) => (
-                                  <MenuItem
-                                    key={index}
-                                    value={selectValues.inputValue}
-                                  >
-                                    {selectValues.inputLabel}
-                                  </MenuItem>
-                                ))
+                                <MenuItem
+                                  key={index}
+                                  value={selectValues.inputValue}
+                                >
+                                  {selectValues.inputLabel}
+                                </MenuItem>
+                              ))
                               : null}
                           </Select>
                           {error && error[`propertyType${[index]}`] && (
@@ -489,7 +492,7 @@ const PropertyAffected = () => {
                       startIcon={<PersonAddIcon />}
                       onClick={() => addNewPropertyDetails()}
                     >
-                      Add details of another property affected
+                      Add details of another property/material affected
                     </TextButton>
                   </Grid>
                 </>
@@ -502,7 +505,7 @@ const PropertyAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Describe property affected"
+                    label={COMMENT}
                     fullWidth
                     value={propertyDamagedComments || ""}
                     onChange={(e) => {
@@ -529,7 +532,7 @@ const PropertyAffected = () => {
                   className={classes.button}
                   disabled={!isNext}
                 >
-                  Next {isNext?null:<CircularProgress size={20}/>}
+                  Next {isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -539,14 +542,14 @@ const PropertyAffected = () => {
             <Col md={3}>
               <FormSideBar
                 listOfItems={INITIAL_NOTIFICATION_FORM}
-                selectedItem={"Property affected"}
+                selectedItem={"Property/Material affected"}
                 id={id}
               />
             </Col>
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

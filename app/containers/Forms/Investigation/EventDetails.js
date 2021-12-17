@@ -11,18 +11,23 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { PapperBlock } from "dan-components";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import api from "../../../utils/axios";
-import { INVESTIGATION_FORM } from "../../../utils/constants";
+import { INVESTIGATION_FORM, SUMMERY_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import EventDetailsCostValidate from "../../Validator/InvestigationValidation/EventDetailsCostValidate";
 import EventDetailsValidate from "../../Validator/InvestigationValidation/EventDetailsValdiate";
 import EventDetailsWeatherValidate from "../../Validator/InvestigationValidation/EventDetailsWeatherValidate";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
+// redux
+import { useDispatch } from "react-redux";
+import { tabViewMode } from "../../../redux/actions/initialDetails";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -67,9 +72,11 @@ const EventDetails = () => {
   const weatherId = useRef([]);
   const overAllCostId = useRef([]);
   const history = useHistory();
+  const dispatch = useDispatch();
   const CheckPost = useRef();
   const radioYesNo = ["Yes", "No"];
   const [overAllCostShow, setOverAllCostShow] = useState("");
+  const [incidentsListData, setIncidentsListdata] = useState([]);
 
   const [weather, setWeather] = useState([
     {
@@ -92,8 +99,9 @@ const EventDetails = () => {
   const [error, setError] = useState({});
   const [errorWeather, setErrorWeather] = useState({});
   const [errorCost, setErrorCost] = useState({});
-  const [loading, setLoading] = useState(false)
-  const [buttonLoading, setButtonLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   // check upadte 
   const handelUpdateCheck = async (e) => {
@@ -233,7 +241,20 @@ const EventDetails = () => {
     await setError(error);
     await setErrorWeather(errorWeather);
     await setErrorCost(errorCost)
+    const temp = incidentsListData
+    temp.updatedAt = new Date().toISOString();
     setButtonLoading(true)
+    if (incidentsListData.incidentStage === "Investigation") {
+      temp.incidentStatus = "Done"
+      try {
+        const res = await api.put(
+          `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        history.push("/app/pages/error")
+      }
+    }
     // event api call
     if (
       Object.keys(error).length == 0 &&
@@ -277,9 +298,12 @@ const EventDetails = () => {
               }
             }
           }
-          await history.push(
-            `/app/incident-management/registration/investigation/action-taken/`
-          );
+          let viewMode = {
+            initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+          }
+          localStorage.setItem("viewMode", JSON.stringify(viewMode))
+          dispatch(tabViewMode(viewMode));
+          history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
         }
         // put
       } else if (eventId.current !== "") {
@@ -348,29 +372,43 @@ const EventDetails = () => {
             }
           }
         }
-        await history.push(
-          `/app/incident-management/registration/investigation/action-taken/${putId.current
-          }`
-        );
+        let viewMode = {
+          initialNotification: false, investigation: true, evidence: false, rootcauseanalysis: false, lessionlearn: false
+        }
+        localStorage.setItem("viewMode", JSON.stringify(viewMode))
+        dispatch(tabViewMode(viewMode));
+        history.push(`${SUMMERY_FORM['Summary']}${putId.current}/`);
       }
     }
     setButtonLoading(false)
   };
 
   const PickListCall = async () => {
-    activityListValues.current = await PickListData(63);
-    jobTaskValues.current = await PickListData(64);
-    weatherValues.current = await PickListData(65);
-    lightningValues.current = await PickListData(66);
-    fluidTypeValues.current = await PickListData(67);
-    costTypeValues.current = await PickListData(68);
-    casualFactorTypeValues.current = await PickListData(69);
+    activityListValues.current = await pickListValues["63"];
+    jobTaskValues.current = await pickListValues["64"];
+    weatherValues.current = await pickListValues["65"];
+    lightningValues.current = await pickListValues["66"];
+    fluidTypeValues.current = await pickListValues["67"];
+    costTypeValues.current = await pickListValues["68"];
+    casualFactorTypeValues.current = await pickListValues["69"];
     await handelUpdateCheck();
     await setLoading(true)
+  };
+  // fetch incident data
+  const fetchIncidentsData = async () => {
+    const res = await api.get(
+      `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
+    ).then((res) => {
+      const result = res.data.data.results;
+      setIncidentsListdata(result);
+    })
+      .catch((err) => history.push("/app/pages/error"))
+
   };
 
   useEffect(() => {
     PickListCall();
+    fetchIncidentsData();
   }, []);
 
   const classes = useStyles();
@@ -381,45 +419,6 @@ const EventDetails = () => {
         <>
           <Grid container spacing={3}>
             <Grid container item xs={12} md={9} spacing={3}>
-              {/* activity */}
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  error={
-                    error && error.activity
-                  }
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="project-name-label">Activity</InputLabel>
-                  <Select
-                    id="project-name"
-                    labelId="project-name-label"
-                    label="Activity"
-                    value={form.activity}
-                  >
-                    {activityListValues.current.map((selectValues) => (
-                      <MenuItem
-                        value={selectValues.value}
-                        onClick={(e) => {
-                          setForm({
-                            ...form,
-                            activity: selectValues.value,
-                          });
-                        }}
-                      >
-                        {selectValues.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {error && error.activity && (
-                  <FormHelperText style={{ color: "red" }}>
-                    {error.activity}
-                  </FormHelperText>
-                )}
-              </Grid>
-
               {/* job task */}
               <Grid item xs={12} md={6}>
                 <FormControl
@@ -455,6 +454,45 @@ const EventDetails = () => {
                 {error && error.jobTask && (
                   <FormHelperText style={{ color: "red" }}>
                     {error.jobTask}
+                  </FormHelperText>
+                )}
+              </Grid>
+
+              {/* activity */}
+              <Grid item xs={12} md={6}>
+                <FormControl
+                  error={
+                    error && error.activity
+                  }
+                  variant="outlined"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="project-name-label">Activity</InputLabel>
+                  <Select
+                    id="project-name"
+                    labelId="project-name-label"
+                    label="Activity"
+                    value={form.activity}
+                  >
+                    {activityListValues.current.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues.value}
+                        onClick={(e) => {
+                          setForm({
+                            ...form,
+                            activity: selectValues.value,
+                          });
+                        }}
+                      >
+                        {selectValues.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {error && error.activity && (
+                  <FormHelperText style={{ color: "red" }}>
+                    {error.activity}
                   </FormHelperText>
                 )}
               </Grid>
@@ -623,11 +661,7 @@ const EventDetails = () => {
 
               <Grid item xs={12} md={6}>
                 <FormControl
-                  error={
-                    error && error.spillsFluidType
-                  }
                   variant="outlined"
-                  required
                   className={classes.formControl}
                 >
                   <InputLabel id="project-name-label">Fluid type</InputLabel>
@@ -652,11 +686,6 @@ const EventDetails = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {error && error.spillsFluidType && (
-                  <FormHelperText style={{ color: "red" }}>
-                    {error.spillsFluidType}
-                  </FormHelperText>
-                )}
               </Grid>
 
               <Grid item xs={12} md={6}>
@@ -912,7 +941,7 @@ const EventDetails = () => {
                   onClick={(e) => handelNext(e)}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -927,7 +956,9 @@ const EventDetails = () => {
             )}
           </Grid>
         </>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

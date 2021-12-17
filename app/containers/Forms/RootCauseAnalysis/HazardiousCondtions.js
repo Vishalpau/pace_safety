@@ -24,6 +24,9 @@ import {
   TOOLS, WARNINGSYSTEM
 } from "../../../utils/constants";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -465,7 +468,7 @@ const HazardiousCondition = () => {
                     className={classes.button}
                     onClick={(e) => handelNext(e)}
                   >
-                    Next
+                    Next{nextButton && <CircularProgress size={20} />}
                   </Button>
                 </Box>
               </Grid>
@@ -480,7 +483,9 @@ const HazardiousCondition = () => {
             </Col>
           )}
         </Row>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

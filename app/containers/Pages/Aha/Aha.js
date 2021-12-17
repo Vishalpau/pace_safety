@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Box from "@material-ui/core/Box";
@@ -32,11 +33,13 @@ import Fonts from 'dan-styles/Fonts.scss';
 import Incidents from 'dan-styles/IncidentsList.scss';
 import moment from 'moment';
 import MUIDataTable from 'mui-datatables';
-import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import { useHistory } from 'react-router';
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
+import Loader from "../Loader";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -212,28 +215,17 @@ function Aha(props) {
     const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
     localStorage.setItem('fkAHAId', id)
     handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
-    //console.log("Ashutosh")
     history.push(
       `/app/pages/aha/aha-summary/${id}`
     );
   };
 
   const handleNewAhaPush = async () => {
-    //console.log("Ashutosh")
     localStorage.removeItem('fkAHAId')
     history.push(
       "/app/pages/aha/assessments/project-details"
     );
   };
-
-  // const fetchAllAHAData = async () => {
-  //   const res = await api.get("/api/v1/ahas/")
-  //   const result = res.data.data.results.results
-
-  //   await setAllAHAData(result)
-  //   // await handelTableView(result)
-  // }
-
 
   const fetchAllAHAData = async () => {
     await setPage(1)
@@ -250,7 +242,7 @@ function Aha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+    const res = await api.get(`api/v1/ahas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
 
     const result = res.data.data.results.results
     await setAllAHAData(result)
@@ -276,39 +268,17 @@ function Aha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/ahas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    console.log("----------", res)
+    const res = await api.get(`api/v1/ahas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
   };
 
-
-
-  const handelTableView = (result) => {
-    const temp = []
-    result.filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-      item[1]["description"].toLowerCase().includes(
-        searchIncident.toLowerCase()
-      )).map((item, index) => {
-        temp.push([
-          item[1]["ahaNumber"],
-          item[1]['location'],
-          item[1]['createdBy'],
-          item[1]['createdAt']
-        ])
-      })
-    setData(temp)
-  }
-
-  console.log(allAHAData);
-
-  //   Assigning 'classes' to useStyles()
   const classes = useStyles();
 
   useEffect(() => {
     fetchAllAHAData()
-    // handleProjectList()
-  }, [props.projectName.breakDown])
+    allPickListDataValue()
+  }, [props.projectName.breakDown, searchIncident])
   return (
     <PapperBlock title="AHA" icon="ion-md-list-box">
       <Box>
@@ -375,215 +345,207 @@ function Aha(props) {
           </div>
 
           {cardView ? (<>
-            {allAHAData.length > 0 && Object.entries(allAHAData).filter((item) => item[1]["ahaNumber"].includes(searchIncident.toUpperCase()) ||
-              item[1]["description"].toLowerCase().includes(
-                searchIncident.toLowerCase()
-              )).map((item, index) => (
-                <Card variant="outlined" className={Incidents.card}>
-                  <CardContent>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12}>
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid item xs={11}>
-                            <Typography variant="h6">
-                              {item[1]["description"]}
-                            </Typography>
-                          </Grid>
+            {allAHAData.length > 0 ? Object.entries(allAHAData).map((item, index) => (
+              <Card variant="outlined" className={Incidents.card}>
+                <CardContent>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Grid container spacing={3} alignItems="flex-start">
+                        <Grid item xs={10}>
+                          <Typography variant="h6">
+                            {item[1]["description"]}
+                          </Typography>
+                        </Grid>
 
-                          <Grid item xs={1} justifyContent="flex-end">
-                            <Chip
-                              avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
-                              label={item[1]["username"] ? item[1]["username"] : "Admin"}
-                            />
-                          </Grid>
+                        <Grid item xs={2} justifyContent="flex-end">
+                          <Chip
+                            avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : paceLogoSymbol} />}
+                            label={item[1]["username"] ? item[1]["username"] : "Admin"}
+                          />
                         </Grid>
                       </Grid>
+                    </Grid>
 
-                      <Grid item xs={12}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={6} md={3}>
-                            <Typography
-                              display="inline"
-                              className={Fonts.listingLabelName}
+                    <Grid item xs={12}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6} md={3}>
+                          <Typography
+                            display="inline"
+                            className={Fonts.listingLabelName}
+                          >
+                            Number:
+                            <Link
+                              onClick={(e) => handleSummaryPush(index)}
+                              variant="subtitle2"
+                              className={Fonts.listingLabelValue}
+                              style={{
+                                textDecoration: 'underline',
+                                display: 'inline-block',
+                                marginLeft: '8px',
+                              }}
                             >
-                              Number:
-                              <Link
-                                onClick={(e) => handleSummaryPush(index)}
-                                variant="subtitle2"
-                                className={Fonts.listingLabelValue}
-                                style={{
-                                  textDecoration: 'underline',
-                                  display: 'inline-block',
-                                  marginLeft: '8px',
-                                }}
-                              >
-                                {item[1]["ahaNumber"]}
-                              </Link>
-                            </Typography>
-                          </Grid>
+                              {item[1]["ahaNumber"]}
+                            </Link>
+                          </Typography>
+                        </Grid>
 
-                          <Grid item xs={6} md={3}>
-                            <Chip
-                              variant="outlined"
-                              label="AHA"
-                              color="primary"
-                              size="small"
-                            />
-                          </Grid>
+                        <Grid item xs={6} md={3}>
+                          <Chip
+                            variant="outlined"
+                            label={item[1]['ahaStage']}
+                            color="primary"
+                            size="small"
+                          />
+                        </Grid>
 
-                          <Grid item xs={12} md={3}>
-                            <Typography
-                              display="inline"
-                              className={Fonts.listingLabelName}
-                            >
-                              <CalendarTodayIcon fontSize="small" />
-                              <span className={Fonts.listingLabelValue}>
-                                {moment(item[1]["assessmentDate"]).format(
-                                  "Do MMMM YYYY"
-                                )}
-                              </span>
-                            </Typography>
-                          </Grid>
+                        <Grid item xs={12} md={3}>
+                          <Typography
+                            display="inline"
+                            className={Fonts.listingLabelName}
+                          >
+                            <CalendarTodayIcon fontSize="small" />
+                            <span className={Fonts.listingLabelValue}>
+                              {moment(item[1]["assessmentDate"]).format(
+                                "Do MMM YYYY"
+                              )}
+                            </span>
+                          </Typography>
                         </Grid>
                       </Grid>
-
-                      <Grid item xs={6} lg={3}>
-                        <Typography className={Fonts.listingLabelName} gutterBottom>
-                          Work Area
-                        </Typography>
-
-                        <Typography className={Fonts.listingLabelValue}>
-                          {item[1]["workArea"] ? item[1]["workArea"] : "-"}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6} lg={3}>
-                        <Typography className={Fonts.listingLabelName} gutterBottom>
-                          Location
-                        </Typography>
-                        <Typography className={Fonts.listingLabelValue}>
-                          {item[1]["location"] ? item[1]["location"] : "-"}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item xs={6} lg={3}>
-                        <Typography className={Fonts.listingLabelName} gutterBottom>
-                          Created on
-                        </Typography>
-
-                        <Typography variant="body1" className={Fonts.listingLabelValue}>
-                          {moment(item[1]["createdAt"]).format(
-                            "Do MMMM YYYY, h:mm:ss a"
-                          )}
-                        </Typography>
-                      </Grid>
-
-                      <Grid item xs={6} lg={3}>
-                        <Typography className={Fonts.listingLabelName} gutterBottom>
-                          Created By
-                        </Typography>
-
-                        <Typography className={Fonts.listingLabelValue}>
-                          {item[1]["username"]}
-                        </Typography>
-                      </Grid>
                     </Grid>
-                  </CardContent>
-                  <Divider />
-                  <CardActions className={Incidents.cardActions}>
-                    <Grid
-                      container
-                      spacing={2}
-                      // justify="flex-end"
-                      alignItems="center"
-                    >
-                      <Grid item xs={6} md={3}>
-                        <Typography display="inline" className={Fonts.listingLabelName}>
-                          <MessageIcon fontSize="small" />
-                          {' '}
-                          Comments:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <ILink href="#">{item[1].commentsCount}</ILink>
-                        </Typography>
-                      </Grid>
 
-                      <Grid item xs={6} md={3}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Fonts.listingLabelName}
-                        >
-                          <BuildIcon fontSize="small" />
-                          {' '}
-                          Actions:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <ILink href="#">3</ILink>
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Fonts.listingLabelName}
-                        >
-                          <AttachmentIcon fontSize="small" />
-                          {' '}
-                          Attachments:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <ILink href="#">{item[1].attachmentCount}</ILink>
-                        </Typography>
-                      </Grid>
+                    <Grid item xs={6} lg={3}>
+                      <Typography className={Fonts.listingLabelName} gutterBottom>
+                        Work Area
+                      </Typography>
 
-                      <Grid item xs={6} md={3}>
-                        <Button
-                          disabled
-                          size="small"
-                          color="primary"
-                          startIcon={<Print />}
-                          className={Incidents.actionButton}
-                        >
-                          Print
-                        </Button>
-
-                        <Button
-                          disabled
-                          size="small"
-                          color="primary"
-                          startIcon={<Share />}
-                          className={Incidents.actionButton}
-                        >
-                          Share
-                        </Button>
-                      </Grid>
+                      <Typography className={Fonts.listingLabelValue}>
+                        {item[1]["workArea"] ? item[1]["workArea"] : "-"}
+                      </Typography>
                     </Grid>
-                  </CardActions>
-                </Card>))}</>)
+                    <Grid item xs={6} lg={3}>
+                      <Typography className={Fonts.listingLabelName} gutterBottom>
+                        Location
+                      </Typography>
+                      <Typography className={Fonts.listingLabelValue}>
+                        {item[1]["location"] ? item[1]["location"] : "-"}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={6} lg={3}>
+                      <Typography className={Fonts.listingLabelName} gutterBottom>
+                        Created on
+                      </Typography>
+
+                      <Typography variant="body1" className={Fonts.listingLabelValue}>
+                        {moment(item[1]["createdAt"]).format(
+                          "Do MMM YYYY, h:mm:ss a"
+                        )}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={6} lg={3}>
+                      <Typography className={Fonts.listingLabelName} gutterBottom>
+                        Created By
+                      </Typography>
+
+                      <Typography className={Fonts.listingLabelValue}>
+                        {item[1]["username"]}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <Divider />
+                <CardActions className={Incidents.cardActions}>
+                  <Grid
+                    container
+                    spacing={2}
+                    // justify="flex-end"
+                    alignItems="center"
+                  >{false && <>
+                    <Grid item xs={6} md={3}>
+                      <Typography display="inline" className={Fonts.listingLabelName}>
+                        <MessageIcon fontSize="small" />
+                        {' '}
+                        Comments:
+                      </Typography>
+                      <Typography variant="body2" display="inline">
+                        <ILink href="#">{item[1].commentsCount}</ILink>
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={6} md={3}>
+                      <Typography
+                        variant="body2"
+                        display="inline"
+                        className={Fonts.listingLabelName}
+                      >
+                        <BuildIcon fontSize="small" />
+                        {' '}
+                        Actions:
+                      </Typography>
+                      <Typography variant="body2" display="inline">
+                        <ILink href="#">3</ILink>
+                      </Typography>
+                    </Grid> </>}
+                    <Grid item xs={6} md={3}>
+                      <Typography
+                        variant="body2"
+                        display="inline"
+                        className={Fonts.listingLabelName}
+                      >
+                        <AttachmentIcon fontSize="small" />
+                        {' '}
+                        Attachments:
+                      </Typography>
+                      <Typography variant="body2" display="inline">
+                        <ILink href="#">{item[1].attachmentCount}</ILink>
+                      </Typography>
+                    </Grid>
+
+                    {false && <Grid item xs={6} md={3}>
+                      <Button
+                        disabled
+                        size="small"
+                        color="primary"
+                        startIcon={<Print />}
+                        className={Incidents.actionButton}
+                      >
+                        Print
+                      </Button>
+
+                      <Button
+                        disabled
+                        size="small"
+                        color="primary"
+                        startIcon={<Share />}
+                        className={Incidents.actionButton}
+                      >
+                        Share
+                      </Button>
+                    </Grid>}
+                  </Grid>
+                </CardActions>
+              </Card>))
+              :
+              <Card variant="outlined" className={Incidents.card}>
+                <CardContent>
+                  <Grid container spacing={3} justify="center">
+                    Sorry, no matching records found
+                  </Grid>
+                </CardContent>
+              </Card>
+            }</>)
             : (
               <MUIDataTable
-                title="Incidents List"
+                title="Aha List"
 
 
-                data={Object.entries(allAHAData).filter(
-                  (item) => {
-                    return (
-
-                      item[1]["description"]
-                        .toLowerCase()
-                        .includes(searchIncident.toLowerCase()) ||
-                      item[1]["ahaNumber"].toLowerCase().includes(
-                        searchIncident.toLowerCase()
-
-                      )
-                    )
-                  }
-
-                ).map((item) => [
+                data={Object.entries(allAHAData).map((item) => [
                   item[1]["ahaNumber"],
                   item[1]["location"],
                   item[1]["username"],
-                  item[1]["createdAt"],
+                  moment(item[1]["createdAt"]).format("Do MMM YYYY, h:mm:ss a"),
                 ])}
 
                 columns={columns}
@@ -594,8 +556,9 @@ function Aha(props) {
             {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
           </div>
-        </> : <h1>Loading...</h1>}
+        </> : <Loader />}
       </Box>
+
     </PapperBlock>
   );
 }

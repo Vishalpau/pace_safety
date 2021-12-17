@@ -16,7 +16,8 @@ import { INVESTIGATION_FORM } from "../../../utils/constants";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
 import InvestigationOverviewValidate from "../../Validator/InvestigationValidation/InvestigationOverviewValidate";
 import FormSideBar from "../FormSideBar";
-
+import Loader from "../Loader";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -36,6 +37,7 @@ const InvestigationOverview = () => {
   const severityValues = useRef([]);
   const [incidentsListData, setIncidentsListdata] = useState([]);
   const [buttonLoading, setButtonLoading] = useState(false)
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const handelUpdateCheck = async (e) => {
     let page_url = window.location.href;
@@ -113,21 +115,19 @@ const InvestigationOverview = () => {
       setIncidentsListdata(result);
     })
       .catch((err) => history.push("/app/pages/error"))
-
   };
 
   const classes = useStyles();
   const callback = async () => {
     await handelUpdateCheck();
-    severityValues.current = await PickListData(41);
+    severityValues.current = await pickListValues["41"];
     setIsLoading(true);
     localStorage.removeItem("WorkerDataFetched");
+    await fetchIncidentsData()
   };
 
   useEffect(() => {
-    handelUpdateCheck();
     callback();
-    fetchIncidentsData()
   }, []);
 
   const isDesktop = useMediaQuery("(min-width:992px)");
@@ -139,7 +139,7 @@ const InvestigationOverview = () => {
           <Col md={9}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Typography variant="h6">Unit constructor manager</Typography>
+                <Typography variant="h6">Unit manager</Typography>
               </Grid>
 
               <Grid item xs={12} md={6}>
@@ -298,7 +298,7 @@ const InvestigationOverview = () => {
                   onClick={() => handleNext()}
                   disabled={buttonLoading}
                 >
-                  Next
+                  Next{buttonLoading && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -314,7 +314,7 @@ const InvestigationOverview = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

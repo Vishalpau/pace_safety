@@ -135,29 +135,32 @@ import {
   Groups,
   Options,
   Aha,
+  AhaMain,
   AhaSummary,
   AssessmentsForms,
-  ProjectDetails,
-  ProjectAreaHazards,
-  Assessment,
-  DocumentNotification,
+  ProjectDetailsAndHazard,
+  AssessmentAndNotification,
   Approvals,
   LessonsLearned,
   AhaCloseOut,
   Prints,
   Setting,
-  Jha,
+  JhaMain,
   JhaSummary,
   JhaJobDetails,
+  JhaJobDetailHazard,
   JhaProjectAreaHazards,
   JhaAssessment,
   JhaDocumentNotification,
   JhaLessonsLearned,
+  JhaAssessmentAndDocument,
   JhaApprovals,
   Comments,
   JhaCloseOut,
   ShowGroup,
   ShowCheckList,
+  Picklist,
+  PicklistValue,
   Xflha,
   FlhaSummary,
   FlhaAdd,
@@ -167,15 +170,16 @@ import {
   EnergyControl,
   AuditCheck,
   AssessmentCloseOut,
-  FlhaConfigHazard,
-  FlhaConfig,
-  FlhaConfigCriticalTask,
-  FlhaConfigAdd,
+  // FlhaConfigHazard,
+  // FlhaConfig,
+  // FlhaConfigCriticalTask,
+  // FlhaConfigAdd,
   SamplePage,
   PrintFlha,
   FlhaActivities,
   FlhaComments,
   GeneralObservationPrints,
+  ControlTowerIcare
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -453,7 +457,7 @@ function Application(props) {
           path="/app/pages/options/"
           component={Options}
         />
-        <Route exact path="/app/:entity/comments/:id/" component={Comments} />
+        {/* <Route exact path="/app/:entity/comments/:id/" component={Comments} /> */}
 
         {/* close out */}
         <Route
@@ -515,41 +519,36 @@ function Application(props) {
         />
 
         {/* Observation Routes  */}
-        {/* <Route path="/app/pages/summary" component={Summary} /> */}
-        {/* <Route path="/app/pages/sample" component={SamplePages} /> */}
+        <Route path="/app/icare/comments/:id" component={Comments} />
+
+        <Route exact path="/app/icare" component={Observations} />
         <Route exact path="/app/observations" component={Observations} />
-        <Route exact path="/observations" component={Observations} />
-        {/* <Route exact path="/:observations" component={Observations} /> */}
-        {/* <Route path="/app/observationsearch/#{search-keyword}" component={Observations} /> */}
-        <Route path="/app/observations#table" component={Observations} />
-        <Route exact path="/app/observation-corrective-action" component={ObservationCorrectiveAction} />
-        <Route exact path="/app/observation-corrective-action/:id" component={ObservationCorrectiveAction} />
-        <Route path="/app/observation/details/:id" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#action-taking" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#comments" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#activity" component={ObservationSummary} />
-        <Route path="/app/observation/details/:id#modify" component={ObservationSummary} />
-        <Route exact path="/app/observation-initial-notification" component={ObservationInitialNotification} />
-        <Route exact path="/app/observation-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
-        <Route path="/app/observation-observation-view" component={ObservationInitialNotificationView} />
+        <Route exact path="/icare" component={Observations} />
+        <Route path="/app/icare#table" component={Observations} />
+        <Route exact path="/app/icare-corrective-action" component={ObservationCorrectiveAction} />
+        <Route exact path="/app/icare-corrective-action/:id" component={ObservationCorrectiveAction} />
+        <Route path="/app/icare/details/:id" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#action-taking" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#comments" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#activity" component={ObservationSummary} />
+        <Route path="/app/icare/details/:id#modify" component={ObservationSummary} />
+        <Route exact path="/app/icare-initial-notification" component={ObservationInitialNotification} />
+        <Route exact path="/app/icare-initial-notification/:id" component={ObservationInitialNotificationUpdate} />
+        <Route path="/app/icare-view" component={ObservationInitialNotificationView} />
         <Route path="/app/prints/:id" component={Prints} />
-        <Route path="/app/pages/general-observation-prints/:id" component={GeneralObservationPrints} />
-        <Route path="/app/observation-bulkupload" component={ObservationBulkupload} />
-        <Route path="/app/observation-bulkuploadfile" component={ObservationUploadScreen} />
+        <Route path="/app/pages/general-icare-prints/:id" component={GeneralObservationPrints} />
+        <Route path="/app/icare-bulkupload" component={ObservationBulkupload} />
+        <Route path="/app/icare-bulkuploadfile" component={ObservationUploadScreen} />
 
         {/* Aha Routes */}
 
-        <Route path="/app/pages/aha" exact component={Aha} />
+        <Route path="/app/pages/aha" exact component={AhaMain} />
         <Route path="/app/pages/aha/aha-summary/:id" exact component={AhaSummary} />
         <Route path="/app/pages/aha/assessments" exact component={AssessmentsForms} />
-        <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetails} />
-        <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetails} />
-        <Route path="/app/pages/aha/assessments/project-area-hazards" exact component={ProjectAreaHazards} />
-        <Route path="/app/pages/aha/assessments/project-area-hazards/:id" exact component={ProjectAreaHazards} />
-        <Route path="/app/pages/aha/assessments/assessment" exact component={Assessment} />
-        <Route path="/app/pages/aha/assessments/assessment/:id" exact component={Assessment} />
-        <Route path="/app/pages/aha/assessments/DocumentsNotifications" exact component={DocumentNotification} />
-        <Route path="/app/pages/aha/assessments/DocumentsNotifications/:id" exact component={DocumentNotification} />
+        <Route path="/app/pages/aha/assessments/project-details" exact component={ProjectDetailsAndHazard} />
+        <Route path="/app/pages/aha/assessments/project-details/:id" exact component={ProjectDetailsAndHazard} />
+        <Route path="/app/pages/aha/assessments/assessment" exact component={AssessmentAndNotification} />
+        <Route path="/app/pages/aha/assessments/assessment/:id" exact component={AssessmentAndNotification} />
         <Route path="/app/pages/aha/approvals/approvals" exact component={Approvals} />
         <Route path="/app/pages/aha/lessons-learned/lessons-learned" exact component={LessonsLearned} />
         <Route path="/app/pages/aha/close-out" component={AhaCloseOut} />
@@ -557,10 +556,12 @@ function Application(props) {
 
         {/* Jha  */}
 
-        <Route path="/app/pages/jha/all_jha" component={Jha} />
+        <Route path="/app/pages/jha/all_jha" component={JhaMain} />
         <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
         <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
+        <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
         <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
+        <Route path="/app/pages/jha/assessments/Assessment-Document" component={JhaAssessmentAndDocument} />
         <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
         <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
         <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
@@ -601,9 +602,13 @@ function Application(props) {
         <Route path="/app/maps/map-searchbox" component={SearchMap} />
         <Route path="/app/maps/map-traffic" component={TrafficIndicator} />
         <Route path="/app/maps/street-view" component={StreetViewMap} />
+        {/* Picklist */}
+        <Route exact path="/app/pages/picklist" component={Picklist} />
+        <Route exact path="/app/pages/picklist/value/:id" component={PicklistValue} />
         {/* Xflha Routes  */}
         <Route path="/app/pages/summary" component={Summary} />
-        <Route path="/app/pages/sample" component={SamplePage} />
+        {/* <Route path="/app/pages/sample" component={SamplePage} /> */}
+        <Route path="/app/assesments/" component={Xflha} />
         <Route path="/app/pages/assesments/xflha" component={Xflha} />
         <Route path="/app/pages/assesments/FlhaSummary/:id" component={FlhaSummary} />
         <Route path="/app/pages/assesments/PreventiveControls" component={PreventiveControls} />
@@ -617,10 +622,12 @@ function Application(props) {
         <Route path="/app/pages/assesments/flha/:id/activities" component={FlhaActivities} />
         <Route path="/app/pages/assesments/flha/:id/comments" component={FlhaComments} />
         {/* Xflha Config  */}
-        <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
+        {/* <Route path="/app/pages/assesments/FlhaConfig" component={FlhaConfig} />
         <Route path="/app/pages/assesments/FlhaConfigAdd" component={FlhaConfigAdd} />
         <Route path="/app/pages/assesments/FlhaConfigCriticalTask" component={FlhaConfigCriticalTask} />
-        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} />
+        <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} /> */}
+        {/* Control Tower */}
+        <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
 
         {/* Default */}
         <Route component={NotFound} />

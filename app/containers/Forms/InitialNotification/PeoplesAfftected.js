@@ -26,6 +26,7 @@ import FormSideBar from "../FormSideBar";
 import {
   INITIAL_NOTIFICATION,
   INITIAL_NOTIFICATION_FORM,
+  COMMENT,
 } from "../../../utils/constants";
 import FormHeader from "../FormHeader";
 import PeopleValidate from "../../Validator/PeopleValidation";
@@ -34,6 +35,7 @@ import "../../../styles/custom.css";
 import { FormHelperText, FormLabel } from "@material-ui/core";
 import AlertMessage from "./Alert";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Loader from "../Loader";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -150,122 +152,70 @@ const PeoplesAffected = () => {
 
   // Next button click event handling.
   const handleNext = async () => {
-   
-      // Next path handlings.
-      const nextPath = JSON.parse(localStorage.getItem("nextPath"));
-      setIsNext(true)
-      // This is the condition when Yes is clicked on the form.
-      if (personAffect === "Yes") {
-        // Validate the form.
-        const { error, isValid } = PeopleValidate(form);
 
-        // End the function exeution if isvalid is false.
-        setError(error);
-        
-        // Loop over all the people added and hit them with the help of the Post API.
-        // We don't have single API.
+    // Next path handlings.
+    const nextPath = JSON.parse(localStorage.getItem("nextPath"));
+    setIsNext(true)
+    // This is the condition when Yes is clicked on the form.
+    if (personAffect === "Yes") {
+      // Validate the form.
+      const { error, isValid } = PeopleValidate(form);
 
-        if (isValid) {
-          for (var i = 0; i < form.length; i++) {
-            if (form[i].id) {
-              try {
-                const res = await api.put(
-                  `api/v1/incidents/${localStorage.getItem(
-                    "fkincidentId"
-                  )}/people/${form[i].id}/`,
-                  {
-                    personType: form[i].personType,
-                    personDepartment: form[i].personDepartment,
-                    personName: form[i].personName,
-                    personIdentification: form[i].personIdentification,
-                    personMedicalCare: form[i].personMedicalCare,
-                    workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-                    locationAssessmentCenter: form[i].locationAssessmentCenter,
-                    createdBy: parseInt(userId),
-                    fkIncidentId: localStorage.getItem("fkincidentId"),
-                  }
-                );
-              } catch (error) {setIsNext(false)}
-            } else {
-              try {
-                const res = await api.post(
-                  `api/v1/incidents/${localStorage.getItem(
-                    "fkincidentId"
-                  )}/people/`,
-                  {
-                    personType: form[i].personType,
-                    personDepartment: form[i].personDepartment,
-                    personName: form[i].personName,
-                    personIdentification: form[i].personIdentification,
-                    personMedicalCare: form[i].personMedicalCare,
-                    workerOffsiteAssessment: form[i].workerOffsiteAssessment,
-                    locationAssessmentCenter: form[i].locationAssessmentCenter,
-                    createdBy: parseInt(userId),
-                    fkIncidentId: localStorage.getItem("fkincidentId"),
-                  }
-                );
-              } catch (error) {history.push("/app/pages/error");setIsNext(false)}
-            }
-          }
+      // End the function exeution if isvalid is false.
+      setError(error);
 
-          // We have hit the API to create person Affected.
-          // Now we are hitting the put api to send is person available is true in other API.
-          const temp = incidentsListData;
-          temp.isPersonDetailsAvailable =
-            personAffect || incidentsListData.isPersonDetailsAvailable;
-          temp.updatedAt = new Date().toISOString();
-          try {
-            const res = await api.put(
-              `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
-              temp
-            );
-          } catch (error) {
-            history.push("/app/pages/error")
-          }
-          // check condition id
+      // Loop over all the people added and hit them with the help of the Post API.
+      // We don't have single API.
 
-          if (nextPath.propertyAffect === "Yes") {
-            history.push(
-              `/incident/${id}/modify/property-affected/`
-            );
-          } else if (nextPath.equipmentAffect === "Yes") {
-            history.push(
-              `/incident/${id}/modify/equipment-affected/`
-            );
-          } else if (nextPath.environmentAffect === "Yes") {
-            history.push(
-              `/incident/${id}/modify/environment-affected/`
-            );
-          } else {
-            history.push(
-              `/incident/${id}/modify/reporting-and-notification/`
-            );
-          }
-        }
-
-        // Case when form has No option selected.
-      } else {
-        // delete existing data if user select NO or N/A
-        try {
-          if (peopleData.length > 0) {
-            const temp = peopleData;
-            for (var i = 0; i < peopleData.length; i++) {
-              const res = await api.delete(
-                `api/v1/incidents/${id}/people/${temp[i].id}/`
+      if (isValid) {
+        for (var i = 0; i < form.length; i++) {
+          if (form[i].id) {
+            try {
+              const res = await api.put(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/people/${form[i].id}/`,
+                {
+                  personType: form[i].personType,
+                  personDepartment: form[i].personDepartment,
+                  personName: form[i].personName,
+                  personIdentification: form[i].personIdentification,
+                  personMedicalCare: form[i].personMedicalCare,
+                  workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                  locationAssessmentCenter: form[i].locationAssessmentCenter,
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                }
               );
-            }
+            } catch (error) { setIsNext(false) }
+          } else {
+            try {
+              const res = await api.post(
+                `api/v1/incidents/${localStorage.getItem(
+                  "fkincidentId"
+                )}/people/`,
+                {
+                  personType: form[i].personType,
+                  personDepartment: form[i].personDepartment,
+                  personName: form[i].personName,
+                  personIdentification: form[i].personIdentification,
+                  personMedicalCare: form[i].personMedicalCare,
+                  workerOffsiteAssessment: form[i].workerOffsiteAssessment,
+                  locationAssessmentCenter: form[i].locationAssessmentCenter,
+                  createdBy: parseInt(userId),
+                  fkIncidentId: localStorage.getItem("fkincidentId"),
+                }
+              );
+            } catch (error) { history.push("/app/pages/error"); setIsNext(false) }
           }
-        } catch (error) {
-          history.push("/app/pages/error")
         }
 
-        // When no is selected we just have to send the comment and yes/no flag to API via put request.
+        // We have hit the API to create person Affected.
+        // Now we are hitting the put api to send is person available is true in other API.
         const temp = incidentsListData;
         temp.isPersonDetailsAvailable =
           personAffect || incidentsListData.isPersonDetailsAvailable;
         temp.updatedAt = new Date().toISOString();
-        temp.personAffectedComments =
-          personAffectedComments || incidentsListData.personAffectedComments;
         try {
           const res = await api.put(
             `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
@@ -274,10 +224,7 @@ const PeoplesAffected = () => {
         } catch (error) {
           history.push("/app/pages/error")
         }
-
-        // Case when id is available. Update case. Redirect user to specific page.
-        // Here if we see, we are redirecting user to urls with /id/ in the end.
-        // Therefore, next page will get the input from the id and pre-fill the details.
+        // check condition id
 
         if (nextPath.propertyAffect === "Yes") {
           history.push(
@@ -296,8 +243,65 @@ const PeoplesAffected = () => {
             `/incident/${id}/modify/reporting-and-notification/`
           );
         }
+      } else {
+        setIsNext(false)
       }
-    
+
+      // Case when form has No option selected.
+    } else {
+      // delete existing data if user select NO or N/A
+      try {
+        if (peopleData.length > 0) {
+          const temp = peopleData;
+          for (var i = 0; i < peopleData.length; i++) {
+            const res = await api.delete(
+              `api/v1/incidents/${id}/people/${temp[i].id}/`
+            );
+          }
+        }
+      } catch (error) {
+        history.push("/app/pages/error")
+      }
+
+      // When no is selected we just have to send the comment and yes/no flag to API via put request.
+      const temp = incidentsListData;
+      temp.isPersonDetailsAvailable =
+        personAffect || incidentsListData.isPersonDetailsAvailable;
+      temp.updatedAt = new Date().toISOString();
+      temp.personAffectedComments =
+        personAffectedComments || incidentsListData.personAffectedComments;
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
+          temp
+        );
+      } catch (error) {
+        history.push("/app/pages/error")
+      }
+
+      // Case when id is available. Update case. Redirect user to specific page.
+      // Here if we see, we are redirecting user to urls with /id/ in the end.
+      // Therefore, next page will get the input from the id and pre-fill the details.
+
+      if (nextPath.propertyAffect === "Yes") {
+        history.push(
+          `/incident/${id}/modify/property-affected/`
+        );
+      } else if (nextPath.equipmentAffect === "Yes") {
+        history.push(
+          `/incident/${id}/modify/equipment-affected/`
+        );
+      } else if (nextPath.environmentAffect === "Yes") {
+        history.push(
+          `/incident/${id}/modify/environment-affected/`
+        );
+      } else {
+        history.push(
+          `/incident/${id}/modify/reporting-and-notification/`
+        );
+      }
+    }
+
   };
 
   // hablde Remove
@@ -327,13 +331,13 @@ const PeoplesAffected = () => {
   const fetchIndividualAffectValue = async () => {
     try {
       await api.get("api/v1/lists/8/value")
-      .then((res)=>{
-        const result = res.data.data.results;
-        setIndividualAffecctValue(result);
-      }).catch((error)=>{
-        history.push("/app/pages/error")
-      })
-      
+        .then((res) => {
+          const result = res.data.data.results;
+          setIndividualAffecctValue(result);
+        }).catch((error) => {
+          history.push("/app/pages/error")
+        })
+
     } catch (error) {
       history.push("/app/pages/error")
     }
@@ -343,13 +347,17 @@ const PeoplesAffected = () => {
   const fetchPersonTypeValue = async () => {
     try {
       await api.get("api/v1/lists/71/value")
-      .then((res)=>{
-        const result = res.data.data.results;
-        setPersonTypeValue(result);
-      }).catch(error=>{
-        history.push("/app/pages/error")
-      })
-      
+        .then((res) => {
+          let data=[];
+          data = res.data.data.results;
+          let result = [...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]
+          console.log(result)
+          setPersonTypeValue(result);
+        }).catch(error => {
+          console.log(error)
+          // history.push("/app/pages/error")
+        })
+
     } catch (error) {
       history.push("/app/pages/error")
     }
@@ -359,13 +367,16 @@ const PeoplesAffected = () => {
   const fetchDepartmentValue = async () => {
     try {
       const res = await api.get("api/v1/lists/10/value")
-      .then((res)=>{
-        const result = res.data.data.results;
-        setDepartmentValue(result);
-      }).catch(error=>{
-        history.push("/app/pages/error")
-      })
-      
+        .then((res) => {
+          let data=[];
+          data = res.data.data.results;
+          const result = [...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]
+          
+          setDepartmentValue(result);
+        }).catch(error => {
+          history.push("/app/pages/error")
+        })
+
     } catch (error) {
       history.push("/app/pages/error")
     }
@@ -375,12 +386,12 @@ const PeoplesAffected = () => {
   const fetchPersonTakenMedicalCare = async () => {
     try {
       const res = await api.get("api/v1/lists/11/value")
-      .then((res)=>{
-        const result = res.data.data.results;
-        setMedicalCareValue(result);
-      }).catch(error=>{
-        history.push("/app/pages/error")
-      })
+        .then((res) => {
+          const result = res.data.data.results;
+          setMedicalCareValue(result);
+        }).catch(error => {
+          history.push("/app/pages/error")
+        })
 
     } catch (error) {
       history.push("/app/pages/error")
@@ -393,7 +404,7 @@ const PeoplesAffected = () => {
     try {
       const res = await api.get(
         `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-      ).then((res)=>{
+      ).then((res) => {
         if (res.status === 200) {
           const result = res.data.data.results;
           const isavailable = result.isPersonDetailsAvailable;
@@ -401,14 +412,14 @@ const PeoplesAffected = () => {
           setPersonAffectedComments(result.personAffectedComments);
           setIncidentsListdata(result);
           if (!id) {
-             setIsLoading(true);
+            setIsLoading(true);
           }
         }
       })
-      .catch(error=>{
-        history.push("/app/pages/error")
-      })
-      
+        .catch(error => {
+          history.push("/app/pages/error")
+        })
+
     } catch (error) {
       history.push("/app/pages/error")
     }
@@ -417,20 +428,20 @@ const PeoplesAffected = () => {
   // Fetch the individual page data in case of the update.
   const fetchPersonListData = async () => {
     try {
-       await api.get(`api/v1/incidents/${id}/people/`)
-      .then((res)=>{
-        const result = res.data.data.results;
-         setPeopleData(result);
-        if (result.length > 0) {
-          let temp = [...form];
-          temp = result;
-           setForm(temp);
-        }
-         setIsLoading(true);
-      })
-      .catch(error=>{
-        history.push("/app/pages/error")
-      })
+      await api.get(`api/v1/incidents/${id}/people/`)
+        .then((res) => {
+          const result = res.data.data.results;
+          setPeopleData(result);
+          if (result.length > 0) {
+            let temp = [...form];
+            temp = result;
+            setForm(temp);
+          }
+          setIsLoading(true);
+        })
+        .catch(error => {
+          history.push("/app/pages/error")
+        })
     } catch (error) {
       history.push("/app/pages/error")
     }
@@ -510,13 +521,13 @@ const PeoplesAffected = () => {
                             >
                               {personTypeValue.length !== 0
                                 ? personTypeValue.map((selectValues, key) => (
-                                    <MenuItem
-                                      key={key}
-                                      value={selectValues.inputValue}
-                                    >
-                                      {selectValues.inputLabel}
-                                    </MenuItem>
-                                  ))
+                                  <MenuItem
+                                    key={key}
+                                    value={selectValues.inputValue}
+                                  >
+                                    {selectValues.inputLabel}
+                                  </MenuItem>
+                                ))
                                 : null}
                             </Select>
                             {error && error[`personType${[key]}`] && (
@@ -545,13 +556,13 @@ const PeoplesAffected = () => {
                             >
                               {departmentValue.length !== 0
                                 ? departmentValue.map((selectValues, index) => (
-                                    <MenuItem
-                                      key={index}
-                                      value={selectValues.inputValue}
-                                    >
-                                      {selectValues.inputLabel}
-                                    </MenuItem>
-                                  ))
+                                  <MenuItem
+                                    key={index}
+                                    value={selectValues.inputValue}
+                                  >
+                                    {selectValues.inputLabel}
+                                  </MenuItem>
+                                ))
                                 : null}
                             </Select>
                             {error && error[`personDepartment${[key]}`] && (
@@ -627,13 +638,13 @@ const PeoplesAffected = () => {
                             >
                               {medicalCareValue.length !== 0
                                 ? medicalCareValue.map((value, index) => (
-                                    <FormControlLabel
-                                      key={index}
-                                      value={value.inputValue}
-                                      control={<Radio />}
-                                      label={value.inputLabel}
-                                    />
-                                  ))
+                                  <FormControlLabel
+                                    key={index}
+                                    value={value.inputValue}
+                                    control={<Radio />}
+                                    label={value.inputLabel}
+                                  />
+                                ))
                                 : null}
                             </RadioGroup>
                             {error && error[`personMedicalCare${[key]}`] && (
@@ -718,7 +729,7 @@ const PeoplesAffected = () => {
                     multiline
                     rows="3"
                     variant="outlined"
-                    label="Details of people affected"
+                    label={COMMENT}
                     className={classes.fullWidth}
                     onChange={(e) => setPersonAffectedComments(e.target.value)}
                     value={personAffectedComments || ""}
@@ -726,13 +737,13 @@ const PeoplesAffected = () => {
                 </Grid>
               )}
 
-             {message&& <AlertMessage
+              {message && <AlertMessage
                 message={message}
                 type={messageType}
                 open={open}
                 setOpen={setOpen}
               />
-             }
+              }
               <Grid item xs={12} md={6}>
                 <Button
                   onClick={() =>
@@ -753,7 +764,7 @@ const PeoplesAffected = () => {
                   className={classes.button}
                   disabled={isNext}
                 >
-                  Next {isNext && <CircularProgress size={20}/>}
+                  Next {isNext && <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -769,7 +780,7 @@ const PeoplesAffected = () => {
           )}
         </Row>
       ) : (
-        <div>Loading...</div>
+        <Loader />
       )}
     </PapperBlock>
   );

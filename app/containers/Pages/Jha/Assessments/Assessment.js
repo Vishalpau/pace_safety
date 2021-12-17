@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Button, Grid, TextField, Typography
 } from '@material-ui/core';
@@ -11,7 +12,6 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
-import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -19,15 +19,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
 import { PapperBlock } from 'dan-components';
-import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-grid-system';
 import { useHistory } from 'react-router';
+
 import api from '../../../../utils/axios';
-import { handelActionData, handelCommonObject } from '../../../../utils/CheckerValue';
+import { handelActionDataAssessment, handelCommonObject } from '../../../../utils/CheckerValue';
 import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from '../../../Forms/ActionTracker';
 import FormSideBar from '../../../Forms/FormSideBar';
-import { handelJhaId, PickListData } from '../Utils/checkValue';
+import { handelJhaId } from '../Utils/checkValue';
 import { JHA_FORM } from '../Utils/constants';
 
 
@@ -68,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     lineHeight: '30px',
     border: 'none',
-    marginTop: '12px',
     '&:hover': {
       backgroundColor: '#ff8533',
       border: 'none',
@@ -167,6 +166,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '10px',
     color: '#06425c',
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Assessment = () => {
@@ -201,11 +213,11 @@ const Assessment = () => {
     const project = JSON.parse(localStorage.getItem('projectName'));
     const { projectId } = project.projectName;
     const baseUrl = localStorage.getItem('apiBaseUrl');
-    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`);
-    const apiDataPerformance = specificPerformance.data.data.results[0].checklistGroups;
+    const specificPerformance = await api.get(`${baseUrl}/api/v1/core/checklists/jha-human-performance-aspects/${projectId}/`)
+    const apiDataPerformance = specificPerformance.data.data.results.length > 0 ? specificPerformance.data.data.results[0].checklistGroups : [];
 
     const documentCondition = await api.get(`${baseUrl}/api/v1/core/checklists/jha-document-conditions/${projectId}/`);
-    const apiCondition = documentCondition.data.data.results[0].checklistValues;
+    const apiCondition = documentCondition.data.data.results.length > 0 ? documentCondition.data.data.results[0].checklistValues : [];
 
     apiDataPerformance.map((value) => {
       const checkList = [];
@@ -234,11 +246,12 @@ const Assessment = () => {
   const handelActionTracker = async () => {
     const jhaId = localStorage.getItem('fkJHAId');
     const apiData = JSON.parse(localStorage.getItem('commonObject')).jha.assessmentIds;
-    const allAction = await handelActionData(jhaId, apiData);
+    const allAction = await handelActionDataAssessment(jhaId, apiData, "all", "jsa:hazard");
     setActionData(allAction);
   };
+
   const handelActionShow = (id) => (
-    <Grid>
+    <>
       {actionData.map((val) => (
         <>
           {val.id === id
@@ -261,7 +274,7 @@ const Assessment = () => {
             : null}
         </>
       ))}
-    </Grid>
+    </>
   );
 
   const handelJobDetails = async () => {
@@ -363,6 +376,7 @@ const Assessment = () => {
       projectStructId: JSON.parse(localStorage.getItem('commonObject')).jha.projectStruct
     });
   };
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
   const classes = useStyles();
 
@@ -371,9 +385,7 @@ const Assessment = () => {
     await handelCheckList();
     await handelJobDetails();
     await handelActionLink();
-    PickListData(78).then((results) => {
-      setRisk(results);
-    });
+    setRisk(pickListValues["78"])
     await handelActionTracker();
     await setLoading(false);
   };
@@ -456,23 +468,24 @@ const Assessment = () => {
                               />
                             </Grid>
 
-                            <Grid item md={2} sm={2} xs={2}>
-                              <Grid item xs={12} className={classes.createHazardbox}>
-                                <ActionTracker
-                                  actionContext="jha:hazard"
-                                  enitityReferenceId={`${localStorage.getItem('fkJHAId')}:${value.id}`}
-                                  setUpdatePage={setUpdatePage}
-                                  fkCompanyId={projectData.companyId}
-                                  fkProjectId={projectData.projectId}
-                                  fkProjectStructureIds={projectData.projectStructId}
-                                  createdBy={projectData.createdBy}
-                                  updatePage={updatePage}
-                                  handelShowData={handelActionTracker}
-                                />
-                              </Grid>
-                              <Grid item xs={12} className={classes.createHazardbox}>
+                            <Grid item md={2} sm={5} xs={5}>
+                              <ActionTracker
+                                actionContext="jsa:hazard"
+                                enitityReferenceId={`${localStorage.getItem('fkJHAId')}:${value.id}`}
+                                setUpdatePage={setUpdatePage}
+                                fkCompanyId={projectData.companyId}
+                                fkProjectId={projectData.projectId}
+                                fkProjectStructureIds={projectData.projectStructId}
+                                createdBy={projectData.createdBy}
+                                updatePage={updatePage}
+                                handelShowData={handelActionTracker}
+                              />
+                            </Grid>
+
+                            <Grid container item sm={12}>
+                              <>
                                 {handelActionShow(value.id)}
-                              </Grid>
+                              </>
                             </Grid>
 
                           </Grid>
@@ -575,24 +588,24 @@ const Assessment = () => {
                   >
                     Previous
                   </Button>
-                  {submitLoader === false
-                    ? (
-                      <Button
-                        variant="outlined"
-                        onClick={(e) => handelNext()}
-                        className={classes.custmSubmitBtn}
-                        style={{ marginLeft: '10px' }}
-                      >
+                  <div className={classes.loadingWrapper}>
 
-                        Next
-                      </Button>
-                    )
-                    : (
-                      <IconButton className={classes.loader} disabled>
-                        <CircularProgress color="secondary" />
-                      </IconButton>
-                    )
-                  }
+                    <Button
+                      variant="outlined"
+                      onClick={(e) => handelNext()}
+                      className={classes.custmSubmitBtn}
+                      style={{ marginLeft: '10px' }}
+                      disabled={submitLoader}
+                    >
+
+                      Next
+                    </Button>
+                    {submitLoader && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}</div>
                 </Grid>
               </Grid>
             </Col>

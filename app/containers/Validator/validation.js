@@ -1,7 +1,7 @@
 import { ErrorOutline } from "@material-ui/icons";
 import validator from "validator";
 
-function validate(data,projectStructure) {
+function validate(data, projectStructure) {
   let isValid = true;
   const error = {};
   const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
@@ -11,7 +11,7 @@ function validate(data,projectStructure) {
       isValid = false;
     }
   }
-  
+
 
   if (validator.isEmpty(data.incidentType)) {
     error.incidentType = "Please select incident type";
@@ -30,15 +30,15 @@ function validate(data,projectStructure) {
     error.incidentOccuredOn = "Please select date and time";
     isValid = false;
   }
- 
- if (data.incidentLocation.length > 45) {
-  error.incidentLocation = "Please enter less than 45 charecter";
-  isValid = false;
-  }
-  if (validator.isEmpty(data.contractor)) {
-    error.contractor = "Please select contractor name";
+
+  if (data.incidentLocation.length > 45) {
+    error.incidentLocation = "Please enter less than 45 charecter";
     isValid = false;
-  } 
+  }
+  // if (validator.isEmpty(data.contractor)) {
+  //   error.contractor = "Please select contractor name";
+  //   isValid = false;
+  // } 
 
 
 
@@ -48,7 +48,7 @@ function validate(data,projectStructure) {
   }
 
   if (validator.isEmpty(data.isPropertyDamaged)) {
-    error.isPropertyDamaged = "Please choose property affected";
+    error.isPropertyDamaged = "Please choose property/material affected";
     isValid = false;
   }
 

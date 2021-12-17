@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { FormHelperText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -11,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { PapperBlock } from "dan-components";
-import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-grid-system";
 import { useHistory, useParams } from "react-router-dom";
 import Type from "../../../styles/components/Fonts.scss";
@@ -19,6 +19,7 @@ import api from "../../../utils/axios";
 import { EVIDENCE_FORM } from "../../../utils/constants";
 import ActivityDetailValidate from "../../Validator/ActivityDetailValidation";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -84,7 +85,7 @@ const ActivityDetails = () => {
     },
     {
       questionCode: "AD-04",
-      question: "Was JHA executed for the task?",
+      question: "Was JSA executed for the task?",
       answer: "",
       activityGroup: "Evidence",
       status: "Active",
@@ -130,20 +131,20 @@ const ActivityDetails = () => {
 
   const fetchActivityList = async () => {
     await api.get(`/api/v1/incidents/${id}/activities/`)
-    .then((res)=>{
-      const result = res.data.data.results;
-      if (result.length) {
-        setActvityList(result);
-      }
-      setIsLoading(true);
-    })
-    .catch(()=>{history.push("/app/pages/error")})
+      .then((res) => {
+        const result = res.data.data.results;
+        if (result.length) {
+          setActvityList(result);
+        }
+        setIsLoading(true);
+      })
+      .catch(() => { history.push("/app/pages/error") })
   };
 
   const fetchActivityData = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`
-    ).then((res)=>{
+    ).then((res) => {
       const result = res.data.data.results;
       if (result.length) {
         let temp = [...activtyList];
@@ -153,56 +154,56 @@ const ActivityDetails = () => {
       if (!id) {
         setIsLoading(true);
       }
-    }).catch(()=>{history.push("/app/pages/error")})
-    
+    }).catch(() => { history.push("/app/pages/error") })
+
   };
 
   const handleNext = async () => {
     await setIsNext(false)
     if (id && activtyList.length > 0 && activtyList[0].id) {
-      try{
-      const res = await api.put(
-        `api/v1/incidents/${id}/activities/`,
-        activtyList
-      );
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${id}/activities/`,
+          activtyList
         );
-      }
-    }catch(err){setIsNext(true)}
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/personal-and-ppedetails/${id}`
+          );
+        }
+      } catch (err) { setIsNext(true) }
     } else if (
       localStorage.getItem("fkincidentId") &&
       activtyList.length > 6 &&
       activtyList[0].id
     ) {
-      try{
-      const res = await api.put(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        activtyList
-      );
-      if (res.status === 200) {
-        history.push(
-          `/app/incident-management/registration/evidence/personal-and-ppedetails/`
+      try {
+        const res = await api.put(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          activtyList
         );
-      }
-    }catch(err){setIsNext(true)}
+        if (res.status === 200) {
+          history.push(
+            `/app/incident-management/registration/evidence/personal-and-ppedetails/`
+          );
+        }
+      } catch (err) { setIsNext(true) }
     } else {
-      try{
-      const { error, isValid } = ActivityDetailValidate(activtyList);
-      await setError(error);
-      if (!isValid) {
-        setIsNext(true)
-        return;
-      }
-      const res = await api.post(
-        `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
-        activtyList
-      );
-      history.push(
-        "/app/incident-management/registration/evidence/personal-and-ppedetails/"
-      );
-    }catch(err){setIsNext(true)}
+      try {
+        const { error, isValid } = ActivityDetailValidate(activtyList);
+        await setError(error);
+        if (!isValid) {
+          setIsNext(true)
+          return;
+        }
+        const res = await api.post(
+          `api/v1/incidents/${localStorage.getItem("fkincidentId")}/activities/`,
+          activtyList
+        );
+        history.push(
+          "/app/incident-management/registration/evidence/personal-and-ppedetails/"
+        );
+      } catch (err) { setIsNext(true) }
     }
   };
 
@@ -221,11 +222,11 @@ const ActivityDetails = () => {
   const fetchIncidentDetails = async () => {
     await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`
-    ).then((res)=>{
+    ).then((res) => {
       const result = res.data.data.results;
       setIncidentDetail(result);
-    }).catch(err=>history.push("/app/pages/error"))
-    
+    }).catch(err => history.push("/app/pages/error"))
+
   };
 
   useEffect(() => {
@@ -276,7 +277,7 @@ const ActivityDetails = () => {
                             onChange={(e) => {
                               handleRadioData(e, value.questionCode);
                             }}
-                            // defaultValue={value.answer}
+                          // defaultValue={value.answer}
                           >
                             {radioDecide.map((value) => (
                               <FormControlLabel
@@ -286,7 +287,7 @@ const ActivityDetails = () => {
                               />
                             ))}
                           </RadioGroup>
-                          ​
+
                           {value.error ? (
                             <FormHelperText>{value.error}</FormHelperText>
                           ) : null}
@@ -307,7 +308,7 @@ const ActivityDetails = () => {
                       )}`
                     );
                   }}
-                  // href="/app/incident-management/registration/evidence/evidence/"
+                // href="/app/incident-management/registration/evidence/evidence/"
                 >
                   Previous
                 </Button>
@@ -317,9 +318,9 @@ const ActivityDetails = () => {
                   className={classes.button}
                   onClick={() => handleNext()}
                   disabled={!isNext}
-                  // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
+                // href={Object.keys(error).length == 0 ? "http://localhost:3000/app/incident-management/registration/evidence/personal-and-ppedetails/" : "#"}
                 >
-                  Next{isNext?null:<CircularProgress size={20}/>}
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -335,7 +336,7 @@ const ActivityDetails = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

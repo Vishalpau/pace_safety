@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import { useHistory, useParams } from "react-router";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import EditIcon from "@material-ui/icons/Edit";
-
+import Paper from "@material-ui/core/Paper";
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
 // Table
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -20,32 +18,23 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-
+import Typography from "@material-ui/core/Typography";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 // Icons
 import Close from "@material-ui/icons/Close";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
-import ImageIcon from "@material-ui/icons/Image";
-import VideoCallIcon from "@material-ui/icons/VideoCall";
-import TextFieldsIcon from "@material-ui/icons/TextFields";
-import DescriptionIcon from "@material-ui/icons/Description";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Slide from "@material-ui/core/Slide";
-
-// Styles
-import Styles from "dan-styles/Summary.scss";
-import Type from "dan-styles/Typography.scss";
-import Fonts from "dan-styles/Fonts.scss";
-import moment from "moment";
+import EditIcon from "@material-ui/icons/Edit";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import api from "../../utils/axios";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import Fonts from "dan-styles/Fonts.scss";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router";
 import "../../styles/custom.css";
-
+import api from "../../utils/axios";
 import Attachment from "../Attachment/Attachment";
+import Loader from "../Forms/Loader";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -130,7 +119,7 @@ const EvidenceSummary = () => {
         item.evidenceCategory !== "Initial Evidence"
     );
     await setEvidence(newData);
-    await setIsLoding(true);
+
   };
 
   const fetchActivityData = async () => {
@@ -158,19 +147,24 @@ const EvidenceSummary = () => {
     }
   };
 
-  useEffect(() => {
+  const handelCallBack = async () => {
     if (id) {
-      fetchEvidenceData();
-      fetchActivityData();
+      await setIsLoding(true);
+      await fetchEvidenceData();
+      await fetchActivityData();
+      await setIsLoding(false);
     }
-    setIsLoding(true);
+  }
+
+  useEffect(() => {
+    handelCallBack()
   }, []);
 
   const classes = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
   return (
     <>
-      {isLoading ? (
+      {isLoading == false ? (
         <Grid container spacing={3}>
           {!isDesktop && (
             <Grid item xs={12}>
@@ -226,31 +220,31 @@ const EvidenceSummary = () => {
                     <TableBody>
                       {evidence.length !== 0
                         ? evidence.map((value, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{value.evidenceNumber}</TableCell>
-                              <TableCell>{value.evidenceCheck}</TableCell>
-                              <TableCell>{value.evidenceCategory}</TableCell>
-                              <TableCell>
-                                {value.evidenceRemark
-                                  ? value.evidenceRemark
-                                  : "-"}
-                              </TableCell>
+                          <TableRow key={index}>
+                            <TableCell>{value.evidenceNumber}</TableCell>
+                            <TableCell>{value.evidenceCheck}</TableCell>
+                            <TableCell>{value.evidenceCategory}</TableCell>
+                            <TableCell>
+                              {value.evidenceRemark
+                                ? value.evidenceRemark
+                                : "-"}
+                            </TableCell>
 
-                              <TableCell>
-                                {value.evidenceCheck !== "Yes" ? (
-                                  "-"
-                                ) : value.evidenceDocument ? (
-                                  
-                                    <Attachment
-                                      value={value.evidenceDocument}
-                                    />
-                                
-                                ) : (
-                                  "-"
-                                )}
-                              </TableCell>
-                            </TableRow>
-                          ))
+                            <TableCell>
+                              {value.evidenceCheck !== "Yes" ? (
+                                "-"
+                              ) : value.evidenceDocument ? (
+
+                                <Attachment
+                                  value={value.evidenceDocument}
+                                />
+
+                              ) : (
+                                "-"
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        ))
                         : null}
                     </TableBody>
                   </Table>
@@ -270,9 +264,55 @@ const EvidenceSummary = () => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.slice(0, 21).map((ad, key) => (
+                    ? activity.slice(0, 7).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(7, 8).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                {activity[7] !== undefined && activity[7]["answer"] === "Yes" ?
+                  <Grid container spacing={3}>
+                    {activity.length !== 0
+                      ? activity.slice(8, 11).map((ad, key) => (
                         <Grid item xs={12} md={6} key={key}>
                           <Typography
                             variant="h6"
@@ -289,12 +329,59 @@ const EvidenceSummary = () => {
                           </Typography>
                         </Grid>
                       ))
-                    : null}
-                </Grid>
+                      : null}
+                  </Grid>
+                  : null}
+
                 <Grid container spacing={3}>
                   {activity.length !== 0
-                    ? activity.slice(21, 25).map((ad, key) => (
-                        <Grid item xs={12} key={key}>
+                    ? activity.slice(11, 16).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(16, 17).map((ad, key) => (
+                      <Grid item xs={12} md={6} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer}
+                        </Typography>
+                      </Grid>
+                    ))
+                    : null}
+                </Grid>
+
+                {activity[16] !== undefined && activity[16]["answer"] === "Yes" ?
+                  <Grid container spacing={3}>
+                    {activity.length !== 0
+                      ? activity.slice(17, 19).map((ad, key) => (
+                        <Grid item xs={12} md={6} key={key}>
                           <Typography
                             variant="h6"
                             gutterBottom
@@ -306,10 +393,33 @@ const EvidenceSummary = () => {
                             variant="body"
                             className={Fonts.labelValue}
                           >
-                            {ad.answer ? ad.answer : "-"}
+                            {ad.answer}
                           </Typography>
                         </Grid>
                       ))
+                      : null}
+                  </Grid>
+                  : null}
+
+                <Grid container spacing={3}>
+                  {activity.length !== 0
+                    ? activity.slice(19, 25).map((ad, key) => (
+                      <Grid item xs={12} key={key}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          className={Fonts.labelName}
+                        >
+                          {ad.question}
+                        </Typography>
+                        <Typography
+                          variant="body"
+                          className={Fonts.labelValue}
+                        >
+                          {ad.answer ? ad.answer : "-"}
+                        </Typography>
+                      </Grid>
+                    ))
                     : "-"}
                 </Grid>
               </AccordionDetails>
@@ -317,7 +427,7 @@ const EvidenceSummary = () => {
           </Grid>
         </Grid>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
 
       <Dialog

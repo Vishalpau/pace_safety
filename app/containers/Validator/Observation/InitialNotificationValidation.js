@@ -18,7 +18,7 @@ function InitialNotificationValidator(data, projectStructure) {
 
 
   if (validator.isEmpty(data.observationDetails.toString())) {
-    error.observationDetails = "Enter observation details";
+    error.observationDetails = "Enter iCare details";
     isValid = false;
   }
 
@@ -28,7 +28,7 @@ function InitialNotificationValidator(data, projectStructure) {
   }
 
   if (validator.isEmpty(data.observationType.toString())) {
-    error.observationType = "Choose any one observation type";
+    error.observationType = "Choose any one iCare type";
     isValid = false;
   }
 

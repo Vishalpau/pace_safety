@@ -1,3 +1,4 @@
+import React, { useEffect, useState, lazy } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -13,16 +14,13 @@ import ReorderIcon from '@material-ui/icons/Reorder';
 import classNames from "classnames";
 import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
-import ObservationSearchSection from './ObservationSearchSection';
-import ObservationsKanban from './ObservationsKanban';
-import ObservationsBarCharts from './ObservationsBarCharts';
-import ObservationsList from './ObservationsList';
-// import DashboardIcon from '@material-ui/icons/Dashboard';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
+
+const ObservationSearchSection = lazy(() => import('./ObservationSearchSection'));
+const ObservationsBarCharts = lazy(() => import('./ObservationsBarCharts'));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
   navTabBack: {
     backgroundColor: 'transparent',
     color: 'black',
-    marginTop: '3px',
     '& .MuiTab-root': {
       minWidth: '80px',
       minHeight: '40px',
@@ -71,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
       display: 'inline',
       textAlign: 'left',
       fontWeight: '600',
+      '&:hover': {
+        color: '#f47607 !important',
+      },
     },
     '& .MuiTab-textColorInherit.Mui-selected': {
       color: '#f47607',
@@ -81,9 +81,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   pLtenPRten: { padding: '0px 10px 0px 10px', },
-  pLTen: {
-    marginRight: '5px',
-  },
+  // pLTen: {
+  //   marginRight: '5px',
+  // },
   mTtop20: {
     marginTop: '20px',
   },
@@ -139,6 +139,11 @@ const useStyles = makeStyles((theme) => ({
   },
   activeTab: {
     color: 'orange',
+  },
+  listViewTab: {
+    ['@media (max-width:480px)']: {
+      padding: '12px 12px 0px 12px !important',
+    },
   },
   buttonsNew: {
     borderRadius: '5px',
@@ -206,28 +211,28 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Observations() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const history = useHistory();
-  const [searchText, setSearchText] = React.useState('')
-
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  console.log(value)
-
   const handleBulkUploadfilePush = async () => {
     history.push(
-      '/app/observation-bulkuploadfile'
+      '/app/icare-bulkuploadfile'
     );
   }
+
   const handleInitialNotificationPush = async () => {
     localStorage.removeItem("action");
     localStorage.removeItem("value")
-
-    history.push("/app/observation-initial-notification");
+    history.push("/app/icare-initial-notification");
   };
+
+  useEffect(() => {
+    allPickListDataValue()
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -235,41 +240,39 @@ export default function Observations() {
         <Grid container spacing={3}>
           <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
             <img src={obsIcon} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Observations</Typography>
+            <Typography variant="h5"> iCare </Typography>
           </Grid>
           <Grid item sm={5} xs={12}>
 
 
-            {/* <Button
-                variant="contained"
-                // color="primary"
-                size="small"
-                className={classNames(classes.buttonsNew, classes.floatR)}
-                disableElevation
-                startIcon={<CloudUploadIcon />}
-                //onClick={() => handleBulkUploadPush()}
-                style={{marginLeft: '10px'}}
-                onClick={() => handleBulkUploadfilePush()}
-              >
-                Upload
-              </Button> */}
+            {false && <Button
+              variant="contained"
+              size="small"
+              className={classNames(classes.buttonsNew, classes.floatR)}
+              disableElevation
+              startIcon={<CloudUploadIcon />}
+              style={{ marginLeft: '10px' }}
+              onClick={() => handleBulkUploadfilePush()}
+            >
+              Upload
+            </Button>
+            }
             <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
               <AddIcon className={classes.floatR} /> Add new
             </Button>
+
 
           </Grid>
 
         </Grid>
       </Grid>
       <Grid container spacing={3}>
-        <Grid item sm={8} xs={12}>
+        <Grid item sm={8} xs={12} className={classes.listViewTab}>
           <AppBar position="static" className={classes.navTabBack}>
             <div className={classes.floatL}>
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0, classes.active)} />} />
+                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
                 <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} /> */}
-          {/* <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
               </Tabs>
             </div>
           </AppBar>
@@ -277,24 +280,6 @@ export default function Observations() {
         <Grid item sm={4} xs={12}>
           <Grid className={classes.Lheight}>
             <div className={classes.floatR}>
-
-              <span className={classes.pLTen}>
-                {/* <Button size="small" className={classes.buttonsNTwo} variant="contained">
-					  <PermIdentityIcon /> GIS
-					</Button> */}
-              </span>
-
-              {/* <span className={classes.pLTen}>
-					<Button size="small" className={classes.buttonsNTwo} variant="contained">
-					  <DateRangeOutlinedIcon />iPlanner
-					</Button>
-				</span>
-				
-			  <span className={classes.pLTen}>
-				<Button size="small" className={classes.buttonsNTwo} variant="contained">
-				  <GamesOutlinedIcon /> 3D
-				</Button>
-				</span> */}
             </div>
           </Grid>
         </Grid>
@@ -303,11 +288,8 @@ export default function Observations() {
         <ObservationSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-      <ObservationSearchSection value={value} />
+        <ObservationSearchSection value={value} />
       </TabPanel>
-      {/* <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <ObservationsKanban />
-      </TabPanel> */}
       <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsBarCharts />
       </TabPanel>

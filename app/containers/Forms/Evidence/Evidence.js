@@ -29,6 +29,7 @@ import { EVIDENCE_FORM } from "../../../utils/constants";
 import Attachment from "../../Attachment/Attachment";
 import EvidenceValidate from "../../Validator/EvidenceValidation";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -137,7 +138,7 @@ const Evidence = () => {
       error: "",
     },
     {
-      evidenceCategory: "Scope of work, JHA/ FLHA",
+      evidenceCategory: "Scope of work, JSA/ FLHA",
       evidenceCheck: "",
       evidenceRemark: "",
       evidenceDocument: null,
@@ -220,49 +221,49 @@ const Evidence = () => {
   const fetchEvidenceList = async () => {
     const lastItem = id || localStorage.getItem("fkincidentId");
     const res = await api.get(`/api/v1/incidents/${lastItem}/evidences/`)
-    .then((res)=>{
-      const result = res.data.data.results;
-      const newData = result.filter(
-        (item) =>
-          item.evidenceCategory !== "Lessons Learned" &&
-          item.evidenceCategory !== "Initial Evidence"
-      );
-      const tempData = [];
-      if (newData.length > 0) {
-        for (let i = 0; i < newData.length; i++) {
-          if (newData[i].evidenceCheck !== "Yes") {
-            tempData.push({
-              evidenceCategory: newData[i].evidenceCategory,
-              evidenceCheck: newData[i].evidenceCheck,
-              evidenceRemark: newData[i].evidenceRemark,
-              evidenceDocument: null,
-              status: "Active",
-              createdBy: 0,
-              updatedBy: 0,
-              fkIncidentId: id || localStorage.getItem("fkincidentId"),
-              pk: newData[i].id,
-            });
-          } else {
-            tempData.push({
-              evidenceCategory: newData[i].evidenceCategory,
-              evidenceCheck: newData[i].evidenceCheck,
-              evidenceRemark: newData[i].evidenceRemark,
-              evidenceDocument: newData[i].evidenceDocument,
-              status: "Active",
-              createdBy: 0,
-              updatedBy: 0,
-              fkIncidentId: id || localStorage.getItem("fkincidentId"),
-              pk: newData[i].id,
-            });
+      .then((res) => {
+        const result = res.data.data.results;
+        const newData = result.filter(
+          (item) =>
+            item.evidenceCategory !== "Lessons Learned" &&
+            item.evidenceCategory !== "Initial Evidence"
+        );
+        const tempData = [];
+        if (newData.length > 0) {
+          for (let i = 0; i < newData.length; i++) {
+            if (newData[i].evidenceCheck !== "Yes") {
+              tempData.push({
+                evidenceCategory: newData[i].evidenceCategory,
+                evidenceCheck: newData[i].evidenceCheck,
+                evidenceRemark: newData[i].evidenceRemark,
+                evidenceDocument: null,
+                status: "Active",
+                createdBy: 0,
+                updatedBy: 0,
+                fkIncidentId: id || localStorage.getItem("fkincidentId"),
+                pk: newData[i].id,
+              });
+            } else {
+              tempData.push({
+                evidenceCategory: newData[i].evidenceCategory,
+                evidenceCheck: newData[i].evidenceCheck,
+                evidenceRemark: newData[i].evidenceRemark,
+                evidenceDocument: newData[i].evidenceDocument,
+                status: "Active",
+                createdBy: 0,
+                updatedBy: 0,
+                fkIncidentId: id || localStorage.getItem("fkincidentId"),
+                pk: newData[i].id,
+              });
+            }
           }
+
+          setForm(tempData);
+          setEvideceData(tempData);
         }
-  
-         setForm(tempData);
-         setEvideceData(tempData);
-      }
-       setIsLoading(true);
-    })
-    .catch(()=>{})
+        setIsLoading(true);
+      })
+      .catch(() => { })
 
 
   };
@@ -270,20 +271,20 @@ const Evidence = () => {
   const fetchIncidentDetails = async () => {
     const res = await api.get(
       `/api/v1/incidents/${localStorage.getItem("fkincidentId") || id}/`
-    ).then((res)=>{
+    ).then((res) => {
       const result = res.data.data.results;
       setIncidentDetail(result);
     })
-    .catch(()=>history.push("/app/pages/error"))
-  
+      .catch(() => history.push("/app/pages/error"))
+
   };
 
   // On the next button click function call.
 
   const handleNext = async () => {
     const { error, isValid } = EvidenceValidate(form);
-    if(evideceData.length > 0){
-      
+    if (evideceData.length > 0) {
+
     }
     await setError(error);
 
@@ -352,8 +353,8 @@ const Evidence = () => {
           );
         }
       } else {
-       
-        
+
+
 
         data.append("createdAt", form[i].createdAt);
         data.append("createdBy", form[i].createdBy);
@@ -380,11 +381,11 @@ const Evidence = () => {
 
   const handleSubmit = async () => {
     const temp = incidentDetail;
-    if(incidentDetail.incidentStage == "Investigation"){
+    if (incidentDetail.incidentStage == "Investigation") {
       try {
         temp.updatedAt = new Date().toISOString();
-        temp.incidentStage= "Evidence"
-        temp.incidentStatus= "pending"
+        temp.incidentStage = "Evidence"
+        temp.incidentStatus = "pending"
         const res = await api.put(
           `/api/v1/incidents/${localStorage.getItem("fkincidentId")}/`,
           temp
@@ -394,11 +395,12 @@ const Evidence = () => {
       }
     }
     const { error, isValid } = EvidenceValidate(form);
+    await setError(error);
     if (isValid === true) {
       setIsNext(false);
       let status = 0;
       if (evideceData.length > 0) {
-        
+
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -439,7 +441,7 @@ const Evidence = () => {
           }
         }
       } else {
-        
+
         for (let i = 0; i < form.length; i++) {
           try {
             const data = new FormData();
@@ -478,7 +480,7 @@ const Evidence = () => {
           )}`
         );
       }
-    }else{setIsNext(true)}
+    } else { setIsNext(true) }
   };
 
   const handleClose = (event, reason) => {
@@ -688,8 +690,8 @@ const Evidence = () => {
                               />
 
                               {value.evidenceDocument ===
-                              null ? null : typeof value.evidenceDocument ===
-                                "string" ? (
+                                null ? null : typeof value.evidenceDocument ===
+                                  "string" ? (
                                 <Attachment value={value.evidenceDocument} />
                               ) : null}
                             </TableCell>
@@ -728,7 +730,7 @@ const Evidence = () => {
                   onClick={() => handleSubmit()}
                   disabled={!isNext}
                 >
-                  Next{isNext?null:<CircularProgress size={20}/>}
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -744,7 +746,7 @@ const Evidence = () => {
           )}
         </Row>
       ) : (
-        <h1>Loading...</h1>
+        <Loader />
       )}
     </PapperBlock>
   );

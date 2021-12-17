@@ -322,7 +322,7 @@ const ProjectStructure = (props) => {
         <FormControl
           key={index}
           variant="outlined"
-          error={props.error && props.error[`projectStructure${[item.index]}`]}
+          error={props.selectDepthAndId[item.index] != undefined ? false: props.error && props.error[`projectStructure${[item.index]}`]}
           fullWidth={true}
           className="formControl"
           required
@@ -361,8 +361,8 @@ const ProjectStructure = (props) => {
                 No Data
               </MenuItem>}
           </Select>
-          <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
-
+          {props.selectDepthAndId[item.index] != undefined ? null :<p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+              }
           {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
             <FormHelperText>
               {props.error[`projectStructure${[item.index]}`]}
@@ -377,7 +377,7 @@ const ProjectStructure = (props) => {
             <FormControl
               key={index}
               variant="outlined"
-              error={props.error && props.error[`projectStructure${[item.index]}`]}
+              error={props.selectDepthAndId[item.index] != undefined ? false: props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className="formControl"
               required
@@ -416,8 +416,9 @@ const ProjectStructure = (props) => {
                     No Data
                   </MenuItem>}
               </Select>
-              <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
 
+ {props.selectDepthAndId[item.index] != undefined ? null :<p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+              }
               {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
                 <FormHelperText>
                   {props.error[`projectStructure${[item.index]}`]}
@@ -431,7 +432,7 @@ const ProjectStructure = (props) => {
             <FormControl
               key={index}
               variant="outlined"
-              error={props.error && props.error[`projectStructure${[item.index]}`]}
+              error={props.selectDepthAndId[item.index] != undefined ? false: props.error && props.error[`projectStructure${[item.index]}`]}
               fullWidth={true}
               className="formControl"
               required
@@ -470,7 +471,9 @@ const ProjectStructure = (props) => {
                     No Data
                   </MenuItem>}
               </Select>
-              <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+              {props.selectDepthAndId[item.index] != undefined ? null :<p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`] }</p>
+              }
+              
 
               {/* {props.error && props.error[`projectStructure${[item.index]}`] && (
                 <FormHelperText>

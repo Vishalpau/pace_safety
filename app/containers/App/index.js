@@ -1,4 +1,4 @@
-import React, { lazy,Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import NotFound from "containers/Pages/Standalone/NotFoundDedicated";
 import Auth from "./Auth";
@@ -69,7 +69,7 @@ function App() {
   }, [status])
   const getToken = async () => {
     const url = window.location
-    
+
 
     let comId = 0
     let proId = 0
@@ -77,6 +77,7 @@ function App() {
     let tarPage = ''
     let tarId = 0
     let jsonCode = ""
+    let tarProjectStruct;
     if (window.location.search !== "") {
       // let state = localStorage.getItem('direct_landing')
       var search = location.search.substring(1);
@@ -85,16 +86,15 @@ function App() {
       if (state) {
         jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
         let newArr = (0, eval)('(' + jsonCode + ')')
-        
         state = newArr;
-        
         comId = state.companyId;
         proId = state.projectId;
         redback = state.redirect_back;
         tarPage = state.targetPage.trim();
         tarId = state.targetId;
-        if(comId!==""){
-        localStorage.setItem("direct_loading",JSON.stringify({comId:comId,proId:proId,tarPage:tarPage}))
+        tarProjectStruct = state.projectStructure
+        if (comId !== "") {
+          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
         }
       }
     }
@@ -104,8 +104,9 @@ function App() {
     // const targetId = searchParams.get("targetId");
     const companyId = searchParams.get("companyId") || comId;
     const projectId = searchParams.get('projectId') || proId
-    
+
     let data = {}
+    console.log(code)
     if (code) {
       if (window.location.hostname === 'localhost') {
 
@@ -141,11 +142,7 @@ function App() {
         .then(function (response) {
           if (response.status === 200) {
             localStorage.setItem("access_token", response.data.access_token);
-            if (!tagetPage) {
-              window.location.href = "/"
-            } else {
-              window.location.href = `/app/${tagetPage}`
-            }
+            window.location.href = "/"
           }
         })
         .catch(function (error) {
@@ -168,26 +165,26 @@ function App() {
 
   }, []);
 
-    return (<Suspense fallback={<Loading/>}>
-      <ThemeWrapper>
-        <Online>
-          {localStorage.getItem("access_token") !== null ? (
-            <Switch>
-              <Route path="/app" exact component={LandingCorporate} />
-              <Route path="/landing-creative" exact component={LandingCreative} />
-              <Route path="/" component={Application} />
-              
-              <Route path="/blog" component={ArticleNews} />
-              <Route component={Auth} />
-              <Route component={NotFound} />
-            </Switch>
-          ) : <Loading/>}
-        </Online>
-        <Offline>Turn on internet</Offline> 
-      </ThemeWrapper>
-      </Suspense>
-    ); 
-  
+  return (<Suspense fallback={<Loading />}>
+    <ThemeWrapper>
+      {/* <Online> */}
+      {localStorage.getItem("access_token") !== null ? (
+        <Switch>
+          <Route path="/app" exact component={LandingCorporate} />
+          <Route path="/landing-creative" exact component={LandingCreative} />
+          <Route path="/" component={Application} />
+
+          <Route path="/blog" component={ArticleNews} />
+          <Route component={Auth} />
+          <Route component={NotFound} />
+        </Switch>
+      ) : <Loading />}
+      {/* </Online>
+        <Offline>Turn on internet</Offline>  */}
+    </ThemeWrapper>
+  </Suspense>
+  );
+
 
 }
 

@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import moment from "moment";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import classNames from "classnames";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import Modal from "@material-ui/core/Modal";
-import PhotoSizeSelectActualIcon from "@material-ui/icons/PhotoSizeSelectActual";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
 import Slide from "@material-ui/core/Slide";
-import Close from "@material-ui/icons/Close";
-import AddIcon from "@material-ui/icons/Add";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import EditIcon from "@material-ui/icons/Edit";
-import { useHistory, useParams } from "react-router";
-
-import { Link } from "react-router-dom";
-import { SSO_URL } from "../../utils/constants";
-
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import classNames from "classnames";
 // Styles
 import Fonts from "dan-styles/Fonts.scss";
-import api from "../../utils/axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router";
 import "../../styles/custom.css";
-
+import api from "../../utils/axios";
+import { SSO_URL } from "../../utils/constants";
 import Attachment from "../Attachment/Attachment";
+import Loader from "../Forms/Loader";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -142,8 +127,11 @@ const IncidentDetailsSummary = () => {
   const fetchReportsData = async () => {
     const response = await api.get(`api/v1/incidents/${fkid}/reports/`);
     if (response.status === 200) {
-      await setReportsData(response.data.data.results);
-      fetchNotificationSent(response.data.data.results[0].notifyTo)
+      let results = response.data.data.results
+      await setReportsData(results);
+      if (results.length > 0) {
+        fetchNotificationSent(results[0].notifyTo)
+      }
     }
 
   };
@@ -165,10 +153,11 @@ const IncidentDetailsSummary = () => {
       let projectId = JSON.parse(localStorage.getItem("projectName"))
         .projectName.projectId;
 
-      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident`,)
+      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom`)
         .then((res) => {
           if (res.status === 200) {
             const result = res.data.data.results;
+            console.log(result)
             data = []
             const newData = result.map(item => {
 
@@ -493,7 +482,7 @@ const IncidentDetailsSummary = () => {
               >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography className={classes.heading}>
-                    Property affected
+                    Property/Material affected
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -506,7 +495,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            {key + 1}: Details of property
+                            {key + 1}: Details of property/material
                           </Typography>
                         </Grid>
 
@@ -516,7 +505,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            Property type
+                            Property/Material type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
                             {propertydata.propertyType
@@ -531,7 +520,7 @@ const IncidentDetailsSummary = () => {
                             gutterBottom
                             className={Fonts.labelName}
                           >
-                            Property other type
+                            Property/Material other type
                           </Typography>
                           <Typography className={Fonts.labelValue}>
                             {propertydata.propertyOtherType
@@ -952,7 +941,9 @@ const IncidentDetailsSummary = () => {
             </Grid>
           )}
         </Grid>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </>
   );
 };

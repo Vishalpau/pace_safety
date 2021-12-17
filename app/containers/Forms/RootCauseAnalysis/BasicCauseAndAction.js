@@ -23,6 +23,7 @@ import { PACE_MANAGEMENT_CONTROL_SUB_TYPES, ROOT_CAUSE_ANALYSIS_FORM } from "../
 import ActionShow from "../ActionShow";
 import ActionTracker from "../ActionTracker";
 import FormSideBar from "../FormSideBar";
+import Loader from "../Loader";
 
 
 
@@ -234,7 +235,7 @@ const BasicCauseAndAction = () => {
                         <TableCell align="right">
 
                           <ActionTracker
-                            actionContext="incidents:Pacacuase"
+                            actionContext="incidents:Pacecause"
                             enitityReferenceId={`${putId.current}:${value.id}`}
                             setUpdatePage={setUpdatePage}
                             updatePage={updatePage}
@@ -282,10 +283,12 @@ const BasicCauseAndAction = () => {
               <Button
                 variant="contained"
                 color="primary"
+                // disable={buttonLoading}
                 className={classes.button}
                 onClick={(e) => handelNavigate("next")}
               >
                 Next
+                {/* {buttonLoading && <CircularProgress size={20} />} */}
               </Button>
             </Grid>
           </Grid>
@@ -299,7 +302,9 @@ const BasicCauseAndAction = () => {
             </Grid>
           )}
         </Grid>
-        : "Loading..."}
+        :
+        <Loader />
+      }
     </PapperBlock>
   );
 };

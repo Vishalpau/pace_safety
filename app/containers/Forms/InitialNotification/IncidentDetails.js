@@ -36,7 +36,7 @@ import api from "../../../utils/axios";
 import AlertMessage from "./Alert";
 import Type from "../../../styles/components/Fonts.scss";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Loader from "../Loader";
 
 // redux
 import { connect } from 'react-redux'
@@ -104,7 +104,7 @@ const IncidentDetails = (props) => {
   // Initial forms.
   const [form, setForm] = useState({
     incidentType: "",
-    incidentOccuredOn: null,
+    incidentOccuredOn: new Date(),
     incidentTitle: "",
     incidentDetails: "",
     immediateActionsTaken: "",
@@ -378,10 +378,13 @@ const IncidentDetails = (props) => {
   const fetchIncidentTypeValue = async () => {
     try {
       const res = await api.get("api/v1/lists/1/value");
-      const result = res.data.data.results;
-      await setIncidentTypeValue(result);
+      const result = res.data.data.results;let data = [];
+      data = result
+      await setIncidentTypeValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
+    
+      // await setIncidentTypeValue(result);
     } catch (error) {
-history.push("/app/pages/error")
+      history.push("/app/pages/error")
     }
   };
 
@@ -391,12 +394,14 @@ history.push("/app/pages/error")
       const res = await api.get("api/v1/lists/2/value")
         .catch(error => setMessage(error.message))
       const result = res.data.data.results;
-      await setContractorValue(result);
+      let data = [];
+      data = result
+      await setContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
     } catch (error) {
       setIsNext(true);
 
-      
-history.push("/app/pages/error")
+
+      history.push("/app/pages/error")
     }
   };
 
@@ -406,7 +411,11 @@ history.push("/app/pages/error")
       const res = await api.get("api/v1/lists/3/value")
         .catch(error => setMessage(error.message))
       const result = res.data.data.results;
-      await setSubContractorValue(result);
+      let data = [];
+      data = result
+
+      await setSubContractorValue([...data,{inputLabel:"Other",inputValue:"Other"},{inputLabel:"NA",inputValue:"NA"}]);
+    
     } catch (error) {
       setIsNext(true);
 
@@ -786,7 +795,7 @@ history.push("/app/pages/error")
                     }}
                     onClick={(e) => setIsDateShow(true)}
                     open={isDateShow}
-                    onClose={(e) => {setIsDateShow(false)}}
+                    onClose={(e) => { setIsDateShow(false) }}
                     InputProps={{ readOnly: true }}
                     format="yyyy/MM/dd HH:mm"
                     inputVariant="outlined"
@@ -881,17 +890,16 @@ history.push("/app/pages/error")
                 <FormControl
                   variant="outlined"
                   error={error.contractor}
-                  required
                   className={classes.formControl}
                 >
                   <InputLabel id="demo-simple-select-label">
-                    Contractor
+                    Contractor/Agency name
                   </InputLabel>
                   <Select
                     labelId="contractor-type-label"
                     id="contractor"
-                    label="Contractor"
-                    value={form.contractor.trim() || ""}
+                    label="Contractor/Agency name"
+                    value={form.contractor !== null && form.contractor.trim() || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -1010,7 +1018,7 @@ history.push("/app/pages/error")
                   error={error && error.isPropertyDamaged}
                 >
                   <FormLabel component="legend">
-                    Was any property damaged during incident?
+                    Was any property/material damaged during incident?
                   </FormLabel>
                   <RadioGroup
                     className={classes.inlineRadioGroup}
@@ -1025,7 +1033,7 @@ history.push("/app/pages/error")
                       });
                       handleHideAffect(
                         e.target.value,
-                        "Property affected",
+                        "Property/Material affected",
                         "propertyAffect"
                       );
                       setNextPath({
@@ -1164,7 +1172,7 @@ history.push("/app/pages/error")
                   onClick={(e) => handelNext(e)}
                   disabled={!isNext}
                 >
-                  Next{isNext?null:<CircularProgress size={20}/>}
+                  Next{isNext ? null : <CircularProgress size={20} />}
                 </Button>
               </Grid>
             </Grid>
@@ -1182,7 +1190,7 @@ history.push("/app/pages/error")
           )}
         </Row>
       ) : (
-        <div> Loading...</div>
+        <Loader />
       )}
     </PapperBlock>
   );
