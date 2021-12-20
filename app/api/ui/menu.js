@@ -17,6 +17,13 @@ var menu = [
     linkParent: "/incidents/",
   },
   {
+    key: 'compliance',
+    name: 'Compliance',
+    icon: "ion-ios-list-box",
+    multilevel: false,
+    linkParent: "/app/pages/compliance",
+  },
+  {
     key: "assessments",
     name: "Assessments",
     icon: "ion-ios-clipboard",

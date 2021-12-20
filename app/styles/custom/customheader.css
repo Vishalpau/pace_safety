@@ -1164,3 +1164,16 @@ html .custmCancelBtn {
 .MuiAvatar-root.MuiAvatar-square .MuiAvatar-img {
   border-radius: 10px;
 }
+.customDropdownPageIcon {
+  height: 40px;
+  width: 40px;
+  display: block;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
+  float: left;
+}
+.compliancePageIcon {
+  background-position: -200px -405px;
+}
+.paginationSection nav {
+  float: right;
+}

@@ -834,3 +834,28 @@ export const PrintFlha = loadable(() => import("./Pages/Assesments/PrintFlha"), 
 export const ControlTowerIcare = loadable(() => import('./Pages/ControlTower/ControlTowerIcare'), {
   fallback: <Loading />,
 });
+
+// Compliance
+export const Compliance = loadable(() => import("./Pages/Compliance/Compliance"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceSummary = loadable(() => import("./Pages/Compliance/ComplianceSummary"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceDetails = loadable(() => import("./Pages/Compliance/Compliance/ComplianceDetails"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceForm = loadable(() => import("./Pages/Compliance/Compliance/ComplianceForm"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceComment = loadable(() => import("./Pages/Compliance/List/ComplianceComment"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceActivity = loadable(() => import("./Pages/Compliance/List/ComplianceActivity"), {
+  fallback: <Loading />,
+});
