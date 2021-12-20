@@ -19,7 +19,7 @@ import moment from "moment";
 import { useHistory, useParams } from "react-router";
 import "../../../../styles/custom.css";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import FormHelperText from "@material-ui/core/FormHelperText";
 import api from "../../../../utils/axios";
 import {
     access_token,
@@ -29,8 +29,6 @@ import JhaCommonInfo from "../JhaCommonInfo";
 import { handelJhaId } from "../Utils/checkValue";
 import { SUMMARY_FORM } from "../Utils/constants";
 import CloseOutValidator from "../Validation/CloseOutValidation"
-import FormHelperText from "@material-ui/core/FormHelperText";
-
 
 
 function Alert(props) {
@@ -142,10 +140,10 @@ const CloseOut = () => {
     }
 
     const handleNext = async () => {
-        const { error, isValid } = CloseOutValidator(jhaListData);
-        await setError(error);
-        if (!isValid) {
-            return "Data is not valid";
+        const {error , isValid} = CloseOutValidator(jhaListData)
+        await setError(error)
+        if(!isValid) {
+            return "data not valid"
         }
         await setSubmitLoader(true)
         delete jhaListData["jhaAssessmentAttachment"]
@@ -187,12 +185,6 @@ const CloseOut = () => {
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDateTimePicker
                                     className={classes.formControl}
-                                    // onClick={(e) => setIsDateShow(true)}
-                                    // error={error.closeDate}
-                                    // helperText={
-                                    //     error.closeDate ? error.closeDate : null
-                                    // }
-                                    // value={jhaListData.closedDate ? jhaListData.closedDate : null}
                                     format="yyyy/MM/dd HH:mm"
                                     inputVariant="outlined"
                                     id="date-picker-dialog"
@@ -202,12 +194,6 @@ const CloseOut = () => {
                                     KeyboardButtonProps={{
                                         "aria-label": "change date",
                                     }}
-                                    // onChange={(e) => {
-                                    //     setJhaListdata({
-                                    //         ...jhaListData,
-                                    //         closedDate: moment(e).format("YYYY-MM-DD hh:mm:ss"),
-                                    //     });
-                                    // }}
                                     disabled={true}
                                     disableFuture
                                     InputProps={{ readOnly: true }}
@@ -221,18 +207,17 @@ const CloseOut = () => {
                             <FormControl
                                 variant="outlined"
                                 className={classes.formControl}
-                                error={error.closedByName}
-
+                                error={error.closedByName ? error.closedByName : ""}
+                                
                             >
                                 <InputLabel id="demo-simple-select-label">
-                                    Closed by
+                                    Closed by*
                                 </InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     label="Closed by"
                                     value={jhaListData.closedByName ? jhaListData.closedByName : ""}
-
                                 >
                                     {userList.map((selectValues, index) => (
                                         <MenuItem
@@ -245,7 +230,6 @@ const CloseOut = () => {
                                     ))}
                                 </Select>
                                 {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
-
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} md={6}>

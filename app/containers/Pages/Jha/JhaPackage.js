@@ -54,11 +54,11 @@ import Select from '@material-ui/core/Select';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-
+import Pagination from '@material-ui/lab/Pagination';
 import { connect } from "react-redux";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
-
+import Loader from "../Loader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -462,13 +462,19 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'flex-start',
     },
   },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '-10px',
+  },
 }));
 
 function JhaPackage(props) {
-
+  console.log(props.assessment)
   const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([])
-  const [searchIncident, setSeacrhIncident] = useState("");
+  const search = props.search
   const history = useHistory();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
@@ -499,19 +505,34 @@ function JhaPackage(props) {
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+        ? JSON.parse(localStorage.getItem('userDetails')).id
+        : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
 
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-    const result = res.data.data.results.results !== undefined && res.data.data.results.results
-    await setAllJHAData(result)
-    await setTotalData(res.data.data.results.count)
-    await setPageData(res.data.data.results.count / 25)
-    let pageCount = Math.ceil(res.data.data.results.count / 25)
-    await setPageCount(pageCount)
+    if(props.assessment === "My Assessments"){
+      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+  
+      const result = res.data.data.results.results
+      await setAllJHAData(result)
+      await setTotalData(res.data.data.results.count)
+      await setPageData(res.data.data.results.count / 25)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
+    }else{
+      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+  
+      const result = res.data.data.results.results
+      await setAllJHAData(result)
+      await setTotalData(res.data.data.results.count)
+      await setPageData(res.data.data.results.count / 25)
+      let pageCount = Math.ceil(res.data.data.results.count / 25)
+      await setPageCount(pageCount)
+    }
     // handelTableView(result)
 
     await setIsLoading(true)
@@ -531,7 +552,7 @@ function JhaPackage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/jhas/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await setPage(value)
     await handelTableView(res.data.data.results.results)
@@ -630,14 +651,25 @@ function JhaPackage(props) {
     history.push(`/app/pages/jha/jha-summary/${jha.id}`);
   };
 
+  const handleDelete = async (item) => {
+    let data = item
+    // let id = item[1].id
+    data.status = "Delete"
+    delete data.jhaAssessmentAttachment
+    await setIsLoading(false)
+    const res1 = await api.put(`/api/v1/jhas/${data.id}/`, data).then(response => fetchData()).catch(err => console.log(err))
+  }
+
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [props.projectName.breakDown,props.search,props.assessment])
 
   return (
     <>
+    {isLoading ? 
       <Box>
-        {allJHAData.map((value) => (
+      
+       { allJHAData.length > 0 ? allJHAData.map((value) => (
           <Grid className={classes.marginTopBottom}>
 
             <div className="gridView">
@@ -647,7 +679,9 @@ function JhaPackage(props) {
                     <Grid item md={2} sm={4} xs={12}
                       className={classes.userPictureBox}
                     >
-                      <Button className={classNames(classes.floatR)} onClick={(e) => handleMyUserPClickOpen(e)} >
+                      <Button className={classNames(classes.floatR)}
+                      //  onClick={(e) => handleMyUserPClickOpen(e)}
+                        >
                         <img src={value["avatar"]} className={classes.userImage} /> {value["username"]}
                       </Button>
                     </Grid>
@@ -700,9 +734,9 @@ function JhaPackage(props) {
                                 >
                                   Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
                                   <span item xs={1} className={classes.sepHeightOne}></span>
-                                  Stage: <span className={classes.listingLabelValue}>In progress <img src={in_progress_small} className={classes.smallImage} /></span>
+                                  Stage: <span className={classes.listingLabelValue}>{value["jhaStage"]}<img src={in_progress_small} className={classes.smallImage} /></span>
                                   <span item xs={1} className={classes.sepHeightOne}></span>
-                                  Status: <span className="listingLabelValue statusColor_complete">{value["status"]}</span>
+                                  Status: <span className="listingLabelValue statusColor_complete">{value["jhaStatus"]}</span>
                                 </Typography>
 
                               </Grid>
@@ -810,7 +844,7 @@ function JhaPackage(props) {
                       <Typography variant="body2" display="inline">
                         <span>
                           <Link href="#"
-                            onClick={handleVisibility}
+                            // onClick={handleVisibility}
                             color="secondary"
                             aria-haspopup="true"
                             className={classes.mLeft}>
@@ -819,7 +853,7 @@ function JhaPackage(props) {
                         </span>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography
+                      {/* <Typography
                         variant="body1"
                         display="inline"
                         color="textPrimary"
@@ -842,7 +876,7 @@ function JhaPackage(props) {
                             {value["commentsCount"]}
                           </Link>
                         </span>
-                      </Typography>
+                      </Typography> */}
                     </Grid>
 
                     <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
@@ -851,15 +885,15 @@ function JhaPackage(props) {
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                       </Typography>
                       <span item xs={1} className={classes.sepHeightTen}></span> */}
-                        <Typography variant="body1" display="inline">
+                        {/* <Typography variant="body1" display="inline">
                           <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
                         </Typography>
                         <span item xs={1} className={classes.sepHeightTen}></span>
                         <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
-                        </Typography>
+                        </Typography> */}
                         <span item xs={1} className={classes.sepHeightTen}></span>
                         <Typography variant="body1" display="inline">
-                          <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} /></Link>
+                          <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link>
                         </Typography>
                       </div>
                     </Grid>
@@ -1096,10 +1130,20 @@ function JhaPackage(props) {
                   </Button>
                 </DialogActions> */}
             </Dialog>
+
+            
           </Grid>
-        ))}
+        )) : <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                      Sorry, no matching records found
+                    </Typography>}
+
+        <div className={classes.pagination}>
+          {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+                <Pagination count={pageCount} page={page} onChange={handleChange} />
+              </div> 
 
       </Box>
+      : <Loader/>}
     </>
   );
 }

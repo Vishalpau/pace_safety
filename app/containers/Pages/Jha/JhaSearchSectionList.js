@@ -368,9 +368,20 @@ const useStyles = makeStyles((theme) => ({
 export default function JhaSearchSection() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [search, setSearch] = React.useState("")
+  const [assessment, setAssessments] = React.useState("My Assessments")
+
+  const handelSearch = (e) => {
+    setSearch(e.target.value)
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(newValue === 0){
+      setAssessments("My Assessments")
+    }else if(newValue === 1){
+      setAssessments("Big Picture")
+    }
   };
 
   return (
@@ -382,9 +393,9 @@ export default function JhaSearchSection() {
             <div className={classes.floatL}>
             <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
               <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
-              <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} />
+              {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
               <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
-              <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} />
+              {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
             </Tabs>
             </div>  
           </AppBar>
@@ -400,6 +411,7 @@ export default function JhaSearchSection() {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
+              onChange={(e) => handelSearch(e)}
               inputProps={{ 'aria-label': 'search' }}
             />
           </Paper> 
@@ -416,16 +428,16 @@ export default function JhaSearchSection() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <JhaFilterList />
+			  <JhaFilterList search={search} assessment={assessment} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			  <JhaFilterList />
+			  <JhaFilterList search={search} assessment={assessment} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			  <JhaFilterList />
+			  <JhaFilterList search={search} assessment={assessment} />
 		  </TabPanel>
 		  <TabPanel value={value} index={3}>
-			  <JhaFilterList />
+			  <JhaFilterList search={search} assessment={assessment} />
 		  </TabPanel>
 		</Grid>
 	</Grid>

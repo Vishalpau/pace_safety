@@ -482,6 +482,8 @@ const JobDetails = (props) => {
     await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
     await setSubmitLoader(false)
   }
+  const [typeOfPremit,setTypeOfPremit] = useState([])
+
 
   const classes = useStyles();
 
@@ -497,6 +499,7 @@ const JobDetails = (props) => {
     await pickListValue()
     await fetchTeamData()
     await fetchDepartment()
+    await pickListValue()
     await setLoading(false)
   }
 

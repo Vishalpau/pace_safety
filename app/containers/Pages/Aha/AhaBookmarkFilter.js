@@ -1,20 +1,25 @@
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-//import '../../../styles/custom/customheader.css';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import { withStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuIcon from '@material-ui/icons/Menu';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import React from 'react';
-import JhaPackage from './JhaPackage';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuData from './menuData';
+//import ObservationsPackage from './ObservationsPackage';
+import Button from '@material-ui/core/Button';
+import '../../../styles/custom/customheader.css';
+import Grid from '@material-ui/core/Grid';
+import AhaBookmarkPackage from './AhaBookmarkPackage';
 
 
 const drawerWidth = 240;
@@ -216,27 +221,20 @@ const styles = theme => ({
   floatR: { float: 'right', },
   catSectionArea: {
     zIndex: '-9999',
-    '& nav': {
-      ['@media (max-width:800px)']: {
-        paddingTop: '0px',
-      },
-    },
   },
   packageTitleBox: {
-    padding: '20px 16px 20px 16px !important',
     ['@media (max-width:480px)']: {
       padding: '5px 12px !important',
     },
   },
   daysFilterBox: {
-    padding: '15px 16px 20px 16px !important',
     ['@media (max-width:480px)']: {
       padding: '0px 12px !important',
     },
   },
 });
 
-class JhaFilter extends React.Component {
+class AhaBookmarkFilter extends React.Component {
   state = {
     open: false,
     anchor: 'right',
@@ -335,7 +333,7 @@ class JhaFilter extends React.Component {
               <Grid container spacing={3}>
                 <Grid item md={8} sm={12} xs={12} className={classes.packageTitleBox}>
                   <Typography className={classes.title} variant="h5" color="inherit" noWrap>
-                    My Assessments
+                    My Bookmarks
                   </Typography>
                 </Grid>
 
@@ -365,10 +363,7 @@ class JhaFilter extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <JhaPackage
-              search={this.props.search}
-              assessment={this.props.assessment}
-            />
+            <AhaBookmarkPackage />
           </main>
           {after}
         </div>
@@ -377,9 +372,9 @@ class JhaFilter extends React.Component {
   }
 }
 
-JhaFilter.propTypes = {
+AhaBookmarkFilter.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(JhaFilter);
+export default withStyles(styles, { withTheme: true })(AhaBookmarkFilter);

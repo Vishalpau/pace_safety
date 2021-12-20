@@ -131,18 +131,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function JhaList(props) {
+function FlhaList(props) {
+  console.log(props)
   const [incidents] = useState([]);
-  const [cardView, setCardView] = useState(true);
-  const [tableView, setTableView] = useState(false);
-  const [allJHAData , setAllJHAData] = useState([])
-  const [listToggle, setListToggle] = useState(false);
-  const [searchIncident, setSeacrhIncident] = useState("");
-  const [pageCount, setPageCount] = useState(0);
-  const [pageData, setPageData] = useState(0)
-  const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
-  const [isLoading, setIsLoading] = useState(false)
 
   const handelView = (e) => {
     setListToggle(false);
@@ -151,11 +142,21 @@ function JhaList(props) {
     setListToggle(true);
   };
 
-  const [value, setValue] = React.useState(2);
-
+  const [cardView, setCardView] = useState(true);
+  const [tableView, setTableView] = useState(false);
+  const [allAHAData , setAllAHAData] = useState([])
+  const [listToggle, setListToggle] = useState(false);
+  const [searchIncident, setSeacrhIncident] = useState("");
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
+  
+  
   //   Data for the table view
   const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
-  const data = [
+const data = [
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
@@ -180,7 +181,9 @@ function JhaList(props) {
     pagination:false
   };
 
-  const fetchAllJHAData = async () => {
+  const classes = useStyles();
+
+  const fetchAllAHAData = async () => {
     await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -197,25 +200,28 @@ function JhaList(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-    if(props.assessment === "My Assessments"){
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+  console.log(props.assessments)
+    if(props.assessments === "My Assessments"){
+      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
   
       const result = res.data.data.results.results
-      await setAllJHAData(result)
+      await setAllAHAData(result)
       await setTotalData(res.data.data.results.count)
             await setPageData(res.data.data.results.count / 25)
             let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
     }else{
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
   
       const result = res.data.data.results.results
-      await setAllJHAData(result)
+      await setAllAHAData(result)
       await setTotalData(res.data.data.results.count)
             await setPageData(res.data.data.results.count / 25)
             let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
     }
+    
+  
     await setIsLoading(true)
   };
 
@@ -236,22 +242,21 @@ function JhaList(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  if(props.assessment === "My Assessments"){
-    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
-      await setAllJHAData(res.data.data.results.results);
+  if(props.assessments === "My Assessments"){
+    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+      await setAllAHAData(res.data.data.results.results);
       await setPage(value)
   }else{
-    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    await setAllJHAData(res.data.data.results.results);
+    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllAHAData(res.data.data.results.results);
     await setPage(value)
   }
   };
 
-  const classes = useStyles();
-
   useEffect(() => {
-    fetchAllJHAData()
-},[props.projectName.breakDown,props.search,props.assessment])
+    fetchAllAHAData()
+    // handleProjectList()
+},[props.projectName.breakDown,props.search,props.assessments])
 
   return (
     <>
@@ -262,11 +267,23 @@ function JhaList(props) {
               <MUIDataTable
                 //title="Observations List"
                 className="dataTableSectionDesign"
-                data={Object.entries(allJHAData).map((item) => [
-                      item[1]["jhaNumber"],
+                data={Object.entries(allAHAData).filter(
+                      (item) => {return (
+                         
+                        item[1]["description"]
+                          .toLowerCase()
+                          .includes(searchIncident.toLowerCase()) ||
+                          item[1]["ahaNumber"].toLowerCase().includes(
+                            searchIncident.toLowerCase()
+                          
+                        )
+                      )}
+                        
+                    ).map((item) => [
+                      item[1]["ahaNumber"],
                       item[1]["typeOfPermit"],
                       item[1]["username"],
-                      item[1]["jhaStatus"],
+                      item[1]["ahaStatus"],
                       item[1]['createdByName'],
                       moment(item[1]["createdAt"]).format(
                                   "Do MMMM YYYY, h:mm:ss a"
@@ -286,7 +303,7 @@ function JhaList(props) {
             <div className={classes.pagination}>
       {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
             <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div></> : <Loader/>}
+          </div> </> : <Loader/>}
       </Box>
     </>
   );
@@ -302,5 +319,5 @@ const mapStateToProps = (state) => {
 export default connect(
   mapStateToProps,
   null
-)(JhaList);
+)(FlhaList);
 

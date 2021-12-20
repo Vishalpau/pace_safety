@@ -6,6 +6,11 @@ export const JHA_FORM = {
     "Documents & Notifications": `/app/pages/Jha/assessments/DocumentsNotifications/`
 }
 
+export const JHA_FORM_COMBINE = {
+    "Job details": `/app/pages/Jha/assessments/project-details/`,
+    "Job hazard analysis": `/app/pages/Jha/assessments/DocumentsNotifications/`
+}
+
 export const APPROVAL_FORM = {
     "Approval": `/app/pages/jha/approvals/approvals`
 }
