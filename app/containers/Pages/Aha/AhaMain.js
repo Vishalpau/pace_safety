@@ -1,26 +1,34 @@
-import AppBar from '@material-ui/core/AppBar';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import React , {useEffect, useState} from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
+import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import AddIcon from '@material-ui/icons/Add';
+import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
+import classNames from "classnames";
+import Button from '@material-ui/core/Button';
+import ReorderIcon from '@material-ui/icons/Reorder';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
-import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import ReorderIcon from '@material-ui/icons/Reorder';
+import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-import classNames from "classnames";
-import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
-import PropTypes from 'prop-types';
-import React , { useEffect } from 'react';
-import { useHistory } from 'react-router';
-import JhaSearchSection from './JhaSearchSection';
-import JhaSearchSectionKanban from './JhaSearchSectionKanban';
-import JhaSearchSectionList from './JhaSearchSectionList';
-import JhaSearchSectionTrend from './JhaSearchSectionTrend';
+import AhaSearchSection from './AhaSearchSection';
+//import ObservationsFilter from './ObservationsFilter';
+import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
+import GamesOutlinedIcon from '@material-ui/icons/GamesOutlined';
+import AhaKanban from './AhaKanban';
+import AhaBarCharts from './AhaBarCharts';
+import AhaList from './AhaList';
+import preplanning from 'dan-images/preplanning.png';
+import progress from 'dan-images/progress.png';
+import completed from 'dan-images/completed.png';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { useHistory, useParams } from 'react-router';
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 function TabPanel(props) {
@@ -71,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: '600',
       '&:hover': {
         color: '#f47607 !important',
-      },
+       },
     },
     '& .MuiTab-textColorInherit.Mui-selected': {
       color: '#f47607',
@@ -90,25 +98,25 @@ const useStyles = makeStyles((theme) => ({
   },
   attachImg: {
     float: 'left',
-    paddingRight: '10px',
+    marginRight: '10px',
   },
   headignLineHeight: {
     lineHeight: '40px',
   },
   listViewTab: {
-    ['@media (max-width:480px)']: {
+    ['@media (max-width:480px)']: { 
       padding: '12px 12px 0px 12px !important',
     },
   },
   iplnGisDSection: {
-    ['@media (max-width:480px)']: {
+    ['@media (max-width:480px)']: { 
       padding: '0px 12px 12px 12px !important',
     },
   },
   Lheight: {
     lineHeight: '65px',
     textAlign: 'right',
-    ['@media (max-width:480px)']: {
+    ['@media (max-width:480px)']: { 
       padding: '0px 0px 20px 0px !important',
       lineHeight: '0px',
       textAlign: 'left',
@@ -122,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
       '&:hover': {
         backgroundColor: '#f47607',
       },
-      ['@media (max-width:480px)']: {
+      ['@media (max-width:480px)']: { 
         fontSize: '11px',
       },
     },
@@ -137,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   borderTop: {
-    marginTop: '5px',
+    marginTop: '20px',
     borderBottom: '1px solid #ccc',
     paddingBottom: '10px',
     '& .MuiTypography-h5': {
@@ -161,10 +169,6 @@ const useStyles = makeStyles((theme) => ({
   floatL: {
     float: 'left',
   },
-  floatLTabs: {
-    float: 'left',
-    paddingTop: '10px',
-  },
   activeTab: {
     color: 'orange',
   },
@@ -172,16 +176,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '5px',
     backgroundColor: '#06425c',
     padding: '7px 10px 7px 10px',
+    marginTop: '10px',
     float: 'right',
-    ['@media (max-width:800px)']: {
-      marginTop: '0px',
-    },
-  },
-  pLFiveHt40: {
-    ['@media (max-width:800px)']: {
-      paddingTop: '0px !important',
-      paddingBottom: '0px !important',
-    },
   },
   paddLRzero: {
     padding: '0px 0px 24px 0px',
@@ -190,6 +186,9 @@ const useStyles = makeStyles((theme) => ({
     },
     pL0: {
       paddingLeft: '0px !important',
+    },
+    pLFiveHt40: {
+      paddingLeft: '15px 5px 5px 5px',
     },
     ptotop20: {
       paddingTop: '20px',
@@ -240,7 +239,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function JhaMain() {
+export default function AhaMain() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const history = useHistory();
@@ -249,9 +248,12 @@ export default function JhaMain() {
     setValue(newValue);
   };
 
-  const handleNewJhaPush = async () => {
-    localStorage.removeItem("fkJHAId")
-    history.push("/app/pages/jha/assessments/Job-hazards");
+  const handleNewAhaPush = async () => {
+    //console.log("Ashutosh")
+    localStorage.removeItem('fkAHAId')
+    history.push(
+      "/app/pages/aha/assessments/project-details"
+    );
   };
 
   useEffect(() => {
@@ -263,51 +265,64 @@ export default function JhaMain() {
       <Grid item sm={12} xs={12} className={classes.borderTop}>
         <Grid container spacing={3}>
           <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
-            <img src={jhaLogoSymbol} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Job Hazard Assessments</Typography>
+            <img src={ahaLogoSymbol} className={classes.attachImg} alt="decoration" />
+            <Typography variant="h5"> Area Hazard Assessments</Typography>
           </Grid>
           <Grid item md={5} sm={6} xs={12}>
-            <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={(e) => handleNewJhaPush(e)}>
+            <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={(e) => handleNewAhaPush(e)}>
               <AddIcon className={classes.floatR} /> Add new
             </Button>
           </Grid>
         </Grid>
       </Grid>
       <Grid container spacing={3}>
-        <Grid item sm={6} xs={12} className={classes.listViewTab}>
-          <AppBar position="static" className={classes.navTabBack}>
-            <div className={classes.floatLTabs}>
+      <Grid item sm={6} xs={12} className={classes.listViewTab}>
+        <AppBar position="static" className={classes.navTabBack}>
+          <div className={classes.floatL}>
               <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
-                <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-               /
-              </Tabs>
-            </div>
-          </AppBar>
-        </Grid>
-        <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
-          <Grid className={classes.Lheight}>
-            <div className={classes.floatR}>
-              <span className={classes.pLTen}>
-                <Button size="small" className={classes.buttonsNTwo} variant="contained">
-                  <PermIdentityIcon /> GIS
-                </Button>
-              </span>
+              <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon  className={classNames(classes.pL0)} />} />
+              <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />}  classNames={classes.pLTen} />
+              {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+              <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
+            </Tabs>
+          </div>  
+        </AppBar>
+      </Grid>
+      <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+        <Grid className={classes.Lheight}>
+          <div className={classes.floatR}>				
+            {/* <span className={classes.pLTen}>
+              <Button size="small" className={classes.buttonsNTwo} variant="contained">
+                <PermIdentityIcon /> GIS
+              </Button>
+            </span> */}
+            
+            {/* <span className={classes.pLTen}>
+              <Button size="small" className={classes.buttonsNTwo} variant="contained">
+                <DateRangeOutlinedIcon />iPlanner
+              </Button>
+            </span>
+				
+			  <span className={classes.pLTen}>
+				<Button size="small" className={classes.buttonsNTwo} variant="contained">
+				  <GamesOutlinedIcon /> 3D
+				</Button>
+				</span>*/} 
             </div>
           </Grid>
         </Grid>
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <JhaSearchSection />
+        <AhaSearchSection value={value} />
       </TabPanel>
       <TabPanel value={value} index={1} className={classes.paddLRzero}>
-        <JhaSearchSectionList />
+      <AhaSearchSection value={value} />
       </TabPanel>
-      <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <JhaSearchSectionKanban />
+	    <TabPanel value={value} index={2} className={classes.paddLRzero}>
+        <AhaKanban />
       </TabPanel>
       <TabPanel value={value} index={3} className={classes.paddLRzero}>
-        <JhaSearchSectionTrend />
+        <AhaBarCharts />
       </TabPanel>
     </div>
   );

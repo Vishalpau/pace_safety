@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Grid, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Grid, Typography,TextField } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -20,9 +20,34 @@ import ActionShow from '../../../Forms/ActionShow';
 import ActionTracker from "../../../Forms/ActionTracker";
 import FormSideBar from '../../../Forms/FormSideBar';
 import { APPROVAL_FORM } from "../constants";
-import Loader from "../../../Forms/Loader";
+import Paper from '@material-ui/core/Paper';
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import ahaLogoSymbol from 'dan-images/ahaLogoSymbol.png';
+import FormLabel from '@material-ui/core/FormLabel';
+import Loader from "../../Loader"
 import ApprovalValidator from "../Validator/ApprovalValidation"
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import {
+  access_token,
+  ACCOUNT_API_URL,SSO_URL
+} from "../../../../utils/constants";
+import {
+  KeyboardDateTimePicker, MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import axios from "axios";
 
+// Table
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -102,7 +127,10 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '1rem',
     right: '1rem'
-  }
+  },
+  formControl: {
+    width: "100%",
+},
 }));
 
 const Approvals = () => {
@@ -111,7 +139,6 @@ const Approvals = () => {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [updatePage, setUpdatePage] = useState(false)
   const [actionData, setActionData] = useState([])
-  const [person, setPerson] = useState("")
   const [projectData, setProjectData] = useState({
     companyId: "",
     projectId: "",
@@ -121,9 +148,19 @@ const Approvals = () => {
   const [error, setError] = useState({})
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [person, setPerson] = useState("")
+  const [isDateShow, setIsDateShow] = useState(false)
+  const [userList, setUserList] = useState([]);
+
+
   const user =
     JSON.parse(localStorage.getItem("userDetails")) !== null
       ? JSON.parse(localStorage.getItem("userDetails"))
+      : null;
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
       : null;
 
   const handelJobDetails = async () => {
@@ -132,10 +169,33 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/`
     );
     const apiData = res.data.data.results;
-    console.log(apiData)
+    if (apiData["closedDate"] === null) {
+      apiData["closedDate"] = new Date()
+  }
     setForm(apiData);
     setIsLoading(true)
   };
+
+  const handelClose = () => {
+    setIsDateShow(false)
+    return true
+}
+console.log('form',form)
+
+  const handleCloseDate = (e) => {
+    if (new Date(e) < new Date()) {
+        setForm({ ...form, closedDate: moment(e).toISOString() });
+        error.closedDate = ""
+        setError(error);
+    }
+    else {
+        setForm({ ...form, closeDate: null })
+        let errorMessage = "Closed time should not be ahead of current time"
+        error.closedDate = errorMessage
+        setError(error);
+
+    }
+}
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkAHAId")
@@ -170,20 +230,21 @@ const Approvals = () => {
   const handelWorkAndPic = (type) => {
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let name = user.name;
+    let id = user.id;
     if (type == "Competent Person (CP)") {
       setForm({
         ...form,
         wrpApprovalUser: name,
         wrpApprovalDateTime: new Date(),
       });
-      setOpen(false)
+      setProjectOpen(false)
     } else if (type == "Senior Authorized Person (SAP)") {
       setForm({
         ...form,
         sapApprovalUser: name,
         sapApprovalDateTime: new Date(),
       });
-      setOpen(false)
+      setProjectOpen(false)
     }
   };
 
@@ -191,21 +252,27 @@ const Approvals = () => {
     setOpen(false)
   }
   const handelSubmit = async () => {
+    const { error, isValid } = ApprovalValidator(form, actionData)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
+    await setSubmitLoader(true)
     if (form.notifyTo === null) {
       form['notifyTo'] = "null"
     }
     form["ahaStage"] = "Approval"
     if (form['wrpApprovalUser'] === null) {
-      form["ahaStatus"] = "Pending"
+      
+      if(form['wrpApprovalUser'] === null || form['sapApprovalUser'] === null) {
+        form["ahaStatus"] = "Pending"
+        delete form['closedDate'] 
+        delete form['closedByName'] 
+        delete form['closedById'] 
+      }
     } else {
       form["ahaStatus"] = "Done"
     }
-    const { error, isValid } = ApprovalValidator(form, actionData)
-    await setError(error)
-    if (!isValid) {
-      return "data not valid"
-    }
-    await setSubmitLoader(true)
 
     delete form["ahaAssessmentAttachment"];
     const res = await api.put(
@@ -214,9 +281,42 @@ const Approvals = () => {
     );
     history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
   };
+const [projectOpen , setProjectOpen] = useState(false)
+  const handleProjectOpen = () => {
+    setProjectOpen(true);
+  };
+
+  const fetchUserList = async () => {
+    let fkCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId
+    var config = {
+        method: 'get',
+        url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/users/`,
+        headers: {
+            Authorization: `Bearer ${access_token}`,
+        },
+    };
+
+    axios(config)
+        .then(function (response) {
+
+            if (response.status === 200) {
+                const result = response.data.data.results.users;
+
+                setUserList(result);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+  const handleProjectClose = () => {
+    setProjectOpen(false);
+  };
 
   useEffect(() => {
     handelJobDetails();
+    fetchUserList();
     handelWorkAndPic();
     handelActionTracker();
     handelActionLink();
@@ -225,99 +325,215 @@ const Approvals = () => {
   const classes = useStyles();
   return (
     <>
-      <PapperBlock title="Approval" icon="ion-md-list-box">
+        <CustomPapperBlock title="Assessment - Approval" icon={ahaLogoSymbol} whiteBg>
         {isLoading ? <>
           <Row>
             <Col md={9}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Aha number
-                  </Typography>
 
-                  <Typography varint="body1" className={Type.labelValue}>
-                    {form.ahaNumber ? form.ahaNumber : "-"}
-                  </Typography>
-                </Grid>
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25.16" height="28.45" viewBox="0 0 25.16 28.45">
+                    <g id="Group_5490" data-name="Group 5490" transform="translate(-1383 -174.131)">
+                      <g id="approval" transform="translate(1383 174.131)">
+                        <path id="Path_5203" data-name="Path 5203" d="M5.821,12.357a.641.641,0,0,0,0,1.283h4.656a.641.641,0,0,0,0-1.283ZM18.006,0a7.156,7.156,0,0,1,3.07,13.618V26.975A1.478,1.478,0,0,1,19.6,28.45H1.475A1.478,1.478,0,0,1,0,26.975V5.186A1.478,1.478,0,0,1,1.475,3.711H11.732A7.153,7.153,0,0,1,18.006,0Zm1.8,14.079a7.159,7.159,0,0,1-8.62-9.1H1.475a.209.209,0,0,0-.146.06.213.213,0,0,0-.06.146V26.973a.206.206,0,0,0,.206.206H19.6a.209.209,0,0,0,.146-.06.213.213,0,0,0,.06-.146V14.079ZM5.821,21.352a.634.634,0,1,0,0,1.269h8.907a.634.634,0,1,0,0-1.269Zm0-4.494a.634.634,0,1,0,0,1.269h8.907a.634.634,0,1,0,0-1.269ZM15.908,5.969l1.313,1.25,2.723-2.76c.225-.227.364-.41.641-.125l.9.917c.294.292.28.461,0,.732L17.733,9.673c-.586.574-.484.609-1.077.021L14.4,7.448a.26.26,0,0,1,.025-.4l1.04-1.079c.155-.162.282-.153.445,0Z" fill="#06425c"/>
+                      </g>
+                      <g id="approval-2" data-name="approval" transform="translate(1383 174.131)">
+                        <path id="Path_5203-2" data-name="Path 5203" d="M15.908,5.969l1.313,1.25,2.723-2.76c.225-.227.364-.41.641-.125l.9.917c.294.292.28.461,0,.732L17.733,9.673c-.586.574-.484.609-1.077.021L14.4,7.448a.26.26,0,0,1,.025-.4l1.04-1.079c.155-.162.282-.153.445,0Z" fill="#fff"/>
+                      </g>
+                    </g>
+                  </svg> Approval
+                </Typography>
+              </Grid>
 
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Aha assessment data
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {moment(form.ahaAssessmentDate).format(
-                      "Do MMMM YYYY"
-                    )}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Aha description
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {form.description ? form.description : "-"}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" className={Type.labelName} gutterBottom>
-                    Aha location
-                  </Typography>
-                  <Typography className={Type.labelValue}>
-                    {form.location ? form.location : "-"}
-                  </Typography>
-                </Grid>
-                <Grid item md={8} xs={12} className={classes.formBox}>
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                
+                <Grid item md={8} xs={12} className="formFieldBTNSection">
 
                   <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Competent Person (CP)
+                  Competent Person (CP)
                   </Typography>
                   <Button
                     variant="contained"
-                    color={form.wrpApprovalUser == null ? "primary" : "secondary"}
-                    className={classes.approvalButton}
-                    onClick={(e) => { setOpen(true), setPerson("Competent Person (CP)") }}
+                    color={form.wrpApprovalUser == "" ? "primary" : "secondary"}
+                    className="marginT0"
                     disabled={form.wrpApprovalUser !== null}
+                    onClick={(e) => { setProjectOpen(true), setPerson("Competent Person (CP)") }}
                   >
                     {form.wrpApprovalUser == null ? "Approve Now" : "Approved"}
                   </Button>
-                  <div>
-                    {form.wrpApprovalDateTime !== undefined
+                </Grid>
+                {form.wrpApprovalDateTime !== undefined
                       &&
                       form.wrpApprovalDateTime !== null ?
-                      `Approved By: ${form.wrpApprovalUser} on Date: ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
-                      : null
-                    }
-                  </div>
-                </Grid>
-                <Grid item md={8} xs={12} className={classes.formBox}>
-
-                  <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    Senior Authorized Person (SAP)
+                <Grid item xs={12} md={6}>
+                  <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
+                  <Typography className="viewLabelValue">
+                  {`${form.wrpApprovalUser} , ${moment(form.wrpApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
                   </Typography>
-                  <Button
-                    variant="contained"
-                    color={form.sapApprovalUser === null ? "primary" : "secondary"}
-                    className={classes.approvalButton}
-                    onClick={(e) => { setOpen(true), setPerson("Senior Authorized Person (SAP)") }}
-                    disabled={form.sapApprovalUser !== null}
-                  >
-                    {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
-                  </Button>
-                  <div>
-                    {form.sapApprovalUser !== undefined
+                </Grid> : null}
+
+                <Grid item md={8} xs={12} className="formFieldBTNSection">
+
+                    <Typography variant="h6" gutterBottom className={classes.labelName}>
+                      Senior Authorized Person (SAP)
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color={form.sapApprovalUser === null ? "primary" : "secondary"}
+                      className="marginT0"
+                      disabled={form.sapApprovalUser !== null}
+                      onClick={(e) => { setProjectOpen(true), setPerson("Senior Authorized Person (SAP)") }}
+                    >
+                      {form.sapApprovalUser === null ? "Approve Now" : "Approved"}
+                    </Button>
+                </Grid>
+                {form.sapApprovalUser !== undefined
                       &&
-                      form.sapApprovalDateTime !== null ?
-                      `Approved By: ${form.sapApprovalUser} on Date: ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`
-                      : null
-                    }
-                  </div>
+                      form.sapApprovalUser !== null ?
+                <Grid item xs={12} md={6}>
+                  <FormLabel component="legend" className="viewLabel">Approved by</FormLabel>
+                  <Typography className="viewLabelValue">
+                  {`${form.sapApprovalUser} , ${moment(form.sapApprovalDateTime).format('MMMM Do YYYY, h:mm:ss a')}`}          
+                  </Typography>
+                </Grid> : null}
+
+                {actionData.length == 0 ? <Grid item md={8}>
+                <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
+
+
+                <Grid item md={12} xs={12}>
+                  <FormLabel className="checkRadioLabel" component="legend">Create action </FormLabel>
+                    <ActionTracker
+                      actionContext="aha:approval"
+                      enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
+                      setUpdatePage={setUpdatePage}
+                      updatePage={updatePage}
+                      fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                      fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
+                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                      handelShowData={handelActionTracker}
+                    />
+                  
+                </Grid>
+                {actionData.length > 0 ? 
+                        <Grid item md={12} xs={12}>
+                          <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
+                          <Table component={Paper}>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell className="tableHeadCellFirst">Action number</TableCell>
+                                <TableCell className="tableHeadCellSecond">Action title</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            {/* Action show */}
+                            <TableBody>
+                            {actionData.map((action, index) => (
+                              <>
+                                <TableRow>
+                                  <TableCell style={{ width: 50 }}>
+                                    <a
+                                      href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(localStorage.getItem("BaseUrl"))["actionClientID"]}&response_type=code&companyId=${fkCompanyId}&projectId=${JSON.parse(localStorage.getItem("projectName")).projectName.projectId}&targetPage=/action/details/&targetId=${action.id}`}
+                                      target="_blank"
+                                    >{action.actionNumber}</a>
+                                  </TableCell>
+                                  <TableCell style={{ width: 50 }}>
+                                    {action.actionTitle}
+                                  </TableCell>
+                                </TableRow>
+                              </>
+                            ))
+                          }
+                          
+                          </TableBody>
+                          </Table>
+                        </Grid>
+                       : null}
+                {/* <Grid item md={6} xs={12}>
+                {actionData.map((value) => (
+                      <ActionShow
+                        action={{ id: value.id, number: value.actionNumber }}
+                        title={value.actionTitle}
+                        companyId={projectData.companyId}
+                        projectId={projectData.projectId}
+                        updatePage={updatePage}
+                      />
+                    ))}
+                </Grid> */}
+
+                <Grid item xs={12} md={6}>
+                            <FormControl
+                                variant="outlined"
+
+                                className={classes.formControl}
+                                error={error.closedByName}
+
+
+                            >
+                                <InputLabel id="demo-simple-select-label">
+                                    Closed by
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Closed by"
+                                    value={form.closedByName ? form.closedByName : ""}
+
+
+                                >
+                                    {userList.map((selectValues, index) => (
+                                        <MenuItem
+                                            value={selectValues.name}
+                                            key={index}
+                                            onClick={(e) => setForm({ ...form, closedByName: selectValues.name, closedById: selectValues.id })}
+
+                                        >
+                                            {selectValues.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDateTimePicker
+                                    className={classes.formControl}
+                                    error={error.closedDate}
+                                    helperText={
+                                        error.closedDate ? error.closedDate : null
+                                    }
+                                    value={form.closedDate ? form.closedDate : null}
+                                    onChange={(e) => handleCloseDate(e)}
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    id="date-picker-dialog"
+                                    format="yyyy/MM/dd HH:mm"
+                                    inputVariant="outlined"
+                                    label="Closed on*"
+                                    autoComplete="off"
+                                    onClick={(e) => setIsDateShow(true)}
+                                    open={isDateShow}
+                                    onClose={(e) => handelClose()}
+                                    KeyboardButtonProps={{
+                                        "aria-label": "change date",
+                                    }}
+                                    InputProps={{ readOnly: true }}
+                                    disableFuture
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+
+                </Grid>
+                </Paper>
                 </Grid>
 
                 <Dialog
                   className={classes.projectDialog}
-                  open={open}
+                  open={projectOpen}
                   onClose={handleClose}
                   PaperProps={{
                     style: {
@@ -356,57 +572,24 @@ const Approvals = () => {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={(e) => handelWorkAndPic(person)}
-                      >
+                        onClick={(e) => handelWorkAndPic(person)}                      >
                         Ok
                       </Button>
                     </Tooltip>
                   </DialogActions>
                 </Dialog>
-                {/* <Grid item md={8} xs={12} className={classes.formBox}>
+                
 
-                  <Typography variant="h6" gutterBottom className={classes.labelName}>
-
-                    If not approved then create a action.
-                  </Typography>
-                </Grid> */}
-                {actionData.length == 0 ? <Grid item md={8}>
-                  <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
-
-                <Grid item md={6} xs={12}>
-                  <Typography variant="h6" gutterBottom className={classes.labelName}>
-                    <ActionTracker
-                      actionContext="aha:approval"
-                      enitityReferenceId={`${localStorage.getItem("fkAHAId")}:00`}
-                      setUpdatePage={setUpdatePage}
-                      updatePage={updatePage}
-                      fkCompanyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                      fkProjectStructureIds={JSON.parse(localStorage.getItem("commonObject"))["aha"]["projectStruct"]}
-                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                      handelShowData={handelActionTracker}
-                    />
-                  </Typography>
-                  <Typography className={classes.aLabelValue}>
-                    {actionData.map((value) => (
-                      <ActionShow
-                        action={{ id: value.id, number: value.actionNumber }}
-                        title={value.actionTitle}
-                        companyId={projectData.companyId}
-                        projectId={projectData.projectId}
-                        updatePage={updatePage}
-                      />
-                    ))}
-                  </Typography>
-                </Grid>
+                
 
                 <Grid item md={12} xs={12}>
                   <div className={classes.loadingWrapper}>
 
-                    <Button
-                      variant="outlined"
+                    <Button size="medium" 
+                      variant="contained" 
+                      color="primary"
+                      className="spacerRight buttonStyle"
                       onClick={(e) => handelSubmit()}
-                      className={classes.custmSubmitBtn}
                       style={{ marginLeft: "10px" }}
                       disabled={submitLoader}
                     >
@@ -418,6 +601,14 @@ const Approvals = () => {
                         className={classes.buttonProgress}
                       />
                     )}</div>
+                    <Button size="medium"
+                      variant="contained"
+                      color="secondary"
+                      className="buttonStyle custmCancelBtn"
+                      onClick={() => history.goBack()}
+                    >
+                      Cancel
+                    </Button>
                 </Grid>
               </Grid>
             </Col>
@@ -428,9 +619,8 @@ const Approvals = () => {
                 selectedItem={"Approval"}
               />
             </Col>
-          </Row> </> : <Loader />}
-
-      </PapperBlock>
+          </Row> </> : <Loader/>}
+      </CustomPapperBlock>
     </>
   );
 };

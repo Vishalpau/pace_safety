@@ -123,11 +123,11 @@ const useStyles = makeStyles((theme) => ({
 
 const ProjectAreaHazards = () => {
 
-  const [form, setForm] = useState([])
+  const [formHazard, setFormHazard] = useState([])
   const [checkGroups, setCheckListGroups] = useState([])
   const [selectedOptions, setSelectedOption] = useState({})
-  const [fetchOption, setFetchedOptions] = useState([])
-  const [submitLoader, setSubmitLoader] = useState(false)
+  const [fetchOptionHazard, setFetchedOptionsHazard] = useState([])
+  const [submitLoaderHazard, setSubmitLoaderHazard] = useState(false)
   const [otherHazards, setOtherHazards] = useState([
     {
       "hazard": "",
@@ -139,10 +139,10 @@ const ProjectAreaHazards = () => {
       "fkJhaId": localStorage.getItem("fkJHAId")
     }
   ])
-  const [loading, setLoading] = useState(false)
+  const [loadingHazard, setLoadingHazard] = useState(false)
   const history = useHistory()
 
-  const handelUpdate = async () => {
+  const handelUpdateHazard = async () => {
     const temp = {}
     const otherNoId = []
     const tempForm = []
@@ -156,11 +156,11 @@ const ProjectAreaHazards = () => {
         otherNoId.push(value)
       }
     })
-    setForm(tempForm)
+    setFormHazard(tempForm)
     if (otherNoId.length > 0) {
       setOtherHazards(otherNoId)
     }
-    setFetchedOptions(apiData)
+    setFetchedOptionsHazard(apiData)
     apiData.map((value) => {
       if (value.hazard in temp) {
         temp[value.hazard].push(value.risk)
@@ -192,7 +192,7 @@ const ProjectAreaHazards = () => {
     setCheckListGroups(temp)
   }
 
-  const handleAdd = (e) => {
+  const handleAddHazard = (e) => {
     if (Object.keys(otherHazards).length < 100) {
       setOtherHazards([...otherHazards, {
         "hazard": "",
@@ -206,7 +206,7 @@ const ProjectAreaHazards = () => {
     }
   };
 
-  const handelRemove = async (e, index) => {
+  const handelRemoveHazard = async (e, index) => {
     if (otherHazards.length > 1) {
       let temp = otherHazards;
       let newData = otherHazards.filter((item, key) => key !== index);
@@ -222,12 +222,12 @@ const ProjectAreaHazards = () => {
   };
 
   const handlePhysicalHazards = async (e, checkListId, hazard_value) => {
-    let temp = [...form]
+    let temp = [...formHazard]
     if (e.target.checked == false) {
       temp.map((jhaValue, index) => {
         if (jhaValue['fkChecklistId'] === checkListId) {
           temp.splice(index, 1);
-          fetchOption.splice(index, 1);
+          fetchOptionHazard.splice(index, 1);
 
         }
       })
@@ -244,18 +244,18 @@ const ProjectAreaHazards = () => {
         "fkJhaId": localStorage.getItem("fkJHAId"),
       })
     }
-    await setForm(temp)
+    await setFormHazard(temp)
   };
 
   const handelSelectOption = (checklistId, hazard) => {
-    for (let i = 0; i <= form.length; i++) {
-      if (form[i] != undefined && form[i]["hazard"] == hazard && form[i]["fkChecklistId"] == checklistId) {
+    for (let i = 0; i <= formHazard.length; i++) {
+      if (formHazard[i] != undefined && formHazard[i]["hazard"] == hazard && formHazard[i]["fkChecklistId"] == checklistId) {
         return true
       }
     }
   }
 
-  const handelNavigate = (navigateType) => {
+  const handelNavigateHazard = (navigateType) => {
     if (navigateType == "next") {
       history.push("/app/pages/Jha/assessments/assessment/")
     } else if (navigateType == "previous") {
@@ -264,24 +264,24 @@ const ProjectAreaHazards = () => {
   }
 
   const handelCheckPost = (checklistId, hazard) => {
-    for (let i = 0; i <= fetchOption.length; i++) {
-      if (fetchOption[i] != undefined && fetchOption[i]["hazard"] == hazard && fetchOption[i]["fkChecklistId"] == checklistId) {
+    for (let i = 0; i <= fetchOptionHazard.length; i++) {
+      if (fetchOptionHazard[i] != undefined && fetchOptionHazard[i]["hazard"] == hazard && fetchOptionHazard[i]["fkChecklistId"] == checklistId) {
         return true
       }
     }
   }
 
-  const handelApiError = () => {
-    setSubmitLoader(false)
+  const handelApiErrorHazard = () => {
+    setSubmitLoaderHazard(false)
     history.push("/app/pages/error")
   }
 
-  const handleSubmit = async (e) => {
-    setSubmitLoader(true)
+  const handleSubmitHazard = async (e) => {
+    setSubmitLoaderHazard(true)
 
     let hazardNew = []
     let hazardUpdate = []
-    let allHazard = [form, otherHazards]
+    let allHazard = [formHazard, otherHazards]
 
     allHazard.map((values, index) => {
       allHazard[index].map((value) => {
@@ -296,27 +296,27 @@ const ProjectAreaHazards = () => {
         }
       })
     })
-    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate).catch(() => handelApiError())
-    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew).catch(() => handelApiError())
-    handelNavigate("next")
-    setSubmitLoader(false)
+    const resUpdate = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
+    const resNew = await api.post(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
+    handelNavigateHazard("next")
+    setSubmitLoaderHazard(false)
   }
 
-  const handelCallback = async () => {
-    await setLoading(true)
-    await handelUpdate()
+  const handelCallbackHazard = async () => {
+    await setLoadingHazard(true)
+    await handelUpdateHazard()
     await checkList()
-    await setLoading(false)
+    await setLoadingHazard(false)
   }
 
   useEffect(() => {
-    handelCallback()
+    handelCallbackHazard()
   }, [])
 
   const classes = useStyles();
   return (
     <PapperBlock title="Project Area Hazard" icon="ion-md-list-box">
-      {loading == false ?
+      {loadingHazard == false ?
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>
@@ -370,7 +370,7 @@ const ProjectAreaHazards = () => {
                       <IconButton
                         variant="contained"
                         color="primary"
-                        onClick={(e) => handelRemove(e, index)}
+                        onClick={(e) => handelRemoveHazard(e, index)}
                       >
                         <DeleteForeverIcon />
                       </IconButton>
@@ -386,7 +386,7 @@ const ProjectAreaHazards = () => {
                   color="primary"
                   startIcon={<AddCircleIcon />}
                   className={classes.button}
-                  onClick={(e) => handleAdd()}
+                  onClick={(e) => handleAddHazard()}
                 >
                   Add
                 </Button>
@@ -399,21 +399,21 @@ const ProjectAreaHazards = () => {
                 <Button
                   variant="outlined"
                   className={classes.custmSubmitBtn}
-                  onClick={(e) => handelNavigate("previous")}
+                  onClick={(e) => handelNavigateHazard("previous")}
                 >
                   Previous
                 </Button>
                 <div className={classes.loadingWrapper}>
                   <Button
                     variant="contained"
-                    onClick={(e) => handleSubmit()}
+                    onClick={(e) => handleSubmitHazard()}
                     className={classes.custmSubmitBtn}
                     style={{ marginLeft: "10px" }}
-                    disabled={submitLoader}
+                    disabled={submitLoaderHazard}
                   >
                     Next
                   </Button>
-                  {submitLoader && (
+                  {submitLoaderHazard && (
                     <CircularProgress
                       size={24}
                       className={classes.buttonProgress}

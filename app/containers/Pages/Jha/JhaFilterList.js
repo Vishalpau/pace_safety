@@ -369,7 +369,9 @@ class JhaFilter extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <JhaList />
+            <JhaList
+              search={this.props.search}
+              assessment={this.props.assessment} />
           </main>
           {after}
         </div>

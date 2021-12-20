@@ -1,23 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React , {useState} from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import InputBase from '@material-ui/core/InputBase';
-import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import AddIcon from '@material-ui/icons/Add';
+import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import classNames from "classnames";
+import Button from '@material-ui/core/Button';
+import ReorderIcon from '@material-ui/icons/Reorder';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import ViewColumnIcon from '@material-ui/icons/ViewColumn';
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+//import ObservationsLookAhead from './ObservationsLookAhead';
+import AhaFilter from './AhaFilter';
+import AhaBookmarkFilter from './AhaBookmarkFilter';
 //import ObservationsKanban from './ObservationsKanban';
 import SearchIcon from '@material-ui/icons/Search';
-import StarsIcon from '@material-ui/icons/Stars';
-import classNames from "classnames";
-import completed from 'dan-images/completed.png';
+
+import Paper from '@material-ui/core/Paper';
+import Toolbar from '@material-ui/core/Toolbar';
+import InputBase from '@material-ui/core/InputBase';
+import Tooltip from '@material-ui/core/Tooltip';
 import preplanning from 'dan-images/preplanning.png';
 import progress from 'dan-images/progress.png';
-import PropTypes from 'prop-types';
-//import ObservationsLookAhead from './ObservationsLookAhead';
-import JhaFilter from './JhaFilter';
+import completed from 'dan-images/completed.png';
+import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
+import GamesOutlinedIcon from '@material-ui/icons/GamesOutlined';
+import StarsIcon from '@material-ui/icons/Stars';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -247,11 +262,11 @@ const useStyles = makeStyles((theme) => ({
   },
   searchSetionBox: {
     paddingRight: '0px',
-    ['@media (max-width:800px)']: {
+    ['@media (max-width:800px)']: { 
       padding: '0px 12px !important',
     },
-    '& .MuiPaper-root': {
-      ['@media (max-width:800px)']: {
+    '& .MuiPaper-root':{
+      ['@media (max-width:800px)']: { 
         margin: '0px 0px 0px 8px',
       },
     },
@@ -259,20 +274,20 @@ const useStyles = makeStyles((theme) => ({
   statusIconBox: {
     textAlign: 'center',
     padding: '24px 0px !important',
-    ['@media (max-width:800px)']: {
+    ['@media (max-width:800px)']: { 
       padding: '0px 0px 25px 0px !important',
     },
-    ['@media (max-width:480px)']: {
+    ['@media (max-width:480px)']: { 
       padding: '12px 0px 25px 16px !important',
       textAlign: 'left',
     },
   },
   mR10: {
     marginRight: '10px',
-    '& img:hover': {
-      borderRadius: '50%',
-      boxShadow: '0px 0px 2px 2px #f47607',
-    },
+   '& img:hover': {
+     borderRadius: '50%',
+     boxShadow: '0px 0px 2px 2px #f47607',
+   },
   },
   pLThirty: {
     paddingLeft: '30px',
@@ -297,7 +312,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
     marginTop: '13px',
     '& button': {
-      ['@media (max-width:480px)']: {
+      ['@media (max-width:480px)']: { 
         fontSize: '9px',
       },
     },
@@ -331,7 +346,7 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40px',
       marginLeft: '5px',
       padding: '10px',
-      ['@media (max-width:480px)']: {
+      ['@media (max-width:480px)']: { 
         minWidth: 'auto',
         marginLeft: '2px',
         marginRight: '2px',
@@ -353,84 +368,85 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function JhaSearchSection() {
+export default function SimpleTabs(props) {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
-  const [search, setSearch] = useState("")
-  const [assessment, setAssessments] = useState("My Assessments")
-
- 
-
-  const handelSearch = (e) => {
-    setSearch(e.target.value)
-  }
+  const [value, setValue] = React.useState(0);
+  const[searchIncident,setSeacrhIncident] = React.useState('');
+  const [assessments, setAssessments] = useState("My Assessments");
+  // const [searchIncident, setSeacrhIncident] = useState("")
+  const [status, setStatus] = useState('')
+  const handleSearch = (e) => {
+    setSeacrhIncident(e.target.value);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if(newValue === 0){
       setAssessments("My Assessments")
+      setStatus('')
     }else if(newValue === 1){
       setAssessments("Big Picture")
+      setStatus('')
     }
   };
 
   return (
     <div className={classes.root}>
-      <Grid item md={12} className={classes.AppBarHeader}>
-        <Grid container spacing={3}>
-          <Grid item md={7} sm={12} xs={12}>
-            <AppBar position="static" className={classes.navTabBack}>
-              <div className={classes.floatL}>
-                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                  <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
-                  {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
-                  <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
-                  {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
-                </Tabs>
-              </div>
-            </AppBar>
-          </Grid>
-          <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
-            <Paper elevation={1} className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
-                onChange={(e) => handelSearch(e)}
-              />
-            </Paper>
-          </Grid>
-          <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
-            <span className={classes.mR10}>
-              <img src={preplanning} />
-              <img src={progress} className={classes.pLtenPRten} />
-              <img src={completed} />
-            </span>
-          </Grid>
+	  <Grid item md={12} className={classes.AppBarHeader}>
+		  <Grid container spacing={3}>			
+        <Grid item md={7} sm={12} xs={12}>
+          <AppBar position="static" className={classes.navTabBack}>
+            <div className={classes.floatL}>
+            <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+              <Tab label="My Assessments" {...a11yProps(0)} className={classes.hoverB} />
+              {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
+              <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
+              {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+            </Tabs>
+            </div>  
+          </AppBar>
         </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item sm={12} xs={12}>
-          <TabPanel value={value} index={0} className={classes.paddLRzero}>
-            <JhaFilter search={search} assessment={assessment} />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <JhaFilter search={search} assessment={assessment} />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <JhaFilter search={search} assessment={assessment} />
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <JhaFilter search={search} assessment={assessment} />
-          </TabPanel>
+        <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
+          <Paper elevation={1} className={classes.search}>
+            <div className={classes.searchIcon}>
+            <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ 'aria-label': 'search' }}
+              onChange={(e) => handleSearch(e)}
+            />
+          </Paper> 
         </Grid>
-      </Grid>
-    </div>
+        <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
+          <span className={classes.mR10}>
+            <img src={preplanning} />
+            <img src={progress} className={classes.pLtenPRten} />
+            <img src={completed} />
+          </span>
+        </Grid>
+		  </Grid>
+	  </Grid>
+	  <Grid container spacing={3}>
+		<Grid item sm={12} xs={12}>
+		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
+			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} />
+		  </TabPanel>
+		  <TabPanel value={value} index={1}>
+			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} />
+		  </TabPanel>
+		  <TabPanel value={value} index={2}>
+			  <AhaFilter search={searchIncident} assessments={assessments} />
+		  </TabPanel>
+		  <TabPanel value={value} index={3}>
+			  <AhaBookmarkFilter />
+		  </TabPanel>
+		</Grid>
+	</Grid>
+	</div>
   );
 }

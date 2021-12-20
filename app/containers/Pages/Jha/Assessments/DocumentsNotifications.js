@@ -135,17 +135,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DocumentNotification = () => {
-  const [form, setForm] = useState({});
+  const [formDocument, setFormDocument] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const history = useHistory();
   const [notifyToList, setNotifyToList] = useState([]);
   const [open, setOpen] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [message, setMessage] = useState('');
-  const [submitLoader, setSubmitLoader] = useState(false);
+  const [submitLoaderDocument, setsubmitLoaderDocumentDocument] = useState(false);
   const ref = useRef();
 
-  const handelJobDetails = async () => {
+  const handelJobDetailsDocument = async () => {
     const jhaId = handelJhaId();
     const res = await api.get(`/api/v1/jhas/${jhaId}/`);
     const apiData = res.data.data.results;
@@ -187,10 +187,10 @@ const DocumentNotification = () => {
       acceptFileTypes.includes(file[file.length - 1])
       && e.target.files[0].size < 25670647
     ) {
-      const temp = { ...form };
+      const temp = { ...formDocument };
       const filesAll = e.target.files[0];
       temp.jhaAssessmentAttachment = filesAll;
-      await setForm(temp);
+      await setFormDocument(temp);
     } else {
       ref.current.value = '';
       !acceptFileTypes.includes(file[file.length - 1])
@@ -212,7 +212,7 @@ const DocumentNotification = () => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-  const handelNavigate = (navigateType) => {
+  const handelNavigateDocument = (navigateType) => {
     if (navigateType === 'next') {
       history.push('/app/pages/jha/jha-summary');
     } else if (navigateType === 'previous') {
@@ -241,8 +241,8 @@ const DocumentNotification = () => {
 
   };
 
-  const handelApiError = () => {
-    setSubmitLoader(false);
+  const handelApiErrorDocument = () => {
+    setsubmitLoaderDocumentDocument(false);
     history.push('/app/pages/error');
   };
 
@@ -276,11 +276,11 @@ const DocumentNotification = () => {
     }
     history.push(SUMMARY_FORM.Summary);
     localStorage.setItem('Jha Status', JSON.stringify({ assessment: 'done' }));
-    setSubmitLoader(false);
+    setsubmitLoaderDocumentDocument(false);
   };
 
   useEffect(() => {
-    handelJobDetails();
+    handelJobDetailsDocument();
   }, []);
 
   const classes = useStyles();
@@ -308,10 +308,6 @@ const DocumentNotification = () => {
                   name="file"
                   ref={ref}
                   accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
-                  // style={{
-                  //   color:
-                  //     typeof form.attachments === "string" && "transparent",
-                  // }}
                   onChange={(e) => {
                     handleFile(e);
                   }}
@@ -336,12 +332,12 @@ const DocumentNotification = () => {
                 label="Link"
                 name="link"
                 id="link"
-                value={form.link != null ? form.link : ''}
+                value={formDocument.link != null ? formDocument.link : ''}
                 fullWidth
                 variant="outlined"
                 className={classes.formControl}
-                onChange={(e) => setForm({
-                  ...form,
+                onChange={(e) => setFormDocument({
+                  ...formDocument,
                   link: e.target.value
                 })}
               />
@@ -387,7 +383,7 @@ const DocumentNotification = () => {
                 variant="outlined"
                 size="medium"
                 className={classes.custmSubmitBtn}
-                onClick={() => handelNavigate('previous')}
+                onClick={() => handelNavigateDocument('previous')}
               >
                 Previous
               </Button>
@@ -397,12 +393,12 @@ const DocumentNotification = () => {
                   onClick={(e) => handelNext()}
                   className={classes.custmSubmitBtn}
                   style={{ marginLeft: "10px" }}
-                  disabled={submitLoader}
+                  disabled={submitLoaderDocument}
                 >
 
                   Submit
                 </Button>
-                {submitLoader && (
+                {submitLoaderDocument && (
                   <CircularProgress
                     size={24}
                     className={classes.buttonProgress}

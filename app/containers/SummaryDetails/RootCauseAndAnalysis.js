@@ -109,6 +109,7 @@ const RootCauseAnalysisSummary = () => {
         additonalDetails["Reasons to support above"].push(value["rcaRemark"])
       }
     })
+    console.log(additonalDetails)
 
     setAdditonalDetails(additonalDetails);
     handelActionTracker(paceData)
@@ -464,7 +465,8 @@ const RootCauseAnalysisSummary = () => {
             </Grid>
           ) : null}
 
-          {Object.keys(additionalDetails).length !== 0 ? (
+          {Object.entries(additionalDetails).map(([key, value]) => {
+            value.length > 0 ? (
             <Grid item xs={12}>
               <Accordion
                 expanded={expanded === "panel5"}
@@ -495,8 +497,8 @@ const RootCauseAnalysisSummary = () => {
                   </Grid>
                 </AccordionDetails>
               </Accordion>
-            </Grid>
-          ) : null}
+            </Grid>): null
+          })} 
         </>
         :
         <Loader />

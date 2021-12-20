@@ -260,7 +260,6 @@ const ObservationCorrectiveActionView = () => {
                     </TableCell>
                   </TableRow></TableHead>
                   <TableBody>
-                    {console.log(actionTakenData, "!!!")}
                     {actionTakenData.map((action, index) => (<>
                       <TableRow>
                         <TableCell style={{ width: 50 }}>
