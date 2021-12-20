@@ -15,12 +15,13 @@ import ViewWeekIcon from '@material-ui/icons/ViewWeek';
 import classNames from "classnames";
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React , { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import JhaSearchSection from './JhaSearchSection';
 import JhaSearchSectionKanban from './JhaSearchSectionKanban';
 import JhaSearchSectionList from './JhaSearchSectionList';
 import JhaSearchSectionTrend from './JhaSearchSectionTrend';
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -252,6 +253,10 @@ export default function JhaMain() {
     localStorage.removeItem("fkJHAId")
     history.push("/app/pages/jha/assessments/Job-hazards");
   };
+
+  useEffect(() => {
+    allPickListDataValue()
+  }, [])
 
   return (
     <div className={classes.root}>
