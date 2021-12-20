@@ -632,7 +632,7 @@ function ComplianceListNew(props) {
     : null;
     console.log(props.compliance,"::::::::::::::")
     if(props.compliance === "My Inspections"){
-      const res = await api.get(`api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+      const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
   
       const result = res.data.data.results
       await setAllComplianceData(result)

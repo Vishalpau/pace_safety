@@ -369,6 +369,7 @@ export default function ComplianceSearchSectionCard() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
+  const [search, setSearch] = React.useState("");
 
   const handleChange = (event, newValue) => {
     if(newValue === 0){
@@ -379,6 +380,10 @@ export default function ComplianceSearchSectionCard() {
       setValue(newValue);
     }
   };
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
+  }
 
   return (
     
@@ -414,6 +419,7 @@ export default function ComplianceSearchSectionCard() {
               root: classes.inputRoot,
               input: classes.inputInput,
             }}
+            onChange={(e) => handleSearch(e)}
             inputProps={{ 'aria-label': 'search' }}
           />
         </Paper> 
@@ -429,16 +435,16 @@ export default function ComplianceSearchSectionCard() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <ComplianceFilterCard compliance={compliance}/>
+			  <ComplianceFilterCard compliance={compliance} search={search}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-        <ComplianceFilterCard compliance={compliance}/>
+        <ComplianceFilterCard compliance={compliance} search={search}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-        <ComplianceFilterCard compliance={compliance}/>
+        <ComplianceFilterCard compliance={compliance} search={search}/>
 		  </TabPanel>
       <TabPanel value={value} index={3}>
-        <ComplianceFilterCard compliance={compliance}/>
+        <ComplianceFilterCard compliance={compliance} search={search}/>
 		  </TabPanel>
 		</Grid>
 	</Grid>
