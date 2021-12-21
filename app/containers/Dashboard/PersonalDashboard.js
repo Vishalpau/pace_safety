@@ -201,7 +201,12 @@ function PersonalDashboard(props) {
 
 
         await setSubscriptions(data)
-
+        
+        if(localStorage.getItem('lastState') != null){
+          let laststate = localStorage.getItem('lastState')
+          localStorage.removeItem('lastState')
+          history.push(laststate)
+        }
         const modules = data.map(subscription => subscription.modules)
         var modulesState = []
         var temp = []
@@ -225,8 +230,9 @@ function PersonalDashboard(props) {
           }
         })
         let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-        setCode(temp)
-        getModules(apps)
+        await setCode(temp)
+        await getModules(apps)
+        
       } catch (error) { }
     }
     // getAllPickList()
