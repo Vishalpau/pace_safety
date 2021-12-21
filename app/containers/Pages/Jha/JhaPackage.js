@@ -471,10 +471,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function JhaPackage(props) {
-  console.log(props.assessment)
   const [cardView, setCardView] = useState(true);
   const [allJHAData, setAllJHAData] = useState([])
   const search = props.search
+  const status = props.status
   const history = useHistory();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false)
@@ -515,7 +515,7 @@ function JhaPackage(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
 
     if(props.assessment === "My Assessments"){
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`);
   
       const result = res.data.data.results.results
       await setAllJHAData(result)
@@ -524,7 +524,7 @@ function JhaPackage(props) {
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     }else{
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`);
   
       const result = res.data.data.results.results
       await setAllJHAData(result)
@@ -552,11 +552,18 @@ function JhaPackage(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    await setAllJHAData(res.data.data.results.results);
-    await setPage(value)
-    await handelTableView(res.data.data.results.results)
-
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+    if(props.observation === "My Assessments"){
+      const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`);
+        await setAllJHAData(res.data.data.results.results);
+        await setPage(value)
+    }else{
+      const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`);
+      await setAllJHAData(res.data.data.results.results);
+      await setPage(value)
+    }
   };
 
   const handleClick = (event) => {
@@ -662,7 +669,7 @@ function JhaPackage(props) {
 
   useEffect(() => {
     fetchData()
-  }, [props.projectName.breakDown,props.search,props.assessment])
+  }, [props.projectName.breakDown,props.search,props.assessment,props.status])
 
   return (
     <>

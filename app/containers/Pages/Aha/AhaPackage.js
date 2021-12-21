@@ -30,6 +30,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 import completed_small from 'dan-images/completed-small.png';
 import in_progress_small from 'dan-images/in_progress_small.png';
+import preplanning from 'dan-images/preplanning.png';
 import '../../../styles/custom/customheader.css';
 import StarsIcon from '@material-ui/icons/Stars';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
@@ -474,7 +475,8 @@ function AhaPackage(props) {
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
-
+  const search = props.search
+  const status = props.status
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -559,23 +561,21 @@ for (const i in selectBreakdown) {
 }
 const fkProjectStructureIds = struct.slice(0, -1);
   if(props.assessments === "My Assessments"){
-    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
-
+    const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`);
     const result = res.data.data.results.results
     await setAllAHAData(result)
     await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
+    await setPageData(res.data.data.results.count / 25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
   }else{
-    const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-
+    const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`);
     const result = res.data.data.results.results
     await setAllAHAData(result)
     await setTotalData(res.data.data.results.count)
-          await setPageData(res.data.data.results.count / 25)
-          let pageCount = Math.ceil(res.data.data.results.count / 25)
-          await setPageCount(pageCount)
+    await setPageData(res.data.data.results.count / 25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
   }
   
 
@@ -630,7 +630,7 @@ const classes = useStyles();
 useEffect(() => {
   fetchAllAHAData()
   // handleProjectList()
-},[props.projectName.breakDown,props.search,props.assessments])
+},[props.projectName.breakDown,props.search,props.assessments,props.status])
 
 
   return (
@@ -697,9 +697,9 @@ useEffect(() => {
                                 color="textPrimary"
                                 className={classes.listingLabelName}
                               >
-                                Stage: <span className={classes.listingLabelValue}>{item[1].ahaStage} <img src={in_progress_small} className={classes.smallImage} /></span>
+                                Stage: <span className={classes.listingLabelValue}>{item[1].ahaStage} <img src={item[1].ahaStage === "Open" ? preplanning : completed_small} className={classes.smallImage} /></span>
                                 <span item xs={1} className={classes.sepHeightOne}></span>
-                                Status: <span className={classes.listingLabelValue}>{item[1].ahaStatus} <img src={completed_small} className={classes.smallImage} /></span>
+                                Status: <span className={classes.listingLabelValue}>{item[1].ahaStatus} <img src={item[1].ahaStatus === "Open" ? preplanning : completed_small} className={classes.smallImage} /></span>
                               </Typography>
                             
                             </Grid>

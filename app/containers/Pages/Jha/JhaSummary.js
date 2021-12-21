@@ -1279,7 +1279,7 @@ function JhaSummary() {
                     variant="subtitle"
                     onClick={(e) => handleNewJhaPush(e)}
                     >
-                    <ListItemText primary={formStatus.assessmentStatus ? "Update assessment" : "Add assessment"} />
+                    <ListItemText primary={formStatus.assessmentStatus ? "Modify assessment" : "Add assessment"} />
                   </Link>
                 </ListItem>
 
@@ -1294,7 +1294,7 @@ function JhaSummary() {
                     variant="subtitle"
                     onClick={(e) => handleJhaApprovalsPush(e)}
                   >
-                  <ListItemText primary={formStatus.approvalStatus ? "Update approval" : "Add approval"} />
+                  <ListItemText primary={formStatus.approvalStatus ? "Modify approval" : "Add approval"} />
                   </Link>
                 </ListItem>
 
@@ -1308,7 +1308,7 @@ function JhaSummary() {
                     variant="subtitle"
                     onClick={(e) => handleJhaLessonLearnPush(e)}
                   >
-                  <ListItemText primary={formStatus.lessionLeranedStatus ? "Update lessons learned" : "Add lessons learned"} />
+                  <ListItemText primary={formStatus.lessionLeranedStatus ? "Modify lessons learned" : "Add lessons learned"} />
                   </Link>
                 </ListItem>
 
