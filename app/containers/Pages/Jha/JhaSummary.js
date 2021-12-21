@@ -694,7 +694,9 @@ function JhaSummary() {
                                       Assessment started on
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
-                                      {checkValue(assessment.jhaAssessmentDate)}
+                                      {moment(assessment["jhaAssessmentDate"]).format(
+                                        "Do MMM YYYY"
+                                      )}
                                     </Typography>
                                   </Grid>
                                   
@@ -720,7 +722,7 @@ function JhaSummary() {
                                   </Grid>
 
                                   <Grid item xs={12} md={12} className="paddBRemove">
-                                    <FormLabel className="checkRadioLabel" component="legend">Area hazard</FormLabel>
+                                    <FormLabel className="checkRadioLabel" component="legend">Job hazard</FormLabel>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     {false &&

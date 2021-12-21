@@ -872,7 +872,7 @@ const AssessmentAndDocument = () => {
                                             disabled={submitLoader}
                                         >
 
-                                            Next
+                                            Submit
                                         </Button>
                                         {submitLoader && (
                                             <CircularProgress
