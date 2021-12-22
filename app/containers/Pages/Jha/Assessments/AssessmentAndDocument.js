@@ -526,6 +526,8 @@ const AssessmentAndDocument = () => {
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
+            formDocument["jhaStatus"] = "Open"
+            formDocument["jhaStage"] = "Open"
             formDocument['link'] = ""
             formDocument['notifyTo'] = formDocument.notifyTo.toString();
             formDocument['humanPerformanceAspects'] = additinalJobDetails.humanPerformanceAspects.toString();
@@ -870,7 +872,7 @@ const AssessmentAndDocument = () => {
                                             disabled={submitLoader}
                                         >
 
-                                            Next
+                                            Submit
                                         </Button>
                                         {submitLoader && (
                                             <CircularProgress

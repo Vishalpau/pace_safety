@@ -429,10 +429,8 @@ const AssessmentAndNotification = () => {
     ahaform[
       "workStopCondition"
     ] = additinalJobDetails.workStopCondition.toString();
-    ahaform["ahaStage"] = "Assessment";
-    ahaform["ahaStatus"] = "Done";
-    
-    
+    ahaform["ahaStage"] = "Open";
+    ahaform["ahaStatus"] = "Open";
     ahaform["updatedBy"] = userId
     let data = new FormData();
     data.append("fkCompanyId", ahaform.fkCompanyId),

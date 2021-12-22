@@ -151,6 +151,9 @@ function App() {
     }
     else {
       if (localStorage.getItem('access_token') === null) {
+        let laststate = window.location.href.replace(window.location.protocol + '//' + window.location.host, '')
+        if (laststate != '')
+          localStorage.setItem('lastState', laststate)
         if (window.location.hostname === 'localhost') {
           window.location.href = `${LOCAL_LOGIN_URL}`;
         } else {

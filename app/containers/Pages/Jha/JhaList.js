@@ -143,7 +143,8 @@ function JhaList(props) {
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
-
+  const search = props.search
+  const status = props.status
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -198,7 +199,7 @@ function JhaList(props) {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
     if(props.assessment === "My Assessments"){
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+      const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`);
   
       const result = res.data.data.results.results
       await setAllJHAData(result)
@@ -207,7 +208,7 @@ function JhaList(props) {
             let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
     }else{
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+      const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`);
   
       const result = res.data.data.results.results
       await setAllJHAData(result)
@@ -237,11 +238,11 @@ function JhaList(props) {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
   if(props.assessment === "My Assessments"){
-    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`);
       await setAllJHAData(res.data.data.results.results);
       await setPage(value)
   }else{
-    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await setPage(value)
   }
@@ -251,7 +252,7 @@ function JhaList(props) {
 
   useEffect(() => {
     fetchAllJHAData()
-},[props.projectName.breakDown,props.search,props.assessment])
+},[props.projectName.breakDown,props.search,props.assessment,props.status])
 
   return (
     <>
