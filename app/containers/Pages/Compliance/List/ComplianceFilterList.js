@@ -369,7 +369,10 @@ class ComplianceFilterList extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <ComplianceList />
+            <ComplianceList 
+              compliance={this.props.compliance} 
+              search={this.props.search}
+             />
           </main>
           {after}
         </div>

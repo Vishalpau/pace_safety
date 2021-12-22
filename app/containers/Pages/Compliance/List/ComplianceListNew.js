@@ -52,6 +52,7 @@ import api from "../../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../../Loader";
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -431,6 +432,12 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: "flex-start",
     },
   },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '-10px',
+  },
 }));
 
 function ComplianceListNew(props) {
@@ -461,9 +468,9 @@ function ComplianceListNew(props) {
 
   const [value, setValue] = React.useState(2);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
 
   //view comments
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -472,6 +479,10 @@ function ComplianceListNew(props) {
   const [attachOpen, setAttachOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
   const handleVisibility = () => {
     setAttachOpen(true);
     setHidden(!hidden);
@@ -611,7 +622,7 @@ function ComplianceListNew(props) {
   const classes = useStyles();
 
   const fetchAllComplianceData = async () => {
-    // await setPage(1)
+    await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -630,33 +641,62 @@ function ComplianceListNew(props) {
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
-    console.log(props.compliance,"::::::::::::::")
     if(props.compliance === "My Inspections"){
       const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
-  
+      
+      console.log(res,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       const result = res.data.data.results
       await setAllComplianceData(result)
-      // await setTotalData(res.data.data.results.count)
-      //       await setPageData(res.data.data.results.count / 25)
-      //       let pageCount = Math.ceil(res.data.data.results.count / 25)
-      //       await setPageCount(pageCount)
+      await setTotalData(res.data.data.metadata.count)
+            await setPageData(res.data.data.metadata.count / 25)
+            let pageCount = Math.ceil(res.data.data.metadata.count / 25)
+            await setPageCount(pageCount)
     }else{
       const res = await api.get(`api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-  
+      
       const result = res.data.data.results
       await setAllComplianceData(result)
-      // await setTotalData(res.data.data.results.count)
-      //       await setPageData(res.data.data.results.count / 25)
-      //       let pageCount = Math.ceil(res.data.data.results.count / 25)
-      //       await setPageCount(pageCount)
+      await setTotalData(res.data.data.metadata.count)
+            await setPageData(res.data.data.metadata.count / 25)
+            let pageCount = Math.ceil(res.data.data.metadata.count / 25)
+            await setPageCount(pageCount)
     }
-
+    
     await setIsLoading(true);
   };
 
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  if(props.compliance === "My Inspections"){
+    const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+      await setAllComplianceData(res.data.data.results);
+      await setPage(value)
+  }else{
+    const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    await setAllComplianceData(res.data.data.results);
+    await setPage(value)
+  }
+  
+  };
+console.log(totalData,"++++++++++")
   useEffect(() => {
     fetchAllComplianceData();
-  }, [props.projectName.breakDown,props.compliance]);
+  }, [props.projectName.breakDown,props.compliance,props.search]);
 
   return (
     <>
@@ -713,7 +753,7 @@ function ComplianceListNew(props) {
                                       className={classes.title}
                                       variant="h6"
                                     >
-                                      Exposure to dangerous chemicals or toxins
+                                      {value['auditType'] !== null ? value['auditType'] : "-"}
                                     </Typography>
                                     <Typography
                                       className={classes.listingLabelName}
@@ -836,7 +876,9 @@ function ComplianceListNew(props) {
                                 <Typography
                                   className={classes.listingLabelValue}
                                 >
-                                  24-Sep-2021
+                                  {moment(value["createdAt"]).format(
+                                  "Do MMMM YYYY, h:mm:ss a"
+                                )}
                                 </Typography>
                               </Grid>
 
@@ -853,7 +895,7 @@ function ComplianceListNew(props) {
                                 <Typography
                                   className={classes.listingLabelValue}
                                 >
-                                  Person
+                                  {value['createdByName'] !== null ? value['createdByName'] : "-"}
                                 </Typography>
                               </Grid>
                             </Grid>
@@ -1319,6 +1361,13 @@ function ComplianceListNew(props) {
                 </Dialog>
               </div>
             </div>
+            <div className={classes.pagination}>
+            {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+            {/* <div className="paginationSection">
+              <Pagination count={10} />
+            </div> */}
           </div>
         </Grid>
       </Box>

@@ -372,10 +372,23 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [compliance, setCompliancesetValue] = React.useState("My Inspections");
+  const [search, setSearch] = React.useState("");
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if(newValue === 0){
+      setCompliancesetValue("My Inspections")
+      setValue(newValue);
+    }else{
+      setCompliancesetValue("Big Picture")
+      setValue(newValue);
+    }
   };
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
+  }
+
 
   return (
     <div className={classes.root}>
@@ -386,9 +399,9 @@ export default function SimpleTabs() {
             <div className={classes.floatL}>
             <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
               <Tab label="My Inspections" {...a11yProps(0)} className={classes.hoverB} />
-              <Tab label="Team's Inspections" {...a11yProps(1)} className={classes.hoverB} />
+              {/* <Tab label="Team's Inspections" {...a11yProps(1)} className={classes.hoverB} /> */}
               <Tab label="Big Picture" {...a11yProps(2)} className={classes.hoverB} />
-              <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} />
+              {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
             </Tabs>
             </div>  
           </AppBar>
@@ -405,6 +418,7 @@ export default function SimpleTabs() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={(e) => handleSearch(e)}
             />
           </Paper> 
         </Grid>
@@ -416,16 +430,16 @@ export default function SimpleTabs() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			<ComplianceFilterList />
+			  <ComplianceFilterList compliance={compliance} search={search} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			<ComplianceFilterList />
+			  <ComplianceFilterList compliance={compliance} search={search} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			<ComplianceFilterList />
+		  	<ComplianceFilterList compliance={compliance} search={search} />
 		  </TabPanel>
-		<TabPanel value={value} index={3}>
-			<ComplianceFilterList />
+		  <TabPanel value={value} index={3}>
+        <ComplianceFilterList compliance={compliance} search={search} />
 		  </TabPanel>
 		</Grid>
 	</Grid>

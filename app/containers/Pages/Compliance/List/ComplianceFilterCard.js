@@ -365,9 +365,7 @@ class ComplianceFilterCard extends React.Component {
         >
           <div className={classes.drawerHeader} />
           <ComplianceListNew compliance={this.props.compliance} search={this.props.search}/>
-          <div className="paginationSection">
-              <Pagination count={10} showFirstButton showLastButton />
-            </div>
+          
         </main>
         {after}
       </div>
