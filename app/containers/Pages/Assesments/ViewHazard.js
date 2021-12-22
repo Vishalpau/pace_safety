@@ -19,8 +19,10 @@ import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutline
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuOpenOutlinedIcon from '@material-ui/icons/MenuOpenOutlined';
+import moment from 'moment';
 
 import Attachment from '../../../containers/Attachment/Attachment';
+import classNames from 'classnames';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -316,6 +318,8 @@ const useStyles = makeStyles((theme) => ({
 const FlhaDetails = (props) => {
   const classes = useStyles();
   const [flha, setFlha] = useState({});
+  const [notify, setNotify] = useState('');
+
   const [open, setOpen] = useState(false);
   const handleRiskChange = (rating) => {
     let colorRating = ''
@@ -347,6 +351,8 @@ const FlhaDetails = (props) => {
   };
 
   useEffect(() => {
+    if (props.notifyToValues != undefined){
+    setNotify(props.notifyToValues[props.flha.notifyTo])}
     setFlha(props.flha)
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -354,8 +360,8 @@ const FlhaDetails = (props) => {
         descriptionElement.focus();
       }
     }
-  }, [props.criticalTasks, props.visualConfirmations, props.flha]);
-
+  }, [props.criticalTasks, props.visualConfirmations, props.flha, props.notifyToValues]);
+console.log(notify,"props.notifyToValues")
   return (
 
     <div>
@@ -364,7 +370,6 @@ const FlhaDetails = (props) => {
         <Grid item sm={12} xs={12}>
           <Box padding={0}>
             <Grid container spacing={3}>
-
               <Divider className={classes.divider} />
               <Grid item xs={12}>
                 <Box padding={0}>
@@ -384,144 +389,156 @@ const FlhaDetails = (props) => {
                       </svg> Preventive controls
                     </Typography>
                   </Grid>
-                  <Grid item sm={12} xs={12} className={classes.mttopTen}>
-                    <Typography variant="h6">
-                      <AssignmentLateOutlinedIcon className={classes.headingIcon} />
-                      {' '}
-                      Critical tasks
-                    </Typography>
-
+                  <Grid item md={12} sm={12} xs={12} className="sectionSubHeading paddBRemove">
+                    <div className="subsectiontitle">
+                      <Typography variant="h6" className="sectionHeading">
+                        <svg id="Group_5073" data-name="Group 5073" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+                          <g id="outline-assignment-24px">
+                            <g id="Bounding_Boxes">
+                              <path id="Path_2274" data-name="Path 2274" d="M0,0H40V40H0Z" fill="none" />
+                            </g>
+                            <g id="project-manager" transform="translate(2 5.872)">
+                              <path id="Path_5094" data-name="Path 5094" d="M14.777,24.319a3.2,3.2,0,0,0,6.1,0c1.1.993,4.365,1.189,5.578,1.869a3.2,3.2,0,0,1,1.011.855,5.18,5.18,0,0,1,.627,1.213H7.562a5.18,5.18,0,0,1,.627-1.213A3.166,3.166,0,0,1,9.2,26.188c1.213-.68,4.474-.879,5.578-1.869Zm15.334-10.8H27.788a1.259,1.259,0,0,0-.914.375,1.243,1.243,0,0,0-.375.914v2.265a1.28,1.28,0,0,0,1.289,1.289h1a5.053,5.053,0,0,1-.278.809,2.169,2.169,0,0,1-.565.735,4.561,4.561,0,0,0,1.348-.586,4,4,0,0,0,1.017-.958h.855a1.266,1.266,0,0,0,.914-.375,1.231,1.231,0,0,0,.375-.914V14.8a1.254,1.254,0,0,0-.375-.914,1.238,1.238,0,0,0-.914-.375H30.111ZM36,16.116v2.265a1.467,1.467,0,0,1-.442,1.066,1.5,1.5,0,0,1-.2.167,1.558,1.558,0,0,1-.22.132s-.009,0-.012.006a1.377,1.377,0,0,1-.3.1,1.576,1.576,0,0,1-.334.035h-.712c.015.044.029.091.047.138.041.126.094.249.146.375v0a1.629,1.629,0,0,0,.2.331,2.473,2.473,0,0,0,.311.331.21.21,0,0,1,.018.3.216.216,0,0,1-.211.067,5.336,5.336,0,0,1-.747-.258,4.4,4.4,0,0,1-.665-.36,4.121,4.121,0,0,1-.577-.457,4.635,4.635,0,0,1-.428-.466h-.747a1.661,1.661,0,0,1-.4-.05,1.463,1.463,0,0,1-.369-.158.211.211,0,0,1,.22-.36,1.044,1.044,0,0,0,.261.111,1.057,1.057,0,0,0,.293.038h.853a.211.211,0,0,1,.17.085,3.873,3.873,0,0,0,.967.905,4.121,4.121,0,0,0,.571.313c-.041-.067-.07-.132-.1-.2-.056-.132-.111-.267-.158-.407s-.088-.272-.126-.413a.217.217,0,0,1,.2-.287H34.5a1.1,1.1,0,0,0,.243-.026,1.157,1.157,0,0,0,.208-.07l.009-.006a1.025,1.025,0,0,0,.155-.091.981.981,0,0,0,.146-.126A1.085,1.085,0,0,0,35.5,18.8a1.063,1.063,0,0,0,.076-.416V16.122a1.119,1.119,0,0,0-.076-.416,1.04,1.04,0,0,0-.237-.349,1.085,1.085,0,0,0-.349-.237,1.063,1.063,0,0,0-.416-.076H33.439a.214.214,0,1,1,0-.428h1.055a1.5,1.5,0,0,1,.574.111,1.471,1.471,0,0,1,.486.328,1.412,1.412,0,0,1,.328.489,1.444,1.444,0,0,1,.111.574H36ZM4.386,11.856a.171.171,0,0,1-.056-.009.17.17,0,0,1-.17-.17v-.334H2.517v.334a.168.168,0,0,1-.152.167.189.189,0,0,1-.059.009H1.685v.691H4.928v-.691H4.38l.006,0Zm-2.859,4.16a.334.334,0,1,1-.334.334.33.33,0,0,1,.334-.334Zm-.387-.823a.15.15,0,1,1,.249-.167l.082.12.325-.4a.15.15,0,1,1,.231.19l-.448.548a.125.125,0,0,1-.035.032.151.151,0,0,1-.208-.041l-.2-.287Zm0-1.157a.15.15,0,0,1,.041-.208.148.148,0,0,1,.208.041l.082.12.325-.4a.15.15,0,0,1,.231.19l-.448.548a.2.2,0,0,1-.035.035.151.151,0,0,1-.208-.041l-.2-.29Zm3.48,5.13a.179.179,0,0,1-.114.044.081.081,0,0,1-.026,0H.375A.374.374,0,0,1,.108,19.1.367.367,0,0,1,0,18.832v-6.5a.369.369,0,0,1,.111-.267.376.376,0,0,1,.267-.111h.976v-.185a.239.239,0,0,1,.076-.179.257.257,0,0,1,.179-.076h.577v-.231a.27.27,0,0,1,.085-.2.279.279,0,0,1,.2-.082H4.228a.28.28,0,0,1,.278.278v.231h.521a.26.26,0,0,1,.255.255v.185h.976a.369.369,0,0,1,.267.111.382.382,0,0,1,.111.267v4.688a.169.169,0,0,1-.05.17L4.646,19.154a.051.051,0,0,1-.015.012Zm-.284-.3c0-2.244-.284-1.978,1.951-1.978V12.334a.032.032,0,0,0-.012-.026.037.037,0,0,0-.026-.012H5.273v.34a.248.248,0,0,1-.073.179.255.255,0,0,1-.179.073H1.6a.26.26,0,0,1-.179-.073c-.006-.006-.009-.012-.015-.018a.258.258,0,0,1-.059-.161V12.3H.372a.032.032,0,0,0-.026.012.044.044,0,0,0-.012.026v6.5a.029.029,0,0,0,.012.026.037.037,0,0,0,.026.012H4.336Zm-1.585-2.4a.172.172,0,0,1-.17-.17.17.17,0,0,1,.17-.17H4.362a.17.17,0,0,1,0,.34Zm0-2.423a.17.17,0,1,1,0-.34H5.232a.17.17,0,1,1,0,.34Zm0,1.213a.17.17,0,0,1-.17-.17.168.168,0,0,1,.17-.17H5.232a.168.168,0,0,1,.17.17.17.17,0,0,1-.17.17ZM20.766,1.219A4.159,4.159,0,1,0,21.984,4.16a4.147,4.147,0,0,0-1.219-2.941Zm-3.012.92h-.527a.021.021,0,0,0-.018.009.025.025,0,0,0-.009.018v2.76h2.581a.021.021,0,0,0,.018-.009.025.025,0,0,0,.009-.018V4.371a.021.021,0,0,0-.009-.018.025.025,0,0,0-.018-.009H17.93A.15.15,0,0,1,17.78,4.2V2.165a.022.022,0,0,0-.006-.015l0,0a.021.021,0,0,0-.018-.009ZM17.824.68A3.481,3.481,0,1,1,15.363,1.7,3.47,3.47,0,0,1,17.824.68ZM4.081,27.188a.684.684,0,1,1-1.248.56,16.011,16.011,0,0,1-1.374-5.464.686.686,0,0,1,1.368-.1,14.691,14.691,0,0,0,.41,2.558,14.486,14.486,0,0,0,.844,2.443Zm3.627-17.1a.685.685,0,0,1-.914-1.02A18.3,18.3,0,0,1,8.956,7.409,11.575,11.575,0,0,1,11.048,6.3a.684.684,0,0,1,.492,1.277,10.245,10.245,0,0,0-1.84.979A17.352,17.352,0,0,0,7.708,10.09ZM23.7,7.6a.684.684,0,1,1,.563-1.248,16.219,16.219,0,0,1,5.581,4.166.685.685,0,1,1-1.037.9,14.859,14.859,0,0,0-2.353-2.183A14.45,14.45,0,0,0,23.7,7.6Zm8.6,15.483a.684.684,0,0,1,1.356.179,16.026,16.026,0,0,1-.463,2.25,15.709,15.709,0,0,1-.776,2.156.687.687,0,0,1-1.257-.554,14.543,14.543,0,0,0,.712-1.975,13.929,13.929,0,0,0,.428-2.057ZM14.013,18.24a.932.932,0,0,0-.475.123.377.377,0,0,0-.138.158.562.562,0,0,0-.044.252,2.248,2.248,0,0,0,.448,1.093l.006.006h0l.943,1.5a7.9,7.9,0,0,0,1.269,1.664,2.581,2.581,0,0,0,1.808.727A2.656,2.656,0,0,0,19.743,23a8.4,8.4,0,0,0,1.3-1.778l1.061-1.749a1.7,1.7,0,0,0,.226-.932c-.026-.105-.144-.158-.343-.167-.041,0-.085,0-.129,0l-.149.009a.253.253,0,0,1-.082-.006,1.618,1.618,0,0,1-.29-.015L21.7,16.9c-2.7.425-4.717-1.579-7.57-.4l.205,1.746a1.478,1.478,0,0,1-.325-.009Zm8.338-.34a.683.683,0,0,1,.5.513,2.127,2.127,0,0,1-.258,1.289h0a.272.272,0,0,1-.015.029L21.5,21.5a8.723,8.723,0,0,1-1.4,1.893,3.162,3.162,0,0,1-2.276.9,3.11,3.11,0,0,1-2.168-.867A8.4,8.4,0,0,1,14.3,21.656l-.943-1.5a2.735,2.735,0,0,1-.536-1.371,1.079,1.079,0,0,1,.094-.492.916.916,0,0,1,.325-.378,1.047,1.047,0,0,1,.229-.117,20.941,20.941,0,0,1-.044-2.546,3.439,3.439,0,0,1,.117-.609,3.035,3.035,0,0,1,1.594-1.731,5.061,5.061,0,0,1,1.336-.595c.3-.085-.255-1.043.056-1.075,1.5-.152,3.92,1.213,4.966,2.344a2.858,2.858,0,0,1,.923,2.013l-.064,2.3Z" fill="#06425c" />
+                            </g>
+                          </g>
+                        </svg> Critical tasks
+                      </Typography>
+                    </div>
                   </Grid>
                   <Grid item sm={12} xs={12} className={classes.mttopBottomThirty}>
-                    <div>
-                      {(props.criticalTasks !== undefined && props.criticalTasks.length > 0)
-                        ? (props.criticalTasks.map((task,index) => (
-                          <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className={classes.backPaper}>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls="panel1bh-content"
-                              id="panel1bh-header"
-                              className={classes.headingColor}
-                            >
-                              <Typography className={classes.heading}>
-                                <MenuOpenOutlinedIcon className={classes.headingIcon} />
-                                {' '}
-                                Task# {index + 1}-
-                                {' '}
+                    {/* <div> */}
+                    {(props.criticalTasks !== undefined && props.criticalTasks.length > 0)
+                      ? (props.criticalTasks.map((task, index) => (
+                        <Accordion expanded={expanded === 'panel'} onChange={handleTwoChange('panel')} defaultExpanded className="backPaperAccordian">
+                          <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1bh-content"
+                            id="panel1bh-header"
+                            className="accordionHeaderSection"
+                          >
+                            <Typography className={classes.heading}>
+                              {/* <MenuOpenOutlinedIcon className={classes.heading} /> */}
+                              {' '}
+                              Task# {index + 1}-
+                              {' '}
+                              {task.taskIdentification}
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Grid item sm={12} xs={12}>
+                              <FormLabel component="legend" className="viewLabel">Task Name</FormLabel>
+                              <Typography>
                                 {task.taskIdentification}
                               </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <Grid item sm={12} xs={12}>
-                                <FormLabel component="legend" className={classes.mttoptenn}>Task Name</FormLabel>
-                                <Typography>
-                                  {task.taskIdentification}
-                                </Typography>
-                              </Grid>
-                              {(task.hazards.length > 0)
-                                ? (task.hazards.map((hazard, key) => (
-                                  <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className={classes.childBackPaper}>
-                                    <AccordionSummary
-                                      expandIcon={<ExpandMoreIcon />}
-                                      aria-controls="panel2bh-content"
-                                      id="panel2bh-header"
-                                      className={classes.headingColor}
-                                    >
-                                      <Typography className={classes.heading}>
-                                        Hazard#{(key) + 1} -
-                                        {hazard.hazards}
-                                      </Typography>
+                            </Grid>
+                            {(task.hazards.length > 0)
+                              ? (task.hazards.map((hazard, key) => (
+                                <Accordion expanded1={expanded1 === 'panell'} onChange={handleOneChange('panell')} defaultExpanded className="backPaperSubAccordian">
+                                  <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel2bh-content"
+                                    id="panel2bh-header"
+                                    className="accordionSubHeaderSection"
+                                  >
+                                    <Typography className={classes.heading}>
+                                      Hazard#{(key) + 1} -
+                                      {hazard.hazards}
+                                    </Typography>
 
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                      <Grid container spacing={0}>
-                                        <Grid item sm={11} xs={8}>
-                                          <FormLabel component="legend" className={classes.mttoptenn}>Hazards</FormLabel>
+                                  </AccordionSummary>
+                                  <AccordionDetails>
+                                    <Grid container spacing={0}>
+                                      <Grid item sm={11} xs={8}>
+                                        <FormLabel component="legend" className="viewLabel">Hazards</FormLabel>
+                                        <Typography>
+                                          {hazard.hazards}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item sm={1} xs={4}>
+                                        {(hazard.hazardImage) ? <img src={hazard.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
+                                      </Grid>
+                                      <Grid container spacing={2}>
+                                        <Grid item sm={12} xs={12}>
+                                          <FormLabel component="legend" className="viewLabel">Is this hazard present?</FormLabel>
                                           <Typography>
-                                            {hazard.hazards}
+                                            {hazard.hazardStatus ? hazard.hazardStatus : "-"}
                                           </Typography>
                                         </Grid>
-                                        <Grid item sm={1} xs={4}>
-                                          {(hazard.hazardImage) ? <img src={hazard.hazardImage} alt="decoration" className={classes.mttopEight} height={56} /> : ''}
-                                        </Grid>
+                                      </Grid>
+
+                                      {hazard.hazardStatus === "Yes" || hazard.hazardStatus === "" || hazard.hazardStatus === undefined ? <>
                                         <Grid container spacing={2}>
                                           <Grid item sm={12} xs={12}>
-                                            <FormLabel component="legend" className={classes.mttoptenn}>Is this hazard present?</FormLabel>
+                                            <FormLabel component="legend" className="viewLabel">Has this control been put in place?</FormLabel>
                                             <Typography>
-                                              {hazard.hazardStatus ? hazard.hazardStatus : "-"}
+                                              {hazard.controlStatus ? hazard.controlStatus : "-"}
                                             </Typography>
                                           </Grid>
                                         </Grid>
+                                        <Grid item sm={11} xs={8}>
+                                          <FormLabel component="legend" className="viewLabel">Control</FormLabel>
+                                          <Typography>
+                                            {hazard.control ? hazard.control : "-"}
+                                          </Typography>
+                                        </Grid>
 
-                                        {hazard.hazardStatus === "Yes" || hazard.hazardStatus === "" || hazard.hazardStatus === undefined ? <>
-                                          <Grid container spacing={2}>
-                                            <Grid item sm={12} xs={12}>
-                                              <FormLabel component="legend" className={classes.mttoptenn}>Has this control been put in place?</FormLabel>
-                                              <Typography>
-                                                {hazard.controlStatus ? hazard.controlStatus : "-"}
-                                              </Typography>
-                                            </Grid>
-                                          </Grid>
-                                          <Grid item sm={11} xs={8}>
-                                            <FormLabel component="legend" className={classes.mttoptenn}>Control</FormLabel>
+                                        <Grid container spacing={1}>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormLabel component="legend" className="viewLabel">Risk Severity</FormLabel>
                                             <Typography>
-                                              {hazard.control ? hazard.control : "-"}
+                                              {hazard.riskSeverity ? hazard.riskSeverity : '-'}
                                             </Typography>
                                           </Grid>
-
-                                          <Grid container spacing={1}>
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormLabel component="legend" className={classes.mttoptenn}>Risk Severity</FormLabel>
-                                              <Typography>
-                                                {hazard.riskSeverity ? hazard.riskSeverity : '-'}
-                                              </Typography>
-                                            </Grid>
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormLabel component="legend" className={classes.mttoptenn}>Risk Probability</FormLabel>
-                                              <Typography>
-                                                {hazard.riskProbability ? hazard.riskProbability : '-'}
-                                              </Typography>
-                                            </Grid>
-                                            <Grid item md={4} sm={4} xs={12} >
-                                              <div
-                                                className={
-                                                  classes.ratioColororange
-                                                }
-                                                style={{ backgroundColor: handleRiskChange(hazard.riskRatingLevel) }}
-                                              >
-                                                {hazard.riskRatingLevel}
-                                              </div>
-                                            </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormLabel component="legend" className="viewLabel">Risk Probability</FormLabel>
+                                            <Typography>
+                                              {hazard.riskProbability ? hazard.riskProbability : '-'}
+                                            </Typography>
                                           </Grid>
-                                        </> : null}
-                                      </Grid>
-                                    </AccordionDetails>
-                                  </Accordion>
-                                ))) : ''}
+                                          <Grid item md={4} sm={4} xs={12} >
+                                            <div
+                                              className={
+                                                classes.ratioColororange
+                                              }
+                                              style={{ backgroundColor: handleRiskChange(hazard.riskRatingLevel) }}
+                                            >
+                                              {hazard.riskRatingLevel}
+                                            </div>
+                                          </Grid>
+                                        </Grid>
+                                      </> : null}
+                                    </Grid>
+                                  </AccordionDetails>
+                                </Accordion>
+                              ))) : ''}
 
-                            </AccordionDetails>
-                          </Accordion>
+                          </AccordionDetails>
+                        </Accordion>
 
-                        ))) : ''}
-                    </div>
+                      ))) : ''}
+                    {/* </div> */}
 
                   </Grid>
-                  <Divider className={classes.divider} />
 
-                  <Grid item xs={12}>
-                    <TableContainer className={classes.mttopTen}>
-                      <Typography variant="h6">
-                        <CheckOutlinedIcon className={classes.headingIcon} />
-                        {' '}
-                        Job visual confirmation
-                      </Typography>
-
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                    <Typography variant="h6" className="sectionHeading">
+                      <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+                        <g id="Bounding_Boxes">
+                          <path id="Path_2274" data-name="Path 2274" d="M0,0H40V40H0Z" fill="none" />
+                        </g>
+                        <path id="eye-scanning" d="M16.061,7.49a5.244,5.244,0,1,1-5.244,5.244A5.244,5.244,0,0,1,16.061,7.49ZM5.839,23.862a.8.8,0,1,1,0,1.606H1.026a.8.8,0,0,1-.8-.8v-4.74A.8.8,0,0,1,1.6,19.36l.018.021a.8.8,0,0,1,.23.546v3.936ZM5.839,0a.812.812,0,0,1,.569.235l.018.021a.8.8,0,0,1-.588,1.35h-4V5.542a.8.8,0,0,1-1.606,0V.8A.785.785,0,0,1,1.026,0ZM26.282,1.606a.8.8,0,1,1,0-1.606h4.811a.8.8,0,0,1,.8.8V5.542a.8.8,0,0,1-1.606,0V1.606Zm0,23.862a.8.8,0,1,1,0-1.606h4.009V19.926a.8.8,0,0,1,1.6,0v4.74a.8.8,0,0,1-.8.8ZM.276,12.076a24.718,24.718,0,0,1,2.39-2.515,19.572,19.572,0,0,1,12.773-5.32,20.461,20.461,0,0,1,13.5,5.038,28.335,28.335,0,0,1,2.935,2.8.93.93,0,0,1,.06,1.178,19.112,19.112,0,0,1-3.674,3.917,18.783,18.783,0,0,1-11.7,4.051A20.631,20.631,0,0,1,4.6,17.424,21.475,21.475,0,0,1,.216,13.285a.927.927,0,0,1,.06-1.209Zm3.641-1.144a22.577,22.577,0,0,0-1.75,1.781,19.519,19.519,0,0,0,3.5,3.194,18.8,18.8,0,0,0,10.888,3.471A16.944,16.944,0,0,0,27.1,15.722a17.174,17.174,0,0,0,2.873-2.938,26.2,26.2,0,0,0-2.215-2.076A18.7,18.7,0,0,0,15.463,6.093,17.66,17.66,0,0,0,3.9,10.932Zm12.157-.115a1.917,1.917,0,1,1-1.357.561,1.92,1.92,0,0,1,1.357-.561Z" transform="translate(3.979 8.401)" fill="#06425c" />
+                      </svg> Job visual confirmation
+                    </Typography>
+                  </Grid>
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                    <Paper elevation={1} className="paperSection">
                       <Table className={classes.table} aria-label="simple table">
+
                         <TableHead className={classes.tableHeading}>
                           <TableRow className={classes.cellHeight}>
                             <TableCell align="left" className={classes.tableRowColor}>Visual confirmation</TableCell>
                             <TableCell align="left" className={classes.tableRowColor}>Status</TableCell>
-                            <TableCell align="left" className={classes.tableRowColor}>Attachments</TableCell>
+                            <TableCell align="center" className={classNames(classes.tableRowColor, classes.cellWidth)}>Attachments</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -529,52 +546,104 @@ const FlhaDetails = (props) => {
                             ? (props.visualConfirmations.map((visualConf) => (
                               <TableRow className={classes.cellHeight}>
                                 <TableCell align="left">{visualConf.visualConfirmationType}</TableCell>
-                                <TableCell align="left">
-                                  <div className={classes.spacer}>
-                                    {visualConf.visualConfirmationStatus}
+                                <TableCell className="attachFileStylethum" align="left">
+                                  <div className="attachFileThumb">
+                                    {visualConf.visualConfirmationStatus ? visualConf.visualConfirmationStatus:'-'}
                                   </div>
                                 </TableCell>
                                 <TableCell align="left">
-
+                                {visualConf.visualConfirmationAttachment ?
                                   <Typography >
                                     {visualConf.visualConfirmationAttachment ===
                                       null ? null : typeof visualConf.visualConfirmationAttachment ===
                                         "string" ? (
-                                      <Attachment value={visualConf.visualConfirmationAttachment} />
+                                      <Attachment value={visualConf.visualConfirmationAttachment ?visualConf.visualConfirmationAttachment:'-'} />
                                     ) : null}
                                   </Typography>
+                                  :'-'}
                                 </TableCell>
                               </TableRow>
                             ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}
                         </TableBody>
                       </Table>
-                    </TableContainer>
-                  </Grid>
-                  <Divider className={classes.divider} />
 
-                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                    <Paper elevation={1} className="paperSection">
                       <Grid item md={4} sm={4} xs={12}>
-                        <FormLabel component="legend" className={classes.mttoptenn}>Is permit to work done?*</FormLabel>
+                        <FormLabel component="legend" className="viewLabel">Is permit to work done?*</FormLabel>
                         <Typography>
                           {flha.permitToWork}
                         </Typography>
                       </Grid>
                       <Grid item md={4} sm={4} xs={12}>
-                        <FormLabel component="legend" className={classes.mttoptenn}>Enter permit number</FormLabel>
+                        <FormLabel component="legend" className="viewLabel">Enter permit number</FormLabel>
                         <Typography>
                           {flha.permitToWorkNumber == undefined || flha.permitToWorkNumber == 'undefined' || flha.permitToWorkNumber == '' ? '-' : flha.permitToWorkNumber}
                         </Typography>
                       </Grid>
                       <Grid item md={4} sm={4} xs={12}>
-                        <FormLabel component="legend" className={classes.mttoptenn}>Permit job reference</FormLabel>
+                        <FormLabel component="legend" className="viewLabel">Permit job reference</FormLabel>
                         <Typography>
                           {flha.referenceNumber == undefined || flha.referenceNumber == 'undefined' || flha.referenceNumber == '' ? '-' : flha.referenceNumber}
 
                         </Typography>
                       </Grid>
+                      <Grid item xs={12}>
+                        <FormLabel className="viewLabel" component="legend">Date & Time</FormLabel>
+                        <Typography >
+                          {moment(flha.dateTimeFlha).format(
+                            'Do MMMM YYYY, h:mm:ss a'
+                          )}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={6}>
+                        <FormLabel className="viewLabel" component="legend">Attachment</FormLabel>
+                        {flha.attachment ? (
+                          <Typography >
+                            {flha.attachment ===
+                              null ? null : typeof flha.attachment ===
+                                "string" ? (
+                              <Attachment value={flha.attachment} />
+                            ) : null}
+                          </Typography>) : ("-")}
+                      </Grid>
                     </Paper>
                   </Grid>
+
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                    <Typography variant="h6" className="sectionHeading">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31.44" viewBox="0 0 30 31.44">
+                        <g id="outline-assignment-24px" transform="translate(0 1.44)">
+                          <g id="Bounding_Boxes">
+                            <path id="Path_2274" data-name="Path 2274" d="M0,0H30V30H0Z" fill="none" />
+                          </g>
+                          <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" transform="translate(2.703 -1.44)" fill="#06425c" />
+                        </g>
+                      </svg> Notification block
+                    </Typography>
+                  </Grid>
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                    <Paper elevation={1} className="paperSection">
+                      <Grid container spacing={3}>
+                        <Grid
+                          item
+                          md={12}
+                          xs={12}
+                        >
+                          <Typography
+                            variant="label"
+                            gutterBottom
+                            className="viewLabel"
+                          >
+                            Roles
+                          </Typography>
+                          <Typography className="viewLabelValue">
+                            {notify ? notify: '-'}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
 
                   <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
@@ -675,7 +744,7 @@ const FlhaDetails = (props) => {
                             Do you have access to job procedure?
                           </Typography>
                           <Typography className="viewLabelValue">
-                            {flha.accessToJobProcedure ? flha.accessToJobProcedure: '-'}
+                            {flha.accessToJobProcedure ? flha.accessToJobProcedure : '-'}
                           </Typography>
 
                         </Grid>
