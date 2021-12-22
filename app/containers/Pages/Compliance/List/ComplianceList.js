@@ -38,6 +38,7 @@ import { connect } from "react-redux";
 import api from "../../../../utils/axios";
 import moment from "moment";
 import Loader from "../../Loader";
+import Pagination from "@material-ui/lab/Pagination";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,6 +122,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "14px",
     textDecoration: "underline",
     color: "rgba(0, 0, 0, 0.87) !important",
+  },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '10px',
   },
 }));
 
@@ -274,7 +281,7 @@ function Actions(props) {
 
   return (
     <>
-      <Box>{isLoading ?
+      <Box>{isLoading ? <>
         <TableContainer component={Paper}>
           <Grid component={Paper}>
             <MUIDataTable
@@ -283,7 +290,7 @@ function Actions(props) {
                 data["complianceNumber"],
                 data["auditType"],
                 data["location"] !== null ? data["location"] : "-",
-                moment(data["createdAt"]).format("Do MMMM YYYY, h:mm:ss a"),
+                moment(data["createdAt"]).format("Do MMMM YYYY"),
                 data["username"] !== null ? data["username"] : "-",
               ])}
               columns={columns}
@@ -291,7 +298,12 @@ function Actions(props) {
               className="dataTableSectionDesign"
             />
           </Grid>
-        </TableContainer>:<Loader />}
+        </TableContainer>
+        <div className={classes.pagination}>
+            {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+          </> :<Loader />}
       </Box>
     </>
   );
