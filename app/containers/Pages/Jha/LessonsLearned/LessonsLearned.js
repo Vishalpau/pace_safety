@@ -309,7 +309,7 @@ const LessonsLearned = () => {
                             <Grid item md={6} xs={12}>
                               <Typography variant="h6" gutterBottom className={classes.labelName}>
                                 <ActionTracker
-                                  actionContext="jha:lessonLearned"
+                                  actionContext="jsa:lessonLearned"
                                   enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                                   setUpdatePage={setUpdatePage}
                                   updatePage={updatePage}

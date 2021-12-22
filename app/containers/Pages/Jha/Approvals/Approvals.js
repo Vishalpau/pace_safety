@@ -551,7 +551,7 @@ const Approvals = () => {
                         <Typography variant="h6" gutterBottom className={classes.labelName}>
                           <FormLabel className="checkRadioLabel" component="legend">Create action </FormLabel>
                           <ActionTracker
-                            actionContext="jha:approval"
+                            actionContext="jsa:approval"
                             enitityReferenceId={`${localStorage.getItem("fkJHAId")}:00`}
                             setUpdatePage={setUpdatePage}
                             updatePage={updatePage}

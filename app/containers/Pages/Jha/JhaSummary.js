@@ -39,7 +39,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Link from '@material-ui/core/Link';
 import Attachment from "../../../containers/Attachment/Attachment";
 import api from "../../../utils/axios";
-import { handelActionData } from "../../../utils/CheckerValue";
+import { handelActionData , handelActionDataAssessment,handelActionWithEntity } from "../../../utils/CheckerValue";
 import { HEADER_AUTH, SSO_URL } from "../../../utils/constants";
 import ActionShow from '../../Forms/ActionShow';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -169,7 +169,7 @@ function JhaSummary() {
     companyId: "",
   })
   const [projectStructName, setProjectStructName] = useState([])
-  const [allActionType, setAllActionType] = useState({})
+  const [lessionAction , setLessionAction] = useState([])
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [messageSnackBar, setMessageSnackbar] = useState("")
   const [checkListAssessment, setCheckListAssessment] = useState({})
@@ -193,9 +193,10 @@ function JhaSummary() {
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
     await setTeam(resultTeam)
-
     const resHazards = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`)
     const resultHazard = resHazards.data.data.results
+    let resAction = await handelActionDataAssessment(jhaId, resultHazard, "all", "jha:hazard")
+    await setHazard(resAction);
     await handelActionTracker(resultHazard)
     let assessmentDecider = result.link !== null
     let approvalDecider = result.wrpApprovalUser !== null && result.sapApprovalUser !== null
@@ -208,6 +209,7 @@ function JhaSummary() {
       closeOutStatus: closeOutDecider,
       lessionLeranedStatus: lessionDecider
     })
+    await setLoader(false)
   }
 
   const handleClickSnackBar = () => {
@@ -239,6 +241,7 @@ function JhaSummary() {
 
     let user = JSON.parse(localStorage.getItem("userDetails"))
     setUser({ ...user, name: user.name, badgeNumber: user.badgeNo })
+    
   }
 
   const handleNewJhaPush = async () => {
@@ -265,43 +268,14 @@ function JhaSummary() {
   };
 
   const handelActionTracker = async (resultHazard) => {
-    let actionType = { "jsa:hazard": [], "jsa:lessonLearned": [], "jsa:approval": [] }
     let jhaId = localStorage.getItem("fkJHAId")
-    let allAction = await handelActionData(jhaId, [], "title")
-
-    allAction.map((value) => {
-      if (Object.keys(actionType).includes(value["actionContext"])) {
-        actionType[value["actionContext"]].push(value)
-      }
-    })
-    setAllActionType(actionType)
-    let allHazardActions = actionType["jsa:hazard"]
-    let actionHazard = {}
-
-    allHazardActions.map((value) => {
-      let hazardId = value["enitityReferenceId"].split(":")[1]
-      let hazarAction = { "number": value["actionNumber"], "id": value["id"], "title": value["actionTitle"] }
-      if (Object.keys(actionHazard).includes(hazardId)) {
-        actionHazard[hazardId].push(hazarAction)
-      } else {
-        actionHazard[hazardId] = [hazarAction]
-      }
-    })
-
-    resultHazard.map((value) => {
-      if (Object.keys(actionHazard).includes(value["id"].toString())) {
-        value["action"] = actionHazard[value["id"]]
-      }
-    })
-    await setHazard(resultHazard)
-
-    let temp = []
-    allAction.map((value) => {
-      if (value.enitityReferenceId.split(":")[1] == "00") {
-        temp.push(value)
-      }
-    })
-    setApprovalactionData(temp !== null ? temp : [])
+    const allAction = await handelActionWithEntity(jhaId, "jsa:approval");
+    setApprovalactionData(allAction)
+  };
+  const handelLessionActionTracker = async () => {
+    let ahaId = localStorage.getItem("fkJHAId")
+    let allAction = await handelActionWithEntity(ahaId, "jsa:lessonLearned")
+    setLessionAction(allAction)
   };
 
   const handelActionLink = async () => {
@@ -512,7 +486,7 @@ function JhaSummary() {
     await handelProjectStructre()
     await handelActionLink()
     await assessmentDataValues()
-    await setLoader(false)
+    await handelLessionActionTracker()
   }
 
   useEffect(() => {
@@ -1069,7 +1043,7 @@ function JhaSummary() {
                                     </Typography>
                                   
                                   </Grid>
-                                  {allActionType["jha:approval"].length > 0 ? 
+                                  {approvalActionData.length > 0 ? 
                                     <Grid item md={12} xs={12}>
                                       <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
                                       <Table component={Paper}>
@@ -1081,7 +1055,7 @@ function JhaSummary() {
                                         </TableHead>
                                         {/* Action show */}
                                         <TableBody>
-                                        {allActionType["jha:approval"].map((action, index) => (<>
+                                        {approvalActionData.map((action, index) => (<>
                                         <TableRow>
                                           <TableCell style={{ width: 50 }}>
                                             <a
@@ -1170,7 +1144,7 @@ function JhaSummary() {
                                         {checkValue(assessment.lessonLearntDetails)}
                                       </Typography>
                                     </Grid>
-                                    {allActionType["jha:lessonLearned"].length > 0 ? 
+                                    {lessionAction.length > 0 ? 
                                       <Grid item md={12} xs={12}>
                                         <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
                                         <Table component={Paper}>
@@ -1182,7 +1156,7 @@ function JhaSummary() {
                                           </TableHead>
                                           {/* Action show */}
                                           <TableBody>
-                                          {allActionType["jha:lessonLearned"].map((action, index) => (
+                                          {lessionAction.map((action, index) => (
                                           <>
                                             <TableRow>
                                               <TableCell style={{ width: 50 }}>
