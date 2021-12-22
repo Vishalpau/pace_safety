@@ -369,6 +369,7 @@ export default function JhaSearchSection() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [search, setSearch] = React.useState("")
+  const [status, setStatus] = React.useState('')
   const [assessment, setAssessments] = React.useState("My Assessments")
 
   const handelSearch = (e) => {
@@ -418,9 +419,8 @@ export default function JhaSearchSection() {
         </Grid>
         <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
           <span className={classes.mR10}>
-            <img src={preplanning} />
-            <img src={progress} className={classes.pLtenPRten} />
-            <img src={completed} />
+            <img src={preplanning} onClick={() => setStatus("Open")} />
+            <img src={completed} onClick={() => setStatus("Completed")} />
           </span>
         </Grid>
 		  </Grid>
@@ -428,16 +428,16 @@ export default function JhaSearchSection() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <JhaFilterList search={search} assessment={assessment} />
+			  <JhaFilterList search={search} assessment={assessment} status={status} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			  <JhaFilterList search={search} assessment={assessment} />
+        <JhaFilterList search={search} assessment={assessment} status={status} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			  <JhaFilterList search={search} assessment={assessment} />
+        <JhaFilterList search={search} assessment={assessment} status={status} />
 		  </TabPanel>
 		  <TabPanel value={value} index={3}>
-			  <JhaFilterList search={search} assessment={assessment} />
+        <JhaFilterList search={search} assessment={assessment} status={status} />
 		  </TabPanel>
 		</Grid>
 	</Grid>

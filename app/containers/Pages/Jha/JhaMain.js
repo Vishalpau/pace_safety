@@ -285,7 +285,7 @@ export default function JhaMain() {
             </div>
           </AppBar>
         </Grid>
-        <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+        {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
           <Grid className={classes.Lheight}>
             <div className={classes.floatR}>
               <span className={classes.pLTen}>
@@ -295,7 +295,7 @@ export default function JhaMain() {
               </span>
             </div>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
       <TabPanel value={value} index={0} className={classes.paddLRzero}>
         <JhaSearchSection />

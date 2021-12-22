@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {
-    KeyboardDatePicker, MuiPickersUtilsProvider
+    KeyboardDateTimePicker, MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import axios from 'axios';
 import { PapperBlock } from 'dan-components';
@@ -180,8 +180,8 @@ const JobDetails = (props) => {
             "supervisorName": "",
             "emergencyNumber": "",
             "evacuationAssemblyPoint": "",
-            "jhaStatus": "",
-            "jhaStage": "",
+            "jhaStatus": "Open",
+            "jhaStage": "Open",
             "badgeNumber": "",
             "status": "Active",
             "createdBy": parseInt(userId),
@@ -789,7 +789,7 @@ const JobDetails = (props) => {
                                         className={classes.formBox}
                                     >
                                         <TextField
-                                            label="Job Title"
+                                            label="Job Title *"
                                             name="jobtitle"
                                             id="jobtitle"
                                             value={form.jobTitle ? form.jobTitle : ""}
@@ -797,6 +797,24 @@ const JobDetails = (props) => {
                                             helperText={error.jobTitle ? error.jobTitle : ""}
                                             fullWidth
                                             onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
+                                            variant="outlined"
+                                            className={classes.formControl}
+                                        />
+                                    </Grid>
+
+                                     {/* order number */}
+                                     <Grid
+                                        item
+                                        md={6}
+                                        xs={11}
+                                    >
+                                        <TextField
+                                            label="Order number"
+                                            name="ordernumber"
+                                            id="ordernumber"
+                                            value={form.jobOrderNumber ? form.jobOrderNumber : ""}
+                                            onChange={(e) => setForm({ ...form, jobOrderNumber: e.target.value })}
+                                            fullWidth
                                             variant="outlined"
                                             className={classes.formControl}
                                         />
@@ -810,7 +828,7 @@ const JobDetails = (props) => {
                                         className={classes.formBox}
                                     >
                                         <TextField
-                                            label="Location"
+                                            label="Location *"
                                             name="worklocation"
                                             id="worklocation"
                                             defaultValue=""
@@ -824,43 +842,12 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
-                                    {/* approval time */}
-                                    <Grid
-                                        item
-                                        md={6}
-                                        xs={12}
-                                        className={classes.formBox}
-                                    >
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <KeyboardDatePicker
-                                                onClick={(e) => setIsDateShow(true)}
-                                                className={classes.formControl}
-                                                fullWidth
-                                                id="jha_assessment_date"
-                                                label="Date"
-                                                format="MM/dd/yyyy"
-                                                value={form.jhaAssessmentDate}
-                                                onChange={(e) => {
-                                                    setForm({
-                                                        ...form,
-                                                        jhaAssessmentDate: moment(e).format("YYYY-MM-DD"),
-                                                    });
-                                                }}
-                                                error={error.jhaAssessmentDate}
-                                                helperText={error.jhaAssessmentDate ? error.jhaAssessmentDate : ""}
-                                                inputVariant="outlined"
-                                                disableFuture="true"
-                                                open={isDateShow}
-                                                onClose={(e) => handelClose()}
-                                            />
-
-                                        </MuiPickersUtilsProvider>
-                                    </Grid>
+                                    
 
                                     {/* perform to permit */}
                                     <Grid
                                         item
-                                        md={6}
+                                        md={12}
                                         xs={12}
                                         className={classes.formBox}
                                     >
@@ -870,8 +857,9 @@ const JobDetails = (props) => {
                                             <FormLabel
                                                 error={error.permitToPerform}
                                                 component="legend"
+                                                className="checkRadioLabel"
                                             >
-                                                Permit to Work
+                                                Do you have a permit to perform the JHA? *
                                             </FormLabel>
                                             <RadioGroup
                                                 style={{ display: 'block' }}
@@ -923,9 +911,9 @@ const JobDetails = (props) => {
                                             xs={11}
                                         >
                                             <TextField
-                                            label="Permit number"
-                                            name="permitnumber"
-                                            id="permitnumber"
+                                            label="Permit reference number"
+                                            name="permintreferencenumber"
+                                            id="permintreferencenumber"
                                             value={form.permitNumber ? form.permitNumber : ""}
                                             onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
                                             fullWidth
@@ -937,25 +925,38 @@ const JobDetails = (props) => {
                                         :
                                         null
                                     }
-                                    <Grid item md={6} xs={11}>
-                                        <TextField
-                                        label="Department"
-                                        name="department"
-                                        id="department"
-                                        select
-                                        fullWidth
-                                        value={form.department ? form.department : ""}
-                                        onChange={(e) => setForm({ ...form, department: e.target.value })}
-                                        variant="outlined"
-                                        >
-                                        {departmentName.map((option) => (
-                                            <MenuItem key={option}
-                                            value={option}
-                                            >
-                                            {option}
-                                            </MenuItem>
-                                        ))}
-                                        </TextField>
+                                    
+                                    {/* approval time */}
+                                    <Grid
+                                        item
+                                        md={6}
+                                        xs={12}
+                                        className={classes.formBox}
+                                    >
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <KeyboardDateTimePicker
+                                                onClick={(e) => setIsDateShow(true)}
+                                                className={classes.formControl}
+                                                fullWidth
+                                                id="jha_assessment_date"
+                                                label="Date *"
+                                                format="MM/dd/yyyy"
+                                                value={form.jhaAssessmentDate}
+                                                onChange={(e) => {
+                                                    setForm({
+                                                        ...form,
+                                                        jhaAssessmentDate: moment(e).format("YYYY-MM-DD"),
+                                                    });
+                                                }}
+                                                error={error.jhaAssessmentDate}
+                                                helperText={error.jhaAssessmentDate ? error.jhaAssessmentDate : ""}
+                                                inputVariant="outlined"
+                                                disableFuture="true"
+                                                open={isDateShow}
+                                                onClose={(e) => handelClose()}
+                                            />
+
+                                        </MuiPickersUtilsProvider>
                                     </Grid>
 
                                     {/* scope work */}
@@ -966,7 +967,7 @@ const JobDetails = (props) => {
                                         className={classes.formBox}
                                     >
                                         <TextField
-                                            label="Scope of work (Describe all tasks)"
+                                            label="Scope of work (Describe all tasks) *"
                                             name="scopeofwork"
                                             id="scopeofwork"
                                             multiline
@@ -1080,7 +1081,28 @@ const JobDetails = (props) => {
                                             className={classes.formControl}
                                         />
                                     </Grid>
-
+                                    
+                                    {/* Department */}
+                                    <Grid item md={6} xs={11}>
+                                        <TextField
+                                        label="Department"
+                                        name="department"
+                                        id="department"
+                                        select
+                                        fullWidth
+                                        value={form.department ? form.department : ""}
+                                        onChange={(e) => setForm({ ...form, department: e.target.value })}
+                                        variant="outlined"
+                                        >
+                                        {departmentName.map((option) => (
+                                            <MenuItem key={option}
+                                            value={option}
+                                            >
+                                            {option}
+                                            </MenuItem>
+                                        ))}
+                                        </TextField>
+                                    </Grid>
                                     
 
                                     {/* emergency number */}
@@ -1120,23 +1142,7 @@ const JobDetails = (props) => {
                                     </Grid>
 
 
-                                    {/* order number */}
-                                    <Grid
-                                        item
-                                        md={6}
-                                        xs={11}
-                                    >
-                                        <TextField
-                                            label="Order number"
-                                            name="ordernumber"
-                                            id="ordernumber"
-                                            value={form.jobOrderNumber ? form.jobOrderNumber : ""}
-                                            onChange={(e) => setForm({ ...form, jobOrderNumber: e.target.value })}
-                                            fullWidth
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                        />
-                                    </Grid>
+                                   
                                 </Grid>
                             </Paper>
                         </Grid>

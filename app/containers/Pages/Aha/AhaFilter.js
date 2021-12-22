@@ -337,21 +337,6 @@ class AhaFilter extends React.Component {
                       {this.props.assessments === "My Assessments" ? "My Assessments" : "All Assessments"}
                     </Typography>
                   </Grid>
-
-                  <Grid item md={4} sm={12} xs={12}>
-                    <Typography className={classes.textRight} variant="h5" color="inherit" noWrap>
-                    </Typography>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.catButton}
-                      onClick={() => { this.handleClickButton() }}
-                    >
-                      {!this.state.open && <Typography variant="h5">Categories</Typography>}{afterBtn}
-
-                    </Button>
-                  </Grid>
                 </Grid>
 
               </Toolbar>
@@ -364,7 +349,7 @@ class AhaFilter extends React.Component {
               })}
             >
               <div className={classes.drawerHeader} />
-              <AhaPackage search={this.props.search} assessments={this.props.assessments} />
+              <AhaPackage search={this.props.search} assessments={this.props.assessments} status={this.props.status} />
             </main>
             {after}
           </div>}
@@ -385,7 +370,7 @@ class AhaFilter extends React.Component {
               <AhaList
                 assessments={this.props.assessments}
                 search={this.props.search}
-              // status={this.props.status}
+                status={this.props.status}
               />
             </main>
             {after}
