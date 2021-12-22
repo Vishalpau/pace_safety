@@ -55,6 +55,9 @@ import Loader from "../../Loader";
 import {
   HEADER_AUTH, SSO_URL
 } from "../../../../utils/constants";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from '@material-ui/lab/Alert';
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -229,10 +232,7 @@ const AssessmentAndNotification = () => {
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
-  const notification = ["Manager", "Supervisor"];
-  const [colorId, setColorId] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [idPerColor, setIdPerColor] = useState({ 243: "yellow" });
   const [submitLoader, setSubmitLoader] = useState(false);
   const risk = useRef([]);
   const [ahaform, setAHAForm] = useState({});
@@ -244,11 +244,15 @@ const AssessmentAndNotification = () => {
     createdBy: "",
     projectStructId: "",
   });
-
+  const [open, setOpen] = useState(false);
+  const [messageType, setMessageType] = useState('');
+  const [message, setMessage] = useState('');
   const monitor = useRef([]);
   const [additinalJobDetails, setAdditionalJobDetails] = useState({
     workStopCondition: [],
   });
+  const ref = useRef();
+
 
   const approver = ["Yes", "No"];
   const [notificationSentValue, setNotificationSentValue] = useState([]);
@@ -258,6 +262,14 @@ const AssessmentAndNotification = () => {
 
   const handleTwoChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        // setOpenError(false)
+        return;
+    }
+    setOpen(false);
   };
 
   const fetchHzardsData = async () => {
@@ -335,6 +347,10 @@ const AssessmentAndNotification = () => {
 
     await setForm(zzz);
   };
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkAHAId");
@@ -544,11 +560,45 @@ const AssessmentAndNotification = () => {
     setCheckListGroups(checklistGroups);
   };
 
-  const handleFile = (e) => {
-    let temp = { ...ahaform };
-    temp.ahaAssessmentAttachment = e.target.files[0];
-    setAHAForm(temp);
-  };
+  const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
+    const fielSizeError = 'Size less than 25Mb allowed';
+    const handleFile = async (e) => {
+        const acceptFileTypes = [
+            'pdf',
+            'png',
+            'jpeg',
+            'jpg',
+            'xls',
+            'xlsx',
+            'doc',
+            'word',
+            'ppt',
+        ];
+        const file = e.target.files[0].name.split('.');
+
+        if (
+            acceptFileTypes.includes(file[file.length - 1])
+            && e.target.files[0].size < 25670647
+        ) {
+            const temp = { ...ahaform };
+            const filesAll = e.target.files[0];
+            temp.ahaAssessmentAttachment = filesAll;
+            await setAHAForm(temp);
+        } else {
+            ref.current.value = '';
+            !acceptFileTypes.includes(file[file.length - 1])
+                ? await setMessage(fileTypeError)
+                : await setMessage(`${fielSizeError}`);
+            await setMessageType('error');
+            await setOpen(true);
+        }
+    };
+
+  // const handleFile = (e) => {
+  //   let temp = { ...ahaform };
+  //   temp.ahaAssessmentAttachment = e.target.files[0];
+  //   setAHAForm(temp);
+  // };
 
   const fetchAhaData = async () => {
     const res = await api.get(
@@ -1165,9 +1215,17 @@ const AssessmentAndNotification = () => {
                               <p />
                             )}
                           </Typography>
-                          <input type="file" onChange={(e) => handleFile(e)} />
+                          <input type="file" 
+                            ref={ref}                                                      
+                            accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
+                            onChange={(e) => handleFile(e)} />
                         </Grid>
                       </Grid>
+                      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                          <Alert onClose={handleClose} severity="error">
+                              {message}
+                          </Alert>
+                      </Snackbar>
                       <Grid item md={12} xs={12}>
                         <TextField
                           label="Link"

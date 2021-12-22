@@ -155,7 +155,7 @@ function JhaList(props) {
   const [value, setValue] = React.useState(2);
 
   //   Data for the table view
-  const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
+  const columns = ['Number', 'Type', 'Stage', 'Status', 'Requested by', 'Submitted date', 'Approved date', 'Approved by'];
   const data = [
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
@@ -266,17 +266,17 @@ function JhaList(props) {
                 data={Object.entries(allJHAData).map((item) => [
                       item[1]["jhaNumber"],
                       item[1]["typeOfPermit"],
-                      item[1]["username"],
+                      item[1]["jhaStage"],
                       item[1]["jhaStatus"],
                       item[1]['createdByName'],
                       moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
+                                  "Do MMMM YYYY"
                                 ),
-                      item[1]["-"],
-                      item[1]["wrpApprovalUser"],
-                      moment(item[1]["wrpApprovalDateTime"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )
+                    
+                      
+                      item[1]["closedDate"] !== null ? moment(item[1]["closedDate"]).format(
+                                  "Do MMMM YYYY"
+                                ) : "-",item[1]["closedByName"],
                 ])}
                 columns={columns}
                 options={options}

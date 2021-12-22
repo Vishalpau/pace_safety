@@ -39,9 +39,7 @@ import { handelJhaId, PickListData } from '../Utils/checkValue';
 import { JHA_FORM_COMBINE, SUMMARY_FORM } from '../Utils/constants';
 import Attachment from '../../../Attachment/Attachment';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
-
-
-
+import Snackbar from "@material-ui/core/Snackbar";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -802,6 +800,11 @@ const AssessmentAndDocument = () => {
 
                                             </Typography>
                                         </Grid>
+                                        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                                            <Alert onClose={handleClose} severity="error">
+                                                {message}
+                                            </Alert>
+                                        </Snackbar>
                                     </Paper>
                                 </Grid>
 
