@@ -155,7 +155,7 @@ function FlhaList(props) {
   const status = props.status
   
   //   Data for the table view
-  const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
+  const columns = ['Number', 'Type', 'Stage', 'Status', 'Requested by', 'Submitted date', 'Approved date', 'Approved by'];
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -262,17 +262,16 @@ function FlhaList(props) {
                 data={Object.entries(allAHAData).map((item) => [
                       item[1]["ahaNumber"],
                       item[1]["typeOfPermit"] !== null ? item[1]["typeOfPermit"] : "-",
-                      item[1]["username"],
+                      item[1]["ahaStage"],
                       item[1]["ahaStatus"],
                       item[1]['createdByName'],
                       moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
+                                  "Do MMMM YYYY"
                                 ),
-                      "-",
-                      item[1]["wrpApprovalUser"],
-                      item[1]['wrpApprovalDateTime'] !== null ? moment(item[1]["wrpApprovalDateTime"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                ): "-"
+                      item[1]['closedDate'] !== null ? moment(item[1]["closedDate"]).format(
+                                  "Do MMMM YYYY"
+                                ): "-",
+                      item[1]["closedByName"] !== null ? item[1]["closedByName"] :"-",
                 ] )}
                 columns={columns}
                 options={options}
