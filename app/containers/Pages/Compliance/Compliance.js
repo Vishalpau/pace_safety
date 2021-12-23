@@ -246,7 +246,7 @@ export default function Compliance() {
   const handleNewCompliancePush = async () => {
     //console.log("Ashutosh")
     history.push(
-      '/app/pages/compliance/compliance'
+      '/app/pages/compliance/compliance-details'
     );
   };
 
