@@ -277,7 +277,7 @@ function AhaSummary() {
   let errorLession = "lession learned"
 
   const handleAssessmentViewChanges = () => {
-    if (ahaData.notifyTo !== "") {
+    if (ahaData.notifyTo !== null) {
       setAssessments(true);
     } else {
       history.push(`/app/pages/aha/assessments/project-details/`)
@@ -290,7 +290,7 @@ function AhaSummary() {
   }
 
   const handelApprovalViewChange = (side) => {
-    if (ahaData.notifyTo !== "") {
+    if (ahaData.notifyTo !== null) {
       setAssessments(false);
       if (ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && side === undefined) {
         setApprovals(true);
@@ -308,11 +308,11 @@ function AhaSummary() {
   }
 
   const handelLessionLearnedChanges = (side) => {
-    if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null ) {
+    if (ahaData.notifyTo !== null && ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null ) {
       setAssessments(false);
       setApprovals(false);
       setCloseOut(false);
-      if (ahaData.anyLessonsLearnt !== ""  && side === undefined) {
+      if (ahaData.anyLessonsLearnt !== null  && side === undefined) {
         setLessonsLearned(true);
       } else {
         history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
@@ -320,10 +320,10 @@ function AhaSummary() {
       setComments(false);
       setActivity(false);
     } else {
-      if (ahaData.notifyTo == "" && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null ) {
+      if (ahaData.notifyTo == null && ahaData.wrpApprovalUser == null && ahaData.sapApprovalUser == null ) {
         setMessageSnackbar(`${errorMessage} ${errorAssessment} , ${errorApproval}`)
         handleClickSnackBar()
-      } else if (ahaData.notifyTo !== "" && ahaData.wrpApprovalUser == null || ahaData.sapApprovalUser == null ) {
+      } else if (ahaData.notifyTo !== null && ahaData.wrpApprovalUser == null || ahaData.sapApprovalUser == null ) {
         setMessageSnackbar(`${errorMessage}  ${errorApproval} `)
         handleClickSnackBar()
       } 
@@ -600,7 +600,7 @@ function AhaSummary() {
                             Assessments
                           </Button>
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            {ahaData.notifyTo !== "" ? "Done" : "Pending"}{ahaData.notifyTo !== "" ? <CheckCircle /> : <AccessTime />}
+                            {ahaData.notifyTo !== null ? "Done" : "Pending"}{ahaData.notifyTo !== null ? <CheckCircle /> : <AccessTime />}
                           </Typography>
                         </li>
                         <li>
@@ -620,7 +620,7 @@ function AhaSummary() {
                         <li>
                           <Button
                             color={lessonsLearned == true ? "secondary" : "primary"}
-                            variant={ahaData.anyLessonsLearnt !== "" ? "contained" : "outlined"}
+                            variant={ahaData.anyLessonsLearnt !== null ? "contained" : "outlined"}
                             size="small"
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("lession")}
@@ -628,8 +628,8 @@ function AhaSummary() {
                             Lessons Learned
                           </Button>
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            {ahaData.anyLessonsLearnt !== "" ? "Done" : "Pending"}
-                            {ahaData.anyLessonsLearnt !== "" ? <CheckCircle /> : <AccessTime />}
+                            {ahaData.anyLessonsLearnt !== null ? "Done" : "Pending"}
+                            {ahaData.anyLessonsLearnt !== null ? <CheckCircle /> : <AccessTime />}
                           </Typography>
                         </li>
                       </ul>
@@ -1182,7 +1182,7 @@ function AhaSummary() {
                 Quick Actions
               </Typography>
               <List component="nav" aria-label="main mailbox folders">
-                {ahaData.notifyTo !== "" ?
+                {ahaData.notifyTo !== null ?
                   <ListItem button disabled={ahaData.closedByName !== null ? true : false}>
                     <ListItemIcon>
                       <Edit />
@@ -1228,7 +1228,7 @@ function AhaSummary() {
                     </Link>
                   </ListItem>
                 }
-                {ahaData.anyLessonsLearnt !== "" ? (
+                {ahaData.anyLessonsLearnt !== null ? (
                   <ListItem button>
                     <ListItemIcon>
                       <Edit />
