@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, Component , useRef} from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'dan-components';
 import FormControl from '@material-ui/core/FormControl';
@@ -30,7 +30,24 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Paper from '@material-ui/core/Paper';
-
+import FormSideBar from "../../../Forms/FormSideBar";
+import {COMPLIANCE} from "../Constants/Constants"
+import {useParams , useHistory} from "react-router-dom"
+import axios from "axios";
+import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../../utils/constants";
+import ComplianceValidation from "../Validations/ComplianceDetailsValidation"
+import { FormHelperText } from "@material-ui/core";
+import api from "../../../../utils/axios";
+import { CircularProgress } from '@material-ui/core';
+import Loader from "../../Loader"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -152,146 +169,79 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '600',
     lineHeight: '1.2',
   },
+  formControl :{
+    width: '100%',
+  },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 
 const ComplianceDetails = () => {
 // class ObservationInitialNotification extends Component {
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+  const [levelLenght, setLevelLenght] = useState(0)
+  const [workArea, setWorkArea] = useState("")
+  const {id} = useParams()
+  const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [breakdown1ListData, setBreakdown1ListData] = useState([]);
+  const [error , setError] = useState({});
+  const [team , setTeam] = useState([{"name" : ""}])
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+  var struct = "";
+  for (var i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
 
-  const areaName = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'areaName',
-      label: 'Area Name',
-    },
-    {
-      value: 'areaName1',
-      label: 'Area Name 1',
-    },
-    {
-      value: 'areaName2',
-      label: 'Area Name 2',
-    },
-    {
-      value: 'areaName3',
-      label: 'Area Name 3',
-    },
-    {
-      value: 'areaName4',
-      label: 'Area Name 4',
-    },
-  ];
+  const [form , setForm] = useState({
+    "fkCompanyId": parseInt(fkCompanyId),
+    "fkProjectId": parseInt(project.projectId),
+    "fkProjectStructureIds": fkProjectStructureIds !== "" ? fkProjectStructureIds : 0,
+    "area": "",
+    "contractor": "",
+    "contractorRepNumber": "",
+    "contractorSupervisorName": "",
+    "subContractor": "",
+    "auditDateTime": new Date(),
+    "hseRepresentative": "",
+    "inspectionTeam": "",
+    "auditType": "",
+    "status": "Active",
+    "createdBy": userId,
+    "source": "Web",
+  });
 
-  const reportedBy = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'reportedBy',
-      label: 'Reported By',
-    },
-    {
-      value: 'reportedBy1',
-      label: 'Reported By 1',
-    },
-    {
-      value: 'reportedBy2',
-      label: 'Reported By 2',
-    },
-    {
-      value: 'reportedBy3',
-      label: 'Reported By 3',
-    },
-    {
-      value: 'reportedBy4',
-      label: 'Reported By 4',
-    },
-  ];
-
-  const supervisorName = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'supervisorName',
-      label: 'Supervisor Name',
-    },
-    {
-      value: 'supervisorName1',
-      label: 'Supervisor Name 1',
-    },
-    {
-      value: 'supervisorName2',
-      label: 'Supervisor Name 2',
-    },
-    {
-      value: 'supervisorName3',
-      label: 'Supervisor Name 3',
-    },
-    {
-      value: 'supervisorName4',
-      label: 'Supervisor Name 4',
-    },
-  ];
-
-  const assignee = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'assignee',
-      label: 'Assignee',
-    },
-    {
-      value: 'assignee1',
-      label: 'Assignee 1',
-    },
-    {
-      value: 'assignee2',
-      label: 'Assignee 2',
-    },
-    {
-      value: 'assignee3',
-      label: 'Assignee 3',
-    },
-    {
-      value: 'assignee4',
-      label: 'Assignee 4',
-    },
-  ];
-
-  const assigneeDepartment = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'assigneeDepartment',
-      label: 'Assignee Department',
-    },
-    {
-      value: 'assigneeDepartment1',
-      label: 'Assignee Department 1',
-    },
-    {
-      value: 'assigneeDepartment2',
-      label: 'Assignee Department 2',
-    },
-    {
-      value: 'assigneeDepartment3',
-      label: 'Assignee Department 3',
-    },
-    {
-      value: 'assigneeDepartment4',
-      label: 'Assignee Department 4',
-    },
-  ];
+  const auditType = ["Company/Contractor Inspection","Area/Focussed Inspection","General Inspection"]
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -304,14 +254,6 @@ const ComplianceDetails = () => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  // const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
-
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
-
-  // render() {
-  // const {classes } = this.props;
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const files = acceptedFiles.map(file => (
@@ -334,100 +276,235 @@ bytes
   
 
   const [inspectionType, setInspectionType] = useState(false);
-  const handelInspectionTypeYes = (e) => {
-    setInspectionType(false);
+
+  const handelTeam = (e) => {
+    if (Object.keys(team).length < 100) {
+      setTeam([...team, {
+        "name": "",
+      }]);
+    }
   };
 
-  const handelInspectionTypeNo = (e) => {
-    setInspectionType(true);
-  };
+  const handelTeamName = (e ,index) =>{
+    const temp = [...team];
+    const value = e.target.value;
+    temp[index]["name"] = value;
+    setTeam(temp);
+  }
 
+  const handelRemove = async (e, index) => {
 
-
-  const handelPositivObservation = (e) => {
-    setPositiveObservation(false);
-    setRiskObservation(true);
-  };
-
-  const handelAtRiskConcern = (e) => {
-    setPositiveObservation(true);
-    setRiskObservation(false);
-  };
-
-  const handelAddressSituationYes = (e) => {
-    setAddressSituation(false);
-  };
-
-  const handelAddressSituationNo = (e) => {
-    setAddressSituation(true);
-  };
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+    if (team.length > 1) {
+      let temp = team;
+      let newData = team.filter((item, key) => key !== index);
+      await setTeam(newData);
+    };
+  }
+//  console.log(team)
 
   const clientRep = [
-    { title: 'Operation' },
-    { title: 'Functional' },
-    { title: 'Foundation' },
-    { title: 'Production' },
+    'Operation' ,
+     'Functional' ,'Foundation', 'Production' ,
   ];
+
+  const handelNext  =  async () => {
+    const {error , isValid} = ComplianceValidation(form , selectDepthAndId)
+    await setError(error)
+    if(!isValid) {
+      return "data not valid"
+    }
+    let teamName = team.map((value) => value.name)
+    if(teamName[0] !== ""){
+      form["inspectionTeam"] = teamName.join(',')
+    }
+    const uniqueProjectStructure = [... new Set(selectDepthAndId)]
+    let fkProjectStructureId = uniqueProjectStructure.map(depth => {
+      return depth;
+    }).join(':')
+    form["fkProjectStructureIds"] = fkProjectStructureId
+    setLoading(true)
+    setSaveLoading(true)
+    if(form.id){
+      form['updatedBy'] = userId
+      const res = await api.put(`/api/v1/audits/${form.id}/`,form).then((response) => {
+        history.push("/app/pages/compliance/checks")
+        },setLoading(false)).catch(error => {console.log(error),setLoading(false),setSaveLoading(true)})
+    }else{
+      const res = await api.post("/api/v1/audits/",form).then((response) => {
+       let result = response.data.data.results
+       let complianceId = result.id
+       localStorage.setItem("fkComplianceId" , complianceId)
+       history.push("/app/pages/compliance/checks"),
+       setLoading(false)}).catch(error =>{ console.log(error),setLoading(false),setSaveLoading(true)})
+    }
+  }
 
   const classes = useStyles();
 
-  const phasename = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'phasename',
-      label: 'Pl-Phase2',
-    },
-    {
-      value: 'phasename1',
-      label: 'Pl-Phase1',
-    },
-  ];
+  const projectData = JSON.parse(localStorage.getItem("projectName"));
 
-  const unitname = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'unitname',
-      label: 'Pl-Unit2',
-    },
-    {
-      value: 'unitname1',
-      label: 'Pl-Unit1',
-    },
-  ];
+  const fetchCallBack = async () => {
+    for (var key in projectData.projectName.breakdown) {
 
-  const workareaname = [
-    {
-      value: 'none',
-      label: 'None',
-    },
-    {
-      value: 'workarea',
-      label: 'Pl-WA2',
-    },
-    {
-      value: 'workarea1',
-      label: 'Pl-WA1',
-    },
-  ];
+      if (key == 0) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+        await axios(config)
+          .then(async (response) => {
+            await setBreakdown1ListData([
+              {
+                breakdownLabel:
+                  projectData.projectName.breakdown[0].structure[0].name,
+                breakdownValue: response.data.data.results,
+                selectValue: ""
+              },
+            ]);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    }
+    setIsLoading(true)
+  };
+
+  const fetchComplianceData = async () =>{
+    let complianceId = localStorage.getItem('fkComplianceId')
+    const res = await api.get(`/api/v1/audits/${complianceId}/`).then((response) => {
+      let result = response.data.data.results
+      setForm(result)
+      fetchTeamMembers(result.inspectionTeam)
+      fetchBreakDownData(result.fkProjectStructureIds)
+    }).catch((error) => console.log(error))
+  }
+
+  const fetchTeamMembers = async (names) =>{
+  let teamName = names.split(",")
+  let temp = [...team]
+  delete temp[0]
+  for(let i = 0; i < teamName.length; i++){
+    let tempName = {}
+    tempName['name'] = teamName[i]
+    temp.push(tempName) 
+  }
+  await setTeam(temp)
+  }
+
+  const fetchBreakDownData = async (projectBreakdown) => {
+    const projectData = JSON.parse(localStorage.getItem('projectName'));
+    let breakdownLength = projectData.projectName.breakdown.length
+    setLevelLenght(breakdownLength)
+    let selectBreakDown = [];
+    const breakDown = projectBreakdown.split(':');
+    setSelectDepthAndId(breakDown)
+    for (var key in breakDown) {
+      if (breakDown[key].slice(0, 2) === '1L') {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+
+        await api(config)
+          .then(async (response) => {
+            const result = response.data.data.results;
+            result.map((item) => {
+              if (breakDown[key].slice(2) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown, {
+                    breakDownLabel: projectData.projectName.breakdown[0].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+                ];
+              }
+            });
+            setFetchSelectBreakDownList(selectBreakDown)
+          })
+          .catch((error) => {
+
+            setIsNext(true);
+          });
+      } else {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+            }${breakDown[key - 1].substring(2)}`,
+          headers: HEADER_AUTH,
+        };
+
+        await api(config)
+          .then(async (response) => {
+
+            const result = response.data.data.results;
+
+            const res = result.map((item, index) => {
+              if (parseInt(breakDown[key].slice(2)) == item.id) {
+                selectBreakDown = [
+                  ...selectBreakDown,
+                  {
+                    breakDownLabel: projectData.projectName.breakdown[key].structure[0].name,
+                    selectValue: { depth: item.depth, id: item.id, name: item.name, label: projectData.projectName.breakdown[key].structure[0].name },
+                    breakDownData: result
+                  }
+                ];
+              }
+            });
+            setFetchSelectBreakDownList(selectBreakDown)
+          })
+          .catch((error) => {
+            console.log(error)
+            setIsNext(true);
+          });
+      }
+    }
+    setIsLoading(true)
+  };
+  const contractor = useRef([])
+  const subContractor = useRef([])
+  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+
+  const pickListValue = async () => {
+    let contractorPickList = await pickListValues["2"]
+    let subContractorPickList= await pickListValues["3"]
+    let temp = []
+    let tempSubContractor = []
+    for(let i = 0; i < contractorPickList.length; i++) {
+      let contractorValue = ""
+      contractorValue = contractorPickList[i].value
+      temp.push(contractorValue)
+    }
+    contractor.current = temp
+    for(let i = 0; i < subContractorPickList.length; i++) {
+      let subContractorValue = ""
+      subContractorValue = subContractorPickList[i].value
+      tempSubContractor.push(subContractorValue)
+    }
+    subContractor.current = tempSubContractor
+    
+  }
+
+  useEffect ( () => {
+    pickListValue()
+    if(id){
+      fetchCallBack()
+      fetchComplianceData()
+    }else{
+      fetchCallBack()
+    }
+  },[])
 
   return (
     <>
         <Grid container spacing={3}>
 
+          {isLoading ? <>
         <Grid container spacing={3} item xs={12} md={9}>
-
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
               <svg xmlns="http://www.w3.org/2000/svg" width="30.961" height="36.053" viewBox="0 0 30.961 36.053">
@@ -446,63 +523,53 @@ bytes
                           NTPC Project
                   </Typography>
                 </Grid>
-                <Grid item md={3} sm={6} xs={12}>
-                  <FormControl
-                    //required
-                    variant="outlined"
-                    className="formControl"
-                  >
-                    {/* <Typography varint="p">Project name</Typography> */}
-                    <InputLabel id="project-name-label">Phase</InputLabel>
-                    <Select
-                      id="project-name"
-                      labelId="project-name-label"
-                      label="Phase"
-                    >
-                      <MenuItem value="Phase">P1-Phase2</MenuItem>
-                      <MenuItem value="Phase1">P1-Phase1</MenuItem>
-                    </Select>
-                    
-                  </FormControl>
-                </Grid>
+                {id ?
+                  fetchSelectBreakDownList.map((data, key) =>
+                    <Grid item xs={3} md={3} key={key}>
+                      <FormControl
+                        error={error && error[`projectStructure${[key]}`]}
+                        variant="outlined"
+                        required
+                        className={classes.formControl}
+                      >
+                        <InputLabel id="demo-simple-select-label">
+                          {data.breakDownLabel}
+                        </InputLabel>
+                        <Select
+                          labelId="incident-type-label"
+                          id="incident-type"
+                          label={data.breakDownLabel}
+                          value={data.selectValue.id || ""}
+                          disabled={data.breakDownData.length === 0}
 
-                <Grid item md={3} sm={6} xs={12}>
-                  <FormControl
-                    //required
-                    variant="outlined"
-                    className="formControl"
-                  >
-                    <InputLabel id="project-name-label">Unit</InputLabel>
-                    <Select
-                      id="project-name"
-                      labelId="project-unit-label"
-                      label="Unit"
-                    >
-                      <MenuItem value="unit">P1-Unit2</MenuItem>
-                      <MenuItem value="unit1">P1-Unit1</MenuItem>
-                    </Select>
-                    
-                  </FormControl>
-                </Grid>
-
-                <Grid item md={3} sm={6} xs={12}>
-                  <FormControl
-                    //required
-                    variant="outlined"
-                    className="formControl"
-                  >
-                    <InputLabel id="project-name-label">Work area</InputLabel>
-                    <Select
-                      id="project-name"
-                      labelId="project-unit-label"
-                      label="Work area"
-                    >
-                      <MenuItem value="WA1">P1-WA2</MenuItem>
-                      <MenuItem value="WA2">P1-WA1</MenuItem>
-                    </Select>
-                    
-                  </FormControl>
-                </Grid>
+                          onChange={(e) => {
+                            handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                          }}
+                        >
+                          {data.breakDownData.length !== 0
+                            ? data.breakDownData.map((selectvalues, index) => (
+                              <MenuItem key={index}
+                                value={selectvalues.id}>
+                                {selectvalues.structureName}
+                              </MenuItem>
+                            ))
+                            : null}
+                        </Select>
+                        {error && error[`projectStructure${[key]}`] && (
+                          <FormHelperText>
+                            {error[`projectStructure${[key]}`]}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                  ) :
+                    <ProjectStructureInit
+                    selectDepthAndId={selectDepthAndId}
+                    setLevelLenght={setLevelLenght}
+                    error={error}
+                    setWorkArea={setWorkArea}
+                    setSelectDepthAndId={setSelectDepthAndId} />
+                }
               </Grid>
             </Paper>
           </Grid>
@@ -525,13 +592,27 @@ bytes
                   md={12}
                   xs={12}
                 >
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend" className="checkRadioLabel">Select the type of inspection*</FormLabel>
-                    <RadioGroup aria-label="select-typeof-compliance" name="select-typeof-compliance">
-                      <FormControlLabel value="contractor-compliance" className="selectLabel" control={<Radio />} label="Company/Contractor Inspection" />
-                      <FormControlLabel value="workarea-compliance" className="selectLabel" control={<Radio />} label="Area/Focussed Inspection" />
-                      <FormControlLabel value="general-compliance" className="selectLabel" control={<Radio />} label="General Inspection" />
+                  <FormControl component="fieldset" error={error.auditType}>
+                    <FormLabel component="legend" className="checkRadioLabel" >Select the type of inspection*</FormLabel>
+                    <RadioGroup aria-label="select-typeof-compliance" name="select-typeof-compliance"
+                    // value={form.auditType}
+                    onChange={(e) => 
+                     setForm({ ...form, auditType: e.target.value }) }>
+                    {auditType.map((option) => (      
+                      <FormControlLabel 
+                      className="selectLabel"
+                      checked={form.auditType === option}  
+                      value={option}
+                      control={<Radio />} 
+                      label={option} />
+                    ))}
+    
                     </RadioGroup>
+                    {error && error["auditType"] && (
+                      <FormHelperText>
+                        {error["auditType"]}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
               </Grid>
@@ -573,8 +654,10 @@ bytes
                       className="formControl"
                       options={clientRep}
                       className={classes.mT30}
-                      getOptionLabel={(option) => option.title}
-                      renderInput={(params) => <TextField {...params} label="Client HSE rep" variant="outlined" />}
+                      getOptionLabel={(option) => option}
+                      value={form.hseRepresentative ? form.hseRepresentative : ""}
+                      onSelect={(e) => setForm({...form,hseRepresentative: e.target.value})}
+                      renderInput={(params) => <TextField {...params} label="Client HSE rep" variant="outlined"  />}
                   />
                 </Grid>
                 <Grid
@@ -619,10 +702,13 @@ bytes
                   <Autocomplete
                       id="clientRep"
                       className="formControl"
-                      options={clientRep}
+                      options={contractor.current}
                       className={classes.mT30}
-                      getOptionLabel={(option) => option.title}
-                      renderInput={(params) => <TextField {...params} label="Contractor name*" variant="outlined" />}
+                      getOptionLabel={(option) => option}
+                      value={form.contractor ? form.contractor : ""}
+                      onSelect={(e) => setForm({...form,contractor : e.target.value})}
+                      renderInput={(params) => <TextField {...params} label="Contractor name*" variant="outlined" error={error.contractor}
+                      helperText={error.contractor ? error.contractor :""}/>}
                   />
                 </Grid>
                 <Grid
@@ -634,10 +720,11 @@ bytes
                     label="Contractor rep number"
                     name="contractorrapnu"
                     id="contractorrapnu"
-                    defaultValue=""
+                    value={form.contractorRepNumber ? form.contractorRepNumber :""}
                     fullWidth
                     variant="outlined"
                     className="formControl"
+                    onChange={(e) => setForm({...form , contractorRepNumber : e.target.value})}
                   />
                 </Grid>
                 <Grid
@@ -648,10 +735,13 @@ bytes
                   <Autocomplete
                       id="clientRep"
                       className="formControl"
-                      options={clientRep}
+                      options={subContractor.current}
                       className={classes.mT30}
-                      getOptionLabel={(option) => option.title}
-                      renderInput={(params) => <TextField {...params} label="Sub-Contractor name* " variant="outlined" />}
+                      getOptionLabel={(option) => option}
+                      value={form.subContractor ? form.subContractor : ""}
+                      onSelect={(e) => setForm({...form,subContractor : e.target.value})}
+                      renderInput={(params) => <TextField {...params} label="Sub-Contractor name* " variant="outlined" error={error.subContractor}
+                      helperText={error.subContractor ? error.subContractor :""} />}
                   />
                 </Grid>
                 <Grid
@@ -663,96 +753,16 @@ bytes
                     label="Contractor supervisor name "
                     name="contractorsupername"
                     id="contractorsupername"
-                    defaultValue=""
+                    value={form.contractorSupervisorName ? form.contractorSupervisorName : ""}
                     fullWidth
                     variant="outlined"
                     className="formControl"
+                    onChange={(e) => setForm({...form,contractorSupervisorName : e.target.value })}
                   />
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
-
-          {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Typography variant="h6" className="sectionHeading">
-              <svg xmlns="http://www.w3.org/2000/svg" width="33.449" height="39" viewBox="0 0 33.449 39">
-                <g id="Group_5722" data-name="Group 5722" transform="translate(-880 -746)">
-                  <g id="Group_5721" data-name="Group 5721" transform="translate(116)">
-                    <g id="transfer-inspection" transform="translate(595.7 635.5)">
-                      <path id="Path_6411" data-name="Path 6411" d="M312.318,292.217a1.469,1.469,0,0,0-1.422-1.509H293.241a1.512,1.512,0,0,0,0,3.019H310.9A1.482,1.482,0,0,0,312.318,292.217Zm-19.1,4.231a1.512,1.512,0,0,0,0,3.019h6.967a1.512,1.512,0,0,0,0-3.019ZM310.9,284.5H293.241a1.512,1.512,0,0,0,0,3.019H310.9a1.512,1.512,0,0,0,0-3.019Z" transform="translate(-117.487 -165.528)" fill="#06425c"/>
-                      <path id="Path_6412" data-name="Path 6412" d="M185.487,146.579H171.226s0,0,0,0V113.426s0,0,0,0h27.6s0,0,0,0v17.358a1.461,1.461,0,1,0,2.921,0V113.421a2.924,2.924,0,0,0-2.921-2.921H171.221a2.924,2.924,0,0,0-2.921,2.921v33.157a2.924,2.924,0,0,0,2.921,2.921h14.266a1.461,1.461,0,1,0,0-2.921Z" fill="#06425c"/>
-                    </g>
-                  </g>
-                  <path id="Path_6413" data-name="Path 6413" d="M12.531,8.087l-.747-.747L8.347,10.777,6.853,9.284l-.747.747,2.24,2.24Zm1.74-5.678h-.7V1H12.158V2.409H6.522V1H5.113V2.409h-.7a1.4,1.4,0,0,0-1.4,1.409L3,13.68a1.408,1.408,0,0,0,1.409,1.409h9.862A1.413,1.413,0,0,0,15.68,13.68V3.818A1.413,1.413,0,0,0,14.271,2.409Zm0,11.271H4.409V5.931h9.862Z" transform="translate(897.77 768.911)" fill="#06425c"/>
-                </g>
-              </svg> Inspection planning
-            </Typography>
-          </Grid>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Paper elevation={1} className="paperSection">
-              <Grid container spacing={3}>
-                <Grid item md={12} sm={12} xs={12}>
-                  <FormControl component="fieldset">
-                    <RadioGroup aria-label="inspectionType" name="inspectionType">
-                      <FormControlLabel value="Planned" className="selectLabel" control={<Radio />} onClick={(e) => handelInspectionTypeYes(e)} label="Planned inspection" />
-                      <FormControlLabel value="Unplanned" className="selectLabel" control={<Radio />} onClick={(e) => handelInspectionTypeNo(e)} label="Adhoc inspection" />
-                    </RadioGroup>
-                  </FormControl>
-                </Grid>
-                {inspectionType == false ? (
-                  <>
-                    <Grid item md={6} sm={6} xs={12}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          inputVariant="outlined"
-                          label="Planned start date"
-                          className="formControl"
-                          variant="outlined"
-                          required
-                          id="date-picker-dialog"
-                          format="dd/mm/yyyy"
-                          value={selectedDate}
-                          onChange={handleDateChange}
-                        />
-                      </MuiPickersUtilsProvider>
-                    </Grid>
-                    <Grid item md={6} sm={6} xs={12}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          inputVariant="outlined"
-                          label="Planned End Date"
-                          className="formControl"
-                          variant="outlined"
-                          required
-                          id="date-picker-dialog"
-                          format="dd/mm/yyyy"
-                          value={selectedDate}
-                          onChange={handleDateChange}
-                        />
-                      </MuiPickersUtilsProvider>
-                    </Grid>
-                  </>
-                  ) : 
-                  
-                  <Grid item md={6} sm={6} xs={12}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <KeyboardDatePicker
-                        inputVariant="outlined"
-                        label="Current date & time"
-                        className="formControl"
-                        variant="outlined"
-                        required
-                        id="date-picker-dialog"
-                        format="dd/mm/yyyy"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </Grid>
-                  }
-              </Grid>
-            </Paper>
-          </Grid> */}
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -782,6 +792,7 @@ bytes
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
+              {team.map((option,index) => (<>
                 <Grid
                   item
                   md={6}
@@ -793,26 +804,39 @@ bytes
                     name="inspectionteammem"
                     id="inspectionteammem"
                     multiline
-                    defaultValue=""
+                    value={team[index].name}
+                    onChange={(e) =>  handelTeamName(e,index)}
                     fullWidth
                     variant="outlined"
                     className="formControl"
                   />
                 </Grid>
-                <Grid item md={1} className={classes.createHazardbox}>
+                {team.length > 1 ?
+                  (<Grid item md={1} className={classes.createHazardbox}>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => { handelRemove(e, index) }}
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Grid>) : null}
+                  </> ))}
+                {/* <Grid item md={1} className={classes.createHazardbox}>
                   <IconButton
                     variant="contained"
                     color="primary"
                   >
                     <DeleteForeverIcon />
                   </IconButton>
-                </Grid>
+                </Grid> */}
                 <Grid item md={12} className={classes.createHazardboxBTN}>
                   <Button
                     variant="contained"
                     color="primary"
                     startIcon={<AddCircleIcon />}
                     className={classes.button}
+                    onClick={() => handelTeam()}
                   >
                     Add
                   </Button>
@@ -822,25 +846,47 @@ bytes
           </Grid>
 
 
-          <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+          
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={COMPLIANCE}
+                selectedItem="Compliance Details"
+              />
+            </Grid>
+
+            <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+            <div className={classes.loadingWrapper}>
+            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" disabled={loading}
+              onClick={() => handelNext()}>
               Next
             </Button>
-            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+            {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+              </div>
+              {/* <div className={classes.loadingWrapper}>
+            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" disabled={saveLoading} onClick={() => handelNext()}>
               Save
             </Button>
+            {saveLoading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div> */}
             <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
               Cancel
             </Button>
           </Grid>
-          </Grid>
+          </> : <Loader/>}
         </Grid>
-
-
-
-        
-     
-     
       </>
     );
   };

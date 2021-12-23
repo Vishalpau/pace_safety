@@ -68,7 +68,8 @@ import icoAudio from 'dan-images/icoAudio.svg';
 import icoPDF from 'dan-images/icoPDF.svg';
 import icoPng from 'dan-images/icoPng.svg';
 import icoVideo from 'dan-images/icoVideo.svg';
-
+import FormSideBar from "../../../Forms/FormSideBar";
+import {COMPLIANCE} from "../Constants/Constants"
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -378,6 +379,8 @@ const Checks = () => {
   return (
         <>
             <Grid container spacing={3}>
+            <Grid container spacing={3} item xs={12} md={9}>
+
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="28" viewBox="0 0 49.737 39">
@@ -1119,7 +1122,15 @@ const Checks = () => {
                         Cancel
                     </Button>
                 </Grid>
-            </Grid>                    
+            </Grid> 
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={COMPLIANCE}
+                selectedItem="Checks"
+              />
+            </Grid>
+             </Grid>                    
 
             {/* <Grid container spacing={3} className={classes.observationNewSection}>
                 

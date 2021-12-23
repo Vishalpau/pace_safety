@@ -183,6 +183,7 @@ import {
   Compliance,
   ComplianceSummary,
   ComplianceDetails,
+  Checks,
   ComplianceForm,
   ComplianceComment,
   ComplianceActivity,
@@ -639,7 +640,9 @@ function Application(props) {
         <Route path="/app/pages/compliance" exact component={Compliance} />
         <Route path="/app/pages/compliance/compliance-summary" exact component={ComplianceSummary} />
         <Route path="/app/pages/compliance/compliance-details" exact component={ComplianceDetails} />
+        <Route path="/app/pages/compliance/compliance-details/:id" exact component={ComplianceDetails} />
         <Route path="/app/pages/compliance/compliance" exact component={ComplianceForm} />
+        <Route path="/app/pages/compliance/checks" exact component={Checks} />
         <Route path="/app/pages/compliance-comment" component={ComplianceComment} />
         <Route path="/app/pages/compliance-activity" component={ComplianceActivity} />
 
