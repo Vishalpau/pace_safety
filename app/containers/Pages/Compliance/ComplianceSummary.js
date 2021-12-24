@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { PapperBlock } from 'dan-components';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -80,6 +80,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
+import api from "../../../utils/axios";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -226,6 +227,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ComplianceSummary() {
     const [compliance, setCompliance] = useState(true);
+    const [complianceData, setComplianceData] = useState({})
     // const [approvals, setApprovals] = useState(false);
     // const [lessonsLearned, setLessonsLearned] = useState(false);
     //const [summary, setSummary] = useState(false);
@@ -248,7 +250,7 @@ function ComplianceSummary() {
 
     const handleNewComplianceUpdatePush = async () => {
       history.push(
-        '/app/pages/compliance/compliance'
+        `/app/pages/compliance/compliance-details/${localStorage.getItem("fkComplianceId")}`
       );
     };
 
@@ -307,6 +309,17 @@ function ComplianceSummary() {
     setMyAudioOpen(false);
   };
 
+  const fetchComplianceData = async () =>{
+    let complianceId = localStorage.getItem('fkComplianceId')
+    const res = await api.get(`/api/v1/audits/${complianceId}/`).then((response) => {
+      let result = response.data.data.results
+      setComplianceData(result) 
+    }).catch((error) => console.log(error))
+  }
+
+  useEffect(() => {
+    fetchComplianceData()
+  },[])
   return (
       <CustomPapperBlock title="Compliance number: IR-15415415" icon='customDropdownPageIcon compliancePageIcon' whiteBg>
         <Grid container spacing={3}>
@@ -326,8 +339,8 @@ function ComplianceSummary() {
                       <ul className="SummaryTabList">
                         <li>
                           <Button
-                            color="primary"
-                            variant="contained"
+                            color={complianceData.performanceSummary !== null ? "secondary" : "primary"}
+                            variant={complianceData.performanceSummary !== null ? "contained" : "not-contained"}
                             size="small"
                             //endIcon={<CheckCircle />}
                             className={classes.statusButton}
@@ -341,7 +354,7 @@ function ComplianceSummary() {
                             Compliance
                           </Button>
                           <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            Done <CheckCircle />
+                          {complianceData.performanceSummary !== null ? "Done" : "Pending"}{complianceData.performanceSummary !== null ? <CheckCircle /> : <AccessTime />}
                           </Typography>
                         </li>
                       </ul>                        
@@ -1622,14 +1635,14 @@ function ComplianceSummary() {
               <List component="nav" aria-label="main mailbox folders">
                 <ListItem button >
                   <ListItemIcon>
-                    <Edit />
+                    {complianceData.performanceSummary !== null ? <Edit /> : <Add />}
                   </ListItemIcon>
                   <Link
                     onClick={(e) => handleNewComplianceUpdatePush(e)}
                     to="#"
                     variant="subtitle"
                   >
-                    <ListItemText primary="Update compliance" />
+                    <ListItemText primary={complianceData.performanceSummary !== null ? "Update compliance" : "Add compliance"} />
                   </Link>
                 </ListItem>
 

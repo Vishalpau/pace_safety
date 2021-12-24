@@ -279,9 +279,11 @@ bytes
 
   const handelTeam = (e) => {
     if (Object.keys(team).length < 100) {
-      setTeam([...team, {
-        "name": "",
-      }]);
+      let newData = team.filter((item , key) => key !== undefined)
+      let temp = {}
+      temp['name'] = ""
+      newData.push(temp)
+      setTeam(newData);
     }
   };
 
@@ -313,64 +315,35 @@ bytes
     if(!isValid) {
       return "data not valid"
     }
+    setLoading(true)
+    setSaveLoading(true)
     let teamName = team.map((value) => value.name)
-    if(teamName[0] !== ""){
-      form["inspectionTeam"] = teamName.join(',')
+    for(let key in teamName){
+
+      if(teamName[key]["name"] !== ""){
+        form["inspectionTeam"] = teamName.join(',')
+      }
     }
     const uniqueProjectStructure = [... new Set(selectDepthAndId)]
     let fkProjectStructureId = uniqueProjectStructure.map(depth => {
       return depth;
     }).join(':')
     form["fkProjectStructureIds"] = fkProjectStructureId
-    setLoading(true)
-    setSaveLoading(true)
     if(form.id){
       form['updatedBy'] = userId
       const res = await api.put(`/api/v1/audits/${form.id}/`,form).then((response) => {
-        history.push("/app/pages/compliance/checks")
+        history.push("/app/pages/compliance/categories")
         },setLoading(false)).catch(error => {console.log(error),setLoading(false),setSaveLoading(true)})
     }else{
       const res = await api.post("/api/v1/audits/",form).then((response) => {
        let result = response.data.data.results
        let complianceId = result.id
        localStorage.setItem("fkComplianceId" , complianceId)
-       history.push("/app/pages/compliance/checks"),
+       history.push("/app/pages/compliance/categories"),
        setLoading(false)}).catch(error =>{ console.log(error),setLoading(false),setSaveLoading(true)})
     }
   }
-
   const classes = useStyles();
-
-  const projectData = JSON.parse(localStorage.getItem("projectName"));
-
-  const fetchCallBack = async () => {
-    for (var key in projectData.projectName.breakdown) {
-
-      if (key == 0) {
-        var config = {
-          method: "get",
-          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
-            }`,
-          headers: HEADER_AUTH,
-        };
-        await axios(config)
-          .then(async (response) => {
-            await setBreakdown1ListData([
-              {
-                breakdownLabel:
-                  projectData.projectName.breakdown[0].structure[0].name,
-                breakdownValue: response.data.data.results,
-                selectValue: ""
-              },
-            ]);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
-    }
-    setIsLoading(true)
-  };
 
   const fetchComplianceData = async () =>{
     let complianceId = localStorage.getItem('fkComplianceId')
@@ -384,15 +357,17 @@ bytes
 
   const fetchTeamMembers = async (names) =>{
   let teamName = names.split(",")
-  let temp = [...team]
-  delete temp[0]
+  let temp = []
   for(let i = 0; i < teamName.length; i++){
-    let tempName = {}
-    tempName['name'] = teamName[i]
-    temp.push(tempName) 
+    if(teamName[i] === "" ){
+      delete temp[i]}else{
+        let tempName = {}
+        tempName['name'] = teamName[i]
+        temp.push(tempName) 
+      }
   }
   await setTeam(temp)
-  }
+  } 
 
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -492,10 +467,10 @@ bytes
   useEffect ( () => {
     pickListValue()
     if(id){
-      fetchCallBack()
+      
       fetchComplianceData()
     }else{
-      fetchCallBack()
+      setIsLoading(true)
     }
   },[])
 
@@ -520,7 +495,7 @@ bytes
                           Project name
                   </Typography>
                   <Typography className="labelValue">
-                          NTPC Project
+                      {project.projectName}
                   </Typography>
                 </Grid>
                 {id ?

@@ -70,6 +70,7 @@ import icoPng from 'dan-images/icoPng.svg';
 import icoVideo from 'dan-images/icoVideo.svg';
 import FormSideBar from "../../../Forms/FormSideBar";
 import {COMPLIANCE} from "../Constants/Constants"
+import {useParams , useHistory} from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -282,7 +283,7 @@ closeButton: {
 });
 
 const Checks = () => {
-
+    const history = useHistory();
     //const [expanded, setExpanded] = React.useState('panel1');
     const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel4');
     // const handleExpand = (panel) => (event, isExpanded) => {
@@ -374,7 +375,9 @@ const Checks = () => {
   });
 
   const [value, setValue] = React.useState(1);
-
+  const handelSubmit =() => {
+      history.push("/app/pages/compliance/performance-summary")
+  }
   const classes = useStyles();
   return (
         <>
@@ -1112,7 +1115,7 @@ const Checks = () => {
                 </Grid>
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={(e) => handelSubmit()}>
                         Next
                     </Button>
                     <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">

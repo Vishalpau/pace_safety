@@ -848,6 +848,14 @@ export const ComplianceDetails = loadable(() => import("./Pages/Compliance/Compl
   fallback: <Loading />,
 });
 
+export const Categories = loadable(() => import("./Pages/Compliance/Compliance/Categories"), {
+  fallback: <Loading />,
+});
+
+export const PerformanceSummary = loadable(() => import("./Pages/Compliance/Compliance/PerformanceSummary"), {
+  fallback: <Loading />,
+});
+
 export const ComplianceForm = loadable(() => import("./Pages/Compliance/Compliance/ComplianceForm"), {
   fallback: <Loading />,
 });

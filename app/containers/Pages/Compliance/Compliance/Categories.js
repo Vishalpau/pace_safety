@@ -29,7 +29,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Avatar from '@material-ui/core/Avatar';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Paper from '@material-ui/core/Paper';
-
+import FormSideBar from "../../../Forms/FormSideBar";
+import {COMPLIANCE} from "../Constants/Constants"
+import {useParams , useHistory} from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -143,6 +145,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Categories = () => {
 
+  const history = useHistory();
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -163,51 +166,17 @@ const Categories = () => {
     { title: 'Production' },
   ];
 
+  const handelSubmit = () => {
+    history.push("/app/pages/compliance/checks")
+  }
+
   const classes = useStyles();
   return (
     <>
       <Grid container spacing={3} className={classes.observationNewSection}>
 
-        {/* <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Project
-        </Typography>
-        <Typography className={classes.labelValue}>
-                A23-ERT1236 - NTPC
-        </Typography>
-        </Grid>
-        <Grid item md={12}>
-        <Typography variant="h6" gutterBottom className={classes.labelName}>
-                Unit
-        </Typography>
-        <Typography className={classes.labelValue}>
-                A23-ERT1236 - NTPC
-        </Typography>
-        </Grid>
+      <Grid container spacing={3} item xs={12} md={9}>
 
-          <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.inputFieldWithLabel}
-          style={{marginTop: '12px'}}
-          >
-            <Typography variant="h6" className={classes.labelName}>Work area information</Typography>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-            className={classes.formBox}
-          >
-            <Autocomplete
-                id="workArea"
-                options={workArea}
-                className={classes.mT30}
-                getOptionLabel={(option) => option.title}
-                renderInput={(params) => <TextField {...params} label="Work area*" variant="outlined" />}
-            />
-          </Grid> */}
           <Grid
             item
             md={12}
@@ -568,8 +537,15 @@ const Categories = () => {
                 </FormGroup>
               </Grid> */}
             </Grid> 
+          </Grid>
           </Grid> 
-
+          <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={COMPLIANCE}
+                selectedItem="Categories"
+              />
+            </Grid>
 
           {/* <Grid
           item
@@ -584,7 +560,7 @@ const Categories = () => {
 
 
           <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handelSubmit()}>
               Next
             </Button>
             <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">

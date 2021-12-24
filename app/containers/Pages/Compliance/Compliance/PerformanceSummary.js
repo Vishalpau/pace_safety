@@ -28,7 +28,12 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Paper from '@material-ui/core/Paper';
-
+import FormSideBar from "../../../Forms/FormSideBar";
+import {COMPLIANCE} from "../Constants/Constants"
+import api from "../../../../utils/axios";
+import { CircularProgress } from '@material-ui/core';
+import Loader from "../../Loader"
+import {useParams , useHistory} from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -100,14 +105,37 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PerformanceSummary = () => {
+  const [form , setForm] = useState({})
+  const history = useHistory()
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+    const fetchComplianceData = async () =>{
+      let complianceId = localStorage.getItem('fkComplianceId')
+      const res = await api.get(`/api/v1/audits/${complianceId}/`).then((response) => {
+        let result = response.data.data.results
+        setForm(result) 
+      }).catch((error) => console.log(error))
+    }
+  
+    const handelSubmit = async () => {
+      let complianceId = localStorage.getItem('fkComplianceId')
+      
+      const res = await api.put(`/api/v1/audits/${complianceId}/`, form).then((response) => {
+        history.push(`/app/pages/compliance/compliance-summary/${complianceId}`)
+      }).catch((error) => console.log(error))
+    }
+
   const classes = useStyles();
+  
+  useEffect(() => {
+    fetchComplianceData()
+  },[])
   return (
     <>
       <Grid container spacing={3} className={classes.observationNewSection}>
+      <Grid container spacing={3} item xs={12} md={9}>
 
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
@@ -135,7 +163,8 @@ const PerformanceSummary = () => {
                   id="performancesummary"
                   multiline
                   rows={4}
-                  defaultValue=""
+                  value ={form.performanceSummary ? form.performanceSummary : ""}
+                  onChange = {(e) => setForm({...form,performanceSummary : e.target.value})}
                   fullWidth
                   variant="outlined"
                   className="formControl"
@@ -204,7 +233,7 @@ const PerformanceSummary = () => {
         </Grid> 
 
         <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-          <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+          <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handelSubmit()}>
             Submit
           </Button>
           <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
@@ -305,6 +334,14 @@ const PerformanceSummary = () => {
           <Button variant="outlined" size="medium" className={classes.custmCancelBtn}>Cancel</Button>
         </Grid> */}
 
+      </Grid>
+      <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={COMPLIANCE}
+                selectedItem="Performance summary"
+              />
+            </Grid>
       </Grid>
     </>
   );
