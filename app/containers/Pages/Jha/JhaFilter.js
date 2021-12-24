@@ -339,20 +339,7 @@ class JhaFilter extends React.Component {
                   </Typography>
                 </Grid>
 
-                <Grid item md={4} sm={12} xs={12}>
-                  <Typography className={classes.textRight} variant="h5" color="inherit" noWrap>
-                  </Typography>
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.catButton}
-                    onClick={() => { this.handleClickButton() }}
-                  >
-                    {!this.state.open && <Typography variant="h5">Categories</Typography>}{afterBtn}
-
-                  </Button>
-                </Grid>
+              
               </Grid>
 
             </Toolbar>
@@ -368,6 +355,7 @@ class JhaFilter extends React.Component {
             <JhaPackage
               search={this.props.search}
               assessment={this.props.assessment}
+              status={this.props.status}
             />
           </main>
           {after}

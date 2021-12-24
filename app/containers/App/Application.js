@@ -147,11 +147,7 @@ import {
   Setting,
   JhaMain,
   JhaSummary,
-  JhaJobDetails,
   JhaJobDetailHazard,
-  JhaProjectAreaHazards,
-  JhaAssessment,
-  JhaDocumentNotification,
   JhaLessonsLearned,
   JhaAssessmentAndDocument,
   JhaApprovals,
@@ -558,20 +554,12 @@ function Application(props) {
 
         <Route path="/app/pages/jha/all_jha" component={JhaMain} />
         <Route path="/app/pages/jha/jha-summary" component={JhaSummary} />
-        <Route path="/app/pages/jha/assessments/project-details" component={JhaJobDetails} />
         <Route path="/app/pages/jha/assessments/Job-hazards" component={JhaJobDetailHazard} />
-        <Route path="/app/pages/jha/assessments/project-area-hazards" component={JhaProjectAreaHazards} />
         <Route path="/app/pages/jha/assessments/Assessment-Document" component={JhaAssessmentAndDocument} />
-        <Route path="/app/pages/jha/assessments/assessment" component={JhaAssessment} />
-        <Route path="/app/pages/jha/assessments/DocumentsNotifications" component={JhaDocumentNotification} />
         <Route path="/app/pages/jha/approvals/approvals" component={JhaApprovals} />
         <Route path="/app/pages/jha/lessons-learned/lessons-learned" component={JhaLessonsLearned} />
         <Route path="/app/pages/jha/close-out" component={JhaCloseOut} />
 
-        <Route path="/app/pages/jha/assessments/project-details/:id" exact component={JhaJobDetails} />
-        <Route path="/app/pages/jha/assessments/project-area-hazards/:id" exact component={JhaProjectAreaHazards} />
-        <Route path="/app/pages/jha/assessments/assessment/:id" exact component={JhaAssessment} />
-        <Route path="/app/pages/jha/assessments/DocumentsNotifications/:id" exact component={JhaDocumentNotification} />
 
         {/* Sample Apps */}
         <Route path="/app/pages/contact" component={Contact} />

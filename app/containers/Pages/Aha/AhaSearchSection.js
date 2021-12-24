@@ -424,9 +424,8 @@ export default function SimpleTabs(props) {
         </Grid>
         <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
           <span className={classes.mR10}>
-            <img src={preplanning} />
-            <img src={progress} className={classes.pLtenPRten} />
-            <img src={completed} />
+            <img src={preplanning} onClick={() => setStatus("Open")} />
+            <img src={completed} onClick={() => setStatus("Closed")} />
           </span>
         </Grid>
 		  </Grid>
@@ -434,13 +433,13 @@ export default function SimpleTabs(props) {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} />
+			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} status={status} />
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} />
+			  <AhaFilter search={searchIncident} assessments={assessments} value={props.value} status={status} />
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-			  <AhaFilter search={searchIncident} assessments={assessments} />
+			  <AhaFilter search={searchIncident} assessments={assessments} status={status} />
 		  </TabPanel>
 		  <TabPanel value={value} index={3}>
 			  <AhaBookmarkFilter />

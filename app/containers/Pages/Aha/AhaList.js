@@ -132,7 +132,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function FlhaList(props) {
-  console.log(props)
   const [incidents] = useState([]);
 
   const handelView = (e) => {
@@ -152,17 +151,11 @@ function FlhaList(props) {
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
-  
+  const search = props.search
+  const status = props.status
   
   //   Data for the table view
-  const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
-const data = [
-  ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-  ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
-];
+  const columns = ['Number', 'Type', 'Stage', 'Status', 'Requested by', 'Submitted date', 'Approved date', 'Approved by'];
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -200,26 +193,25 @@ const data = [
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
-  console.log(props.assessments)
-    if(props.assessments === "My Assessments"){
-      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
-  
-      const result = res.data.data.results.results
-      await setAllAHAData(result)
-      await setTotalData(res.data.data.results.count)
-            await setPageData(res.data.data.results.count / 25)
-            let pageCount = Math.ceil(res.data.data.results.count / 25)
-            await setPageCount(pageCount)
-    }else{
-      const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-  
-      const result = res.data.data.results.results
-      await setAllAHAData(result)
-      await setTotalData(res.data.data.results.count)
-            await setPageData(res.data.data.results.count / 25)
-            let pageCount = Math.ceil(res.data.data.results.count / 25)
-            await setPageCount(pageCount)
-    }
+  if(props.assessments === "My Assessments"){
+    const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}`);
+
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    await setTotalData(res.data.data.results.count)
+    await setPageData(res.data.data.results.count / 25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
+  }else{
+    const res = await api.get(`api/v1/ahas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}`);
+
+    const result = res.data.data.results.results
+    await setAllAHAData(result)
+    await setTotalData(res.data.data.results.count)
+    await setPageData(res.data.data.results.count / 25)
+    let pageCount = Math.ceil(res.data.data.results.count / 25)
+    await setPageCount(pageCount)
+  }
     
   
     await setIsLoading(true)
@@ -256,7 +248,7 @@ const data = [
   useEffect(() => {
     fetchAllAHAData()
     // handleProjectList()
-},[props.projectName.breakDown,props.search,props.assessments])
+},[props.projectName.breakDown,props.search,props.assessments,props.status])
 
   return (
     <>
@@ -267,33 +259,20 @@ const data = [
               <MUIDataTable
                 //title="Observations List"
                 className="dataTableSectionDesign"
-                data={Object.entries(allAHAData).filter(
-                      (item) => {return (
-                         
-                        item[1]["description"]
-                          .toLowerCase()
-                          .includes(searchIncident.toLowerCase()) ||
-                          item[1]["ahaNumber"].toLowerCase().includes(
-                            searchIncident.toLowerCase()
-                          
-                        )
-                      )}
-                        
-                    ).map((item) => [
+                data={Object.entries(allAHAData).map((item) => [
                       item[1]["ahaNumber"],
-                      item[1]["typeOfPermit"],
-                      item[1]["username"],
+                      item[1]["typeOfPermit"] !== null ? item[1]["typeOfPermit"] : "-",
+                      item[1]["ahaStage"],
                       item[1]["ahaStatus"],
                       item[1]['createdByName'],
                       moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
+                                  "Do MMMM YYYY"
                                 ),
-                      item[1]["-"],
-                      item[1]["wrpApprovalUser"],
-                      moment(item[1]["wrpApprovalDateTime"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )
-                ])}
+                      item[1]['closedDate'] !== null ? moment(item[1]["closedDate"]).format(
+                                  "Do MMMM YYYY"
+                                ): "-",
+                      item[1]["closedByName"] !== null ? item[1]["closedByName"] :"-",
+                ] )}
                 columns={columns}
                 options={options}
                 //className="classes.dataTableNew"
