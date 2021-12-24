@@ -25,6 +25,8 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 
 import Attachment from '../../../containers/Attachment/Attachment';
 import api from '../../../utils/axios';
+import axios from "axios";
+
 import ViewHazard from './ViewHazard';
 
 import { withRouter } from 'react-router-dom';
@@ -37,7 +39,7 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 function TabContainer(props) {
   const { children } = props;
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div">
       {children}
     </Typography>
   );
@@ -50,7 +52,7 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
   formControl: {
     margin: '.5rem 0',
@@ -161,20 +163,21 @@ class SimpleTabs extends React.Component {
     visualConfirmations: {},
     versions: ["1.0",],
     selectedVersion: "1.0",
-
+    projectStructName: ''
   };
 
   componentDidMount() {
     this.getFlhaDetails();
     this.getJobVisualConfirmation();
     this.handelVersion();
-  
   }
 
   getFlhaDetails = async () => {
     const flhaNumber = this.props.match.params.id;
     const res = await api.get('api/v1/flhas/' + flhaNumber + '/');
     this.setState({ flha: res.data.data.results });
+    //  this.handelWorkArea1(res.data.data.results )
+     
   }
 
   handelVersion = async () => {
@@ -198,6 +201,39 @@ class SimpleTabs extends React.Component {
     const res = await api.get('api/v1/flhas/' + flhaId + '/visualconfirmations/');
     await this.setState({ visualConfirmations: res.data.data.results });
   }
+
+  count = 0;
+
+   handelWorkArea1 =  (assessment) => {
+    if (Object.keys(assessment).length > 0 && this.count === 0) {
+      this.count++
+      const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+          ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+          : null;
+      const projectId =
+        JSON.parse(localStorage.getItem("projectName")) !== null
+          ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+          : null;
+      let structName = []
+      
+      let projectStructId = assessment.fkProjectStructureIds.split(":")
+      let c = 0;
+      // for (let key in projectStructId) 
+      projectStructId.map(ps => {
+        c++
+        let workAreaId = [ps.substring(0, 2), ps.substring(2)]
+        const api_work_area = axios.create({
+          baseURL: SSO_URL,
+          headers: HEADER_AUTH
+        });
+        api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`)
+                     .then(workArea => this.setState({projectStructName : this.state.projectStructName + (c > 1 ? ':' : '') + workArea.data.data.results[0].name})) //this.setState({projectStructName : workArea.data.results[0]["structureName"].join(' ')}))
+      })
+    }
+   
+  }
+
   redirectToHome = (Path) => {
     const { history } = this.props;
     if (history) {
@@ -205,12 +241,23 @@ class SimpleTabs extends React.Component {
     }
   }
 
+
+
+  handleProjectName = (flha) => {
+    const companies = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).companies
+      : null;
+    if (Object.keys(flha).length > 0) {
+      return companies.filter((company) => company.companyId == flha.fkCompanyId)[0].projects.filter((project) => project.projectId === flha.fkProjectId)[0].projectName
+    }
+    return ''
+  }
+
   render() {
     const { classes } = this.props;
     const {
-      value, flha, criticalTasks, visualConfirmations, versions
+      value, flha, criticalTasks, visualConfirmations, versions, projectStructName
     } = this.state;
-
 
 
     return (
@@ -261,10 +308,12 @@ class SimpleTabs extends React.Component {
                   <Grid container spacing={3}>
                     <Grid item md={12} sm={12} xs={12}>
                       <Typography gutterBottom className="labelValue">
-                        {JSON.parse(localStorage.getItem('projectName')).projectName.projectName}
+                        {this.handleProjectName(flha)}
+
                       </Typography>
                       <Typography className="labelValue">
-                        Level1 : Level2 : Level3
+                       {this.handelWorkArea1(flha)}
+                       {projectStructName}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -335,37 +384,36 @@ class SimpleTabs extends React.Component {
                 </Grid> */}
 
             </Grid>
-            <div className={classes.root}>
+            <Grid container spacing={3}>
+              <Grid item md={12} xs={12}>
+                <List component="nav" className="inlineListBTN versionTabBox" aria-label="main mailbox folders">
+                  <ListItem button className={this.state.selectedVersion == 1.0 ? "active" : ""}>
+                    <ListItemText primary="Initial assessment" onClick={(e) => this.getPreventiveControls("1.0")} />
+                  </ListItem>
+                  {this.state.versions !== undefined
+                    && this.state.versions.length > 0
+                    && this.state.versions.slice(1, this.state.versions.length).map((version) => (
+                      <ListItem button className={this.state.selectedVersion == version ? "active" : ""}>
+                        <ListItemText primary={`${version}`} onClick={(e) => this.getPreventiveControls(version)} />
+                      </ListItem>
+                    ))}
 
-              <List component="nav" className="inlineListBTN" aria-label="main mailbox folders">
-                <ListItem button className={this.state.selectedVersion == 1.0 ? "active" : ""}>
-                  <ListItemText primary="Initial assessment" onClick={(e) => this.getPreventiveControls("1.0")} />
-                </ListItem>
-                {this.state.versions !== undefined
-                  && this.state.versions.length > 0
-                  && this.state.versions.slice(1, this.state.versions.length).map((version) => (
-                    <ListItem button className={this.state.selectedVersion == version ? "active" : ""}>
-                      <ListItemText primary={`${version}`} onClick={(e) => this.getPreventiveControls(version)} />
-                    </ListItem>
-                  ))}
+                </List>
 
-              </List>
-
-              <TabContainer className={classes.paddZero}>
-                <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
-              </TabContainer>
-
-            </div>
+                <TabContainer className={classes.paddZero}>
+                  <ViewHazard criticalTasks={this.state.criticalTasks} visualConfirmations={this.state.visualConfirmations} flha={this.state.flha} />
+                </TabContainer>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item md={3} xs={12}>
             <Paper elevation={0}>
-              <div className={classes.root}>
+              <div className="quickActionSection">
                 <Box padding={1} bgcolor="background.paper">
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h5" className="rightSectiondetail">
                     Quick Actions
-
                   </Typography>
-                  <Divider />
+                  {/* <Divider /> */}
                   <List component="nav" aria-label="main mailbox folders">
                     <ListItem
                       button
@@ -382,7 +430,7 @@ class SimpleTabs extends React.Component {
                         <ListItemText primary="Revise FLHA" />
                       </Link>
                     </ListItem>
-                    <Divider />
+                    {/* <Divider /> */}
 
                     <ListItem
                       button

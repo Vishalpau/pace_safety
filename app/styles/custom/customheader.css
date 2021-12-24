@@ -615,6 +615,10 @@ html .custmCancelBtn {
   margin-right: 10px;
   color: #ffffff;
   padding: 12px 15px;
+  margin-top: 30px;
+}
+.versionTabBox {
+  margin-top: 30px !important;
 }
 .inlineListBTN .MuiListItem-button {
   display: inline;
@@ -737,8 +741,6 @@ html .custmCancelBtn {
   font-family: 'Montserrat-Regular';
   color: #666666;
 }
-
-
 
 
 /* Activity */
@@ -936,6 +938,9 @@ html .custmCancelBtn {
   border-bottom: 1px solid #ccc; */
 }
 
+/* .MuiList-padding {
+  margin-top: 30px !important;
+} */
 .dateRangeSection {
   position: absolute;
   right: 0px;
@@ -955,98 +960,137 @@ html .custmCancelBtn {
 /* Left menu custom style */
 .incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
   border-radius: 0 0px 0px 0 !important;
-  padding-left: 20px !important;
+  padding-left: 15px !important;
 }
 
 .homeMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -40px -18px;
-  margin-right: 5px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -675px -16px;
+  margin-right: 16px;
 }
 .incident-managementMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -108px -18px;
-  margin-right: 5px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -740px -16px;
+  margin-right: 16px;
 }
 .assessmentsMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -320px -18px;
-  margin-right: 5px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat  -227px -16px;
+  margin-right: 16px;
 }
 .icareMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -248px -18px;
-  margin-right: 5px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -98px -16px;
+  margin-right: 16px;
 }
 .controlTowerMenu .MuiListItemIcon-root {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -945px -18px;
-  margin-right: 5px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -292px -16px;
+  margin-right: 16px;
 }
-
-
 .incident-managementMenu.selectmenu .MuiListItemIcon-root,
-.incident-managementMenu.selectmenu:hover .MuiListItemIcon-root,
-.incident-managementMenu:hover .MuiListItemIcon-root,
-.incident-managementMenu:hover .MuiListItemText-root span,
+/* .incidentManagMenu.selectmenu:hover .MuiListItemIcon-root,
+.incidentManagMenu:hover .MuiListItemIcon-root,
+.incidentManagMenu:hover .MuiListItemText-root span, */
 .incident-managementMenu.selectmenu:hover .MuiListItemText-root span,
 .incident-managementMenu.selectmenu .MuiListItemText-root span,
+.incident-managementMenu:hover,
+.incident-managementMenu.selectmenu:hover,
+.incident-managementMenu.selectmenu,
+
+
 
 .homeMenu.selectmenu .MuiListItemIcon-root,
-.homeMenu.selectmenu:hover .MuiListItemIcon-root,
+/* .homeMenu.selectmenu:hover .MuiListItemIcon-root,
 .homeMenu:hover .MuiListItemIcon-root,
-.homeMenu:hover .MuiListItemText-root span,
+.homeMenu:hover .MuiListItemText-root span, */
 .homeMenu.selectmenu:hover .MuiListItemText-root span,
 .homeMenu.selectmenu .MuiListItemText-root span,
+.homeMenu:hover,
+.homeMenu.selectmenu:hover,
+.homeMenu.selectmenu,
 
 .icareMenu.selectmenu .MuiListItemIcon-root,
-.icareMenu.selectmenu:hover .MuiListItemIcon-root,
+/* .icareMenu.selectmenu:hover .MuiListItemIcon-root,
 .icareMenu:hover .MuiListItemIcon-root,
-.icareMenu:hover .MuiListItemText-root span,
+.icareMenu:hover .MuiListItemText-root span, */
 .icareMenu.selectmenu:hover .MuiListItemText-root span,
 .icareMenu.selectmenu .MuiListItemText-root span,
+.icareMenu:hover,
+.icareMenu.selectmenu:hover,
+.icareMenu.selectmenu,
 
 .assessmentsMenu.selectmenu .MuiListItemIcon-root,
-.assessmentsMenu.selectmenu:hover .MuiListItemIcon-root,
+/* .assessmentsMenu.selectmenu:hover .MuiListItemIcon-root,
 .assessmentsMenu:hover .MuiListItemIcon-root,
-.assessmentsMenu:hover .MuiListItemText-root span,
+.assessmentsMenu:hover .MuiListItemText-root span, */
 .assessmentsMenu.selectmenu:hover .MuiListItemText-root span,
 .assessmentsMenu.selectmenu .MuiListItemText-root span,
-.controlTowerMenu.selectmenu .MuiListItemIcon-root,
-.controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
-.controlTowerMenu:hover .MuiListItemIcon-root,
-.controlTowerMenu:hover .MuiListItemText-root span,
-.controlTowerMenu.selectmenu:hover .MuiListItemText-root span,
-.controlTowerMenu.selectmenu .MuiListItemText-root span{
-  background-position-y: -132px;
-  color: #ff8533;
-  font-weight: 700;
-}
+.assessmentsMenu:hover,
+.assessmentsMenu.selectmenu:hover,
+.assessmentsMenu.selectmenu,
 
+.controlTowerMenu.selectmenu .MuiListItemIcon-root,
+/* .controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
+.controlTowerMenu:hover .MuiListItemIcon-root,
+.controlTowerMenu:hover .MuiListItemText-root span, */
+.controlTowerMenu.selectmenu:hover .MuiListItemText-root span,
+.controlTowerMenu.selectmenu .MuiListItemText-root span,
+.controlTowerMenu:hover,
+.controlTowerMenu.selectmenu:hover,
+.controlTowerMenu.selectmenu{
+  background-position-y: -80px;
+  color: #ffffff !important;
+  background-color: #ff8533 !important;
+}
+.homeMenu:hover .MuiListItemIcon-root,
+.icareMenu:hover .MuiListItemIcon-root,
+.incident-managementMenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemIcon-root,
+.controlTowerMenu:hover .MuiListItemIcon-root,
+.assessmentsMenu:hover .MuiListItemIcon-root {
+  background-position-y: -80px;
+}
 
 
 /* Left sub menu custom style */
 .flhaMenu, .jhaMenu, .ahaMenu {
   position: relative;
 }
+.MuiList-dense.MuiList-padding {
+  padding-top: 0px;
+}
 .flhaMenu .MuiTypography-colorTextSecondary,
 .jhaMenu .MuiTypography-colorTextSecondary,
-.ahaMenu .MuiTypography-colorTextSecondary{
+.ahaMenu .MuiTypography-colorTextSecondary {
   position: absolute;
-  left: 37px;
+  left: 72px;
   top: 10px;
+  left: -8px;
 }
+.flhaMenu .MuiListItemText-inset,
+.jhaMenu .MuiListItemText-inset,
+.ahaMenu .MuiListItemText-inset {
+  padding-left: 60px;
+}
+.flhaMenu .MuiListItemText-inset > span,
+.jhaMenu .MuiListItemText-inset > span,
+.ahaMenu .MuiListItemText-inset > span {
+  padding-left: 48px;
+}
+
 .flhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .jhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
-.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg{
+.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg {
   position: absolute;
   top: 0px;
+  left: 90px;
 }
 .flhaMenu .leftCustomImg {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -394px -18px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -803px -16px;
   margin-right: 5px; 
 }
 .jhaMenu .leftCustomImg {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -463px -18px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -867px -16px;
   margin-right: 5px; 
 }
 .ahaMenu .leftCustomImg {
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat -534px -18px;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -931px -16px;
   margin-right: 5px; 
 }
 
@@ -1054,25 +1098,39 @@ html .custmCancelBtn {
 .flhaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .flhaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .flhaMenu.selectmenu:hover .MuiListItemText-root span,
-.flhaMenu:hover .MuiListItemText-root span,
+/* .dropdown_listsMenu:hover .MuiListItemText-root span, */
+.flhaMenu:hover,
+.flhaMenu.selectmenu:hover,
+.flhaMenu.selectmenu,
 
 .jhaMenu.selectmenu .MuiListItemText-root span,
 .jhaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .jhaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .jhaMenu.selectmenu:hover .MuiListItemText-root span,
-.jhaMenu:hover .MuiListItemText-root span,
+/* .dropdown_listsMenu:hover .MuiListItemText-root span, */
+.jhaMenu:hover,
+.jhaMenu.selectmenu:hover,
+.jhaMenu.selectmenu,
 
 .ahaMenu.selectmenu .MuiListItemText-root span,
 .ahaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .ahaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .ahaMenu.selectmenu:hover .MuiListItemText-root span,
-.ahaMenu:hover .MuiListItemText-root span
+/* .dropdown_listsMenu:hover .MuiListItemText-root span, */
+.ahaMenu:hover,
+.ahaMenu.selectmenu:hover,
+.ahaMenu.selectmenu
 {
-  background-position-y: -132px;
-  color: #ff8533;
-  font-weight: 700;
-  background-color: transparent !important;
+  background-position-y: -80px;
+  color: #ffffff !important;
+  background-color: #ff8533 !important;
 }
+.flhaMenu:hover .MuiListItemText-root span,
+.jhaMenu:hover .MuiListItemText-root span,
+.ahaMenu:hover .MuiListItemText-root span {
+  background-position-y: -80px;
+}
+
 .leftCustomImg {
   padding: 16px;
 }

@@ -782,7 +782,7 @@ function xflha(props) {
                         <RecentActorsIcon />
                       </IconButton>
                     </Tooltip>
-                    {/* <Tooltip title="list" aria-label="list">
+                    <Tooltip title="list" aria-label="list">
                       <IconButton
                         aria-label="list"
                         onClick={(e) => handelViewTabel(e)}
@@ -790,7 +790,7 @@ function xflha(props) {
                       >
                         <ListAltOutlinedIcon />
                       </IconButton>
-                    </Tooltip> */}
+                    </Tooltip>
                   </div>
                 </Grid>
                 <Grid item xs={12}>
@@ -1521,32 +1521,37 @@ function xflha(props) {
             // listview end
 
           ) : (
-            <Grid component={Paper}>
-              <MUIDataTable
-                title="FLHA's"
-                data={Object.entries(flhas).map((item) => [
+            <Box>
+              <TableContainer component={Paper}>
+                <Grid component={Paper}>
+                  <MUIDataTable
+                    className="dataTableSectionDesign"
+                    title="FLHA's"
+                    data={Object.entries(flhas).map((item) => [
 
-                  item[1].flhaNumber,
-                  item[1].jobTitle,
-                  'NA',
-                  'NA',
-                  'NA',
-                  'NA',
-                  'NA',
-                  'NA',
-                  'NA',
-                  'NA',
-                  // item[1]["incidentLocation"],
-                  // moment(item[1]["incidentReportedOn"]).format(
-                  //   "Do MMMM YYYY, h:mm:ss a"
-                  // ),
-                  // item[1]["incidentReportedByName"],
-                  // item[1]["id"],
-                ])}
-                columns={columns}
-                options={options}
-              />
-            </Grid>
+                      item[1].flhaNumber,
+                      item[1].jobTitle,
+                      // 'NA',
+                      // 'NA',
+                      // 'NA',
+                      // 'NA',
+                      // 'NA',
+                      // 'NA',
+                      // 'NA',
+                      // 'NA',
+                      // item[1]["incidentLocation"],
+                      // moment(item[1]["incidentReportedOn"]).format(
+                      //   "Do MMMM YYYY, h:mm:ss a"
+                      // ),
+                      // item[1]["incidentReportedByName"],
+                      // item[1]["id"],
+                    ])}
+                    columns={columns}
+                    options={options}
+                  />
+                </Grid>
+              </TableContainer>
+            </Box>
           )}
 
           <div className={classes.pagination}>

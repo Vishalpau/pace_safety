@@ -189,7 +189,7 @@ const useStyles = makeStyles((theme) => ({
     '& tr th': {
       backgroundColor: '#06425c',
       color: '#ffffff',
-      lineHeight: '0.5rem',
+      // lineHeight: '0.5rem',
     },
   },
   headerBackground: {
@@ -370,7 +370,7 @@ console.log(notify,"props.notifyToValues")
         <Grid item sm={12} xs={12}>
           <Box padding={0}>
             <Grid container spacing={3}>
-              <Divider className={classes.divider} />
+              {/* <Divider className={classes.divider} /> */}
               <Grid item xs={12}>
                 <Box padding={0}>
                   <Grid item sm={12} xs={12}>

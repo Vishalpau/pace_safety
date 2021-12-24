@@ -171,7 +171,8 @@ const styles = (theme) => ({
       margin: "0",
     },
     "& $head": {
-      paddingLeft: theme.spacing(10),
+      //paddingLeft: theme.spacing(10),
+      paddingLeft: "58px",
     },
   },
   active: {
