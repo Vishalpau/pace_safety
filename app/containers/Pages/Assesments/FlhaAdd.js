@@ -1270,7 +1270,7 @@ const FlhaDetails = (props) => {
                                           onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
                                           }
                                         >
-                                          <MenuItem value={2}>Sightly harmful</MenuItem>
+                                          <MenuItem value={2}>Slightly harmful</MenuItem>
                                           <MenuItem value={4}>Harmful</MenuItem>
                                           <MenuItem value={6}>Very harmful</MenuItem>
                                           <MenuItem value={8}>Extremely harmful</MenuItem>
