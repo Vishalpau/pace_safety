@@ -56,7 +56,7 @@ function MainMenu(props) {
               </ListItemIcon>
             )}
             <ListItemText
-              style={{ color: "#000" }}
+              // style={{ color: "#000" }}
               classes={{ primary: classes.primary }}
               variant="inset"
               primary={item.name}
