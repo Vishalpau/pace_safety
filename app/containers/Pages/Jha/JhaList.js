@@ -143,7 +143,8 @@ function JhaList(props) {
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
-
+  const search = props.search
+  const status = props.status
   const handelView = (e) => {
     setListToggle(false);
   };
@@ -154,7 +155,7 @@ function JhaList(props) {
   const [value, setValue] = React.useState(2);
 
   //   Data for the table view
-  const columns = ['Number', 'Type', 'Schedule', 'Status', 'Requested by', 'Submitted date', 'Required date', 'Approved date', 'Approved by'];
+  const columns = ['Number', 'Type', 'Stage', 'Status', 'Requested by', 'Submitted date', 'Approved date', 'Approved by'];
   const data = [
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
   ['FLHA-125-256-251', 'XFLHA', 'Planned', 'Assigned', 'Mayank', 'Dec 26, 2020', 'Dec 26, 2020', 'Dec 26, 2020', 'Prakash'],
@@ -198,7 +199,7 @@ function JhaList(props) {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
     if(props.assessment === "My Assessments"){
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
+      const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}`);
   
       const result = res.data.data.results.results
       await setAllJHAData(result)
@@ -207,7 +208,7 @@ function JhaList(props) {
             let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
     }else{
-      const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+      const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}`);
   
       const result = res.data.data.results.results
       await setAllJHAData(result)
@@ -237,11 +238,11 @@ function JhaList(props) {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
   if(props.assessment === "My Assessments"){
-    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&jhaStatus=${status}&page=${value}`);
       await setAllJHAData(res.data.data.results.results);
       await setPage(value)
   }else{
-    const res = await api.get(`api/v1/jhas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/jhas/?search=${search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&jhaStatus=${status}&page=${value}`);
     await setAllJHAData(res.data.data.results.results);
     await setPage(value)
   }
@@ -251,7 +252,7 @@ function JhaList(props) {
 
   useEffect(() => {
     fetchAllJHAData()
-},[props.projectName.breakDown,props.search,props.assessment])
+},[props.projectName.breakDown,props.search,props.assessment,props.status])
 
   return (
     <>
@@ -265,17 +266,17 @@ function JhaList(props) {
                 data={Object.entries(allJHAData).map((item) => [
                       item[1]["jhaNumber"],
                       item[1]["typeOfPermit"],
-                      item[1]["username"],
+                      item[1]["jhaStage"],
                       item[1]["jhaStatus"],
                       item[1]['createdByName'],
                       moment(item[1]["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
+                                  "Do MMMM YYYY"
                                 ),
-                      item[1]["-"],
-                      item[1]["wrpApprovalUser"],
-                      moment(item[1]["wrpApprovalDateTime"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )
+                    
+                      
+                      item[1]["closedDate"] !== null ? moment(item[1]["closedDate"]).format(
+                                  "Do MMMM YYYY"
+                                ) : "-",item[1]["closedByName"],
                 ])}
                 columns={columns}
                 options={options}

@@ -39,9 +39,7 @@ import { handelJhaId, PickListData } from '../Utils/checkValue';
 import { JHA_FORM_COMBINE, SUMMARY_FORM } from '../Utils/constants';
 import Attachment from '../../../Attachment/Attachment';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
-
-
-
+import Snackbar from "@material-ui/core/Snackbar";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -526,6 +524,8 @@ const AssessmentAndDocument = () => {
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, data).catch(() => handelApiErrorDocument());
         } else {
             delete formDocument.jhaAssessmentAttachment;
+            formDocument["jhaStatus"] = "Open"
+            formDocument["jhaStage"] = "Open"
             formDocument['link'] = ""
             formDocument['notifyTo'] = formDocument.notifyTo.toString();
             formDocument['humanPerformanceAspects'] = additinalJobDetails.humanPerformanceAspects.toString();
@@ -800,6 +800,11 @@ const AssessmentAndDocument = () => {
 
                                             </Typography>
                                         </Grid>
+                                        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                                            <Alert onClose={handleClose} severity="error">
+                                                {message}
+                                            </Alert>
+                                        </Snackbar>
                                     </Paper>
                                 </Grid>
 
@@ -870,7 +875,7 @@ const AssessmentAndDocument = () => {
                                             disabled={submitLoader}
                                         >
 
-                                            Next
+                                            Submit
                                         </Button>
                                         {submitLoader && (
                                             <CircularProgress

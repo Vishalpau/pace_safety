@@ -180,7 +180,6 @@ const Approvals = () => {
     setIsDateShow(false)
     return true
 }
-console.log('form',form)
 
   const handleCloseDate = (e) => {
     if (new Date(e) < new Date()) {
@@ -261,17 +260,15 @@ console.log('form',form)
     if (form.notifyTo === null) {
       form['notifyTo'] = "null"
     }
-    form["ahaStage"] = "Approval"
-    if (form['wrpApprovalUser'] === null) {
-      
-      if(form['wrpApprovalUser'] === null || form['sapApprovalUser'] === null) {
-        form["ahaStatus"] = "Pending"
-        delete form['closedDate'] 
-        delete form['closedByName'] 
-        delete form['closedById'] 
-      }
-    } else {
-      form["ahaStatus"] = "Done"
+    if (form['wrpApprovalUser'] !== null && form['sapApprovalUser'] !== null) {
+      let user = JSON.parse(localStorage.getItem("userDetails"));
+      let name = user.name;
+      let id = user.id;
+      form['closedById'] = id
+      form['closedByName']  = name
+      form['closedDate'] = new Date()
+      form["ahaStage"] = "Closed"
+      form["ahaStatus"] = "Closed" 
     }
 
     delete form["ahaAssessmentAttachment"];
@@ -464,68 +461,7 @@ const [projectOpen , setProjectOpen] = useState(false)
                     ))}
                 </Grid> */}
 
-                <Grid item xs={12} md={6}>
-                            <FormControl
-                                variant="outlined"
-
-                                className={classes.formControl}
-                                error={error.closedByName}
-
-
-                            >
-                                <InputLabel id="demo-simple-select-label">
-                                    Closed by
-                                </InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    label="Closed by"
-                                    value={form.closedByName ? form.closedByName : ""}
-
-
-                                >
-                                    {userList.map((selectValues, index) => (
-                                        <MenuItem
-                                            value={selectValues.name}
-                                            key={index}
-                                            onClick={(e) => setForm({ ...form, closedByName: selectValues.name, closedById: selectValues.id })}
-
-                                        >
-                                            {selectValues.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                {error.closedByName ? <FormHelperText>{error.closedByName}</FormHelperText> : ""}
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDateTimePicker
-                                    className={classes.formControl}
-                                    error={error.closedDate}
-                                    helperText={
-                                        error.closedDate ? error.closedDate : null
-                                    }
-                                    value={form.closedDate ? form.closedDate : null}
-                                    onChange={(e) => handleCloseDate(e)}
-                                    format="yyyy/MM/dd HH:mm"
-                                    inputVariant="outlined"
-                                    id="date-picker-dialog"
-                                    format="yyyy/MM/dd HH:mm"
-                                    inputVariant="outlined"
-                                    label="Closed on*"
-                                    autoComplete="off"
-                                    onClick={(e) => setIsDateShow(true)}
-                                    open={isDateShow}
-                                    onClose={(e) => handelClose()}
-                                    KeyboardButtonProps={{
-                                        "aria-label": "change date",
-                                    }}
-                                    InputProps={{ readOnly: true }}
-                                    disableFuture
-                                />
-                            </MuiPickersUtilsProvider>
-                        </Grid>
+                
 
                 </Grid>
                 </Paper>

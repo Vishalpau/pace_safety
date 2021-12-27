@@ -703,24 +703,7 @@ export const JhaSummary = loadable(() => import("./Pages/Jha/JhaSummary"), {
   fallback: <Loading />,
 });
 
-export const JhaJobDetails = loadable(() => import("./Pages/Jha/Assessments/JobDetails"), {
-  fallback: <Loading />,
-});
-
-export const JhaProjectAreaHazards = loadable(() => import("./Pages/Jha/Assessments/ProjectAreaHazards"), {
-  fallback: <Loading />,
-});
-
 export const JhaJobDetailHazard = loadable(() => import("./Pages/Jha/Assessments/JobDetailHazard"), {
-  fallback: <Loading />,
-});
-
-
-export const JhaAssessment = loadable(() => import("./Pages/Jha/Assessments/Assessment"), {
-  fallback: <Loading />,
-});
-
-export const JhaDocumentNotification = loadable(() => import("./Pages/Jha/Assessments/DocumentsNotifications"), {
   fallback: <Loading />,
 });
 

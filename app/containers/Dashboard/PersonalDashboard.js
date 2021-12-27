@@ -201,7 +201,8 @@ function PersonalDashboard(props) {
 
 
         await setSubscriptions(data)
-
+        // redirectionAccount()
+     
         const modules = data.map(subscription => subscription.modules)
         var modulesState = []
         var temp = []
@@ -225,11 +226,20 @@ function PersonalDashboard(props) {
           }
         })
         let mod = ['incidents', 'knowledge', 'observations', 'actions', 'controltower', 'HSE', 'compliances', 'ProjectInfo', 'assessments', 'permits']
-        setCode(temp)
-        getModules(apps)
+        await setCode(temp)
+        await getModules(apps)
+        
       } catch (error) { }
     }
     // getAllPickList()
+  }
+
+  const redirectionAccount = ()=>{
+    if(localStorage.getItem('lastState') != null && localStorage.getItem('projectName') != null){
+      let laststate = localStorage.getItem('lastState')
+      localStorage.removeItem('lastState')
+      history.push(laststate)
+    }
   }
 
   const getModules = async (apps) => {
@@ -357,6 +367,8 @@ function PersonalDashboard(props) {
     await dispatch(projectName(data));
     localStorage.setItem("projectName", JSON.stringify(data));
     setProjectOpen(false);
+    redirectionAccount()
+
   };
 
   // fecthing project structure with name and label
@@ -364,6 +376,8 @@ function PersonalDashboard(props) {
     let breakDownData = JSON.parse(tarProjectStruct)
     localStorage.setItem("selectBreakDown", JSON.stringify(breakDownData))
     dispatch(breakDownDetails(breakDownData))
+    redirectionAccount()
+
   }
   // end fetching name and label
 
@@ -422,6 +436,7 @@ function PersonalDashboard(props) {
                   "projectName",
                   JSON.stringify(newData.projects[0])
                 );
+                redirectionAccount()
               }
               if (newData.projects.length > 1) {
                 if (JSON.parse(localStorage.getItem('projectName') === null)) {
@@ -515,6 +530,7 @@ function PersonalDashboard(props) {
 
   useEffect(() => {
     handelCallBack()
+    // redirectionAccount()
   }, [props.initialValues.companyListData]);
 
   return (
@@ -629,12 +645,12 @@ function PersonalDashboard(props) {
                   </div>
                 </div>
 
-                <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                <div className={!(codes.includes('gis')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
                     <a className="hse_rapid_knowledge_collaboration"
-                      onClick={() => handleClick('knowledge')}
+                      onClick={() => handleClick('gis')}
                     >
-                      <p>Rapid Knowledge &amp; Collaboration</p>
+                      <p>Safety plot manager</p>
                     </a>
                   </div>
                 </div>

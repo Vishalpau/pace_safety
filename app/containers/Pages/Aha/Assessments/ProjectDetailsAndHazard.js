@@ -282,11 +282,8 @@ const ProjectDetailsAndHazard = () => {
       "picApprovalDateTime": null,
       "signedUser": "",
       "signedDateTime": "2021-08-17T09:55:30.900000Z",
-      "anyLessonsLearnt": "",
-      "lessonLearntDetails": "",
-      "lessonLearntUserName": "",
-      "ahaStatus": "",
-      "ahaStage": "",
+      "ahaStatus": "Open",
+      "ahaStage": "Open",
       "typeOfPermit" : "",
       "badgeNumber": "",
       "status": "Active",
@@ -343,8 +340,6 @@ const ProjectDetailsAndHazard = () => {
         form['typeOfPermit']  = ""
         form['permitNumber'] = ""
       }
-      form['ahaStage'] = "Assessment"
-      form['ahaStatus'] = "Pending"
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 201) {
         let fkAHAId = res.data.data.results.id
@@ -781,7 +776,7 @@ const ProjectDetailsAndHazard = () => {
                       <g id="project-work" transform="translate(0.005)">
                         <path id="Path_5191" data-name="Path 5191" d="M37.827,11.584l.981.981a.665.665,0,0,1,0,.939l-.792.792a5.287,5.287,0,0,1,.491,1.309h1.024a.665.665,0,0,1,.664.664v1.387a.665.665,0,0,1-.664.664H38.412a5.255,5.255,0,0,1-.579,1.269l.726.723a.665.665,0,0,1,0,.939l-.981.981a.665.665,0,0,1-.939,0l-.792-.792a5.114,5.114,0,0,1-1.309.491v1.024a.665.665,0,0,1-.664.664H32.488a.665.665,0,0,1-.664-.664V21.836a5.255,5.255,0,0,1-1.269-.579l-.723.726a.665.665,0,0,1-.939,0L27.911,21a.665.665,0,0,1,0-.939l.792-.792a5.161,5.161,0,0,1-.491-1.309H27.188a.665.665,0,0,1-.664-.664V15.912a.665.665,0,0,1,.664-.664h1.119a5.255,5.255,0,0,1,.579-1.269l-.723-.723a.665.665,0,0,1,0-.939l.981-.981a.665.665,0,0,1,.939,0l.792.792a5.16,5.16,0,0,1,1.309-.491V10.612a.665.665,0,0,1,.664-.664h1.387a.665.665,0,0,1,.664.664v1.116a5.255,5.255,0,0,1,1.269.579l.723-.723a.661.661,0,0,1,.936,0ZM1.142,23a3.671,3.671,0,0,1,2.637-1.371V.991c-3.01.294-2.66,3.078-2.643,5.666,0,.347.007.53.007.615V23Zm8.4-14.3h5.78V26.3h-6.2V8.708h.415Zm1.083,14.908h1.116V24.2H10.622v-.582Zm0-1.623h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.852v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.642h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.639h1.116v.582H10.622v-.582Zm0-1.626h1.852v.582H10.622v-.582Zm3.863-.991H9.955V25.461h4.531V9.536ZM23.057,12.5V26.177H19.229V12.5h-.016l.131-.265,1.58-3.248.16-.33.167.327,1.685,3.248.141.272h-.02v0ZM19.8,12.13h2.666l-1.06-2.041H20.8L19.8,12.13ZM4.91,3.955H33.119a.773.773,0,0,1,.556.232.784.784,0,0,1,.232.556V7.03H32.445V5.247H4.91V22.2h0a.478.478,0,0,1-.409.474c-4.3.664-4.488,5.758-.128,6.487H32.445V27.021h1.462v2.813a.784.784,0,0,1-.232.556l0,0h0a.784.784,0,0,1-.556.232H4.338a5.021,5.021,0,0,1-3.494-1.9A5.631,5.631,0,0,1,.007,25.14V6.66C-.013,3.5-.036.079,4.371,0a.317.317,0,0,1,.056,0A.483.483,0,0,1,4.91.484V3.955Zm28.448,10.1a2.728,2.728,0,1,1-2.728,2.728,2.729,2.729,0,0,1,2.728-2.728Z" fill="#06425c"/>
                       </g>
-                    </svg> Project details
+                    </svg> Assessment details
                   </Typography>
                 </Grid>
 
@@ -790,7 +785,7 @@ const ProjectDetailsAndHazard = () => {
                     <Grid container spacing={3}>
                       <Grid
                         item
-                        md={6}
+                        md={12}
                         xs={12}
                         className={classes.formBox}
                       >
@@ -851,7 +846,7 @@ const ProjectDetailsAndHazard = () => {
                         <FormControl component="fieldset" error={
                           error && error["permitToPerform"]
                         }>
-                          <FormLabel component="legend" className={classes.labelName} >Confirm if AHA required for permit?*</FormLabel>
+                          <FormLabel component="legend" className="checkRadioLabel" >Confirm if AHA required for permit?*</FormLabel>
                           <RadioGroup row aria-label="gender" name="gender1"
                             onChange={(e) => {
                               { setForm({ ...form, permitToPerform: e.target.value }) };
@@ -902,7 +897,7 @@ const ProjectDetailsAndHazard = () => {
                         className={classes.formBox}
                       >
                         <TextField
-                          label="Permit Reference"
+                          label="Permit Reference number"
                           // margin="dense"
                           name="reference"
                           id="reference"

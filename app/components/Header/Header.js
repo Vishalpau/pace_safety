@@ -461,21 +461,14 @@ function Header(props) {
             headers: HEADER_AUTH,
           };
           const res = await Axios(config)
-            .then((res) => {
-              if (res.status === 200) {
-                labellist[0].breakdownValue = res.data.data.results
-                setLabelList(labellist)
-                setIsLoading(true)
-                localStorage.setItem('allBreakdown', JSON.stringify(labellist))
-              }
-            })
-            .catch(err => console.log(err.message))
+          if (res.status === 200) {
+            labellist[0].breakdownValue = res.data.data.results
+            setLabelList(labellist)
+            setIsLoading(true)
+          }
         }
       }
-    } catch (err) {
-      console.log(err.message)
-    }
-
+    } catch { }
   };
 
   useEffect(() => {
