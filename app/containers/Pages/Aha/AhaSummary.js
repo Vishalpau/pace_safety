@@ -520,9 +520,9 @@ function AhaSummary() {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
       : null;
-    const abc = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
-    const dd = abc[0].projects.filter((user) => user.projectId === projectId)
-    return dd[0].projectName
+    const fetchCompanyId = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
+    const fetchProjectId = fetchCompanyId[0].projects.filter((user) => user.projectId === projectId)
+    return fetchProjectId[0].projectName
   }
 
   const fetchNotificationSent = async (notifyTo) => {

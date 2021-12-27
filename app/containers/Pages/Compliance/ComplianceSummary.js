@@ -81,6 +81,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import api from "../../../utils/axios";
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../utils/constants";
+import axios from "axios";
+import moment from "moment";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -228,10 +238,12 @@ const useStyles = makeStyles((theme) => ({
 function ComplianceSummary() {
     const [compliance, setCompliance] = useState(true);
     const [complianceData, setComplianceData] = useState({})
-    // const [approvals, setApprovals] = useState(false);
+    const [projectStructName, setProjectStructName] = useState([])
+    const [team, setTeam] = useState([])
     // const [lessonsLearned, setLessonsLearned] = useState(false);
-    //const [summary, setSummary] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const history = useHistory();
+    const {id} = useParams()
 
     const [expanded, setExpanded] = React.useState('panel1');
     const handleExpand = (panel) => (event, isExpanded) => {
@@ -314,14 +326,71 @@ function ComplianceSummary() {
     const res = await api.get(`/api/v1/audits/${complianceId}/`).then((response) => {
       let result = response.data.data.results
       setComplianceData(result) 
+      handelWorkArea(result)
+      handleTeamName(result.inspectionTeam)
+      setIsLoading(true)
     }).catch((error) => console.log(error))
   }
 
+  const handelWorkArea = async (complianceData) => {
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    let structName = []
+    let projectStructId = complianceData.fkProjectStructureIds.split(":")
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    setProjectStructName(structName)
+  }
+  
+  const handleTeamName = (teamName) => {
+    let data = teamName.split(",")
+    console.log(data,"LLLLLLLL")
+    setTeam(data)
+  }
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).companies
+      : null;
+      console.log(complianceData)
+    const fetchCompanyId = userName.filter((user) => user.companyId === complianceData.fkCompanyId)
+    const fetchProjectId = fetchCompanyId[0].projects.filter((user) => user.projectId === projectId)
+    return fetchProjectId[0].projectName
+  }
+
+  const handleComplianceStatusChange = () => {
+    if(complianceData.performanceSummary !== null){
+      setCompliance(true);
+    }else{
+      history.push(
+        `/app/pages/compliance/compliance-details/${localStorage.getItem("fkComplianceId")}`
+      );
+    }
+  }
+
+
   useEffect(() => {
-    fetchComplianceData()
-  },[])
+    if (id) {
+      fetchComplianceData();  
+    }
+  }, []);
+
   return (
       <CustomPapperBlock title="Compliance number: IR-15415415" icon='customDropdownPageIcon compliancePageIcon' whiteBg>
+      {isLoading ? <>
         <Grid container spacing={3}>
           <Grid item md={9} xs={12}>
             <Grid container spacing={3}>
@@ -345,7 +414,8 @@ function ComplianceSummary() {
                             //endIcon={<CheckCircle />}
                             className={classes.statusButton}
                             onClick={(e) => {
-                              setCompliance(true);
+                              handleComplianceStatusChange()
+                              
                               //setApprovals(false);
                               //setLessonsLearned(false);
                               //setSummary(false);
@@ -409,10 +479,10 @@ function ComplianceSummary() {
                                     <Grid container spacing={3}>
                                       <Grid item md={12} sm={12} xs={12}>
                                         <Typography gutterBottom className="labelValue">
-                                            NTPC
+                                            {handleProjectName(complianceData['fkProjectId'])}
                                         </Typography>
                                         <Typography className="labelValue">
-                                            Phase 1 : Unit 11 : Work area 11
+                                        {projectStructName.map(value => { return value }).join(" : ")}
                                         </Typography>
                                       </Grid>
                                     </Grid>
@@ -453,7 +523,7 @@ function ComplianceSummary() {
                                           Select the type of compliance check
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          Work area compliance check
+                                          {complianceData['auditType']}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
@@ -465,7 +535,9 @@ function ComplianceSummary() {
                                           Date of compliance check
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          02-09-2021
+                                          {moment(complianceData['createdAt']).format(
+                                              "Do MMMM YYYY, h:mm:ss a"
+                                            )}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={12} className={classes.viewSectionHeading}>
@@ -480,7 +552,7 @@ function ComplianceSummary() {
                                           Client HSE rep
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          {complianceData["hseRepresentative"] !== "" ? complianceData["hseRepresentative"] : "-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={6} md={6}>
@@ -507,7 +579,7 @@ function ComplianceSummary() {
                                           Contractor name
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          {complianceData["contractor"] !== "" ? complianceData["contractor"] : "-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
@@ -519,7 +591,7 @@ function ComplianceSummary() {
                                           Contractor rep number
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          {complianceData["contractorRepNumber"] !== "" ? complianceData["contractorRepNumber"] : "-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
@@ -531,7 +603,7 @@ function ComplianceSummary() {
                                           Sub-Contractor name
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          {complianceData["subContractor"] !== "" ? complianceData["subContractor"] : "-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={6}>
@@ -543,7 +615,7 @@ function ComplianceSummary() {
                                           Contractor supervisor name
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          {complianceData["contractorSupervisorName"] !== "" ? complianceData["contractorSupervisorName"] : "-"}
                                         </Typography>
                                       </Grid>
 
@@ -555,8 +627,9 @@ function ComplianceSummary() {
                                         >
                                           Inspection team
                                         </Typography>
-                                        <Typography display="block" className="viewLabelValue">Inspection team one</Typography>
-                                        <Typography display="block" className="viewLabelValue">Inspection team Two</Typography>
+                                        {team.length > 0 ? team.map((item) => (
+                                        <Typography display="block" className="viewLabelValue">{item}</Typography>
+                                        )) : "-"}
                                       </Grid>
 
                                       {/* <Grid item md={12} sm={12} xs={12}>
@@ -1713,7 +1786,7 @@ function ComplianceSummary() {
               </List> */}
             </div>
           </Grid>
-        </Grid>
+        </Grid></>:"Loading..."}
       </CustomPapperBlock>
   );
 }

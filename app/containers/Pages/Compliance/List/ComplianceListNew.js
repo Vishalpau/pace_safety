@@ -598,9 +598,11 @@ function ComplianceListNew(props) {
     page: 0,
   };
 
-  const handleSummaryPush = async () => {
+  const handleSummaryPush = async (item) => {
     console.log("calling this");
-    history.push("/app/pages/compliance/compliance-summary");
+    let id = item
+    localStorage.setItem("fkComplianceId", id)
+    history.push(`/app/pages/compliance/compliance-summary/${id}`);
   };
 
   const handleNewCompliancePush = async () => {
@@ -732,7 +734,7 @@ console.log(totalData,"++++++++++")
                           </Button>
                         </Grid>
                         <Link
-                          onClick={() => handleSummaryPush()}
+                          onClick={() => handleSummaryPush(value["id"])}
                           className={classes.cardLinkAction}
                         >
                           <Grid item xs={12}>
