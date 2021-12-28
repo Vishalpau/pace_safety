@@ -235,7 +235,7 @@ function PersonalDashboard(props) {
   }
 
   const redirectionAccount = ()=>{
-    if(localStorage.getItem('lastState') != null){
+    if(localStorage.getItem('lastState') != null && localStorage.getItem('projectName') != null){
       let laststate = localStorage.getItem('lastState')
       localStorage.removeItem('lastState')
       history.push(laststate)
@@ -645,12 +645,12 @@ function PersonalDashboard(props) {
                   </div>
                 </div>
 
-                <div className={!(codes.includes('knowledge')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                <div className={!(codes.includes('gis')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                   <div className="hexagontent hexagon_content_box">
                     <a className="hse_rapid_knowledge_collaboration"
-                      onClick={() => handleClick('knowledge')}
+                      onClick={() => handleClick('gis')}
                     >
-                      <p>Rapid Knowledge &amp; Collaboration</p>
+                      <p>Safety plot manager</p>
                     </a>
                   </div>
                 </div>
