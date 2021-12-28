@@ -358,14 +358,12 @@ function ComplianceSummary() {
   
   const handleTeamName = (teamName) => {
     let data = teamName.split(",")
-    console.log(data,"LLLLLLLL")
     setTeam(data)
   }
   const handleProjectName = (projectId) => {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
       : null;
-      console.log(complianceData)
     const fetchCompanyId = userName.filter((user) => user.companyId === complianceData.fkCompanyId)
     const fetchProjectId = fetchCompanyId[0].projects.filter((user) => user.projectId === projectId)
     return fetchProjectId[0].projectName
@@ -1623,7 +1621,7 @@ function ComplianceSummary() {
                                   <Grid item xs={12} md={6}> 
                                     <FormLabel component="legend" className="viewLabel">Describe here</FormLabel>
                                     <Typography className="viewLabelValue">
-                                      NA
+                                      {complianceData["performanceSummary"] !== null ? complianceData["performanceSummary"] : "-"}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>

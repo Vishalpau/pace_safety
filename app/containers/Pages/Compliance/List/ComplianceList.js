@@ -287,9 +287,9 @@ function Actions(props) {
             <MUIDataTable
               //title="Compliance List"
               data={allComplianceData.map((data) => [
-                data["complianceNumber"],
+                "data not available in api",
                 data["auditType"],
-                data["location"] !== null ? data["location"] : "-",
+                "data not available in api",
                 moment(data["createdAt"]).format("Do MMMM YYYY"),
                 data["username"] !== null ? data["username"] : "-",
               ])}

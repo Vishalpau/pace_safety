@@ -244,15 +244,11 @@ export default function Compliance() {
   };
 
   const handleNewCompliancePush = async () => {
-    //console.log("Ashutosh")
+    localStorage.removeItem("fkComplianceId")
     history.push(
       '/app/pages/compliance/compliance-details'
     );
   };
-
-  
-
-  
 
   return (
     <div className={classes.root}>

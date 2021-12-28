@@ -364,7 +364,7 @@ class ComplianceFilterCard extends React.Component {
           })}
         >
           <div className={classes.drawerHeader} />
-          <ComplianceListNew compliance={this.props.compliance} search={this.props.search}/>
+          <ComplianceListNew compliance={this.props.compliance} search={this.props.search} status={this.props.status}/>
           
         </main>
         {after}

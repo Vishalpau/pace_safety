@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 export default function StatusFilter() {
     const classes = useStyles();
     const [anchorGrow, setAnchorGrow] = React.useState(null);
+    const [status, setStatus] = React.useState("");
 
     const handleClick = (event, type) => {
         console.log(event);
@@ -64,16 +65,16 @@ export default function StatusFilter() {
         <>
         <div className={classes.statusIconBox}>
             <span className={classes.statusHover}>
-                <img src={preplanning} />
-                <img src={progress} className={classes.pLtenPRten} />
-                <img src={completed} />
-                <IconButton
+                <img src={preplanning} onClick={() => setStatus("Draft")} />
+                {/* <img src={progress} className={classes.pLtenPRten} /> */}
+                <img src={completed} onClick={() => setStatus("Closed")}/>
+                {/* <IconButton
                     aria-owns={anchorGrow ? 'grow-menu' : null}
                     aria-haspopup="true"
                     onClick={(e) => handleClick(e, 'anchorGrow')}
                 >
                     <MoreVertIcon />
-                </IconButton>
+                </IconButton> */}
             </span>
 
             <div className="statusDropdownIcon">

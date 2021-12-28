@@ -438,6 +438,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     marginTop : '-10px',
   },
+  
 }));
 
 function ComplianceListNew(props) {
@@ -654,7 +655,7 @@ function ComplianceListNew(props) {
             let pageCount = Math.ceil(res.data.data.metadata.count / 25)
             await setPageCount(pageCount)
     }else{
-      const res = await api.get(`api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
+      const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
       
       const result = res.data.data.results
       await setAllComplianceData(result)
@@ -695,10 +696,22 @@ function ComplianceListNew(props) {
   }
   
   };
+
+  const handleDelete = async (item) => {
+    let temp = {...item}
+    temp.status = "Delete"
+    let id = item.id
+    setIsLoading(false)
+    const  res = await api.put(`api/v1/audits/${id}/`,temp).then((response) => {
+      fetchAllComplianceData()
+      setIsLoading(true)
+    }).catch((error) => console.log(error))
+  }
+
 console.log(totalData,"++++++++++")
   useEffect(() => {
     fetchAllComplianceData();
-  }, [props.projectName.breakDown,props.compliance,props.search]);
+  }, [props.projectName.breakDown,props.compliance,props.search,props.status]);
 
   return (
     <>
@@ -774,7 +787,7 @@ console.log(totalData,"++++++++++")
                                               classes.listingLabelValue
                                             }
                                           >
-                                            CL-182-252-36
+                                            data not available in api
                                           </span>
                                         </Link>
                                       </span>
@@ -795,7 +808,7 @@ console.log(totalData,"++++++++++")
                                       <span
                                         className={classes.listingLabelValue}
                                       >
-                                        Contractor compliance check
+                                       data not available in api
                                       </span>
                                     </Typography>
                                     <span
@@ -861,7 +874,7 @@ console.log(totalData,"++++++++++")
                                 <Typography
                                   className={classes.listingLabelValue}
                                 >
-                                  Delhi
+                                  data not available in api
                                 </Typography>
                               </Grid>
 
@@ -986,7 +999,7 @@ console.log(totalData,"++++++++++")
                           md={7}
                           className={classes.textRight}
                         >
-                          <Typography variant="body1" display="inline">
+                          {/* <Typography variant="body1" display="inline">
                             <IconButton>
                               <PrintOutlinedIcon className={classes.iconteal} />
                             </IconButton>{" "}
@@ -994,23 +1007,23 @@ console.log(totalData,"++++++++++")
                               href="/app/pages/general-observation-prints"
                               className={classes.mLeftR5}
                             />
-                          </Typography>
+                          </Typography> */}
                           {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body2" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography> */}
-                          <span item xs={1} className={classes.sepHeightTen} />
+                          {/* <span item xs={1} className={classes.sepHeightTen} />
                           <Typography variant="body1" display="inline">
                             <Link href="#" className={classes.mLeftR5}>
                               <IconButton>
                                 <StarsIcon className={classes.iconteal} />
                               </IconButton>
                             </Link>
-                          </Typography>
+                          </Typography> */}
                           <span item xs={1} className={classes.sepHeightTen} />
                           <Typography variant="body1" display="inline">
                             <Link href="#" className={classes.mLeftR5}>
-                              <IconButton>
+                              <IconButton onClick={() => handleDelete(value)}>
                                 <DeleteForeverOutlinedIcon
                                   className={classes.iconteal}
                                 />

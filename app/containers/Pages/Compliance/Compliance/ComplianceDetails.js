@@ -856,7 +856,7 @@ bytes
                 />
               )}
             </div> */}
-            <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
+            <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.goBack()}>
               Cancel
             </Button>
           </Grid>

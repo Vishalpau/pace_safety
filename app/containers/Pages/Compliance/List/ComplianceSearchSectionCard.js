@@ -363,6 +363,27 @@ hoverB: {
     opacity: '0.9',
   },
 },
+statusHover: {
+  '& img:hover': {
+    borderRadius: '50%',
+    boxShadow: '0px 0px 2px 2px #f47607',
+  },
+ },
+ statusIconBox: {
+  position: 'relative',
+  textAlign: 'center',
+  padding: '11px 0px !important',
+  '& img': {
+      width: '40px',
+  },
+  ['@media (max-width:800px)']: { 
+    padding: '0px 0px 24px 0px !important',
+  },
+  ['@media (max-width:480px)']: { 
+    padding: '12px 0px 24px 16px !important',
+    textAlign: 'left',
+  },
+},
 }));
 
 export default function ComplianceSearchSectionCard() {
@@ -370,6 +391,7 @@ export default function ComplianceSearchSectionCard() {
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
   const [search, setSearch] = React.useState("");
+  const [status, setStatus] = React.useState("");
 
   const handleChange = (event, newValue) => {
     if(newValue === 0){
@@ -426,7 +448,15 @@ export default function ComplianceSearchSectionCard() {
       </Grid>
 
       <Grid item md={2} sm={6} xs={12}>
-        <StatusFilter />
+      <div className={classes.statusIconBox}>
+
+      <span className={classes.statusHover}>
+      <img src={preplanning} onClick={() => setStatus("Draft")} />
+                {/* <img src={progress} className={classes.pLtenPRten} /> */}
+                <img src={completed} onClick={() => setStatus("Closed")}/>
+                </span>
+                </div>
+        {/* <StatusFilter /> */}
       </Grid>
 
 			
@@ -435,16 +465,16 @@ export default function ComplianceSearchSectionCard() {
 	  <Grid container spacing={3}>
 		<Grid item sm={12} xs={12}>
 		  <TabPanel value={value} index={0} className={classes.paddLRzero}>
-			  <ComplianceFilterCard compliance={compliance} search={search}/>
+			  <ComplianceFilterCard compliance={compliance} search={search} status={status}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={1}>
-        <ComplianceFilterCard compliance={compliance} search={search}/>
+        <ComplianceFilterCard compliance={compliance} search={search} status={status}/>
 		  </TabPanel>
 		  <TabPanel value={value} index={2}>
-        <ComplianceFilterCard compliance={compliance} search={search}/>
+        <ComplianceFilterCard compliance={compliance} search={search} status={status}/>
 		  </TabPanel>
       <TabPanel value={value} index={3}>
-        <ComplianceFilterCard compliance={compliance} search={search}/>
+        <ComplianceFilterCard compliance={compliance} search={search} status={status}/>
 		  </TabPanel>
 		</Grid>
 	</Grid>
