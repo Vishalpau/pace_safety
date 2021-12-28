@@ -34,6 +34,14 @@ import api from "../../../../utils/axios";
 import { CircularProgress } from '@material-ui/core';
 import Loader from "../../Loader"
 import {useParams , useHistory} from "react-router-dom"
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -127,10 +135,30 @@ const PerformanceSummary = () => {
       }).catch((error) => console.log(error))
     }
 
+    const fetchNotificationSent = async () => {
+      let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+      let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+        .projectId;
+      try {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+          headers: HEADER_AUTH,
+        };
+        const res = await api(config);
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          console.log(result,"LLLLLL");
+          // setNotificationSentValue(result);
+        }
+      } catch (error) {}
+    };
+
   const classes = useStyles();
   
   useEffect(() => {
     fetchComplianceData()
+    fetchNotificationSent()
   },[])
   return (
     <>
