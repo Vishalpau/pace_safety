@@ -349,12 +349,12 @@ class SimpleTabs extends React.Component {
                         {(flha.jobDetails) ? flha.jobDetails : '-'}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    {/* <Grid item xs={6}>
                       <FormLabel component="legend" className="viewLabel">Reference</FormLabel>
                       <Typography>
                         {flha.referenceNumber !== 'undefined' ? flha.referenceNumber : '-'}
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Paper>
               </Grid>
