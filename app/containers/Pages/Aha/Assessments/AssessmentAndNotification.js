@@ -300,52 +300,52 @@ const AssessmentAndNotification = () => {
       }
     }
 
-    let abc = [...getSeverity];
+    let getProvability = [...getSeverity];
     for (var i = 0; i < getSeverity.length; i++) {
       if (getSeverity[i].probability !== "") {
         if (getSeverity[i].probability === "Highly unlikely") {
-          abc[i].riskProbabilityValue = 1;
+          getProvability[i].riskProbabilityValue = 1;
         } else if (getSeverity[i].probability === "Unlikely") {
-          abc[i].riskProbabilityValue = 2;
+          getProvability[i].riskProbabilityValue = 2;
         } else if (getSeverity[i].probability === "Likely") {
-          abc[i].riskProbabilityValue = 3;
+          getProvability[i].riskProbabilityValue = 3;
         } else if (getSeverity[i].probability === "Very likely") {
-          abc[i].riskProbabilityValue = 4;
+          getProvability[i].riskProbabilityValue = 4;
         } else {
         }
       }
     }
 
-    let zzz = [...abc];
-    for (var i = 0; i < abc.length; i++) {
-      if (abc[i].riskRating !== "") {
+    let getRating = [...getProvability];
+    for (var i = 0; i < getProvability.length; i++) {
+      if (getProvability[i].riskRating !== "") {
         if (
-          abc[i].riskRating === "2 Trivial" ||
-          abc[i].riskRating === "4 Trivial"
+          getProvability[i].riskRating === "2 Trivial" ||
+          getProvability[i].riskRating === "4 Trivial"
         ) {
-          zzz[i].riskRatingColour = "#009933";
+          getRating[i].riskRatingColour = "#009933";
         } else if (
-          abc[i].riskRating === "6 Tolerable" ||
-          abc[i].riskRating === "8 Tolerable"
+          getProvability[i].riskRating === "6 Tolerable" ||
+          getProvability[i].riskRating === "8 Tolerable"
         ) {
-          zzz[i].riskRatingColour = "#8da225";
+          getRating[i].riskRatingColour = "#8da225";
         } else if (
-          abc[i].riskRating === "12 Moderate" ||
-          abc[i].riskRating === "16 Moderate"
+          getProvability[i].riskRating === "12 Moderate" ||
+          getProvability[i].riskRating === "16 Moderate"
         ) {
-          zzz[i].riskRatingColour = "#fff82e";
+          getRating[i].riskRatingColour = "#fff82e";
         } else if (
-          abc[i].riskRating === "18 Substantial" ||
-          abc[i].riskRating === "24 Substantial"
+          getProvability[i].riskRating === "18 Substantial" ||
+          getProvability[i].riskRating === "24 Substantial"
         ) {
-          zzz[i].riskRatingColour = "#990000";
+          getRating[i].riskRatingColour = "#990000";
         } else {
-          zzz[i].riskRatingColour = "#ff0000";
+          getRating[i].riskRatingColour = "#ff0000";
         }
       }
     }
 
-    await setForm(zzz);
+    await setForm(getRating);
   };
 
   function Alert(props) {
@@ -475,9 +475,6 @@ const AssessmentAndNotification = () => {
       data.append("picApprovalUser", ahaform.picApprovalUser),
       data.append("signedUser", ahaform.signedUser),
       data.append("signedDateTime", ahaform.signedDateTime),
-      data.append("anyLessonsLearnt", ahaform.anyLessonsLearnt),
-      data.append("lessonLearntDetails", ahaform.lessonLearntDetails),
-      data.append("lessonLearntUserName", ahaform.lessonLearntUserName),
       data.append("ahaStatus", ahaform.ahaStatus),
       data.append("ahaStage", ahaform.ahaStage),
       data.append("badgeNumber", ahaform.badgeNumber),
