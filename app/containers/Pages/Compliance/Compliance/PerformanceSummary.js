@@ -114,7 +114,9 @@ const useStyles = makeStyles((theme) => ({
 
 const PerformanceSummary = () => {
   const [form , setForm] = useState({})
+  const [notificationSentValue , setNotificationSentValue] = useState([])
   const history = useHistory()
+  const [state, setState] = useState("")
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -149,10 +151,29 @@ const PerformanceSummary = () => {
         if (res.status === 200) {
           const result = res.data.data.results;
           console.log(result,"LLLLLL");
-          // setNotificationSentValue(result);
+          setNotificationSentValue(result);
         }
       } catch (error) {}
     };
+
+  const handleNotification = (e, value) => {
+    if (e.target.checked === true) {
+      let temp = [];
+
+      temp.push(value);
+      let uniq = [...new Set(temp)];
+
+      setForm({ ...form, notifyTo: temp.toString() });
+    } else {
+      let temp = [];
+
+      let newData = temp.filter((item) => item !== value);
+
+      setForm({ ...form, notifyTo: newData.toString() });
+    }
+  }
+
+  
 
   const classes = useStyles();
   
@@ -206,6 +227,7 @@ const PerformanceSummary = () => {
               >
                 <FormLabel className="checkRadioLabel" component="legend">Notification</FormLabel>
                 <FormGroup >
+                {notificationSentValue.map((value) => (
                   <FormControlLabel
                     className="selectLabel"
                     control={(
@@ -213,47 +235,12 @@ const PerformanceSummary = () => {
                         icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                         checkedIcon={<CheckBoxIcon fontSize="small" />}
                         name="checkedI"
-                        onChange={handleChange}
+                        onChange={(e) => handleNotification(e,value.id )}
                       />
                     )}
-                    label="Safety manager"
-                  />
-                  <FormControlLabel
-                    className="selectLabel"
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Auditor"
-                  />
-                  <FormControlLabel
-                    className="selectLabel"
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Role 3"
-                  />
-                  <FormControlLabel
-                    className="selectLabel"
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Role 4"
-                  />
+                    label={value.roleName}
+                  />))}
+                  
                 </FormGroup>
               </Grid>
             </Grid>
@@ -267,7 +254,7 @@ const PerformanceSummary = () => {
           <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
             Save
           </Button>
-          <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
+          <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.push(`/app/pages/compliance/compliance-summary/${localStorage.getItem('fkComplianceId')}`)}>
             Cancel
           </Button>
         </Grid>

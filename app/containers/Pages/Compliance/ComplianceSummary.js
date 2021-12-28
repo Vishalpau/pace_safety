@@ -91,6 +91,7 @@ import {
 } from "../../../utils/constants";
 import axios from "axios";
 import moment from "moment";
+import Loader from "../Loader";
 
 // Sidebar Links Helper Function
 function ListItemLink(props) {
@@ -244,6 +245,8 @@ function ComplianceSummary() {
     const [isLoading, setIsLoading] = useState(false);
     const history = useHistory();
     const {id} = useParams()
+    const [notificationSentValue, setNotificationSentValue] = useState([])
+
 
     const [expanded, setExpanded] = React.useState('panel1');
     const handleExpand = (panel) => (event, isExpanded) => {
@@ -328,6 +331,7 @@ function ComplianceSummary() {
       setComplianceData(result) 
       handelWorkArea(result)
       handleTeamName(result.inspectionTeam)
+      fetchNotificationSent(result.notifyTo)
       setIsLoading(true)
     }).catch((error) => console.log(error))
   }
@@ -379,6 +383,33 @@ function ComplianceSummary() {
     }
   }
 
+  const fetchNotificationSent = async (notifyTo) => {
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { }
+  };
+
 
   useEffect(() => {
     if (id) {
@@ -387,7 +418,7 @@ function ComplianceSummary() {
   }, []);
 
   return (
-      <CustomPapperBlock title="Compliance number: IR-15415415" icon='customDropdownPageIcon compliancePageIcon' whiteBg>
+      <CustomPapperBlock title="Compliance number: Data not available in api" icon='customDropdownPageIcon compliancePageIcon' whiteBg>
       {isLoading ? <>
         <Grid container spacing={3}>
           <Grid item md={9} xs={12}>
@@ -562,7 +593,7 @@ function ComplianceSummary() {
                                           Client rep number
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          NA
+                                          Data not available in api
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={12} className={classes.viewSectionHeading}>
@@ -1626,8 +1657,8 @@ function ComplianceSummary() {
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     <FormLabel component="legend" className="viewLabel">Notifications sent to</FormLabel>
-                                    <Typography display="block" className="viewLabelValue">Safety manager</Typography>
-                                    <Typography display="block" className="viewLabelValue">Auditor</Typography>
+                                    {notificationSentValue.length > 0 ? notificationSentValue.map((value) => (
+                                    <Typography display="block" className="viewLabelValue">{value.roleName}</Typography>)) : "-"}
                                   </Grid>
                                 </Grid>
                               </Paper>
@@ -1784,7 +1815,7 @@ function ComplianceSummary() {
               </List> */}
             </div>
           </Grid>
-        </Grid></>:"Loading..."}
+        </Grid></>:<Loader/>}
       </CustomPapperBlock>
   );
 }
