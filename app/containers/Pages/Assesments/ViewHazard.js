@@ -23,6 +23,8 @@ import moment from 'moment';
 
 import Attachment from '../../../containers/Attachment/Attachment';
 import classNames from 'classnames';
+import { HEADER_AUTH, SSO_URL } from '../../../utils/constants';
+import api from '../../../utils/axios';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -350,9 +352,41 @@ const FlhaDetails = (props) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
 
+  const [notificationSentValue, setNotificationSentValue] = useState([])
+
+  const fetchNotificationSent = async (notifyTo) => {
+    console.log(notifyTo,'viraj')
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      console.log(res, 'vishal')
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { console.log(error,'error')}
+  };
+
   useEffect(() => {
     if (props.notifyToValues != undefined){
     setNotify(props.notifyToValues[props.flha.notifyTo])}
+    fetchNotificationSent(props.flha.notifyTo)
     setFlha(props.flha)
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -361,7 +395,6 @@ const FlhaDetails = (props) => {
       }
     }
   }, [props.criticalTasks, props.visualConfirmations, props.flha, props.notifyToValues]);
-console.log(notify,"props.notifyToValues")
   return (
 
     <div>
@@ -637,7 +670,8 @@ console.log(notify,"props.notifyToValues")
                             Roles
                           </Typography>
                           <Typography className="viewLabelValue">
-                            {notify ? notify: '-'}
+                            
+                            {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"} 
                           </Typography>
                         </Grid>
                       </Grid>
