@@ -593,7 +593,7 @@ function ComplianceSummary() {
                                           Client rep number
                                         </Typography>
                                         <Typography className="viewLabelValue">
-                                          Data not available in api
+                                          {complianceData['hseRepNumber'] !== "" ? complianceData['hseRepNumber'] :"-"}
                                         </Typography>
                                       </Grid>
                                       <Grid item xs={12} md={12} className={classes.viewSectionHeading}>

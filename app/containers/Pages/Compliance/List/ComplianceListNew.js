@@ -648,18 +648,18 @@ function ComplianceListNew(props) {
       const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
       const result = res.data.data.results.results
       await setAllComplianceData(result)
-      await setTotalData(res.data.data.metadata.count)
-            await setPageData(res.data.data.metadata.count / 25)
-            let pageCount = Math.ceil(res.data.data.metadata.count / 25)
+      await setTotalData(res.data.data.results.count)
+            await setPageData(res.data.data.results.count / 25)
+            let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
     }else{
       const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
       
       const result = res.data.data.results.results
       await setAllComplianceData(result)
-      await setTotalData(res.data.data.metadata.count)
-            await setPageData(res.data.data.metadata.count / 25)
-            let pageCount = Math.ceil(res.data.data.metadata.count / 25)
+      await setTotalData(res.data.data.results.count)
+            await setPageData(res.data.data.results.count / 25)
+            let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
     }
     

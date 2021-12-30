@@ -239,6 +239,7 @@ const ComplianceDetails = () => {
     "status": "Active",
     "createdBy": userId,
     "source": "Web",
+    "hseRepNumber" : ""
   });
 
   const auditType = ["Company/Contractor Inspection","Area/Focussed Inspection","General Inspection"]
@@ -646,6 +647,7 @@ bytes
                     id="clientrepnu"
                     defaultValue=""
                     fullWidth
+                    onChange={(e) => setForm({...form,hseRepNumber:e.target.value})}
                     variant="outlined"
                     className="formControl"
                   />
