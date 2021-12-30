@@ -1051,40 +1051,7 @@ function AhaSummary() {
                                     </Table>
                                   </Grid> : null}
 
-                                  {ahaData.closedByName !== null ?
-                                  <>
-                                  {/* Closed out */}
-                                    <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                      <FormLabel className="checkRadioLabel" component="legend">
-                                        Closed out
-                                      </FormLabel>
-                                    </Grid>
-
-                                    {/* Closed by */}
-                                    <Grid item xs={12} md={6}>
-                                      <FormLabel component="legend" className="viewLabel">Closed by</FormLabel>
-                                      <Typography
-                                        variant="body"
-                                        className="viewLabelValue"
-                                      >
-                                        {ahaData.closedByName ? ahaData.closedByName : "-"}
-                                      </Typography>
-                                    </Grid>
-
-                                    {/* Closed on */}
-                                    <Grid item xs={12} md={6}>
-                                      <FormLabel component="legend" className="viewLabel">Closed on</FormLabel>
-                                      <Typography
-                                        variant="body"
-                                        className="viewLabelValue"
-                                      >
-                                        {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                                          "Do MMMM YYYY"
-                                        ) : "-"}
-                                      </Typography>
-                                    </Grid>
-                                  </>
-                                  :null}
+                                  
                                 </Grid>
                               </Paper>
                             </Grid>
@@ -1123,13 +1090,22 @@ function AhaSummary() {
                                     </Typography>
                                   </Grid>
 
-                                  {/* Lessons learnt */}
+                                  {/* Are there any lessons learned? */}
                                   <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Lessons learnt</FormLabel>
+                                    <FormLabel component="legend" className="viewLabel">Are there any lessons learned?</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
                                     </Typography>
                                   </Grid>
+
+
+                                  {ahaData.anyLessonsLearnt === "Yes" ? 
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Lessons learned</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {ahaData.lessonLearntDetails ? ahaData.lessonLearntDetails : "-"}
+                                    </Typography>
+                                  </Grid> : null}
 
                                   {/* Lessons learnt action  */}
                                   {lessionAction.length > 0 ? 

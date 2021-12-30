@@ -23,6 +23,8 @@ import moment from 'moment';
 
 import Attachment from '../../../containers/Attachment/Attachment';
 import classNames from 'classnames';
+import { HEADER_AUTH, SSO_URL } from '../../../utils/constants';
+import api from '../../../utils/axios';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -313,6 +315,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '2px',
     marginRight: '20%',
   },
+  question: {
+    marginTop: '12px'
+  }
 }));
 
 const FlhaDetails = (props) => {
@@ -350,9 +355,41 @@ const FlhaDetails = (props) => {
     setExpanded1(isExpanded1 ? panell : false);
   };
 
+  const [notificationSentValue, setNotificationSentValue] = useState([])
+
+  const fetchNotificationSent = async (notifyTo) => {
+    console.log(notifyTo,'viraj')
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+    try {
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+        headers: HEADER_AUTH,
+      };
+      const res = await api(config);
+      console.log(res, 'vishal')
+      if (res.status === 200) {
+        let data = []
+        let user = notifyTo.split(",");
+        const result = res.data.data.results;
+        for (let i = 0; i < result.length; i++) {
+          for (let j = 0; j < user.length; j++) {
+            if (user[j] == result[i].id) {
+              data.push(result[i]);
+            }
+          }
+        }
+        await setNotificationSentValue(data);
+      }
+    } catch (error) { console.log(error,'error')}
+  };
+
   useEffect(() => {
     if (props.notifyToValues != undefined){
     setNotify(props.notifyToValues[props.flha.notifyTo])}
+    fetchNotificationSent(props.flha.notifyTo)
     setFlha(props.flha)
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -361,7 +398,6 @@ const FlhaDetails = (props) => {
       }
     }
   }, [props.criticalTasks, props.visualConfirmations, props.flha, props.notifyToValues]);
-console.log(notify,"props.notifyToValues")
   return (
 
     <div>
@@ -567,35 +603,35 @@ console.log(notify,"props.notifyToValues")
                         </TableBody>
                       </Table>
 
-                      <Grid item md={4} sm={4} xs={12}>
+                      <Grid item md={4} sm={4} xs={12} className={classes.question}>
                         <FormLabel component="legend" className="viewLabel">Is permit to work done?*</FormLabel>
                         <Typography>
                           {flha.permitToWork}
                         </Typography>
                       </Grid>
-                      <Grid item md={4} sm={4} xs={12}>
+                      <Grid item md={4} sm={4} xs={12} className={classes.question}>
                         <FormLabel component="legend" className="viewLabel">Enter permit number</FormLabel>
                         <Typography>
                           {flha.permitToWorkNumber == undefined || flha.permitToWorkNumber == 'undefined' || flha.permitToWorkNumber == '' ? '-' : flha.permitToWorkNumber}
                         </Typography>
                       </Grid>
-                      <Grid item md={4} sm={4} xs={12}>
+                      <Grid item md={4} sm={4} xs={12} className={classes.question}>
                         <FormLabel component="legend" className="viewLabel">Permit job reference</FormLabel>
                         <Typography>
                           {flha.referenceNumber == undefined || flha.referenceNumber == 'undefined' || flha.referenceNumber == '' ? '-' : flha.referenceNumber}
 
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} className={classes.question}>
                         <FormLabel className="viewLabel" component="legend">Date & Time</FormLabel>
                         <Typography >
                           {moment(flha.dateTimeFlha).format(
-                            'Do MMMM YYYY, h:mm:ss a'
+                            'Do MMM YYYY'
                           )}
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={6}>
+                      <Grid item xs={6} className={classes.question}>
                         <FormLabel className="viewLabel" component="legend">Attachment</FormLabel>
                         {flha.attachment ? (
                           <Typography >
@@ -637,7 +673,8 @@ console.log(notify,"props.notifyToValues")
                             Roles
                           </Typography>
                           <Typography className="viewLabelValue">
-                            {notify ? notify: '-'}
+                            
+                            {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"} 
                           </Typography>
                         </Grid>
                       </Grid>
