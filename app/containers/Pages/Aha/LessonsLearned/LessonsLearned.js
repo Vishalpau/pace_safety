@@ -175,6 +175,9 @@ const LessonsLearned = () => {
     if (form.anyLessonsLearnt == "Yes" || form.anyLessonsLearnt == "No") {
       delete form["ahaAssessmentAttachment"]
       form["lessonLearntUserName"] = user.name
+      if(form.anyLessonsLearnt === "No"){
+        form["lessonLearntDetails"] = ""
+      }
       await setSubmitLoader(true)
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);

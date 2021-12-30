@@ -1090,11 +1090,11 @@ function xflha(props) {
           <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
             <Grid className={classes.Lheight}>
               <div className={classes.floatRR}>
-                <span className={classes.pLTen}>
+                {/* <span className={classes.pLTen}>
                   <Button size="small" className={classes.buttonsNTwo} variant="contained">
                     <PermIdentityIcon /> GIS
                   </Button>
-                </span>
+                </span> */}
 
                 {/* <span className={classes.pLTen}>
               <Button size="small" className={classes.buttonsNTwo} variant="contained">
