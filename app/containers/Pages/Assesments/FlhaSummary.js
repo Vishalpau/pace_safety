@@ -163,7 +163,7 @@ class SimpleTabs extends React.Component {
     visualConfirmations: {},
     versions: ["1.0",],
     selectedVersion: "1.0",
-    projectStructName: ''
+    projectStructName: []
   };
 
   componentDidMount() {
@@ -175,8 +175,8 @@ class SimpleTabs extends React.Component {
   getFlhaDetails = async () => {
     const flhaNumber = this.props.match.params.id;
     const res = await api.get('api/v1/flhas/' + flhaNumber + '/');
-    this.setState({ flha: res.data.data.results });
-    //  this.handelWorkArea1(res.data.data.results )
+    await this.handelWorkArea1(res.data.data.results )
+    await this.setState({ flha: res.data.data.results });
      
   }
 
@@ -202,38 +202,29 @@ class SimpleTabs extends React.Component {
     await this.setState({ visualConfirmations: res.data.data.results });
   }
 
-  count = 0;
+   handelWorkArea1 = async (assessment) => {
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
-   handelWorkArea1 =  (assessment) => {
-    if (Object.keys(assessment).length > 0 && this.count === 0) {
-      this.count++
-      const fkCompanyId =
-        JSON.parse(localStorage.getItem("company")) !== null
-          ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-          : null;
-      const projectId =
-        JSON.parse(localStorage.getItem("projectName")) !== null
-          ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-          : null;
-      let structName = []
-      
-      let projectStructId = assessment.fkProjectStructureIds.split(":")
-      let c = 0;
-      // for (let key in projectStructId) 
-      projectStructId.map(ps => {
-        c++
-        let workAreaId = [ps.substring(0, 2), ps.substring(2)]
-        const api_work_area = axios.create({
-          baseURL: SSO_URL,
-          headers: HEADER_AUTH
-        });
-        api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`)
-                     .then(workArea => this.setState({projectStructName : this.state.projectStructName + (c > 1 ? ':' : '') + workArea.data.data.results[0].name})) //this.setState({projectStructName : workArea.data.results[0]["structureName"].join(' ')}))
-      })
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    let structName = []
+    let projectStructId = assessment.fkProjectStructureIds.split(":")
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
     }
-   
-  }
-
+    await this.setState({projectStructName : structName})
+   }
   redirectToHome = (Path) => {
     const { history } = this.props;
     if (history) {
@@ -248,7 +239,8 @@ class SimpleTabs extends React.Component {
       ? JSON.parse(localStorage.getItem('userDetails')).companies
       : null;
     if (Object.keys(flha).length > 0) {
-      return companies.filter((company) => company.companyId == flha.fkCompanyId)[0].projects.filter((project) => project.projectId === flha.fkProjectId)[0].projectName
+      let projectData = companies.filter((company) => company.companyId == flha.fkCompanyId)[0].projects.filter((project) => project.projectId === flha.fkProjectId)[0].projectName
+      return projectData
     }
     return ''
   }
@@ -312,8 +304,7 @@ class SimpleTabs extends React.Component {
 
                       </Typography>
                       <Typography className="labelValue">
-                       {this.handelWorkArea1(flha)}
-                       {projectStructName}
+                       {this.state.projectStructName.map(value => { return value }).join(" : ")}
                       </Typography>
                     </Grid>
                   </Grid>

@@ -665,7 +665,7 @@ function JhaSummary() {
                                   {/* assessment start date */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">
-                                      Assessment started on
+                                      Date
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
                                       {moment(assessment["jhaAssessmentDate"]).format(
@@ -681,6 +681,16 @@ function JhaSummary() {
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
                                       {checkValue(assessment.permitToPerform)}
+                                    </Typography>
+                                  </Grid>
+                                  
+                                  {/* Scope of work  */}
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">
+                                    Scope of work (Describe all tasks)
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.description)}
                                     </Typography>
                                   </Grid>
       
@@ -1075,31 +1085,7 @@ function JhaSummary() {
                                       </Table>
                                     </Grid>
                                   : null}
-                                  {assessment.closedByName !== null ? <>
-                                  <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                  <FormLabel className="checkRadioLabel" component="legend">Close out</FormLabel>
-                                  </Grid>
-
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel"
-                                    >
-                                      Closed by
-                                    </FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      {checkValue(assessment.closedByName)}
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel"
-                                    >
-                                      Closed on
-                                    </FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
-                                    </Typography>
-                                  </Grid>
-                                  </>:null}
+                                  
                                 </Grid>
                               </Paper>
                             </Grid>

@@ -315,6 +315,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '2px',
     marginRight: '20%',
   },
+  question: {
+    marginTop: '12px'
+  }
 }));
 
 const FlhaDetails = (props) => {
@@ -600,35 +603,35 @@ const FlhaDetails = (props) => {
                         </TableBody>
                       </Table>
 
-                      <Grid item md={4} sm={4} xs={12}>
+                      <Grid item md={4} sm={4} xs={12} className={classes.question}>
                         <FormLabel component="legend" className="viewLabel">Is permit to work done?*</FormLabel>
                         <Typography>
                           {flha.permitToWork}
                         </Typography>
                       </Grid>
-                      <Grid item md={4} sm={4} xs={12}>
+                      <Grid item md={4} sm={4} xs={12} className={classes.question}>
                         <FormLabel component="legend" className="viewLabel">Enter permit number</FormLabel>
                         <Typography>
                           {flha.permitToWorkNumber == undefined || flha.permitToWorkNumber == 'undefined' || flha.permitToWorkNumber == '' ? '-' : flha.permitToWorkNumber}
                         </Typography>
                       </Grid>
-                      <Grid item md={4} sm={4} xs={12}>
+                      <Grid item md={4} sm={4} xs={12} className={classes.question}>
                         <FormLabel component="legend" className="viewLabel">Permit job reference</FormLabel>
                         <Typography>
                           {flha.referenceNumber == undefined || flha.referenceNumber == 'undefined' || flha.referenceNumber == '' ? '-' : flha.referenceNumber}
 
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} className={classes.question}>
                         <FormLabel className="viewLabel" component="legend">Date & Time</FormLabel>
                         <Typography >
                           {moment(flha.dateTimeFlha).format(
-                            'Do MMMM YYYY, h:mm:ss a'
+                            'Do MMM YYYY'
                           )}
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={6}>
+                      <Grid item xs={6} className={classes.question}>
                         <FormLabel className="viewLabel" component="legend">Attachment</FormLabel>
                         {flha.attachment ? (
                           <Typography >
