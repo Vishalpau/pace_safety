@@ -375,6 +375,7 @@ const ObservationInitialNotification = (props) => {
     observationDetails: "",
     isSituationAddressed: "",
     isNotifiedToSupervisor: "",
+    isSupervisorPresent: "",
     actionTaken: "",
     location: "",
     observedAt: new Date().toISOString(),
@@ -456,6 +457,7 @@ const ObservationInitialNotification = (props) => {
       data.append("location", form.location),
       data.append("observedAt", handelTime(form.observedAt)),
       data.append("isNotifiedToSupervisor", form.isNotifiedToSupervisor),
+      data.append("isSupervisorPresent", form.isSupervisorPresent),
       data.append("assigneeName", form.assigneeName),
       data.append("assigneeId", form.assigneeId),
       data.append("shift", form.shift),
@@ -1535,6 +1537,34 @@ const ObservationInitialNotification = (props) => {
                           setForm({
                             ...form,
                             isNotifiedToSupervisor: e.target.value,
+                          });
+                        }}
+                      >
+                        {radioSituation.map((value) => (
+                          <FormControlLabel
+                            value={value}
+                            className="selectLabel"
+                            control={<Radio />}
+                            label={value}
+                          />
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item md={12} xs={12} className={classes.formBox}>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend" className="checkRadioLabel">
+                      Confirm if the foreman was present at the time of your observation?
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-label="safetymanagement"
+                        name="safetymanagement"
+                        onChange={(e) => {
+                          setForm({
+                            ...form,
+                            isSupervisorPresent: e.target.value,
                           });
                         }}
                       >
