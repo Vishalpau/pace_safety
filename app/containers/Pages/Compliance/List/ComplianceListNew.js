@@ -646,9 +646,7 @@ function ComplianceListNew(props) {
     : null;
     if(props.compliance === "My Inspections"){
       const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
-      
-      console.log(res,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-      const result = res.data.data.results
+      const result = res.data.data.results.results
       await setAllComplianceData(result)
       await setTotalData(res.data.data.metadata.count)
             await setPageData(res.data.data.metadata.count / 25)
@@ -657,7 +655,7 @@ function ComplianceListNew(props) {
     }else{
       const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
       
-      const result = res.data.data.results
+      const result = res.data.data.results.results
       await setAllComplianceData(result)
       await setTotalData(res.data.data.metadata.count)
             await setPageData(res.data.data.metadata.count / 25)
