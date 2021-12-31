@@ -23,9 +23,10 @@ var menu = [
     multilevel: true,
     child: [
       {
-        key: 'flha',
-        name: 'FLHA',
-        link: "/app/pages/assesments/xflha",
+        key: 'aha',
+        name: 'AHA',
+        link: '/app/pages/aha',
+        
       },
       {
         key: 'jha',
@@ -33,9 +34,9 @@ var menu = [
         link: "/app/pages/jha/all_jha",
       },
       {
-        key: 'aha',
-        name: 'AHA',
-        link: '/app/pages/aha',
+        key: 'flha',
+        name: 'FLHA',
+        link: "/app/pages/assesments/xflha",
       },
     ],
   },

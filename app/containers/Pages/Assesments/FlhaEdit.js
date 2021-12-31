@@ -455,7 +455,7 @@ const FlhaDetails = () => {
   const history = useHistory();
 
   let colorSeverityObj = {
-    "Sightly harmful": 2,
+    "Slightly harmful": 2,
     "Harmful": 4,
     "Very harmful": 6,
     "Extremely harmful": 8,

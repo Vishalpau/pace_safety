@@ -569,6 +569,12 @@ const ObservationInitialNotificationView = () => {
                   {initialData.isNotifiedToSupervisor ? initialData.isNotifiedToSupervisor : "-"}
                 </Typography>
               </Grid>
+              <Grid item md={12} sm={12} xs={12}>
+                <FormLabel component="legend" className="viewLabel">Confirm if the foreman was present at the time of your observation</FormLabel>
+                <Typography className="viewLabelValue">
+                  {initialData.isSupervisorPresent ? initialData.isSupervisorPresent : "-"}
+                </Typography>
+              </Grid>
             </Grid>
           </Paper>
         </Grid>
