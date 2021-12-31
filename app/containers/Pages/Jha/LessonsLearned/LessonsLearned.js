@@ -175,8 +175,8 @@ const LessonsLearned = () => {
     if (form.anyLessonsLearnt == "Yes" || form.anyLessonsLearnt == "No") {
       await setSubmitLoader(true)
       delete form["jhaAssessmentAttachment"]
-      if (form["anyLessonsLearnt"] == null) {
-        form["anyLessonsLearnt"] = ""
+      if (form["anyLessonsLearnt"] === "No") {
+        form["lessonLearntDetails"] = ""
       }
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       history.push(SUMMARY_FORM["Summary"])
