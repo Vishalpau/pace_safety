@@ -276,6 +276,7 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,
       form
     );
+    localStorage.setItem("Approval" , "Done")
     history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
   };
 const [projectOpen , setProjectOpen] = useState(false)

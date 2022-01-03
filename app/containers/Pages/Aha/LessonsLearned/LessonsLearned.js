@@ -180,6 +180,9 @@ const LessonsLearned = () => {
       }
       await setSubmitLoader(true)
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
+      localStorage.removeItem('Approval')
+      localStorage.removeItem('Assessment')
+      localStorage.setItem("lessonsLearned" , "Done")
       history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
     } else {
       setError({ "LessonDecide": "Please select any one" })

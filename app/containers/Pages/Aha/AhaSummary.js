@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AhaSummary() {
-  const [assessments, setAssessments] = useState(true);
+  const [assessments, setAssessments] = useState(false);
   const [approvals, setApprovals] = useState(false);
   const [lessonsLearned, setLessonsLearned] = useState(false);
   //const [summary, setSummary] = useState(false);
@@ -279,6 +279,9 @@ function AhaSummary() {
   const handleAssessmentViewChanges = () => {
     if (ahaData.notifyTo !== null) {
       setAssessments(true);
+      localStorage.removeItem('Approval')
+        localStorage.removeItem('lessonsLearned')
+        localStorage.setItem("Assessment" , "Done")
     } else {
       history.push(`/app/pages/aha/assessments/project-details/`)
     }
@@ -294,6 +297,9 @@ function AhaSummary() {
       setAssessments(false);
       if (ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && side === undefined) {
         setApprovals(true);
+        localStorage.removeItem('Assessment')
+        localStorage.removeItem('lessonsLearned')
+        localStorage.setItem("Approval" , "Done")
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
       }
@@ -313,6 +319,9 @@ function AhaSummary() {
       setApprovals(false);
       setCloseOut(false);
       if (ahaData.anyLessonsLearnt !== null  && side === undefined) {
+        localStorage.removeItem('Approval')
+        localStorage.removeItem('Assessment')
+        localStorage.setItem("lessonsLearned" , "Done")
         setLessonsLearned(true);
       } else {
         history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
@@ -357,6 +366,17 @@ function AhaSummary() {
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
     await fetchNotificationSent(result.notifyTo)
+    if(localStorage.getItem("lessonsLearned") === "Done"){
+      await setLessonsLearned(true)
+    }else if(localStorage.getItem("Approval") === "Done"){
+      await setApprovals(true)
+    }
+    else{
+      await setAssessments(true)
+    }
+    await setIsLoading(true);
+
+    
   };
 
   const handelWorkArea = async (assessment) => {
@@ -409,7 +429,6 @@ function AhaSummary() {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
 
@@ -520,9 +539,9 @@ function AhaSummary() {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
       : null;
-    const abc = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
-    const dd = abc[0].projects.filter((user) => user.projectId === projectId)
-    return dd[0].projectName
+    const fetchCompany = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
+    const fetchProject = fetchCompany[0].projects.filter((user) => user.projectId === projectId)
+    return fetchProject[0].projectName
   }
 
   const fetchNotificationSent = async (notifyTo) => {
