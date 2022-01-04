@@ -269,6 +269,7 @@ const Approvals = () => {
       form['closedDate'] = new Date()
       form["ahaStage"] = "Closed"
       form["ahaStatus"] = "Closed" 
+      localStorage.setItem("Approval" , "Done")
     }
 
     delete form["ahaAssessmentAttachment"];
@@ -276,7 +277,6 @@ const Approvals = () => {
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,
       form
     );
-    localStorage.setItem("Approval" , "Done")
     history.push(`/app/pages/aha/aha-summary/${localStorage.getItem("fkAHAId")}`);
   };
 const [projectOpen , setProjectOpen] = useState(false)

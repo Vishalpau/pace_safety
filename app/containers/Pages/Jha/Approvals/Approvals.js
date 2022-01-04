@@ -295,6 +295,7 @@ const Approvals = () => {
       form['closedDate'] = new Date()
       form["jhaStage"] = "Closed"
       form["jhaStatus"] = "Closed"
+      localStorage.setItem("JSAApproval" , "Done")
     }
     await setSubmitLoader(true)
     delete form["jhaAssessmentAttachment"]

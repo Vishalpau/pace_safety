@@ -178,6 +178,7 @@ const LessonsLearned = () => {
       if(form.anyLessonsLearnt === "No"){
         form["lessonLearntDetails"] = ""
       }
+      console.log("sagar")
       await setSubmitLoader(true)
       const res = await api.put(`/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `, form)
       localStorage.removeItem('Approval')
@@ -233,8 +234,10 @@ const LessonsLearned = () => {
                       xs={12}
                       className={classes.formBox}
                     >
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?</FormLabel>
+                        <FormControl component="fieldset" error={
+                          error && error["LessonDecide"]
+                        }>
+                            <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?*</FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
                             {radioDecide.map((value) => (
                           <FormControlLabel
@@ -250,6 +253,11 @@ const LessonsLearned = () => {
                         ))}
                            
                             </RadioGroup>
+                            {error && error["LessonDecide"] && (
+                            <FormHelperText>
+                              {error["LessonDecide"]}
+                            </FormHelperText>
+                          )}
                         </FormControl>
                     </Grid>
                     {form.anyLessonsLearnt == "Yes"  || form.anyLessonsLearnt == "" ?
