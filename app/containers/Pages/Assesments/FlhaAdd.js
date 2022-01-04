@@ -846,7 +846,7 @@ const FlhaDetails = (props) => {
       temp[taskIndex].hazards[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Moderate`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#fff82e';
+      temp[taskIndex].hazards[key].riskRatingColour = '#FFBF00';
     } else if (riskRating > 17 && riskRating <= 24) {
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Substantial`;
       temp[taskIndex].hazards[key].riskRatingColour = '#990000';

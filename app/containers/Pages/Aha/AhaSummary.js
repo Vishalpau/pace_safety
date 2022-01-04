@@ -493,7 +493,7 @@ function AhaSummary() {
           colorAssessmment[i].riskRatingColour = '#8da225'
 
         } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
-          colorAssessmment[i].riskRatingColour = '#fff82e'
+          colorAssessmment[i].riskRatingColour = '#FFBF00'
 
         } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
           colorAssessmment[i].riskRatingColour = '#990000'

@@ -333,7 +333,7 @@ const AssessmentAndNotification = () => {
           getProvability[i].riskRating === "12 Moderate" ||
           getProvability[i].riskRating === "16 Moderate"
         ) {
-          getRating[i].riskRatingColour = "#fff82e";
+          getRating[i].riskRatingColour = "#FFBF00";
         } else if (
           getProvability[i].riskRating === "18 Substantial" ||
           getProvability[i].riskRating === "24 Substantial"
@@ -652,7 +652,7 @@ const AssessmentAndNotification = () => {
       temp[key].riskRatingColour = "#8da225";
     } else if (riskRating > 9 && riskRating <= 16) {
       temp[key].riskRating = `${riskRating} Moderate`;
-      temp[key].riskRatingColour = "#fff82e";
+      temp[key].riskRatingColour = "#FFBF00";
     } else if (riskRating > 17 && riskRating <= 24) {
       temp[key].riskRating = `${riskRating} Substantial`;
       temp[key].riskRatingColour = "#990000";

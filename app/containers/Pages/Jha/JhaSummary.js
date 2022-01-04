@@ -684,6 +684,15 @@ function JhaSummary() {
                                     </Typography>
                                   </Grid>
                                   
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">
+                                      Permit type
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.typeOfPermit)}
+                                    </Typography>
+                                  </Grid>
+
                                   {/* Scope of work  */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">
@@ -705,8 +714,8 @@ function JhaSummary() {
                                     )):"-"}
                                   </Grid>
 
-                                  <Grid item xs={12} md={12} className="paddBRemove">
-                                    <FormLabel className="checkRadioLabel" component="legend">Job hazard</FormLabel>
+                                  <Grid item xs={12} md={12} >
+                                    <FormLabel className="viewLabel" component="legend">Job hazard</FormLabel>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     {false &&
