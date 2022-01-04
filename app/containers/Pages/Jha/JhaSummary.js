@@ -1131,14 +1131,23 @@ function JhaSummary() {
                                         {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
                                       </Typography>
                                     </Grid>
-                                    <Grid item xs={12} md={6}>
-                                      <FormLabel component="legend" className="viewLabel">
-                                        Lessons learned
-                                      </FormLabel>
-                                      <Typography className="viewLabelValue">
-                                        {checkValue(assessment.lessonLearntDetails)}
-                                      </Typography>
-                                    </Grid>
+                                    {/* Are there any lessons learned? */}
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Are there any lessons learned?</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {assessment.anyLessonsLearnt ? assessment.anyLessonsLearnt : "-"}
+                                    </Typography>
+                                  </Grid>
+
+
+                                  {assessment.anyLessonsLearnt === "Yes" ? 
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Lessons learned</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {assessment.lessonLearntDetails ? assessment.lessonLearntDetails : "-"}
+                                    </Typography>
+                                  </Grid> : null}
+                                    
                                     {lessionAction.length > 0 ? 
                                       <Grid item md={12} xs={12}>
                                         <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>
