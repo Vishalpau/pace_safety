@@ -20,7 +20,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {
-  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker
+  DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardTimePicker,KeyboardDatePicker
 } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import moment from "moment";
@@ -810,11 +810,11 @@ const ProjectDetailsAndHazard = () => {
                         className={classes.formBox}
                       >
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                          <KeyboardDateTimePicker
+                          <KeyboardDatePicker
                             className={classes.formControl}
                             // margin="dense"
                             fullWidth
-                            label="Date & Time*"
+                            label="Date*"
                             value={selectedDate}
                             // onChange={handleDateChange}
                             value={form.assessmentDate ? form.assessmentDate :null}
