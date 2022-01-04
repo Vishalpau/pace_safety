@@ -730,7 +730,7 @@ const FlhaDetails = () => {
       taskHazard[indexHazard].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Moderate`;
-      taskHazard[indexHazard].riskRatingColour = '#fff82e';
+      taskHazard[indexHazard].riskRatingColour = '#FFBF00';
     } else if (riskRating > 17 && riskRating <= 24) {
       taskHazard[indexHazard].riskRatingLevel = `${riskRating} Substantial`;
       taskHazard[indexHazard].riskRatingColour = '#990000';
@@ -1592,7 +1592,7 @@ const FlhaDetails = () => {
                               });
                             }}
                             InputProps={{ readOnly: true }}
-                            format="yyyy/MM/dd HH:mm"
+                            format="MM/dd/yyyy HH:mm"
                             inputVariant="outlined"
                             disableFuture="true"
                           />
