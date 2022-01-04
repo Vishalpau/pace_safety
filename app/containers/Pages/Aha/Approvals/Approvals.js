@@ -269,6 +269,7 @@ const Approvals = () => {
       form['closedDate'] = new Date()
       form["ahaStage"] = "Closed"
       form["ahaStatus"] = "Closed" 
+      localStorage.setItem("Approval" , "Done")
     }
 
     delete form["ahaAssessmentAttachment"];

@@ -658,7 +658,6 @@ const ProjectDetailsAndHazard = () => {
     setHazardForm(tempForm)
 
     // setForm(apiData)
-    setFetchedOptions(apiData)
     if (otherNoId.length > 0) {
       setOtherHazards(otherNoId)
     }
