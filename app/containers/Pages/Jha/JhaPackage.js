@@ -655,6 +655,9 @@ function JhaPackage(props) {
 
     localStorage.setItem("fkJHAId", jha.id)
     handelCommonObject("commonObject", "jha", "projectStruct", jha.fkProjectStructureIds)
+    localStorage.removeItem('JSAAssessments')
+    localStorage.removeItem('JSAApproval')
+    localStorage.removeItem('JSAlessonsLearned')
     history.push(`/app/pages/jha/jha-summary/${jha.id}`);
   };
 

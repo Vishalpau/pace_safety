@@ -251,6 +251,9 @@ export default function JhaMain() {
 
   const handleNewJhaPush = async () => {
     localStorage.removeItem("fkJHAId")
+    localStorage.removeItem('JSAAssessments')
+    localStorage.removeItem('JSAApproval')
+    localStorage.removeItem('JSAlessonsLearned')
     history.push("/app/pages/jha/assessments/Job-hazards");
   };
 

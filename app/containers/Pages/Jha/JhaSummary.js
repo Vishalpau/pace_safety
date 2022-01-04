@@ -143,7 +143,7 @@ function Alert(props) {
 }
 
 function JhaSummary() {
-  const [assessmentsView, setAssessmentsView] = useState(true);
+  const [assessmentsView, setAssessmentsView] = useState(false);
   const [approvalsView, setApprovalsView] = useState(false);
   const [closeOutView, setCloseOutView] = useState(false);
   const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
@@ -189,6 +189,14 @@ function JhaSummary() {
     const result = res.data.data.results;
     await setAssessment(result)
     await handelWorkArea(result)
+    if(localStorage.getItem("JSAlessonsLearned") === "Done"){
+      await setLessonsLearnedView(true)
+    }else if(localStorage.getItem("JSAApproval") === "Done"){
+      await setApprovalsView(true)
+    }
+    else{
+      await setAssessmentsView(true)
+    }
     await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
@@ -377,6 +385,9 @@ function JhaSummary() {
 
   const handleAssessmentViewChanges = () => {
     if (formStatus.assessmentStatus) {
+      localStorage.removeItem('JSAApproval')
+      localStorage.removeItem('JSAlessonsLearned')
+      localStorage.setItem("JSAAssessment" , "Done")
       setAssessmentsView(true);
     } else {
       history.push(`/app/pages/jha/assessments/Job-hazards`)
@@ -392,6 +403,9 @@ function JhaSummary() {
       setAssessmentsView(false);
       if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
+        localStorage.removeItem('JSAAssessment')
+        localStorage.removeItem('JSAlessonsLearned')
+        localStorage.setItem("JSAApproval" , "Done")
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
       }
@@ -410,6 +424,9 @@ function JhaSummary() {
       setApprovalsView(false);
       setCloseOutView(false);
       if (formStatus.lessionLeranedStatus && side === undefined ) {
+        localStorage.removeItem('JSAApproval')
+        localStorage.removeItem('JSAAssessment')
+        localStorage.setItem("JSAlessonsLearned" , "Done")
         setLessonsLearnedView(true);
       } else {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
@@ -519,7 +536,7 @@ function JhaSummary() {
                         <ul className="SummaryTabList">
                           <li>
                             <Button
-                              color={assessmentsView ? "secondary" : "primary"}
+                              color={assessmentsView === true ? "secondary" : "primary"}
                               size="large"
                               variant={formStatus.assessmentStatus ? "contained" : "outlined"}
                               endIcon={

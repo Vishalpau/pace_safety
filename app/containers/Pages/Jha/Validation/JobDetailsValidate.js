@@ -9,7 +9,6 @@ function JobDetailsValidate(data, projectStructure) {
     const breakdownValue = JSON.parse(localStorage.getItem('projectName')).projectName.breakdown
     for (let i = 0; i < breakdownValue.length; i++) {
         var element = projectStructure[i]
-        console.log({ element: element })
         if (projectStructure[i] === undefined) {
             error[`projectStructure${[i]}`] = `Please select ${breakdownValue[i].structure[0].name}`;
             isValid = false;
