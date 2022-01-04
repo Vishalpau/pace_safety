@@ -531,7 +531,6 @@ const AssessmentAndDocument = () => {
             formDocument['humanPerformanceAspects'] = additinalJobDetails.humanPerformanceAspects.toString();
             formDocument['additionalRemarks'] = additinalJobDetails.additionalRemarks;
             formDocument['workStopCondition'] = additinalJobDetails.workStopCondition.toString();
-            console.log(formDocument,">>>>>")
             await api.put(`/api/v1/jhas/${localStorage.getItem('fkJHAId')}/ `, formDocument).catch(() => handelApiErrorDocument());
         }
         history.push(SUMMARY_FORM.Summary);
@@ -856,14 +855,6 @@ const AssessmentAndDocument = () => {
                                     md={12}
                                     xs={12}
                                 >
-                                    <Button
-                                        variant="outlined"
-                                        size="medium"
-                                        className={classes.custmSubmitBtn}
-                                        onClick={(e) => handelNavigate('previous')}
-                                    >
-                                        Previous
-                                    </Button>
                                     <div className={classes.loadingWrapper}>
 
                                         <Button

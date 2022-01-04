@@ -521,6 +521,9 @@ const handleSummaryPush = async (index) => {
     localStorage.setItem('fkAHAId', id)
     handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
   //console.log("Ashutosh")
+    localStorage.removeItem('Assessments')
+    localStorage.removeItem('Approval')
+    localStorage.removeItem('lessonsLearned')
   history.push(
     `/app/pages/aha/aha-summary/${id}`
   );
