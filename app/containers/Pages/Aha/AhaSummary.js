@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AhaSummary() {
-  const [assessments, setAssessments] = useState(true);
+  const [assessments, setAssessments] = useState(false);
   const [approvals, setApprovals] = useState(false);
   const [lessonsLearned, setLessonsLearned] = useState(false);
   //const [summary, setSummary] = useState(false);
@@ -279,6 +279,9 @@ function AhaSummary() {
   const handleAssessmentViewChanges = () => {
     if (ahaData.notifyTo !== null) {
       setAssessments(true);
+      localStorage.removeItem('Approval')
+        localStorage.removeItem('lessonsLearned')
+        localStorage.setItem("Assessment" , "Done")
     } else {
       history.push(`/app/pages/aha/assessments/project-details/`)
     }
@@ -294,6 +297,9 @@ function AhaSummary() {
       setAssessments(false);
       if (ahaData.wrpApprovalUser !== null && ahaData.sapApprovalUser !== null && side === undefined) {
         setApprovals(true);
+        localStorage.removeItem('Assessment')
+        localStorage.removeItem('lessonsLearned')
+        localStorage.setItem("Approval" , "Done")
       } else {
         history.push(`/app/pages/aha/approvals/approvals`)
       }
@@ -313,6 +319,9 @@ function AhaSummary() {
       setApprovals(false);
       setCloseOut(false);
       if (ahaData.anyLessonsLearnt !== null  && side === undefined) {
+        localStorage.removeItem('Approval')
+        localStorage.removeItem('Assessment')
+        localStorage.setItem("lessonsLearned" , "Done")
         setLessonsLearned(true);
       } else {
         history.push(`/app/pages/aha/lessons-learned/lessons-learned`)
@@ -357,6 +366,17 @@ function AhaSummary() {
     await handelWorkArea(result)
     await fetchBreakDownData(result.fkProjectStructureIds);
     await fetchNotificationSent(result.notifyTo)
+    if(localStorage.getItem("lessonsLearned") === "Done"){
+      await setLessonsLearned(true)
+    }else if(localStorage.getItem("Approval") === "Done"){
+      await setApprovals(true)
+    }
+    else{
+      await setAssessments(true)
+    }
+    await setIsLoading(true);
+
+    
   };
 
   const handelWorkArea = async (assessment) => {
@@ -409,7 +429,6 @@ function AhaSummary() {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-            await setIsLoading(true);
             result.map((item) => {
               if (breakDown[key].slice(2) == item.id) {
 
@@ -493,7 +512,7 @@ function AhaSummary() {
           colorAssessmment[i].riskRatingColour = '#8da225'
 
         } else if (result[i].riskRating === "12 Moderate" || result[i].riskRating === "16 Moderate") {
-          colorAssessmment[i].riskRatingColour = '#fff82e'
+          colorAssessmment[i].riskRatingColour = '#FFBF00'
 
         } else if (result[i].riskRating === "18 Substantial" || result[i].riskRating === "24 Substantial") {
           colorAssessmment[i].riskRatingColour = '#990000'
@@ -520,9 +539,9 @@ function AhaSummary() {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
       : null;
-    const fetchCompanyId = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
-    const fetchProjectId = fetchCompanyId[0].projects.filter((user) => user.projectId === projectId)
-    return fetchProjectId[0].projectName
+    const fetchCompany = userName.filter((user) => user.companyId === ahaData.fkCompanyId)
+    const fetchProject = fetchCompany[0].projects.filter((user) => user.projectId === projectId)
+    return fetchProject[0].projectName
   }
 
   const fetchNotificationSent = async (notifyTo) => {
@@ -1051,40 +1070,7 @@ function AhaSummary() {
                                     </Table>
                                   </Grid> : null}
 
-                                  {ahaData.closedByName !== null ?
-                                  <>
-                                  {/* Closed out */}
-                                    <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                      <FormLabel className="checkRadioLabel" component="legend">
-                                        Closed out
-                                      </FormLabel>
-                                    </Grid>
-
-                                    {/* Closed by */}
-                                    <Grid item xs={12} md={6}>
-                                      <FormLabel component="legend" className="viewLabel">Closed by</FormLabel>
-                                      <Typography
-                                        variant="body"
-                                        className="viewLabelValue"
-                                      >
-                                        {ahaData.closedByName ? ahaData.closedByName : "-"}
-                                      </Typography>
-                                    </Grid>
-
-                                    {/* Closed on */}
-                                    <Grid item xs={12} md={6}>
-                                      <FormLabel component="legend" className="viewLabel">Closed on</FormLabel>
-                                      <Typography
-                                        variant="body"
-                                        className="viewLabelValue"
-                                      >
-                                        {ahaData.closedDate ? moment(ahaData["closedDate"]).format(
-                                          "Do MMMM YYYY"
-                                        ) : "-"}
-                                      </Typography>
-                                    </Grid>
-                                  </>
-                                  :null}
+                                  
                                 </Grid>
                               </Paper>
                             </Grid>
@@ -1123,13 +1109,22 @@ function AhaSummary() {
                                     </Typography>
                                   </Grid>
 
-                                  {/* Lessons learnt */}
+                                  {/* Are there any lessons learned? */}
                                   <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Lessons learnt</FormLabel>
+                                    <FormLabel component="legend" className="viewLabel">Are there any lessons learned?</FormLabel>
                                     <Typography className="viewLabelValue">
                                       {ahaData.anyLessonsLearnt ? ahaData.anyLessonsLearnt : "-"}
                                     </Typography>
                                   </Grid>
+
+
+                                  {ahaData.anyLessonsLearnt === "Yes" ? 
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Lessons learned</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {ahaData.lessonLearntDetails ? ahaData.lessonLearntDetails : "-"}
+                                    </Typography>
+                                  </Grid> : null}
 
                                   {/* Lessons learnt action  */}
                                   {lessionAction.length > 0 ? 

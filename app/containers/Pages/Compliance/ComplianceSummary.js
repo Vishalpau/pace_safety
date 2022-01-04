@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'none',
     fontFamily: 'Montserrat-SemiBold !important',
     lineHeight: '18px',
-    border: '1px solid #06425c',
+    // border: '1px solid #06425c',
   },
   heading: {
     width: '100%',
@@ -418,7 +418,7 @@ function ComplianceSummary() {
   }, []);
 
   return (
-      <CustomPapperBlock title="Compliance number: Data not available in api" icon='customDropdownPageIcon compliancePageIcon' whiteBg>
+      <CustomPapperBlock title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""}`} icon={complianceLogoSymbol} whiteBg>
       {isLoading ? <>
         <Grid container spacing={3}>
           <Grid item md={9} xs={12}>

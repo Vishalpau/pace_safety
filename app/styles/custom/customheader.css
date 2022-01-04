@@ -22,7 +22,20 @@
 html {    
 	font-family: Montserrat-Regular !important;
 }
-
+.versionSectionText {
+  position: fixed;
+  left: 20px;
+  bottom: 5px;
+  color: #666666;
+  white-space: nowrap;
+}
+.versionSectionText span {
+  font-size: 16px;
+  padding-left: 15px;
+}
+.versionSectionText svg {
+  vertical-align: bottom;
+}
 .headerAppsGrid {
   opacity: 1;
 }
@@ -164,7 +177,12 @@ html .custmCancelBtn {
   background-color: #ffffff;
   border: 1px solid #E7E7E7;
 }
-
+.cardSectionBottom {
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #E7E7E7;
+  margin-bottom: 20px;
+}
 .sectionHeading {
   font-size: 16px !important;
   line-height: 19px;
@@ -235,8 +253,14 @@ html .custmCancelBtn {
 }
 .buttonStyle span {
   font-family: 'Montserrat-SemiBold' !important;
+  font-size: 0.875rem;
 }
-
+.buttonStyleNew {
+  font-size: 14px !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  padding: 5px 20px !important;
+}
 .quickActionSection nav {
   background-color: #7890A4;
 }
@@ -346,6 +370,9 @@ html .custmCancelBtn {
   display: inline-block;
   margin-right: 5px;
 }
+.attachFileThumb button {
+  padding: 0px;
+}
 .attachFileThumbEnry {
   width: 62px;
   float: left;
@@ -377,8 +404,41 @@ html .custmCancelBtn {
 .attachContent button {
   text-align: center;
 }
-
-
+.textCenter {
+  justify-content: center;
+}
+ul.MuiMenu-list a.textCenter {
+  justify-content: center;
+}
+ul.MuiMenu-list a.textCenter .MuiAvatar-root {
+  width: 64px;
+  height: 64px;
+}
+ul.MuiMenu-list a svg {
+  margin-right: 8px;
+}
+ul.MuiMenu-list a ul li {
+  text-align: center;
+}
+li.MuiMenuItem-root.textCenter {
+  justify-content: center;
+  margin-right: 0px !important;
+  padding-top: 16px;
+}
+a.MuiMenuItem-root.userText {
+  padding: 16px;
+  font-size: 14px;
+  color: #7890A4;
+}
+.MuiAvatar-root.MuiAvatar-circle.avtaProfile {
+  height: 25px;
+  width: 25px;
+  margin-right: 8px;
+}
+ul.MuiMenu-list a ul li.userName {
+  color: #06425C;
+  font-family: 'Montserrat-SemiBold';
+}
 .checkedUnclick {
   pointer-events: none;
 }
@@ -393,6 +453,31 @@ html .custmCancelBtn {
 /* Table style component */
 .simpleTableSection, .MuiTableBody-root {
   border: 1px solid #E7E7E7;
+}
+
+.tabContentDesign {
+  color: inherit;
+  border: 1px solid #e4e4e4;
+  padding: 12px 5px 5px 5px;
+  box-shadow: 1px 1px 13px #e6e6e6;
+  border-radius: 2px;
+  margin-bottom: 0px;
+  background-color: #ffffff;
+}
+.tabContentDesign button {
+  color: #ffffff;
+  padding: 10px;
+  min-width: 100px;
+  max-height: 40px;
+  min-height: 40px;
+  margin-left: 5px;
+  margin-right: 6px;
+  border-radius: 5px 5px 5px 5px;
+  background-color: #06425c;
+}
+.tabContentDesign button.Mui-selected, .tabContentDesign button:hover {
+  background-color: #ff8533;
+  color: #ffffff;
 }
 .tableHeadCellFirst {
   background-color: #06425c;
@@ -409,6 +494,13 @@ html .custmCancelBtn {
 }
 .dataTableSectionDesign table thead tr th {
   background-color: #06425c;
+  color: #ffffff;
+}
+.dataTableSectionDesign table thead tr th:nth-last-child(1) {
+  border-top-right-radius: 6px;
+}
+.dataTableSectionDesign table thead tr th:nth-child(1) {
+  border-top-left-radius: 6px;
 }
 .dataTableSectionDesign .MuiButton-text {
   padding: 0px 8px;
@@ -449,6 +541,18 @@ html .custmCancelBtn {
   border-radius: 10px !important;
   box-shadow: 0px 0px 0px 1px #7890a4 !important;
   margin: 0px 0px 20px 0px !important;
+}
+.backPaperAccordianMTNone {
+  border: 0px solid #06425c;
+  border-radius: 10px !important;
+  box-shadow: 0px 0px 0px 1px #7890a4 !important;
+  margin: 0px 0px 0px 0px !important;
+}
+.backPaperAccordianMTNone .accordionHeaderSection {
+  border-radius: 10px;
+}
+.backPaperAccordianMTNone .accordionHeaderSection.Mui-expanded {
+  border-radius: 0px;
 }
 .backPaperSubAccordian {
   border: 0px solid #EDEDED;
@@ -604,8 +708,12 @@ html .custmCancelBtn {
 .blockBGColor {
   background-color: #06425C !important;
 }
+/*below code is diff then html Css bcz of initial version tab which only in deploment not in design*/
 .blockBGColor .formControl .MuiSelect-select {
   color: #ffffff !important;
+}
+.versionTabBox {
+  margin-top: 30px !important;
 }
 .reviseCount {
   margin-top: 4px !important;
@@ -615,10 +723,7 @@ html .custmCancelBtn {
   margin-right: 10px;
   color: #ffffff;
   padding: 12px 15px;
-  margin-top: 30px;
-}
-.versionTabBox {
-  margin-top: 30px !important;
+  margin-top: 30px; /* not in html css*/
 }
 .inlineListBTN .MuiListItem-button {
   display: inline;
@@ -646,9 +751,9 @@ html .custmCancelBtn {
   background-color: transparent;
   text-decoration: underline;
 }
-.rangeLableBox {
+/* .rangeLableBox {
 
-}
+} */
 
 .attachFileBtn button {
   text-transform: none;
@@ -741,7 +846,34 @@ html .custmCancelBtn {
   font-family: 'Montserrat-Regular';
   color: #666666;
 }
-
+.assessmentPageIcon {
+  background-position: -282px -405px;
+}
+.flhaPageIcon {
+  background-position: -921px -405px;
+}
+.customDropdownPageIcon {
+  height: 40px;
+  width: 40px;
+  display: block;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
+  float: left;
+}
+.customDropdownPageFlhaIcon {
+  height: 40px;
+  /* width: 40px; */
+  display: block;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
+  float: left;
+}
+.mainPageTitleBox h5{
+  width: calc(100% - 40px);
+  float: left;
+  padding-left: 5px;
+}
+.mainPageTitleBox {
+  display: inline-flex;
+}
 
 /* Activity */
 .filterTitle {
@@ -958,7 +1090,7 @@ html .custmCancelBtn {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .complianceMenu {
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -983,6 +1115,11 @@ html .custmCancelBtn {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -292px -16px;
   margin-right: 16px;
 }
+.complianceMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -163px -16px;
+  margin-right: 16px;
+}
+ 
 .incident-managementMenu.selectmenu .MuiListItemIcon-root,
 /* .incidentManagMenu.selectmenu:hover .MuiListItemIcon-root,
 .incidentManagMenu:hover .MuiListItemIcon-root,
@@ -1024,6 +1161,18 @@ html .custmCancelBtn {
 .assessmentsMenu:hover,
 .assessmentsMenu.selectmenu:hover,
 .assessmentsMenu.selectmenu,
+
+
+.complianceMenu.selectmenu .MuiListItemIcon-root,
+/* .complianceMenu.selectmenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemText-root span, */
+.complianceMenu.selectmenu:hover .MuiListItemText-root span,
+.complianceMenu.selectmenu .MuiListItemText-root span,
+.complianceMenu:hover,
+.complianceMenu.selectmenu:hover,
+.complianceMenu.selectmenu,
+
 
 .controlTowerMenu.selectmenu .MuiListItemIcon-root,
 /* .controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
@@ -1147,6 +1296,19 @@ html .custmCancelBtn {
 
 .loginLogoHead {
   margin-bottom: 30px;
+}
+@media (max-width: 800px) {
+  .catDrawerSection {
+    top: 55px;
+  }
+  .catDrawerSection {
+    top: 55px;
+  }
+  .mainPageTitleBox {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
+  
 }
 
 @media (max-width: 1280px) {

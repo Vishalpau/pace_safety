@@ -143,7 +143,7 @@ function Alert(props) {
 }
 
 function JhaSummary() {
-  const [assessmentsView, setAssessmentsView] = useState(true);
+  const [assessmentsView, setAssessmentsView] = useState(false);
   const [approvalsView, setApprovalsView] = useState(false);
   const [closeOutView, setCloseOutView] = useState(false);
   const [lessonsLearnedView, setLessonsLearnedView] = useState(false);
@@ -189,6 +189,14 @@ function JhaSummary() {
     const result = res.data.data.results;
     await setAssessment(result)
     await handelWorkArea(result)
+    if(localStorage.getItem("JSAlessonsLearned") === "Done"){
+      await setLessonsLearnedView(true)
+    }else if(localStorage.getItem("JSAApproval") === "Done"){
+      await setApprovalsView(true)
+    }
+    else{
+      await setAssessmentsView(true)
+    }
     await fetchNotificationSent(result.notifyTo)
     const resTeam = await api.get(`/api/v1/jhas/${jhaId}/teams/`)
     const resultTeam = resTeam.data.data.results
@@ -377,6 +385,9 @@ function JhaSummary() {
 
   const handleAssessmentViewChanges = () => {
     if (formStatus.assessmentStatus) {
+      localStorage.removeItem('JSAApproval')
+      localStorage.removeItem('JSAlessonsLearned')
+      localStorage.setItem("JSAAssessment" , "Done")
       setAssessmentsView(true);
     } else {
       history.push(`/app/pages/jha/assessments/Job-hazards`)
@@ -392,6 +403,9 @@ function JhaSummary() {
       setAssessmentsView(false);
       if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
+        localStorage.removeItem('JSAAssessment')
+        localStorage.removeItem('JSAlessonsLearned')
+        localStorage.setItem("JSAApproval" , "Done")
       } else {
         history.push(`/app/pages/jha/approvals/approvals`)
       }
@@ -410,6 +424,9 @@ function JhaSummary() {
       setApprovalsView(false);
       setCloseOutView(false);
       if (formStatus.lessionLeranedStatus && side === undefined ) {
+        localStorage.removeItem('JSAApproval')
+        localStorage.removeItem('JSAAssessment')
+        localStorage.setItem("JSAlessonsLearned" , "Done")
         setLessonsLearnedView(true);
       } else {
         history.push(`/app/pages/jha/lessons-learned/lessons-learned`)
@@ -519,7 +536,7 @@ function JhaSummary() {
                         <ul className="SummaryTabList">
                           <li>
                             <Button
-                              color={assessmentsView ? "secondary" : "primary"}
+                              color={assessmentsView === true ? "secondary" : "primary"}
                               size="large"
                               variant={formStatus.assessmentStatus ? "contained" : "outlined"}
                               endIcon={
@@ -665,7 +682,7 @@ function JhaSummary() {
                                   {/* assessment start date */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">
-                                      Assessment started on
+                                      Date
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
                                       {moment(assessment["jhaAssessmentDate"]).format(
@@ -683,6 +700,25 @@ function JhaSummary() {
                                       {checkValue(assessment.permitToPerform)}
                                     </Typography>
                                   </Grid>
+                                  
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">
+                                      Permit type
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.typeOfPermit)}
+                                    </Typography>
+                                  </Grid>
+
+                                  {/* Scope of work  */}
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">
+                                    Scope of work (Describe all tasks)
+                                    </FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.description)}
+                                    </Typography>
+                                  </Grid>
       
                                   {/* risk assessment team */}
                                   <Grid item xs={12} md={12}>
@@ -695,8 +731,8 @@ function JhaSummary() {
                                     )):"-"}
                                   </Grid>
 
-                                  <Grid item xs={12} md={12} className="paddBRemove">
-                                    <FormLabel className="checkRadioLabel" component="legend">Job hazard</FormLabel>
+                                  <Grid item xs={12} md={12} >
+                                    <FormLabel className="viewLabel" component="legend">Job hazard</FormLabel>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
                                     {false &&
@@ -1075,31 +1111,7 @@ function JhaSummary() {
                                       </Table>
                                     </Grid>
                                   : null}
-                                  {assessment.closedByName !== null ? <>
-                                  <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                                  <FormLabel className="checkRadioLabel" component="legend">Close out</FormLabel>
-                                  </Grid>
-
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel"
-                                    >
-                                      Closed by
-                                    </FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      {checkValue(assessment.closedByName)}
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel"
-                                    >
-                                      Closed on
-                                    </FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      {moment(checkValue(assessment.closedDate)).format("Do MMM YYYY")}
-                                    </Typography>
-                                  </Grid>
-                                  </>:null}
+                                  
                                 </Grid>
                               </Paper>
                             </Grid>
@@ -1136,14 +1148,23 @@ function JhaSummary() {
                                         {user.name} {user.badgeNumber !== null && `,${user.badgeNumber}`}
                                       </Typography>
                                     </Grid>
-                                    <Grid item xs={12} md={6}>
-                                      <FormLabel component="legend" className="viewLabel">
-                                        Lessons learned
-                                      </FormLabel>
-                                      <Typography className="viewLabelValue">
-                                        {checkValue(assessment.lessonLearntDetails)}
-                                      </Typography>
-                                    </Grid>
+                                    {/* Are there any lessons learned? */}
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Are there any lessons learned?</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {assessment.anyLessonsLearnt ? assessment.anyLessonsLearnt : "-"}
+                                    </Typography>
+                                  </Grid>
+
+
+                                  {assessment.anyLessonsLearnt === "Yes" ? 
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Lessons learned</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {assessment.lessonLearntDetails ? assessment.lessonLearntDetails : "-"}
+                                    </Typography>
+                                  </Grid> : null}
+                                    
                                     {lessionAction.length > 0 ? 
                                       <Grid item md={12} xs={12}>
                                         <FormLabel component="legend" className="checkRadioLabel">Actions</FormLabel>

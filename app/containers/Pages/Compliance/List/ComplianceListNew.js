@@ -785,7 +785,7 @@ console.log(totalData,"++++++++++")
                                               classes.listingLabelValue
                                             }
                                           >
-                                            data not available in api
+                                            {value['auditNumber'] !== null ? value['auditNumber'] : "-"}
                                           </span>
                                         </Link>
                                       </span>

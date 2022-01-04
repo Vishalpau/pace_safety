@@ -251,6 +251,9 @@ export default function AhaMain() {
   const handleNewAhaPush = async () => {
     //console.log("Ashutosh")
     localStorage.removeItem('fkAHAId')
+    localStorage.removeItem('Assessments')
+    localStorage.removeItem('Approval')
+    localStorage.removeItem('lessonsLearned')
     history.push(
       "/app/pages/aha/assessments/project-details"
     );

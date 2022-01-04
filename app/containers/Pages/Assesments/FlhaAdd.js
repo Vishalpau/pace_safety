@@ -52,7 +52,7 @@ import api from '../../../utils/axios';
 import {
   HEADER_AUTH, SSO_URL, userId
 } from '../../../utils/constants';
-import { getPicklistvalues } from '../../../utils/helper';
+import { getPicklistvalues,handelNotifyToValues } from '../../../utils/helper';
 import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import validate from '../../Validator/jobFormValidation';
 
@@ -448,7 +448,7 @@ const FlhaDetails = (props) => {
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState('paper');
   const [jobTitles, setjobTitles] = useState([]);
-  const [jobForm, setJobForm] = useState({
+  let jobsDefault = {
     fkCompanyId: '',
     fkProjectId: '',
     jobTitle: '',
@@ -492,11 +492,12 @@ const FlhaDetails = (props) => {
     vendor: "",
     vendorReferenceId: "",
     Checked: false
-  });
+  }
+  const [jobForm, setJobForm] = useState(jobsDefault);
 
   const [contractors, setContractors] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
-  const [hazardForm, setHazardForm] = useState([
+  let defaultHazards = [
     {
       hazards: '',
       riskSeverity: '',
@@ -505,7 +506,8 @@ const FlhaDetails = (props) => {
       controlStatus: '',
       control: '',
     },
-  ]);
+  ]
+  const [hazardForm, setHazardForm] = useState(defaultHazards);
 
   let hazardData = {
     "control": "",
@@ -605,6 +607,7 @@ const FlhaDetails = (props) => {
   };
 
   const handleSelectedJobHazardFormTemp = async (tasks) => {
+    
     const temp = [];
 
     const temp1 = tasks.map((task, index) => {
@@ -725,6 +728,22 @@ const FlhaDetails = (props) => {
     setScroll(scrollType);
   };
 
+  const handleClear =()=>{
+    let temp = {...jobsDefault}
+    temp.jobTitle = ''
+    temp.jobDetails = ''
+    temp.hazards= '',
+    temp.riskSeverity= '',
+    temp.riskProbability='',
+    temp.hazardStatus= '',
+    temp.controlStatus= '',
+    temp.control= ''
+    setJobForm(temp)
+    setTaskForm([])
+    setHazardForm(temp)
+    setOpen(false)
+  }
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -827,7 +846,7 @@ const FlhaDetails = (props) => {
       temp[taskIndex].hazards[key].riskRatingColour = '#8da225';
     } else if (riskRating > 9 && riskRating <= 16) {
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Moderate`;
-      temp[taskIndex].hazards[key].riskRatingColour = '#fff82e';
+      temp[taskIndex].hazards[key].riskRatingColour = '#FFBF00';
     } else if (riskRating > 17 && riskRating <= 24) {
       temp[taskIndex].hazards[key].riskRatingLevel = `${riskRating} Substantial`;
       temp[taskIndex].hazards[key].riskRatingColour = '#990000';
@@ -1015,7 +1034,7 @@ const FlhaDetails = (props) => {
                                 color="primary"
                                 startIcon={<AddCircleIcon />}
                                 className={classes.button}
-                                onClick={() => setOpen(false)}
+                                onClick={() => handleClear()}
                               >
                                 New job
                               </Button>
@@ -1379,7 +1398,7 @@ const FlhaDetails = (props) => {
                         });
                       }}
                       InputProps={{ readOnly: true }}
-                      format="yyyy/MM/dd HH:mm"
+                      format="MM/dd/yyyy HH:mm"
                       inputVariant="outlined"
                       disableFuture="true"
                     />

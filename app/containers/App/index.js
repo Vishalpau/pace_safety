@@ -94,7 +94,7 @@ function App() {
         tarId = state.targetId;
         tarProjectStruct = state.projectStructure
         if (comId !== "") {
-          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
+          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarId:tarId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
         }
       }
     }

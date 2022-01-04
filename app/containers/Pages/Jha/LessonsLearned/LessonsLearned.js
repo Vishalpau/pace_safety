@@ -175,14 +175,17 @@ const LessonsLearned = () => {
     if (form.anyLessonsLearnt == "Yes" || form.anyLessonsLearnt == "No") {
       await setSubmitLoader(true)
       delete form["jhaAssessmentAttachment"]
-      if (form["anyLessonsLearnt"] == null) {
-        form["anyLessonsLearnt"] = ""
+      if (form["anyLessonsLearnt"] === "No") {
+        form["lessonLearntDetails"] = ""
       }
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+      localStorage.removeItem('JSAApproval')
+      localStorage.removeItem('JSAAssessment')
+      localStorage.setItem("JSAlessonsLearned" , "Done")
       history.push(SUMMARY_FORM["Summary"])
     }
     else {
-      setError({ LessonDecide: "Please select any one." })
+      setError({ LessonDecide: "Please select any one" })
     }
   }
 
@@ -233,8 +236,10 @@ const LessonsLearned = () => {
                           xs={12}
                           className={classes.formBox}
                         >
-                          <FormControl component="fieldset">
-                          <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?</FormLabel>
+                          <FormControl component="fieldset" error={
+                          error && error["LessonDecide"]
+                        }>
+                          <FormLabel component="legend" className="checkRadioLabel">Are there any lessons learned?*</FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
                               {radioDecide.map((value) => (
                                 <FormControlLabel
@@ -249,6 +254,11 @@ const LessonsLearned = () => {
                                 />
                               ))}
                             </RadioGroup>
+                            {error && error["LessonDecide"] && (
+                            <FormHelperText>
+                              {error["LessonDecide"]}
+                            </FormHelperText>
+                          )}
                           </FormControl>
                         </Grid>
                         {form.anyLessonsLearnt == "Yes" ?

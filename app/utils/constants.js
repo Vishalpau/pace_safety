@@ -27,8 +27,8 @@ export const SSO_URL = getSSOUrl()
 // "https://accounts.pace-os.com/"
 
 // local
-export const LOCAL_SSO_CLIENT_SECRET = 'pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW';
-export const LOCAL_SSO_CLIENT_ID = 'ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1';
+export const LOCAL_SSO_CLIENT_SECRET = 'pLYnuvaKXGkdZLaHf6HtlM9QxS3QLVs2gnrOr6hxZJJgS5PWuPsnGKPTwQcahaJ6gjyNDJ2mpktlePjQkEScFd9V3CTzI0Zdo2Yr38LVwSDXHfH7YOi4oacYregPF5Wz';
+export const LOCAL_SSO_CLIENT_ID = 'yVgvwzSwoYhk0AM2s7XFkr7fbVYK5ZET9JwP5lOo';
 export const LOCAL_LOGIN_URL =
   "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=" + LOCAL_SSO_CLIENT_ID + "&client_secret=" + LOCAL_SSO_CLIENT_SECRET + "&response_type=code";
 
