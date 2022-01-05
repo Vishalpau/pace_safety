@@ -242,6 +242,7 @@ const AssessmentAndDocument = () => {
             tempPerformance[value.checkListGroupName] = checkList;
             return tempPerformance;
         });
+        console.log(tempPerformance,">>>>>>>>>")
 
         await setPerformance(tempPerformance);
         await setDocument(apiCondition);
@@ -722,6 +723,7 @@ const AssessmentAndDocument = () => {
                                     </Paper>
                                 </Grid>
 
+                                {Object.entries(preformace).length > 0 ? (<>
                                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                                     <Typography variant="h6" className="sectionHeading">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30.458" height="31.8" viewBox="0 0 30.458 31.8">
@@ -757,7 +759,7 @@ const AssessmentAndDocument = () => {
                                         </Grid>
                                     </Paper>
                                 </Grid>
-
+                                </>):null }
                                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                                     <Typography variant="h6" className="sectionHeading">
                                         <svg id="twotone-closed_caption-24px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

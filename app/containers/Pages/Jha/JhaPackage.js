@@ -497,6 +497,7 @@ function JhaPackage(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const fetchData = async () => {
+    await setIsLoading(false);
     await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
