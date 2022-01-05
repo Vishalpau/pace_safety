@@ -7,7 +7,7 @@ export const JHA_FORM = {
 }
 
 export const JHA_FORM_COMBINE = {
-    "Job details": `/app/pages/Jha/assessments/project-details/`,
+    "Job details": `/app/pages/jha/assessments/Job-hazards`,
     "Job hazard analysis": `/app/pages/Jha/assessments/DocumentsNotifications/`
 }
 
