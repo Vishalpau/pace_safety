@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {
-    KeyboardDateTimePicker, MuiPickersUtilsProvider
+    KeyboardDateTimePicker, MuiPickersUtilsProvider,KeyboardDatePicker
 } from '@material-ui/pickers';
 import axios from 'axios';
 import { PapperBlock } from 'dan-components';
@@ -934,12 +934,12 @@ const JobDetails = (props) => {
                                         className={classes.formBox}
                                     >
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                            <KeyboardDateTimePicker
+                                            <KeyboardDatePicker
                                                 onClick={(e) => setIsDateShow(true)}
                                                 className={classes.formControl}
                                                 fullWidth
                                                 id="jha_assessment_date"
-                                                label="Date *"
+                                                label="Date*"
                                                 format="MM/dd/yyyy"
                                                 value={form.jhaAssessmentDate}
                                                 onChange={(e) => {

@@ -26,6 +26,8 @@ import {
 } from '../../../utils/constants';
 import ActionTracker from "../../Forms/ActionTracker";
 import ActionShow from "../../Forms/ActionShow"
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -160,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
     '& tr th': {
       backgroundColor: '#06425c',
       color: '#ffffff',
-      lineHeight: '0.5rem',
+      //    lineHeight: '0.5rem',
     },
   },
   headerBackground: {
@@ -446,517 +448,526 @@ const FlhaDetails = (props) => {
 
   return (
     <div>
-      <PapperBlock title="XFLHA - Audit Check" icon="ion-ios-create-outline" desc="" color="primary">
-        {pageloading == true ?
-          <Paper elevation={3}>
-            <Grid container spacing={1}>
-              <Grid item md={12} xs={12}>
-                <Box padding={3}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Grid container spacing={3}>
-                        <Grid item md={6} sm={6} xs={12}>
+      <CustomPapperBlock title="FLHA - Initial Assessment" icon={flhaLogoSymbol} whiteBg>
+        <Grid container spacing={3}>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg id="baseline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                <path id="Path_152" data-name="Path 152" d="M0,0H24V24H0Z" fill="none" />
+                <path id="Path_153" data-name="Path 153" d="M19,3H14.82A2.988,2.988,0,0,0,9.18,3H5A2.006,2.006,0,0,0,3,5V19a2.006,2.006,0,0,0,2,2H19a2.006,2.006,0,0,0,2-2V5A2.006,2.006,0,0,0,19,3ZM12,3a1,1,0,1,1-1,1A1,1,0,0,1,12,3Zm2,14H7V15h7Zm3-4H7V11H17Zm0-4H7V7H17Z" fill="#06425c" />
+              </svg> Audit check
+            </Typography>
+          </Grid>
+          {pageloading == true ?
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Paper elevation={1} className="paperSection">
+                <Grid container spacing={3}>
+                  <Grid item md={6} sm={6} xs={12}>
 
-                          {!isLock ?
-                            <Autocomplete
-                              id="combo-box-demo"
-                              className={classes.mtTen}
-                              options={users}
-                              defaultValue={auditName}
-                              getOptionLabel={(option) => option.title}
-                              onChange={(e) => setAuditForm({ ...auditForm, auditor: e.currentTarget.innerHTML })}
-                              renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
-                            />
-                            : 'Auditor Name: ' + auditName}
-                          <div style={{ color: "red" }}>{error.auditor}</div>
+                    {!isLock ?
+                      <Autocomplete
+                        id="combo-box-demo"
+                        className={classes.mtTen}
+                        options={users}
+                        defaultValue={auditName}
+                        getOptionLabel={(option) => option.title}
+                        onChange={(e) => setAuditForm({ ...auditForm, auditor: e.currentTarget.innerHTML })}
+                        renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
+                      />
+                      : 'Auditor Name: ' + auditName}
+                    <div style={{ color: "red" }}>{error.auditor}</div>
 
-                          {/* <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div> */}
+                    {/* <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div> */}
 
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TableContainer>
-                            <Table className={classes.table} aria-label="simple table">
-                              <TableHead className={classes.tableHeading}>
-                                <TableRow>
-                                  <TableCell align="left">Check</TableCell>
-                                  <TableCell align="left">Control and isolation method</TableCell>
-                                  <TableCell align="left">Yes</TableCell>
-                                  <TableCell align="left">No</TableCell>
-                                  <TableCell align="left">Action</TableCell>
-                                  <TableCell align="left">Needs improvements (Specify)</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-
-                                <TableRow>
-                                  <TableCell align="left">1</TableCell>
-                                  <TableCell align="left">
-                                    Identification information complete
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step1 == 'Yes' ? true : false} onClick={() => setStep1('Yes')} />
-
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id1"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd1.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-                                    </Typography>
-                                    )}
-
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      onChange={(e) => setRemark1(e.currentTarget.value)}
-                                      value={remark1}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">2</TableCell>
-                                  <TableCell align="left">
-                                    Job described accurately
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step2 == 'Yes' ? true : false} onClick={() => setStep2('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step2 == 'No' ? true : false} onClick={() => setStep2('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id2"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd2.map(i1 => <Typography className={classes.labelValueName}>
-
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark2}
-                                      onChange={(e) => setRemark2(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">3</TableCell>
-                                  <TableCell align="left">
-                                    Critical tasks identified
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step3 == 'Yes' ? true : false} onClick={() => setStep3('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step3 == 'No' ? true : false} onClick={() => setStep3('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id3"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd3.map(i1 => <Typography className={classes.labelValueName}>
-
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark3}
-                                      onChange={(e) => setRemark3(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">4</TableCell>
-                                  <TableCell align="left">
-                                    Applicable hazards identified
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step4 == 'Yes' ? true : false} onClick={() => setStep4('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step4 == 'No' ? true : false} onClick={() => setStep4('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id4"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd4.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark4}
-                                      onChange={(e) => setRemark4(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">5</TableCell>
-                                  <TableCell align="left">
-                                    Controlled developed for hazards identified
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step5 == 'Yes' ? true : false} onClick={() => setStep5('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step5 == 'No' ? true : false} onClick={() => setStep5('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id5"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd5.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark5}
-                                      onChange={(e) => setRemark5(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">6</TableCell>
-                                  <TableCell align="left">
-                                    All present energies identified at the job site
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step6 == 'Yes' ? true : false} onClick={() => setStep6('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step6 == 'No' ? true : false} onClick={() => setStep6('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id6"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd6.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark6}
-                                      onChange={(e) => setRemark6(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">7</TableCell>
-                                  <TableCell align="left">
-                                    Energies isolated or controlled
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step7 == 'Yes' ? true : false} onClick={() => setStep7('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step7 == 'No' ? true : false} onClick={() => setStep7('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id7"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd7.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark7}
-                                      onChange={(e) => setRemark7(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">8</TableCell>
-                                  <TableCell align="left">
-                                    Re-assesment of hazards completed after pause and resart
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'Yes' ? true : false} onClick={() => setStep8('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'No' ? true : false} onClick={() => setStep8('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id8"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd8.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark8}
-                                      onChange={(e) => setRemark8(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                                <TableRow>
-                                  <TableCell align="left">9</TableCell>
-                                  <TableCell align="left">
-                                    Agreement signed
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step9 == 'Yes' ? true : false} onClick={() => setStep9('Yes')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step9 == 'No' ? true : false} onClick={() => setStep9('No')} />
-                                  </TableCell>
-                                  <TableCell align="left">
-
-                                    <ActionTracker
-                                      actionContext="flha:audit"
-                                      enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id9"]}`}
-                                      setUpdatePage={setUpdatePage}
-                                      updatePage={updatePage}
-                                      fkCompanyId={fkCompanyId}
-                                      fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                      fkProjectStructureIds={projectStr}
-                                      createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
-                                      handelShowData={setActions}
-                                    />
-                                    {idd9.map(i1 => <Typography className={classes.labelValueName}>
-                                      <ActionShow
-                                        action={{ id: i1["id"], number: i1["actionNumber"] }}
-                                        companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
-                                        projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
-                                        updatePage={updatePage}
-                                      />
-
-                                    </Typography>
-                                    )}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    <TextField
-                                      variant="outlined"
-                                      id="immediate-actions"
-                                      multiline
-                                      rows="1"
-                                      label=""
-                                      value={remark9}
-                                      onChange={(e) => setRemark9(e.currentTarget.value)}
-                                      className={classes.fullWidth}
-                                    />
-                                  </TableCell>
-                                </TableRow>
-
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </Grid>
-                        <Grid item md={12} xs={12}>
-                          <Box marginTop={1}>
-                            <div className={classes.loadingWrapper}>
-                              {isLock ? '' : <Button size="medium" variant="contained" color="primary" className={classes.spacerRight} onClick={() => AuditCheckSubmit()} disabled={loading}>
-                                Submit
-                              </Button>}
-                              {loading && (
-                                <CircularProgress
-                                  size={24}
-                                  className={classes.buttonProgress}
-                                />
-                              )}
-                            </div>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Grid>
                   </Grid>
-                </Box>
+                  <Grid item xs={12}>
+                    <TableContainer>
+                      <Table className={classes.table} aria-label="simple table">
+                        <TableHead className={classes.tableHeading}>
+                          <TableRow>
+                            <TableCell align="left">Check</TableCell>
+                            <TableCell align="left">Control and isolation method</TableCell>
+                            <TableCell align="left">Yes</TableCell>
+                            <TableCell align="left">No</TableCell>
+                            <TableCell align="left">Action</TableCell>
+                            <TableCell align="left">Needs improvements (Specify)</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+
+                          <TableRow>
+                            <TableCell align="left">1</TableCell>
+                            <TableCell align="left">
+                              Identification information complete
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step1 == 'Yes' ? true : false} onClick={() => setStep1('Yes')} />
+
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step1 == 'No' ? true : false} onClick={() => setStep1('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id1"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd1.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+                              </Typography>
+                              )}
+
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                onChange={(e) => setRemark1(e.currentTarget.value)}
+                                value={remark1}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">2</TableCell>
+                            <TableCell align="left">
+                              Job described accurately
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step2 == 'Yes' ? true : false} onClick={() => setStep2('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step2 == 'No' ? true : false} onClick={() => setStep2('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id2"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd2.map(i1 => <Typography className={classes.labelValueName}>
+
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark2}
+                                onChange={(e) => setRemark2(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">3</TableCell>
+                            <TableCell align="left">
+                              Critical tasks identified
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step3 == 'Yes' ? true : false} onClick={() => setStep3('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step3 == 'No' ? true : false} onClick={() => setStep3('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id3"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd3.map(i1 => <Typography className={classes.labelValueName}>
+
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark3}
+                                onChange={(e) => setRemark3(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">4</TableCell>
+                            <TableCell align="left">
+                              Applicable hazards identified
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step4 == 'Yes' ? true : false} onClick={() => setStep4('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step4 == 'No' ? true : false} onClick={() => setStep4('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id4"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd4.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark4}
+                                onChange={(e) => setRemark4(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">5</TableCell>
+                            <TableCell align="left">
+                              Controlled developed for hazards identified
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step5 == 'Yes' ? true : false} onClick={() => setStep5('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step5 == 'No' ? true : false} onClick={() => setStep5('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id5"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd5.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark5}
+                                onChange={(e) => setRemark5(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">6</TableCell>
+                            <TableCell align="left">
+                              All present energies identified at the job site
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step6 == 'Yes' ? true : false} onClick={() => setStep6('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step6 == 'No' ? true : false} onClick={() => setStep6('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id6"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd6.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark6}
+                                onChange={(e) => setRemark6(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">7</TableCell>
+                            <TableCell align="left">
+                              Energies isolated or controlled
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step7 == 'Yes' ? true : false} onClick={() => setStep7('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step7 == 'No' ? true : false} onClick={() => setStep7('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id7"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd7.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark7}
+                                onChange={(e) => setRemark7(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">8</TableCell>
+                            <TableCell align="left">
+                              Re-assesment of hazards completed after pause and resart
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'Yes' ? true : false} onClick={() => setStep8('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'No' ? true : false} onClick={() => setStep8('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id8"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd8.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark8}
+                                onChange={(e) => setRemark8(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                          <TableRow>
+                            <TableCell align="left">9</TableCell>
+                            <TableCell align="left">
+                              Agreement signed
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step9 == 'Yes' ? true : false} onClick={() => setStep9('Yes')} />
+                            </TableCell>
+                            <TableCell align="left">
+                              <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step9 == 'No' ? true : false} onClick={() => setStep9('No')} />
+                            </TableCell>
+                            <TableCell align="left">
+
+                              <ActionTracker
+                                actionContext="flha:audit"
+                                enitityReferenceId={`${localStorage.getItem("flhaId")}:${objId["id9"]}`}
+                                setUpdatePage={setUpdatePage}
+                                updatePage={updatePage}
+                                fkCompanyId={fkCompanyId}
+                                fkProjectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                fkProjectStructureIds={projectStr}
+                                createdBy={JSON.parse(localStorage.getItem('userDetails')).id}
+                                handelShowData={setActions}
+                              />
+                              {idd9.map(i1 => <Typography className={classes.labelValueName}>
+                                <ActionShow
+                                  action={{ id: i1["id"], number: i1["actionNumber"] }}
+                                  companyId={JSON.parse(localStorage.getItem("company")).fkCompanyId}
+                                  projectId={JSON.parse(localStorage.getItem("projectName")).projectName.projectId}
+                                  updatePage={updatePage}
+                                />
+
+                              </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <TextField
+                                variant="outlined"
+                                id="immediate-actions"
+                                multiline
+                                rows="1"
+                                label=""
+                                value={remark9}
+                                onChange={(e) => setRemark9(e.currentTarget.value)}
+                                className={classes.fullWidth}
+                              />
+                            </TableCell>
+                          </TableRow>
+
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                </Grid>
+              </Paper>
+              <Grid item md={12} xs={12}>
+                <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+                  <div className={classes.loadingWrapper}>
+                    {isLock ? '' : <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => AuditCheckSubmit()} disabled={loading}>
+                      Submit
+                    </Button>}
+                    {loading && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
+                  <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
+                    onClick={() => {
+                      history.push("/app/pages/assesments/xflha");
+                    }}>
+
+                    Cancel
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Paper>
-          : "Loading..."}
-      </PapperBlock>
+            : "Loading..."}
+        </Grid>
+      </CustomPapperBlock>
     </div>
   );
 };

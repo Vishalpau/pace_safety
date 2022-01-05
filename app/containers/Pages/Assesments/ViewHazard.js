@@ -334,7 +334,7 @@ const FlhaDetails = (props) => {
       colorRating = '#8da225'
 
     } else if (rating === "12 Moderate" || rating === "16 Moderate") {
-      colorRating = '#fff82e'
+      colorRating = '#FFBF00'
 
     } else if (rating === "18 Substantial" || rating === "24 Substantial") {
       colorRating = '#990000'
@@ -358,7 +358,6 @@ const FlhaDetails = (props) => {
   const [notificationSentValue, setNotificationSentValue] = useState([])
 
   const fetchNotificationSent = async (notifyTo) => {
-    console.log(notifyTo,'viraj')
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
@@ -369,7 +368,6 @@ const FlhaDetails = (props) => {
         headers: HEADER_AUTH,
       };
       const res = await api(config);
-      console.log(res, 'vishal')
       if (res.status === 200) {
         let data = []
         let user = notifyTo.split(",");
@@ -383,7 +381,7 @@ const FlhaDetails = (props) => {
         }
         await setNotificationSentValue(data);
       }
-    } catch (error) { console.log(error,'error')}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -623,7 +621,7 @@ const FlhaDetails = (props) => {
                         </Typography>
                       </Grid>
                       <Grid item xs={12} className={classes.question}>
-                        <FormLabel className="viewLabel" component="legend">Date & Time</FormLabel>
+                        <FormLabel className="viewLabel" component="legend">Date</FormLabel>
                         <Typography >
                           {moment(flha.dateTimeFlha).format(
                             'Do MMM YYYY'
