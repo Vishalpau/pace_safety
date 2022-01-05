@@ -742,11 +742,18 @@ const FlhaDetails = () => {
   };
 
   const handelVisualConfirmation = (index, value) => {
-
+console.log(value)
     let temp = [...jobVisualConfirmation]
+    if(value==='Yes'){
     temp[index].visualConfirmationType = visualType[index]
     temp[index].visualConfirmationStatus = value
     setJobVisualConfirmation(temp)
+    }else{
+      temp[index].visualConfirmationAttachment = null 
+      temp[index].visualConfirmationType = visualType[index]
+    temp[index].visualConfirmationStatus = value
+    setJobVisualConfirmation(temp)
+    }
   }
 
   const handelVisualAttachment = (index, e, type) => {
@@ -1477,7 +1484,6 @@ const FlhaDetails = () => {
                                     <div className={classes.spacer}>
                                       <FormControl component="fieldset">
                                         <RadioGroup className={classes.radioInline}>
-                                          {console.log(value, 'value')}
                                           {radioDecide.map((value) => (
                                             <FormControlLabel
                                               value={value}
@@ -1492,7 +1498,9 @@ const FlhaDetails = () => {
                                       </FormControl>
                                     </div>
                                   </TableCell>
+
                                   <TableCell align="left">
+                                  
                                     <input
                                       className="tableFileAttach"
                                       id="icon-button-file"
@@ -1505,12 +1513,13 @@ const FlhaDetails = () => {
                                       }}
                                       disabled={handelJobVisualAttachment(index)}
                                     />
-
+                                   
                                     {jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
                                       null ? null : typeof jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
                                         "string" ? (
                                       <Attachment value={jobVisualConfirmation[index]["visualConfirmationAttachment"]} />
                                     ) : null}
+                                   
 
                                     {/* <IconButton aria-label="delete" align="right">
                                       <DeleteIcon onClick={(e) => handelVisualAttachmentRemove(index)} />

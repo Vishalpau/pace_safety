@@ -340,40 +340,9 @@ class SimpleTabs extends React.Component {
                         {(flha.jobDetails) ? flha.jobDetails : '-'}
                       </Typography>
                     </Grid>
-                    {/* <Grid item xs={6}>
-                      <FormLabel component="legend" className="viewLabel">Reference</FormLabel>
-                      <Typography>
-                        {flha.referenceNumber !== 'undefined' ? flha.referenceNumber : '-'}
-                      </Typography>
-                    </Grid> */}
                   </Grid>
                 </Paper>
               </Grid>
-
-              {/* <Grid item xs={12}>
-                  <FormLabel component="legend">Date</FormLabel>
-                  <Typography>
-                    {moment(this.state.flha.dateTimeFlha).format(
-                      'Do MMMM YYYY, h:mm:ss a'
-                    )}
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={6}>
-                  <FormLabel component="legend">Attachment</FormLabel>
-                  <Typography>
-
-                  </Typography>
-                  {flha.attachment ? (
-                    <Typography >
-                      {flha.attachment ===
-                        null ? null : typeof flha.attachment ===
-                          "string" ? (
-                        <Attachment value={flha.attachment} />
-                      ) : null}
-                    </Typography>) : ("-")}
-                </Grid> */}
-
             </Grid>
             <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
@@ -404,7 +373,6 @@ class SimpleTabs extends React.Component {
                   <Typography variant="h5" className="rightSectiondetail">
                     Quick Actions
                   </Typography>
-                  {/* <Divider /> */}
                   <List component="nav" aria-label="main mailbox folders">
                     <ListItem
                       button
@@ -414,15 +382,12 @@ class SimpleTabs extends React.Component {
                         <CommentIcon />
                       </ListItemIcon>
                       <Link
-                        // onClick={()=>.push('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
                         onClick={() => this.redirectToHome('/app/pages/assesments/flha/' + this.props.match.params.id + '/revise')}
                         variant="subtitle"
                       >
                         <ListItemText primary="Revise FLHA" />
                       </Link>
                     </ListItem>
-                    {/* <Divider /> */}
-
                     <ListItem
                       button
                     >
@@ -437,7 +402,9 @@ class SimpleTabs extends React.Component {
                       </Link>
                     </ListItem>
 
-                    <ListItem>
+                    <ListItem
+                    button
+                    >
                       <ListItemIcon>
                         <CloseIcon />
                       </ListItemIcon>
