@@ -706,7 +706,6 @@ function ComplianceListNew(props) {
     }).catch((error) => console.log(error))
   }
 
-console.log(totalData,"++++++++++")
   useEffect(() => {
     fetchAllComplianceData();
   }, [props.projectName.breakDown,props.compliance,props.search,props.status]);

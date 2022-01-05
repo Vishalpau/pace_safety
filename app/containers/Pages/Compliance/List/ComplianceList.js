@@ -146,7 +146,6 @@ function Actions(props) {
   const handelViewTabel = (e) => {
     setListToggle(true);
   };
-  console.log(allComplianceData, "allComplianceData");
   const [value, setValue] = React.useState(2);
 
   // const handleChange = (event, newValue) => {
@@ -208,12 +207,7 @@ function Actions(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
       );
-
-      console.log(
-        res,
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      );
-      const result = res.data.data.results;
+      const result = res.data.data.results.results;
       await setAllComplianceData(result);
       await setTotalData(res.data.data.metadata.count);
       await setPageData(res.data.data.metadata.count / 25);
@@ -224,7 +218,7 @@ function Actions(props) {
         `api/v1/audits/?companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
       );
 
-      const result = res.data.data.results;
+      const result = res.data.data.results.results;
       await setAllComplianceData(result);
       await setTotalData(res.data.data.metadata.count);
       await setPageData(res.data.data.metadata.count / 25);
@@ -262,7 +256,7 @@ function Actions(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
       );
-      await setAllComplianceData(res.data.data.results);
+      await setAllComplianceData(res.data.data.results.results);
       await setPage(value);
     } else {
       const res = await api.get(
@@ -270,7 +264,7 @@ function Actions(props) {
           props.search
         }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
       );
-      await setAllComplianceData(res.data.data.results);
+      await setAllComplianceData(res.data.data.results.results);
       await setPage(value);
     }
   };
