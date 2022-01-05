@@ -786,6 +786,7 @@ const FlhaDetails = (props) => {
       setJobForm(temp)
       setTaskForm([])
       setHazardForm(temp)
+      setjobTitles([])
 
     }
 

@@ -742,7 +742,7 @@ const FlhaDetails = () => {
   };
 
   const handelVisualConfirmation = (index, value) => {
-console.log(value)
+
     let temp = [...jobVisualConfirmation]
     if(value==='Yes'){
     temp[index].visualConfirmationType = visualType[index]
