@@ -731,28 +731,22 @@ function JhaSummary() {
                                     )):"-"}
                                   </Grid>
 
-                                  <Grid item xs={12} md={12} >
-                                    <FormLabel className="viewLabel" component="legend">Job hazard</FormLabel>
+                                  <Grid item xs={12} md={12} className="paddBRemove">
+                                    <FormLabel className="checkRadioLabel" component="legend">Job hazard</FormLabel>
                                   </Grid>
-                                  <Grid item xs={12} md={12}>
-                                    {false &&
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        className={Fonts.labelName}
-                                      >
-                                        Hazards Group
-                                      </Typography>
-                                      }
-                                      {
-                                      hazard !== undefined && hazard.map((value, index) => (
-                                        <div>
-                                        <Typography className="viewLabelValue">
-                                            {checkValue(value.hazard)}
-                                          </Typography>
-                                        </div>
-                                      ))
-                                    }
+                                  <Grid item xs={12} md={6}>
+                                    
+                                      {hazard.length > 0 ? hazard.map((item, index) => (
+                                      <>
+                                        <ul
+                                          className="viewLabelValue"
+                                          key={index}
+                                        >
+                                          {<li>{item.hazard ? item.hazard : "-"}</li>}
+                                        </ul>
+                                      </>
+                                    )) : "-"}
+                                      
                                   </Grid>
                                 </Grid>
                               </Paper>
