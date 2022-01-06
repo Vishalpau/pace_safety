@@ -360,9 +360,15 @@ export default function JhaSearchSection() {
   const [status, setStatus] = useState("")
   const [assessment, setAssessments] = useState("My Assessments")
 
-  const handelSearch = (e) => {
-    setSearch(e.target.value)
+  let timer
+  let debounce = ( v, d) => {
+    return function() {
+      clearTimeout(timer)
+      timer = setTimeout(() => setSearch(v), d)
+    }
   }
+
+  const handelSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
