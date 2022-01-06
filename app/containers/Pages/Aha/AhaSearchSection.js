@@ -375,9 +375,17 @@ export default function SimpleTabs(props) {
   const [assessments, setAssessments] = useState("My Assessments");
   // const [searchIncident, setSeacrhIncident] = useState("")
   const [status, setStatus] = useState('')
-  const handleSearch = (e) => {
-    setSeacrhIncident(e.target.value);
-  };
+
+  let timer
+  let debounce = ( v, d) => {
+    return function() {
+      clearTimeout(timer)
+      timer = setTimeout(() => setSeacrhIncident(v), d)
+    }
+  }
+
+  const handleSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
