@@ -186,6 +186,7 @@ function UserMenu(props) {
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
+      console.log(data,'data')
     setSubscriptions(data);
     setIsLoading(true)
   }
@@ -285,6 +286,7 @@ function UserMenu(props) {
               {subscriptions.map((subscription, key) => (
                 (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div key={key}>
+                    {console.log(subscription.appName,'subscriptions')}
                     <ListItemText
                       className={classnames.appDrawerLable}
                       primary={subscription.appName}

@@ -123,7 +123,7 @@ export const HEADER_AUTH = { Authorization: `Bearer ${access_token}` };
 // Header authenticatuon
 export const HEADER_AUTH_ACTION = { Authorization: `Bearer ${access_token_action}` };
 
-// Menu file constantsz
+// Menu file constants
 export const APPCODE = "safety"
 export const adminUser_Dev = "Manager"
 export const adminUser_Prod = "Safety Admin"

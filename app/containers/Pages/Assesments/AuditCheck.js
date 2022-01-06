@@ -957,7 +957,7 @@ const FlhaDetails = (props) => {
                   </div>
                   <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
                     onClick={() => {
-                      history.push("/app/pages/assesments/xflha");
+                      history.push("/app/pages/assesments/xflha/"+ localStorage.getItem('flhaId'));
                     }}>
 
                     Cancel
