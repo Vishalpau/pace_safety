@@ -1008,7 +1008,7 @@ function AhaSummary() {
                                         <FormLabel component="legend" className="viewLabel">Approved on</FormLabel>
                                         <Typography className="viewLabelValue">
                                           {ahaData.wrpApprovalDateTime ? moment(ahaData["wrpApprovalDateTime"]).format(
-                                            "Do MMMM YYYY"
+                                            "Do MMM YYYY"
                                           ) : "-"}
                                         </Typography>
                                       </Grid>
@@ -1031,7 +1031,7 @@ function AhaSummary() {
                                             <FormLabel component="legend" className="viewLabel">Approved on</FormLabel>
                                             <Typography className="viewLabelValue">
                                               {ahaData.sapApprovalDateTime ? moment(ahaData["sapApprovalDateTime"]).format(
-                                                "Do MMMM YYYY"
+                                                "Do MMM YYYY"
                                               ) : "-"}
                                             </Typography>
                                           </Grid>

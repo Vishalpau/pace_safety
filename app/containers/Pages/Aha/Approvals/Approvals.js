@@ -248,7 +248,7 @@ const Approvals = () => {
   };
 
   const handleClose = () => {
-    setOpen(false)
+    setProjectOpen(false)
   }
   const handelSubmit = async () => {
     const { error, isValid } = ApprovalValidator(form, actionData)
