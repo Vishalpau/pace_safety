@@ -645,8 +645,8 @@ bytes
                     label="Client rep number"
                     name="clientrepnu"
                     id="clientrepnu"
-                    defaultValue=""
                     fullWidth
+                    value={form.hseRepNumber ? form.hseRepNumber : ""}
                     onChange={(e) => setForm({...form,hseRepNumber:e.target.value})}
                     variant="outlined"
                     className="formControl"

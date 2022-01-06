@@ -644,6 +644,7 @@ function ComplianceListNew(props) {
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
+    if(props.type === "Categories" || props.type === "All"){
     if(props.compliance === "My Inspections"){
       const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
       const result = res.data.data.results.results
@@ -661,6 +662,26 @@ function ComplianceListNew(props) {
             await setPageData(res.data.data.results.count / 25)
             let pageCount = Math.ceil(res.data.data.results.count / 25)
             await setPageCount(pageCount)
+    }}else{
+      if(props.compliance === "My Inspections"){
+        const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type}&createdBy=${createdBy}`);
+        const result = res.data.data.results.results
+        await setAllComplianceData(result)
+        await setTotalData(res.data.data.results.count)
+              await setPageData(res.data.data.results.count / 25)
+              let pageCount = Math.ceil(res.data.data.results.count / 25)
+              await setPageCount(pageCount)
+      }else{
+        const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type}&projectStructureIds=${fkProjectStructureIds}`);
+        
+        const result = res.data.data.results.results
+        await setAllComplianceData(result)
+        await setTotalData(res.data.data.results.count)
+              await setPageData(res.data.data.results.count / 25)
+              let pageCount = Math.ceil(res.data.data.results.count / 25)
+              await setPageCount(pageCount)
+      }
+
     }
     
     await setIsLoading(true);
@@ -708,7 +729,7 @@ function ComplianceListNew(props) {
 
   useEffect(() => {
     fetchAllComplianceData();
-  }, [props.projectName.breakDown,props.compliance,props.search,props.status]);
+  }, [props.projectName.breakDown,props.compliance,props.search,props.status,props.type]);
 
   return (
     <>
@@ -716,7 +737,7 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {isLoading ? (
+              {isLoading ? (allComplianceData.length > 0 ?
                 allComplianceData.map((value, index) => (
                   <Card variant="outlined" className={classes.card}>
                     <CardContent>
@@ -841,24 +862,7 @@ function ComplianceListNew(props) {
 
                           <Grid item sm={12} xs={12}>
                             <Grid container spacing={3}>
-                              <Grid item sm={3} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  gutterBottom
-                                  color="textPrimary"
-                                  className={classes.listingLabelName}
-                                >
-                                  Type:
-                                </Typography>
-
-                                <Typography
-                                  gutterBottom
-                                  className={classes.listingLabelValue}
-                                >
-                                  {/* {item[1]["incidentReportedByName"]} */}
-                                  Not found
-                                </Typography>
-                              </Grid>
+                              
                               <Grid item sm={3} xs={12}>
                                 <Typography
                                   variant="body1"
@@ -1031,7 +1035,9 @@ function ComplianceListNew(props) {
                       </Grid>
                     </CardActions>
                   </Card>
-                ))
+                 )): <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
+                      Sorry, no matching records found
+                    </Typography>
               ) : (
                 <Loader />
               )}

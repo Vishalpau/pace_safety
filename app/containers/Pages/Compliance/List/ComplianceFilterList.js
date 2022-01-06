@@ -19,7 +19,9 @@ import ComplianceList from './ComplianceList';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import '../../../../styles/custom/customheader.css';
-
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const drawerWidth = 240;
 
@@ -238,13 +240,27 @@ const styles = theme => ({
     padding: '0px 12px !important',
   },
   },
+  listroot: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: '#06425c',
+    '& .MuiListItemText-root':{
+      whiteSpace: 'normal',
+    },
+  },
+  nested: {
+    paddingLeft: theme.spacing(2),
+    backgroundColor: '#7692a4'
+  },
+  selected: {backgroundColor: '#f47607'},
   });
 
 class ComplianceFilterList extends React.Component {
   state = {
     open: false,
     anchor: 'right',
-    button:true
+    button:true,
+    type : "Categories"
   };
 
   handleDrawerOpen = () => {
@@ -263,6 +279,10 @@ class ComplianceFilterList extends React.Component {
   handleClickButton=()=>{
     this.setState({button:!this.state.button})
   }
+
+  handleType = (value) => {
+    this.setState({ type: value });  
+  };
 
   render() {
     const { classes, theme } = this.props;
@@ -287,14 +307,53 @@ class ComplianceFilterList extends React.Component {
           variant="h5"
           classNames={classes.floatL}
           >
-          Categories
+          {this.state.type === "All" ? "Categories" : this.state.type}
           </Typography>
 		
           
         </div>
         <Divider />
         {/* <List className={classes.drawerList}>{MenuData}</List> */}
-        <MenuData />
+        {/* <MenuData /> */}
+        <List
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+            className={classes.listroot}
+          >
+            <ListItem button className={this.state.type === "All" || this.state.type === "Categories"?  classes.selected : classes.nested} onClick={() => this.handleType("All")}>
+              <ListItemText primary="All" />
+            </ListItem>
+            <ListItem button className={this.state.type === "Company/Contractor Inspection" ?  classes.selected : classes.nested} onClick={() => this.handleType("Company/Contractor Inspection")}>
+              <ListItemText primary="Company/Contractor Inspection" />
+            </ListItem>
+            <ListItem button className={this.state.type === "Area/Focussed Inspection" ?  classes.selected : classes.nested} onClick={() => this.handleType("Area/Focussed Inspection")}>
+              <ListItemText primary="Area/Focussed Inspection" />
+            </ListItem>
+            <ListItem button className={this.state.type === "General Inspection" ?  classes.selected : classes.nested} onClick={() => this.handleType("General Inspection")}>
+              <ListItemText primary="General Inspection" />
+            </ListItem>
+            {/* <ListItem button onClick={handleClick}  className={classes.selected}>
+              <ListItemText primary="Staff Commission" />
+              {open ? <RemoveIcon /> : <AddIcon />}
+            </ListItem>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>            
+                  <ListItemText primary="Starred" />
+                </ListItem>
+              </List>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  <ListItemText primary="Starred" />
+                </ListItem>
+              </List>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  <ListItemText primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse> */}
+          </List>
       </Drawer>
       </div>
     );
@@ -353,7 +412,7 @@ class ComplianceFilterList extends React.Component {
                 className={classes.catButton}
                 onClick={()=>{this.handleClickButton()}}
               >
-                {!this.state.open&&<Typography variant="h5">Categories</Typography>}{afterBtn}
+                {!this.state.open&&<Typography variant="h5">{this.state.type === "All" ? "Categories" : this.state.type}</Typography>}{afterBtn}
               
               </Button>
               </Grid>
@@ -372,6 +431,7 @@ class ComplianceFilterList extends React.Component {
             <ComplianceList 
               compliance={this.props.compliance} 
               search={this.props.search}
+              type={this.state.type}
              />
           </main>
           {after}

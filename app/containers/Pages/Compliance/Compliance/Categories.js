@@ -32,7 +32,7 @@ import Paper from '@material-ui/core/Paper';
 import FormSideBar from "../../../Forms/FormSideBar";
 import {COMPLIANCE} from "../Constants/Constants"
 import {useParams , useHistory} from "react-router-dom"
-
+import api from "../../../../utils/axios";
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -146,6 +146,9 @@ const useStyles = makeStyles((theme) => ({
 const Categories = () => {
 
   const history = useHistory();
+  const [checkGroups, setCheckListGroups] = useState([])
+  const [checkData, setCheckData] = useState([])
+  const [checkGroupsData, setCheckListGroupsData] = useState([])
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -171,6 +174,63 @@ const Categories = () => {
   }
 
   const classes = useStyles();
+  const fetchCheklist = async () => {
+    let temp = {}
+    const res = await api.get(`/api/v1/core/checklists/companies/8/projects/15/compliance/`)
+    const result=res.data.data.results
+    
+    result.map((value) => {
+      temp[value["checkListName"]] = []
+      value.checklistValues.map((checkListOptions) => {
+        let checkObj = {}
+        if (checkListOptions !== undefined) {
+          checkObj["inputLabel"] = checkListOptions.inputLabel
+          checkObj["inputValue"] = checkListOptions.inputValue
+          checkObj["id"] = checkListOptions.id
+          temp[value["checkListName"]].push(checkObj)
+        }
+      })
+    })
+    await setCheckListGroups(temp)
+  }
+
+  const handlePhysicalHazards = async(e, value, inputLabel,index) => {
+    let temp = {...checkData}
+    if (e.target.checked == false) {
+      delete temp[value] 
+    }else{
+      temp[value] = inputLabel
+    }
+    await setCheckData(temp)
+  }
+
+  const handleGroups = async (e , key , inputLabel , id) => {
+    let temp = [...checkGroupsData]
+    if (e.target.checked == false) {
+      temp.map((ahaValue, index) => {   
+          temp.splice(index, 1);
+      })
+    }
+    else if (e.target.checked) {
+      temp.push({
+        "hazard": key,
+        "risk": inputLabel,
+        "severity": "",
+        "probability": "",
+        "riskRating": "",
+        "control": "",
+        "residualRisk": "",
+        "approveToImplement": "",
+        "monitor": "",
+        "status": "Active",
+        
+      })
+    }
+    setCheckListGroupsData(temp)
+  }
+  useEffect(() => {
+    fetchCheklist()
+  },[])
   return (
     <>
       <Grid container spacing={3} className={classes.observationNewSection}>
@@ -194,13 +254,29 @@ const Categories = () => {
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Paper elevation={1} className="paperSection">
                   <Grid container spacing={3}>
-                    <Grid
-                      item
-                      md={6}
-                      xs={12}
-                    >
+                    
+                      
+                        
+                          <FormControl component="fieldset">
                       <FormLabel className="checkRadioLabel" component="legend">Group name</FormLabel>
-                      <FormGroup className={classes.customCheckBoxList}>
+                          {/* <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel> */}
+                            <FormGroup className={classes.customCheckBoxList}>
+                              {Object.entries(checkGroups).map(([key, value] , index)  => (
+                                <FormControlLabel
+                                  control={<Checkbox name={key} icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                              checkedIcon={<CheckBoxIcon fontSize="small" />}
+                               />}
+                                  className="selectLabel"
+                                  label={key}
+                                  // checked={handelSelectOption(option.inputLabel, option.id)}
+                                  onChange={async (e) => handlePhysicalHazards(e, key, value,index)}
+                                />
+                              ))}
+                            </FormGroup>
+                          </FormControl>
+                        
+                     
+                      {/* <FormGroup className={classes.customCheckBoxList}>
                         <FormControlLabel
                           className="selectLabel"
                           control={(
@@ -287,8 +363,8 @@ const Categories = () => {
                           )}
                           label="Fire"
                         />
-                      </FormGroup>
-                    </Grid>
+                      </FormGroup> */}
+                    
 
                     <Grid
                       item
@@ -296,52 +372,45 @@ const Categories = () => {
                       xs={12}
                     >
                       <Grid container spacing={3}>
-                        <Grid
-                          item
-                          md={12}
+                      {Object.entries(checkData).map(([key, value]) => (
+                        <Grid item md={6}
                           xs={12}
-                        >
-                          <FormLabel className="checkRadioLabel" component="legend">Environment</FormLabel>
-                          <FormGroup className={classes.customCheckBoxList}>
-                            <FormControlLabel
-                              className="selectLabel"
-                              control={(
-                                <Checkbox
-                                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                  name="checkedI"
-                                  onChange={handleChange}
+                          className={classes.formBox}>
+                          <FormControl component="fieldset">
+                          <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel>
+                            <FormGroup>
+                              {value.map((option) => (
+                                <FormControlLabel
+                                  control={<Checkbox name={option.inputLabel} />}
+                                  label={option.inputLabel}
+                                  // checked={handelSelectOption(option.inputLabel, option.id)}
+                                  onChange={async (e) => handleGroups(e, key, option.inputLabel, option.id)}
                                 />
-                              )}
-                              label="Category"
-                            />
-                            <FormControlLabel
-                              className="selectLabel"
-                              control={(
-                                <Checkbox
-                                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                  name="checkedI"
-                                  onChange={handleChange}
-                                />
-                              )}
-                              label="Category 2"
-                            />
-                            <FormControlLabel
-                              className="selectLabel"
-                              control={(
-                                <Checkbox
-                                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                  name="checkedI"
-                                  onChange={handleChange}
-                                />
-                              )}
-                              label="Option 3"
-                            />
-                          </FormGroup>
+                              ))}
+                            </FormGroup>
+                          </FormControl>
                         </Grid>
-                        <Grid
+                      ))}
+                      {/* {checkData.map(([key, value]) => (
+                        <Grid item md={6}
+                          xs={12}
+                          className={classes.formBox}>
+                          <FormControl component="fieldset">
+                          <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel>
+                            <FormGroup>
+                              {value.map((option) => (
+                                <FormControlLabel
+                                  control={<Checkbox name={option.inputLabel} />}
+                                  label={option.inputLabel}
+                                  // checked={handelSelectOption(option.inputLabel, option.id)}
+                                  // onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel, option.id)}
+                                />
+                              ))}
+                            </FormGroup>
+                          </FormControl>
+                        </Grid>
+                      ))} */}
+                        {/* <Grid
                           item
                           md={12}
                           xs={12}
@@ -373,7 +442,7 @@ const Categories = () => {
                               label="Category 2"
                             />
                           </FormGroup>
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </Grid>
 

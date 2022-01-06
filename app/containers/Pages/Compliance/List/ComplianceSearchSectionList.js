@@ -367,6 +367,27 @@ const useStyles = makeStyles((theme) => ({
       opacity: '0.9',
     },
   },
+  statusHover: {
+    '& img:hover': {
+      borderRadius: '50%',
+      boxShadow: '0px 0px 2px 2px #f47607',
+    },
+   },
+  statusIconBox: {
+    position: 'relative',
+    textAlign: 'center',
+    padding: '11px 0px !important',
+    '& img': {
+        width: '40px',
+    },
+    ['@media (max-width:800px)']: { 
+      padding: '0px 0px 24px 0px !important',
+    },
+    ['@media (max-width:480px)']: { 
+      padding: '12px 0px 24px 16px !important',
+      textAlign: 'left',
+    },
+  },
 }));
 
 export default function SimpleTabs() {
@@ -374,6 +395,7 @@ export default function SimpleTabs() {
   const [value, setValue] = React.useState(0);
   const [compliance, setCompliancesetValue] = React.useState("My Inspections");
   const [search, setSearch] = React.useState("");
+  const [status, setStatus] = React.useState("");
 
   const handleChange = (event, newValue) => {
     if(newValue === 0){
@@ -385,9 +407,15 @@ export default function SimpleTabs() {
     }
   };
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value)
+  let timer
+  let debounce = ( v, d) => {
+    return function() {
+      clearTimeout(timer)
+      timer = setTimeout(() => setSearch(v), d)
+    }
   }
+
+  const handleSearch = e => debounce( e.target.value.toLowerCase(), 1000)()
 
 
   return (
@@ -423,7 +451,14 @@ export default function SimpleTabs() {
           </Paper> 
         </Grid>
         <Grid item md={2} sm={6} xs={12}>
-          <StatusFilter />
+        <div className={classes.statusIconBox}>
+
+      <span className={classes.statusHover}>
+      <img src={preplanning} onClick={() => setStatus("Draft")} />
+                {/* <img src={progress} className={classes.pLtenPRten} /> */}
+                <img src={completed} onClick={() => setStatus("Closed")}/>
+                </span>
+                </div>
         </Grid>
 		  </Grid>
 	  </Grid>

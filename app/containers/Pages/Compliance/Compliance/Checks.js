@@ -71,7 +71,7 @@ import icoVideo from 'dan-images/icoVideo.svg';
 import FormSideBar from "../../../Forms/FormSideBar";
 import {COMPLIANCE} from "../Constants/Constants"
 import {useParams , useHistory} from "react-router-dom"
-
+import api from "../../../../utils/axios";
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -375,10 +375,18 @@ const Checks = () => {
   });
 
   const [value, setValue] = React.useState(1);
+
+  const fetchCheklist = async () => {
+    const res = await api.get(`/api/v1/core/checklists/companies/8/projects/15/compliance/`)
+    console.log(res.data.data.results)
+  }
   const handelSubmit =() => {
       history.push("/app/pages/compliance/performance-summary")
   }
   const classes = useStyles();
+  useEffect(() => {
+      fetchCheklist()
+  },[])
   return (
         <>
             <Grid container spacing={3}>
