@@ -955,8 +955,6 @@ const FlhaDetails = (props) => {
                       />
                     )}
                   </div>
-                  {console.log(last_part)}
-
                   <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
                     onClick={() => {
                       history.push("/app/pages/assesments/flhasummary/"+ last_part);
