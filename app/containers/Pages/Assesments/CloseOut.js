@@ -196,7 +196,7 @@ const CloseOut = (props) => {
                     component="legend"
                     className="checkRadioLabel"
                   >
-                    Has a pre-use inspection of tools/equipment been completed?
+                    Has a pre-use inspection of tools/equipment been completed?*
                   </FormLabel>
                   <RadioGroup
                     className={classes.radioInline}
@@ -237,7 +237,7 @@ const CloseOut = (props) => {
                     component="legend"
                     className="checkRadioLabel"
                   >
-                    Is a warning ribbon need?
+                    Is a warning ribbon need?*
                   </FormLabel>
                   <RadioGroup
                     className={classes.radioInline}
@@ -278,7 +278,7 @@ const CloseOut = (props) => {
                     component="legend"
                     className="checkRadioLabel"
                   >
-                    Is the worker working alone?
+                    Is the worker working alone?*
                   </FormLabel>
                   <RadioGroup
                     className={classes.radioInline}
@@ -340,7 +340,7 @@ const CloseOut = (props) => {
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Are all permit(s) closed out?</FormLabel>
+                  <FormLabel component="legend" className="checkRadioLabel">Are all permit(s) closed out?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="permitClosedOut" name="permitClosedOut" value={jobForm.permitClosedOut} onChange={(e) => handleJobFormChange(e, 'permitClosedOut')}>
                     <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                     <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -355,7 +355,7 @@ const CloseOut = (props) => {
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Are there Hazards remaining?</FormLabel>
+                  <FormLabel component="legend" className="checkRadioLabel">Are there Hazards remaining?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="hazardsRemaining" name="hazardsRemaining" value={jobForm.hazardsRemaining} onChange={(e) => handleJobFormChange(e, 'hazardsRemaining')}>
                     <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                     <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -370,7 +370,7 @@ const CloseOut = (props) => {
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Was the area cleaned up at the end of job/shift?</FormLabel>
+                  <FormLabel component="legend" className="checkRadioLabel">Was the area cleaned up at the end of job/shift?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="endOfJob" name="endOfJob" value={jobForm.endOfJob} onChange={(e) => handleJobFormChange(e, 'endOfJob')}>
                     <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                     <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -385,7 +385,7 @@ const CloseOut = (props) => {
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Were there any incidents/injuries?</FormLabel>
+                  <FormLabel component="legend" className="checkRadioLabel">Were there any incidents/injuries?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="anyIncidents" name="anyIncidents" value={jobForm.anyIncidents} onChange={(e) => handleJobFormChange(e, 'anyIncidents')}>
                     <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                     <FormControlLabel value="No" control={<Radio />} label="No" />
@@ -423,7 +423,7 @@ const CloseOut = (props) => {
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend" className="checkRadioLabel">Do you want to continue to creating an Incident?</FormLabel>
+                  <FormLabel component="legend" className="checkRadioLabel">Do you want to continue to creating an Incident?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="creatingIncident" name="creatingIncident" value={jobForm.creatingIncident} onChange={(e) => handleJobFormChange(e, 'creatingIncident')}>
                     <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                     <FormControlLabel value="No" control={<Radio />} label="No" />

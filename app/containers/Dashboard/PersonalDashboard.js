@@ -455,7 +455,7 @@ function PersonalDashboard(props) {
 
       });
   };
-  const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct) => {
+  const fetchUserDetails = async (compId, proId, targetPage, tarProjectStruct, tarId) => {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
@@ -499,7 +499,7 @@ function PersonalDashboard(props) {
                 }
                 // fetchPermissionData();
                 if (res.status === 200) {
-                  history.push('/app/' + targetPage)
+                  history.push('/app/' + targetPage + tarId)
                   localStorage.removeItem("direct_loading")
                 }
               })
@@ -521,8 +521,10 @@ function PersonalDashboard(props) {
     let tarPage = ''
     let tarId = 0
     if (state !== null) {
-      await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct)
+      
+      await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct, state.tarId)
     } else {
+      
       await userDetails(comId, proId, redback, tarPage, tarId);
     }
     await getSubscriptions();

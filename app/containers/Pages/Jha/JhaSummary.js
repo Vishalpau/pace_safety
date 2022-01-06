@@ -731,22 +731,15 @@ function JhaSummary() {
                                     )):"-"}
                                   </Grid>
 
-                                  <Grid item xs={12} md={12} className="paddBRemove">
-                                    <FormLabel className="checkRadioLabel" component="legend">Job hazard</FormLabel>
-                                  </Grid>
-                                  <Grid item xs={12} md={6}>
-                                    
-                                      {hazard.length > 0 ? hazard.map((item, index) => (
-                                      <>
-                                        <ul
-                                          className="viewLabelValue"
-                                          key={index}
-                                        >
-                                          {<li>{item.hazard ? item.hazard : "-"}</li>}
-                                        </ul>
-                                      </>
-                                    )) : "-"}
-                                      
+                                  <Grid item xs={12} md={12} >
+                                    <FormLabel className="viewLabel" component="legend">Job hazard</FormLabel>
+                                      {
+                                      hazard !== undefined && hazard.length > 0 ? hazard.map((value, index) => (
+                                        <Typography className="viewLabelValue">
+                                            {checkValue(value.hazard)}
+                                          </Typography>
+                                      )):"-"
+                                    }
                                   </Grid>
                                 </Grid>
                               </Paper>

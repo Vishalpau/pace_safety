@@ -703,7 +703,6 @@ function xflha(props) {
   const [attachOpen, setAttachOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
   const [openAttachment, setopenAttachment] = React.useState(false);
-  const [searchIncident, setSeacrhIncident] = React.useState('');
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
@@ -782,15 +781,6 @@ function xflha(props) {
   : null;
   const fetchData = async () => {
     await setPage(1)
-    console.log(status, 'ddd')
-
-    // console.log(props.projectName, 'project');
-    // const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
-    // // alert(fkCompanyId);
-    // const fkProjectId = JSON.parse(localStorage.getItem('projectName'))
-    //   .projectName.projectId;
-    // // alert(fkProjectId);
-
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
@@ -802,18 +792,9 @@ function xflha(props) {
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
-    // const fkProjectStructureIds = struct.slice(0, -1);
-    // const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
-    // // console.log({ res: res.data.data.results.results });
-    // await setTotalData(res.data.data.results.count)
-    // await setPageData(res.data.data.results.count / 25)
-    // let pageCount = Math.ceil(res.data.data.results.count / 25)
-    // await setPageCount(pageCount)
-    // await setFlhas(res.data.data.results.results);
-    // await setIsLoading(true)
     const fkProjectStructureIds = struct.slice(0, -1);
     if (assessments === "My Assessments") {
-    const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}&createdBy=${createdBy}`);
+    const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}&createdBy=${createdBy}`);
     const result = res.data.data.results.results
       await setFlhas(result)
       await setTotalData(res.data.data.results.count)
@@ -821,7 +802,7 @@ function xflha(props) {
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     } else {
-    const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
+    const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
     const result = res.data.data.results.results
       await setFlhas(result)
       await setTotalData(res.data.data.results.count)
@@ -977,7 +958,7 @@ function xflha(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const res = await api.get(`api/v1/flhas/?search=${searchIncident}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+    const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setFlhas(res.data.data.results.results);
     await setPage(value)
   };
@@ -991,8 +972,12 @@ function xflha(props) {
     } else {
       fetchData();
     }
+   
+  }, [props.projectName.breakDown, searchFlha, status,assessments]);
+
+  useEffect(() => {
     allPickListDataValue()
-  }, [props.projectName.breakDown, searchIncident, status,assessments]);
+  },[]);
 
   return (
 
@@ -1017,63 +1002,7 @@ function xflha(props) {
       </Grid>
       <Box> {isLoading ? <>
 
-        {/* <div className={classes.root}>
-            <AppBar position="static" color="transparent" className={classes.searchHeaderTop}>
-              <Toolbar className={classes.paddZero}>
-                <div className={classes.search}>
-                  <Paper elevation={1}>
-                    <div className={classes.searchIcon}>
-                      <SearchIcon />
-                    </div>
-                    <InputBase
-                      placeholder="Search…"
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                      }}
-                      inputProps={{ 'aria-label': 'search' }}
-                      onChange={(e) => setSeacrhIncident(e.target.value)}
-                    />
-                  </Paper>
-                </div>
-                <Grid item xs={12}>
-                  <div className="toggleViewButtons">
-                    <Typography variant="caption" className={classes.toggleTitle} />
-                    <Tooltip title="card" aria-label="card">
-                      <IconButton
-                        onClick={(e) => handelView(e)}
-                        aria-label="grid"
-                        className={classes.filterIcon}
-                      >
-                        <RecentActorsIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="list" aria-label="list">
-                      <IconButton
-                        aria-label="list"
-                        onClick={(e) => handelViewTabel(e)}
-                        className={classes.filterIcon}
-                      >
-                        <ListAltOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <div className={classes.rightSide}>
-                    <Tooltip title="Create XFLHA" aria-label="new XFLHA">
-                      <Button size="medium" variant="contained" color="primary"
-                        onClick={() => history.push("/app/pages/assesments/flhaadd")} >
-                        <ControlPointIcon className={classes.spacerRight} />
-                        {' '}
-                        Create XFLHA
-                      </Button>
-                    </Tooltip>
-                  </div>
-                </Grid>
-              </Toolbar>
-            </AppBar>
-          </div> */}
+        
         <Grid container spacing={3}>
           <Grid item sm={6} xs={12} className={classes.listViewTab}>
             <AppBar position="static" className={classes.topNavTabBack}>
@@ -1139,7 +1068,7 @@ function xflha(props) {
                       input: classes.inputInput,
                     }}
                     inputProps={{ 'aria-label': 'search' }}
-                    onChange={(e) => setSeacrhIncident(e.target.value)}
+                    onChange={(e) => setSeacrhFlha(e.target.value)}
                   />
                 </Paper>
               </div>
@@ -1152,17 +1081,8 @@ function xflha(props) {
             </Grid>
           </Grid>
         </Grid>
-
-
-
-
-
-
-
         {listToggle == false ? (
           <div>
-
-
             <div className="gridView">
               {Object.entries(flhas)
                 .map((item, index) => (
