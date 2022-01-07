@@ -438,7 +438,7 @@ function ComplianceSummary() {
                         <li>
                           <Button
                             color={complianceData.performanceSummary !== null ? "secondary" : "primary"}
-                            variant={complianceData.performanceSummary !== null ? "contained" : "not-contained"}
+                            variant={complianceData.performanceSummary !== null ? "contained" : "outlined"}
                             size="small"
                             //endIcon={<CheckCircle />}
                             className={classes.statusButton}
