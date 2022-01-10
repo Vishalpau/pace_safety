@@ -744,7 +744,7 @@ const ObservationInitialNotification = (props) => {
 
   return (
     <>
-      <CustomPapperBlock title="iCare" icon={obsIcon} whiteBg>
+      <CustomPapperBlock title="iCare" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
 
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>

@@ -191,7 +191,12 @@ html .custmCancelBtn {
   padding-bottom: 5px;
   padding-top: 20px;
 }
-
+.userDropDownHeading {
+  font-size: 1.125rem !important;
+  line-height: 19px;
+  color: #06425C;
+  font-family: Montserrat-SemiBold !important;
+}
 /* .formControl {
   margin: .5rem 0;
   width: 100%;
@@ -260,6 +265,16 @@ html .custmCancelBtn {
   text-transform: none !important;
   color: #ffffff !important;
   padding: 5px 20px !important;
+}
+.buttonStyleDropdown {
+  background-color: #7890A4 !important;
+  font-size: 0.875rem !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  padding: 5px 20px !important;
+}
+.buttonStyleDropdown:hover {
+  background-color: #F28705 !important;
 }
 .quickActionSection nav {
   background-color: #7890A4;
@@ -406,6 +421,13 @@ html .custmCancelBtn {
 }
 .textCenter {
   justify-content: center;
+  text-align: center;
+}
+li.MuiMenuItem-root.textCenterButton {
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 12px;
+  padding-top: 18px;
 }
 ul.MuiMenu-list a.textCenter {
   justify-content: center;
@@ -426,9 +448,9 @@ li.MuiMenuItem-root.textCenter {
   padding-top: 16px;
 }
 a.MuiMenuItem-root.userText {
-  padding: 16px;
-  font-size: 14px;
-  color: #7890A4;
+  padding: 16px 16px 16px 30px;
+  font-size: 1rem;
+  color: #666666;
 }
 .MuiAvatar-root.MuiAvatar-circle.avtaProfile {
   height: 25px;
@@ -475,6 +497,32 @@ ul.MuiMenu-list a ul li.userName {
   border-radius: 5px 5px 5px 5px;
   background-color: #06425c;
 }
+.avtarCenter {
+  margin: 4px auto auto auto;
+}  
+.userPrigileGrid .avtarCenter {
+  width: 56px;
+  height: 56px;
+}
+.userPrigileGrid {
+  padding: 16px 16px 4px 16px !important;
+}
+.pTopFour {padding-top: 4px !important}
+.userDropDown {
+  padding: 2px;
+  font-size: 1rem !important;
+  color: #666666;
+  font-family: 'Montserrat-Medium' !important;
+  line-height: 19px !important;
+}
+.userDropDownLast {
+  padding: 2px 2px 30px 2px;
+  font-size: 1rem !important;
+  color: #666666;
+  font-family: 'Montserrat-Medium' !important;
+  line-height: 19px !important;
+}
+
 .tabContentDesign button.Mui-selected, .tabContentDesign button:hover {
   background-color: #ff8533;
   color: #ffffff;
@@ -850,7 +898,16 @@ ul.MuiMenu-list a ul li.userName {
   background-position: -282px -405px;
 }
 .flhaPageIcon {
-  background-position: -921px -405px;
+  background-position: -921px -405px !important;
+}
+.iCarePageIcon {
+  background-position: -120px -405px !important;
+}
+.jsaPageIcon {
+  background-position: -1000px -405px !important;
+}
+.ahaPageIcon {
+  background-position: -1082px -405px !important;
 }
 .customDropdownPageIcon {
   height: 40px;
@@ -858,6 +915,9 @@ ul.MuiMenu-list a ul li.userName {
   display: block;
   background: url(../../../public/images/leftMenuIcons.png) no-repeat;
   float: left;
+}
+.homePageIcon {
+  background-position: -760px -405px;
 }
 .customDropdownPageFlhaIcon {
   height: 40px;
@@ -1367,3 +1427,4 @@ ul.MuiMenu-list a ul li.userName {
 .MuiAvatar-root.MuiAvatar-square .MuiAvatar-img {
   border-radius: 10px;
 }
+

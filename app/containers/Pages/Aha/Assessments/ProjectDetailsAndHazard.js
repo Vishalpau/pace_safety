@@ -696,7 +696,7 @@ const ProjectDetailsAndHazard = () => {
   }, []);
   return (
     <>
-        <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon'whiteBg>
         {isLoading ?
           <Grid container spacing={3} className={classes.observationNewSection}>
             <Grid container spacing={3} item xs={12} md={9}>

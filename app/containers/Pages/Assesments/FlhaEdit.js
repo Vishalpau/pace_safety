@@ -749,7 +749,7 @@ const FlhaDetails = () => {
     temp[index].visualConfirmationStatus = value
     setJobVisualConfirmation(temp)
     }else{
-      temp[index].visualConfirmationAttachment = null 
+      // temp[index].visualConfirmationAttachment = null 
       temp[index].visualConfirmationType = visualType[index]
     temp[index].visualConfirmationStatus = value
     setJobVisualConfirmation(temp)
