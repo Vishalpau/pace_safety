@@ -743,8 +743,6 @@ function JhaPackage(props) {
                                   color="textPrimary"
                                   className={classes.listingLabelName}
                                 >
-                                  Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
-                                  <span item xs={1} className={classes.sepHeightOne}></span>
                                   Stage: <span className={classes.listingLabelValue}>{value["jhaStage"]}<img src={in_progress_small} className={classes.smallImage} /></span>
                                   <span item xs={1} className={classes.sepHeightOne}></span>
                                   Status: <span className="listingLabelValue statusColor_complete">{value["jhaStatus"]}</span>
@@ -759,23 +757,6 @@ function JhaPackage(props) {
 
                       <Grid item sm={12} xs={12}>
                         <Grid container spacing={3}>
-                          <Grid item md={3} sm={6} xs={12}>
-                            <Typography
-                              variant="body1"
-                              gutterBottom
-                              color="textPrimary"
-                              className={classes.listingLabelName}
-                            >
-                              Type:
-                            </Typography>
-
-                            <Typography
-                              gutterBottom
-                              className={classes.listingLabelValue}
-                            >
-                              {value["typeOfPermit"] !== null ? value["typeOfPermit"] : "-"}
-                            </Typography>
-                          </Grid>
                           <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body1"
