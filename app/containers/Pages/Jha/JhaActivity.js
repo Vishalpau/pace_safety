@@ -63,7 +63,7 @@ const JhaActivity = () => {
     const classes = useStyles();
 	return (
 
-        <CustomPapperBlock title="JHA - Activity" icon={ahaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="JHA - Activity" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
             <Grid container spacing={3}>	
                 <Grid item md={9} xs={12}>
                     <Grid container spacing={3}>

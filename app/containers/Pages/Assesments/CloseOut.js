@@ -173,7 +173,7 @@ const CloseOut = (props) => {
   }, [open]);
 
   return (
-    <CustomPapperBlock title="FLHA - Close Out" icon={flhaLogoSymbol} whiteBg>
+    <CustomPapperBlock title="FLHA - Close Out" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
       {loading == false ?
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -187,7 +187,7 @@ const CloseOut = (props) => {
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
-              <Grid item md={12} xs={12}>
+              {/* <Grid item md={12} xs={12}>
                 <FormControl
                   component="fieldset"
                   error={true}
@@ -336,7 +336,7 @@ const CloseOut = (props) => {
                 </Grid>
                 :
                 null
-              }
+              } */}
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">

@@ -536,7 +536,8 @@ const JobDetails = (props) => {
         const temp = {}
         const project = JSON.parse(localStorage.getItem("projectName"))
         const projectId = project.projectName.projectId
-        const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
+        // const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
+        const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards/${projectId}/`)
         const checklistGroups = res.data.data.results[0].checklistGroups
         checklistGroups.map((value) => {
             temp[value["checkListGroupName"]] = []

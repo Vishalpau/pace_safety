@@ -188,7 +188,7 @@ function UserMenu(props) {
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
-      console.log('sub', data)
+      // console.log('subs',data)
     setSubscriptions(data);
     setIsLoading(true)
   }
@@ -228,7 +228,8 @@ function UserMenu(props) {
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
         });
-        console.log('apps', data)
+        // console.log('apps',data)
+        
       await setApps(data.map(app => app.appId))
     }
   }
@@ -298,7 +299,7 @@ function UserMenu(props) {
                       {subscription.modules.map((module, mIndex) => (
                         <div key={mIndex}>
 
-                          <ListItemLink disabled={!apps.includes(subscription.appId)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
+                          <ListItemLink disabled={!apps.includes(module.moduleCode)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
                             {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <img className={classnames.appDrawerImage} src={module.moduleIcon} />
                             <ListItemText primary={module.moduleWebName} />

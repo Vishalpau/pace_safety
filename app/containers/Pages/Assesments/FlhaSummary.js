@@ -254,7 +254,7 @@ class SimpleTabs extends React.Component {
 
     return (
 
-      <CustomPapperBlock title={'FLHA Number:' + flha.flhaNumber} icon={flhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title={'FLHA Number:' + flha.flhaNumber} icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         <Grid container spacing={1}>
           <Grid item md={9} xs={12}>
             <Grid container spacing={3}>

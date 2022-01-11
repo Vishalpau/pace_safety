@@ -515,7 +515,7 @@ function JhaSummary() {
 
     <CustomPapperBlock 
       title={`Assessment Number: ${assessment.jhaNumber !== undefined ? assessment.jhaNumber : ""}`}
-      icon={jhaLogoSymbol} whiteBg 
+      icon='customDropdownPageIcon jsaPageIcon' whiteBg 
       >
       {loader == false ?       
         <Grid container spacing={3}>

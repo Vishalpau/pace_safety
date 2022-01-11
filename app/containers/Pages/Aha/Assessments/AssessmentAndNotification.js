@@ -699,7 +699,7 @@ const AssessmentAndNotification = () => {
   return (
     <>
       {" "}
-      <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon' whiteBg>
         {isLoading ? (
           <>
             <Grid
