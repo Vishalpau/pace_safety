@@ -188,6 +188,7 @@ function UserMenu(props) {
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
+      console.log('sub', data)
     setSubscriptions(data);
     setIsLoading(true)
   }
@@ -227,6 +228,7 @@ function UserMenu(props) {
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
         });
+        console.log('apps', data)
       await setApps(data.map(app => app.appId))
     }
   }
