@@ -214,6 +214,8 @@ const JobDetails = (props) => {
     const [isDateShow, setIsDateShow] = useState(false)
     const [formHazard, setFormHazard] = useState([])
     const [checkGroups, setCheckListGroups] = useState([])
+    const [checkGroupsControl, setCheckListGroupsControl] = useState([])
+
     const [selectedOptions, setSelectedOption] = useState({})
     const [fetchOptionHazard, setFetchedOptionsHazard] = useState([])
     const [submitLoaderHazard, setSubmitLoaderHazard] = useState(false)
@@ -554,6 +556,28 @@ const JobDetails = (props) => {
         setCheckListGroups(temp)
     }
 
+    const checkListControl = async () => {
+        const temp = {}
+        const project = JSON.parse(localStorage.getItem("projectName"))
+        const projectId = project.projectName.projectId
+        const res = await api.get(`/api/v1/core/checklists/jha-safety-ppe-checklist/${projectId}/`)
+        // https://dev-safety-api.paceos.io/api/v1/core/checklists/jha-safety-ppe-checklist/<projectId>/
+        const checklistGroupsControls = res.data.data.results[0].checklistGroups
+        checklistGroupsControls.map((value) => {
+            temp[value["checkListGroupName"]] = []
+            value.checkListValues.map((checkListOptions) => {
+                let checkObj = {}
+                if (checkListOptions !== undefined) {
+                    checkObj["inputLabel"] = checkListOptions.inputLabel
+                    checkObj["inputValue"] = checkListOptions.inputValue
+                    checkObj["checkListId"] = checkListOptions.id
+                    temp[value["checkListGroupName"]].push(checkObj)
+                }
+            })
+        })
+        setCheckListGroupsControl(temp)
+    }
+
     const handleAddHazard = (e) => {
         if (Object.keys(otherHazards).length < 100) {
             setOtherHazards([...otherHazards, {
@@ -670,6 +694,7 @@ const JobDetails = (props) => {
         await fetchDepartment()
         await handelUpdateHazard()
         await checkList()
+        await checkListControl()
         await pickListValue()
         await setLoading(false)
     }
@@ -1186,6 +1211,24 @@ const JobDetails = (props) => {
                                         </Grid>
                                     ))}
 
+{Object.entries(checkGroupsControl).map(([key, value]) => (
+                                        <Grid item md={6}>
+                                            <FormControl component="fieldset">
+                                                <FormLabel component="legend">{key}</FormLabel>
+                                                <FormGroup>
+                                                    {value.map((option) => (
+                                                        <FormControlLabel
+                                                            control={<Checkbox name={option.inputLabel} />}
+                                                            label={option.inputLabel}
+                                                            checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                                                            onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
+                                                        />
+                                                    ))}
+                                                </FormGroup>
+                                            </FormControl>
+                                        </Grid>
+                                    ))}
+
                                     <Grid
                                         item
                                         md={12}
@@ -1211,7 +1254,7 @@ const JobDetails = (props) => {
                                                 className={classes.createHazardbox}
                                             >
                                                 <TextField
-                                                    label="Other Hazards"
+                                                    label="Other hazards"
                                                     margin="dense"
                                                     name="otherhazards"
                                                     id="otherhazards"
@@ -1252,6 +1295,8 @@ const JobDetails = (props) => {
                                 </Grid>
                             </Paper>
                         </Grid>
+
+                        
 
                         <Grid
                             item

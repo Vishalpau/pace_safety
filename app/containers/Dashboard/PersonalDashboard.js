@@ -572,7 +572,7 @@ function PersonalDashboard(props) {
 
                       <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                         <div className="hexagontent hexagon_content_box">
-                          <a className="hse_hse_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
+                          <a className="hse_digital_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
                             <p>Control Tower</p>
                           </a>
                         </div>
@@ -628,7 +628,7 @@ function PersonalDashboard(props) {
                       </div>
                       <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                         <div className="hexagontent hexagon_content_box">
-                          <a className="hse_smart_permit_management" onClick={() => history.push('/app/pages/assesments/xflha')}>
+                          <a className="hse_assessments_development" onClick={() => history.push('/app/pages/assesments/xflha')}>
                             <p>Assessments</p>
                           </a>
                         </div>
@@ -636,7 +636,7 @@ function PersonalDashboard(props) {
 
                       <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                         <div className="hexagontent hexagon_content_box">
-                          <a className="hse_action_tracker"
+                          <a className="hse_action_tracker_new"
                             onClick={() => handleClick('actions')}
                           >
                             <p>Action Tracker</p>
@@ -656,7 +656,7 @@ function PersonalDashboard(props) {
 
                       <div className={!(codes.includes('gis')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
                         <div className="hexagontent hexagon_content_box">
-                          <a className="hse_rapid_knowledge_collaboration"
+                          <a className="hse_safety_plot_manager"
                             onClick={() => handleClick('gis')}
                           >
                             <p>Safety plot manager</p>

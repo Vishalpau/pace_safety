@@ -541,7 +541,7 @@ const AssessmentAndDocument = () => {
     };
 
     return (
-        <CustomPapperBlock title="Assessments" icon={jhaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
             {/* {console.log(form.Assessment)} */}
             {loading === false
                 ? (

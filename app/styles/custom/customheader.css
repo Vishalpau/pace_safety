@@ -1150,7 +1150,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -1166,6 +1166,10 @@ ul.MuiMenu-list a ul li.userName {
 .assessmentsMenu .MuiListItemIcon-root {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat  -227px -16px;
   margin-right: 16px;
+}
+.administrationMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -22.313rem -1rem;
+  margin-right: 1rem;
 }
 .icareMenu .MuiListItemIcon-root {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -98px -16px;
@@ -1217,6 +1221,16 @@ ul.MuiMenu-list a ul li.userName {
 .assessmentsMenu.selectmenu:hover,
 .assessmentsMenu.selectmenu,
 
+.administrationMenu.selectmenu .MuiListItemIcon-root,
+/* .administrationMenu.selectmenu:hover .MuiListItemIcon-root,
+.administrationMenu:hover .MuiListItemIcon-root,
+.administrationMenu:hover .MuiListItemText-root span, */
+.administrationMenu.selectmenu:hover .MuiListItemText-root span,
+.administrationMenu.selectmenu .MuiListItemText-root span,
+.administrationMenu:hover,
+.administrationMenu.selectmenu:hover,
+.administrationMenu.selectmenu,
+
 .controlTowerMenu.selectmenu .MuiListItemIcon-root,
 /* .controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemIcon-root,
@@ -1235,7 +1249,8 @@ ul.MuiMenu-list a ul li.userName {
 .incident-managementMenu:hover .MuiListItemIcon-root,
 .complianceMenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemIcon-root,
-.assessmentsMenu:hover .MuiListItemIcon-root {
+.assessmentsMenu:hover .MuiListItemIcon-root 
+.administrationMenu:hover .MuiListItemIcon-root {
   background-position-y: -80px;
 }
 
