@@ -1551,7 +1551,7 @@ const ObservationInitialNotification = (props) => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-
+                {form.fkCompanyId === 3 ? 
                   <Grid item md={12} xs={12} className={classes.formBox}>
                     <FormControl component="fieldset">
                       <FormLabel component="legend" className="checkRadioLabel">
@@ -1579,6 +1579,7 @@ const ObservationInitialNotification = (props) => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
+                : null}
 
                   {notificationSentValue.map((value, index) => (
                     <Grid item md={12} xs={12} className={classes.formBox}>

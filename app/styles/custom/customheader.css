@@ -1150,7 +1150,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -1249,14 +1249,14 @@ ul.MuiMenu-list a ul li.userName {
 .incident-managementMenu:hover .MuiListItemIcon-root,
 .complianceMenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemIcon-root,
-.assessmentsMenu:hover .MuiListItemIcon-root 
+.assessmentsMenu:hover .MuiListItemIcon-root, 
 .administrationMenu:hover .MuiListItemIcon-root {
   background-position-y: -80px;
 }
 
 
 /* Left sub menu custom style */
-.flhaMenu, .jhaMenu, .ahaMenu {
+.flhaMenu, .jhaMenu, .ahaMenu , .dropdown_listsMenu, .check_listsMenu {
   position: relative;
 }
 .MuiList-dense.MuiList-padding {
@@ -1264,7 +1264,10 @@ ul.MuiMenu-list a ul li.userName {
 }
 .flhaMenu .MuiTypography-colorTextSecondary,
 .jhaMenu .MuiTypography-colorTextSecondary,
-.ahaMenu .MuiTypography-colorTextSecondary {
+.ahaMenu .MuiTypography-colorTextSecondary,
+.dropdown_listsMenu .MuiTypography-colorTextSecondary,
+.check_listsMenu .MuiTypography-colorTextSecondary
+ {
   position: absolute;
   left: 72px;
   top: 10px;
@@ -1272,18 +1275,24 @@ ul.MuiMenu-list a ul li.userName {
 }
 .flhaMenu .MuiListItemText-inset,
 .jhaMenu .MuiListItemText-inset,
-.ahaMenu .MuiListItemText-inset {
+.ahaMenu .MuiListItemText-inset,
+.dropdown_listsMenu .MuiListItemText-inset,
+.check_listsMenu .MuiListItemText-inset {
   padding-left: 60px;
 }
 .flhaMenu .MuiListItemText-inset > span,
 .jhaMenu .MuiListItemText-inset > span,
-.ahaMenu .MuiListItemText-inset > span {
+.ahaMenu .MuiListItemText-inset > span,
+.dropdown_listsMenu .MuiListItemText-inset > span,
+.check_listsMenu .MuiListItemText-inset > span {
   padding-left: 48px;
 }
 
 .flhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .jhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
-.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg {
+.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.dropdown_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.check_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg {
   position: absolute;
   top: 0px;
   left: 90px;
@@ -1299,6 +1308,12 @@ ul.MuiMenu-list a ul li.userName {
 .ahaMenu .leftCustomImg {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -931px -16px;
   margin-right: 5px; 
+}
+.dropdown_listsMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -26.375rem -1rem;
+}
+.check_listsMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -30.188rem -1rem;
 }
 
 .flhaMenu.selectmenu .MuiListItemText-root span,
@@ -1326,7 +1341,25 @@ ul.MuiMenu-list a ul li.userName {
 /* .dropdown_listsMenu:hover .MuiListItemText-root span, */
 .ahaMenu:hover,
 .ahaMenu.selectmenu:hover,
-.ahaMenu.selectmenu
+.ahaMenu.selectmenu,
+
+.dropdown_listsMenu.selectmenu .MuiListItemText-root span,
+.dropdown_listsMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.dropdown_listsMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.dropdown_listsMenu.selectmenu:hover .MuiListItemText-root span,
+/* .dropdown_listsMenu:hover .MuiListItemText-root span, */
+.dropdown_listsMenu:hover,
+.dropdown_listsMenu.selectmenu:hover,
+.dropdown_listsMenu.selectmenu,
+
+.check_listsMenu.selectmenu .MuiListItemText-root span,
+.check_listsMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.check_listsMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.check_listsMenu.selectmenu:hover .MuiListItemText-root span,
+/* .check_listsMenu:hover .MuiListItemText-root span, */
+.check_listsMenu:hover,
+.check_listsMenu.selectmenu:hover,
+.check_listsMenu.selectmenu
 {
   background-position-y: -80px;
   color: #ffffff !important;
@@ -1334,7 +1367,10 @@ ul.MuiMenu-list a ul li.userName {
 }
 .flhaMenu:hover .MuiListItemText-root span,
 .jhaMenu:hover .MuiListItemText-root span,
-.ahaMenu:hover .MuiListItemText-root span {
+.ahaMenu:hover .MuiListItemText-root span,
+.dropdown_listsMenu:hover .MuiListItemText-root span,
+.check_listsMenu:hover .MuiListItemText-root span
+ {
   background-position-y: -80px;
 }
 

@@ -66,14 +66,14 @@ var menu = [
     icon: 'ion-ios-cog',
     child: [
       {
-        key: 'pick_lists',
+        key: 'dropdown_lists',
         name: 'Pick Lists',
-        linkParent: '/app/pages/picklist',
+        link: '/app/pages/picklist',
       },
       {
         key: 'check_lists',
         name: 'Check Lists',
-        linkParent: '/app/pages/checklist/',
+        link: '/app/pages/checklist/',
       },
       // {
       //   key: 'xflha_setting',

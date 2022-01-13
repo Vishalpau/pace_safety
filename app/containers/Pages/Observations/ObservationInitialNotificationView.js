@@ -400,7 +400,7 @@ const ObservationInitialNotificationView = () => {
                   Observed By
                 </FormLabel>
                 <Typography className="viewLabelValue">
-                  {initialData.reportedByName ? initialData.reportedByName : "-"},{initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : "-"}
+                  {initialData.reportedByName ? initialData.reportedByName : "-"}, {initialData.reportedByBadgeId !== "null" ? initialData.reportedByBadgeId : "-"}
                 </Typography>
               </Grid>
               <Grid item md={4} sm={4} xs={12}>
@@ -569,12 +569,14 @@ const ObservationInitialNotificationView = () => {
                   {initialData.isNotifiedToSupervisor ? initialData.isNotifiedToSupervisor : "-"}
                 </Typography>
               </Grid>
+              {initialData.fkCompanyId === 3 ?
               <Grid item md={12} sm={12} xs={12}>
                 <FormLabel component="legend" className="viewLabel">Confirm if the foreman was present at the time of your observation</FormLabel>
                 <Typography className="viewLabelValue">
                   {initialData.isSupervisorPresent ? initialData.isSupervisorPresent : "-"}
                 </Typography>
               </Grid>
+            :null}
             </Grid>
           </Paper>
         </Grid>
