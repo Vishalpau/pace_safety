@@ -218,7 +218,7 @@ const AssessmentAndDocument = () => {
         const tempPerformance = {};
         const jhaId = handelJhaId();
         const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`);
-        const apiData = res.data.data.results;
+        const apiData = res.data.data.results.filter((value) => value.hazard !== 'N/A');
 
         const project = JSON.parse(localStorage.getItem('projectName'));
         const { projectId } = project.projectName;

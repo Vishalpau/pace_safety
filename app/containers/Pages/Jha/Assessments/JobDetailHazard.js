@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {
-    KeyboardDateTimePicker, MuiPickersUtilsProvider,KeyboardDatePicker
+    KeyboardDateTimePicker, MuiPickersUtilsProvider, KeyboardDatePicker
 } from '@material-ui/pickers';
 import axios from 'axios';
 import { PapperBlock } from 'dan-components';
@@ -213,7 +213,10 @@ const JobDetails = (props) => {
     const [departmentName, setDepartmentName] = useState([])
     const [isDateShow, setIsDateShow] = useState(false)
     const [formHazard, setFormHazard] = useState([])
+    const [formPpe, setFormPpe] = useState([])
+
     const [checkGroups, setCheckListGroups] = useState([])
+
     const [checkGroupsControl, setCheckListGroupsControl] = useState([])
 
     const [selectedOptions, setSelectedOption] = useState({})
@@ -462,13 +465,13 @@ const JobDetails = (props) => {
             } else {
                 Teamform[i]["fkJhaId"] = CreatedJhaId;
                 if (Teamform[i].teamName !== "") {
-                const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError())
-                if (res.status === 200) {
+                    const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError())
+                    if (res.status === 200) {
+                        handelNavigate()
+                    }
+                } else {
                     handelNavigate()
                 }
-            }else{
-                handelNavigate()
-            }
             }
         }
     }
@@ -633,6 +636,33 @@ const JobDetails = (props) => {
         await setFormHazard(temp)
     };
 
+    const handlePhysicalPpe = async (e, checkListId, hazard_value) => {
+        let temp = [...formPpe]
+        if (e.target.checked == false) {
+            temp.map((jhaValue, index) => {
+                if (jhaValue['fkChecklistId'] === checkListId) {
+                    temp.splice(index, 1);
+                    fetchOptionHazard.splice(index, 1);
+
+                }
+            })
+        }
+        else if (e.target.checked) {
+            temp.push({
+                "fkChecklistId": checkListId,
+                "hazard": "N/A",
+                "risk": "",
+                "control": "",
+                "safetyChecks" : hazard_value,
+                "humanPerformanceAspects": "string",
+                "status": "Active",
+                "createdBy": 0,
+                "fkJhaId": localStorage.getItem("fkJHAId"),
+            })
+        }
+        await setFormPpe(temp)
+    };
+
     const handelSelectOption = (checklistId, hazard) => {
         for (let i = 0; i <= formHazard.length; i++) {
             if (formHazard[i] != undefined && formHazard[i]["hazard"] == hazard && formHazard[i]["fkChecklistId"] == checklistId) {
@@ -657,12 +687,12 @@ const JobDetails = (props) => {
     const handleSubmitHazard = async (newJhaId) => {
         let hazardNew = []
         let hazardUpdate = []
-        let allHazard = [formHazard, otherHazards]
+        let allHazard = [formHazard, otherHazards, formPpe]
 
         allHazard.map((values, index) => {
             allHazard[index].map((value) => {
                 if (value["id"] == undefined) {
-                    if (value["hazard"] !== "") {
+                    if (value["hazard"] !== "" ) {
                         value["fkJhaId"] = newJhaId
                         hazardNew.push(value)
                     }
@@ -679,12 +709,12 @@ const JobDetails = (props) => {
         setSubmitLoaderHazard(false)
     }
 
-    const [typeOfPremit,setTypeOfPremit] = useState([])
-  let pickListValues = JSON.parse(localStorage.getItem("pickList"))
+    const [typeOfPremit, setTypeOfPremit] = useState([])
+    let pickListValues = JSON.parse(localStorage.getItem("pickList"))
 
-  const pickListValue = async () => {
-    setTypeOfPremit(await pickListValues["80"])
-  }
+    const pickListValue = async () => {
+        setTypeOfPremit(await pickListValues["80"])
+    }
 
 
     const handelCallBack = async () => {
@@ -761,7 +791,7 @@ const JobDetails = (props) => {
                                                                     {selectvalues.structureName}
                                                                 </MenuItem>
                                                             ))
-                                                        : null}
+                                                            : null}
                                                     </Select>
                                                     {error && error[`projectStructure${[key]}`] && (
                                                         <FormHelperText>
@@ -828,8 +858,8 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
-                                     {/* order number */}
-                                     <Grid
+                                    {/* order number */}
+                                    <Grid
                                         item
                                         md={6}
                                         xs={11}
@@ -868,7 +898,7 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
-                                    
+
 
                                     {/* perform to permit */}
                                     <Grid
@@ -926,7 +956,7 @@ const JobDetails = (props) => {
                                                     <MenuItem key={selectValues}
                                                         value={selectValues.value}
                                                     >
-                                                    {selectValues.label}
+                                                        {selectValues.label}
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
@@ -937,21 +967,21 @@ const JobDetails = (props) => {
                                             xs={11}
                                         >
                                             <TextField
-                                            label="Permit reference number"
-                                            name="permintreferencenumber"
-                                            id="permintreferencenumber"
-                                            value={form.permitNumber ? form.permitNumber : ""}
-                                            onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
-                                            fullWidth
-                                            variant="outlined"
-                                            className={classes.formControl}
+                                                label="Permit reference number"
+                                                name="permintreferencenumber"
+                                                id="permintreferencenumber"
+                                                value={form.permitNumber ? form.permitNumber : ""}
+                                                onChange={(e) => setForm({ ...form, permitNumber: e.target.value })}
+                                                fullWidth
+                                                variant="outlined"
+                                                className={classes.formControl}
                                             />
                                         </Grid>
-                                        </>
+                                    </>
                                         :
                                         null
                                     }
-                                    
+
                                     {/* approval time */}
                                     <Grid
                                         item
@@ -1107,29 +1137,29 @@ const JobDetails = (props) => {
                                             className={classes.formControl}
                                         />
                                     </Grid>
-                                    
+
                                     {/* Department */}
                                     <Grid item md={6} xs={11}>
                                         <TextField
-                                        label="Department"
-                                        name="department"
-                                        id="department"
-                                        select
-                                        fullWidth
-                                        value={form.department ? form.department : ""}
-                                        onChange={(e) => setForm({ ...form, department: e.target.value })}
-                                        variant="outlined"
+                                            label="Department"
+                                            name="department"
+                                            id="department"
+                                            select
+                                            fullWidth
+                                            value={form.department ? form.department : ""}
+                                            onChange={(e) => setForm({ ...form, department: e.target.value })}
+                                            variant="outlined"
                                         >
-                                        {departmentName.map((option) => (
-                                            <MenuItem key={option}
-                                            value={option}
-                                            >
-                                            {option}
-                                            </MenuItem>
-                                        ))}
+                                            {departmentName.map((option) => (
+                                                <MenuItem key={option}
+                                                    value={option}
+                                                >
+                                                    {option}
+                                                </MenuItem>
+                                            ))}
                                         </TextField>
                                     </Grid>
-                                    
+
 
                                     {/* emergency number */}
                                     <Grid
@@ -1168,7 +1198,7 @@ const JobDetails = (props) => {
                                     </Grid>
 
 
-                                   
+
                                 </Grid>
                             </Paper>
                         </Grid>
@@ -1211,7 +1241,7 @@ const JobDetails = (props) => {
                                         </Grid>
                                     ))}
 
-{Object.entries(checkGroupsControl).map(([key, value]) => (
+                                    {Object.entries(checkGroupsControl).map(([key, value]) => (
                                         <Grid item md={6}>
                                             <FormControl component="fieldset">
                                                 <FormLabel component="legend">{key}</FormLabel>
@@ -1221,7 +1251,7 @@ const JobDetails = (props) => {
                                                             control={<Checkbox name={option.inputLabel} />}
                                                             label={option.inputLabel}
                                                             checked={handelSelectOption(option.checkListId, option.inputLabel)}
-                                                            onChange={async (e) => handlePhysicalHazards(e, option.checkListId, option.inputLabel)}
+                                                            onChange={async (e) => handlePhysicalPpe(e, option.checkListId, option.inputLabel)}
                                                         />
                                                     ))}
                                                 </FormGroup>
@@ -1296,7 +1326,7 @@ const JobDetails = (props) => {
                             </Paper>
                         </Grid>
 
-                        
+
 
                         <Grid
                             item
@@ -1346,7 +1376,7 @@ const JobDetails = (props) => {
                     </Col>
 
                 </Row>
-                : <Loader/>}
+                : <Loader />}
         </CustomPapperBlock >
     );
 };

@@ -40,6 +40,7 @@ import {
 } from "../../../utils/constants";
 // import PickListData from "../../../utils/Picklist/InitialPicklist";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import ShiftPickListData from "../../../utils/Picklist/ShiftPickListData";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import Loader from "../Loader"
@@ -369,7 +370,7 @@ const ObservationInitialNotification = (props) => {
     observationClassification: "",
     stopWork: "",
     nearMiss: "",
-    acceptAndPledge: "",
+    acceptAndPledge: "Yes",
     personRecognition: "",
     observationTitle: "",
     observationDetails: "",
@@ -727,7 +728,7 @@ const ObservationInitialNotification = (props) => {
   const classes = useStyles();
 
   const PickList = async () => {
-    setShiftType(await PickListData(47));
+    setShiftType(await ShiftPickListData(47));
     setClassification(await PickListData(82));
     await setIsLoading(true);
   };
@@ -1647,6 +1648,7 @@ const ObservationInitialNotification = (props) => {
                       checkedIcon={<CheckBoxIcon fontSize="small" />}
                       error={error.acceptAndPledge}
                       name="checkedI"
+                      checked = {true}
                       onChange={(e) => {
                         handlePledge(e);
                       }}
@@ -1665,7 +1667,8 @@ const ObservationInitialNotification = (props) => {
             className={classes.formBBanner}
           >
             <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
-          </Grid> :null}
+          </Grid> 
+          :null}
 
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
