@@ -149,6 +149,7 @@ const Categories = () => {
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
   const [checkListGroupsData, setCheckListGroupsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -187,6 +188,9 @@ const Categories = () => {
     const resss = await api.post(
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,
       hazardNew
+    ); const res = await api.put(
+      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,
+      hazardUpdate
     );
     history.push("/app/pages/compliance/checks");
   };
@@ -211,6 +215,7 @@ const Categories = () => {
         }
       });
     });
+    await fetchCategoryData(temp)
     await setCheckListGroups(temp);
   };
 
@@ -244,12 +249,47 @@ const Categories = () => {
     }
     setCheckListGroupsData(temp);
   };
+  console.log(checkListGroupsData,"?????????????")
+  const handelSelectOption = (key) => {
+    for (let i = 0; i <= checkListGroupsData.length; i++) {
+      if (checkListGroupsData[i] != undefined && checkListGroupsData[i]["groupName"] == key) {
+        return true
+      }
+    }
+  }
+ 
+  const handelSelectOptionSubGroup = (key) => {
+    for (let i = 0; i <= checkListGroupsData.length; i++) {
+      if (checkListGroupsData[i] != undefined && checkListGroupsData[i]["subGroupName"] == key) {
+        return true
+      }
+    }
+  }
+  const fetchCategoryData = async (data) => {
+    const res = await api.get(
+      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+    );
+    const result = res.data.data.results;
+    await setCheckListGroupsData(result)
+    let temp = {}
+    for(let i = 0; i < result.length; i++) {
+      for(var j in data) {
+        if(result[i]['groupName'] === j){
+          temp[j] = data[j]
+        }  
+      } 
+    }
+    await setCheckData(temp)
+    await setIsLoading(true)
+  };
   useEffect(() => {
     fetchCheklist();
+    fetchCategoryData();
   }, []);
   return (
     <>
       <Grid container spacing={3} className={classes.observationNewSection}>
+      {isLoading ? <>
         <Grid container spacing={3} item xs={12} md={9}>
           <Grid item md={12} xs={12}>
             <Grid container spacing={3}>
@@ -271,6 +311,7 @@ const Categories = () => {
                   Categories
                 </Typography>
               </Grid>
+              
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Paper elevation={1} className="paperSection">
                   <Grid container spacing={3}>
@@ -296,7 +337,7 @@ const Categories = () => {
                               }
                               className="selectLabel"
                               label={key}
-                              // checked={handelSelectOption(option.inputLabel, option.id)}
+                              checked={handelSelectOption(key)}
                               onChange={async (e) =>
                                 handlePhysicalHazards(e, key, value, index)
                               }
@@ -305,96 +346,6 @@ const Categories = () => {
                         )}
                       </FormGroup>
                     </FormControl>
-
-                    {/* <FormGroup className={classes.customCheckBoxList}>
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Category"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                              checked
-                            />
-                          )}
-                          label="Environment"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              checked
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Housekeeping"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Electrical"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Mechanical"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Guards of equipment"
-                        />
-                        <FormControlLabel
-                          className="selectLabel"
-                          control={(
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              name="checkedI"
-                              onChange={handleChange}
-                            />
-                          )}
-                          label="Fire"
-                        />
-                      </FormGroup> */}
-
                     <Grid item md={6} xs={12}>
                       <Grid container spacing={3}>
                         {Object.entries(checkData).map(
@@ -419,7 +370,7 @@ const Categories = () => {
                                         <Checkbox name={option.inputLabel} />
                                       }
                                       label={option.inputLabel}
-                                      // checked={handelSelectOption(option.inputLabel, option.id)}
+                                      checked={handelSelectOptionSubGroup(option.inputLabel)}
                                       onChange={async (e) =>
                                         handleGroups(
                                           e,
@@ -436,205 +387,11 @@ const Categories = () => {
                             </Grid>
                           )
                         )}
-                        {/* {checkData.map(([key, value]) => (
-                        <Grid item md={6}
-                          xs={12}
-                          className={classes.formBox}>
-                          <FormControl component="fieldset">
-                          <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel>
-                            <FormGroup>
-                              {value.map((option) => (
-                                <FormControlLabel
-                                  control={<Checkbox name={option.inputLabel} />}
-                                  label={option.inputLabel}
-                                  // checked={handelSelectOption(option.inputLabel, option.id)}
-                                  // onChange={async (e) => handlePhysicalHazards(e, key, option.inputLabel, option.id)}
-                                />
-                              ))}
-                            </FormGroup>
-                          </FormControl>
-                        </Grid>
-                      ))} */}
-                        {/* <Grid
-                          item
-                          md={12}
-                          xs={12}
-                        >
-                          <FormLabel className="checkRadioLabel" component="legend">Housekeeping</FormLabel>
-                          <FormGroup className={classes.customCheckBoxList}>
-                            <FormControlLabel
-                              className="selectLabel"
-                              control={(
-                                <Checkbox
-                                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                  name="checkedI"
-                                  onChange={handleChange}
-                                />
-                              )}
-                              label="Category"
-                            />
-                            <FormControlLabel
-                              className="selectLabel"
-                              control={(
-                                <Checkbox
-                                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                  name="checkedI"
-                                  onChange={handleChange}
-                                />
-                              )}
-                              label="Category 2"
-                            />
-                          </FormGroup>
-                        </Grid> */}
                       </Grid>
                     </Grid>
                   </Grid>
                 </Paper>
               </Grid>
-
-              {/* <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <FormLabel className={classes.labelName} component="legend">Group name</FormLabel>
-                <FormGroup className={classes.customCheckBoxList}>
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Category"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Environment"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Housekeeping"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Electrical"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Mechanical"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Guards of equipment"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Fire"
-                  />
-                </FormGroup>
-              </Grid>
-
-              <Grid
-                item
-                md={6}
-                xs={12}
-                className={classes.formBox}
-              >
-                <FormLabel className={classes.labelName} component="legend">Group name 2</FormLabel>
-                <FormGroup className={classes.customCheckBoxList}>
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Category"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Category 2"
-                  />
-                  <FormControlLabel
-                    className={classes.labelValue}
-                    control={(
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        name="checkedI"
-                        onChange={handleChange}
-                      />
-                    )}
-                    label="Option 3"
-                  />
-                </FormGroup>
-              </Grid> */}
             </Grid>
           </Grid>
         </Grid>
@@ -645,17 +402,6 @@ const Categories = () => {
             selectedItem="Categories"
           />
         </Grid>
-
-        {/* <Grid
-          item
-          md={12}
-          xs={12}
-          style={{marginTop: '15px'}}
-          >
-            <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
-            <Button variant="outlined" size="medium" className={classes.custmSaveBtn}>Save</Button>
-            <Button variant="outlined" size="medium" className={classes.custmCancelBtn}>Cancel</Button>
-          </Grid> */}
 
         <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
           <Button
@@ -684,6 +430,7 @@ const Categories = () => {
             Cancel
           </Button>
         </Grid>
+        </> : null}
       </Grid>
     </>
   );
