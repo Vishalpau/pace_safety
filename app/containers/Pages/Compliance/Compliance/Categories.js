@@ -202,30 +202,33 @@ const Categories = () => {
       `/api/v1/core/checklists/companies/8/projects/15/compliance/`
     );
     const result = res.data.data.results;
+    console.log(result)
 
-    result.map((value) => {
-      temp[value["checkListName"]] = [];
-      value.checklistValues.map((checkListOptions) => {
-        let checkObj = {};
-        if (checkListOptions !== undefined) {
-          checkObj["inputLabel"] = checkListOptions.inputLabel;
-          checkObj["inputValue"] = checkListOptions.inputValue;
-          checkObj["id"] = checkListOptions.id;
-          temp[value["checkListName"]].push(checkObj);
-        }
-      });
-    });
-    await fetchCategoryData(temp)
-    await setCheckListGroups(temp);
+    // result.map((value) => {
+    //   temp[value["checkListName"]] = [];
+    //   value.checklistValues.map((checkListOptions) => {
+    //     let checkObj = {};
+    //     if (checkListOptions !== undefined) {
+    //       checkObj["inputLabel"] = checkListOptions.inputLabel;
+    //       checkObj["inputValue"] = checkListOptions.inputValue;
+    //       checkObj["id"] = checkListOptions.id;
+    //       temp[value["checkListName"]].push(checkObj);
+    //     }
+    //   });
+    // });
+//await fetchCategoryData(temp)
+    await setCheckListGroups(result);
   };
 
-  const handlePhysicalHazards = async (e, value, inputLabel, index) => {
+  const handlePhysicalHazards = async (e, value) => {
+    console.log(value)
     let temp = { ...checkData };
     if (e.target.checked == false) {
       delete temp[value];
     } else {
       temp[value] = inputLabel;
     }
+    console.log(temp);
     await setCheckData(temp);
   };
 
@@ -240,12 +243,7 @@ const Categories = () => {
         }
       });
     } else if (e.target.checked) {
-      temp.push({
-        groupName: key,
-        subGroupName: inputLabel,
-        fkAuditId: parseInt(complianceId),
-        createdBy: 6,
-      });
+      temp.push();
     }
     setCheckListGroupsData(temp);
   };
@@ -321,12 +319,12 @@ const Categories = () => {
                       </FormLabel>
                       {/* <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel> */}
                       <FormGroup className={classes.customCheckBoxList}>
-                        {Object.entries(checkGroups).map(
-                          ([key, value], index) => (
+                        {checkGroups.map(
+                          (value,index) => (
                             <FormControlLabel
                               control={
                                 <Checkbox
-                                  name={key}
+                                  name={index}
                                   icon={
                                     <CheckBoxOutlineBlankIcon fontSize="small" />
                                   }
@@ -336,10 +334,10 @@ const Categories = () => {
                                 />
                               }
                               className="selectLabel"
-                              label={key}
-                              checked={handelSelectOption(key)}
+                              label={value.checkListLabel}
+                              checked={handelSelectOption(value)}
                               onChange={async (e) =>
-                                handlePhysicalHazards(e, key, value, index)
+                                handlePhysicalHazards(e, value)
                               }
                             />
                           )
