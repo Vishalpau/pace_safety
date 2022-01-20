@@ -148,8 +148,15 @@ const Categories = () => {
   const history = useHistory();
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
+  const [form , setForm] = useState({});
   const [checkListGroupsData, setCheckListGroupsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [groupId , setGroupId] = useState([])
+  const [subGroupId , setSubGroupId] = useState([])
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -170,29 +177,17 @@ const Categories = () => {
   ];
 
   const handelSubmit = async () => {
-    let hazardNew = [];
-    let hazardUpdate = [];
-
-    checkListGroupsData.map((value) => {
-      if (value["id"] == undefined) {
-        if (value["subGroupName"] !== "") {
-          hazardNew.push(value);
-        }
-      } else {
-        if (value["subGroupName"] !== "") {
-          hazardUpdate.push(value);
-        }
-      }
-    });
-
-    const resss = await api.post(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,
-      hazardNew
-    ); const res = await api.put(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,
-      hazardUpdate
-    );
-    history.push("/app/pages/compliance/checks");
+    form['groupIds'] = groupId.toString()
+    form['subGroupIds'] = subGroupId.toString()
+    form["updatedBy"] = userId;
+      const res = await api
+        .put(`/api/v1/audits/${form.id}/`, form)
+        .then((response) => {
+          history.push("/app/pages/compliance/checks");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   };
 
   const classes = useStyles();
@@ -202,7 +197,7 @@ const Categories = () => {
       `/api/v1/core/checklists/companies/8/projects/15/compliance/`
     );
     const result = res.data.data.results;
-    console.log(result)
+    await setIsLoading(true)
 
     // result.map((value) => {
     //   temp[value["checkListName"]] = [];
@@ -220,34 +215,71 @@ const Categories = () => {
     await setCheckListGroups(result);
   };
 
-  const handlePhysicalHazards = async (e, value) => {
+  const fetchComplianceData = async () => {
+    let complianceId = localStorage.getItem("fkComplianceId");
+    const res = await api
+      .get(`/api/v1/audits/${complianceId}/`)
+      .then((response) => {
+        let result = response.data.data.results
+        let groupIds = result.groupIds.split(',')
+        console.log(groupIds)
+        let tempGroup = []
+        let tempSubGroup = []
+        for (let i = 0; i < groupIds.length; i++){
+
+          console.log(checkGroups)
+          for (let j = 0; j < checkGroups.length; j++){
+            console.log(checkGroups[j]['checklistId'] === groupIds[i],">>>>>")
+            if(checkGroups[j]['checklistId'] === groupIds[i]){
+              tempGroup.push(checkGroups[j])
+            }
+          }
+        }
+        console.log(tempGroup)
+        setForm(result);
+        
+        // fetchTeamMembers(result.inspectionTeam);
+        // fetchBreakDownData(result.fkProjectStructureIds);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handlePhysicalHazards = async (e, value,index) => {
     console.log(value)
-    let temp = { ...checkData };
+    let tempGroupId = [...groupId]
+    let temp = [...checkData];
     if (e.target.checked == false) {
-      delete temp[value];
+      temp.map((data,key) => {
+        if(data['checklistId'] == value["checklistId"]){
+          temp.splice(key,1)
+        }
+      })
+      tempGroupId.map((data,key) => {
+        if(data == value["checklistId"]){
+          tempGroupId.splice(key,1)
+        }
+      })
     } else {
-      temp[value] = inputLabel;
+      tempGroupId.push(value.checklistId);
+      temp.push(value);
     }
-    console.log(temp);
+    await setGroupId(tempGroupId)
     await setCheckData(temp);
   };
 
-  const handleGroups = async (e, key, inputLabel, id, index) => {
-    let complianceId = localStorage.getItem("fkComplianceId");
-
-    let temp = [...checkListGroupsData];
+  const handleGroups = async (e, value, index) => {
+    let temp = [...subGroupId];
     if (e.target.checked == false) {
-      temp.map((value, index) => {
-        if (value["subGroupName"] === inputLabel) {
+      temp.map((data, index) => {
+        if (data === value) {
           temp.splice(index, 1);
         }
       });
     } else if (e.target.checked) {
-      temp.push();
+      temp.push(value);
     }
-    setCheckListGroupsData(temp);
+    setSubGroupId(temp);
   };
-  console.log(checkListGroupsData,"?????????????")
   const handelSelectOption = (key) => {
     for (let i = 0; i <= checkListGroupsData.length; i++) {
       if (checkListGroupsData[i] != undefined && checkListGroupsData[i]["groupName"] == key) {
@@ -282,7 +314,8 @@ const Categories = () => {
   };
   useEffect(() => {
     fetchCheklist();
-    fetchCategoryData();
+    fetchComplianceData();
+    // fetchCategoryData();
   }, []);
   return (
     <>
@@ -337,7 +370,7 @@ const Categories = () => {
                               label={value.checkListLabel}
                               checked={handelSelectOption(value)}
                               onChange={async (e) =>
-                                handlePhysicalHazards(e, value)
+                                handlePhysicalHazards(e, value,index)
                               }
                             />
                           )
@@ -346,8 +379,8 @@ const Categories = () => {
                     </FormControl>
                     <Grid item md={6} xs={12}>
                       <Grid container spacing={3}>
-                        {Object.entries(checkData).map(
-                          ([key, value], index) => (
+                        {checkData.map(
+                          (value, index) => (
                             <Grid
                               item
                               md={6}
@@ -359,10 +392,10 @@ const Categories = () => {
                                   className="checkRadioLabel"
                                   component="legend"
                                 >
-                                  {key}
+                                  {value['checkListLabel']}
                                 </FormLabel>
                                 <FormGroup>
-                                  {value.map((option) => (
+                                  {value['checklistValues'].map((option,index) => (
                                     <FormControlLabel
                                       control={
                                         <Checkbox name={option.inputLabel} />
@@ -372,8 +405,6 @@ const Categories = () => {
                                       onChange={async (e) =>
                                         handleGroups(
                                           e,
-                                          key,
-                                          option.inputLabel,
                                           option.id,
                                           index
                                         )
