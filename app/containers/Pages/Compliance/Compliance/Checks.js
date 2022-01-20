@@ -286,10 +286,13 @@ const styles = (theme) => ({
 
 const Checks = () => {
   const history = useHistory();
+  const [form , setForm] = useState({})
+  const [checkData , setCheckData] = useState([])
   //const [expanded, setExpanded] = React.useState('panel1');
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel4"
   );
+  const radioDecide = ["Yes" , "No" , "NA"]
   // const handleExpand = (panel) => (event, isExpanded) => {
   //     setExpanded(isExpanded ? panel : false);
   // };
@@ -379,16 +382,70 @@ const Checks = () => {
   const [value, setValue] = React.useState(1);
   const [categories, setCategories] = useState([]);
 
-  const fetchCheklist = async () => {
+  const fetchCheklistData = async () => {
+    let temp = {};
     const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+      `/api/v1/core/checklists/companies/8/projects/15/compliance/`
     );
     const result = res.data.data.results;
+    // await setIsLoading(true)
+
+    // result.map((value) => {
+    //   temp[value["checkListName"]] = [];
+    //   value.checklistValues.map((checkListOptions) => {
+    //     let checkObj = {};
+    //     if (checkListOptions !== undefined) {
+    //       checkObj["inputLabel"] = checkListOptions.inputLabel;
+    //       checkObj["inputValue"] = checkListOptions.inputValue;
+    //       checkObj["id"] = checkListOptions.id;
+    //       temp[value["checkListName"]].push(checkObj);
+    //     }
+    //   });
+    // });
+//await fetchCategoryData(temp)
+await fetchComplianceData(result)
+    // await setCheckListGroups(result);
+  };
+
+  const fetchComplianceData = async (data) => {
+    let complianceId = localStorage.getItem("fkComplianceId");
+    const res = await api
+      .get(`/api/v1/audits/${complianceId}/`)
+      .then((response) => {
+        let result = response.data.data.results
+        let groupIds = result.groupIds.split(',')
+        let subGroupIds = result.subGroupIds.split(',')
+        let tempGroup = []
+        let tempSubGroup = []
+        for (let i = 0; i < groupIds.length; i++){
+          for (let j = 0; j < data.length; j++){
+            if(data[j]['checklistId'] == groupIds[i]){
+              tempGroup.push(data[j])
+            }
+          }
+        }
+        for (let i = 0; i < subGroupIds.length; i++){
+          for (let j = 0; j < tempGroup.length; j++){
+            tempGroup[j]['checklistValues'].map((value) => {
+              if(value.id == subGroupIds[i]){
+                tempSubGroup.push({groupName : tempGroup[j]['checkListLabel'] , subGroupName : value['inputLabel']})
+              }
+            } )
+          }
+        }
+        setForm(result);
+        fetchCheklist(tempSubGroup)
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const fetchCheklist = async (data) => {
     let temp = [];
+    let tempCheckData = []
     let categoriesData = {};
-    for (let i = 0; i < result.length; i++) {
-      let groupName = result[i].groupName;
-      let subGroupName = result[i].subGroupName;
+    for (let i = 0; i < data.length; i++) {
+      let groupName = data[i].groupName;
+      let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/groups/${groupName}/subgroups/${subGroupName}/?company=8&project=15`
@@ -398,17 +455,54 @@ const Checks = () => {
     }
     temp.map((value, i) => {
       temp[i].map((value, index) => {
+        console.log(value,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        tempCheckData.push({
+          "questionId": value.id,
+          "question": value.question,
+          "criticality": "",
+          "auditStatus": "",
+          "performance": "",
+          "groupName": value.groupName,
+          "subGroupName" : value.subGroupName,
+          "defaultResponse":"",
+          "score":"",
+          "findings": "",
+          "status": "Active",
+          "createdBy": 1,
+          "updatedBy": 0,
+          "fkAuditId": localStorage.getItem('fkComplianceId')
+        })
         categoriesData[value["groupName"]].push(value);
       });
     });
+    // for(let i=0; i<tempCheckData.length; i++){
+    //   for()
+    // }
+    await setCheckData(tempCheckData)
     await setCategories(categoriesData);
   };
   const handelSubmit = () => {
     history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
+
+  const handleChangeData = (e , field , index , id) => {
+    // console.log(e, field , index);
+    let value = e.target.value
+    let temp = [...checkData]
+    for(let i = 0; i < temp.length; i++) {
+      console.log(temp[i]['questionId'] , id)
+      if(temp[i]['questionId'] == id){
+        console.log(value,">>>>>")
+        temp[i][field] = value
+      }
+    }
+    console.log(temp)
+  }
+  
   useEffect(() => {
-    fetchCheklist();
+    //fetchCheklist();
+    fetchCheklistData();
   }, []);
   return (
     <>
@@ -492,7 +586,7 @@ const Checks = () => {
                     Compliance type
                   </FormLabel>
                   <Typography className="viewLabelValue">
-                    General Inspection
+                    {form.auditType}
                   </Typography>
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -537,8 +631,8 @@ const Checks = () => {
                               <div>
                                 {value.responseType === "Yes-No-NA" ? (
                                   <Accordion
-                                    expanded={expandedTableDetail === "panel6"}
-                                    onChange={handleTDChange("panel6")}
+                                    expanded={expandedTableDetail === `panel6 ${index}`}
+                                    onChange={handleTDChange(`panel6 ${index}`)}
                                     className="backPaperAccordian"
                                   >
                                     <AccordionSummary
@@ -553,7 +647,7 @@ const Checks = () => {
                                             classes.accordingHeaderContentLeft
                                           }
                                         >
-                                          <ListItemText primary="Permit system- whether work is done through relevant Permit" />
+                                          <ListItemText primary={value.question} />
                                         </ListItem>
                                       </List>
                                     </AccordionSummary>
@@ -561,24 +655,20 @@ const Checks = () => {
                                       <Grid container spacing={2}>
                                         <Grid item md={12} xs={12}>
                                           <FormControl component="fieldset">
-                                            <FormLabel
-                                              component="legend"
-                                              className="checkRadioLabel"
-                                            >
-                                              {value.question}
-                                            </FormLabel>
                                             <RadioGroup
                                               row
                                               aria-label="select-typeof-compliance"
                                               name="select-typeof-compliance"
-                                            >
-                                              <FormControlLabel
-                                                value="contractor-compliance"
+                                            >{radioDecide.map((option) => 
+                                            <FormControlLabel
+                                                value={option}
                                                 className="selectLabel"
                                                 control={<Radio />}
-                                                label="Yes"
-                                              />
-                                              <FormControlLabel
+                                                onChange={(e) => handleChangeData(e ,"defaultResponse" , index , value.id)} 
+                                                label={option}
+                                              />)}
+                                              
+                                              {/* <FormControlLabel
                                                 value="workarea-compliance"
                                                 className="selectLabel"
                                                 control={<Radio />}
@@ -589,7 +679,7 @@ const Checks = () => {
                                                 className="selectLabel"
                                                 control={<Radio />}
                                                 label="NA"
-                                              />
+                                              /> */}
                                             </RadioGroup>
                                           </FormControl>
                                         </Grid>
@@ -598,6 +688,7 @@ const Checks = () => {
                                             label="Findings"
                                             name="findings"
                                             id="findings"
+                                            onChange={(e) => handleChangeData(e ,"findings" , index , value.id)} 
                                             multiline
                                             rows={4}
                                             defaultValue=""

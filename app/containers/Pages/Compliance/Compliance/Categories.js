@@ -212,40 +212,39 @@ const Categories = () => {
     //   });
     // });
 //await fetchCategoryData(temp)
+await fetchComplianceData(result)
     await setCheckListGroups(result);
   };
 
-  const fetchComplianceData = async () => {
+  const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results
         let groupIds = result.groupIds.split(',')
-        console.log(groupIds)
+        let subGroupIds = result.subGroupIds.split(',')
+        setGroupId(groupIds)
+        setSubGroupId(subGroupIds)
         let tempGroup = []
         let tempSubGroup = []
         for (let i = 0; i < groupIds.length; i++){
 
-          console.log(checkGroups)
-          for (let j = 0; j < checkGroups.length; j++){
-            console.log(checkGroups[j]['checklistId'] === groupIds[i],">>>>>")
-            if(checkGroups[j]['checklistId'] === groupIds[i]){
-              tempGroup.push(checkGroups[j])
+          for (let j = 0; j < data.length; j++){
+            if(data[j]['checklistId'] == groupIds[i]){
+              tempGroup.push(data[j])
             }
           }
         }
-        console.log(tempGroup)
+        setCheckData(tempGroup)
         setForm(result);
-        
-        // fetchTeamMembers(result.inspectionTeam);
-        // fetchBreakDownData(result.fkProjectStructureIds);
       })
       .catch((error) => console.log(error));
   };
 
+
+
   const handlePhysicalHazards = async (e, value,index) => {
-    console.log(value)
     let tempGroupId = [...groupId]
     let temp = [...checkData];
     if (e.target.checked == false) {
@@ -271,7 +270,7 @@ const Categories = () => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
       temp.map((data, index) => {
-        if (data === value) {
+        if (data == value) {
           temp.splice(index, 1);
         }
       });
@@ -280,21 +279,23 @@ const Categories = () => {
     }
     setSubGroupId(temp);
   };
+
   const handelSelectOption = (key) => {
-    for (let i = 0; i <= checkListGroupsData.length; i++) {
-      if (checkListGroupsData[i] != undefined && checkListGroupsData[i]["groupName"] == key) {
+    for (let i = 0; i <= groupId.length; i++) {
+      if (groupId[i] != undefined && groupId[i] == key['checklistId']) {
         return true
       }
     }
   }
  
-  const handelSelectOptionSubGroup = (key) => {
-    for (let i = 0; i <= checkListGroupsData.length; i++) {
-      if (checkListGroupsData[i] != undefined && checkListGroupsData[i]["subGroupName"] == key) {
+  const handelSelectOptionSubGroup = (id) => {
+    for (let i = 0; i <= subGroupId.length; i++) {
+      if (subGroupId[i] != undefined && subGroupId[i] == id) {
         return true
       }
     }
   }
+  console.log(checkGroups,"LLLLLLLLLLLLLLLLLLLLLLLLLLL")
   const fetchCategoryData = async (data) => {
     const res = await api.get(
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
@@ -401,7 +402,7 @@ const Categories = () => {
                                         <Checkbox name={option.inputLabel} />
                                       }
                                       label={option.inputLabel}
-                                      checked={handelSelectOptionSubGroup(option.inputLabel)}
+                                      checked={handelSelectOptionSubGroup(option.id)}
                                       onChange={async (e) =>
                                         handleGroups(
                                           e,
