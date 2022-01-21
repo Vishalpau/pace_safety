@@ -466,7 +466,7 @@ const ObservationInitialNotification = (props) => {
       data.append("shift", form.shift),
       data.append("departmentName", form.departmentName),
       data.append("departmentId", form.departmentId),
-      data.append("reportedById", ((form.reportedById && (form.reportedById != undefind)) ? form.reportedById : 0)),
+      data.append("reportedById", ((form.reportedById && (form.reportedById != undefined)) ? form.reportedById : 0)),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment),
       data.append("reportedDate", handelTime(form.reportedDate)),
