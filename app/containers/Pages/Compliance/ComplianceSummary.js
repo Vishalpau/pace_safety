@@ -241,6 +241,8 @@ function ComplianceSummary() {
     const [complianceData, setComplianceData] = useState({})
     const [projectStructName, setProjectStructName] = useState([])
     const [team, setTeam] = useState([])
+    const [groupData,setGroupData] = useState([])
+    const [subGroupData,setSubGroupData] = useState([])
     // const [lessonsLearned, setLessonsLearned] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const history = useHistory();
@@ -324,10 +326,52 @@ function ComplianceSummary() {
     setMyAudioOpen(false);
   };
 
-  const fetchComplianceData = async () =>{
+  const fetchCheklistData = async () => {
+    const res = await api.get(
+      `/api/v1/core/checklists/companies/8/projects/15/compliance/`
+    );
+    const result = res.data.data.results;
+    await fetchComplianceData(result)
+
+  };
+
+  const fetchComplianceData = async (data) =>{
     let complianceId = localStorage.getItem('fkComplianceId')
     const res = await api.get(`/api/v1/audits/${complianceId}/`).then((response) => {
       let result = response.data.data.results
+      let groupIds = result.groupIds.split(',')
+        let subGroupIds = result.subGroupIds.split(',')
+        let tempGroup = []
+        let temp = {}
+        let tempSubGroup = []
+        for (let i = 0; i < groupIds.length; i++){
+
+          for (let j = 0; j < data.length; j++){
+            if(data[j]['checklistId'] == groupIds[i]){
+              console.log(data[j],"::::::::::::::::")
+              tempGroup.push(data[j])
+              temp[data[j].checkListName] = []
+            }
+          }
+        }
+        for (let i = 0; i < subGroupIds.length; i++){
+          
+          for (let j = 0; j < tempGroup.length; j++){
+            for (let k = 0; k < tempGroup[j]['checklistValues'].length; k++){
+              if(tempGroup[j]['checklistValues'][k]['id'] == subGroupIds[i]){
+                tempSubGroup.push(tempGroup[j]['checklistValues'][k])
+                temp[tempGroup[j]['checkListName']].push(tempGroup[j]['checklistValues'][k])
+                
+              }
+            }
+          }
+        }
+        console.log(temp,"AAAAAAAAAA")
+
+        console.log(tempSubGroup,">>>>>>>>>>")
+        
+        setGroupData(tempGroup)
+        setSubGroupData(temp)
       setComplianceData(result) 
       handelWorkArea(result)
       handleTeamName(result.inspectionTeam)
@@ -335,6 +379,32 @@ function ComplianceSummary() {
       setIsLoading(true)
     }).catch((error) => console.log(error))
   }
+
+  // const fetchComplianceData = async (data) => {
+  //   let complianceId = localStorage.getItem("fkComplianceId");
+  //   const res = await api
+  //     .get(`/api/v1/audits/${complianceId}/`)
+  //     .then((response) => {
+  //       let result = response.data.data.results
+  //       let groupIds = result.groupIds.split(',')
+  //       let subGroupIds = result.subGroupIds.split(',')
+  //       setGroupId(groupIds)
+  //       setSubGroupId(subGroupIds)
+  //       let tempGroup = []
+  //       let tempSubGroup = []
+  //       for (let i = 0; i < groupIds.length; i++){
+
+  //         for (let j = 0; j < data.length; j++){
+  //           if(data[j]['checklistId'] == groupIds[i]){
+  //             tempGroup.push(data[j])
+  //           }
+  //         }
+  //       }
+  //       setCheckData(tempGroup)
+  //       setForm(result);
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   const handelWorkArea = async (complianceData) => {
     const fkCompanyId =
@@ -409,11 +479,11 @@ function ComplianceSummary() {
       }
     } catch (error) { }
   };
-
+  console.log(groupData,":::::::::::::")
 
   useEffect(() => {
     if (id) {
-      fetchComplianceData();  
+      fetchCheklistData();  
     }
   }, []);
 
@@ -834,6 +904,8 @@ function ComplianceSummary() {
                                           >
                                             <FormLabel className="checkRadioLabel" component="legend">Group name</FormLabel>
                                             <FormGroup>
+                                              {groupData.map((value, index) => (
+
                                               
                                               <FormControlLabel
                                                 //className={classNames(classes.checkedUnclick, classes.labelValue)}
@@ -849,24 +921,9 @@ function ComplianceSummary() {
                                                     }}
                                                   />
                                                 )}
-                                                label="Environment"
+                                                label={value.checkListLabel}
                                               />
-                                              <FormControlLabel
-                                                //className={classNames(classes.checkedUnclick, classes.labelValue)}
-                                                className="checkRadioLabel checkedUnclick"
-                                                control={(
-                                                  <Checkbox
-                                                    checked={checkedC}
-                                                    onChange={handleChange('checkedC')}
-                                                    value="checkedC"
-                                                    classes={{
-                                                      root: classes.root,
-                                                      checked: classes.checked,
-                                                    }}
-                                                  />
-                                                )}
-                                                label="Housekeeping"
-                                              />
+                                              )) }
                                             </FormGroup>
                                           </Grid>
                                         
@@ -876,14 +933,16 @@ function ComplianceSummary() {
                                             xs={12}
                                           >
                                             <Grid container spacing={3}>
+                                            {Object.entries(subGroupData).map(([key, value]) => (
                                               <Grid
                                                 item
                                                 md={12}
                                                 xs={12}
                                                 className={classes.formBox} 
                                               >
-                                                <FormLabel className="checkRadioLabel" component="legend">Environment</FormLabel>
+                                                <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel>
                                                 <FormGroup>
+                                                {value.map((value, i) =>(
                                                   <FormControlLabel
                                                     //className={classes.labelValue}
                                                     className="checkedUnclick"
@@ -897,50 +956,12 @@ function ComplianceSummary() {
                                                         value="checkedC"
                                                       />
                                                     )}
-                                                    label="Category"
+                                                    label={value.inputLabel}
                                                   />
-                                                  <FormControlLabel
-                                                    //className={classes.labelValue}
-                                                    className="checkedUnclick"
-                                                    control={(
-                                                      <Checkbox
-                                                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                        name="checkedI"
-                                                        onChange={handleChange}
-                                                        checked={checkedC}
-                                                        value="checkedC"
-                                                      />
-                                                    )}
-                                                    label="Category 2"
-                                                  />
+                                                ))}
                                                 </FormGroup>
                                               </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                xs={12}
-                                                className={classes.formBox} 
-                                              >
-                                                <FormLabel className="checkRadioLabel" component="legend">Housekeeping</FormLabel>
-                                                <FormGroup>
-                                                  <FormControlLabel
-                                                    //className={classes.labelValue}
-                                                    className="checkedUnclick"
-                                                    control={(
-                                                      <Checkbox
-                                                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                        name="checkedI"
-                                                        onChange={handleChange}
-                                                        checked={checkedC}
-                                                        value="checkedC"
-                                                      />
-                                                    )}
-                                                    label="Category"
-                                                  />
-                                                </FormGroup>
-                                              </Grid>
+                                            ))}
                                             </Grid>
                                           </Grid>
                                         </Grid>

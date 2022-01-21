@@ -451,18 +451,21 @@ await fetchComplianceData(result)
         `/api/v1/configaudits/auditquestions/groups/${groupName}/subgroups/${subGroupName}/?company=8&project=15`
       );
       const result2 = res.data.data.results;
+      console.log(result2);
       temp.push(result2);
     }
+    console.log(temp);
     temp.map((value, i) => {
       temp[i].map((value, index) => {
-        console.log(value,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         tempCheckData.push({
           "questionId": value.id,
           "question": value.question,
           "criticality": "",
           "auditStatus": "",
           "performance": "",
+          "groupId" : temp[i].id,
           "groupName": value.groupName,
+          "subGroupId": temp[i].id,
           "subGroupName" : value.subGroupName,
           "defaultResponse":"",
           "score":"",
@@ -472,37 +475,47 @@ await fetchComplianceData(result)
           "updatedBy": 0,
           "fkAuditId": localStorage.getItem('fkComplianceId')
         })
+        console.log(tempCheckData);
         categoriesData[value["groupName"]].push(value);
       });
     });
-    // for(let i=0; i<tempCheckData.length; i++){
-    //   for()
-    // }
     await setCheckData(tempCheckData)
     await setCategories(categoriesData);
   };
-  const handelSubmit = () => {
+  const handelSubmit = async() => {
+    if(checkData[0].id){
+      console.log("put")
+      const res = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,checkData)
+    }else{
+      console.log("post")
+      const res = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,checkData)
+    }
     history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
 
-  const handleChangeData = (e , field , index , id) => {
+  const handleChangeData = (value , field , index , id) => {
     // console.log(e, field , index);
-    let value = e.target.value
     let temp = [...checkData]
     for(let i = 0; i < temp.length; i++) {
-      console.log(temp[i]['questionId'] , id)
+      // console.log(temp[i]['questionId'] , id)
       if(temp[i]['questionId'] == id){
-        console.log(value,">>>>>")
         temp[i][field] = value
       }
     }
-    console.log(temp)
+    setCheckData(temp)
+  }
+
+  const fetchData = async () => {
+    const res = await api.get(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`)
+    const result = res.data.data.results
+    await setCheckData(result)
   }
   
   useEffect(() => {
     //fetchCheklist();
     fetchCheklistData();
+    fetchData();
   }, []);
   return (
     <>
@@ -664,7 +677,7 @@ await fetchComplianceData(result)
                                                 value={option}
                                                 className="selectLabel"
                                                 control={<Radio />}
-                                                onChange={(e) => handleChangeData(e ,"defaultResponse" , index , value.id)} 
+                                                onChange={(e) => handleChangeData(e.target.value ,"defaultResponse" , index , value.id)} 
                                                 label={option}
                                               />)}
                                               
@@ -688,7 +701,7 @@ await fetchComplianceData(result)
                                             label="Findings"
                                             name="findings"
                                             id="findings"
-                                            onChange={(e) => handleChangeData(e ,"findings" , index , value.id)} 
+                                            onChange={(e) => handleChangeData(e.target.value ,"findings" , index , value.id)} 
                                             multiline
                                             rows={4}
                                             defaultValue=""
