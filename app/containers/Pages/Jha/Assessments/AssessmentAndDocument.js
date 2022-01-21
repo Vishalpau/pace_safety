@@ -218,7 +218,7 @@ const AssessmentAndDocument = () => {
         const tempPerformance = {};
         const jhaId = handelJhaId();
         const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`);
-        const apiData = res.data.data.results.filter((value) => value.hazard !== 'N/A');
+        const apiData = res.data.data.results;
 
         const project = JSON.parse(localStorage.getItem('projectName'));
         const { projectId } = project.projectName;
@@ -570,7 +570,10 @@ const AssessmentAndDocument = () => {
                                                 xs={12}
                                             >
                                                 <div>
-                                                    {form.map((value, index) => (
+                                                    
+                                                    {form.map((value, index) => 
+                                                 
+                                                        value.hazard == 'N/A' ? null :
                                                         <Accordion
                                                             defaultExpanded
                                                             className={classes.backPaper}
@@ -653,7 +656,8 @@ const AssessmentAndDocument = () => {
                                                                 </Grid>
                                                             </AccordionDetails>
                                                         </Accordion>
-                                                    ))}
+                                                        
+                                                    )}
                                                 </div>
                                                 {false ?
                                                     <Grid item xs={12} className="formFieldBTNSection paddTRemove marginB15" align="left">

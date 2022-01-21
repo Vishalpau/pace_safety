@@ -133,6 +133,8 @@ const useStyles = makeStyles((theme) => ({
   observationFormBox: {
     width: "100%",
     height: "100%",
+    borderRadius: '15px',
+
   },
   loadingWrapper: {
     margin: theme.spacing(1),
@@ -385,7 +387,7 @@ const ObservationInitialNotification = (props) => {
     shift: "",
     departmentName: "",
     departmentId: 0,
-    reportedById: user.id,
+    reportedById:  user.id,
     reportedByName: user.name,
     reportedByDepartment: userDepartment[0] ? userDepartment[0].departmentName : "",
     reportedDate: new Date().toISOString(),
@@ -464,7 +466,7 @@ const ObservationInitialNotification = (props) => {
       data.append("shift", form.shift),
       data.append("departmentName", form.departmentName),
       data.append("departmentId", form.departmentId),
-      data.append("reportedById", form.reportedById),
+      data.append("reportedById", ((form.reportedById && (form.reportedById != undefind)) ? form.reportedById : 0)),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment),
       data.append("reportedDate", handelTime(form.reportedDate)),
@@ -742,7 +744,7 @@ const ObservationInitialNotification = (props) => {
     PickList();
     fetchAttachment()
   }, [props.initialValues.breakDown]);
-
+  console.log(form.reportedById,'reportedById')
   return (
     <>
       <CustomPapperBlock title="iCare" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
@@ -809,11 +811,11 @@ const ObservationInitialNotification = (props) => {
                           setValueReportedBy({
                             inputValue: newValue,
                           });
-
+                          
                           setForm({
                             ...form,
                             reportedByName: newValue,
-                            reportedById: "",
+                            reportedById: 0,
                             reportedByBadgeId: "",
                           });
                         } else if (newValue && newValue.inputValue) {
@@ -1659,15 +1661,17 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-                  {attachment !== "" ?
+            {console.log(attachment)}
+            {attachment !== "" && attachment != undefined ?
             <Grid
             item
             md={12}
             xs={12}
             className={classes.formBBanner}
           >
-            <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
-          </Grid> 
+            <img className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
+          </Grid>
+          
           :null}
 
             {Object.values(error).length > 0 ?
@@ -1703,7 +1707,7 @@ const ObservationInitialNotification = (props) => {
               <Button
                 variant="outlined"
                 size="medium"
-                className={classes.custmCancelBtn}
+                className="buttonStyle custmCancelBtn"
                 onClick={() => {
                   history.push("/app/icare");
                 }}

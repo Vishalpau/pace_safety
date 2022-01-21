@@ -62,7 +62,7 @@ const JhaComment = () => {
     const classes = useStyles();
 	return (
 
-        <CustomPapperBlock title="JHA - Comments" icon={jhaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="JHA - Comments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
             <Grid container spacing={3}>	
                 <Grid item md={9} xs={12}>
                     <Paper elevation={1} className="paperSection">

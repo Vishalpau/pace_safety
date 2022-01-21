@@ -125,6 +125,15 @@ function UserMenu(props) {
   const handleClose = () => {
     setMenuState({ anchorEl: null, openMenu: null });
   };
+
+  const companyId = JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
+  const projectId = JSON.parse(localStorage.getItem("projectName")) !== null
+  ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+  : null
+  const selectBreakDown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+  ? JSON.parse(localStorage.getItem("selectBreakDown")).selectBreakDown
+  : null
+
   const { classes, dark } = props;
   const { anchorEl, openMenu } = menuState;
   // Apps Menu
@@ -188,7 +197,7 @@ function UserMenu(props) {
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
-      // console.log('subs',data)
+      console.log('sub', data)
     setSubscriptions(data);
     setIsLoading(true)
   }
@@ -228,8 +237,7 @@ function UserMenu(props) {
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
         });
-        // console.log('apps',data)
-        
+        console.log('apps', data)
       await setApps(data.map(app => app.appId))
     }
   }
@@ -366,9 +374,9 @@ function UserMenu(props) {
         ? JSON.parse(localStorage.getItem("userDetails")).name
         : null}
             </Typography>
-            <Typography className="userDropDown">
+            {/* <Typography className="userDropDown">
               Safety Department
-            </Typography>
+            </Typography> */}
             <Typography className="userDropDownLast">
               {/* {JSON.parse(localStorage.getItem('projectName')).projectName.projectName} */}
            {   JSON.parse(localStorage.getItem("projectName")) !== null
@@ -379,10 +387,9 @@ function UserMenu(props) {
         </Grid>
         <MenuItem
           component={Link}
-          to={link.calendar}
           className="userText"
           onClick={() =>
-            window.location.href = `${SSO_URL}/UserProfile`}
+            window.location.href = `${SSO_URL}/UserProfile/?companyId=${companyId}`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <g id="Profile-24" transform="translate(-2 -2)">
@@ -397,8 +404,8 @@ function UserMenu(props) {
         <Divider />
         <MenuItem
           component={Link}
-          to={link.calendar}
           className="userText"
+          disabled={true}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <g id="setting-24" transform="translate(-1041 -51)">
@@ -437,8 +444,8 @@ function UserMenu(props) {
         <Divider />
         <MenuItem
           component={Link}
-          to={link.calendar}
           className="userText"
+          disabled={true}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <g id="switch-compnay-24" transform="translate(-96.011 -108.003)">

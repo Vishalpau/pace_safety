@@ -203,7 +203,7 @@ const LessonsLearned = () => {
   }, [])
   return (
     <>
-      <CustomPapperBlock title="Assessment - Lessons learned" icon={jhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="Assessment - Lessons learned" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
         <Row>
           <Col md={9}>
             <Grid container spacing={3}>

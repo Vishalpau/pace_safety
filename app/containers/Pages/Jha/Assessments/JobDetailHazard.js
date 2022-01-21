@@ -543,6 +543,7 @@ const JobDetails = (props) => {
         const projectId = project.projectName.projectId
         // const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
         const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards/${projectId}/`)
+        console.log(res, 'res')
         const checklistGroups = res.data.data.results[0].checklistGroups
         checklistGroups.map((value) => {
             temp[value["checkListGroupName"]] = []
@@ -653,7 +654,7 @@ const JobDetails = (props) => {
                 "hazard": "N/A",
                 "risk": "",
                 "control": "",
-                "safetyChecks" : hazard_value,
+                "safetyChecks": hazard_value,
                 "humanPerformanceAspects": "string",
                 "status": "Active",
                 "createdBy": 0,
@@ -666,6 +667,14 @@ const JobDetails = (props) => {
     const handelSelectOption = (checklistId, hazard) => {
         for (let i = 0; i <= formHazard.length; i++) {
             if (formHazard[i] != undefined && formHazard[i]["hazard"] == hazard && formHazard[i]["fkChecklistId"] == checklistId) {
+                return true
+            }
+        }
+    }
+
+    const handelSelectOptionPpe = (checklistId, safetyChecks) => {
+        for (let i = 0; i <= formHazard.length; i++) {
+            if (formHazard[i] != undefined && formHazard[i]["safetyChecks"] == safetyChecks && formHazard[i]["fkChecklistId"] == checklistId) {
                 return true
             }
         }
@@ -692,7 +701,7 @@ const JobDetails = (props) => {
         allHazard.map((values, index) => {
             allHazard[index].map((value) => {
                 if (value["id"] == undefined) {
-                    if (value["hazard"] !== "" ) {
+                    if (value["hazard"] !== "") {
                         value["fkJhaId"] = newJhaId
                         hazardNew.push(value)
                     }
@@ -915,7 +924,7 @@ const JobDetails = (props) => {
                                                 component="legend"
                                                 className="checkRadioLabel"
                                             >
-                                                Do you have a permit to perform the JHA? *
+                                                Do you have a permit to perform the JSA? *
                                             </FormLabel>
                                             <RadioGroup
                                                 style={{ display: 'block' }}
@@ -1250,7 +1259,7 @@ const JobDetails = (props) => {
                                                         <FormControlLabel
                                                             control={<Checkbox name={option.inputLabel} />}
                                                             label={option.inputLabel}
-                                                            checked={handelSelectOption(option.checkListId, option.inputLabel)}
+                                                            checked={handelSelectOptionPpe(option.checkListId, option.inputLabel)}
                                                             onChange={async (e) => handlePhysicalPpe(e, option.checkListId, option.inputLabel)}
                                                         />
                                                     ))}

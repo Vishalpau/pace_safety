@@ -352,7 +352,7 @@ const Approvals = () => {
   const classes = useStyles();
   return (
     <>
-      <CustomPapperBlock title="Assessment - Approval" icon={jhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="Assessment - Approval" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
         {/* {console.log(projectData)} */}
         {loading == false ?
           <Row>
