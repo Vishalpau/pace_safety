@@ -323,7 +323,7 @@ const [projectOpen , setProjectOpen] = useState(false)
   const classes = useStyles();
   return (
     <>
-        <CustomPapperBlock title="Assessment - Approval" icon={ahaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="Assessment - Approval" icon='customDropdownPageIcon ahaPageIcon' whiteBg>
         {isLoading ? <>
           <Row>
             <Col md={9}>

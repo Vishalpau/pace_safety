@@ -266,8 +266,8 @@ const FlhaDetails = (props) => {
   const fkUserId = JSON.parse(localStorage.getItem('userDetails')).id;
 
   const parts = history.location.pathname.split('/');
-  let last_part = parts[parts.length - 1].replace('-', ' ') * 1;
-
+  let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
+// alert(last_part)
   const selectBreakdown =
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -448,7 +448,7 @@ const FlhaDetails = (props) => {
 
   return (
     <div>
-      <CustomPapperBlock title="FLHA - Initial Assessment" icon={flhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -957,7 +957,7 @@ const FlhaDetails = (props) => {
                   </div>
                   <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
                     onClick={() => {
-                      history.push("/app/pages/assesments/xflha/"+ localStorage.getItem('flhaId'));
+                      history.push("/app/pages/assesments/flhasummary/"+ last_part);
                     }}>
 
                     Cancel

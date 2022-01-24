@@ -175,7 +175,16 @@ import {
   FlhaActivities,
   FlhaComments,
   GeneralObservationPrints,
-  ControlTowerIcare
+  ControlTowerIcare,
+  Compliance,
+  ComplianceSummary,
+  ComplianceDetails,
+  Categories,
+  Checks,
+  PerformanceSummary,
+  ComplianceForm,
+  ComplianceComment,
+  ComplianceActivity,
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -616,6 +625,18 @@ function Application(props) {
         <Route path="/app/pages/assesments/FlhaConfigHazard" component={FlhaConfigHazard} /> */}
         {/* Control Tower */}
         <Route path="/app/pages/control-tower/controltower-icare" component={ControlTowerIcare} />
+
+        {/* Compliance Routes */}
+        <Route path="/app/pages/compliance" exact component={Compliance} />
+        <Route path="/app/pages/compliance/compliance-summary/:id" exact component={ComplianceSummary} />
+        <Route path="/app/pages/compliance/compliance-details" exact component={ComplianceDetails} />
+        <Route path="/app/pages/compliance/compliance-details/:id" exact component={ComplianceDetails} />
+        <Route path="/app/pages/compliance/compliance" exact component={ComplianceForm} />
+        <Route path="/app/pages/compliance/checks" exact component={Checks} />
+        <Route path="/app/pages/compliance/categories" exact component={Categories} />
+        <Route path="/app/pages/compliance/performance-summary" exact component={PerformanceSummary} />
+        <Route path="/app/pages/compliance-comment" component={ComplianceComment} />
+        <Route path="/app/pages/compliance-activity" component={ComplianceActivity} />
 
         {/* Default */}
         <Route component={NotFound} />

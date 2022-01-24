@@ -40,6 +40,7 @@ import {
 } from "../../../utils/constants";
 // import PickListData from "../../../utils/Picklist/InitialPicklist";
 import PickListData from "../../../utils/Picklist/InvestigationPicklist";
+import ShiftPickListData from "../../../utils/Picklist/ShiftPickListData";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import Loader from "../Loader"
@@ -132,6 +133,8 @@ const useStyles = makeStyles((theme) => ({
   observationFormBox: {
     width: "100%",
     height: "100%",
+    borderRadius: '15px',
+
   },
   loadingWrapper: {
     margin: theme.spacing(1),
@@ -369,7 +372,7 @@ const ObservationInitialNotification = (props) => {
     observationClassification: "",
     stopWork: "",
     nearMiss: "",
-    acceptAndPledge: "",
+    acceptAndPledge: "Yes",
     personRecognition: "",
     observationTitle: "",
     observationDetails: "",
@@ -384,7 +387,7 @@ const ObservationInitialNotification = (props) => {
     shift: "",
     departmentName: "",
     departmentId: 0,
-    reportedById: user.id,
+    reportedById:  user.id,
     reportedByName: user.name,
     reportedByDepartment: userDepartment[0] ? userDepartment[0].departmentName : "",
     reportedDate: new Date().toISOString(),
@@ -463,7 +466,7 @@ const ObservationInitialNotification = (props) => {
       data.append("shift", form.shift),
       data.append("departmentName", form.departmentName),
       data.append("departmentId", form.departmentId),
-      data.append("reportedById", form.reportedById),
+      data.append("reportedById", ((form.reportedById && (form.reportedById != undefined)) ? form.reportedById : 0)),
       data.append("reportedByName", form.reportedByName),
       data.append("reportedByDepartment", form.reportedByDepartment),
       data.append("reportedDate", handelTime(form.reportedDate)),
@@ -727,7 +730,7 @@ const ObservationInitialNotification = (props) => {
   const classes = useStyles();
 
   const PickList = async () => {
-    setShiftType(await PickListData(47));
+    setShiftType(await ShiftPickListData(47));
     setClassification(await PickListData(82));
     await setIsLoading(true);
   };
@@ -741,10 +744,10 @@ const ObservationInitialNotification = (props) => {
     PickList();
     fetchAttachment()
   }, [props.initialValues.breakDown]);
-
+  console.log(form.reportedById,'reportedById')
   return (
     <>
-      <CustomPapperBlock title="iCare" icon={obsIcon} whiteBg>
+      <CustomPapperBlock title="iCare" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
 
         {isLoading ? (
           <Grid container spacing={3} className={classes.observationNewSection}>
@@ -808,11 +811,11 @@ const ObservationInitialNotification = (props) => {
                           setValueReportedBy({
                             inputValue: newValue,
                           });
-
+                          
                           setForm({
                             ...form,
                             reportedByName: newValue,
-                            reportedById: "",
+                            reportedById: 0,
                             reportedByBadgeId: "",
                           });
                         } else if (newValue && newValue.inputValue) {
@@ -1551,7 +1554,7 @@ const ObservationInitialNotification = (props) => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
-
+                {form.fkCompanyId === 3 ? 
                   <Grid item md={12} xs={12} className={classes.formBox}>
                     <FormControl component="fieldset">
                       <FormLabel component="legend" className="checkRadioLabel">
@@ -1579,6 +1582,7 @@ const ObservationInitialNotification = (props) => {
                       </RadioGroup>
                     </FormControl>
                   </Grid>
+                : null}
 
                   {notificationSentValue.map((value, index) => (
                     <Grid item md={12} xs={12} className={classes.formBox}>
@@ -1646,6 +1650,7 @@ const ObservationInitialNotification = (props) => {
                       checkedIcon={<CheckBoxIcon fontSize="small" />}
                       error={error.acceptAndPledge}
                       name="checkedI"
+                      checked = {true}
                       onChange={(e) => {
                         handlePledge(e);
                       }}
@@ -1656,15 +1661,18 @@ const ObservationInitialNotification = (props) => {
               </FormGroup>
               <p style={{ color: "red" }}>{error.acceptAndPledge}</p>
             </Grid>
-                  {attachment !== "" ?
+            {console.log(attachment)}
+            {attachment !== "" && attachment != undefined ?
             <Grid
             item
             md={12}
             xs={12}
             className={classes.formBBanner}
           >
-            <Avatar className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
-          </Grid> :null}
+            <img className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
+          </Grid>
+          
+          :null}
 
             {Object.values(error).length > 0 ?
               <Grid item xs={12} md={6} className={classes.errorsWrapper}>
@@ -1699,7 +1707,7 @@ const ObservationInitialNotification = (props) => {
               <Button
                 variant="outlined"
                 size="medium"
-                className={classes.custmCancelBtn}
+                className="buttonStyle custmCancelBtn"
                 onClick={() => {
                   history.push("/app/icare");
                 }}

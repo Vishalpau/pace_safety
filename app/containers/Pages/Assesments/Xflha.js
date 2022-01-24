@@ -324,7 +324,7 @@ const useStyles = makeStyles((theme) => ({
       float: 'left',
     },
   },
-  
+
   newIncidentButton: {
     marginTop: '20px',
     marginLeft: '5px',
@@ -588,8 +588,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   hoverA: {
-      backgroundColor: '#f47607 !important',
-      opacity: '0.9',
+    backgroundColor: '#f47607 !important',
+    opacity: '0.9',
     '&:hover': {
       backgroundColor: '#f47607 !important',
       opacity: '0.9',
@@ -658,7 +658,7 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'left',
       fontWeight: '600',
       '&:hover': {
-       color: '#f47607 !important',
+        color: '#f47607 !important',
       },
     },
     '& .MuiTab-textColorInherit.Mui-selected': {
@@ -777,8 +777,8 @@ function xflha(props) {
 
   const classes = useStyles();
   const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-  ? JSON.parse(localStorage.getItem('userDetails')).id
-  : null;
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
   const fetchData = async () => {
     await setPage(1)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
@@ -794,16 +794,17 @@ function xflha(props) {
     }
     const fkProjectStructureIds = struct.slice(0, -1);
     if (assessments === "My Assessments") {
-    const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}&createdBy=${createdBy}`);
-    const result = res.data.data.results.results
+      const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}&createdBy=${createdBy}`);
+      const result = res.data.data.results.results
       await setFlhas(result)
+
       await setTotalData(res.data.data.results.count)
       await setPageData(res.data.data.results.count / 25)
       let pageCount = Math.ceil(res.data.data.results.count / 25)
       await setPageCount(pageCount)
     } else {
-    const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
-    const result = res.data.data.results.results
+      const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
+      const result = res.data.data.results.results
       await setFlhas(result)
       await setTotalData(res.data.data.results.count)
       await setPageData(res.data.data.results.count / 25)
@@ -813,6 +814,16 @@ function xflha(props) {
     await setIsLoading(true)
 
   };
+
+  let timer
+  let debounce = (fn, v, d) => {
+    return function () {
+      clearTimeout(timer)
+      
+      timer = setTimeout(() => setSeacrhFlha(v),d)
+    }
+  }
+  const handleSearch = e => debounce(fetchData, e.target.value.toLowerCase(), 500)()
 
   // const handleDelete = async (item) => {
   //   console.log(item[1].id)
@@ -972,12 +983,12 @@ function xflha(props) {
     } else {
       fetchData();
     }
-   
-  }, [props.projectName.breakDown, searchFlha, status,assessments]);
+
+  }, [props.projectName.breakDown, searchFlha, status, assessments]);
 
   useEffect(() => {
     allPickListDataValue()
-  },[]);
+  }, []);
 
   return (
 
@@ -993,16 +1004,16 @@ function xflha(props) {
             <Button size="medium" variant="contained" color="primary"
               className={classNames(classes.buttonsNew, classes.floatR)}
               onClick={() => history.push("/app/pages/assesments/flhaadd")} >
-              <ControlPointIcon className={classes.floatR} />
+              <AddIcon className={classes.floatR} />
               {' '}
-              Create XFLHA
+              Add new
             </Button>
           </Grid>
         </Grid>
       </Grid>
       <Box> {isLoading ? <>
 
-        
+
         <Grid container spacing={3}>
           <Grid item sm={6} xs={12} className={classes.listViewTab}>
             <AppBar position="static" className={classes.topNavTabBack}>
@@ -1068,7 +1079,7 @@ function xflha(props) {
                       input: classes.inputInput,
                     }}
                     inputProps={{ 'aria-label': 'search' }}
-                    onChange={(e) => setSeacrhFlha(e.target.value)}
+                    onChange={(e) => handleSearch(e)}
                   />
                 </Paper>
               </div>
@@ -1305,7 +1316,7 @@ function xflha(props) {
                                     <span item xs={1} className={classes.sepHeightTen}></span>
                                     <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                     </Typography> */}
-                                    {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                     <Typography variant="body1" display="inline">
                                       <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
                                     </Typography> */}
@@ -1810,8 +1821,8 @@ function xflha(props) {
                     ),
                     item[1]['closedDate'] !== null ? moment(item[1]["closedDate"]).format(
                       "Do MMMM YYYY"
-                    ): "-",
-                    item[1]["closedByName"] ? item[1]["closedByName"] :"-",
+                    ) : "-",
+                    item[1]["closedByName"] ? item[1]["closedByName"] : "-",
 
                   ])}
                   columns={columns}

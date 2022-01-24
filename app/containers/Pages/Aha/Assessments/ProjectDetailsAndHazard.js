@@ -241,8 +241,10 @@ const ProjectDetailsAndHazard = () => {
   }
 
   const checkList = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const temp = {}
-    const res = await api.get("/api/v1/core/checklists/aha-hazards/1/")
+    const res = await api.get(`/api/v1/core/checklists/aha-hazards/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
@@ -696,7 +698,7 @@ const ProjectDetailsAndHazard = () => {
   }, []);
   return (
     <>
-        <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon'whiteBg>
         {isLoading ?
           <Grid container spacing={3} className={classes.observationNewSection}>
             <Grid container spacing={3} item xs={12} md={9}>

@@ -191,7 +191,12 @@ html .custmCancelBtn {
   padding-bottom: 5px;
   padding-top: 20px;
 }
-
+.userDropDownHeading {
+  font-size: 1.125rem !important;
+  line-height: 19px;
+  color: #06425C;
+  font-family: Montserrat-SemiBold !important;
+}
 /* .formControl {
   margin: .5rem 0;
   width: 100%;
@@ -260,6 +265,16 @@ html .custmCancelBtn {
   text-transform: none !important;
   color: #ffffff !important;
   padding: 5px 20px !important;
+}
+.buttonStyleDropdown {
+  background-color: #7890A4 !important;
+  font-size: 0.875rem !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  padding: 5px 20px !important;
+}
+.buttonStyleDropdown:hover {
+  background-color: #F28705 !important;
 }
 .quickActionSection nav {
   background-color: #7890A4;
@@ -406,6 +421,13 @@ html .custmCancelBtn {
 }
 .textCenter {
   justify-content: center;
+  text-align: center;
+}
+li.MuiMenuItem-root.textCenterButton {
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 12px;
+  padding-top: 18px;
 }
 ul.MuiMenu-list a.textCenter {
   justify-content: center;
@@ -426,9 +448,9 @@ li.MuiMenuItem-root.textCenter {
   padding-top: 16px;
 }
 a.MuiMenuItem-root.userText {
-  padding: 16px;
-  font-size: 14px;
-  color: #7890A4;
+  padding: 16px 16px 16px 30px;
+  font-size: 1rem;
+  color: #666666;
 }
 .MuiAvatar-root.MuiAvatar-circle.avtaProfile {
   height: 25px;
@@ -475,6 +497,32 @@ ul.MuiMenu-list a ul li.userName {
   border-radius: 5px 5px 5px 5px;
   background-color: #06425c;
 }
+.avtarCenter {
+  margin: 4px auto auto auto;
+}  
+.userPrigileGrid .avtarCenter {
+  width: 56px;
+  height: 56px;
+}
+.userPrigileGrid {
+  padding: 16px 16px 4px 16px !important;
+}
+.pTopFour {padding-top: 4px !important}
+.userDropDown {
+  padding: 2px;
+  font-size: 1rem !important;
+  color: #666666;
+  font-family: 'Montserrat-Medium' !important;
+  line-height: 19px !important;
+}
+.userDropDownLast {
+  padding: 2px 2px 30px 2px;
+  font-size: 1rem !important;
+  color: #666666;
+  font-family: 'Montserrat-Medium' !important;
+  line-height: 19px !important;
+}
+
 .tabContentDesign button.Mui-selected, .tabContentDesign button:hover {
   background-color: #ff8533;
   color: #ffffff;
@@ -850,7 +898,16 @@ ul.MuiMenu-list a ul li.userName {
   background-position: -282px -405px;
 }
 .flhaPageIcon {
-  background-position: -921px -405px;
+  background-position: -921px -405px !important;
+}
+.iCarePageIcon {
+  background-position: -120px -405px !important;
+}
+.jsaPageIcon {
+  background-position: -1000px -405px !important;
+}
+.ahaPageIcon {
+  background-position: -1082px -405px !important;
 }
 .customDropdownPageIcon {
   height: 40px;
@@ -858,6 +915,9 @@ ul.MuiMenu-list a ul li.userName {
   display: block;
   background: url(../../../public/images/leftMenuIcons.png) no-repeat;
   float: left;
+}
+.homePageIcon {
+  background-position: -760px -405px;
 }
 .customDropdownPageFlhaIcon {
   height: 40px;
@@ -1090,7 +1150,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .complianceMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -1107,6 +1167,10 @@ ul.MuiMenu-list a ul li.userName {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat  -227px -16px;
   margin-right: 16px;
 }
+.administrationMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -22.313rem -1rem;
+  margin-right: 1rem;
+}
 .icareMenu .MuiListItemIcon-root {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -98px -16px;
   margin-right: 16px;
@@ -1115,6 +1179,11 @@ ul.MuiMenu-list a ul li.userName {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -292px -16px;
   margin-right: 16px;
 }
+.complianceMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -163px -16px;
+  margin-right: 16px;
+}
+ 
 .incident-managementMenu.selectmenu .MuiListItemIcon-root,
 /* .incidentManagMenu.selectmenu:hover .MuiListItemIcon-root,
 .incidentManagMenu:hover .MuiListItemIcon-root,
@@ -1157,6 +1226,27 @@ ul.MuiMenu-list a ul li.userName {
 .assessmentsMenu.selectmenu:hover,
 .assessmentsMenu.selectmenu,
 
+
+.complianceMenu.selectmenu .MuiListItemIcon-root,
+/* .complianceMenu.selectmenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemText-root span, */
+.complianceMenu.selectmenu:hover .MuiListItemText-root span,
+.complianceMenu.selectmenu .MuiListItemText-root span,
+.complianceMenu:hover,
+.complianceMenu.selectmenu:hover,
+.complianceMenu.selectmenu,
+
+.administrationMenu.selectmenu .MuiListItemIcon-root,
+/* .administrationMenu.selectmenu:hover .MuiListItemIcon-root,
+.administrationMenu:hover .MuiListItemIcon-root,
+.administrationMenu:hover .MuiListItemText-root span, */
+.administrationMenu.selectmenu:hover .MuiListItemText-root span,
+.administrationMenu.selectmenu .MuiListItemText-root span,
+.administrationMenu:hover,
+.administrationMenu.selectmenu:hover,
+.administrationMenu.selectmenu,
+
 .controlTowerMenu.selectmenu .MuiListItemIcon-root,
 /* .controlTowerMenu.selectmenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemIcon-root,
@@ -1175,13 +1265,14 @@ ul.MuiMenu-list a ul li.userName {
 .incident-managementMenu:hover .MuiListItemIcon-root,
 .complianceMenu:hover .MuiListItemIcon-root,
 .controlTowerMenu:hover .MuiListItemIcon-root,
-.assessmentsMenu:hover .MuiListItemIcon-root {
+.assessmentsMenu:hover .MuiListItemIcon-root, 
+.administrationMenu:hover .MuiListItemIcon-root {
   background-position-y: -80px;
 }
 
 
 /* Left sub menu custom style */
-.flhaMenu, .jhaMenu, .ahaMenu {
+.flhaMenu, .jhaMenu, .ahaMenu , .dropdown_listsMenu, .check_listsMenu {
   position: relative;
 }
 .MuiList-dense.MuiList-padding {
@@ -1189,7 +1280,10 @@ ul.MuiMenu-list a ul li.userName {
 }
 .flhaMenu .MuiTypography-colorTextSecondary,
 .jhaMenu .MuiTypography-colorTextSecondary,
-.ahaMenu .MuiTypography-colorTextSecondary {
+.ahaMenu .MuiTypography-colorTextSecondary,
+.dropdown_listsMenu .MuiTypography-colorTextSecondary,
+.check_listsMenu .MuiTypography-colorTextSecondary
+ {
   position: absolute;
   left: 72px;
   top: 10px;
@@ -1197,18 +1291,24 @@ ul.MuiMenu-list a ul li.userName {
 }
 .flhaMenu .MuiListItemText-inset,
 .jhaMenu .MuiListItemText-inset,
-.ahaMenu .MuiListItemText-inset {
+.ahaMenu .MuiListItemText-inset,
+.dropdown_listsMenu .MuiListItemText-inset,
+.check_listsMenu .MuiListItemText-inset {
   padding-left: 60px;
 }
 .flhaMenu .MuiListItemText-inset > span,
 .jhaMenu .MuiListItemText-inset > span,
-.ahaMenu .MuiListItemText-inset > span {
+.ahaMenu .MuiListItemText-inset > span,
+.dropdown_listsMenu .MuiListItemText-inset > span,
+.check_listsMenu .MuiListItemText-inset > span {
   padding-left: 48px;
 }
 
 .flhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .jhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
-.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg {
+.ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.dropdown_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.check_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg {
   position: absolute;
   top: 0px;
   left: 90px;
@@ -1224,6 +1324,12 @@ ul.MuiMenu-list a ul li.userName {
 .ahaMenu .leftCustomImg {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -931px -16px;
   margin-right: 5px; 
+}
+.dropdown_listsMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -26.375rem -1rem;
+}
+.check_listsMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -30.188rem -1rem;
 }
 
 .flhaMenu.selectmenu .MuiListItemText-root span,
@@ -1251,7 +1357,25 @@ ul.MuiMenu-list a ul li.userName {
 /* .dropdown_listsMenu:hover .MuiListItemText-root span, */
 .ahaMenu:hover,
 .ahaMenu.selectmenu:hover,
-.ahaMenu.selectmenu
+.ahaMenu.selectmenu,
+
+.dropdown_listsMenu.selectmenu .MuiListItemText-root span,
+.dropdown_listsMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.dropdown_listsMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.dropdown_listsMenu.selectmenu:hover .MuiListItemText-root span,
+/* .dropdown_listsMenu:hover .MuiListItemText-root span, */
+.dropdown_listsMenu:hover,
+.dropdown_listsMenu.selectmenu:hover,
+.dropdown_listsMenu.selectmenu,
+
+.check_listsMenu.selectmenu .MuiListItemText-root span,
+.check_listsMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.check_listsMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.check_listsMenu.selectmenu:hover .MuiListItemText-root span,
+/* .check_listsMenu:hover .MuiListItemText-root span, */
+.check_listsMenu:hover,
+.check_listsMenu.selectmenu:hover,
+.check_listsMenu.selectmenu
 {
   background-position-y: -80px;
   color: #ffffff !important;
@@ -1259,7 +1383,10 @@ ul.MuiMenu-list a ul li.userName {
 }
 .flhaMenu:hover .MuiListItemText-root span,
 .jhaMenu:hover .MuiListItemText-root span,
-.ahaMenu:hover .MuiListItemText-root span {
+.ahaMenu:hover .MuiListItemText-root span,
+.dropdown_listsMenu:hover .MuiListItemText-root span,
+.check_listsMenu:hover .MuiListItemText-root span
+ {
   background-position-y: -80px;
 }
 
@@ -1367,3 +1494,17 @@ ul.MuiMenu-list a ul li.userName {
 .MuiAvatar-root.MuiAvatar-square .MuiAvatar-img {
   border-radius: 10px;
 }
+.customDropdownPageIcon {
+  height: 40px;
+  width: 40px;
+  display: block;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
+  float: left;
+}
+.compliancePageIcon {
+  background-position: -200px -405px;
+}
+.paginationSection nav {
+  float: right;
+}
+

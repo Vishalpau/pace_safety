@@ -432,6 +432,8 @@ const FlhaDetails = (props) => {
   const [loading, setLoading] = useState(false);
   const [hazardtype, setHazardType] = useState([])
   const [notifyToValue, setNotifyToValue] = useState('')
+  const [disableForm, setDisableForm] = useState(false);
+
 
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -672,7 +674,7 @@ const FlhaDetails = (props) => {
     formDataPost.append('firstAid', jobForm.firstAid);
     formDataPost.append('jhaReviewed', jobForm.jhaReviewed);
     formDataPost.append('accessToJobProcedure', jobForm.accessToJobProcedure);
-
+    await setDisableForm(true)
     await setLoading(true)
     const res = await api.post(
       '/api/v1/flhas/',
@@ -932,7 +934,7 @@ const FlhaDetails = (props) => {
 
   return (
     <div>
-      <CustomPapperBlock title="FLHA - Initial Assessment" icon={flhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Typography variant="h6" className="sectionHeading">
@@ -996,6 +998,7 @@ const FlhaDetails = (props) => {
                       });
                     }}
                     value={jobForm.jobTitle}
+                    disabled ={disableForm}
                   />
                   <div style={{ color: "red" }}>{jobForm.jobTitle ? '' : error.jobTitle}</div>
                 </Grid>
@@ -1085,6 +1088,7 @@ const FlhaDetails = (props) => {
                       });
                     }}
                     value={jobForm.jobDetails}
+                    disabled ={disableForm}
                   />
                   <div style={{ color: "red" }}>{jobForm.jobDetails ? '' : error.jobDetails}</div>
 
@@ -1171,6 +1175,7 @@ const FlhaDetails = (props) => {
                             value={taskForm[taskIndex]["taskIdentification"]}
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
+                            disabled ={disableForm}
                           />
                         </Grid>
                         {taskValue.hazards.map((item, indexHazard) => (
@@ -1209,6 +1214,7 @@ const FlhaDetails = (props) => {
                                         label="Hazards"
                                         className="formControl"
                                         value={taskForm[taskIndex]["hazards"][indexHazard]["hazard"]}
+                                        disabled ={disableForm}
 
                                       />
                                       :
@@ -1218,6 +1224,7 @@ const FlhaDetails = (props) => {
                                           {' '}
                                         </InputLabel>
                                         <Select
+                                          disabled ={disableForm}
                                           labelId="demo-simple-select-label"
                                           id="incident-type"
                                           label="Hazards"
@@ -1242,10 +1249,10 @@ const FlhaDetails = (props) => {
                                       <FormLabel component="legend" className="checkRadioLabel">
                                         Is this hazard present?
                                       </FormLabel>
-                                      <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'hazardStatus')}>
-                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                                        <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
+                                      <RadioGroup  className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus}  onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'hazardStatus')}>
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm}/>
+                                        <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm}/>
+                                        <FormControlLabel value="N/A" control={<Radio />} label="N/A" disabled ={disableForm} />
                                       </RadioGroup>
                                     </FormControl>
                                   </div>
@@ -1265,6 +1272,7 @@ const FlhaDetails = (props) => {
                                       value={taskForm[taskIndex]["hazards"][indexHazard]["control"]}
                                       onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'control')
                                       }
+                                      disabled ={disableForm}
                                     />
                                   </Grid>
                                   <Grid item sm={12} xs={12}>
@@ -1273,9 +1281,9 @@ const FlhaDetails = (props) => {
                                         Has this control been put in place?
                                       </FormLabel>
                                       <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
-                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                        <FormControlLabel value="No" control={<Radio />} label="No" />
-                                        <FormControlLabel value="NA" control={<Radio />} label="N/A" />
+                                        <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                                        <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
+                                        <FormControlLabel value="NA" control={<Radio />} label="N/A" disabled ={disableForm} />
                                       </RadioGroup>
                                     </FormControl>
                                   </Grid>
@@ -1303,6 +1311,7 @@ const FlhaDetails = (props) => {
 
                                         onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskSeverityValue')
                                         }
+                                        disabled ={disableForm}
                                       >
                                         <MenuItem value={2}>Slightly harmful</MenuItem>
                                         <MenuItem value={4}>Harmful</MenuItem>
@@ -1327,6 +1336,7 @@ const FlhaDetails = (props) => {
                                         value={item.riskProbabilityValue}
                                         onChange={(e) => handleRiskChange(e, indexHazard, taskIndex, 'riskProbabilityValue')
                                         }
+                                        disabled ={disableForm}
                                       >
                                         <MenuItem value={1} selected={item.riskProbability == 1}>Highly unlikely</MenuItem>
                                         <MenuItem value={2} selected={item.riskProbability == 2}>Unlikely</MenuItem>
@@ -1454,9 +1464,9 @@ const FlhaDetails = (props) => {
                             <div className={classes.spacer}>
                               <FormControl component="fieldset">
                                 <RadioGroup row aria-label="status" name="visualConfirmationStatus" value={jobConfirmation[0].visualConfirmationStatus} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationStatus', 0)}>
-                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                  <FormControlLabel value="No" control={<Radio />} label="No" />
-                                  <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
+                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm}/>
+                                  <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
+                                  <FormControlLabel value="N/A" control={<Radio />} label="N/A" disabled ={disableForm}/>
                                 </RadioGroup>
                               </FormControl>
                             </div>
@@ -1471,9 +1481,9 @@ const FlhaDetails = (props) => {
                             <div className={classes.spacer}>
                               <FormControl component="fieldset">
                                 <RadioGroup row aria-label="status" name="visualConfirmationStatus" value={jobConfirmation[1].visualConfirmationStatus} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationStatus', 1)}>
-                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                  <FormControlLabel value="No" control={<Radio />} label="No" />
-                                  <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
+                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                                  <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
+                                  <FormControlLabel value="N/A" control={<Radio />} label="N/A"  disabled ={disableForm}/>
                                 </RadioGroup>
                               </FormControl>
                             </div>
@@ -1488,9 +1498,9 @@ const FlhaDetails = (props) => {
                             <div className={classes.spacer}>
                               <FormControl component="fieldset">
                                 <RadioGroup row aria-label="status" name="visualConfirmationStatus" value={jobConfirmation[2].visualConfirmationStatus} onChange={(e) => handleJobConfirmationFormChange(e, 'visualConfirmationStatus', 2)}>
-                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                                  <FormControlLabel value="No" control={<Radio />} label="No" />
-                                  <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
+                                  <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                                  <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
+                                  <FormControlLabel value="N/A" control={<Radio />} label="N/A" disabled ={disableForm} />
                                 </RadioGroup>
                               </FormControl>
                             </div>
@@ -1516,9 +1526,9 @@ const FlhaDetails = (props) => {
                         permitToWork: e.target.value,
                       });
                     }}>
-                      <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                      <FormControlLabel value="N/A" control={<Radio />} label="N/A" />
+                      <FormControlLabel value="yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                      <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm}/>
+                      <FormControlLabel value="N/A" control={<Radio />} label="N/A" disabled ={disableForm} />
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.permitToWork ? '' : error.permitToWork}</div>
                   </FormControl>
@@ -1544,6 +1554,7 @@ const FlhaDetails = (props) => {
                             });
                           }}
                           className="formControl"
+                          disabled ={disableForm}
                         />
                       </Grid>
                       <Grid item md={4} sm={4} xs={12}>
@@ -1561,6 +1572,7 @@ const FlhaDetails = (props) => {
                               referenceNumber: e.target.value,
                             });
                           }}
+                          disabled ={disableForm}
                         />
                       </Grid>
                     </Grid>
@@ -1599,6 +1611,7 @@ const FlhaDetails = (props) => {
                         control={<Checkbox name={value} />}
                         label={value}
                         onChange={async (e) => handelNotifyTo(e, key)}
+                        disabled ={disableForm}
                       />
                     ))}
                   </FormGroup>
@@ -1633,8 +1646,8 @@ const FlhaDetails = (props) => {
                         firstAid: e.target.value,
                       });
                     }}>
-                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                      <FormControlLabel value="Yes" control={<Radio />} label="Yes"  disabled ={disableForm}/>
+                      <FormControlLabel value="No" control={<Radio />} label="No"  disabled ={disableForm}/>
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.firstAid ? '' : error.firstAid}</div>
                   </FormControl>
@@ -1658,6 +1671,7 @@ const FlhaDetails = (props) => {
                         emergencyPhoneNumber: e.target.value,
                       });
                     }}
+                    disabled ={disableForm}
                   />
                 </Grid>
               </Grid>
@@ -1675,8 +1689,8 @@ const FlhaDetails = (props) => {
                         jhaReviewed: e.target.value,
                       });
                     }}>
-                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm}/>
+                      <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.jhaReviewed ? '' : error.jhaReviewed}</div>
                   </FormControl>
@@ -1700,6 +1714,7 @@ const FlhaDetails = (props) => {
                         evacuationPoint: e.target.value,
                       });
                     }}
+                    disabled ={disableForm}
                   />
                 </Grid>
               </Grid>
@@ -1717,8 +1732,8 @@ const FlhaDetails = (props) => {
                         accessToJobProcedure: e.target.value,
                       });
                     }}>
-                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
+                      <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                      <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
                     </RadioGroup>
                     <div style={{ color: "red" }}>{jobForm.accessToJobProcedure ? '' : error.accessToJobProcedure}</div>
                   </FormControl>
@@ -1742,6 +1757,7 @@ const FlhaDetails = (props) => {
                         location: e.target.value,
                       });
                     }}
+                    disabled ={disableForm}
                   />
                 </Grid>
               </Grid>
@@ -1763,6 +1779,7 @@ const FlhaDetails = (props) => {
                     name="checkedI"
                     onChange={handleChange}
                     value={jobForm.Checked}
+                    disabled ={disableForm}
                   />
                 )}
                 label="I pledge that I will always be responsible for my safety and the safety of people around me *"

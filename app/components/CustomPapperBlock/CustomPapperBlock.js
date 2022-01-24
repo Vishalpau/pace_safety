@@ -32,7 +32,8 @@ function PapperBlock(props) {
         <div className={classes.descBlock}>
           {icon && (
             <span className={classes.iconTitle}>
-              <img src={icon} className={icon} />
+              {/* <img src={icon} className={icon} /> */}
+              <span className={icon} />
             </span>
           )}
           <div className={classes.titleText}>
