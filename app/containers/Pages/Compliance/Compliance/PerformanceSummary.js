@@ -111,6 +111,19 @@ const useStyles = makeStyles((theme) => ({
       border: "none",
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
   // });
 }));
 
@@ -118,7 +131,9 @@ const PerformanceSummary = () => {
   const [form, setForm] = useState({});
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -130,13 +145,14 @@ const PerformanceSummary = () => {
       .then((response) => {
         let result = response.data.data.results;
         setForm(result);
+        setIsLoading(true)
       })
       .catch((error) => console.log(error));
   };
 
   const handelSubmit = async () => {
     let complianceId = localStorage.getItem("fkComplianceId");
-
+    setLoading(true);
     const res = await api
       .put(`/api/v1/audits/${complianceId}/`, form)
       .then((response) => {
@@ -144,7 +160,8 @@ const PerformanceSummary = () => {
           `/app/pages/compliance/compliance-summary/${complianceId}`
         );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {console.log(error),    setLoading(false);
+      });
   };
 
   const fetchNotificationSent = async () => {
@@ -164,6 +181,7 @@ const PerformanceSummary = () => {
         setNotificationSentValue(result);
       }
     } catch (error) {}
+    
   };
 
   const handleNotification = (e, value) => {
@@ -186,11 +204,11 @@ const PerformanceSummary = () => {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchComplianceData();
     fetchNotificationSent();
+    fetchComplianceData();
   }, []);
   return (
-    <>
+    <>{isLoading ? 
       <Grid container spacing={3} className={classes.observationNewSection}>
         <Grid container spacing={3} item xs={12} md={9}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -257,12 +275,18 @@ const PerformanceSummary = () => {
                   </FormLabel>
                   <FormGroup>
                     {notificationSentValue.map((value) => (
+                      
                       <FormControlLabel
                         className="selectLabel"
                         control={
                           <Checkbox
                             icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
                             checkedIcon={<CheckBoxIcon fontSize="small" />}
+                            checked={
+                                        form.notifyTo !== null
+                                          ? form.notifyTo.includes(value.id)
+                                          : ""
+                                      }
                             name="checkedI"
                             onChange={(e) => handleNotification(e, value.id)}
                           />
@@ -277,23 +301,32 @@ const PerformanceSummary = () => {
           </Grid>
 
           <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+          <div className={classes.loadingWrapper}>
             <Button
               size="medium"
               variant="contained"
               color="primary"
               className="spacerRight buttonStyle"
+              disabled={loading}
               onClick={() => handelSubmit()}
             >
               Submit
             </Button>
-            <Button
+            {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+            {/* <Button
               size="medium"
               variant="contained"
               color="primary"
               className="spacerRight buttonStyle"
             >
               Save
-            </Button>
+            </Button> */}
             <Button
               size="medium"
               variant="contained"
@@ -311,95 +344,7 @@ const PerformanceSummary = () => {
             </Button>
           </Grid>
 
-          {/* <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.inputFieldWithLabel}
-        >
-          <Typography variant="label" gutterBottom className={classes.labelName}>Performance summary</Typography>
-          <TextField
-            label="Describe here"
-            name="performancesummary"
-            id="performancesummary"
-            multiline
-            rows={4}
-            defaultValue=""
-            fullWidth
-            variant="outlined"
-            className={classes.formControl}
-          />
-        </Grid>
           
-        <Grid
-          item
-          md={12}
-          xs={12}
-          className={classes.formBox}
-        >
-          <FormLabel className={classes.labelName} component="legend">Notification</FormLabel>
-          <FormGroup className={classes.customCheckBoxList}>
-            <FormControlLabel
-              className={classes.labelValue}
-              control={(
-                <Checkbox
-                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                  name="checkedI"
-                  onChange={handleChange}
-                />
-              )}
-              label="Role 1"
-            />
-            <FormControlLabel
-              className={classes.labelValue}
-              control={(
-                <Checkbox
-                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                  name="checkedI"
-                  onChange={handleChange}
-                />
-              )}
-              label="Role 2"
-            />
-            <FormControlLabel
-              className={classes.labelValue}
-              control={(
-                <Checkbox
-                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                  name="checkedI"
-                  onChange={handleChange}
-                />
-              )}
-              label="Role 3"
-            />
-            <FormControlLabel
-              className={classes.labelValue}
-              control={(
-                <Checkbox
-                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                  checkedIcon={<CheckBoxIcon fontSize="small" />}
-                  name="checkedI"
-                  onChange={handleChange}
-                />
-              )}
-              label="Role 4"
-            />
-          </FormGroup>
-        </Grid>
-
-        <Grid
-          item
-          md={12}
-          xs={12}
-          style={{marginTop: '15px'}}
-        >
-          <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Submit</Button>
-          <Button variant="outlined" size="medium" className={classes.custmSaveBtn}>Save</Button>
-          <Button variant="outlined" size="medium" className={classes.custmCancelBtn}>Cancel</Button>
-        </Grid> */}
         </Grid>
         <Grid item xs={12} md={3}>
           <FormSideBar
@@ -408,7 +353,7 @@ const PerformanceSummary = () => {
             selectedItem="Performance summary"
           />
         </Grid>
-      </Grid>
+      </Grid> : <Loader />}
     </>
   );
 };

@@ -36,6 +36,9 @@ import { COMPLIANCE } from "../Constants/Constants";
 import { useParams, useHistory } from "react-router-dom";
 import api from "../../../../utils/axios";
 import { subDays } from "date-fns/esm";
+import Loader from "../../Loader";
+import { CircularProgress } from "@material-ui/core";
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -142,6 +145,19 @@ const useStyles = makeStyles((theme) => ({
       border: "none",
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const Categories = () => {
@@ -152,6 +168,7 @@ const Categories = () => {
   const [checkListGroupsData, setCheckListGroupsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [groupId , setGroupId] = useState([])
+  const [loading, setLoading] = useState(false);
   const [subGroupId , setSubGroupId] = useState([])
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -180,13 +197,16 @@ const Categories = () => {
     form['groupIds'] = groupId.toString()
     form['subGroupIds'] = subGroupId.toString()
     form["updatedBy"] = userId;
+    setLoading(true);
       const res = await api
         .put(`/api/v1/audits/${form.id}/`, form)
         .then((response) => {
-          history.push("/app/pages/compliance/checks");
+          history.push("/app/pages/compliance/performance-summary");
+          // history.push("/app/pages/compliance/checks");
         })
         .catch((error) => {
           console.log(error);
+          setLoading(false);
         });
   };
 
@@ -197,23 +217,9 @@ const Categories = () => {
       `/api/v1/core/checklists/companies/8/projects/15/compliance/`
     );
     const result = res.data.data.results;
-    await setIsLoading(true)
-
-    // result.map((value) => {
-    //   temp[value["checkListName"]] = [];
-    //   value.checklistValues.map((checkListOptions) => {
-    //     let checkObj = {};
-    //     if (checkListOptions !== undefined) {
-    //       checkObj["inputLabel"] = checkListOptions.inputLabel;
-    //       checkObj["inputValue"] = checkListOptions.inputValue;
-    //       checkObj["id"] = checkListOptions.id;
-    //       temp[value["checkListName"]].push(checkObj);
-    //     }
-    //   });
-    // });
-//await fetchCategoryData(temp)
-await fetchComplianceData(result)
+    await fetchComplianceData(result)
     await setCheckListGroups(result);
+    await setIsLoading(true)
   };
 
   const fetchComplianceData = async (data) => {
@@ -296,23 +302,23 @@ await fetchComplianceData(result)
     }
   }
   console.log(checkGroups,"LLLLLLLLLLLLLLLLLLLLLLLLLLL")
-  const fetchCategoryData = async (data) => {
-    const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
-    );
-    const result = res.data.data.results;
-    await setCheckListGroupsData(result)
-    let temp = {}
-    for(let i = 0; i < result.length; i++) {
-      for(var j in data) {
-        if(result[i]['groupName'] === j){
-          temp[j] = data[j]
-        }  
-      } 
-    }
-    await setCheckData(temp)
-    await setIsLoading(true)
-  };
+  // const fetchCategoryData = async (data) => {
+  //   const res = await api.get(
+  //     `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+  //   );
+  //   const result = res.data.data.results;
+  //   await setCheckListGroupsData(result)
+  //   let temp = {}
+  //   for(let i = 0; i < result.length; i++) {
+  //     for(var j in data) {
+  //       if(result[i]['groupName'] === j){
+  //         temp[j] = data[j]
+  //       }  
+  //     } 
+  //   }
+  //   await setCheckData(temp)
+  //   await setIsLoading(true)
+  // };
   useEffect(() => {
     fetchCheklist();
     fetchComplianceData();
@@ -320,8 +326,8 @@ await fetchComplianceData(result)
   }, []);
   return (
     <>
-      <Grid container spacing={3} className={classes.observationNewSection}>
       {isLoading ? <>
+      <Grid container spacing={3} className={classes.observationNewSection}>
         <Grid container spacing={3} item xs={12} md={9}>
           <Grid item md={12} xs={12}>
             <Grid container spacing={3}>
@@ -434,23 +440,32 @@ await fetchComplianceData(result)
         </Grid>
 
         <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+        <div className={classes.loadingWrapper}>
           <Button
             size="medium"
             variant="contained"
             color="primary"
             className="spacerRight buttonStyle"
+            disabled={loading}
             onClick={() => handelSubmit()}
           >
             Next
           </Button>
-          <Button
+          {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+          {/* <Button
             size="medium"
             variant="contained"
             color="primary"
             className="spacerRight buttonStyle"
           >
             Save
-          </Button>
+          </Button> */}
           <Button
             size="medium"
             variant="contained"
@@ -460,8 +475,8 @@ await fetchComplianceData(result)
             Cancel
           </Button>
         </Grid>
-        </> : null}
       </Grid>
+        </> : <Loader/>}
     </>
   );
 };

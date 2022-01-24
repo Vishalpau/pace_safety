@@ -973,7 +973,7 @@ function ComplianceSummary() {
 
 
                             
-                            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                            {false && <><Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Typography variant="h6" className="sectionHeading">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="35" height="28" viewBox="0 0 49.737 39">
                                   <g id="check-30" transform="translate(-100.352 -178.176)">
@@ -1653,7 +1653,7 @@ function ComplianceSummary() {
 
                                 </Grid>
                               </Paper>
-                            </Grid>
+                            </Grid></>}
 
                             <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                               <Typography variant="h6" className="sectionHeading">
@@ -1769,7 +1769,7 @@ function ComplianceSummary() {
                   </Link>
                 </ListItem>
 
-                <ListItem button >
+                {/* <ListItem button >
                   <ListItemIcon>
                     <Comment />
                   </ListItemIcon>
@@ -1805,7 +1805,7 @@ function ComplianceSummary() {
                   >
                     <ListItemText primary="Print" />
                   </Link>
-                </ListItem>
+                </ListItem> */}
               </List> 
                 
                 {/* </List>

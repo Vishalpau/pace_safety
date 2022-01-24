@@ -330,7 +330,7 @@ const ComplianceDetails = () => {
         .put(`/api/v1/audits/${form.id}/`, form)
         .then((response) => {
           history.push("/app/pages/compliance/categories");
-        }, setLoading(false))
+        })
         .catch((error) => {
           console.log(error), setLoading(false), setSaveLoading(true);
         });
@@ -500,8 +500,8 @@ const ComplianceDetails = () => {
 
   return (
     <>
-      <Grid container spacing={3}>
         {isLoading ? (
+      <Grid container spacing={3}>
           <>
             <Grid container spacing={3} item xs={12} md={9}>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1112,10 +1112,10 @@ const ComplianceDetails = () => {
               </Button>
             </Grid>
           </>
+      </Grid>
         ) : (
           <Loader />
         )}
-      </Grid>
     </>
   );
 };

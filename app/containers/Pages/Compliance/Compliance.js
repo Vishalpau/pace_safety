@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useEffect} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -26,6 +26,7 @@ import ComplianceSearchSectionTrend from "./List/ComplianceSearchSectionTrend";
 import ComplianceSearchSectionList from "./List/ComplianceSearchSectionList";
 import { useHistory, useParams } from "react-router";
 import "../../../styles/FontsFamily.css";
+import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -238,7 +239,7 @@ export default function Compliance() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const history = useHistory();
-
+  const pickList = localStorage.getItem("pickList")
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -247,6 +248,12 @@ export default function Compliance() {
     localStorage.removeItem("fkComplianceId");
     history.push("/app/pages/compliance/compliance-details");
   };
+
+  useEffect(() => {
+    if(pickList == null){
+      allPickListDataValue()
+    }
+  }, [])
 
   return (
     <div className={classes.root}>
