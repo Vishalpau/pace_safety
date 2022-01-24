@@ -128,11 +128,11 @@ function UserMenu(props) {
 
   const companyId = JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
   const projectId = JSON.parse(localStorage.getItem("projectName")) !== null
-  ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-  : null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null
   const selectBreakDown = JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-  ? JSON.parse(localStorage.getItem("selectBreakDown")).selectBreakDown
-  : null
+    ? JSON.parse(localStorage.getItem("selectBreakDown")).selectBreakDown
+    : null
 
   const { classes, dark } = props;
   const { anchorEl, openMenu } = menuState;
@@ -150,10 +150,14 @@ function UserMenu(props) {
   const [userImageLink, setUserImageLink] = useState([])
   const [companyLogoLink, setCompanyLogoLink] = useState('')
   const [companyName, setCompanyName] = useState('')
+  const anchorRef = React.useRef(null);
+  const [openA, setOpena] = useState(false);
+
   const [project, setProject] = ([])
   const dispatch = useDispatch()
   const handleAppsClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
+    setOpena(true)
   };
   const handleAppsClose = () => {
     setMenuAnchorEl(null);
@@ -197,7 +201,7 @@ function UserMenu(props) {
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
-      console.log('sub', data)
+    console.log('sub', data)
     setSubscriptions(data);
     setIsLoading(true)
   }
@@ -237,9 +241,30 @@ function UserMenu(props) {
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
         });
-        console.log('apps', data)
-      await setApps(data.map(app => app.appId))
+      console.log('apps', data)
+      const modules = data.map(subscription => subscription.modules)
+      console.log({ modules: modules })
+      var temp = []
+      modules.map((module) =>
+      // console.log({code_in:module})
+      {
+        temp = [...temp]
+        if (module.length > 0) {
+          (module.map((mod) => {
+            console.log({ code_in: mod })
+            if (mod.subscriptionStatus == 'active') {
+              temp.push(mod.moduleCode)
+              console.log({ temp: temp })
+              setApps(temp)
+              return temp
+            }
+          }
+          ))
+        }
+      }
+      )
     }
+    console.log({ active_modules: apps })
   }
 
   const handleClosea = (event) => {
@@ -257,7 +282,7 @@ function UserMenu(props) {
       window.open(
         ACCOUNT_API_URL + API_VERSION + 'user/auth/authorize/?client_id=' + clientId + '&response_type=code&targetPage=' + targetPage + '&companyId=' + JSON.parse(localStorage.getItem('company')).fkCompanyId + '&projectId=' + JSON.parse(localStorage.getItem('projectName')).projectName.projectId,
         '_blank' // <- This is what makes it open in a new window.
-      ).onClick();
+      );
     }
 
     // window.open(
@@ -273,12 +298,12 @@ function UserMenu(props) {
 
   const classnames = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
-  
+
   return (
     <div>
       <Tooltip title="Apps" placement="bottom">
         <IconButton
-          aria-controls="apps-menu"
+          aria-controls={openA ? "apps-menu" : undefined}
           aria-haspopup="true"
           onClick={handleAppsClick}
           className={classNames(
@@ -290,11 +315,10 @@ function UserMenu(props) {
         </IconButton>
       </Tooltip>
       {/* <Topbar/> */}
-      <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
+      {/* <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
         {isLoading ?
           <div elevation={3} className={classnames.list}>
             <List component="nav">
-              {/* https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=6PZZ5hTD0cV7TLTE15GqQU5hucV6PV88VSxNv3NT&response_type=code&targetPage=actions&companyId=1&projectId=undefined */}
               {subscriptions.map((subscription, key) => (
                 (subscription.appCode !== "safety") && subscription.modules.length > 0 && apps.includes(subscription.appId) ?
                   <div key={key}>
@@ -308,7 +332,6 @@ function UserMenu(props) {
                         <div key={mIndex}>
 
                           <ListItemLink disabled={!apps.includes(subscription.appId)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
-                            {/* {process.env.API_URL + process.env.API_VERSION + '/user/auth/authorize/?client_id='+subscription.hostings[0].clientId+'&response_type=code&targetPage='+module.targetPage+'&companyId='+localStorage.getItem('companyId')+'&projectId='+localStorage.getItem('ssoProjectId')} */}
                             <img className={classnames.appDrawerImage} src={module.moduleIcon} />
                             <ListItemText primary={module.moduleWebName} />
                           </ListItemLink>
@@ -319,9 +342,42 @@ function UserMenu(props) {
                   : ""
               )
               )}
-              {/* <Divider /> */}
             </List>
           </div> : null}
+      </Drawer> */}
+
+      <Drawer anchor="right" className={classes.appDrawerSection} open={openA} role={undefined} transition disablePortal>
+        <div elevation={3} className={classnames.list}>
+          <ClickAwayListener onClickAway={handleClosea}>
+            <List component="nav">
+              {subscriptions.map((subscription) => (
+                (subscription.modules.length > 0) ?
+                  <div>
+                    <ListItemText
+                      className={classnames.appDrawerLable}
+                      primary={subscription.appName}
+                    />
+                    <Divider />
+                    <List>
+                      {subscription.modules.map((module) => (
+                        <div>
+                          <ListItemLink disabled={!apps.includes(module.moduleCode)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
+                            {Boolean(module.moduleIcon) ?
+                              <img className={classnames.appDrawerImage} src={module.moduleIcon} />
+                              : <AssignmentIcon />
+                            }
+                            <ListItemText primary={module.moduleWebName} />
+                          </ListItemLink>
+                        </div>
+                      ))}
+                    </List>
+                  </div>
+                  : ""
+              ))}
+              <Divider />
+            </List>
+          </ClickAwayListener>
+        </div>
       </Drawer>
 
       <Button
@@ -329,16 +385,16 @@ function UserMenu(props) {
         className="textCenter"
         onClick={handleMenu("user-setting")}
       >
-      {isDesktop && companyLogoLink ? 
-      <img className={classes.userLogo} src={companyLogoLink} />
-       : <MenuItem style={{ color: "white" }} color="white">{companyName}</MenuItem>}
+        {isDesktop && companyLogoLink ?
+          <img className={classes.userLogo} src={companyLogoLink} />
+          : <MenuItem style={{ color: "white" }} color="white">{companyName}</MenuItem>}
         <Avatar
           alt={dummy.user.name}
           variant="circle"
           src={userImageLink ? userImageLink : dummy.user.avatar}
         />
       </Button>
-      
+
       <Menu
         id="menu-appbar"
         anchorEl={anchorEl}
@@ -370,18 +426,18 @@ function UserMenu(props) {
           <Grid item md={12} sm={12} xs={12} className="pTopFour">
             <Typography className="userDropDownHeading">
               {/* {JSON.parse(localStorage.getItem('userDetails')).name} */}
-              {   JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails")).name
-        : null}
+              {JSON.parse(localStorage.getItem("userDetails")) !== null
+                ? JSON.parse(localStorage.getItem("userDetails")).name
+                : null}
             </Typography>
             {/* <Typography className="userDropDown">
               Safety Department
             </Typography> */}
             <Typography className="userDropDownLast">
               {/* {JSON.parse(localStorage.getItem('projectName')).projectName.projectName} */}
-           {   JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectName
-        : null}
+              {JSON.parse(localStorage.getItem("projectName")) !== null
+                ? JSON.parse(localStorage.getItem("projectName")).projectName.projectName
+                : null}
             </Typography>
           </Grid>
         </Grid>
