@@ -1150,7 +1150,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .complianceMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -1179,6 +1179,11 @@ ul.MuiMenu-list a ul li.userName {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -292px -16px;
   margin-right: 16px;
 }
+.complianceMenu .MuiListItemIcon-root {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -163px -16px;
+  margin-right: 16px;
+}
+ 
 .incident-managementMenu.selectmenu .MuiListItemIcon-root,
 /* .incidentManagMenu.selectmenu:hover .MuiListItemIcon-root,
 .incidentManagMenu:hover .MuiListItemIcon-root,
@@ -1220,6 +1225,17 @@ ul.MuiMenu-list a ul li.userName {
 .assessmentsMenu:hover,
 .assessmentsMenu.selectmenu:hover,
 .assessmentsMenu.selectmenu,
+
+
+.complianceMenu.selectmenu .MuiListItemIcon-root,
+/* .complianceMenu.selectmenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemIcon-root,
+.complianceMenu:hover .MuiListItemText-root span, */
+.complianceMenu.selectmenu:hover .MuiListItemText-root span,
+.complianceMenu.selectmenu .MuiListItemText-root span,
+.complianceMenu:hover,
+.complianceMenu.selectmenu:hover,
+.complianceMenu.selectmenu,
 
 .administrationMenu.selectmenu .MuiListItemIcon-root,
 /* .administrationMenu.selectmenu:hover .MuiListItemIcon-root,
@@ -1477,5 +1493,18 @@ ul.MuiMenu-list a ul li.userName {
 
 .MuiAvatar-root.MuiAvatar-square .MuiAvatar-img {
   border-radius: 10px;
+}
+.customDropdownPageIcon {
+  height: 40px;
+  width: 40px;
+  display: block;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
+  float: left;
+}
+.compliancePageIcon {
+  background-position: -200px -405px;
+}
+.paginationSection nav {
+  float: right;
 }
 
