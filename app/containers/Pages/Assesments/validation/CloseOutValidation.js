@@ -4,25 +4,25 @@ function CloseOutFlhaValidation(data) {
     let isValid = true;
     const error = {};
 
-    if (data.preUseInspection == null) {
-        error.preUseInspection = "Please choose any one";
-        isValid = false;
-    }
+    // if (data.preUseInspection == null) {
+    //     error.preUseInspection = "Please choose any one";
+    //     isValid = false;
+    // }
 
-    if (data.warningRibbon == null) {
-        error.warningRibbon = "Please choose any one";
-        isValid = false;
-    }
+    // if (data.warningRibbon == null) {
+    //     error.warningRibbon = "Please choose any one";
+    //     isValid = false;
+    // }
 
-    if (data.workerWorking == null) {
-        error.workerWorking = "Please choose any one";
-        isValid = false;
-    }
+    // if (data.workerWorking == null) {
+    //     error.workerWorking = "Please choose any one";
+    //     isValid = false;
+    // }
 
-    if (data.workerWorking == "Yes" && data.workerRemarks == null) {
-        error.workerRemarks = "Please enter details";
-        isValid = false;
-    }
+    // if (data.workerWorking == "Yes" && data.workerRemarks == null) {
+    //     error.workerRemarks = "Please enter details";
+    //     isValid = false;
+    // }
 
     if (data.permitClosedOut == null) {
         error.permitClosedOut = "Please choose any one";

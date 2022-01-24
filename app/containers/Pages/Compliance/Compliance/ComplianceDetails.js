@@ -500,8 +500,8 @@ const ComplianceDetails = () => {
 
   return (
     <>
-        {isLoading ? (
-      <Grid container spacing={3}>
+      {isLoading ? (
+        <Grid container spacing={3}>
           <>
             <Grid container spacing={3} item xs={12} md={9}>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1112,10 +1112,10 @@ const ComplianceDetails = () => {
               </Button>
             </Grid>
           </>
-      </Grid>
-        ) : (
-          <Loader />
-        )}
+        </Grid>
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };

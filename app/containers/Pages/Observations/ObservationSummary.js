@@ -217,7 +217,7 @@ const ObservationSummary = () => {
         title={`iCare Number: ${initialData.observationNumber ? initialData.observationNumber : ""}`}
         // icon="ion-md-list-box"
         variant="h5"
-        icon={obsIcon}
+        icon='customDropdownPageIcon iCarePageIcon'
         whiteBg
       >
 

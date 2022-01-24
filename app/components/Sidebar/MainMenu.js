@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
@@ -15,6 +15,7 @@ import Chip from "@material-ui/core/Chip";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import styles from "./sidebar-jss";
+import { adminUser_Dev, adminUser_Prod, APPCODE } from "../../utils/constants";
 
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) {
   // eslint-disable-line
@@ -24,6 +25,7 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) {
 // eslint-disable-next-line
 function MainMenu(props) {
   const [selectedMenuItem, setSelectedMenuItem] = useState("")
+  const [dataMenuInner, setDataMenuInner] = useState({})
   const handleClick = () => {
     const { toggleDrawerOpen, loadTransition } = props;
 
@@ -135,8 +137,39 @@ function MainMenu(props) {
       </ListItem>
     );
   });
-  return <div>{getMenus(dataMenu)}</div>;
+
+  const load = () => {
+    if(dataMenuInner.length == undefined && localStorage.getItem('userDetails') != undefined && localStorage.getItem('company') != undefined) {
+      let ud = JSON.parse(localStorage.getItem('userDetails')).companies
+                                                              .filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)[0]
+                                                              .subscriptions
+                                                              .filter(subscription => subscription.appCode == APPCODE)[0]
+                                                              .modules
+                                                              .filter(module => module.subscriptionStatus == 'active')
+                                                              .map(module => module.moduleCode)
+      let userRole = JSON.parse(localStorage.getItem('userDetails')).companies
+                                                                    .filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)[0]
+                                                                    .subscriptions
+                                                                    .filter(subscription => subscription.appCode == APPCODE)[0].roles[0].name
+      
+      ud.push('home')
+      if (userRole == adminUser_Dev || userRole == adminUser_Prod) {
+        ud.push('administration')
+      }
+      setDataMenuInner(dataMenu.filter(data => ud.includes(data.acl)))
+    } else if (dataMenuInner.length == undefined){
+      setTimeout(() => load(), 1000)
+    }
+    }
+
+  useEffect(() => {
+      load()    
+  }, [])
+
+  return <div>{dataMenuInner.length == undefined ? <></> : getMenus(dataMenuInner)}</div>;
 }
+
+
 
 MainMenu.propTypes = {
   classes: PropTypes.object.isRequired,

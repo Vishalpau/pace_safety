@@ -145,7 +145,7 @@ const PerformanceSummary = () => {
       .then((response) => {
         let result = response.data.data.results;
         setForm(result);
-        setIsLoading(true)
+        setIsLoading(true);
       })
       .catch((error) => console.log(error));
   };
@@ -160,7 +160,8 @@ const PerformanceSummary = () => {
           `/app/pages/compliance/compliance-summary/${complianceId}`
         );
       })
-      .catch((error) => {console.log(error),    setLoading(false);
+      .catch((error) => {
+        console.log(error), setLoading(false);
       });
   };
 
@@ -181,7 +182,6 @@ const PerformanceSummary = () => {
         setNotificationSentValue(result);
       }
     } catch (error) {}
-    
   };
 
   const handleNotification = (e, value) => {
@@ -208,118 +208,120 @@ const PerformanceSummary = () => {
     fetchComplianceData();
   }, []);
   return (
-    <>{isLoading ? 
-      <Grid container spacing={3} className={classes.observationNewSection}>
-        <Grid container spacing={3} item xs={12} md={9}>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Typography variant="h6" className="sectionHeading">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="27"
-                height="32"
-                viewBox="0 0 33.2 39"
-              >
-                <g
-                  id="Group_5726"
-                  data-name="Group 5726"
-                  transform="translate(-1540 -746)"
+    <>
+      {isLoading ? (
+        <Grid container spacing={3} className={classes.observationNewSection}>
+          <Grid container spacing={3} item xs={12} md={9}>
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Typography variant="h6" className="sectionHeading">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="27"
+                  height="32"
+                  viewBox="0 0 33.2 39"
                 >
                   <g
-                    id="Group_5725"
-                    data-name="Group 5725"
-                    transform="translate(427.999)"
+                    id="Group_5726"
+                    data-name="Group 5726"
+                    transform="translate(-1540 -746)"
                   >
+                    <g
+                      id="Group_5725"
+                      data-name="Group 5725"
+                      transform="translate(427.999)"
+                    >
+                      <path
+                        id="personal-information-5"
+                        d="M184.6,100.531h16.977a1.124,1.124,0,1,0,0-2.248H184.6a1.124,1.124,0,0,0,0,2.248Zm23.964-32.483H177.615a1.124,1.124,0,0,0-1.124,1.124v36.752a1.124,1.124,0,0,0,1.124,1.124h30.951a1.124,1.124,0,0,0,1.124-1.124V69.172A1.124,1.124,0,0,0,208.566,68.048ZM207.442,104.8h-28.7V70.3h28.7ZM184.6,95.386h16.977a1.124,1.124,0,0,0,0-2.248H184.6a1.124,1.124,0,1,0,0,2.248Z"
+                        transform="translate(935.51 677.952)"
+                        fill="#06425c"
+                      />
+                    </g>
                     <path
-                      id="personal-information-5"
-                      d="M184.6,100.531h16.977a1.124,1.124,0,1,0,0-2.248H184.6a1.124,1.124,0,0,0,0,2.248Zm23.964-32.483H177.615a1.124,1.124,0,0,0-1.124,1.124v36.752a1.124,1.124,0,0,0,1.124,1.124h30.951a1.124,1.124,0,0,0,1.124-1.124V69.172A1.124,1.124,0,0,0,208.566,68.048ZM207.442,104.8h-28.7V70.3h28.7ZM184.6,95.386h16.977a1.124,1.124,0,0,0,0-2.248H184.6a1.124,1.124,0,1,0,0,2.248Z"
-                      transform="translate(935.51 677.952)"
+                      id="statement-2"
+                      d="M186.341,173.22l-6.774-3.683a1.53,1.53,0,0,0-1.467,0l-6.776,3.685a1.6,1.6,0,0,0-.83,1.413v7.143a1.606,1.606,0,0,0,.83,1.413l6.775,3.682a1.531,1.531,0,0,0,1.467,0l6.775-3.684a1.607,1.607,0,0,0,.83-1.414v-7.143A1.6,1.6,0,0,0,186.341,173.22Zm-5.424,3.434a.521.521,0,0,1,.521-.521h1.042a.521.521,0,0,1,.521.521v4.159a.522.522,0,0,1-.521.521h-1.042a.522.522,0,0,1-.521-.521Zm-3.127-2.1a.521.521,0,0,1,.521-.521h1.042a.521.521,0,0,1,.521.521v6.256a.522.522,0,0,1-.521.521h-1.042a.522.522,0,0,1-.521-.521Zm-3.127,3.657a.521.521,0,0,1,.521-.521h1.042a.521.521,0,0,1,.521.521v2.6a.522.522,0,0,1-.521.521h-1.042a.522.522,0,0,1-.521-.521Zm9.131,4.16h-9.9a.261.261,0,0,1,0-.521h9.9a.261.261,0,1,1,0,.521Z"
+                      transform="translate(1377.505 581.403)"
                       fill="#06425c"
                     />
                   </g>
-                  <path
-                    id="statement-2"
-                    d="M186.341,173.22l-6.774-3.683a1.53,1.53,0,0,0-1.467,0l-6.776,3.685a1.6,1.6,0,0,0-.83,1.413v7.143a1.606,1.606,0,0,0,.83,1.413l6.775,3.682a1.531,1.531,0,0,0,1.467,0l6.775-3.684a1.607,1.607,0,0,0,.83-1.414v-7.143A1.6,1.6,0,0,0,186.341,173.22Zm-5.424,3.434a.521.521,0,0,1,.521-.521h1.042a.521.521,0,0,1,.521.521v4.159a.522.522,0,0,1-.521.521h-1.042a.522.522,0,0,1-.521-.521Zm-3.127-2.1a.521.521,0,0,1,.521-.521h1.042a.521.521,0,0,1,.521.521v6.256a.522.522,0,0,1-.521.521h-1.042a.522.522,0,0,1-.521-.521Zm-3.127,3.657a.521.521,0,0,1,.521-.521h1.042a.521.521,0,0,1,.521.521v2.6a.522.522,0,0,1-.521.521h-1.042a.522.522,0,0,1-.521-.521Zm9.131,4.16h-9.9a.261.261,0,0,1,0-.521h9.9a.261.261,0,1,1,0,.521Z"
-                    transform="translate(1377.505 581.403)"
-                    fill="#06425c"
-                  />
-                </g>
-              </svg>{" "}
-              Performance summary
-            </Typography>
-          </Grid>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Paper elevation={1} className="paperSection">
-              <Grid container spacing={3}>
-                <Grid item md={12} xs={12}>
-                  <TextField
-                    label="Describe here"
-                    name="performancesummary"
-                    id="performancesummary"
-                    multiline
-                    rows={4}
-                    value={
-                      form.performanceSummary ? form.performanceSummary : ""
-                    }
-                    onChange={(e) =>
-                      setForm({ ...form, performanceSummary: e.target.value })
-                    }
-                    fullWidth
-                    variant="outlined"
-                    className="formControl"
-                  />
-                </Grid>
+                </svg>{" "}
+                Performance summary
+              </Typography>
+            </Grid>
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Paper elevation={1} className="paperSection">
+                <Grid container spacing={3}>
+                  <Grid item md={12} xs={12}>
+                    <TextField
+                      label="Describe here"
+                      name="performancesummary"
+                      id="performancesummary"
+                      multiline
+                      rows={4}
+                      value={
+                        form.performanceSummary ? form.performanceSummary : ""
+                      }
+                      onChange={(e) =>
+                        setForm({ ...form, performanceSummary: e.target.value })
+                      }
+                      fullWidth
+                      variant="outlined"
+                      className="formControl"
+                    />
+                  </Grid>
 
-                <Grid item md={12} xs={12}>
-                  <FormLabel className="checkRadioLabel" component="legend">
-                    Notification
-                  </FormLabel>
-                  <FormGroup>
-                    {notificationSentValue.map((value) => (
-                      
-                      <FormControlLabel
-                        className="selectLabel"
-                        control={
-                          <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                            checkedIcon={<CheckBoxIcon fontSize="small" />}
-                            checked={
-                                        form.notifyTo !== null
-                                          ? form.notifyTo.includes(value.id)
-                                          : ""
-                                      }
-                            name="checkedI"
-                            onChange={(e) => handleNotification(e, value.id)}
-                          />
-                        }
-                        label={value.roleName}
-                      />
-                    ))}
-                  </FormGroup>
+                  <Grid item md={12} xs={12}>
+                    <FormLabel className="checkRadioLabel" component="legend">
+                      Notification
+                    </FormLabel>
+                    <FormGroup>
+                      {notificationSentValue.map((value) => (
+                        <FormControlLabel
+                          className="selectLabel"
+                          control={
+                            <Checkbox
+                              icon={
+                                <CheckBoxOutlineBlankIcon fontSize="small" />
+                              }
+                              checkedIcon={<CheckBoxIcon fontSize="small" />}
+                              checked={
+                                form.notifyTo !== null
+                                  ? form.notifyTo.includes(value.id)
+                                  : ""
+                              }
+                              name="checkedI"
+                              onChange={(e) => handleNotification(e, value.id)}
+                            />
+                          }
+                          label={value.roleName}
+                        />
+                      ))}
+                    </FormGroup>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
+              </Paper>
+            </Grid>
 
-          <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-          <div className={classes.loadingWrapper}>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              className="spacerRight buttonStyle"
-              disabled={loading}
-              onClick={() => handelSubmit()}
-            >
-              Submit
-            </Button>
-            {loading && (
+            <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+              <div className={classes.loadingWrapper}>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="primary"
+                  className="spacerRight buttonStyle"
+                  disabled={loading}
+                  onClick={() => handelSubmit()}
+                >
+                  Submit
+                </Button>
+                {loading && (
                   <CircularProgress
                     size={24}
                     className={classes.buttonProgress}
                   />
                 )}
               </div>
-            {/* <Button
+              {/* <Button
               size="medium"
               variant="contained"
               color="primary"
@@ -327,33 +329,34 @@ const PerformanceSummary = () => {
             >
               Save
             </Button> */}
-            <Button
-              size="medium"
-              variant="contained"
-              color="secondary"
-              className="buttonStyle custmCancelBtn"
-              onClick={() =>
-                history.push(
-                  `/app/pages/compliance/compliance-summary/${localStorage.getItem(
-                    "fkComplianceId"
-                  )}`
-                )
-              }
-            >
-              Cancel
-            </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                color="secondary"
+                className="buttonStyle custmCancelBtn"
+                onClick={() =>
+                  history.push(
+                    `/app/pages/compliance/compliance-summary/${localStorage.getItem(
+                      "fkComplianceId"
+                    )}`
+                  )
+                }
+              >
+                Cancel
+              </Button>
+            </Grid>
           </Grid>
-
-          
+          <Grid item xs={12} md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={COMPLIANCE}
+              selectedItem="Performance summary"
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={COMPLIANCE}
-            selectedItem="Performance summary"
-          />
-        </Grid>
-      </Grid> : <Loader />}
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };

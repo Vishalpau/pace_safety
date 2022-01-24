@@ -125,7 +125,7 @@ export const HEADER_AUTH_ACTION = { Authorization: `Bearer ${access_token_action
 
 // Menu file constants
 export const APPCODE = "safety"
-export const adminUser_Dev = "Manager"
+export const adminUser_Dev = "Supervisor"
 export const adminUser_Prod = "Safety Admin"
 
 // comment constant

@@ -52,7 +52,7 @@ import api from "../../../../utils/axios";
 import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../../Loader";
-import moment from 'moment';
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -436,9 +436,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '-10px',
+    marginTop: "-10px",
   },
-  
 }));
 
 function ComplianceListNew(props) {
@@ -481,9 +480,9 @@ function ComplianceListNew(props) {
   const [hidden, setHidden] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
-  const [pageData, setPageData] = useState(0)
+  const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
+  const [page, setPage] = useState(1);
   const handleVisibility = () => {
     setAttachOpen(true);
     setHidden(!hidden);
@@ -601,8 +600,8 @@ function ComplianceListNew(props) {
 
   const handleSummaryPush = async (item) => {
     console.log("calling this");
-    let id = item
-    localStorage.setItem("fkComplianceId", id)
+    let id = item;
+    localStorage.setItem("fkComplianceId", id);
     history.push(`/app/pages/compliance/compliance-summary/${id}`);
   };
 
@@ -625,7 +624,7 @@ function ComplianceListNew(props) {
   const classes = useStyles();
 
   const fetchAllComplianceData = async () => {
-    await setPage(1)
+    await setPage(1);
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -641,95 +640,136 @@ function ComplianceListNew(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-    if(props.type === "Categories" || props.type === "All"){
-    if(props.compliance === "My Inspections"){
-      const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
-      const result = res.data.data.results.results
-      await setAllComplianceData(result)
-      await setTotalData(res.data.data.results.count)
-            await setPageData(res.data.data.results.count / 25)
-            let pageCount = Math.ceil(res.data.data.results.count / 25)
-            await setPageCount(pageCount)
-    }else{
-      const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-      
-      const result = res.data.data.results.results
-      await setAllComplianceData(result)
-      await setTotalData(res.data.data.results.count)
-            await setPageData(res.data.data.results.count / 25)
-            let pageCount = Math.ceil(res.data.data.results.count / 25)
-            await setPageCount(pageCount)
-    }}else{
-      if(props.compliance === "My Inspections"){
-        const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type}&createdBy=${createdBy}`);
-        const result = res.data.data.results.results
-        await setAllComplianceData(result)
-        await setTotalData(res.data.data.results.count)
-              await setPageData(res.data.data.results.count / 25)
-              let pageCount = Math.ceil(res.data.data.results.count / 25)
-              await setPageCount(pageCount)
-      }else{
-        const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type}&projectStructureIds=${fkProjectStructureIds}`);
-        
-        const result = res.data.data.results.results
-        await setAllComplianceData(result)
-        await setTotalData(res.data.data.results.count)
-              await setPageData(res.data.data.results.count / 25)
-              let pageCount = Math.ceil(res.data.data.results.count / 25)
-              await setPageCount(pageCount)
-      }
+    const createdBy =
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
+    if (props.type === "Categories" || props.type === "All") {
+      if (props.compliance === "My Inspections") {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
+        );
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      } else {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
+        );
 
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      }
+    } else {
+      if (props.compliance === "My Inspections") {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
+          }&createdBy=${createdBy}`
+        );
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      } else {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
+          }&projectStructureIds=${fkProjectStructureIds}`
+        );
+
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      }
     }
-    
+
     await setIsLoading(true);
   };
 
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
-      .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
-    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  if(props.compliance === "My Inspections"){
-    const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    const createdBy =
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    if (props.compliance === "My Inspections") {
+      const res = await api.get(
+        `api/v1/audits/?search=${
+          props.search
+        }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
+      );
       await setAllComplianceData(res.data.data.results);
-      await setPage(value)
-  }else{
-    const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
-    await setAllComplianceData(res.data.data.results);
-    await setPage(value)
-  }
-  
+      await setPage(value);
+    } else {
+      const res = await api.get(
+        `api/v1/audits/?search=${
+          props.search
+        }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
+      );
+      await setAllComplianceData(res.data.data.results);
+      await setPage(value);
+    }
   };
 
   const handleDelete = async (item) => {
-    let temp = {...item}
-    temp.status = "Delete"
-    let id = item.id
-    setIsLoading(false)
-    const  res = await api.put(`api/v1/audits/${id}/`,temp).then((response) => {
-      fetchAllComplianceData()
-      setIsLoading(true)
-    }).catch((error) => console.log(error))
-  }
+    let temp = { ...item };
+    temp.status = "Delete";
+    let id = item.id;
+    setIsLoading(false);
+    const res = await api
+      .put(`api/v1/audits/${id}/`, temp)
+      .then((response) => {
+        fetchAllComplianceData();
+        setIsLoading(true);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
     fetchAllComplianceData();
-  }, [props.projectName.breakDown,props.compliance,props.search,props.status,props.type]);
+  }, [
+    props.projectName.breakDown,
+    props.compliance,
+    props.search,
+    props.status,
+    props.type,
+  ]);
 
   return (
     <>
@@ -737,270 +777,288 @@ function ComplianceListNew(props) {
         <Grid className={classes.marginTopBottom}>
           <div>
             <div className="gridView">
-              {isLoading ? (allComplianceData.length > 0 ?
-                allComplianceData.map((value, index) => (
-                  <Card variant="outlined" className={classes.card}>
-                    <CardContent>
-                      <Grid
-                        container
-                        spacing={3}
-                        className={classes.cardContentSection}
-                      >
+              {isLoading ? (
+                allComplianceData.length > 0 ? (
+                  allComplianceData.map((value, index) => (
+                    <Card variant="outlined" className={classes.card}>
+                      <CardContent>
                         <Grid
-                          item
-                          md={2}
-                          sm={4}
-                          xs={12}
-                          className={classes.userPictureBox}
+                          container
+                          spacing={3}
+                          className={classes.cardContentSection}
                         >
-                          <Button
-                            className={classes.floatR}
-                            onClick={(e) => handleMyUserPClickOpen(e)}
+                          <Grid
+                            item
+                            md={2}
+                            sm={4}
+                            xs={12}
+                            className={classes.userPictureBox}
                           >
-                            <img
-                              src={value['avatar'] !== null ? value['avatar'] :paceLogoSymbol}
-                              className={classes.userImage}
-                            />{" "}
-                            {value['username']}
-                          </Button>
-                        </Grid>
-                        <Link
-                          onClick={() => handleSummaryPush(value["id"])}
-                          className={classes.cardLinkAction}
-                        >
-                          <Grid item xs={12}>
-                            <Grid container spacing={3} alignItems="flex-start">
+                            <Button
+                              className={classes.floatR}
+                              onClick={(e) => handleMyUserPClickOpen(e)}
+                            >
+                              <img
+                                src={
+                                  value["avatar"] !== null
+                                    ? value["avatar"]
+                                    : paceLogoSymbol
+                                }
+                                className={classes.userImage}
+                              />{" "}
+                              {value["username"]}
+                            </Button>
+                          </Grid>
+                          <Link
+                            onClick={() => handleSummaryPush(value["id"])}
+                            className={classes.cardLinkAction}
+                          >
+                            <Grid item xs={12}>
                               <Grid
-                                item
-                                sm={12}
-                                xs={12}
-                                className={classes.listHeadColor}
+                                container
+                                spacing={3}
+                                alignItems="flex-start"
                               >
                                 <Grid
-                                  container
-                                  spacing={3}
-                                  alignItems="flex-start"
+                                  item
+                                  sm={12}
+                                  xs={12}
+                                  className={classes.listHeadColor}
                                 >
-                                  <Grid item md={10} sm={12} xs={12}>
-                                    <Typography
-                                      className={classes.title}
-                                      variant="h6"
-                                    >
-                                      {value['auditType'] !== null ? value['auditType'] : "-"}
-                                    </Typography>
-                                    <Typography
-                                      className={classes.listingLabelName}
-                                      display="inline"
-                                    >
-                                      Number:{" "}
-                                      <span>
-                                        <Link
-                                          onClick={() => handleSummaryPush()}
-                                          //href="/app/pages/actions/actionsummary"
-                                          variant="h6"
-                                          className={classes.mLeftfont}
-                                        >
-                                          <span
-                                            className={
-                                              classes.listingLabelValue
-                                            }
-                                          >
-                                            {value['auditNumber'] !== null ? value['auditNumber'] : "-"}
-                                          </span>
-                                        </Link>
-                                      </span>
-                                    </Typography>
-                                    <span
-                                      item
-                                      xs={1}
-                                      className={classes.sepHeightOne}
-                                    />
-                                    <Typography
-                                      variant="body1"
-                                      gutterBottom
-                                      display="inline"
-                                      color="textPrimary"
-                                      className={classes.listingLabelName}
-                                    >
-                                      Category:{" "}
-                                      <span
-                                        className={classes.listingLabelValue}
+                                  <Grid
+                                    container
+                                    spacing={3}
+                                    alignItems="flex-start"
+                                  >
+                                    <Grid item md={10} sm={12} xs={12}>
+                                      <Typography
+                                        className={classes.title}
+                                        variant="h6"
                                       >
-                                       data not available in api
-                                      </span>
-                                    </Typography>
-                                    <span
-                                      item
-                                      xs={1}
-                                      className={classes.sepHeightOne}
-                                    />
-                                    <Typography
-                                      variant="body1"
-                                      gutterBottom
-                                      display="inline"
-                                      color="textPrimary"
-                                      className={classes.listingLabelName}
-                                    >
-                                      {/* Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
+                                        {value["auditType"] !== null
+                                          ? value["auditType"]
+                                          : "-"}
+                                      </Typography>
+                                      <Typography
+                                        className={classes.listingLabelName}
+                                        display="inline"
+                                      >
+                                        Number:{" "}
+                                        <span>
+                                          <Link
+                                            onClick={() => handleSummaryPush()}
+                                            //href="/app/pages/actions/actionsummary"
+                                            variant="h6"
+                                            className={classes.mLeftfont}
+                                          >
+                                            <span
+                                              className={
+                                                classes.listingLabelValue
+                                              }
+                                            >
+                                              {value["auditNumber"] !== null
+                                                ? value["auditNumber"]
+                                                : "-"}
+                                            </span>
+                                          </Link>
+                                        </span>
+                                      </Typography>
+                                      <span
+                                        item
+                                        xs={1}
+                                        className={classes.sepHeightOne}
+                                      />
+                                      <Typography
+                                        variant="body1"
+                                        gutterBottom
+                                        display="inline"
+                                        color="textPrimary"
+                                        className={classes.listingLabelName}
+                                      >
+                                        Category:{" "}
+                                        <span
+                                          className={classes.listingLabelValue}
+                                        >
+                                          data not available in api
+                                        </span>
+                                      </Typography>
+                                      <span
+                                        item
+                                        xs={1}
+                                        className={classes.sepHeightOne}
+                                      />
+                                      <Typography
+                                        variant="body1"
+                                        gutterBottom
+                                        display="inline"
+                                        color="textPrimary"
+                                        className={classes.listingLabelName}
+                                      >
+                                        {/* Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
                                   <span item xs={1} className={classes.sepHeightOne}></span> */}
-                                      Status:{" "}
-                                      <span className="listingLabelValue statusColor_complete">
-                                        Assigned
-                                      </span>
-                                    </Typography>
-                                  </Grid>
+                                        Status:{" "}
+                                        <span className="listingLabelValue statusColor_complete">
+                                          Assigned
+                                        </span>
+                                      </Typography>
+                                    </Grid>
 
-                                  {/* <Grid item md={2} sm={4} xs={12}>
+                                    {/* <Grid item md={2} sm={4} xs={12}>
                                 <Button  className={classes.floatR} onClick={(e) => handleNewCompliancePush(e)} >
                                   <img src={paceLogoSymbol} className={classes.userImage} /> Admin
                                 </Button>
                               </Grid> */}
+                                  </Grid>
                                 </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
 
-                          <Grid item sm={12} xs={12}>
-                            <Grid container spacing={3}>
-                              
-                              <Grid item sm={3} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  color="textPrimary"
-                                  gutterBottom
-                                  className={classes.listingLabelName}
-                                >
-                                  Location:
-                                </Typography>
-                                <Typography
-                                  className={classes.listingLabelValue}
-                                >
-                                  data not available in api
-                                </Typography>
-                              </Grid>
+                            <Grid item sm={12} xs={12}>
+                              <Grid container spacing={3}>
+                                <Grid item sm={3} xs={12}>
+                                  <Typography
+                                    variant="body1"
+                                    color="textPrimary"
+                                    gutterBottom
+                                    className={classes.listingLabelName}
+                                  >
+                                    Location:
+                                  </Typography>
+                                  <Typography
+                                    className={classes.listingLabelValue}
+                                  >
+                                    data not available in api
+                                  </Typography>
+                                </Grid>
 
-                              <Grid item sm={3} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  color="textPrimary"
-                                  gutterBottom
-                                  className={classes.listingLabelName}
-                                >
-                                  Audited on:
-                                </Typography>
+                                <Grid item sm={3} xs={12}>
+                                  <Typography
+                                    variant="body1"
+                                    color="textPrimary"
+                                    gutterBottom
+                                    className={classes.listingLabelName}
+                                  >
+                                    Audited on:
+                                  </Typography>
 
-                                <Typography
-                                  className={classes.listingLabelValue}
-                                >
-                                  {moment(value["createdAt"]).format(
-                                  "Do MMMM YYYY, h:mm:ss a"
-                                )}
-                                </Typography>
-                              </Grid>
+                                  <Typography
+                                    className={classes.listingLabelValue}
+                                  >
+                                    {moment(value["createdAt"]).format(
+                                      "Do MMMM YYYY, h:mm:ss a"
+                                    )}
+                                  </Typography>
+                                </Grid>
 
-                              <Grid item sm={3} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  color="textPrimary"
-                                  gutterBottom
-                                  className={classes.listingLabelName}
-                                >
-                                  Audited by:
-                                </Typography>
+                                <Grid item sm={3} xs={12}>
+                                  <Typography
+                                    variant="body1"
+                                    color="textPrimary"
+                                    gutterBottom
+                                    className={classes.listingLabelName}
+                                  >
+                                    Audited by:
+                                  </Typography>
 
-                                <Typography
-                                  className={classes.listingLabelValue}
-                                >
-                                  {value['createdByName'] !== null ? value['createdByName'] : "-"}
-                                </Typography>
+                                  <Typography
+                                    className={classes.listingLabelValue}
+                                  >
+                                    {value["createdByName"] !== null
+                                      ? value["createdByName"]
+                                      : "-"}
+                                  </Typography>
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        </Link>
-                      </Grid>
-                    </CardContent>
-                    <Divider />
-                    <CardActions
-                      className={classNames(
-                        Incidents.cardActions,
-                        classes.cardActionBottomBox
-                      )}
-                    >
-                      <Grid
-                        container
-                        spacing={2}
-                        justify="flex-end"
-                        alignItems="left"
-                        className={classes.cardBottomSection}
-                      >
-                        <Grid item xs={12} sm={6} md={5}>
-                          <Typography
-                            variant="body1"
-                            display="inline"
-                            color="textPrimary"
-                          >
-                            <AttachmentIcon className={classes.mright5} />
-                            Attachments:
-                          </Typography>
-                          <Typography variant="body2" display="inline">
-                            {/* <Link href="#" color="secondary" className={classes.mLeftR5}>3</Link> */}
-                            <span>
-                              <Link
-                                href="#"
-                                onClick={handleVisibility}
-                                color="secondary"
-                                aria-haspopup="true"
-                                className={classes.mLeftR5}
-                              >
-                                3
-                              </Link>
-                            </span>
-                          </Typography>
-                          <span item xs={1} className={classes.sepHeightTen} />
-                          <Typography
-                            variant="body1"
-                            display="inline"
-                            color="textPrimary"
-                            className={classes.mLeft}
-                          >
-                            <InsertCommentOutlinedIcon
-                              className={classes.mright5}
-                            />
-                            <Link
-                              href="#"
-                              onClick={handleVisibilityComments}
-                              aria-haspopup="true"
-                            >
-                              Comments:
-                            </Link>
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            display="inline"
-                            className={classes.mLeft}
-                          >
-                            <span>
-                              <Link
-                                href="#"
-                                color="secondary"
-                                aria-haspopup="true"
-                                className={classes.mLeft}
-                              >
-                                3
-                              </Link>
-                            </span>
-                            {/* <Link href="#" color="secondary" className={classes.mLeft}>3</Link> */}
-                          </Typography>
+                          </Link>
                         </Grid>
-
+                      </CardContent>
+                      <Divider />
+                      <CardActions
+                        className={classNames(
+                          Incidents.cardActions,
+                          classes.cardActionBottomBox
+                        )}
+                      >
                         <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          md={7}
-                          className={classes.textRight}
+                          container
+                          spacing={2}
+                          justify="flex-end"
+                          alignItems="left"
+                          className={classes.cardBottomSection}
                         >
-                          {/* <Typography variant="body1" display="inline">
+                          <Grid item xs={12} sm={6} md={5}>
+                            <Typography
+                              variant="body1"
+                              display="inline"
+                              color="textPrimary"
+                            >
+                              <AttachmentIcon className={classes.mright5} />
+                              Attachments:
+                            </Typography>
+                            <Typography variant="body2" display="inline">
+                              {/* <Link href="#" color="secondary" className={classes.mLeftR5}>3</Link> */}
+                              <span>
+                                <Link
+                                  href="#"
+                                  onClick={handleVisibility}
+                                  color="secondary"
+                                  aria-haspopup="true"
+                                  className={classes.mLeftR5}
+                                >
+                                  3
+                                </Link>
+                              </span>
+                            </Typography>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightTen}
+                            />
+                            <Typography
+                              variant="body1"
+                              display="inline"
+                              color="textPrimary"
+                              className={classes.mLeft}
+                            >
+                              <InsertCommentOutlinedIcon
+                                className={classes.mright5}
+                              />
+                              <Link
+                                href="#"
+                                onClick={handleVisibilityComments}
+                                aria-haspopup="true"
+                              >
+                                Comments:
+                              </Link>
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              display="inline"
+                              className={classes.mLeft}
+                            >
+                              <span>
+                                <Link
+                                  href="#"
+                                  color="secondary"
+                                  aria-haspopup="true"
+                                  className={classes.mLeft}
+                                >
+                                  3
+                                </Link>
+                              </span>
+                              {/* <Link href="#" color="secondary" className={classes.mLeft}>3</Link> */}
+                            </Typography>
+                          </Grid>
+
+                          <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            md={7}
+                            className={classes.textRight}
+                          >
+                            {/* <Typography variant="body1" display="inline">
                             <IconButton>
                               <PrintOutlinedIcon className={classes.iconteal} />
                             </IconButton>{" "}
@@ -1009,11 +1067,11 @@ function ComplianceListNew(props) {
                               className={classes.mLeftR5}
                             />
                           </Typography> */}
-                          {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                            {/* <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body2" display="inline">
                       <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
                       </Typography> */}
-                          {/* <span item xs={1} className={classes.sepHeightTen} />
+                            {/* <span item xs={1} className={classes.sepHeightTen} />
                           <Typography variant="body1" display="inline">
                             <Link href="#" className={classes.mLeftR5}>
                               <IconButton>
@@ -1021,23 +1079,35 @@ function ComplianceListNew(props) {
                               </IconButton>
                             </Link>
                           </Typography> */}
-                          <span item xs={1} className={classes.sepHeightTen} />
-                          <Typography variant="body1" display="inline">
-                            <Link href="#" className={classes.mLeftR5}>
-                              <IconButton onClick={() => handleDelete(value)}>
-                                <DeleteForeverOutlinedIcon
-                                  className={classes.iconteal}
-                                />
-                              </IconButton>
-                            </Link>
-                          </Typography>
+                            <span
+                              item
+                              xs={1}
+                              className={classes.sepHeightTen}
+                            />
+                            <Typography variant="body1" display="inline">
+                              <Link href="#" className={classes.mLeftR5}>
+                                <IconButton onClick={() => handleDelete(value)}>
+                                  <DeleteForeverOutlinedIcon
+                                    className={classes.iconteal}
+                                  />
+                                </IconButton>
+                              </Link>
+                            </Typography>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </CardActions>
-                  </Card>
-                 )): <Typography className={classes.sorryTitle} variant="h6" color="primary" noWrap>
-                      Sorry, no matching records found
-                    </Typography>
+                      </CardActions>
+                    </Card>
+                  ))
+                ) : (
+                  <Typography
+                    className={classes.sorryTitle}
+                    variant="h6"
+                    color="primary"
+                    noWrap
+                  >
+                    Sorry, no matching records found
+                  </Typography>
+                )
               ) : (
                 <Loader />
               )}
@@ -1378,8 +1448,18 @@ function ComplianceListNew(props) {
                           </DialogActions> */}
                 </Dialog>
                 <div className={classes.pagination}>
-                  {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-                  <Pagination count={pageCount} page={page} onChange={handleChange} />
+                  {totalData != 0
+                    ? Number.isInteger(pageData) !== true
+                      ? totalData < 25 * page
+                        ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                        : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                      : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                    : null}
+                  <Pagination
+                    count={pageCount}
+                    page={page}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
             </div>

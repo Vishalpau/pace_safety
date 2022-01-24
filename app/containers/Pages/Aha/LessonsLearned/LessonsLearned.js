@@ -201,7 +201,7 @@ const LessonsLearned = () => {
   const classes = useStyles();
   return (
     <>
-      <CustomPapperBlock title="Assessment - Lessons learned" icon={ahaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="Assessment - Lessons learned" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
       {isLoading ? 
     <Row>
           <Col md={9}>

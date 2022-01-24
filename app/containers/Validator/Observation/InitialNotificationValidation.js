@@ -53,7 +53,7 @@ function InitialNotificationValidator(data, projectStructure) {
 
   if (data.isSituationAddressed === "Yes") {
     if (validator.isEmpty(data.actionTaken.toString())) {
-      error.actionTaken = "Enter describe the actions taken";
+      error.actionTaken = "Enter actions taken";
       isValid = false;
 
     }

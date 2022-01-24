@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '10px',
+    marginTop: "10px",
   },
 }));
 
@@ -201,45 +201,65 @@ function Actions(props) {
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
         : null;
-        if(props.type === "Categories" || props.type === "All"){
-          if(props.compliance === "My Inspections"){
-            const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`);
-            const result = res.data.data.results.results
-            await setAllComplianceData(result)
-            await setTotalData(res.data.data.results.count)
-                  await setPageData(res.data.data.results.count / 25)
-                  let pageCount = Math.ceil(res.data.data.results.count / 25)
-                  await setPageCount(pageCount)
-          }else{
-            const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`);
-            
-            const result = res.data.data.results.results
-            await setAllComplianceData(result)
-            await setTotalData(res.data.data.results.count)
-                  await setPageData(res.data.data.results.count / 25)
-                  let pageCount = Math.ceil(res.data.data.results.count / 25)
-                  await setPageCount(pageCount)
-          }}else{
-            if(props.compliance === "My Inspections"){
-              const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type}&createdBy=${createdBy}`);
-              const result = res.data.data.results.results
-              await setAllComplianceData(result)
-              await setTotalData(res.data.data.results.count)
-                    await setPageData(res.data.data.results.count / 25)
-                    let pageCount = Math.ceil(res.data.data.results.count / 25)
-                    await setPageCount(pageCount)
-            }else{
-              const res = await api.get(`api/v1/audits/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type}&projectStructureIds=${fkProjectStructureIds}`);
-              
-              const result = res.data.data.results.results
-              await setAllComplianceData(result)
-              await setTotalData(res.data.data.results.count)
-                    await setPageData(res.data.data.results.count / 25)
-                    let pageCount = Math.ceil(res.data.data.results.count / 25)
-                    await setPageCount(pageCount)
-            }
-      
-          }
+    if (props.type === "Categories" || props.type === "All") {
+      if (props.compliance === "My Inspections") {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
+        );
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      } else {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
+        );
+
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      }
+    } else {
+      if (props.compliance === "My Inspections") {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
+          }&createdBy=${createdBy}`
+        );
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      } else {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
+            props.type
+          }&projectStructureIds=${fkProjectStructureIds}`
+        );
+
+        const result = res.data.data.results.results;
+        await setAllComplianceData(result);
+        await setTotalData(res.data.data.results.count);
+        await setPageData(res.data.data.results.count / 25);
+        let pageCount = Math.ceil(res.data.data.results.count / 25);
+        await setPageCount(pageCount);
+      }
+    }
 
     await setIsLoading(true);
   };
@@ -286,33 +306,54 @@ function Actions(props) {
 
   useEffect(() => {
     fetchAllComplianceData();
-  }, [props.projectName.breakDown, props.compliance, props.search ,props.status, props.type]);
+  }, [
+    props.projectName.breakDown,
+    props.compliance,
+    props.search,
+    props.status,
+    props.type,
+  ]);
 
   return (
     <>
-      <Box>{isLoading ? <>
-        <TableContainer component={Paper}>
-          <Grid component={Paper}>
-            <MUIDataTable
-              //title="Compliance List"
-              data={allComplianceData.map((data) => [
-                data['auditNumber'],
-                data["auditType"],
-                "data not available in api",
-                moment(data["createdAt"]).format("Do MMMM YYYY"),
-                data["username"] !== null ? data["username"] : "-",
-              ])}
-              columns={columns}
-              options={options}
-              className="dataTableSectionDesign"
-            />
-          </Grid>
-        </TableContainer>
-        <div className={classes.pagination}>
-            {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div>
-          </> :<Loader />}
+      <Box>
+        {isLoading ? (
+          <>
+            <TableContainer component={Paper}>
+              <Grid component={Paper}>
+                <MUIDataTable
+                  //title="Compliance List"
+                  data={allComplianceData.map((data) => [
+                    data["auditNumber"],
+                    data["auditType"],
+                    "data not available in api",
+                    moment(data["createdAt"]).format("Do MMMM YYYY"),
+                    data["username"] !== null ? data["username"] : "-",
+                  ])}
+                  columns={columns}
+                  options={options}
+                  className="dataTableSectionDesign"
+                />
+              </Grid>
+            </TableContainer>
+            <div className={classes.pagination}>
+              {totalData != 0
+                ? Number.isInteger(pageData) !== true
+                  ? totalData < 25 * page
+                    ? `${page * 25 - 24} - ${totalData} of ${totalData}`
+                    : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                  : `${page * 25 - 24} - ${25 * page} of ${totalData}`
+                : null}
+              <Pagination
+                count={pageCount}
+                page={page}
+                onChange={handleChange}
+              />
+            </div>
+          </>
+        ) : (
+          <Loader />
+        )}
       </Box>
     </>
   );

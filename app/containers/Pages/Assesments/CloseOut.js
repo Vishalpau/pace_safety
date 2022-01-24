@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FormHelperText } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import { CircularProgress } from "@material-ui/core";
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -84,6 +85,19 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const CloseOut = (props) => {
@@ -111,6 +125,7 @@ const CloseOut = (props) => {
   const [loading, setLoading] = useState(false)
   const { id } = props.match.params;
   const [error, setError] = useState({})
+  const [disableForm, setDisableForm] = useState(false);
 
   const setFlhaDetails = async () => {
     const { id } = props.match.params;
@@ -154,9 +169,12 @@ const CloseOut = (props) => {
       jobForm["flhaStage"] = "Close"
       jobForm["flhaStatus"] = "Close"
       const res = await api.put('/api/v1/flhas/' + id + '/', jobForm);
+      await setDisableForm(true)
+      // await setLoading(true)
       if (jobForm.creatingIncident === "Yes") {
         history.push(INITIAL_NOTIFICATION_FORM_NEW["Incident details"])
-      } else {
+      } 
+      else {
         history.push('/app/pages/assesments/flhasummary/' + id);
       }
     }
@@ -173,7 +191,7 @@ const CloseOut = (props) => {
   }, [open]);
 
   return (
-    <CustomPapperBlock title="FLHA - Close Out" icon={flhaLogoSymbol} whiteBg>
+    <CustomPapperBlock title="FLHA - Close Out" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
       {loading == false ?
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -187,7 +205,7 @@ const CloseOut = (props) => {
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
-              <Grid item md={12} xs={12}>
+              {/* <Grid item md={12} xs={12}>
                 <FormControl
                   component="fieldset"
                   error={true}
@@ -336,14 +354,14 @@ const CloseOut = (props) => {
                 </Grid>
                 :
                 null
-              }
+              } */}
 
               <Grid item md={6} sm={6} xs={12}>
                 <FormControl component="fieldset">
                   <FormLabel component="legend" className="checkRadioLabel">Are all permit(s) closed out?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="permitClosedOut" name="permitClosedOut" value={jobForm.permitClosedOut} onChange={(e) => handleJobFormChange(e, 'permitClosedOut')}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                    <FormControlLabel value="No" control={<Radio />} label="No"  disabled ={disableForm}/>
                   </RadioGroup>
                 </FormControl>
                 {error && error["permitClosedOut"] && (
@@ -357,8 +375,8 @@ const CloseOut = (props) => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" className="checkRadioLabel">Are there Hazards remaining?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="hazardsRemaining" name="hazardsRemaining" value={jobForm.hazardsRemaining} onChange={(e) => handleJobFormChange(e, 'hazardsRemaining')}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                    <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
                   </RadioGroup>
                 </FormControl>
                 {error && error["hazardsRemaining"] && (
@@ -372,8 +390,8 @@ const CloseOut = (props) => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" className="checkRadioLabel">Was the area cleaned up at the end of job/shift?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="endOfJob" name="endOfJob" value={jobForm.endOfJob} onChange={(e) => handleJobFormChange(e, 'endOfJob')}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                    <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
                   </RadioGroup>
                 </FormControl>
                 {error && error["endOfJob"] && (
@@ -387,8 +405,8 @@ const CloseOut = (props) => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" className="checkRadioLabel">Were there any incidents/injuries?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="anyIncidents" name="anyIncidents" value={jobForm.anyIncidents} onChange={(e) => handleJobFormChange(e, 'anyIncidents')}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm} />
+                    <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
                   </RadioGroup>
                 </FormControl>
                 {error && error["anyIncidents"] && (
@@ -410,6 +428,7 @@ const CloseOut = (props) => {
                     value={jobForm.jobCompletionRemarks}
                     onChange={(e) => handleJobFormChange(e, 'jobCompletionRemarks')}
                     className={classes.fullWidth}
+                    disabled ={disableForm}
                   />
                   {error && error["jobCompletionRemarks"] && (
                     <FormHelperText style={{ color: "red" }}>
@@ -425,8 +444,8 @@ const CloseOut = (props) => {
                 <FormControl component="fieldset">
                   <FormLabel component="legend" className="checkRadioLabel">Do you want to continue to creating an Incident?*</FormLabel>
                   <RadioGroup className={classes.radioInline} aria-label="creatingIncident" name="creatingIncident" value={jobForm.creatingIncident} onChange={(e) => handleJobFormChange(e, 'creatingIncident')}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled ={disableForm}/>
+                    <FormControlLabel value="No" control={<Radio />} label="No" disabled ={disableForm} />
                   </RadioGroup>
                 </FormControl>
                 {error && error["creatingIncident"] && (
@@ -452,6 +471,7 @@ const CloseOut = (props) => {
             }
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+            <div className={classes.loadingWrapper}>
               <Button
                 size="medium"
                 variant="contained"
@@ -459,9 +479,18 @@ const CloseOut = (props) => {
                 disabled={jobForm.flhaStage === "Close" ? true : false}
                 className="spacerRight buttonStyle"
                 onClick={() => handleFormSubmit()}
+                disabled={loading}
               >
                 Closeout
               </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
+
               <Button
                 size="medium"
                 variant="contained"

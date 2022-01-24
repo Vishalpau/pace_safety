@@ -749,7 +749,7 @@ const FlhaDetails = () => {
     temp[index].visualConfirmationStatus = value
     setJobVisualConfirmation(temp)
     }else{
-      temp[index].visualConfirmationAttachment = null 
+      // temp[index].visualConfirmationAttachment = null 
       temp[index].visualConfirmationType = visualType[index]
     temp[index].visualConfirmationStatus = value
     setJobVisualConfirmation(temp)
@@ -873,7 +873,7 @@ const FlhaDetails = () => {
   return (
     <>
 
-      <CustomPapperBlock title="FLHA - Initial Assessment" icon={flhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         {isLoading == false ?
           <Grid container spacing={3}>
             {/* project information */}

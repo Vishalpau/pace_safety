@@ -344,7 +344,7 @@ const styles = (theme) => ({
     display: "block",
     padding: `${theme.spacing(5)}px 0`,
     "&$withProfile": {
-      paddingTop: theme.spacing(2),
+      paddingTop: theme.spacing(0),
     },
     "&$landingNav": {
       [theme.breakpoints.up("lg")]: {

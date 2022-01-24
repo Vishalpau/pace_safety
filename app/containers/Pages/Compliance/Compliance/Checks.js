@@ -286,13 +286,13 @@ const styles = (theme) => ({
 
 const Checks = () => {
   const history = useHistory();
-  const [form , setForm] = useState({})
-  const [checkData , setCheckData] = useState([])
+  const [form, setForm] = useState({});
+  const [checkData, setCheckData] = useState([]);
   //const [expanded, setExpanded] = React.useState('panel1');
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel4"
   );
-  const radioDecide = ["Yes" , "No" , "NA"]
+  const radioDecide = ["Yes", "No", "NA"];
   // const handleExpand = (panel) => (event, isExpanded) => {
   //     setExpanded(isExpanded ? panel : false);
   // };
@@ -402,8 +402,8 @@ const Checks = () => {
     //     }
     //   });
     // });
-//await fetchCategoryData(temp)
-await fetchComplianceData(result)
+    //await fetchCategoryData(temp)
+    await fetchComplianceData(result);
     // await setCheckListGroups(result);
   };
 
@@ -412,36 +412,39 @@ await fetchComplianceData(result)
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
-        let result = response.data.data.results
-        let groupIds = result.groupIds.split(',')
-        let subGroupIds = result.subGroupIds.split(',')
-        let tempGroup = []
-        let tempSubGroup = []
-        for (let i = 0; i < groupIds.length; i++){
-          for (let j = 0; j < data.length; j++){
-            if(data[j]['checklistId'] == groupIds[i]){
-              tempGroup.push(data[j])
+        let result = response.data.data.results;
+        let groupIds = result.groupIds.split(",");
+        let subGroupIds = result.subGroupIds.split(",");
+        let tempGroup = [];
+        let tempSubGroup = [];
+        for (let i = 0; i < groupIds.length; i++) {
+          for (let j = 0; j < data.length; j++) {
+            if (data[j]["checklistId"] == groupIds[i]) {
+              tempGroup.push(data[j]);
             }
           }
         }
-        for (let i = 0; i < subGroupIds.length; i++){
-          for (let j = 0; j < tempGroup.length; j++){
-            tempGroup[j]['checklistValues'].map((value) => {
-              if(value.id == subGroupIds[i]){
-                tempSubGroup.push({groupName : tempGroup[j]['checkListLabel'] , subGroupName : value['inputLabel']})
+        for (let i = 0; i < subGroupIds.length; i++) {
+          for (let j = 0; j < tempGroup.length; j++) {
+            tempGroup[j]["checklistValues"].map((value) => {
+              if (value.id == subGroupIds[i]) {
+                tempSubGroup.push({
+                  groupName: tempGroup[j]["checkListLabel"],
+                  subGroupName: value["inputLabel"],
+                });
               }
-            } )
+            });
           }
         }
         setForm(result);
-        fetchCheklist(tempSubGroup)
+        fetchCheklist(tempSubGroup);
       })
       .catch((error) => console.log(error));
   };
 
   const fetchCheklist = async (data) => {
     let temp = [];
-    let tempCheckData = []
+    let tempCheckData = [];
     let categoriesData = {};
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
@@ -458,60 +461,72 @@ await fetchComplianceData(result)
     temp.map((value, i) => {
       temp[i].map((value, index) => {
         tempCheckData.push({
-          "questionId": value.id,
-          "question": value.question,
-          "criticality": "",
-          "auditStatus": "",
-          "performance": "",
-          "groupId" : temp[i].id,
-          "groupName": value.groupName,
-          "subGroupId": temp[i].id,
-          "subGroupName" : value.subGroupName,
-          "defaultResponse":"",
-          "score":"",
-          "findings": "",
-          "status": "Active",
-          "createdBy": 1,
-          "updatedBy": 0,
-          "fkAuditId": localStorage.getItem('fkComplianceId')
-        })
+          questionId: value.id,
+          question: value.question,
+          criticality: "",
+          auditStatus: "",
+          performance: "",
+          groupId: temp[i].id,
+          groupName: value.groupName,
+          subGroupId: temp[i].id,
+          subGroupName: value.subGroupName,
+          defaultResponse: "",
+          score: "",
+          findings: "",
+          status: "Active",
+          createdBy: 1,
+          updatedBy: 0,
+          fkAuditId: localStorage.getItem("fkComplianceId"),
+        });
         console.log(tempCheckData);
         categoriesData[value["groupName"]].push(value);
       });
     });
-    await setCheckData(tempCheckData)
+    await setCheckData(tempCheckData);
     await setCategories(categoriesData);
   };
-  const handelSubmit = async() => {
-    if(checkData[0].id){
-      console.log("put")
-      const res = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,checkData)
-    }else{
-      console.log("post")
-      const res = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,checkData)
+  const handelSubmit = async () => {
+    if (checkData[0].id) {
+      console.log("put");
+      const res = await api.put(
+        `/api/v1/audits/${localStorage.getItem(
+          "fkComplianceId"
+        )}/auditresponse/`,
+        checkData
+      );
+    } else {
+      console.log("post");
+      const res = await api.post(
+        `/api/v1/audits/${localStorage.getItem(
+          "fkComplianceId"
+        )}/auditresponse/`,
+        checkData
+      );
     }
     history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
 
-  const handleChangeData = (value , field , index , id) => {
+  const handleChangeData = (value, field, index, id) => {
     // console.log(e, field , index);
-    let temp = [...checkData]
-    for(let i = 0; i < temp.length; i++) {
+    let temp = [...checkData];
+    for (let i = 0; i < temp.length; i++) {
       // console.log(temp[i]['questionId'] , id)
-      if(temp[i]['questionId'] == id){
-        temp[i][field] = value
+      if (temp[i]["questionId"] == id) {
+        temp[i][field] = value;
       }
     }
-    setCheckData(temp)
-  }
+    setCheckData(temp);
+  };
 
   const fetchData = async () => {
-    const res = await api.get(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`)
-    const result = res.data.data.results
-    await setCheckData(result)
-  }
-  
+    const res = await api.get(
+      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+    );
+    const result = res.data.data.results;
+    await setCheckData(result);
+  };
+
   useEffect(() => {
     //fetchCheklist();
     fetchCheklistData();
@@ -644,7 +659,9 @@ await fetchComplianceData(result)
                               <div>
                                 {value.responseType === "Yes-No-NA" ? (
                                   <Accordion
-                                    expanded={expandedTableDetail === `panel6 ${index}`}
+                                    expanded={
+                                      expandedTableDetail === `panel6 ${index}`
+                                    }
                                     onChange={handleTDChange(`panel6 ${index}`)}
                                     className="backPaperAccordian"
                                   >
@@ -660,7 +677,9 @@ await fetchComplianceData(result)
                                             classes.accordingHeaderContentLeft
                                           }
                                         >
-                                          <ListItemText primary={value.question} />
+                                          <ListItemText
+                                            primary={value.question}
+                                          />
                                         </ListItem>
                                       </List>
                                     </AccordionSummary>
@@ -672,15 +691,24 @@ await fetchComplianceData(result)
                                               row
                                               aria-label="select-typeof-compliance"
                                               name="select-typeof-compliance"
-                                            >{radioDecide.map((option) => 
-                                            <FormControlLabel
-                                                value={option}
-                                                className="selectLabel"
-                                                control={<Radio />}
-                                                onChange={(e) => handleChangeData(e.target.value ,"defaultResponse" , index , value.id)} 
-                                                label={option}
-                                              />)}
-                                              
+                                            >
+                                              {radioDecide.map((option) => (
+                                                <FormControlLabel
+                                                  value={option}
+                                                  className="selectLabel"
+                                                  control={<Radio />}
+                                                  onChange={(e) =>
+                                                    handleChangeData(
+                                                      e.target.value,
+                                                      "defaultResponse",
+                                                      index,
+                                                      value.id
+                                                    )
+                                                  }
+                                                  label={option}
+                                                />
+                                              ))}
+
                                               {/* <FormControlLabel
                                                 value="workarea-compliance"
                                                 className="selectLabel"
@@ -701,7 +729,14 @@ await fetchComplianceData(result)
                                             label="Findings"
                                             name="findings"
                                             id="findings"
-                                            onChange={(e) => handleChangeData(e.target.value ,"findings" , index , value.id)} 
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "findings",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                             multiline
                                             rows={4}
                                             defaultValue=""
