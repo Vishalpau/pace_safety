@@ -958,6 +958,7 @@ const ProjectDetailsAndHazard = () => {
                             name="arename"
                             id="arename"
                             multiline
+                            inputProps={{ maxLength: 100 }}
                             value={Teamform[index].teamName || ""}
                             fullWidth
                             variant="outlined"
