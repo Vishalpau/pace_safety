@@ -423,6 +423,7 @@ const ObservationInitialNotification = (props) => {
   const [catagory, setCatagory] = useState([]);
   // when click on submit button handleSubmit is called
   const handleSubmit = async () => {
+    form['fkProjectId'] = parseInt(project.projectId)
     const uniqueProjectStructure = [...new Set(selectDepthAndId)];
     let fkProjectStructureId = uniqueProjectStructure
       .map((depth) => {
