@@ -298,6 +298,10 @@ const Categories = () => {
       }
     }
   };
+
+  const handleCancel = () => {
+    history.push("/app/pages/compliance/performance-summary");
+  };
   console.log(checkGroups, "LLLLLLLLLLLLLLLLLLLLLLLLLLL");
   // const fetchCategoryData = async (data) => {
   //   const res = await api.get(
@@ -470,6 +474,7 @@ const Categories = () => {
                 variant="contained"
                 color="secondary"
                 className="buttonStyle custmCancelBtn"
+                onClick={handleCancel}
               >
                 Cancel
               </Button>
