@@ -468,9 +468,9 @@ export default function ComplianceSearchSectionCard() {
           <Grid item md={2} sm={6} xs={12}>
             <div className={classes.statusIconBox}>
               <span className={classes.statusHover}>
-                <img src={preplanning} onClick={() => setStatus("Draft")} />
+                {/* <img src={preplanning} onClick={() => setStatus("Draft")} /> */}
                 {/* <img src={progress} className={classes.pLtenPRten} /> */}
-                <img src={completed} onClick={() => setStatus("Closed")} />
+                {/* <img src={completed} onClick={() => setStatus("Closed")} /> */}
               </span>
             </div>
             {/* <StatusFilter /> */}

@@ -756,7 +756,7 @@ function ComplianceListNew(props) {
       .put(`api/v1/audits/${id}/`, temp)
       .then((response) => {
         fetchAllComplianceData();
-        setIsLoading(true);
+        // setIsLoading(true);
       })
       .catch((error) => console.log(error));
   };
@@ -863,12 +863,12 @@ function ComplianceListNew(props) {
                                           </Link>
                                         </span>
                                       </Typography>
-                                      <span
+                                      {/* <span
                                         item
                                         xs={1}
                                         className={classes.sepHeightOne}
-                                      />
-                                      <Typography
+                                      /> */}
+                                      {/* <Typography
                                         variant="body1"
                                         gutterBottom
                                         display="inline"
@@ -881,8 +881,8 @@ function ComplianceListNew(props) {
                                         >
                                           data not available in api
                                         </span>
-                                      </Typography>
-                                      <span
+                                      </Typography> */}
+                                      {/* <span
                                         item
                                         xs={1}
                                         className={classes.sepHeightOne}
@@ -894,13 +894,11 @@ function ComplianceListNew(props) {
                                         color="textPrimary"
                                         className={classes.listingLabelName}
                                       >
-                                        {/* Assignee: <span className={classes.listingLabelValue}>Ajay chauhan</span>
-                                  <span item xs={1} className={classes.sepHeightOne}></span> */}
                                         Status:{" "}
                                         <span className="listingLabelValue statusColor_complete">
                                           Assigned
                                         </span>
-                                      </Typography>
+                                      </Typography> */}
                                     </Grid>
 
                                     {/* <Grid item md={2} sm={4} xs={12}>
@@ -915,7 +913,7 @@ function ComplianceListNew(props) {
 
                             <Grid item sm={12} xs={12}>
                               <Grid container spacing={3}>
-                                <Grid item sm={3} xs={12}>
+                                {/* <Grid item sm={3} xs={12}>
                                   <Typography
                                     variant="body1"
                                     color="textPrimary"
@@ -929,7 +927,7 @@ function ComplianceListNew(props) {
                                   >
                                     data not available in api
                                   </Typography>
-                                </Grid>
+                                </Grid> */}
 
                                 <Grid item sm={3} xs={12}>
                                   <Typography
@@ -988,7 +986,7 @@ function ComplianceListNew(props) {
                           className={classes.cardBottomSection}
                         >
                           <Grid item xs={12} sm={6} md={5}>
-                            <Typography
+                            {/* <Typography
                               variant="body1"
                               display="inline"
                               color="textPrimary"
@@ -997,7 +995,6 @@ function ComplianceListNew(props) {
                               Attachments:
                             </Typography>
                             <Typography variant="body2" display="inline">
-                              {/* <Link href="#" color="secondary" className={classes.mLeftR5}>3</Link> */}
                               <span>
                                 <Link
                                   href="#"
@@ -1047,8 +1044,7 @@ function ComplianceListNew(props) {
                                   3
                                 </Link>
                               </span>
-                              {/* <Link href="#" color="secondary" className={classes.mLeft}>3</Link> */}
-                            </Typography>
+                            </Typography> */}
                           </Grid>
 
                           <Grid
