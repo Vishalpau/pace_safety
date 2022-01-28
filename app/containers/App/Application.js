@@ -185,6 +185,7 @@ import {
   ComplianceForm,
   ComplianceComment,
   ComplianceActivity,
+  ComplianceConfig,
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -641,6 +642,9 @@ function Application(props) {
         {/* Default */}
         <Route component={NotFound} />
         {/* Administrations */}
+
+        <Route path="/app/compliance-config" exact component={ComplianceConfig} />
+
 
 
       </Switch>
