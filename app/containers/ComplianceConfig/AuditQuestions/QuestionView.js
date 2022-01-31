@@ -37,7 +37,16 @@ import { useHistory, useParams } from 'react-router';
 import { useDropzone } from 'react-dropzone';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-
+import api from "../../../utils/axios";
+import axios from 'axios'
+import {
+    access_token,
+    ACCOUNT_API_URL,
+    HEADER_AUTH,
+    INITIAL_NOTIFICATION_FORM,
+    LOGIN_URL,
+    SSO_URL,
+  } from "../../../utils/constants";
 
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
@@ -186,9 +195,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionView = () => {
+const QuestionView = (props) => {
     const classes = useStyles();
-
+    const {id} = useParams('')
+    const history = useHistory();
+    const [auditDetial ,setAuditDetial] = useState({})
+    const [projectStructName, setProjectStructName] = useState([]);
+    console.log(id,":::::::::::::")
     const [state, setState] = React.useState({
         checkedA: true,
         checkedB: true,
@@ -199,6 +212,86 @@ const QuestionView = () => {
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+
+    const fetchAuditDetails = async () => {
+        const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId =
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    // const selectBreakdown =
+    //   props.projectName.breakDown.length > 0
+    //     ? props.projectName.breakDown
+    //     : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+    //     ? JSON.parse(localStorage.getItem("selectBreakDown"))
+    //     : null;
+    // let struct = "";
+    // for (const i in selectBreakdown) {
+    //   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    // }
+    // const fkProjectStructureIds = struct.slice(0, -1);
+        const res = await api.get(`/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=`)
+        let result = res.data.data.results[0]
+        await handelWorkArea(result);
+        await setAuditDetial(result)
+        console.log(res.data.data.results[0],"LLLLLLLLLLLLLLLLLL")
+    }
+
+    const handleProjectName = (projectId) => {
+        if(projectId != null) {
+            console.log(projectId,"<<<<<<<<<<<<<<<<<<<")
+            const userName =
+              JSON.parse(localStorage.getItem("userDetails")) !== null
+                ? JSON.parse(localStorage.getItem("userDetails")).companies
+                : null;
+            const fetchCompanyId = userName.filter(
+              (user) => user.companyId === auditDetial.fkCompanyId
+            );
+            const fetchProjectId = fetchCompanyId[0].projects.filter(
+              (user) => user.projectId === projectId
+            );
+            return fetchProjectId[0].projectName;
+        }
+      };
+
+      const handelWorkArea = async (complianceData) => {
+        const fkCompanyId =
+          JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+    
+        const projectId =
+          JSON.parse(localStorage.getItem("projectName")) !== null
+            ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+            : null;
+        let structName = [];
+        let projectStructId = complianceData.fkProjectStructureIds.split(":");
+        for (let key in projectStructId) {
+          let workAreaId = [
+            projectStructId[key].substring(0, 2),
+            projectStructId[key].substring(2),
+          ];
+          const api_work_area = axios.create({
+            baseURL: SSO_URL,
+            headers: HEADER_AUTH,
+          });
+          console.log(workAreaId,":::::::::::::::::::::::")
+          const workArea = await api_work_area.get(
+            `/api/v1/companies/1/projects/1/projectstructure/1L/1/`
+          );
+          console.log(workArea);
+          structName.push(workArea.data.data.results[0]["structureName"]);
+        }
+        setProjectStructName(structName);
+      };
+
+    const handleBack = () => {
+        props.setViewQuestion(false);
+        props.setListQuestion(true);
+        history.push(`/app/compliance-config/`)  
+    }
+
+    useEffect(() =>{
+        fetchAuditDetails()
+    },[])
 
     return (
         <>
@@ -224,10 +317,16 @@ const QuestionView = () => {
                             <Grid container spacing={3}>
                                 <Grid item md={12} sm={12} xs={12}>
                                     <Typography gutterBottom className="labelValue">
-                                        NTPC
+                                    {handleProjectName(
+                                        auditDetial["fkProjectId"]
+                                      )}
                                     </Typography>
                                     <Typography className="labelValue">
-                                        All sections : All units : All work areas
+                                    {projectStructName
+                                        .map((value) => {
+                                          return value;
+                                        })
+                                        .join(" : ")}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -269,8 +368,8 @@ const QuestionView = () => {
                                     >
                                     Group name
                                     </Typography>
-                                    <Typography display="block" className="viewLabelValue">Material</Typography>
-                                    <Typography display="block" className="viewLabelValue">Electrical</Typography>
+                                    <Typography display="block" className="viewLabelValue">{auditDetial.groupName !== "" ? auditDetial.groupName : "-"}</Typography>
+                                    {/* <Typography display="block" className="viewLabelValue">Electrical</Typography> */}
                                 </Grid>
 
                                 <Grid
@@ -289,12 +388,12 @@ const QuestionView = () => {
                                             gutterBottom
                                             className="viewLabel"
                                             >
-                                            Material
+                                            {auditDetial.groupName !== "" ? auditDetial.groupName : "-"}
                                             </Typography>
-                                            <Typography display="block" className="viewLabelValue">Fire</Typography>
-                                            <Typography display="block" className="viewLabelValue">Category 2</Typography> 
+                                            <Typography display="block" className="viewLabelValue">{auditDetial.subGroupName !== "" ? auditDetial.subGroupName : "-"}</Typography>
+                                            {/* <Typography display="block" className="viewLabelValue">Category 2</Typography>  */}
                                         </Grid>
-                                        <Grid
+                                        {/* <Grid
                                             item
                                             md={12}
                                             xs={12}
@@ -308,7 +407,7 @@ const QuestionView = () => {
                                             </Typography>
                                             <Typography display="block" className="viewLabelValue">Category</Typography>
                                             <Typography display="block" className="viewLabelValue">Category 2</Typography> 
-                                        </Grid>
+                                        </Grid> */}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -347,7 +446,7 @@ const QuestionView = () => {
                                         Question
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                        The question text will come here
+                                        {auditDetial.question !== "" ? auditDetial.question : "-"}
                                     </Typography>
                                 </Grid>
                                 
@@ -360,7 +459,7 @@ const QuestionView = () => {
                                         Response type
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                        Yes/No/NA/ and finding
+                                    {auditDetial.responseType !== "" ? auditDetial.responseType : "-"}
                                     </Typography>
                                 </Grid>
                                 <Grid item md={6} sm={6} xs={12}>
@@ -372,7 +471,7 @@ const QuestionView = () => {
                                         Record geo location
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                        Yes
+                                    {auditDetial.geoLocation !== "" ? auditDetial.geoLocation : "-"}
                                     </Typography>
                                 </Grid>
                                 <Grid item md={12} sm={12} xs={12}>
@@ -384,7 +483,7 @@ const QuestionView = () => {
                                         Score
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                        Percentage
+                                    {auditDetial.scoreType !== "" ? auditDetial.scoreType : "-"}
                                     </Typography>
                                 </Grid>
                                 <Grid item md={6} sm={6} xs={12}>
@@ -396,7 +495,7 @@ const QuestionView = () => {
                                         Media attachment (Image / audio / video)
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                        No
+                                    {auditDetial.evidenceType !== "" ? auditDetial.evidenceType : "-"}
                                     </Typography>
                                 </Grid>
                                 <Grid item md={6} sm={6} xs={12}>
@@ -408,7 +507,7 @@ const QuestionView = () => {
                                        Document attachment (document  / pdf)
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                        Yes
+                                    {auditDetial.attachment !== "" ? auditDetial.attachment : "-"}
                                     </Typography>
                                 </Grid>
 
@@ -419,7 +518,7 @@ const QuestionView = () => {
             </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
+                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => handleBack()}>
                     Back
                 </Button>
             </Grid>

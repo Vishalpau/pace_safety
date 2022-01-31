@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -35,7 +35,10 @@ import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
 import DeleteIcon from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 
@@ -62,6 +65,9 @@ import QuestionsForm from './QuestionsForm';
 import BulkUploadQuestion from './BulkUploadQuestion';
 import QuestionEdit from './QuestionEdit';
 import QuestionView from './QuestionView';
+import {useParams , useHistory} from 'react-router-dom';
+import api from "../../../utils/axios";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -146,15 +152,27 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     color: 'rgba(0, 0, 0, 0.87) !important',
   },
+  table: {
+    minWidth: 650,
+  },
+  tabelBorder: {
+      width: 110,
+  },
+  columunBorder: {
+      width: 110,
+      fontWeight: 600,
+  },
 }));
 
-function ComplianceQuestionsList() {
+function ComplianceQuestionsList(props) {
   const classes = useStyles();
-
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (value) => {
     setOpen(true);
+    let id = value.id;
+    setAuditId(id)
   };
 
   const handleClose = () => {
@@ -224,7 +242,7 @@ function ComplianceQuestionsList() {
     ['1234', 'The question text will come here', 'Risk score', 'Yes', 'Yes', 'Yes'],
     ['1234', 'The question text will come here', 'Risk score', 'Yes', 'Yes', 'Yes'],
     ['1234', 'The question text will come here', 'Risk score', 'Yes', 'Yes', 'Yes'],
-    ['1234', 'The question text will come here', 'Risk score', 'Yes', 'Yes', 'Yes'],
+    // ['1234', 'The question text will come here', 'Risk score', 'Yes', 'Yes', 'Yes'],
   ];
   const options = {
     filterType: 'dropdown',
@@ -249,7 +267,63 @@ function ComplianceQuestionsList() {
   const [bulkUpload, setBulkUpload] = useState(false);
   const [editQuestion, setEditQuestion] = useState(false);
   const [viewQuestion, setViewQuestion] = useState(false);
+  const [auditData , setAuditData] = useState([]);
+  const [auditId , setAuditId] = useState('');
 
+  const handleNew = () => {
+    setListQuestion(false);
+    setNewQuestion(true);
+    setBulkUpload(false);
+    setEditQuestion(false);
+    setViewQuestion(false);
+    history.push('/app/compliance-config/new')
+  }
+
+  const fetchAuditData = async () => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId =
+      props.projectName.projectId ||
+      JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+    const selectBreakdown =
+      props.projectName.breakDown.length > 0
+        ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(`/api/v1/configaudits/auditquestions/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=${fkProjectStructureIds}`)
+    const result = res.data.data.results;
+    await setAuditData(result)
+    console.log(res,">>>>>>>>>>>>>>>>>>>>>>>>")
+  }
+
+  useEffect ( () => {
+    fetchAuditData()
+  },[props.projectName.breakDown])
+
+    // useEffect(() => {
+    //   fetchAllComplianceData();
+    // }, [
+    //   props.projectName.breakDown,
+    //   props.compliance,
+    //   props.search,
+    //   props.status,
+    //   props.type,
+    // ]);
+
+    const handleView = () => {
+      setListQuestion(false);
+      setNewQuestion(false);
+      setBulkUpload(false);
+      setEditQuestion(false);
+      setViewQuestion(true);
+      setOpen(false);
+      history.push(`/app/compliance-config/${auditId}`)
+    }
   return (
     <>
       <Grid container spacing={3}>
@@ -268,11 +342,7 @@ function ComplianceQuestionsList() {
                         <Tooltip title="New">
                           <Button size="medium" className="marginR5" variant="contained" color="primary"
                             onClick={(e) => {
-                              setListQuestion(false);
-                              setNewQuestion(true);
-                              setBulkUpload(false);
-                              setEditQuestion(false);
-                              setViewQuestion(false);
+                              handleNew()
                             }}
                           >
                             <AddIcon className="marginR5" /> New
@@ -295,14 +365,46 @@ function ComplianceQuestionsList() {
                       <Grid item md={12} sm={12} xs={12}>
                         <TableContainer component={Paper}>
                           <Grid component={Paper}>
-                            <MUIDataTable
+                          <Table className={classes.table}>
+                <TableBody>
+                    <TableRow>
+                        <TableCell className={classes.columunBorder}>Question ID</TableCell>
+                        <TableCell className={classes.columunBorder}>Questions</TableCell>
+                        <TableCell className={classes.columunBorder}>Response type</TableCell>
+                        <TableCell className={classes.columunBorder}>Media attachment</TableCell>
+                        <TableCell className={classes.columunBorder}>Document attachment</TableCell>
+                        <TableCell className={classes.columunBorder}>Geo location</TableCell>
+                        <TableCell className={classes.columunBorder}>Actions</TableCell>
+                    </TableRow>
+                    {auditData.map((value) => (
+                        <TableRow>
+                            <TableCell className={classes.tabelBorder}>{value.id}</TableCell>
+                            <TableCell className={classes.tabelBorder}>{value.question}</TableCell>
+                            <TableCell className={classes.tabelBorder}>{value.responseType}</TableCell>
+                            <TableCell className={classes.tabelBorder}>{value.evidenceType}</TableCell>
+                            <TableCell className={classes.tabelBorder}>{value.attachment}</TableCell>
+                            <TableCell className={classes.tabelBorder}>{value.geoLocation}</TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                <IconButton size="small" color="primary">
+                                    <MoreVertIcon onClick={()=> handleClickOpen(value)} />
+                                </IconButton>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+
+
+                </TableBody>
+            </Table>
+                            {/* <MUIDataTable
                               //title="Actions List"
                               className="dataTableSectionDesign"
-                              data={data}
+                              data={auditData.map((value) => [
+                                value['id'],value['question'],value['responseType'],value['evidenceType'],value['attachment'],value['geoLocation']
+                              ])}
                               columns={columns}
                               options={options}
                               //className="classes.dataTableNew"
-                            />
+                            /> */}
                             </Grid>
                         </TableContainer>
                       </Grid>
@@ -348,7 +450,7 @@ function ComplianceQuestionsList() {
                   <Grid item xs={12} md={12}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={12}>
-                          <QuestionView />
+                          <QuestionView listQuestion={listQuestion} setListQuestion={setListQuestion} viewQuestion={viewQuestion} setViewQuestion={setViewQuestion} />
                         </Grid>
                       </Grid>
                     </Grid>
@@ -386,12 +488,7 @@ function ComplianceQuestionsList() {
               <ListItem
                 button
                 onClick={(e) => {
-                  setListQuestion(false);
-                  setNewQuestion(false);
-                  setBulkUpload(false);
-                  setEditQuestion(false);
-                  setViewQuestion(true);
-                  setOpen(false);
+                  handleView()
                 }}
               >
                 <ListItemIcon><VisibilityIcon /></ListItemIcon>
@@ -414,4 +511,15 @@ function ComplianceQuestionsList() {
   );
 }
 
-export default ComplianceQuestionsList;
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(ComplianceQuestionsList);
+

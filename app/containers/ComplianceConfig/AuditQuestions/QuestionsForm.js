@@ -13,7 +13,8 @@ import Link from '@material-ui/core/Link';
 import classNames from "classnames";
 import QuestionsGroup from "./QuestionsGroup";
 import Questions from './Questions';
-
+import FormSideBar from "../../Forms/FormSideBar";
+import {CONFIG} from '../ComplianceconfigConstants'
 // import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 
 // style
@@ -76,14 +77,14 @@ function QuestionsForm() {
                   ) {
                     return (
                         <>
-                            <QuestionsGroup />
+                            <QuestionsGroup setQuestion={setQuestion}  setQuestionGroup={setQuestionGroup}/>
                         </>
                     );
                   }
                   if (question == true) {
                     return (
                         <>
-                            <Questions />
+                            <Questions setQuestion={setQuestion}  setQuestionGroup={setQuestionGroup} />
                         </>
                     );
                   }
@@ -93,6 +94,14 @@ function QuestionsForm() {
 
         <Grid item xs={12} md={3}>
           <Paper elevation={1}>
+          {/* <Grid item xs={12} md={3}> */}
+              {/* <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={CONFIG}
+                selectedItem="Question"
+                onClick={() =>}
+              /> */}
+            {/* </Grid> */}
             <List dense>
               <ListItem 
                 className={classes.activeList}

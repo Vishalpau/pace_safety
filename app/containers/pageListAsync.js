@@ -857,4 +857,4 @@ export const ComplianceActivity = loadable(() => import("./Pages/Compliance/List
 
 export const ComplianceConfig = loadable(() => import("./ComplianceConfig/ComplianceConfig"), {
   fallback: <Loading />,
-}); 
+},); 

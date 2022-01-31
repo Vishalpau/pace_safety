@@ -298,3 +298,5 @@ ComplianceConfig.propTypes = {
 };
 
 export default withStyles(styles)(ComplianceConfig);
+
+

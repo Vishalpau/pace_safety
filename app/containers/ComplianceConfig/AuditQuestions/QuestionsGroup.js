@@ -43,6 +43,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory, useParams } from 'react-router';
+import api from "../../../utils/axios";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -149,11 +150,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionsGroup = () => {
+const QuestionsGroup = (props) => {
   const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
-
+  const [checkGroups, setCheckListGroups] = useState([]);
+  const [checkData, setCheckData] = useState([]);
+  const fetchChecklist = async () => {
+    let temp = {};
+    const res = await api.get(
+      `/api/v1/core/checklists/companies/8/projects/15/compliance/`
+    );
+    const result = res.data.data.results;
+    // await fetchComplianceData(result);
+    await setCheckListGroups(result);
+    // await setIsLoading(true);
+  };
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
   };
@@ -203,9 +215,18 @@ const QuestionsGroup = () => {
 
   const handleNewPickListPush = async () => {
     history.push(
-      "/app/checkList/checkList"
+      "/app/pages/checklist/"
     );
   };
+
+  const handleNext = async () => {
+    props.setQuestion(true)
+    props.QuestionsGroup(false)
+  }
+
+  useEffect(() => {
+    fetchChecklist()
+  },[])
 
   const classes = useStyles();
   return (
@@ -340,6 +361,29 @@ const QuestionsGroup = () => {
                                 >
                                 <FormLabel className="checkRadioLabel" component="legend">Group name</FormLabel>
                                 <FormGroup className={classes.customCheckBoxList}>
+                                  {checkGroups.map((value, index) => (
+                                    <FormControlLabel
+                                      control={
+                                        <Checkbox
+                                          name={index}
+                                          icon={
+                                            <CheckBoxOutlineBlankIcon fontSize="small" />
+                                          }
+                                          checkedIcon={
+                                            <CheckBoxIcon fontSize="small" />
+                                          }
+                                        />
+                                      }
+                                      className="selectLabel"
+                                      label={value.checkListLabel}
+                                      // checked={handelSelectOption(value)}
+                                      // onChange={async (e) =>
+                                      //   handlePhysicalHazards(e, value, index)
+                                      // }
+                                    />
+                                  ))}
+                                </FormGroup>
+                                {/* <FormGroup className={classes.customCheckBoxList}>
                                     <FormControlLabel
                                         className="selectLabel"
                                         control={(
@@ -426,7 +470,7 @@ const QuestionsGroup = () => {
                                         )}
                                         label="Fire"
                                     />
-                                </FormGroup>
+                                </FormGroup> */}
                             </Grid>
 
                             <Grid
@@ -652,7 +696,7 @@ const QuestionsGroup = () => {
           </Dialog> */}
 
           <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+            <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleNext()}>
               Next
             </Button>
             <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">

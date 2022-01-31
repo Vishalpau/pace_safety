@@ -639,11 +639,13 @@ function Application(props) {
         <Route path="/app/pages/compliance-comment" component={ComplianceComment} />
         <Route path="/app/pages/compliance-activity" component={ComplianceActivity} />
 
+        {/* Administrations */}
+        <Route path="/app/compliance-config/:id" exact component={ComplianceConfig} />
+        <Route path="/app/compliance-config/" exact component={ComplianceConfig} />
+        <Route path="/app/compliance-config/new" exact component={ComplianceConfig} />
         {/* Default */}
         <Route component={NotFound} />
-        {/* Administrations */}
 
-        <Route path="/app/compliance-config" exact component={ComplianceConfig} />
 
 
 
