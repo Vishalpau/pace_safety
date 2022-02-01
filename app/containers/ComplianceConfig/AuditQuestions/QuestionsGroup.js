@@ -223,56 +223,82 @@ const QuestionsGroup = (props) => {
   };
 
   const handleNext = async () => {
+    // let temp = [...subGroupId]
+    // let t = {}
+    // for (let i = 0; i < temp.length; i++) {
+    //   // console.log(temp.length , i,"?????????????????")
+
+    //   // console.log(temp[i+1],"?????????????????")
+    //   t[temp[i]['groupName']] = []
+    //   if(temp.length > i + 1){
+    //     console.log("Sagar")
+    //     if (temp[i]['groupName'] === temp[i + 1]['groupName']) {
+    //       t[temp[i]['groupName']].push(temp[i]['subGroupName'],temp[i+1]['subGroupName'] )
+    //     }
+    //   }
+
+    //   console.log(t)
+    //   // else{
+    //   //   t[temp[i]['groupName']].push(temp[i]['subGroupName'])
+    //   // }
+    // }
+    localStorage.setItem("auditChecks" , JSON.stringify(subGroupId))
     props.setQuestion(true)
-    props.QuestionsGroup(false)
+    props.setQuestionGroup(false)
   }
 
   const handlePhysicalHazards = async (e, value, index) => {
     let temp = [...checkData];
+    let tempsub = [...subGroupId]
     if (e.target.checked == false) {
       temp.map((data, key) => {
         if (data["checklistId"] == value["checklistId"]) {
           temp.splice(key, 1);
         }
       });
+      
+     let abc =  tempsub.filter((data) => data['groupName'] != value['checkListLabel'])
+      // tempsub.map((data, key) => {
+      //   console.log(data.groupName ==  value['checkListLabel'])
+      //   if(data.groupName ==  value['checkListLabel'])
+      //   tempsub.splice(key, 1);
+      // })
+      tempsub= abc
+
     } else {
       temp.push(value);
     }
+    console.log(tempsub,"????????????????????");
     await setCheckData(temp);
+    await setSubGroupId(tempsub);
+
   };
 
   const handleGroups = async (e, value, index , gName,sGName) => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
       temp.map((data, key) => {
-        let sb = temp[key].subGroupName
-        console.log(sb,":::::::::::::::::::::::::::::::::::::::")
-        let aa = sb.filter(a => a != sGName)
-        // temp[key].subGroupName.filter((value, key) => value != sGName )
-        // data.subGroupName.map((value,index) => {
+        if(data.subGroupName === sGName) {
+          temp.splice(key, 1);
+        }
+        // let sb = temp[key].subGroupName
+        // console.log(sb,":::::::::::::::::::::::::::::::::::::::")
+        // let aa = sb.filter(a => a != sGName)
+        // // temp[key].subGroupName.filter((value, key) => value != sGName )
+        // // data.subGroupName.map((value,index) => {
 
-        //   if (value == sGName) {
-        //     console.log(data.subGroupName[index])
-        //     temp[key].subGroupName[index].remove(value)
-        //   }
-        // })
-        temp[key].subGroupName = aa
-        console.log(aa,":::::::::::::::::::::::::::::::::::::::")
+        // //   if (value == sGName) {
+        // //     console.log(data.subGroupName[index])
+        // //     temp[key].subGroupName[index].remove(value)
+        // //   }
+        // // })
+        // temp[key].subGroupName = aa
+        // console.log(aa,":::::::::::::::::::::::::::::::::::::::")
       });
     } else if (e.target.checked) {
-      if(temp.length > 0 ) {
-
-        temp.map((data, index) => {
-          console.log(data.groupName === gName)
-          if(data.groupName === gName) {
-            console.log(data)
-
-            data.subGroupName.push(sGName)
-          }
-        })
-      }else{
-        temp.push({groupName: gName,subGroupName : [sGName] });
-      }
+      
+        temp.push({groupName: gName,subGroupName : sGName });
+      
     }
     console.log(temp);
     setSubGroupId(temp);
