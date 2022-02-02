@@ -602,12 +602,12 @@ for (const i in selectBreakdown) {
   struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
 }
 const fkProjectStructureIds = struct.slice(0, -1);
-if(props.observation === "My Assessments"){
-  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`);
+if(props.assessments === "My Assessments"){
+  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&createdBy=${createdBy}&page=${value}`);
     await setAllAHAData(res.data.data.results.results);
     await setPage(value)
 }else{
-  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
+  const res = await api.get(`api/v1/ahas/?search=${props.search}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&ahaStatus=${status}&page=${value}`);
   await setAllAHAData(res.data.data.results.results);
   await setPage(value)
 }

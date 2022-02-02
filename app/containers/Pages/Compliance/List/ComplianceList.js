@@ -265,6 +265,7 @@ function Actions(props) {
   };
 
   const handleChange = async (event, value) => {
+    console.log(props.type)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -285,22 +286,48 @@ function Actions(props) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    if (props.compliance === "My Inspections") {
-      const res = await api.get(
-        `api/v1/audits/?search=${
-          props.search
-        }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
-      );
-      await setAllComplianceData(res.data.data.results.results);
-      await setPage(value);
-    } else {
-      const res = await api.get(
-        `api/v1/audits/?search=${
-          props.search
-        }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
-      );
-      await setAllComplianceData(res.data.data.results.results);
-      await setPage(value);
+    if (props.type === "Categories" || props.type === "All") {
+      if (props.compliance === "My Inspections") {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
+        );
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
+      } else {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
+        );
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
+      }
+
+    }else{
+      console.log("sagar")
+      if (props.compliance === "My Inspections") {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
+          }&createdBy=${createdBy}&page=${value}`
+        );
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
+      } else {
+        const res = await api.get(
+          `api/v1/audits/?search=${
+            props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
+            props.type
+          }&page=${value}`
+        );
+        await setAllComplianceData(res.data.data.results.results);
+        await setPage(value);
+      }
     }
   };
 
