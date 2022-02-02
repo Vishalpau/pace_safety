@@ -292,9 +292,10 @@ const [checkData, setCheckData] = useState([]);
 const [que , setQue] = useState([])
 
 const handleMoreQuestionCatgry=(index)=>{
-    let temp=[...questionMoreCatgry]
-    temp[index].push({})
-    setQuestionMoreCatgry(temp)
+    console.log(index)
+    // let temp=[...questionMoreCatgry]
+    // temp[index].push({})
+    // setQuestionMoreCatgry(temp)
 }
 
 const handleCloseCatgry=(indexOne)=> {
@@ -326,7 +327,7 @@ const handleCloseCatgry=(indexOne)=> {
       for (let i = 0; i < data.length; i++) {
           
           temp.push(data[i]['groupName'])
-          kk.push([{}])
+          kk.push([{i}])
         }
         let t = {}
         for(let i = 0; i < temp.length; i++) {
@@ -389,27 +390,28 @@ const handleCloseCatgry=(indexOne)=> {
                     <Paper elevation={1} className="paperSection">
                         <Grid container spacing={3}>
                         {value.map((data, i) => (
-
+                            
                             <Grid item md={12} sm={12} xs={12}>
                                 <FormLabel className="checkRadioLabel marginB15" component="legend">{data}</FormLabel>
                                 <Grid container>
-                                    {que.map((value, indexOne) => <>
+                                    {/* {que.map((value, indexOne) => <> */}
                                     <Grid item md={12} sm={12} xs={12} className="positionRelative">
-                                    {console.log(que[indexOne])}
-                                        {que[indexOne].length>1?
+                                    {console.log(i)}
+                                        {que[i].length>1?
                                             <IconButton
                                                 variant="contained"
                                                 color="primary"
                                                 className="accordionCloseIcon"
-                                                onClick={() => handleCloseCatgry(indexOne)}
+                                                onClick={() => handleCloseCatgry(i)}
                                             >
                                                 <CloseIcon />
                                             </IconButton>
                                         : null
-                                        }{
-                                           que[indexOne].map((dd,index) => (
-
-                                        <Accordion expanded={expandedTableDetail === `panel ${indexOne+1}`} onChange={handleTDChange(`panel ${indexOne+1}`)} defaultExpanded className="backPaperAccordian">
+                                        }
+                                        {
+                                           que[i].map((dd,ss) => (<>
+                                            {/* {console.log(ss)} */}
+                                        <Accordion expanded={expandedTableDetail === `panel ${ss+1}`} onChange={handleTDChange(`panel ${ss+1}`)} defaultExpanded className="backPaperAccordian">
                                             <AccordionSummary
                                                 expandIcon={<ExpandMoreIcon />}
                                                 aria-controls="panel1bh-content"
@@ -421,7 +423,7 @@ const handleCloseCatgry=(indexOne)=> {
                                                         <ListItemText
                                                             primary={
                                                                 <>
-                                                                    Question : {indexOne+1}
+                                                                    Question : {index+1}
                                                                 </>
                                                             }
                                                         />
@@ -501,20 +503,24 @@ const handleCloseCatgry=(indexOne)=> {
                                                 </Grid>  
                                             </AccordionDetails>
                                         </Accordion>
-                                           )) 
-                                        }
-                                    </Grid>
-                                    </>)}
-                                    <Grid item md={12} sm={12} xs={12}>
+                                        <Grid item md={12} sm={12} xs={12}>
                                         <IconButton
                                             variant="contained"
                                             color="primary"
                                             className="marginB15 customAddButton"
-                                            onClick={() => handleMoreQuestionCatgry(index)}
+                                            onClick={() => handleMoreQuestionCatgry(ss)}
                                         >
                                             <AddCircleIcon className='marginR5' /> More question
                                         </IconButton>
                                     </Grid>
+                                           </>
+
+                                           ))
+                                            
+                                        }
+                                    </Grid>
+                                    {/* </>)} */}
+                                    
                                 </Grid>
                             </Grid>
                         ))}
