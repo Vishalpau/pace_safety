@@ -265,7 +265,6 @@ function Actions(props) {
   };
 
   const handleChange = async (event, value) => {
-    console.log(props.type)
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
@@ -306,7 +305,6 @@ function Actions(props) {
       }
 
     }else{
-      console.log("sagar")
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${
