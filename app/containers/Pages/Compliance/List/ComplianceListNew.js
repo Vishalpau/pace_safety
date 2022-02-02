@@ -748,7 +748,6 @@ function ComplianceListNew(props) {
       }
 
     }else{
-      console.log("sagar")
       if (props.compliance === "My Inspections") {
         const res = await api.get(
           `api/v1/audits/?search=${
@@ -905,7 +904,6 @@ function ComplianceListNew(props) {
                                         <span
                                           className={classes.listingLabelValue}
                                         >
-                                        {console.log(value['groups'].length)}
                                           {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListLabel).join(', ') :"-"}
                                         </span>
                                       </Typography>
