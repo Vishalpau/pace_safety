@@ -1,4 +1,4 @@
-import React from 'react';  
+import React , {useState , useEffect} from 'react';  
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,6 +15,7 @@ import {
   saveAction,
   closeNotifAction,
 } from '../Tables/actions/crudTbActions';
+import api from "../../utils/axios"
 
 const useStyles = makeStyles((theme) => ({
   // rootTable: {
@@ -123,6 +124,8 @@ const dataApi = [
 
 function CrudTablePerformanceFactor(props) {
   const classes = useStyles();
+  const [fectorData , setFectorData] = React.useState([])
+  const [isLoading , setIsLoading] = React.useState(false)
   //const classes = props;
   //console.log(props)
   // Redux State
@@ -139,12 +142,36 @@ function CrudTablePerformanceFactor(props) {
   const finishEditRow = useDispatch();
   const closeNotif = useDispatch();
 
+  const fetchFectorData = async () =>{
+    let res = await api.get('/api/v1/configaudits/factors/?company=1&project=1&projectStructure=')
+    const result = res.data.data.results
+    let temp = []
+    for(let i = 0; i < result.length; i++) {
+      temp.push({
+        id: result[i].id,
+        factortype: result[i].factorType,
+        factorname: result[i].factorName,
+        factorconstant: result[i].factorConstant,
+        status: true,
+        edited: false,
+      })
+    }
+    await setFectorData(temp)
+    await setIsLoading(true)
+    // console.log(res,"::::::::::::::::::::::::::::")
+  }
+  console.log(fectorData,"LLLLLLLLLLLLLLLLLLLLLLLLL")
+  useEffect(() => {
+    fetchFectorData();
+  },[])
+
   return (
     <div>
       <Notification close={() => closeNotif(closeNotifAction(branch))} message={messageNotif} />
+      {isLoading ? 
       <div className={classes.rootTable}>
         <CrudTable
-          dataInit={dataApi}
+          dataInit={fectorData}
           anchor={anchorTable}
           className="dataTableSectionDesign"
           //title=""
@@ -158,6 +185,7 @@ function CrudTablePerformanceFactor(props) {
           branch={branch}
         />
       </div>
+      :"Loading..."}
     </div>
   );
 }

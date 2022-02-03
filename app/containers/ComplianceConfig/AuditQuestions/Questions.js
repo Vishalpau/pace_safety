@@ -68,7 +68,7 @@ import icoAudio from 'dan-images/icoAudio.svg';
 import icoPDF from 'dan-images/icoPDF.svg';
 import icoPng from 'dan-images/icoPng.svg';
 import icoVideo from 'dan-images/icoVideo.svg';
-
+import QuestionValidation from "../Validation/QuestionValidation"
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -285,23 +285,58 @@ const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel1');
 const handleTDChange = (panel) => (event, isExpanded ) => {
     setExpandedTableDetail(isExpanded ? panel : false);
 };
+const responseType = ['Yes/No/NA/ and finding','Performance rating and finding']
+const scoreType= ["Stars" , "Percentage" , "Count" ]
+const geoLocation = ["Yes" , "No"]
+const evidenceType = ["Yes" , "No"]
+const attachment = ["Yes" , "No"]
 
 const [questionMoreCatgry, setQuestionMoreCatgry] = useState([{}]);
 // const [questionMore, setQuestionMore] = useState([{}]);
 const [checkData, setCheckData] = useState([]);
 const [que , setQue] = useState([])
+const [sub , setSub] = useState([])
 
-const handleMoreQuestionCatgry=(index)=>{
-    console.log(index)
+const handleMoreQuestionCatgry = (index ,groupName , subGroupName ) => {
+    let temp = [...checkData]
+    temp[index]['question'].push({
+        attachment: "",
+        createdBy: 1,
+        evidenceType: "Yes",
+        fkCompanyId: 1,
+        fkProjectId: 1,
+        fkProjectStructureIds: "1L",
+        geoLocation: "",
+        groupName: groupName,
+        question: "",
+        responseType: "",
+        scoreType: "",
+        status: "Active",
+        subGroupName: subGroupName,
+      })
+    setCheckData(temp)
+    // console.log(temp,"LLLLLLLLLLLLLLLLLL")
+    // temp.map((value , index) =>
+    // value.map((ab , ll) => {if(ab.subGroupName === data){
+    //     console.log(ll,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    //     value.push({})
+    // }
+    // }) )
+    // setQue(temp)
+    // console.log(index)
     // let temp=[...questionMoreCatgry]
     // temp[index].push({})
     // setQuestionMoreCatgry(temp)
 }
 
-const handleCloseCatgry=(indexOne)=> {
-    let temp=[...questionMoreCatgry]
-    let newData = temp.filter((item, key) => key !== indexOne);
-    setQuestionMoreCatgry(newData)
+const handleCloseCatgry=(indexOne ,key)=> {
+    // console.log(indexOne , key)
+    let temp = [...checkData]
+    // console.log(temp[key]['question'][indexOne])
+    temp[key]['question'].splice(indexOne, 1)
+    setCheckData(temp)
+    // let newData = temp.filter((item, key) => key !== indexOne);
+    // setQuestionMoreCatgry(newData)
 }
 
 // const handleMoreQuestion=(index)=>{
@@ -320,37 +355,80 @@ const handleCloseCatgry=(indexOne)=> {
 
   const fetchChecks = () => {
       let data = JSON.parse(localStorage.getItem("auditChecks"))
-      console.log(data)
-      let temp = []
-      let p = []
-      let kk = []
-      for (let i = 0; i < data.length; i++) {
+    //   console.log(data)
+      let temp = [...data]
+      for(let i = 0; i < temp.length; i++){
+          temp[i]["question"] = [{
+            attachment: "",
+            createdBy: 1,
+            evidenceType: "Yes",
+            fkCompanyId: 1,
+            fkProjectId: 1,
+            fkProjectStructureIds: "1L",
+            geoLocation: "",
+            groupName: temp[i]['groupName'],
+            question: "",
+            responseType: "",
+            scoreType: "",
+            status: "Active",
+            subGroupName: temp[i]['subGroupName'],
+          }]
+      }
+    //   console.log(temp)
+    //   let tempsub = []
+    //   let kk = []
+    //   for (let i = 0; i < data.length; i++) {
           
-          temp.push(data[i]['groupName'])
-          kk.push([{i}])
-        }
-        let t = {}
-        for(let i = 0; i < temp.length; i++) {
-          t[temp[i]] = []
-          for(let j = 0; j < data.length; j++) {
-              console.log(data[j]['subGroupName'])
-            if(temp[i] == data[j]['groupName'] ){
-                t[temp[i]].push(data[j]['subGroupName'])
-            }
-        }
-    }
-    setQue(kk)
-    console.log(kk)
-        // p.push(t)
-      console.log(p)
-      setCheckData(t)
+    //       temp.push(data[i]['groupName'])
+    //       tempsub.push(data[i]['subGroupName'])
+    //       kk.push([{i , groupName : data[i]['groupName'], subGroupName : data[i]['subGroupName']
+    //     }])
+    //     }
+    //     let t = {}
+    //     for(let i = 0; i < temp.length; i++) {
+    //       t[temp[i]] = []
+    //       for(let j = 0; j < data.length; j++) {
+    //           console.log(data[j]['subGroupName'])
+    //         if(temp[i] == data[j]['groupName'] ){
+    //             t[temp[i]].push(data[j]['subGroupName'])
+    //         }
+    //     }
+    // }
+    // let dd= {}
+    // for(let i=0; i<tempsub.length ; i++ ){
+    //     dd[tempsub[i]]= [{}]
+    // }
+    // setQue(kk)
+    // setSub(dd)
+    // console.log(t)
+    // console.log(dd)
+    //     // p.push(t)
+    // //   console.log(p)
+      setCheckData(temp)
+
+  }
+
+  const handleQuestionData = (value ,index , key , field) => {
+    let temp = [...checkData]
+    console.log(temp[key]['question'][index])
+    temp[key]['question'][index][field] = value
+    console.log(temp)
+    setCheckData(temp)
+
+  }
+
+  const handleSave = () => {
+      const {error , isValid} = QuestionValidation(checkData)
+      if(!isValid) {
+          return "data not valid"
+      }
   }
 
   useEffect(() => {
       fetchChecks()
   },[])
 
-  return (
+  return ( 
         <>
             <Grid container spacing={3}>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -377,27 +455,29 @@ const handleCloseCatgry=(indexOne)=> {
                         </Grid>
                     </Paper>
                 </Grid>
-                {Object.entries(checkData).map(([key, value],index) => (<>
 
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 39 35.181">
                             <path id="floor-plan" d="M30.051,29.16a.794.794,0,1,1,0-1.587h1.521V21.586H30.1A.794.794,0,0,1,30.1,20h1.473V11.593H25.343v8.422h1.476a.794.794,0,1,1,0,1.587H25.343v1.644a.794.794,0,0,1-1.587,0V11.593H13.119v5.66h5.212a.787.787,0,0,1,.79.787v9.539h4.616V26.106a.794.794,0,1,1,1.587,0v1.473h1.87a.794.794,0,1,1,0,1.587H12.328a.79.79,0,0,1-.79-.79V10.793a.794.794,0,0,1,.79-.79H32.378a.794.794,0,0,1,.775.79V28.369a.79.79,0,0,1-.775.79ZM1.685,26.093l.089-.063a4.6,4.6,0,0,1,.514-.394,5.266,5.266,0,0,1,1.178-.578,7.878,7.878,0,0,1,1.117-.3V1.619c-2.939.451-2.92,3.4-2.9,6.152.076,3.809-.171,13.847,0,18.322Zm4.444-.654a.8.8,0,0,1-.187.46.771.771,0,0,1-.476.26h0a8.889,8.889,0,0,0-1.27.276,3.971,3.971,0,0,0-1.044.476,3.371,3.371,0,0,0-.813.771,5.263,5.263,0,0,0-.667,1.2,6.9,6.9,0,0,0,.13,1.74,3.781,3.781,0,0,0,.581,1.381h0a3.3,3.3,0,0,0,1.121.984,5.552,5.552,0,0,0,1.8.59H37.428V6.031H6.145V25.439Zm0-20.951H37.872A1.13,1.13,0,0,1,39,5.619V34.058a1.146,1.146,0,0,1-.086.429,1.187,1.187,0,0,1-.244.365h0a1.187,1.187,0,0,1-.365.244,1.089,1.089,0,0,1-.429.086H5.262a5.06,5.06,0,0,1-2.27-.673,5.593,5.593,0,0,1-1.879-1.587,5.336,5.336,0,0,1-.825-1.9,8.688,8.688,0,0,1-.165-2.286c0-6.822-.279-14.215,0-20.951A13.553,13.553,0,0,1,.733,2.625C1.364,1.162,2.682.051,5.281,0h.083a.781.781,0,0,1,.781.781v3.7ZM13.113,18.84v8.739h4.428V18.83Z" transform="translate(0.001)" fill="#06425c"/>
-                        </svg> {key} 
+                        </svg>  
                     </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Paper elevation={1} className="paperSection">
                         <Grid container spacing={3}>
-                        {value.map((data, i) => (
+                        {/* {Object.entries(sub).map(([ key, value], i) => 
                             
+                            {data.map((item , i) => {
+                                console.log(item === key,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+                                if(item === key) { */}
+                {checkData.map((value,key) => (<>
                             <Grid item md={12} sm={12} xs={12}>
-                                <FormLabel className="checkRadioLabel marginB15" component="legend">{data}</FormLabel>
+                                <FormLabel className="checkRadioLabel marginB15" component="legend">{value['subGroupName']}</FormLabel>
                                 <Grid container>
-                                    {/* {que.map((value, indexOne) => <> */}
                                     <Grid item md={12} sm={12} xs={12} className="positionRelative">
-                                    {console.log(i)}
-                                        {que[i].length>1?
+                                    
+                                        {/* {value['question'].length>1?
                                             <IconButton
                                                 variant="contained"
                                                 color="primary"
@@ -407,11 +487,22 @@ const handleCloseCatgry=(indexOne)=> {
                                                 <CloseIcon />
                                             </IconButton>
                                         : null
-                                        }
+                                        } */}
                                         {
-                                           que[i].map((dd,ss) => (<>
-                                            {/* {console.log(ss)} */}
-                                        <Accordion expanded={expandedTableDetail === `panel ${ss+1}`} onChange={handleTDChange(`panel ${ss+1}`)} defaultExpanded className="backPaperAccordian">
+                                            value['question'].map((dd,index) => (<>
+                                                {value['question'].length>1?
+                                            <IconButton
+                                                variant="contained"
+                                                color="primary"
+                                                className="accordionCloseIcon"
+                                                onClick={() => handleCloseCatgry(index,key)}
+                                            >
+                                                <CloseIcon />
+                                            </IconButton>
+                                        : null
+                                        }
+                                            {/* {console.log(index)} */}
+                                        <Accordion expanded={expandedTableDetail === `panel ${index}`} onChange={handleTDChange(`panel ${index}`)} defaultExpanded className="backPaperAccordian">
                                             <AccordionSummary
                                                 expandIcon={<ExpandMoreIcon />}
                                                 aria-controls="panel1bh-content"
@@ -423,7 +514,7 @@ const handleCloseCatgry=(indexOne)=> {
                                                         <ListItemText
                                                             primary={
                                                                 <>
-                                                                    Question : {index+1}
+                                                                    Question : {index +1}
                                                                 </>
                                                             }
                                                         />
@@ -438,26 +529,32 @@ const handleCloseCatgry=(indexOne)=> {
                                                             name="question"
                                                             id="question"
                                                             defaultValue=""
+                                                            error={dd['question']}
                                                             fullWidth
+                                                            onChange={(e) => handleQuestionData(e.target.value,index , key ,"question")}
                                                             variant="outlined"
                                                             className="formControl"
                                                         />
+                                                        {dd['question'] === "Enter a question" ? dd['question'] : null}
                                                     </Grid>
                                                     <Grid item md={6} xs={12}>
                                                         <FormControl component="fieldset">
                                                             <FormLabel component="legend" className="checkRadioLabel">Response type*</FormLabel>
-                                                            <RadioGroup row aria-label="gender" name="gender1">
-                                                                <FormControlLabel value="ynnafinding" className="selectLabel" control={<Radio />} label="Yes/No/NA/ and finding" />
-                                                                <FormControlLabel value="prfind" className="selectLabel" control={<Radio />} label="Performance rating and finding" />
+                                                            <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleQuestionData(e.target.value,index , key ,"responseType")}>
+                                                            {responseType.map((option) => (
+
+                                                                <FormControlLabel value={option} className="selectLabel" control={<Radio />} label={option} />
+                                                            ))}
                                                             </RadioGroup>
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item md={6} xs={12}>
                                                         <FormControl component="fieldset">
                                                             <FormLabel component="legend" className="checkRadioLabel">Record geo location</FormLabel>
-                                                            <RadioGroup row aria-label="gender" name="gender1">
-                                                                <FormControlLabel value="yes" className="selectLabel" control={<Radio />} label="Yes" />
-                                                                <FormControlLabel value="no" className="selectLabel" control={<Radio />} label="No" />
+                                                            <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleQuestionData(e.target.value,index , key ,"geoLocation")}>
+                                                            {geoLocation.map((option) => (
+                                                                <FormControlLabel value={option} className="selectLabel" control={<Radio />} label={option} />
+                                                            ))}
                                                             </RadioGroup>
                                                         </FormControl>
                                                     </Grid>
@@ -469,14 +566,18 @@ const handleCloseCatgry=(indexOne)=> {
                                                                     className="formControl"
                                                                 >
                                                                     <InputLabel id="scores">Scores</InputLabel>
+                                                                    
                                                                     <Select
                                                                         id="scores"
                                                                         labelId="scores"
                                                                         label="Scores"
-                                                                    >
-                                                                        <MenuItem value="stars">Stars</MenuItem>
-                                                                        <MenuItem value="percentge">Percentage</MenuItem>
-                                                                        <MenuItem value="count">Count</MenuItem>
+                                                                        onChange={(e) => handleQuestionData(e.target.value,index , key ,"scoreType")}
+                                                                    >{scoreType.map((option) => (
+
+                                                                        <MenuItem value={option}>{option}</MenuItem>
+                                                                    ))}
+                                                                        {/* <MenuItem value="percentge">Percentage</MenuItem>
+                                                                        <MenuItem value="count">Count</MenuItem> */}
                                                                     </Select>
                                                                 </FormControl>
                                                             </Grid>
@@ -485,54 +586,61 @@ const handleCloseCatgry=(indexOne)=> {
                                                     <Grid item md={6} xs={12}>
                                                         <FormControl component="fieldset">
                                                             <FormLabel component="legend" className="checkRadioLabel">Media attachment (Image / audio / video)</FormLabel>
-                                                            <RadioGroup row aria-label="gender" name="gender1">
-                                                                <FormControlLabel value="madiayes" className="selectLabel" control={<Radio />} label="Yes" />
-                                                                <FormControlLabel value="madiano" className="selectLabel" control={<Radio />} label="No" />
+                                                            <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleQuestionData(e.target.value,index , key ,"evidenceType")}>
+                                                            {evidenceType.map((option) => (
+                                                                <FormControlLabel value={option} className="selectLabel" control={<Radio />} label={option} />
+                                                            ))}
                                                             </RadioGroup>
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item md={6} xs={12}>
                                                         <FormControl component="fieldset">
                                                             <FormLabel component="legend" className="checkRadioLabel">Document attachment (document  / pdf)</FormLabel>
-                                                            <RadioGroup row aria-label="gender" name="gender1">
-                                                                <FormControlLabel value="docyes" className="selectLabel" control={<Radio />} label="Yes" />
-                                                                <FormControlLabel value="docno" className="selectLabel" control={<Radio />} label="No" />
+                                                            <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleQuestionData(e.target.value,index , key ,"attachment")}>
+                                                            {attachment.map((option) => (
+                                                                <FormControlLabel value={option} className="selectLabel" control={<Radio />} label={option} />
+                                                            ))}
                                                             </RadioGroup>
                                                         </FormControl>
                                                     </Grid>
                                                 </Grid>  
                                             </AccordionDetails>
                                         </Accordion>
-                                        <Grid item md={12} sm={12} xs={12}>
-                                        <IconButton
-                                            variant="contained"
-                                            color="primary"
-                                            className="marginB15 customAddButton"
-                                            onClick={() => handleMoreQuestionCatgry(ss)}
-                                        >
-                                            <AddCircleIcon className='marginR5' /> More question
-                                        </IconButton>
-                                    </Grid>
+                                        
                                            </>
 
                                            ))
                                             
                                         }
+                                        <Grid item md={12} sm={12} xs={12}>
+                                        <IconButton
+                                            variant="contained"
+                                            color="primary"
+                                            className="marginB15 customAddButton"
+                                            onClick={() => handleMoreQuestionCatgry(key , value['groupName'], value['subGroupName'])}
+                                        >
+                                            <AddCircleIcon className='marginR5' /> More question
+                                        </IconButton>
+                                    </Grid>
                                     </Grid>
                                     {/* </>)} */}
                                     
                                 </Grid>
                             </Grid>
-                        ))}
+
+                                {/* } 
+                               
+                            
+                            } )})} */}
+                </>))}
                         </Grid>
 
                        
                     </Paper>
                 </Grid>
-                </>))}
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleSave()}>
                         Save and continue
                     </Button>
                     <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
