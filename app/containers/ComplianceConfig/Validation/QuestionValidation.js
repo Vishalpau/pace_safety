@@ -5,7 +5,10 @@ function QuestionValidation(data) {
         let qq = data[i]["question"] 
         for(let j = 0; j < qq.length; j++){
             if(qq[j].question === ""){
-                qq[j].question = "Enter a question"
+                qq[j].errorquestion = "Enter a question"
+                isValid = false
+            }else{
+                qq[j].errorquestion = ""
                 isValid = false
             }
         }

@@ -529,13 +529,15 @@ const handleCloseCatgry=(indexOne ,key)=> {
                                                             name="question"
                                                             id="question"
                                                             defaultValue=""
-                                                            error={dd['question']}
+                                                            error={dd['errorquestion'] }
+                                                            helperText={
+                                                                dd['errorquestion'] ? dd['errorquestion'] : ""
+                                                            }
                                                             fullWidth
                                                             onChange={(e) => handleQuestionData(e.target.value,index , key ,"question")}
                                                             variant="outlined"
                                                             className="formControl"
                                                         />
-                                                        {dd['question'] === "Enter a question" ? dd['question'] : null}
                                                     </Grid>
                                                     <Grid item md={6} xs={12}>
                                                         <FormControl component="fieldset">
