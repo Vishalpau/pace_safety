@@ -19,6 +19,14 @@ var menu = [
     linkParent: "/incidents/",
   },
   {
+    key: 'compliance',
+    acl: 'incidents',
+    name: 'Compliance',
+    icon: "ion-ios-list-box",
+    multilevel: false,
+    linkParent: "/app/pages/compliance",
+  },
+  {
     key: "assessments",
     acl: "assessments",
     name: "Assessments",
@@ -66,15 +74,20 @@ var menu = [
     icon: 'ion-ios-cog',
     child: [
       {
-        key: 'pick_lists',
+        key: 'dropdown_lists',
         name: 'Pick Lists',
-        linkParent: '/app/pages/picklist',
+        link: '/app/pages/picklist',
       },
       {
         key: 'check_lists',
         name: 'Check Lists',
-        linkParent: '/app/pages/checklist/',
+        link: '/app/pages/checklist/',
       },
+      // {
+      //   key: 'compliance_config',
+      //   name: 'Compliance Config',
+      //   link: '/app/compliance-config',
+      // },
       // {
       //   key: 'xflha_setting',
       //   name: 'X-FLHA Setting',

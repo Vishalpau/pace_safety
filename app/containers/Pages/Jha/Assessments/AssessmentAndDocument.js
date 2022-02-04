@@ -541,7 +541,7 @@ const AssessmentAndDocument = () => {
     };
 
     return (
-        <CustomPapperBlock title="Assessments" icon={jhaLogoSymbol} whiteBg>
+        <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
             {/* {console.log(form.Assessment)} */}
             {loading === false
                 ? (
@@ -570,7 +570,10 @@ const AssessmentAndDocument = () => {
                                                 xs={12}
                                             >
                                                 <div>
-                                                    {form.map((value, index) => (
+                                                    
+                                                    {form.map((value, index) => 
+                                                 
+                                                        value.hazard == 'N/A' ? null :
                                                         <Accordion
                                                             defaultExpanded
                                                             className={classes.backPaper}
@@ -653,7 +656,8 @@ const AssessmentAndDocument = () => {
                                                                 </Grid>
                                                             </AccordionDetails>
                                                         </Accordion>
-                                                    ))}
+                                                        
+                                                    )}
                                                 </div>
                                                 {false ?
                                                     <Grid item xs={12} className="formFieldBTNSection paddTRemove marginB15" align="left">

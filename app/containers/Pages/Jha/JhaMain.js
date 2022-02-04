@@ -267,7 +267,7 @@ export default function JhaMain() {
         <Grid container spacing={3}>
           <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
             <img src={jhaLogoSymbol} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Job Hazard Assessments</Typography>
+            <Typography variant="h5"> Job Safety Assessments</Typography>
           </Grid>
           <Grid item md={5} sm={6} xs={12}>
             <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={(e) => handleNewJhaPush(e)}>

@@ -589,7 +589,7 @@ function AhaSummary() {
   const classes = useStyles();
   return (
     <>
-      <CustomPapperBlock title={`Assessment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`}
+      <CustomPapperBlock title={`Assessment : ${ahaData.ahaNumber ? ahaData.ahaNumber : ""}`} icon='customDropdownPageIcon ahaPageIcon'
         whiteBg >{isLoading ? 
         <Grid container spacing={3}>
           <Grid item md={9} xs={12}>

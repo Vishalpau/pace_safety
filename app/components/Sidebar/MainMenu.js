@@ -157,10 +157,10 @@ function MainMenu(props) {
         ud.push('administration')
       }
       setDataMenuInner(dataMenu.filter(data => ud.includes(data.acl)))
-    } else {
+    } else if (dataMenuInner.length == undefined){
       setTimeout(() => load(), 1000)
     }
-  }
+    }
 
   useEffect(() => {
       load()    

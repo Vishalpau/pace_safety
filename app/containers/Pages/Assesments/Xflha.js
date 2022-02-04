@@ -1004,9 +1004,9 @@ function xflha(props) {
             <Button size="medium" variant="contained" color="primary"
               className={classNames(classes.buttonsNew, classes.floatR)}
               onClick={() => history.push("/app/pages/assesments/flhaadd")} >
-              <ControlPointIcon className={classes.floatR} />
+              <AddIcon className={classes.floatR} />
               {' '}
-              Create XFLHA
+              Add new
             </Button>
           </Grid>
         </Grid>

@@ -873,7 +873,7 @@ const FlhaDetails = () => {
   return (
     <>
 
-      <CustomPapperBlock title="FLHA - Initial Assessment" icon={flhaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         {isLoading == false ?
           <Grid container spacing={3}>
             {/* project information */}

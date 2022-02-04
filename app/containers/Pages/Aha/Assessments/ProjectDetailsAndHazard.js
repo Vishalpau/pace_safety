@@ -241,8 +241,10 @@ const ProjectDetailsAndHazard = () => {
   }
 
   const checkList = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const temp = {}
-    const res = await api.get("/api/v1/core/checklists/aha-hazards/1/")
+    const res = await api.get(`/api/v1/core/checklists/aha-hazards/${projectId}/`)
     const checklistGroups = res.data.data.results[0].checklistGroups
     checklistGroups.map((value) => {
       temp[value["checkListGroupName"]] = []
@@ -958,6 +960,7 @@ const ProjectDetailsAndHazard = () => {
                             name="arename"
                             id="arename"
                             multiline
+                            inputProps={{ maxLength: 100 }}
                             value={Teamform[index].teamName || ""}
                             fullWidth
                             variant="outlined"

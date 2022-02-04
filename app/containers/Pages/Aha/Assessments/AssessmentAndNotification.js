@@ -548,9 +548,11 @@ const AssessmentAndNotification = () => {
   };
 
   const checkList = async () => {
+    const project = JSON.parse(localStorage.getItem("projectName"))
+    const projectId = project.projectName.projectId
     const temp = {};
     const res = await api.get(
-      "/api/v1/core/checklists/aha-document-conditions/1/"
+      `/api/v1/core/checklists/aha-document-conditions/${projectId}/`
     );
     const checklistGroups = res.data.data.results[0].checklistValues;
 
@@ -699,7 +701,7 @@ const AssessmentAndNotification = () => {
   return (
     <>
       {" "}
-      <CustomPapperBlock title="Assessments" icon={ahaLogoSymbol} whiteBg>
+      <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon' whiteBg>
         {isLoading ? (
           <>
             <Grid
