@@ -40,7 +40,7 @@ import { company, projectName, breakDownDetails } from "../../redux/actions/init
 import "../../styles/custom/hexagon.css";
 import api from "../../utils/axios";
 import {
-  ACCOUNT_API_URL, API_VERSION, HEADER_AUTH, SELF_API
+  ACCOUNT_API_URL, API_VERSION, HEADER_AUTH, SELF_API, APPCODE
 } from "../../utils/constants";
 import styles from "./dashboard-jss";
 import './style.css';
@@ -194,7 +194,9 @@ function PersonalDashboard(props) {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
 
-
+            let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
+            api.get(`${ACCOUNT_API_URL.slice(0,-1)}${rolesApi}`).then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])));
+            
             return res.data.data.results.data.companies[0].subscriptions;
 
           })
@@ -483,7 +485,8 @@ function PersonalDashboard(props) {
                 headers: HEADER_AUTH,
               };
               axios(data1).then((res) => {
-                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+                let responseData = JSON.stringify(response.data.data.results.data);
+                localStorage.setItem('userDetails', responseData)
 
                 if (compId) {
                   let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
@@ -500,8 +503,10 @@ function PersonalDashboard(props) {
                   localStorage.setItem("projectName", JSON.stringify(project[0]))
                   dispatch(projectName(project[0]))
                 }
-                // fetchPermissionData();
+                
+                // fetchPermissionData(); 
                 if (res.status === 200) {
+                  getSubscriptions()
                   history.push('/app/' + targetPage + tarId)
                   localStorage.removeItem("direct_loading")
                 }

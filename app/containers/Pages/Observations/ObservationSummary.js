@@ -37,6 +37,8 @@ import Print from '@material-ui/icons/Print';
 import History from '@material-ui/icons/History';
 import Comment from '@material-ui/icons/Comment';
 import Link from '@material-ui/core/Link';
+import Acl from "../../../components/Error/acl"
+import {checkACL} from '../../../utils/helper'
 
 
 // import { useHistory } from "react-router";
@@ -210,7 +212,10 @@ const ObservationSummary = () => {
       fetchInitialiObservation();
     }
   }, [])
-  return (
+  return (<Acl 
+    module='safety'
+    action='view_observations'
+    html={
     <>
       {/* {isLoading ? ( */}
       <CustomPapperBlock
@@ -341,17 +346,19 @@ const ObservationSummary = () => {
                 Quick Actions
               </Typography>
               <List component="nav" aria-label="main mailbox folders">
-                <ListItem button>
-                  <ListItemIcon>
-                    <Edit />
-                  </ListItemIcon>
-                  <Link
-                    variant="subtitle"
-                    onClick={(e) => handelObservationInitialNotificationUpdate(e)}
-                  >
-                    <ListItemText primary="Update iCare" />
-                  </Link>
-                </ListItem>
+              {!checkACL('safety', 'change_observations') ? '' : (
+                  <ListItem button>
+                    <ListItemIcon>
+                      <Edit />
+                    </ListItemIcon>
+                    <Link
+                      variant="subtitle"
+                      onClick={(e) => handelObservationInitialNotificationUpdate(e)}
+                    >
+                      <ListItemText primary="Update iCare" />
+                    </Link>
+                  </ListItem>
+              )}
                 {/* <ListItemLink
                     // href={`/app/pages/observation-initial-notification`}
                     //onClick={() => handlePushUpdateInitialNotification()}
@@ -446,7 +453,8 @@ const ObservationSummary = () => {
 
       </CustomPapperBlock>
 
-    </>
+    </>}
+    />
   );
 };
 

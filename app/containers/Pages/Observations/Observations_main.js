@@ -16,7 +16,8 @@ import obsIcon from 'dan-images/obsIcon.png';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
-
+import Acl from "../../../components/Error/acl"
+import {checkACL} from '../../../utils/helper'
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 const ObservationSearchSection = lazy(() => import('./ObservationSearchSection'));
@@ -231,10 +232,14 @@ export default function Observations() {
   };
 
   useEffect(() => {
+    
     allPickListDataValue()
   }, [])
 
-  return (
+  return  (<Acl 
+    module='safety'
+    action='view_observations'
+    html={
     <div className={classes.root}>
       <Grid item sm={12} xs={12} className={classes.borderTop}>
         <Grid container spacing={3}>
@@ -257,10 +262,11 @@ export default function Observations() {
               Upload
             </Button>
             }
-            <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
-              <AddIcon className={classes.floatR} /> Add new
-            </Button>
-
+             {!checkACL('safety', 'add_observations') ? '' : (
+              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
+                <AddIcon className={classes.floatR} /> Add new
+              </Button>
+            )}
 
           </Grid>
 
@@ -293,6 +299,7 @@ export default function Observations() {
       <TabPanel value={value} index={2} className={classes.paddLRzero}>
         <ObservationsBarCharts />
       </TabPanel>
-    </div>
-  );
+    </div>} />
+    )
+  
 }
