@@ -36,6 +36,8 @@ import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
 import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
+import {checkACL} from '../../../utils/helper'
+
 
 const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
 const Loader = lazy(() => import('../Loader'));
@@ -998,7 +1000,9 @@ function Actions(props) {
                                   <Typography variant="body1" display="inline">
 
                                     {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
-                                    <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+                                    {!checkACL('safety', 'delete_observations') ? '' : (
+                                      <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+                                    )}
                                   </Typography>
                                 </div>
                               </Grid>
