@@ -67,21 +67,19 @@ export const formatNames = (names) => {
   return f.join(' ');
 };
 
-export const checkACL = async (module, action) => {
+export const checkACL = (module, action) => {
 
     let acls = JSON.parse(localStorage.getItem('app_acl'))
-    if(acls == null) {
-      let rolesApi = JSON.parse(localStorage.getItem('userDetails')).companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
-      await api.get(`${ACCOUNT_API_URL.slice(0,-1)}${rolesApi}`).then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])));
-      acls = JSON.parse(localStorage.getItem('app_acl'))
-    }
     let default_return = true
-
+    if(acls == null) {
+      return default_return;
+    }
+    
     if(acls[module] === undefined) { 
       return default_return
     }
     if(acls[module][action] === undefined) {
       return default_return
-    }
+    } 
     return acls[module][action]
 }

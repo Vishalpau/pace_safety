@@ -6,16 +6,18 @@ import Button from '@material-ui/core/Button';
 import { Route, Link } from 'react-router-dom';
 import { checkACL } from '../../utils/helper' 
 
-const Acl = (props) => checkACL(props.module, props.action) ? (
+const Acl = (props) => {
+  console.log(props.module, props.action, checkACL(props.module, props.action))
+  return checkACL(props.module, props.action) ? (
   <div>
     {props.html}
   </div>
 ) : (
   <>
-    You do not have access to this page
+    You do not have access to this page.
   </>
 
-);
+);}
 
 export default Acl
 
