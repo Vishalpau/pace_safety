@@ -223,8 +223,8 @@ const ObservationInitialNotificationView = () => {
   };
 
   const download = (image_link) => {
-    let onlyImage_url = image_link.replace("https://", "")
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url
+    // let onlyImage_url = image_link.replace("https://", "")
+    let image_url = image_link
     let imageArray = image_url.split("/")
     let image_name = imageArray[imageArray.length - 1]
     saveAs(image_url, image_name)
