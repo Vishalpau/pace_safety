@@ -421,7 +421,7 @@ function ObservationCorrectiveAction() {
       fetchInitialiObservationData()
       fetchComments()
       fetchReportedBy()
-      checkACL('action_tracker', 'add_actions').then(val => setATACLStatus(val))
+      setATACLStatus(checkACL('action_tracker', 'view_actions'))
     }
 
   }, [])
@@ -624,7 +624,7 @@ function ObservationCorrectiveAction() {
                     <Typography className={classes.labelValue}>
                       {handelActionShow(id)}
                     </Typography>
-
+                    {!checkACL('action_tracker', 'add_actions') ? '' : 
                     <Typography className={classes.increaseRowBox}>
                       <ActionTracker
                         actionContext="iCare"
@@ -639,7 +639,7 @@ function ObservationCorrectiveAction() {
                         handelShowData={handelActionTracker}
                       />
 
-                    </Typography>
+                    </Typography> }
                   </>
                 )
                   :
