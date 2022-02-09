@@ -6,10 +6,10 @@ export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
 const getSSOUrl = () => {
   if (window.location.hostname === 'localhost') {
-    return "https://dev-accounts-api.paceos.io";
+    return "https://dev-accounts.pace-os.com";
   }
   if (window.location.hostname === 'dev-safety.pace-os.com') {
-    return "https://dev-accounts-api.paceos.io";
+    return "https://dev-accounts.pace-os.com";
   }
   if (window.location.hostname === 'stage-safety.pace-os.com.s3-website-eu-west-1.amazonaws.com') {
     return "https://stage-accounts.pace-os.com";
@@ -22,7 +22,7 @@ const getSSOUrl = () => {
 
 export const SSO_URL = getSSOUrl()
 // Dev
-// "https://dev-accounts-api.paceos.io";
+// "https://dev-accounts.pace-os.com";
 // Production
 // "https://accounts.pace-os.com/"
 
@@ -30,7 +30,7 @@ export const SSO_URL = getSSOUrl()
 export const LOCAL_SSO_CLIENT_SECRET = 'pu0AQUmSRQ6TJY1F5oCra8YyXZ9Unu9P4Mo85weLk0unRireA8W7jUHJ2GIaU0gNyDLxbq5t1Au7E2ybwmBLI8W9atizRqr9wjPh9rChN2GrXnPbDYVSUTINv0M0zaSW';
 export const LOCAL_SSO_CLIENT_ID = 'ZVbuUG5DsHzMgswa5Kb7zp2nHn0ZKiRSA8U2IGN1';
 export const LOCAL_LOGIN_URL =
-  "https://dev-accounts-api.paceos.io/api/v1/user/auth/authorize/?client_id=" + LOCAL_SSO_CLIENT_ID + "&client_secret=" + LOCAL_SSO_CLIENT_SECRET + "&response_type=code";
+  "https://dev-accounts.pace-os.com/api/v1/user/auth/authorize/?client_id=" + LOCAL_SSO_CLIENT_ID + "&client_secret=" + LOCAL_SSO_CLIENT_SECRET + "&response_type=code";
 
 const getSSOClientSecret = () => {
   if (window.location.hostname === 'localhost') {
@@ -107,7 +107,7 @@ export const API_URL = getUrl()
 
 export const ACCOUNT_API_URL = getSSOUrl() + '/'
 // Dev
-// "https://dev-accounts-api.paceos.io/"
+// "https://dev-accounts.pace-os.com/"
 // Production
 // "https://accounts.pace-os.com/"
 
