@@ -441,8 +441,8 @@ const ObservationInitialNotificationView = () => {
                   Reported by
                 </FormLabel>
                 <Typography className="viewLabelValue">
-                  {userName} , {userBadgeNo !== null ? userBadgeNo : "-"}
-                  {/* {initialData.observedAt} */}
+                  {/* {userName} , {userBadgeNo !== null ? userBadgeNo : "-"} */}
+                  {initialData.reportedByName}
                 </Typography>
               </Grid>
 
