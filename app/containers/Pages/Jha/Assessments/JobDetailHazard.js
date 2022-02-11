@@ -885,6 +885,28 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
+                                    {/* Department */}
+                                    <Grid item md={6} xs={11}>
+                                        <TextField
+                                            label="Department"
+                                            name="department"
+                                            id="department"
+                                            select
+                                            fullWidth
+                                            value={form.department ? form.department : ""}
+                                            onChange={(e) => setForm({ ...form, department: e.target.value })}
+                                            variant="outlined"
+                                        >
+                                            {departmentName.map((option) => (
+                                                <MenuItem key={option}
+                                                    value={option}
+                                                >
+                                                    {option}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+
                                     {/* location  */}
                                     <Grid
                                         item
@@ -1147,27 +1169,7 @@ const JobDetails = (props) => {
                                         />
                                     </Grid>
 
-                                    {/* Department */}
-                                    <Grid item md={6} xs={11}>
-                                        <TextField
-                                            label="Department"
-                                            name="department"
-                                            id="department"
-                                            select
-                                            fullWidth
-                                            value={form.department ? form.department : ""}
-                                            onChange={(e) => setForm({ ...form, department: e.target.value })}
-                                            variant="outlined"
-                                        >
-                                            {departmentName.map((option) => (
-                                                <MenuItem key={option}
-                                                    value={option}
-                                                >
-                                                    {option}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
+
 
 
                                     {/* emergency number */}
@@ -1191,8 +1193,8 @@ const JobDetails = (props) => {
                                     {/* evacuation assembly point       */}
                                     <Grid
                                         item
-                                        md={6}
-                                        xs={11}
+                                        md={12}
+                                        xs={12}
                                     >
                                         <TextField
                                             label="Evacuation assembly point"

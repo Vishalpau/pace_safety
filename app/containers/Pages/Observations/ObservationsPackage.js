@@ -36,7 +36,7 @@ import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
 import { HEADER_AUTH, SELF_API } from '../../../utils/constants';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
-import {checkACL} from '../../../utils/helper'
+import { checkACL } from '../../../utils/helper'
 
 
 const UserDetailsView = lazy(() => import('../../UserDetails/UserDetail'));
@@ -908,7 +908,7 @@ function Actions(props) {
                                         gutterBottom
                                         className={classes.listingLabelName}
                                       >
-                                        Reported by:
+                                        Observed By:
                                       </Typography>
 
                                       <Typography

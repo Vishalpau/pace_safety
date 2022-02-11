@@ -678,7 +678,13 @@ function JhaSummary() {
                                       {checkValue(assessment.jobOrderNumber)}
                                     </Typography>
                                   </Grid>
-
+                                  {/* Department */}
+                                  <Grid item xs={12} md={6}>
+                                    <FormLabel component="legend" className="viewLabel">Department</FormLabel>
+                                    <Typography className="viewLabelValue">
+                                      {checkValue(assessment.department)}
+                                    </Typography>
+                                  </Grid>
                                   {/* assessment start date */}
                                   <Grid item xs={12} md={6}>
                                     <FormLabel component="legend" className="viewLabel">
@@ -781,14 +787,6 @@ function JhaSummary() {
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
                                       {checkValue(assessment.supervisorName)}
-                                    </Typography>
-                                  </Grid>
-
-                                  {/* Department */}
-                                  <Grid item xs={12} md={6}>
-                                    <FormLabel component="legend" className="viewLabel">Department</FormLabel>
-                                    <Typography className="viewLabelValue">
-                                      {checkValue(assessment.department)}
                                     </Typography>
                                   </Grid>
 
