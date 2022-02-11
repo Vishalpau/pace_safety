@@ -214,6 +214,8 @@ export default function Observations() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const history = useHistory();
+  const [acls, setAcls] = useState('');
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -232,9 +234,18 @@ export default function Observations() {
   };
 
   useEffect(() => {
+    if(localStorage.getItem('app_acl') == null) {
+      let int = setInterval(() => {
+        if(localStorage.getItem('app_acl') != null) {
+          clearInterval(int)
+          setAcls(localStorage.getItem('app_acl'))
+        }
+      }, 100)
+    } else {
+      allPickListDataValue()
+    }
     
-    allPickListDataValue()
-  }, [])
+  }, [acls])
 
   return  (<Acl 
     module='safety'

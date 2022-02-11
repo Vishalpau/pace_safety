@@ -184,7 +184,6 @@ function PersonalDashboard(props) {
   const [codes, setCode] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const getSubscriptions = async (compId) => {
-
     const companyId = compId ||
       JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
 
@@ -193,7 +192,6 @@ function PersonalDashboard(props) {
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
-
             let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
             api.get(`${ACCOUNT_API_URL.slice(0,-1)}${rolesApi}`).then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])));
             
@@ -235,7 +233,7 @@ function PersonalDashboard(props) {
         await getModules(apps)
 
       } catch (error) { }
-    }
+    } 
     // getAllPickList()
   }
 
