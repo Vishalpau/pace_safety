@@ -171,8 +171,8 @@ function ComplianceQuestionsList(props) {
 
   const handleClickOpen = (value) => {
     setOpen(true);
-    let id = value.id;
-    setAuditId(id)
+    let data = value;
+    setAuditId(data)
   };
 
   const handleClose = () => {
@@ -268,9 +268,10 @@ function ComplianceQuestionsList(props) {
   const [editQuestion, setEditQuestion] = useState(false);
   const [viewQuestion, setViewQuestion] = useState(false);
   const [auditData , setAuditData] = useState([]);
-  const [auditId , setAuditId] = useState('');
+  const [auditId , setAuditId] = useState({});
 
   const handleNew = () => {
+    localStorage.removeItem('auditChecks')
     setListQuestion(false);
     setNewQuestion(true);
     setBulkUpload(false);
@@ -301,6 +302,11 @@ function ComplianceQuestionsList(props) {
     console.log(res,">>>>>>>>>>>>>>>>>>>>>>>>")
   }
 
+  const handleDelete = async () => {
+    auditId['status'] = 'Delete'
+    const res = await api.put(`/api/v1/configaudits/auditquestions/${auditId.id}/?company=${auditId.fkCompanyId}&project=${auditId.fkProjectId}&projectStructure=${auditId.fkProjectStructureIds}`,auditId).then(response => {fetchAuditData() }).catch(error => {console.log(error)});
+  }
+
   useEffect ( () => {
     fetchAuditData()
   },[props.projectName.breakDown])
@@ -322,7 +328,7 @@ function ComplianceQuestionsList(props) {
       setEditQuestion(false);
       setViewQuestion(true);
       setOpen(false);
-      history.push(`/app/compliance-config/${auditId}`)
+      history.push(`/app/compliance-config/${auditId.id}`)
     }
   return (
     <>
@@ -437,7 +443,7 @@ function ComplianceQuestionsList(props) {
                     <Grid item xs={12} md={12}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} md={12}>
-                          <QuestionEdit />
+                          <QuestionEdit auditId={auditId} setListQuestion={setListQuestion} />
                         </Grid>
                       </Grid>
                     </Grid>
@@ -501,7 +507,10 @@ function ComplianceQuestionsList(props) {
                 }}
               >
                 <ListItemIcon><DeleteIcon /></ListItemIcon>
-                <ListItemText primary="Delete" />
+                <ListItemText primary="Delete" 
+                onClick={(e) => {
+                  handleDelete();
+                }}/>
               </ListItem>
             </List>
           </DialogContentText>

@@ -68,7 +68,10 @@ import icoAudio from 'dan-images/icoAudio.svg';
 import icoPDF from 'dan-images/icoPDF.svg';
 import icoPng from 'dan-images/icoPng.svg';
 import icoVideo from 'dan-images/icoVideo.svg';
+import { FormHelperText } from "@material-ui/core";
 import QuestionValidation from "../Validation/QuestionValidation"
+import api from "../../../utils/axios";
+
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -285,8 +288,8 @@ const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel1');
 const handleTDChange = (panel) => (event, isExpanded ) => {
     setExpandedTableDetail(isExpanded ? panel : false);
 };
-const responseType = ['Yes/No/NA/ and finding','Performance rating and finding']
-const scoreType= ["Stars" , "Percentage" , "Count" ]
+const responseType = ['Yes-No-NA','Critacality Matrix']
+const scoreType= ["Stars" , "1-10" , "%" ]
 const geoLocation = ["Yes" , "No"]
 const evidenceType = ["Yes" , "No"]
 const attachment = ["Yes" , "No"]
@@ -302,7 +305,7 @@ const handleMoreQuestionCatgry = (index ,groupName , subGroupName ) => {
     temp[index]['question'].push({
         attachment: "",
         createdBy: 1,
-        evidenceType: "Yes",
+        evidenceType: "",
         fkCompanyId: 1,
         fkProjectId: 1,
         fkProjectStructureIds: "1L",
@@ -361,7 +364,7 @@ const handleCloseCatgry=(indexOne ,key)=> {
           temp[i]["question"] = [{
             attachment: "",
             createdBy: 1,
-            evidenceType: "Yes",
+            evidenceType: "",
             fkCompanyId: 1,
             fkProjectId: 1,
             fkProjectStructureIds: "1L",
@@ -417,11 +420,22 @@ const handleCloseCatgry=(indexOne ,key)=> {
 
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
       const {error , isValid} = QuestionValidation(checkData)
+      setCheckData(error)
       if(!isValid) {
           return "data not valid"
       }
+      let data = []
+      error.map((value, index) => 
+      value.question.map((item , key) => 
+          data.push(item)
+      ))
+      
+      const res = await api.post('/api/v1/configaudits/auditquestions/bulk/',data)
+      console.log(res)
+
+      console.log(data)
   }
 
   useEffect(() => {
@@ -531,7 +545,7 @@ const handleCloseCatgry=(indexOne ,key)=> {
                                                             defaultValue=""
                                                             error={dd['errorquestion'] }
                                                             helperText={
-                                                                dd['errorquestion'] ? dd['errorquestion'] : ""
+                                                                dd['errorquestion'] !== undefined ? dd['errorquestion'] : ""
                                                             }
                                                             fullWidth
                                                             onChange={(e) => handleQuestionData(e.target.value,index , key ,"question")}
@@ -540,7 +554,7 @@ const handleCloseCatgry=(indexOne ,key)=> {
                                                         />
                                                     </Grid>
                                                     <Grid item md={6} xs={12}>
-                                                        <FormControl component="fieldset">
+                                                        <FormControl component="fieldset" error={dd['errorResponseType']}>
                                                             <FormLabel component="legend" className="checkRadioLabel">Response type*</FormLabel>
                                                             <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleQuestionData(e.target.value,index , key ,"responseType")}>
                                                             {responseType.map((option) => (
@@ -548,6 +562,9 @@ const handleCloseCatgry=(indexOne ,key)=> {
                                                                 <FormControlLabel value={option} className="selectLabel" control={<Radio />} label={option} />
                                                             ))}
                                                             </RadioGroup>
+                                                            {dd && dd["errorResponseType"] && (
+                                                            <FormHelperText>{dd["errorResponseType"]}</FormHelperText>
+                                                            )}
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item md={6} xs={12}>
@@ -558,6 +575,7 @@ const handleCloseCatgry=(indexOne ,key)=> {
                                                                 <FormControlLabel value={option} className="selectLabel" control={<Radio />} label={option} />
                                                             ))}
                                                             </RadioGroup>
+                                                            
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item md={12} xs={12}>

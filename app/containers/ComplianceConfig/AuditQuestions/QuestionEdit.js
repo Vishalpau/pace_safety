@@ -37,6 +37,7 @@ import { useHistory, useParams } from 'react-router';
 import { useDropzone } from 'react-dropzone';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import api from "../../../utils/axios";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -186,8 +187,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionEdit = () => {
+const QuestionEdit = (props) => {
     const classes = useStyles();
+    const [auditData, setAuditData] = useState({})
+    const [checkGroups, setCheckListGroups] = useState([]);
+    const [checkData, setCheckData] = useState([])
 
     const [state, setState] = React.useState({
         checkedA: true,
@@ -196,9 +200,68 @@ const QuestionEdit = () => {
         checkedG: true,
     });
 
+    const responseType = ['Yes-No-NA','Critacality Matrix']
+    const scoreType= ["Stars" , "1-10" , "%" ]
+    const geoLocation = ["Yes" , "No"]
+    const evidenceType = ["Yes" , "No"]
+    const attachment = ["Yes" , "No"]
+
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+
+    const fetchAuditData = async () => {
+        const res = await api.get(`/api/v1/configaudits/auditquestions/${props.auditId.id}/?company=${props.auditId.fkCompanyId}&project=${props.auditId.fkProjectId}&projectStructure=${props.auditId.fkProjectStructureIds}`)
+        await setAuditData(res.data.data.results[0])
+        await fetchChecklist(res.data.data.results[0].groupName)
+        console.log(res,"::::::::::::::::::::::::::::::");
+    }
+
+    const fetchChecklist = async (groupName) => {
+        let temp = {};
+        const res = await api.get(
+          `/api/v1/core/checklists/companies/8/projects/15/compliance/`
+        );
+        const result = res.data.data.results;
+        // await fetchComplianceData(result);
+        result.map((option, index) => {
+            if(option.checkListLabel === groupName){
+                setCheckData(option.checklistValues)
+            }
+        })
+        await setCheckListGroups(result);
+        // await setIsLoading(true);
+      };
+
+    const handleGroup = async (value,gName) => {
+        console.log(value)
+        let temp = {...auditData};
+        temp.groupName = gName;
+        temp.subGroupName = "";
+        setCheckData(value);
+        setAuditData(temp);
+    };
+
+    const handleSubGroup = async (sgName) => {
+        let temp = {...auditData};
+        temp.subGroupName = sgName;
+        setAuditData(temp);
+    };
+
+    const handleAllFieldsData = (value , fields) => {
+        let temp = {...auditData};
+        temp[fields] = value;
+        setAuditData(temp);
+    }
+
+    const handleUpdate = async () => {
+        const res = await api.put(`/api/v1/configaudits/auditquestions/${props.auditId.id}/?company=${props.auditId.fkCompanyId}&project=${props.auditId.fkProjectId}&projectStructure=${props.auditId.fkProjectStructureIds}`,auditData).then(response => { props.setListQuestion(true)}).catch(error => {console.log(error)});
+    }
+      console.log("Checklist",auditData);
+    useEffect(() => {
+        fetchAuditData()
+        fetchChecklist()
+    },[])
 
     return (
         <>
@@ -219,7 +282,7 @@ const QuestionEdit = () => {
                     </svg> Work area information
                     </Typography>
                 </Grid>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                         <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
@@ -281,7 +344,7 @@ const QuestionEdit = () => {
                         </Grid>  
                     </Grid>
                     </Paper>
-                </Grid> 
+                </Grid>  */}
 
                     <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
                         <Typography variant="h6" className="sectionHeading">
@@ -306,189 +369,34 @@ const QuestionEdit = () => {
                     <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                         <Paper elevation={1} className="paperSection">
                             <Grid container spacing={3}>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                    >
-                                    <FormLabel className="checkRadioLabel" component="legend">Group name</FormLabel>
-                                    <FormGroup className={classes.customCheckBoxList}>
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                checked
-                                                />
-                                            )}
-                                            label="Material"
-                                        />
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                />
-                                            )}
-                                            label="Environment"
-                                        />
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                />
-                                            )}
-                                            label="Housekeeping"
-                                        />
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                checked
-                                                />
-                                            )}
-                                            label="Electrical"
-                                        />
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                />
-                                            )}
-                                            label="Mechanical"
-                                        />
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                />
-                                            )}
-                                            label="Guards of equipment"
-                                        />
-                                        <FormControlLabel
-                                            className="selectLabel"
-                                            control={(
-                                                <Checkbox
-                                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                name="checkedI"
-                                                onChange={handleChange}
-                                                />
-                                            )}
-                                            label="Fire"
-                                        />
-                                    </FormGroup>
-                                </Grid>
+                            <Grid item md={6} xs={12}>
+                                                        <FormControl component="fieldset" >
+                                                        <FormLabel className="checkRadioLabel" component="legend">Group name</FormLabel>
+                                                            <RadioGroup row aria-label="gender" name="gender1">
+                                                            {checkGroups.map((option) => (
+
+                                                                <FormControlLabel value={option.checkListLabel} checked={option.checkListLabel === auditData.groupName} className="selectLabel" control={<Radio />} onChange={(e) => handleGroup(option.checklistValues , option.checkListLabel)} label={option.checkListLabel} />
+                                                            ))}
+                                                            </RadioGroup>
+                                                            
+                                                        </FormControl>
+                                                    </Grid>
 
                                 <Grid
                                     item
                                     md={6}
                                     xs={12}
                                 >
-                                    <Grid container spacing={3}>
-                                        <Grid
-                                            item
-                                            md={12}
-                                            xs={12}
-                                        >
-                                            <FormLabel className="checkRadioLabel" component="legend">Material</FormLabel>
-                                            <FormGroup className={classes.customCheckBoxList}>
-                                                <FormControlLabel
-                                                className="selectLabel"
-                                                control={(
-                                                    <Checkbox
-                                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                    name="checkedI"
-                                                    onChange={handleChange}
-                                                    />
-                                                )}
-                                                label="Category"
-                                                />
-                                                <FormControlLabel
-                                                className="selectLabel"
-                                                control={(
-                                                    <Checkbox
-                                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                    name="checkedI"
-                                                    onChange={handleChange}
-                                                    checked
-                                                    />
-                                                )}
-                                                label="Fire"
-                                                />
-                                                <FormControlLabel
-                                                className="selectLabel"
-                                                control={(
-                                                    <Checkbox
-                                                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                    name="checkedI"
-                                                    onChange={handleChange}
-                                                    checked
-                                                    />
-                                                )}
-                                                label="Category 2"
-                                                />
-                                            </FormGroup>
-                                        </Grid>
-                                        <Grid
-                                            item
-                                            md={12}
-                                            xs={12}
-                                        >
-                                            <FormLabel className="checkRadioLabel" component="legend">Electrical</FormLabel>
-                                            <FormGroup className={classes.customCheckBoxList}>
-                                                <FormControlLabel
-                                                    className="selectLabel"
-                                                    control={(
-                                                        <Checkbox
-                                                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                        name="checkedI"
-                                                        onChange={handleChange}
-                                                        />
-                                                    )}
-                                                    label="Category"
-                                                />
-                                                <FormControlLabel
-                                                    className="selectLabel"
-                                                    control={(
-                                                        <Checkbox
-                                                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                                                        name="checkedI"
-                                                        onChange={handleChange}
-                                                        />
-                                                    )}
-                                                    label="Category 2"
-                                                />
-                                            </FormGroup>
-                                        </Grid>
-                                    </Grid>
+                                                        <FormControl component="fieldset" >
+                                                        <FormLabel className="checkRadioLabel" component="legend">SubGroup name</FormLabel>
+                                                            <RadioGroup row aria-label="gender" name="gender1">
+                                                            {checkData.map((option) => (
+                                                                <FormControlLabel value={option.inputLabel} checked={option.inputLabel === auditData.subGroupName} className="selectLabel" onChange={(e) => handleSubGroup(option.inputLabel)} control={<Radio />} label={option.inputLabel} />
+                                                            ))}
+                                                            </RadioGroup>
+                                                            
+                                                        </FormControl>
+                                                    
                                 </Grid>
                             </Grid>
                         </Paper>
@@ -522,27 +430,30 @@ const QuestionEdit = () => {
                                         label="Question"
                                         name="question"
                                         id="question"
-                                        defaultValue=""
+                                        value={auditData.question ? auditData.question : ""}
                                         fullWidth
                                         variant="outlined"
                                         className="formControl"
+                                        onChange={(e) => handleAllFieldsData(e.target.value , "question")}
                                     />
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <FormControl component="fieldset">
                                         <FormLabel component="legend" className="checkRadioLabel">Response type*</FormLabel>
-                                        <RadioGroup aria-label="gender" name="gender1">
-                                            <FormControlLabel value="ynnafinding" checked className="selectLabel" control={<Radio />} label="Yes/No/NA/ and finding" />
-                                            <FormControlLabel value="prfind" className="selectLabel" control={<Radio />} label="Performance rating and finding" />
+                                        <RadioGroup aria-label="gender" name="gender1" onChange={(e) => handleAllFieldsData(e.target.value , "responseType")}>
+                                        {responseType.map((option) => (
+                                        <FormControlLabel value={option} checked={auditData.responseType === option} className="selectLabel" control={<Radio />} label={option} />
+                                        ))}
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <FormControl component="fieldset">
                                         <FormLabel component="legend" className="checkRadioLabel">Record geo location</FormLabel>
-                                        <RadioGroup row aria-label="gender" name="gender1">
-                                            <FormControlLabel value="yes" checked className="selectLabel" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="no" className="selectLabel" control={<Radio />} label="No" />
+                                        <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleAllFieldsData(e.target.value , "geoLocation")}>
+                                        {geoLocation.map((option) => (
+                                            <FormControlLabel value={option} checked={auditData.geoLocation === option} className="selectLabel" control={<Radio />} label={option} />
+                                        ))}
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -558,10 +469,12 @@ const QuestionEdit = () => {
                                                     id="scores"
                                                     labelId="scores"
                                                     label="Scores"
+                                                    value={auditData.scoreType ? auditData.scoreType : ""}
+                                                    onChange={(e) => handleAllFieldsData(e.target.value , "scoreType")}
                                                 >
-                                                    <MenuItem value="stars">Stars</MenuItem>
-                                                    <MenuItem value="percentge">Percentage</MenuItem>
-                                                    <MenuItem value="count">Count</MenuItem>
+                                                    {scoreType.map((option) => (
+                                                    <MenuItem value={option} >{option}</MenuItem>
+                                                    ))}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -570,18 +483,20 @@ const QuestionEdit = () => {
                                 <Grid item md={6} xs={12}>
                                     <FormControl component="fieldset">
                                         <FormLabel component="legend" className="checkRadioLabel">Media attachment (Image / audio / video)</FormLabel>
-                                        <RadioGroup row aria-label="gender" name="gender1">
-                                            <FormControlLabel value="madiayes" className="selectLabel" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="madiano" className="selectLabel" control={<Radio />} label="No" />
+                                        <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleAllFieldsData(e.target.value , "evidenceType")}>
+                                        {evidenceType.map((option) => (
+                                            <FormControlLabel value={option} checked={auditData.evidenceType === option} className="selectLabel" control={<Radio />} label={option} />
+                                        ))}
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
                                     <FormControl component="fieldset">
                                         <FormLabel component="legend" className="checkRadioLabel">Document attachment (document  / pdf)</FormLabel>
-                                        <RadioGroup row aria-label="gender" name="gender1">
-                                            <FormControlLabel value="docyes" className="selectLabel" control={<Radio />} label="Yes" />
-                                            <FormControlLabel value="docno" className="selectLabel" control={<Radio />} label="No" />
+                                        <RadioGroup row aria-label="gender" name="gender1" onChange={(e) => handleAllFieldsData(e.target.value , "attachment")}>
+                                        {attachment.map((option) => (
+                                            <FormControlLabel value={option} checked={auditData.attachment === option} className="selectLabel" control={<Radio />} label={option} />
+                                        ))}
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -592,7 +507,7 @@ const QuestionEdit = () => {
             </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleUpdate()}>
                     Update
                 </Button>
                 <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">

@@ -165,6 +165,20 @@ const QuestionsGroup = (props) => {
       `/api/v1/core/checklists/companies/8/projects/15/compliance/`
     );
     const result = res.data.data.results;
+
+    let data = JSON.parse(localStorage.getItem("auditChecks"))
+    console.log(data,"???????????????????");
+    if(data !== null) {
+        let temp = []
+        for (let i = 0; i < data.length; i++) {
+          for( let j = 0; j < result.length; j++) {
+            if(result[j].checkListLabel === data[i].groupName){
+              temp.push(result[j])
+            }
+          }
+        }
+        await setCheckData(temp)
+      }
     // await fetchComplianceData(result);
     await setCheckListGroups(result);
     // await setIsLoading(true);
@@ -303,6 +317,31 @@ const QuestionsGroup = (props) => {
     console.log(temp);
     setSubGroupId(temp);
   };
+
+  const handelSelectOption = (key) => {
+    let temp = [...checkData]
+    let data = JSON.parse(localStorage.getItem("auditChecks"))
+    if(data !== null) {
+      for (let i = 0; i <= data.length; i++) {
+        if (data[i] != undefined && data[i].groupName == key) {
+          return true;
+        }
+      }
+    }
+  };
+
+  const handelSelectOptionSubGroup = (key) => {
+    let temp = [...checkData]
+    let data = JSON.parse(localStorage.getItem("auditChecks"))
+    if(data !== null) {
+      for (let i = 0; i <= data.length; i++) {
+        if (data[i] != undefined && data[i].subGroupName == key) {
+          return true;
+        }
+      }
+    }
+  };
+  
   console.log(subGroupId,"LLLLLLLLLLLLLLLLLLLLLL");
   useEffect(() => {
     fetchChecklist()
@@ -443,6 +482,7 @@ const QuestionsGroup = (props) => {
                                           icon={
                                             <CheckBoxOutlineBlankIcon fontSize="small" />
                                           }
+                                          
                                           checkedIcon={
                                             <CheckBoxIcon fontSize="small" />
                                           }
@@ -450,7 +490,7 @@ const QuestionsGroup = (props) => {
                                       }
                                       className="selectLabel"
                                       label={value.checkListLabel}
-                                      // checked={handelSelectOption(value)}
+                                      checked={handelSelectOption(value.checkListLabel)}
                                       onChange={async (e) =>
                                         handlePhysicalHazards(e, value, index)
                                       }
@@ -493,9 +533,9 @@ const QuestionsGroup = (props) => {
                                             />
                                           }
                                           label={option.inputLabel}
-                                          // checked={handelSelectOptionSubGroup(
-                                          //   option.id
-                                          // )}
+                                          checked={handelSelectOptionSubGroup(
+                                            option.inputLabel
+                                          )}
                                           onChange={async (e) =>
                                             handleGroups(e, option.id, index,value.checkListLabel,option.inputLabel)
                                           }

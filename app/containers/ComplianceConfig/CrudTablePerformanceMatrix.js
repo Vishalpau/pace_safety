@@ -1,5 +1,5 @@
 // import React from 'react';  
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment ,useEffect } from "react";
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -22,6 +22,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {
   Grid, Typography, TextField, Button
 } from '@material-ui/core';
+import api from "../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   // rootTable: {
@@ -145,6 +146,28 @@ function CrudTablePerformanceMatrix(props) {
 
   const [colorPick, setColorPick] = useState('#06425c');
   const [hidden, setHidden] = useState(false);
+  const [matrixData, setMatrixData] = useState([])
+  const [isLoading , setIsLoading] = useState(false);
+  const fetchMatrixData = async () => {
+    const res = await api.get(`/api/v1/configaudits/matrix/?company=1&project=1&projectStructure=`)
+    const result = res.data.data.results
+    let temp = []
+    for(let i = 0; i < result.length; i++) {
+      temp.push({
+        id: result[i].id,
+        matrixConstant: result[i].matrixConstant,
+        matrixConstantName: result[i].matrixConstantName,
+        matrixConstantColor: result[i].matrixConstantColor,
+        status: true,
+        edited: false,
+      })
+    }
+    await setMatrixData(temp)
+    await setIsLoading(true)
+  }
+  useEffect(() => {
+    fetchMatrixData()
+  },[])
 
   return (
     <div >
@@ -161,8 +184,9 @@ function CrudTablePerformanceMatrix(props) {
           </Tooltip>
           <span className="customColorDisplay" onClick={() => setHidden(false)}>{colorPick}</span>
         </div>
+        {isLoading ? 
         <CrudTable
-          dataInit={dataApi}
+          dataInit={matrixData}
           anchor={anchorTable}
           className="dataTableSectionDesign"
           //title=""
@@ -174,7 +198,7 @@ function CrudTablePerformanceMatrix(props) {
           editRow={(payload) => editRow(editAction(payload, branch))}
           finishEditRow={(payload) => finishEditRow(saveAction(payload, branch))}
           branch={branch}
-        />
+        />:"Loading..."}
       </div>
     </div>
   );

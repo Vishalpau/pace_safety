@@ -10,6 +10,13 @@ function QuestionValidation(data) {
             }else{
                delete qq[j].errorquestion 
                 isValid = true
+            } 
+            if(qq[j].responseType === ""){
+                qq[j].errorResponseType = "Select response type"
+                isValid = false
+            }else{
+               delete qq[j].errorResponseType 
+                isValid = true
             }
         }
     }
