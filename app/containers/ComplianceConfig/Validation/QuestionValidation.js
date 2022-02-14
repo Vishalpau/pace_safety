@@ -8,8 +8,8 @@ function QuestionValidation(data) {
                 qq[j].errorquestion = "Enter a question"
                 isValid = false
             }else{
-                qq[j].errorquestion = ""
-                isValid = false
+               delete qq[j].errorquestion 
+                isValid = true
             }
         }
     }
