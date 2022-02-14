@@ -44,6 +44,8 @@ import ShiftPickListData from "../../../utils/Picklist/ShiftPickListData";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import Loader from "../Loader"
+import Acl from "../../../components/Error/acl"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -747,6 +749,10 @@ const ObservationInitialNotification = (props) => {
   }, [props.initialValues.breakDown]);
   console.log(form.reportedById,'reportedById')
   return (
+    <Acl 
+    module='safety'
+    action='add_observations'
+    html={
     <>
       <CustomPapperBlock title="iCare" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
 
@@ -1725,7 +1731,7 @@ const ObservationInitialNotification = (props) => {
           <Loader />
         }
       </CustomPapperBlock>
-    </>
+    </> } />
   );
 };
 

@@ -15,6 +15,7 @@ import Grid from "@material-ui/core/Grid";
 import Slide from "@material-ui/core/Slide";
 import Close from "@material-ui/icons/Close";
 import { saveAs } from 'file-saver';
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,13 +70,19 @@ export default function AlertDialog({ open, setOpen, documentUrl }) {
     setOpen(false);
   };
   const download = (image_link) => {
-    let onlyImage_url = image_link.replace("https://", "");
-    let image_url = "http://cors.digiqt.com/" + onlyImage_url;
-    let imageArray = image_url.split("/");
-    let image_name = imageArray[imageArray.length - 1];
+    window.location.href = image_link
+    // let onlyImage_url = image_link.replace("https://", "");
+    // let image_url = image_link;
+    // let imageArray = image_url.split("/");
+    // let image_name = imageArray[imageArray.length - 1];
     saveAs(image_url, image_name);
     handleClose();
   };
+
+  const downloadImage = (image_link) => {
+    console.log(image_link)
+    saveAs(image_link, "imagename")
+  }
 
   return (
     <div>
@@ -123,7 +130,8 @@ export default function AlertDialog({ open, setOpen, documentUrl }) {
                   color="primary"
                   className={classes.modalButton}
                   disableElevation
-                  onClick={() => download(documentUrl)}
+                  onClick={() => downloadImage(documentUrl)}
+                  //download
                 >
                   Download
                 </Button>

@@ -17,17 +17,17 @@ function InitialNotificationValidator(data, projectStructure) {
   }
 
 
-  if (validator.isEmpty(data.observationDetails.toString())) {
+  if (data.observationDetails == null || data.observationDetails == "") {
     error.observationDetails = "Enter iCare details";
     isValid = false;
   }
 
-  if (validator.isEmpty(data.isSituationAddressed.toString())) {
+  if (data.isSituationAddressed == null || data.isSituationAddressed == "") {
     error.isSituationAddressed = "Select whether you addressed the situation";
     isValid = false;
   }
 
-  if (validator.isEmpty(data.observationType.toString())) {
+  if (data.observationType == null || data.observationType == "") {
     error.observationType = "Choose any one iCare type";
     isValid = false;
   }
@@ -37,7 +37,7 @@ function InitialNotificationValidator(data, projectStructure) {
   //   isValid = false;
   // }
 
-  if (validator.isEmpty(data.reportedByName.toString())) {
+  if (data.reportedByName == null || data.reportedByName == "") {
     error.reportedByName = "Select the observed by";
     isValid = false;
   }
@@ -52,7 +52,7 @@ function InitialNotificationValidator(data, projectStructure) {
   //  }
 
   if (data.isSituationAddressed === "Yes") {
-    if (validator.isEmpty(data.actionTaken.toString())) {
+    if (data.actionTaken == null || data.actionTaken == "") {
       error.actionTaken = "Enter actions taken";
       isValid = false;
 
@@ -69,7 +69,7 @@ function InitialNotificationValidator(data, projectStructure) {
   //   isValid = false;
   // }
 
-  if (validator.isEmpty(data.acceptAndPledge.toString())) {
+  if (data.acceptAndPledge == null || data.acceptAndPledge == ""){
     error.acceptAndPledge = "Check the accept & pledge";
     isValid = false;
   }

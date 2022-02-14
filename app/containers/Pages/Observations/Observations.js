@@ -36,6 +36,8 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router";
 import api from "../../../utils/axios";
+import {checkACL} from "../../../utils/helper";
+
 
 
 
@@ -235,7 +237,7 @@ function Observations(props) {
   };
 
 
-  const fetchInitialiObservation = async () => {
+  const fetchInitialiObservation = async () => { 
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;

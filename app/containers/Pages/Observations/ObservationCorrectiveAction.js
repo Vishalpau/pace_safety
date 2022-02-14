@@ -25,6 +25,8 @@ import ActionShow from '../../Forms/ActionShow';
 import ActionTracker from "../../Forms/ActionTracker";
 import CorrectiveActionValidator from "../../Validator/Observation/CorrectiveActionValidation";
 import Loader from "../Loader"
+import {checkACL} from '../../../utils/helper'
+
 
 // import FormLabel from '@material-ui/core/FormLabel';
 
@@ -159,6 +161,7 @@ function ObservationCorrectiveAction() {
   const [loading, setLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
   const [isDateShow, setIsDateShow] = useState(false)
+  const [ATACLStatus, setATACLStatus] = useState(false)
   let filterReportedByName = []
 
   const [projectData, setProjectData] = useState({
@@ -418,6 +421,7 @@ function ObservationCorrectiveAction() {
       fetchInitialiObservationData()
       fetchComments()
       fetchReportedBy()
+      setATACLStatus(checkACL('action_tracker', 'view_actions'))
     }
 
   }, [])
@@ -566,6 +570,8 @@ function ObservationCorrectiveAction() {
             {form.assigneeName ? form.assigneeName : "-"}
           </Typography>
         </Grid> */}
+        {!ATACLStatus ? '' : (
+          <>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
             <svg xmlns="http://www.w3.org/2000/svg" width="24.096" height="27.08" viewBox="0 0 33.096 36.08">
@@ -610,7 +616,7 @@ function ObservationCorrectiveAction() {
                 <p style={{ color: "red" }}>{error.action}</p></Grid> : null}
 
               <Grid item md={8}>
-                {form.isCorrectiveActionTaken === "Yes" || form.isCorrectiveActionTaken === null ? (
+                {(form.isCorrectiveActionTaken === "Yes" || form.isCorrectiveActionTaken === null) ? (
                   <>
                     <Typography variant="h6" gutterBottom className={classes.labelName}>
                       Actions
@@ -618,7 +624,7 @@ function ObservationCorrectiveAction() {
                     <Typography className={classes.labelValue}>
                       {handelActionShow(id)}
                     </Typography>
-
+                    {!checkACL('action_tracker', 'add_actions') ? '' : 
                     <Typography className={classes.increaseRowBox}>
                       <ActionTracker
                         actionContext="iCare"
@@ -633,7 +639,7 @@ function ObservationCorrectiveAction() {
                         handelShowData={handelActionTracker}
                       />
 
-                    </Typography>
+                    </Typography> }
                   </>
                 )
                   :
@@ -644,6 +650,9 @@ function ObservationCorrectiveAction() {
             </Grid>
           </Paper>
         </Grid>
+        </>
+        )
+    }
         {/* <Grid item md={4}>
            <TextField
             label="Action taken"

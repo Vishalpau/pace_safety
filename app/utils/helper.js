@@ -57,6 +57,7 @@ export const handelNotifyToValues = async () => {
     return allRoles
   }
 }
+
 export const formatNames = (names) => {
   const f = names.split(' ');
   for (let i = 0; i < f.length; i += 1) {
@@ -65,3 +66,20 @@ export const formatNames = (names) => {
 
   return f.join(' ');
 };
+
+export const checkACL = (module, action) => {
+
+    let acls = JSON.parse(localStorage.getItem('app_acl'))
+    let default_return = true
+    if(acls == null) {
+      return default_return;
+    }
+    
+    if(acls[module] === undefined) { 
+      return default_return
+    }
+    if(acls[module][action] === undefined) {
+      return default_return
+    } 
+    return acls[module][action]
+}
