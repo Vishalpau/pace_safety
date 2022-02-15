@@ -545,7 +545,7 @@ function PersonalDashboard(props) {
     <>
       {isLoading ? <>
         {/* <PapperBlock title="Home" icon="ion-md-list-box"> */}
-        <CustomPapperBlock title="Hexagon" icon ='customDropdownPageIcon homePageIcon' whiteBg>
+        <CustomPapperBlock title="Home" icon ='customDropdownPageIcon homePageIcon' whiteBg>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Paper elevation={1} className="paperSection">

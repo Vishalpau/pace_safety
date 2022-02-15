@@ -78,26 +78,7 @@ function App() {
     let tarId = 0
     let jsonCode = ""
     let tarProjectStruct;
-    if (window.location.search !== "") {
-      // let state = localStorage.getItem('direct_landing')
-      var search = location.search.substring(1);
-      let json = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
-      let state = json.state
-      if (state) {
-        jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
-        let newArr = (0, eval)('(' + jsonCode + ')')
-        state = newArr;
-        comId = state.companyId;
-        proId = state.projectId;
-        redback = state.redirect_back;
-        tarPage = state.targetPage.trim();
-        tarId = state.targetId;
-        tarProjectStruct = state.projectStructure
-        if (comId !== "") {
-          localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarId:tarId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
-        }
-      }
-    }
+   
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code") || jsonCode;
     const tagetPage = searchParams.get("targetPage") || tarPage;
@@ -108,8 +89,28 @@ function App() {
     let data = {}
     console.log(code)
     if (code) {
+      localStorage.clear()
+      if (window.location.search !== "") {
+        // let state = localStorage.getItem('direct_landing')
+        var search = location.search.substring(1);
+        let json = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+        let state = json.state
+        if (state) {
+          jsonCode = decodeURIComponent(state.replace(/\+/g, '%20'));
+          let newArr = (0, eval)('(' + jsonCode + ')')
+          state = newArr;
+          comId = state.companyId;
+          proId = state.projectId;
+          redback = state.redirect_back;
+          tarPage = state.targetPage.trim();
+          tarId = state.targetId;
+          tarProjectStruct = state.projectStructure
+          if (comId !== "") {
+            localStorage.setItem("direct_loading", JSON.stringify({ comId: comId, proId: proId, tarId:tarId, tarPage: tarPage, tarProjectStruct: tarProjectStruct }))
+          }
+        }
+      }
       if (window.location.hostname === 'localhost') {
-
         data = JSON.stringify({
           grant_type: "authorization_code",
           client_id: `${LOCAL_SSO_CLIENT_ID}`,
