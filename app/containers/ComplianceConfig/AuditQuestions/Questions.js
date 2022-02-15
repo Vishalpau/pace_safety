@@ -71,7 +71,18 @@ import icoVideo from 'dan-images/icoVideo.svg';
 import { FormHelperText } from "@material-ui/core";
 import QuestionValidation from "../Validation/QuestionValidation"
 import api from "../../../utils/axios";
-
+import { CONFIG } from "../ComplianceconfigConstants"
+import FormSideBar from "../../Forms/FormSideBar";
+import {useHistory} from "react-router"
+import axios from 'axios';
+import {
+    access_token,
+    ACCOUNT_API_URL,
+    HEADER_AUTH,
+    INITIAL_NOTIFICATION_FORM,
+    LOGIN_URL,
+    SSO_URL,
+  } from "../../../utils/constants";
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -283,7 +294,8 @@ const useStyles = makeStyles((theme) => ({
 // });
 
 const Questions = () => {
-
+const history = useHistory();
+console.log(history)
 const [expandedTableDetail, setExpandedTableDetail] = React.useState('panel1');
 const handleTDChange = (panel) => (event, isExpanded ) => {
     setExpandedTableDetail(isExpanded ? panel : false);
@@ -299,6 +311,7 @@ const [questionMoreCatgry, setQuestionMoreCatgry] = useState([{}]);
 const [checkData, setCheckData] = useState([]);
 const [que , setQue] = useState([])
 const [sub , setSub] = useState([])
+const [projectStructName, setProjectStructName] = useState([])
 
 const handleMoreQuestionCatgry = (index ,groupName , subGroupName ) => {
     let temp = [...checkData]
@@ -306,9 +319,9 @@ const handleMoreQuestionCatgry = (index ,groupName , subGroupName ) => {
         attachment: "",
         createdBy: 1,
         evidenceType: "",
-        fkCompanyId: 1,
-        fkProjectId: 1,
-        fkProjectStructureIds: "1L",
+        fkCompanyId: history.location.state.CompanyId,
+        fkProjectId: history.location.state.projectId,
+        fkProjectStructureIds: history.location.state.fkProjectStructureIds,
         geoLocation: "",
         groupName: groupName,
         question: "",
@@ -317,8 +330,8 @@ const handleMoreQuestionCatgry = (index ,groupName , subGroupName ) => {
         status: "Active",
         subGroupName: subGroupName,
       })
+      console.log(temp,"KKKKKKKKKKKK")
     setCheckData(temp)
-    // console.log(temp,"LLLLLLLLLLLLLLLLLL")
     // temp.map((value , index) =>
     // value.map((ab , ll) => {if(ab.subGroupName === data){
     //     console.log(ll,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -365,9 +378,9 @@ const handleCloseCatgry=(indexOne ,key)=> {
             attachment: "",
             createdBy: 1,
             evidenceType: "",
-            fkCompanyId: 1,
-            fkProjectId: 1,
-            fkProjectStructureIds: "1L",
+            fkCompanyId: history.location.state.CompanyId,
+            fkProjectId: history.location.state.projectId,
+            fkProjectStructureIds: history.location.state.fkProjectStructureIds,
             geoLocation: "",
             groupName: temp[i]['groupName'],
             question: "",
@@ -377,7 +390,7 @@ const handleCloseCatgry=(indexOne ,key)=> {
             subGroupName: temp[i]['subGroupName'],
           }]
       }
-    //   console.log(temp)
+      console.log(temp)
     //   let tempsub = []
     //   let kk = []
     //   for (let i = 0; i < data.length; i++) {
@@ -438,13 +451,49 @@ const handleCloseCatgry=(indexOne ,key)=> {
       console.log(data)
   }
 
+  const handleProjectName = (projectId) => {
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).companies
+      : null;
+    const fetchCompany = userName.filter((user) => user.companyId === history.location.state.projectId)
+    const fetchProject = fetchCompany[0].projects.filter((user) => user.projectId === projectId)
+    return fetchProject[0].projectName
+  }
+
+  const handelWorkArea = async () => {
+    const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+    let structName = []
+    let projectStructId = history.location.state.fkProjectStructureIds.split(":")
+    console.log(projectStructId,">>>>>>>>>>>>>>>>>")
+    for (let key in projectStructId) {
+      let workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)]
+      const api_work_area = axios.create({
+        baseURL: SSO_URL,
+        headers: HEADER_AUTH
+      });
+      const workArea = await api_work_area.get(`/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]}/${workAreaId[1]}/`);
+      structName.push(workArea.data.data.results[0]["structureName"])
+    }
+    setProjectStructName(structName)
+  }
+
   useEffect(() => {
       fetchChecks()
+      handelWorkArea()
   },[])
 
   return ( 
         <>
             <Grid container spacing={3}>
+            <Grid container spacing={3} item xs={12} md={9}>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32.001" height="25.557" viewBox="0 0 32.001 25.557">
@@ -460,10 +509,10 @@ const handleCloseCatgry=(indexOne ,key)=> {
                         <Grid container spacing={3}>
                             <Grid item md={12} sm={12} xs={12}>
                                 <Typography gutterBottom className="labelValue">
-                                    NTPC
+                                {handleProjectName(history.location.state.projectId)}
                                 </Typography>
                                 <Typography className="labelValue">
-                                    All sections : All units : All work areas
+                                {projectStructName.map(value => { return value }).join(" : ")}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -658,6 +707,14 @@ const handleCloseCatgry=(indexOne ,key)=> {
                        
                     </Paper>
                 </Grid>
+                </Grid>
+                <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={CONFIG}
+                selectedItem="Question"
+              />
+            </Grid>
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
                     <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleSave()}>

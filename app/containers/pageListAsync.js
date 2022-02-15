@@ -858,3 +858,27 @@ export const ComplianceActivity = loadable(() => import("./Pages/Compliance/List
 export const ComplianceConfig = loadable(() => import("./ComplianceConfig/ComplianceConfig"), {
   fallback: <Loading />,
 },); 
+
+export const ComplianceConfigNewQ = loadable(() => import("./ComplianceConfig/AuditQuestions/QuestionsForm"), {
+  fallback: <Loading />,
+});
+
+export const QuestionsGroup = loadable(() => import("./ComplianceConfig/AuditQuestions/QuestionsGroup"), {
+  fallback: <Loading />,
+});
+
+export const Questions = loadable(() => import("./ComplianceConfig/AuditQuestions/Questions"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceConfigBulkUploadQ = loadable(() => import("./ComplianceConfig/AuditQuestions/BulkUploadQuestion"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceConfigEditQ = loadable(() => import("./ComplianceConfig/AuditQuestions/QuestionEdit"), {
+  fallback: <Loading />,
+});
+
+export const ComplianceConfigViewQ = loadable(() => import("./ComplianceConfig/AuditQuestions/QuestionView"), {
+  fallback: <Loading />,
+});

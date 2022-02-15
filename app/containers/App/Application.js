@@ -186,6 +186,12 @@ import {
   ComplianceComment,
   ComplianceActivity,
   ComplianceConfig,
+  ComplianceConfigNewQ,
+  QuestionsGroup,
+  Questions,
+  ComplianceConfigBulkUploadQ,
+  ComplianceConfigEditQ,
+  ComplianceConfigViewQ,
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -640,9 +646,13 @@ function Application(props) {
         <Route path="/app/pages/compliance-activity" component={ComplianceActivity} />
 
         {/* Administrations */}
-        <Route path="/app/compliance-config/:id" exact component={ComplianceConfig} />
         <Route path="/app/compliance-config/" exact component={ComplianceConfig} />
-        <Route path="/app/compliance-config/new" exact component={ComplianceConfig} />
+        <Route path="/app/compliance-config/question-group" exact component={QuestionsGroup} />
+        <Route path="/app/compliance-config/question" exact component={Questions} />
+        <Route path="/app/compliance-config/new-question" exact component={ComplianceConfigNewQ} />
+        <Route path="/app/compliance-config/bulk-upload" exact component={ComplianceConfigBulkUploadQ} />
+        <Route path="/app/compliance-config/edit/:id" exact component={ComplianceConfigEditQ} />
+        <Route path="/app/compliance-config/view/:id" exact component={ComplianceConfigViewQ} />
         {/* Default */}
         <Route component={NotFound} />
 

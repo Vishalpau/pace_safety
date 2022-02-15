@@ -23,11 +23,11 @@ import Paper from '@material-ui/core/Paper';
 
 import CrudTablePerformanceFactor from './CrudTablePerformanceFactor';
 import CrudTablePerformanceMatrix from './CrudTablePerformanceMatrix';
-import ComplianceQuestionsList from './AuditQuestions/ComplianceQuestionsList';
 import QuestionsForm from './AuditQuestions/QuestionsForm';
 
 import AddIcon from '@material-ui/icons/Add';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import QuestionsList from './AuditQuestions/QuestionsList';
 
 function TabContainer(props) {
   const { children } = props;
@@ -203,7 +203,8 @@ class ComplianceConfig extends React.Component {
                                   </Tooltip>
                                 </Grid> */}
                                 <Grid item md={12} sm={12} xs={12}>
-                                  <ComplianceQuestionsList />
+                                  {/* <ComplianceQuestionsList /> */}
+                                  <QuestionsList />
                                 </Grid>
                             </Grid>
                           </Paper>
@@ -298,5 +299,3 @@ ComplianceConfig.propTypes = {
 };
 
 export default withStyles(styles)(ComplianceConfig);
-
-

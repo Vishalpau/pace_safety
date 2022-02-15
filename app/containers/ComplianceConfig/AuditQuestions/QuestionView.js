@@ -284,8 +284,6 @@ const QuestionView = (props) => {
       };
 
     const handleBack = () => {
-        props.setViewQuestion(false);
-        props.setListQuestion(true);
         history.push(`/app/compliance-config/`)  
     }
 

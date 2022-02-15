@@ -44,8 +44,18 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory, useParams } from 'react-router';
 import api from "../../../utils/axios";
-
-
+import { CONFIG } from "../ComplianceconfigConstants"
+import FormSideBar from "../../Forms/FormSideBar";
+import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../utils/constants";
+import QuestionGroupValidation from "../Validation/QuestionGroupValidations"
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -152,13 +162,16 @@ const useStyles = makeStyles((theme) => ({
 
 const QuestionsGroup = (props) => {
   const history = useHistory();
-
+  const  {id} = useParams('')
   const [open, setOpen] = React.useState(false);
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
   const [subGroupId, setSubGroupId] = useState([]);
+  const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([])
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+  const [levelLenght, setLevelLenght] = useState(0)
+  const [workArea, setWorkArea] = useState("")
 
-  
   const fetchChecklist = async () => {
     let temp = {};
     const res = await api.get(
@@ -169,6 +182,7 @@ const QuestionsGroup = (props) => {
     let data = JSON.parse(localStorage.getItem("auditChecks"))
     console.log(data,"???????????????????");
     if(data !== null) {
+      await setSubGroupId(data)
         let temp = []
         for (let i = 0; i < data.length; i++) {
           for( let j = 0; j < result.length; j++) {
@@ -236,7 +250,28 @@ const QuestionsGroup = (props) => {
     );
   };
 
+  const [error , setError] = useState({})
+
   const handleNext = async () => {
+
+    const fkCompanyId =
+            JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+    const userId =
+        JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
+    const project =
+        JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName
+        : null;
+    const fkpsId = selectDepthAndId.join(':')
+    const {error , isValid} = QuestionGroupValidation(selectDepthAndId)
+    setError(error)
+    if(!isValid){
+      return "data not valid"
+    }
     // let temp = [...subGroupId]
     // let t = {}
     // for (let i = 0; i < temp.length; i++) {
@@ -257,8 +292,7 @@ const QuestionsGroup = (props) => {
     //   // }
     // }
     localStorage.setItem("auditChecks" , JSON.stringify(subGroupId))
-    props.setQuestion(true)
-    props.setQuestionGroup(false)
+    history.push({pathname : '/app/compliance-config/question' , state : {fkProjectStructureIds : fkpsId , CompanyId : fkCompanyId , projectId : project.projectId} })
   }
 
   const handlePhysicalHazards = async (e, value, index) => {
@@ -291,6 +325,7 @@ const QuestionsGroup = (props) => {
   const handleGroups = async (e, value, index , gName,sGName) => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
+      console.log("WARNING")
       temp.map((data, key) => {
         if(data.subGroupName === sGName) {
           temp.splice(key, 1);
@@ -341,9 +376,41 @@ const QuestionsGroup = (props) => {
       }
     }
   };
+
+  const fetchCallBack = async () => {
+    setSelectBreakDown([])
+    for (var key in projectData.projectName.breakdown) {
+
+      if (key == 0) {
+        var config = {
+          method: "get",
+          url: `${SSO_URL}/${projectData.projectName.breakdown[0].structure[0].url
+            }`,
+          headers: HEADER_AUTH,
+        };
+        await axios(config)
+          .then(async (response) => {
+            await setBreakdown1ListData([
+              {
+                breakdownLabel:
+                  projectData.projectName.breakdown[0].structure[0].name,
+                breakdownValue: response.data.data.results,
+                selectValue: ""
+              },
+            ]);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    }
+  };
+
+  
   
   console.log(subGroupId,"LLLLLLLLLLLLLLLLLLLLLL");
   useEffect(() => {
+    fetchCallBack()
     fetchChecklist()
   },[])
 
@@ -351,11 +418,13 @@ const QuestionsGroup = (props) => {
   return (
     <>
       <Grid container spacing={3} className={classes.observationNewSection}>
-          <Grid
+          {/* <Grid
             item
             md={12}
             xs={12}
-          >
+          > */}
+                      <Grid container spacing={3} item xs={12} md={9}>
+
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Typography variant="h6" className="sectionHeading">
@@ -370,6 +439,54 @@ const QuestionsGroup = (props) => {
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                 <Paper elevation={1} className="paperSection">
                   <Grid container spacing={3}>
+                  {id ?
+                        fetchSelectBreakDownList.map((data, key) =>
+                          <Grid item xs={3} md={3} key={key}>
+                            <FormControl
+                              error={error && error[`projectStructure${[key]}`]}
+                              variant="outlined"
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-label">
+                                {data.breakDownLabel}
+                              </InputLabel>
+                              <Select
+                                labelId="incident-type-label"
+                                id="incident-type"
+                                label={data.breakDownLabel}
+                                value={data.selectValue.id || ""}
+                                disabled={data.breakDownData.length === 0}
+
+                                onChange={(e) => {
+                                  handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                                }}
+                              >
+                                {data.breakDownData.length !== 0
+                                  ? data.breakDownData.map((selectvalues, index) => (
+                                    <MenuItem key={index}
+                                      value={selectvalues.id}>
+                                      {selectvalues.structureName}
+                                    </MenuItem>
+                                  ))
+                                  : null}
+                              </Select>
+                              {error && error[`projectStructure${[key]}`] && (
+                                <FormHelperText>
+                                  {error[`projectStructure${[key]}`]}
+                                </FormHelperText>
+                              )}
+                            </FormControl>
+                          </Grid>
+                        ) : <ProjectStructureInit
+                          selectDepthAndId={selectDepthAndId}
+                          setLevelLenght={setLevelLenght}
+                          error={error}
+                          setWorkArea={setWorkArea}
+                          setSelectDepthAndId={setSelectDepthAndId} />
+                      }
+                         
+                      
                     {/* <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
                         
                         <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
@@ -433,6 +550,9 @@ const QuestionsGroup = (props) => {
                   </Grid>
                 </Paper>
               </Grid> 
+              </Grid>
+
+
 
                 <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
@@ -609,7 +729,14 @@ const QuestionsGroup = (props) => {
                 </Grid>
 
             </Grid> 
-          </Grid>
+            <Grid item xs={12} md={3}>
+              <FormSideBar
+                deleteForm={[1, 2, 3]}
+                listOfItems={CONFIG}
+                selectedItem="Question group"
+              />
+            </Grid>
+          
 
           {/* <Dialog
             open={open}

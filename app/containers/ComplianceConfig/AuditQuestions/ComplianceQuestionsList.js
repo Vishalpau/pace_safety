@@ -298,6 +298,12 @@ function ComplianceQuestionsList(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     const res = await api.get(`/api/v1/configaudits/auditquestions/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=${fkProjectStructureIds}`)
     const result = res.data.data.results;
+    let temp = [];
+    for(i = 0 ; i < result.length; i++) {
+      temp.push({
+        
+      })
+    }
     await setAuditData(result)
     console.log(res,">>>>>>>>>>>>>>>>>>>>>>>>")
   }

@@ -39,7 +39,6 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import api from "../../../utils/axios";
 
-
 const useStyles = makeStyles((theme) => ({
 // const styles = theme => ({
   root: {
@@ -189,9 +188,33 @@ const useStyles = makeStyles((theme) => ({
 
 const QuestionEdit = (props) => {
     const classes = useStyles();
+    const {id} = useParams('')
+    const history = useHistory();
     const [auditData, setAuditData] = useState({})
     const [checkGroups, setCheckListGroups] = useState([]);
     const [checkData, setCheckData] = useState([])
+
+    const fkCompanyId =
+            JSON.parse(localStorage.getItem("company")) !== null
+            ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+            : null;
+    const userId =
+        JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
+    const project =
+        JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName
+        : null;
+    const selectBreakdown =
+        JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    var struct = "";
+    for (var i in selectBreakdown) {
+        struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
 
     const [state, setState] = React.useState({
         checkedA: true,
@@ -211,7 +234,8 @@ const QuestionEdit = (props) => {
     };
 
     const fetchAuditData = async () => {
-        const res = await api.get(`/api/v1/configaudits/auditquestions/${props.auditId.id}/?company=${props.auditId.fkCompanyId}&project=${props.auditId.fkProjectId}&projectStructure=${props.auditId.fkProjectStructureIds}`)
+        
+        const res = await api.get(`/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${project.projectId}&projectStructure=${fkProjectStructureIds}`)
         await setAuditData(res.data.data.results[0])
         await fetchChecklist(res.data.data.results[0].groupName)
         console.log(res,"::::::::::::::::::::::::::::::");
@@ -255,7 +279,7 @@ const QuestionEdit = (props) => {
     }
 
     const handleUpdate = async () => {
-        const res = await api.put(`/api/v1/configaudits/auditquestions/${props.auditId.id}/?company=${props.auditId.fkCompanyId}&project=${props.auditId.fkProjectId}&projectStructure=${props.auditId.fkProjectStructureIds}`,auditData).then(response => { props.setListQuestion(true)}).catch(error => {console.log(error)});
+        const res = await api.put(`/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${project.projectId}&projectStructure=${fkProjectStructureIds}`,auditData).then(response => { props.setListQuestion(true)}).catch(error => {console.log(error)});
     }
       console.log("Checklist",auditData);
     useEffect(() => {
@@ -510,7 +534,7 @@ const QuestionEdit = (props) => {
                 <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleUpdate()}>
                     Update
                 </Button>
-                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn">
+                <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.goBack()}>
                     Cancel
                 </Button>
             </Grid>
