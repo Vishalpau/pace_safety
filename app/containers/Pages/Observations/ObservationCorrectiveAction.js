@@ -240,10 +240,13 @@ function ObservationCorrectiveAction() {
 
 
   const handleSubmit = async () => {
-    const { error, isValid } = CorrectiveActionValidator(form, actionData, "submit");
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
+    if(checkACL('action_tracker', 'view_actions')) {
+      const { error, isValid } = CorrectiveActionValidator(form, actionData, "submit");
+      await setError(error);
+      if (!isValid) {
+        return "Data is not valid";
+      }
+
     }
 
     await setLoading(true)
@@ -277,11 +280,13 @@ function ObservationCorrectiveAction() {
     }).catch(err => { setLoading(false) })
   }
   const handleSave = async () => {
-    const { error, isValid } = CorrectiveActionValidator(form, actionData, "save");
+    if(checkACL('action_tracker', 'view_actions')) {
+      const { error, isValid } = CorrectiveActionValidator(form, actionData, "save");
 
-    await setError(error);
-    if (!isValid) {
-      return "Data is not valid";
+      await setError(error);
+      if (!isValid) {
+        return "Data is not valid";
+      }
     }
 
     await setSaveLoading(true)

@@ -21,6 +21,7 @@ import {
   SSO_URL
 } from "../../../utils/constants";
 import Loader from "../Loader"
+import {checkACL} from '../../../utils/helper'
 
 
 
@@ -214,7 +215,12 @@ const ObservationCorrectiveActionView = () => {
     }
   }, [])
   return (
-    <>{isLoading ? (<>
+    <>{isLoading ?
+      (
+    
+    <>
+    {checkACL('action_tracker', 'view_actions') ? 
+      <>
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
         <Typography variant="h6" className="sectionHeading">
           <svg xmlns="http://www.w3.org/2000/svg" width="24.096" height="27.08" viewBox="0 0 33.096 36.08">
@@ -286,6 +292,8 @@ const ObservationCorrectiveActionView = () => {
           </Grid>
         </Paper>
       </Grid>
+      </>
+      : ''}
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
         <Typography variant="h6" className="sectionHeading">
           <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="30.2" height="30.2" viewBox="0 0 40.2 40.2">
