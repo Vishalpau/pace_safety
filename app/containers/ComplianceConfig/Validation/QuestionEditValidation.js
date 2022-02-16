@@ -1,6 +1,6 @@
 import validator from "validator";
 
-function QuestionGroupValidation(projectStructure) {
+function QuestionEditValidation(data, projectStructure) {
   const error = {};
   let isValid = true;
 
@@ -16,7 +16,12 @@ function QuestionGroupValidation(projectStructure) {
     }
   }
 
+  if (data.question === "") {
+    error["question"] = "Please enter question";
+    isValid = false;
+  }
+
   return { error, isValid };
 }
 
-export default QuestionGroupValidation;
+export default QuestionEditValidation;
