@@ -26,7 +26,8 @@ import QuestionsForm from "./AuditQuestions/QuestionsForm";
 import AddIcon from "@material-ui/icons/Add";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import QuestionsList from "./AuditQuestions/QuestionsList";
-
+import PerformanceFactorList from './PerformanceFactor/PerformanceFactorList';
+import PerformanceMatrixList from './PerformanceMatrix/PerformanceMatrixList';
 function TabContainer(props) {
   const { children } = props;
 
@@ -304,7 +305,7 @@ class ComplianceConfig extends React.Component {
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12}>
-                        <CrudTablePerformanceFactor />
+                        <PerformanceFactorList />
                       </Grid>
                     </Grid>
                   </Paper>
@@ -366,7 +367,7 @@ class ComplianceConfig extends React.Component {
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12}>
-                        <CrudTablePerformanceMatrix />
+                        <PerformanceMatrixList />
                       </Grid>
                     </Grid>
                   </Paper>

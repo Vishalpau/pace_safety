@@ -882,3 +882,27 @@ export const ComplianceConfigEditQ = loadable(() => import("./ComplianceConfig/A
 export const ComplianceConfigViewQ = loadable(() => import("./ComplianceConfig/AuditQuestions/QuestionView"), {
   fallback: <Loading />,
 });
+
+export const PerformanceFactorAdd = loadable(() => import("./ComplianceConfig/PerformanceFactor/PerformanceFactorAdd"), {
+  fallback: <Loading />,
+});
+
+export const PerformanceFactorEdit = loadable(() => import("./ComplianceConfig/PerformanceFactor/PerformanceFactorEdit"), {
+  fallback: <Loading />,
+});
+
+export const PerformanceFactorView = loadable(() => import("./ComplianceConfig/PerformanceFactor/PerformanceFactorView"), {
+  fallback: <Loading />,
+});
+
+export const PerformanceMatrixAdd = loadable(() => import("./ComplianceConfig/PerformanceMatrix/PerformanceMatrixAdd"), {
+  fallback: <Loading />,
+});
+
+export const PerformanceMatrixEdit = loadable(() => import("./ComplianceConfig/PerformanceMatrix/PerformanceMatrixEdit"), {
+  fallback: <Loading />,
+});
+
+export const PerformanceMatrixView = loadable(() => import("./ComplianceConfig/PerformanceMatrix/PerformanceMatrixView"), {
+  fallback: <Loading />,
+});

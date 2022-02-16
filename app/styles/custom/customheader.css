@@ -1501,3 +1501,7 @@ ul.MuiMenu-list a ul li.userName {
   float: right;
 }
 
+.tableActionIcons {
+  padding: 0.625rem !important;
+  color: rgba(0, 0, 0, 0.54) !important;
+}
