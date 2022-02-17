@@ -13,7 +13,9 @@ import Select from '@material-ui/core/Select';
 import { useHistory, useParams } from 'react-router';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import Switch from '@material-ui/core/Switch';
-
+import FectorValidation from './FectorValidation';
+import { FormHelperText } from "@material-ui/core";
+import api from "../../../utils/axios"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,8 +25,58 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PerformanceFactorAdd = () => {
+    const [error , setError] = useState({});
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+
+  const [fectorForm , setFectorForm ] = useState(
+    {
+        "fkCompanyId": parseInt(fkCompanyId),
+        "fkProjectId": parseInt(project.projectId),
+        "factorType": "",
+        "factorName": "",
+        "factorConstant": "",
+        "status": "Active",
+        "createdAt": new Date(),
+        "createdBy": parseInt(userId),    
+  })
+
+  const handleStatusChange = (e) => {
+    let temp = {...fectorForm}
+    if(e.target.checked === true) {
+        temp.status = 'Active'
+    }else{
+        temp.status = 'Deactive'
+    }
+    setFectorForm(temp)
+}
     const classes = useStyles();
     const history = useHistory();
+
+    const handleSave = async () => {
+        
+        const { error, isValid} = FectorValidation(fectorForm)
+        console.log(error)
+        setError(error)
+        if(!isValid) {
+            return "data not valid"
+        }
+        const res = await api.post(`/api/v1/configaudits/factors/`, fectorForm).then(res => {localStorage.setItem("configTab", 1),history.goBack()}).catch(err => console.log(error))
+
+    }
 
     return (
         <>
@@ -57,17 +109,24 @@ const PerformanceFactorAdd = () => {
                                       //required
                                       variant="outlined"
                                       className="formControl"
+                                      error= {error.factorType}
                                   >
-                                      <InputLabel id="project-name-label">Factor type</InputLabel>
+                                      <InputLabel id="project-name-label">Factor type *</InputLabel>
                                       <Select
                                       id="project-name"
                                       labelId="project-unit-label"
-                                      label="Factor type"
+                                      label="Factor type *"
+                                      value={fectorForm.factorType ? fectorForm.factorType : ""}
+                                      onChange={(e) => {setFectorForm({...fectorForm , factorType : e.target.value}),setError({...error , factorType  : "" })}}
                                       >
-                                          <MenuItem value="criticality">Criticality</MenuItem>
-                                          <MenuItem value="status">Status</MenuItem>
+                                          <MenuItem value="Criticality">Criticality</MenuItem>
+                                          <MenuItem value="Status">Status</MenuItem>
                                       </Select>
-                                      
+                                      {error && error[`factorType`] && (
+                                <FormHelperText>
+                                  {error[`factorType`]}
+                                </FormHelperText>
+                              )}
                                   </FormControl>
                               </Grid>
 
@@ -75,17 +134,24 @@ const PerformanceFactorAdd = () => {
                                     <FormControl
                                         variant="outlined"
                                         className="formControl"
+                                        error= {error.factorName}
                                     >
-                                        <InputLabel id="project-name-label">Factor name</InputLabel>
+                                        <InputLabel id="project-name-label">Factor name *</InputLabel>
                                         <Select
                                         id="project-name"
                                         labelId="project-unit-label"
-                                        label="Factor name"
+                                        label="Factor name *"
+                                        value={fectorForm.factorName ? fectorForm.factorName : ""}
+                                        onChange={(e) => {setFectorForm({...fectorForm , factorName : e.target.value}),setError({...error, factorName  : "" })}}
                                         >
-                                            <MenuItem value="high">High</MenuItem>
-                                            <MenuItem value="low">Low</MenuItem>
+                                            <MenuItem value="High">High</MenuItem>
+                                            <MenuItem value="Low">Low</MenuItem>
                                         </Select>
-                                        
+                                        {error && error[`factorName`] && (
+                                <FormHelperText>
+                                  {error[`factorName`]}
+                                </FormHelperText>
+                              )}
                                     </FormControl>
                                 </Grid>
 
@@ -94,18 +160,26 @@ const PerformanceFactorAdd = () => {
                                         //required
                                         variant="outlined"
                                         className="formControl"
+                                        error= {error.factorConstant}
                                     >
-                                        <InputLabel id="project-name-label">Factor constant</InputLabel>
+                                        <InputLabel id="project-name-label">Factor constant *</InputLabel>
                                         <Select
                                         id="project-name"
                                         labelId="project-unit-label"
-                                        label="Factor constant"
+                                        label="Factor constant *"
+                                        required
+                                        value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
+                                        onChange={(e) => {setFectorForm({...fectorForm , factorConstant : e.target.value}),setError({...error , factorConstant : "" })}}
                                         >
                                             <MenuItem value="2">2</MenuItem>
                                             <MenuItem value="4">4</MenuItem>
                                             <MenuItem value="6">6</MenuItem>
                                         </Select>
-                                        
+                                        {error && error[`factorConstant`] && (
+                                <FormHelperText>
+                                  {error[`factorConstant`]}
+                                </FormHelperText>
+                              )}
                                     </FormControl>
                                 </Grid>
 
@@ -114,6 +188,8 @@ const PerformanceFactorAdd = () => {
                                     <FormControlLabel
                                         control={(
                                             <Switch
+                                            checked={fectorForm.status === "Active" ? true : false}
+                                            onChange={(e) => handleStatusChange(e)}
                                             //checked={hidden}
                                             //onChange={handleHiddenChange}
                                             value="Status"
@@ -131,10 +207,10 @@ const PerformanceFactorAdd = () => {
             </Grid>
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleSave()}>
                         Save
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.goBack()}>
+                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => {localStorage.setItem("configTab", 1),history.goBack()}}>
                         Cancel
                     </Button>
                 </Grid>

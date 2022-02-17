@@ -15,7 +15,8 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 import Switch from '@material-ui/core/Switch';
 import { SketchPicker } from 'react-color';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import api from "../../../utils/axios"
+import MatrixValidation from './MatrixValidation';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,9 +28,50 @@ const PerformanceMatrixAdd = () => {
     const classes = useStyles();
     const history = useHistory();
 
+    const [error , setError] = useState({});
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
+  const selectBreakdown =
+    JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+
     const [colorPick, setColorPick] = useState('#06425c');
     const [hidden, setHidden] = useState(false);
+    const [matrixForm , setMatrixForm] = useState({
+        "fkCompanyId": parseInt(fkCompanyId),
+        "fkProjectId": parseInt(project.projectId),
+        "matrixConstant": "",
+        "matrixConstantName": "",
+        "matrixConstantColor": "#06425c",
+        "status": "Active",
+        "createdAt": new Date(),
+        "createdBy": parseInt(userId),
+    })
 
+    const handleStatusChange = (e) => {
+        let temp = {...matrixForm}
+        if(e.target.checked === true) {
+            temp.status = 'Active'
+        }else{
+            temp.status = 'Inactive'
+        }
+        setMatrixForm(temp)
+    }
+
+    const handleSave =  async () => {
+        const { error , isValid} = MatrixValidation(matrixForm)
+        setError(error)
+        const res = await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => {localStorage.setItem("configTab", 2),history.goBack()}).catch(err => console.log(error))    }
     return (
         <>
         <CustomPapperBlock title="New performance matrix" icon='customDropdownPageIcon compliancePerMatrixPageIcon' whiteBg>
@@ -60,10 +102,14 @@ const PerformanceMatrixAdd = () => {
                                 <Grid container spacing={3}>
                                     <Grid item md={4} sm={6} xs={12}>
                                         <TextField
-                                            label="Matrix constant"
+                                            label="Matrix constant *"
                                             name="matrixconstant"
                                             id="matrixconstant"
-                                            defaultValue=""
+                                            type="number"
+                                            error={error.matrixConstant}
+                                            helperText={error.matrixConstant ? error.matrixConstant : ""}
+                                            value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
+                                            onChange={(e) => {setMatrixForm({...matrixForm,matrixConstant: e.target.value})}}
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
@@ -75,7 +121,8 @@ const PerformanceMatrixAdd = () => {
                                             label="Matrix constant name"
                                             name="matrixconstantname"
                                             id="matrixconstantname"
-                                            defaultValue=""
+                                            value={matrixForm.matrixConstantName ? matrixForm.matrixConstantName : ""}
+                                            onChange={(e) => {setMatrixForm({...matrixForm,matrixConstantName: e.target.value})}}
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
@@ -85,21 +132,22 @@ const PerformanceMatrixAdd = () => {
                                     <Grid item md={4} sm={6} xs={12} className="positionRelative">
                                         <div className="customColorPickerSection">
                                             <TextField
-                                                label="Matrix constant color"
+                                                label="Matrix constant color *"
                                                 name="matrixconstantcolor"
                                                 id="matrixconstantcolor"
-                                                defaultValue=""
-                                                value={colorPick}
+                                                error={error.matrixConstantColor}
+                                                helperText={error.matrixConstantColor ? error.matrixConstantColor : ""}
+                                                value={matrixForm.matrixConstantColor ? matrixForm.matrixConstantColor : ""}
                                                 fullWidth
                                                 variant="outlined"
                                                 className="formControl"
                                                 disabled
                                             />
                                             {hidden && (
-                                                <SketchPicker color={colorPick} onChange={updateColor => setColorPick(updateColor.hex)} />
+                                                <SketchPicker color={matrixForm.matrixConstantColor} onChange={updateColor => {setMatrixForm({...matrixForm,matrixConstantColor: updateColor.hex})}} />
                                             )}
                                             <Tooltip title="Color pick">
-                                                <span className="customColorDisplay" style={{backgroundColor: colorPick}} onClick={() => setHidden(!hidden)}/>
+                                                <span className="customColorDisplay" style={{backgroundColor: matrixForm.matrixConstantColor}} onClick={() => setHidden(!hidden)}/>
                                             </Tooltip>
                                         </div>
                                     </Grid>
@@ -111,6 +159,8 @@ const PerformanceMatrixAdd = () => {
                                                 <Switch
                                                 value="Status"
                                                 color="secondary"
+                                                checked={matrixForm.status === "Active" ? true : false}
+                                                onChange={(e) => handleStatusChange(e)}
                                                 />
                                             )}
                                         />
@@ -123,10 +173,10 @@ const PerformanceMatrixAdd = () => {
                 </Grid>
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleSave()}>
                         Save
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.goBack()}>
+                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => {localStorage.setItem("configTab", 2),history.goBack()}}>
                         Cancel
                     </Button>
                 </Grid>

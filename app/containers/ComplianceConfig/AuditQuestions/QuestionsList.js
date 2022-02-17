@@ -422,6 +422,7 @@ function QuestionsList(props) {
   const res = await api.get(
     `/api/v1/configaudits/auditquestions/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=${fkProjectStructureIds}&&page=${value}`
   );
+  const result = res.data.data.results;
   let temp = [];
     for (let i = 0; i < result.length; i++) {
       temp.push([

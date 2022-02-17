@@ -15,7 +15,9 @@ import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBloc
 import Switch from '@material-ui/core/Switch';
 import { SketchPicker } from 'react-color';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import api from "../../../utils/axios"
+import MatrixValidation from './MatrixValidation';
+import { error } from 'highcharts';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,9 +28,33 @@ const useStyles = makeStyles((theme) => ({
 const PerformanceMatrixEdit = () => {
     const classes = useStyles();
     const history = useHistory();
-
+    console.log(history)
+    const [matrixData , setMatrixData] = useState(history.location.state);
     const [colorPick, setColorPick] = useState('#06425c');
     const [hidden, setHidden] = useState(false);
+
+    const handleStatusChange = (e) => {
+        let temp = {...matrixData}
+        if(e.target.checked === true) {
+            temp.status = 'Active'
+        }else{
+            temp.status = 'Inactive'
+        }
+        setMatrixData(temp)
+    }
+
+    
+    const [ error , setError] = useState({})
+    const handleUpdate = async () => {
+        const {error , isValid} = MatrixValidation(matrixData)
+        setError(error)
+        if(!isValid){
+            return "data not valid"
+        }
+        const res = await api.put(`/api/v1/configaudits/matrix/${matrixData.id}/?company=${matrixData.fkCompanyId}&project=${matrixData.fkProjectId}&projectStructure=`,matrixData).then(res => {    localStorage.setItem("configTab", 2)
+,        history.goBack()}
+        ).catch(err => console.log(error))
+    }
 
     return (
         <>
@@ -60,10 +86,14 @@ const PerformanceMatrixEdit = () => {
                                 <Grid container spacing={3}>
                                     <Grid item md={4} sm={6} xs={12}>
                                         <TextField
-                                            label="Matrix constant"
+                                        type="number"
+                                            label="Matrix constant *"
                                             name="matrixconstant"
                                             id="matrixconstant"
-                                            defaultValue=""
+                                            error={error.matrixConstant}
+                                            helperText={error.matrixConstant ? error.matrixConstant : ""}
+                                            value={matrixData.matrixConstant ? matrixData.matrixConstant : ""}
+                                            onChange={(e) => {setMatrixData({...matrixData,matrixConstant: e.target.value})}}
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
@@ -75,7 +105,8 @@ const PerformanceMatrixEdit = () => {
                                             label="Matrix constant name"
                                             name="matrixconstantname"
                                             id="matrixconstantname"
-                                            defaultValue=""
+                                            value={matrixData.matrixConstantName ? matrixData.matrixConstantName : ""}
+                                            onChange={(e) => {setMatrixData({...matrixData,matrixConstantName: e.target.value})}}
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
@@ -85,21 +116,22 @@ const PerformanceMatrixEdit = () => {
                                     <Grid item md={4} sm={6} xs={12} className="positionRelative">
                                         <div className="customColorPickerSection">
                                             <TextField
-                                                label="Matrix constant color"
+                                                label="Matrix constant color *"
                                                 name="matrixconstantcolor"
                                                 id="matrixconstantcolor"
-                                                defaultValue=""
-                                                value={colorPick}
+                                                error={error.matrixConstantColor}
+                                                helperText={error.matrixConstantColor ? error.matrixConstantColor : ""}
+                                                value={matrixData.matrixConstantColor ? matrixData.matrixConstantColor : ""}
                                                 fullWidth
                                                 variant="outlined"
                                                 className="formControl"
                                                 disabled
                                             />
                                             {hidden && (
-                                                <SketchPicker color={colorPick} onChange={updateColor => setColorPick(updateColor.hex)} />
+                                                <SketchPicker color={matrixData.matrixConstantColor} onChange={updateColor => {setMatrixData({...matrixData,matrixConstantColor: updateColor.hex})}} />
                                             )}
                                             <Tooltip title="Color pick">
-                                                <span className="customColorDisplay" style={{backgroundColor: colorPick}} onClick={() => setHidden(!hidden)}/>
+                                                <span className="customColorDisplay" style={{backgroundColor: matrixData.matrixConstantColor}} onClick={() => setHidden(!hidden)}/>
                                             </Tooltip>
                                         </div>
                                     </Grid>
@@ -111,6 +143,8 @@ const PerformanceMatrixEdit = () => {
                                                 <Switch
                                                 value="Status"
                                                 color="secondary"
+                                                checked={matrixData.status === "Active" ? true : false}
+                                                onChange={(e) => handleStatusChange(e)}
                                                 />
                                             )}
                                         />
@@ -123,10 +157,10 @@ const PerformanceMatrixEdit = () => {
                 </Grid>
 
                 <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                    <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleUpdate()}>
                         Update
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.goBack()}>
+                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => {localStorage.setItem("configTab", 2),history.goBack()}}>
                         Cancel
                     </Button>
                 </Grid>

@@ -13,6 +13,7 @@ import Select from '@material-ui/core/Select';
 import { useHistory, useParams } from 'react-router';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import Switch from '@material-ui/core/Switch';
+import api from "../../../utils/axios"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,13 +32,13 @@ const PerformanceFactorEdit = () => {
         if(e.target.checked === true) {
             temp.status = 'Active'
         }else{
-            temp.status = 'Deactive'
+            temp.status = 'Inactive'
         }
         setFectorData(temp)
     }
 
     const handleUpdate = async () => {
-        history.goBack()
+        const res = await api.put(`/api/v1/configaudits/factors/${fectorData.id}/?company=${fectorData.fkCompanyId}&project=${fectorData.fkProjectId}&projectStructure=`,fectorData).then(res => {localStorage.setItem("configTab", 1),history.goBack()}).catch(err => console.log(error))
     }
 
     return (
@@ -154,7 +155,7 @@ const PerformanceFactorEdit = () => {
                     <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleUpdate()}>
                         Update
                     </Button>
-                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => history.goBack()}>
+                    <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn" onClick={() => {localStorage.setItem("configTab", 1),history.goBack()}}>
                         Cancel
                     </Button>
                 </Grid>

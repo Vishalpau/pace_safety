@@ -1332,6 +1332,10 @@ ul.MuiMenu-list a ul li.userName {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -30.188rem -1rem;
 }
 
+.compliance_configMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -62.125rem -1rem;
+}
+
 .flhaMenu.selectmenu .MuiListItemText-root span,
 .flhaMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
 .flhaMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
@@ -1388,6 +1392,20 @@ ul.MuiMenu-list a ul li.userName {
 .check_listsMenu:hover .MuiListItemText-root span
  {
   background-position-y: -80px;
+}
+
+.compliance_configMenu.selectmenu .MuiListItemText-root span,
+.compliance_configMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.compliance_configMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.compliance_configMenu.selectmenu:hover .MuiListItemText-root span,
+/* .compliance_configMenu:hover .MuiListItemText-root span, */
+.compliance_configMenu:hover,
+.compliance_configMenu.selectmenu:hover,
+.compliance_configMenu.selectmenu
+{
+  background-position-y: -5rem;
+  color: #ffffff !important;
+  background-color: #ff8533 !important;
 }
 
 .leftCustomImg {
@@ -1504,4 +1522,47 @@ ul.MuiMenu-list a ul li.userName {
 .tableActionIcons {
   padding: 0.625rem !important;
   color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.customColorPickerSection {
+  position: absolute;
+  z-index: 1;
+  display: contents;
+}
+.customColorPickerSection .customColorDisplay {
+  /* padding: 8px 17px;
+  border-radius: 100%; */
+  padding: 27px;
+  border-radius: 4px;
+  position: absolute;
+  top: 190px;
+  right: 12px;
+  cursor: pointer;
+}
+.customColorPickerSection .sketch-picker {
+  position: absolute;
+  right: 90px;
+  top: 235px;
+}
+.customDropdownPageIcon {
+  height: 2.5rem;
+  width: 2.5rem;
+  display: block;
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
+  float: left;
+}
+.complianceConfigPageIcon {
+  background-position: -82.563rem -25.313rem;
+}
+.complianceQuestionPageIcon {
+  background-position: -102.626rem -25.313rem;
+}
+.complianceBulkUplQPageIcon {
+  background-position: -107.626rem -25.313rem;
+}
+.compliancePerFactorPageIcon {
+  background-position: -97.626rem -25.313rem;
+}
+.compliancePerMatrixPageIcon {
+  background-position: -92.626rem -25.313rem;
 }

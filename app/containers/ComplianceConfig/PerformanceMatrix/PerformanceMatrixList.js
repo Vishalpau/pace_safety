@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment ,useEffect } from "react";
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -65,6 +65,9 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory, useParams } from 'react-router';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import api from "../../../utils/axios";
+import Loader from "../../Pages/Loader";
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -149,6 +152,12 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     color: 'rgba(0, 0, 0, 0.87) !important',
   },
+  pagination: {
+    padding: "0px 0px 20px 0px",
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop : '12px',
+  },
 }));
 
 function PerformanceMatrixList() {
@@ -156,11 +165,23 @@ function PerformanceMatrixList() {
 
   const [open, setOpen] = useState(false);
   const [deleteQ, setDeleteQ] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0)
+  const [totalData, setTotalData] = useState(0);
+  const [page , setPage] = useState(1)
 
   // const handleClickOpen = () => {
   //   setOpen(true);
   // };
-  const handleClickDeleteAlert = () => {
+  const handleClickDeleteAlert = (e , columnValue) => {
+    let data = {}
+     for(let i = 0; i < allMatrixData.length; i++){
+       if(allMatrixData[i].id === columnValue.rowData[0]){
+        data = allMatrixData[i]
+       }
+     }
+    setMatrixIdData(data)
     setDeleteQ(true);
   };
   const handleClose = () => {
@@ -173,6 +194,11 @@ function PerformanceMatrixList() {
   //   Data for the table view
   const columns = [
     {
+    name: 'Matrix ID',
+    options: {
+        filter: true
+    }
+    },{
     name: 'Matrix constant',
     options: {
         filter: true
@@ -188,9 +214,9 @@ function PerformanceMatrixList() {
     name: 'Matrix constant color',
     options: {
       filter: false,
-      customBodyRender: (value) => (
+      customBodyRender: (value , tableMeta) => (
         <>
-          <span className='colorBox' style={{backgroundColor: "#cccccc"}}>#cccccc</span>
+          <span className='colorBox' style={{backgroundColor: "#cccccc"}}>{tableMeta.rowData[3]}</span>
         </>
       )
     }
@@ -205,15 +231,15 @@ function PerformanceMatrixList() {
     name: '	Action',
     options: {
         filter: false,
-        customBodyRender: (value) => (
+        customBodyRender: (value , tableMeta) => (
           <>
-            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handlePerformanceMatrixEditPush(e)}>
+            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handlePerformanceMatrixEditPush(e ,tableMeta)}>
               <EditIcon />
             </IconButton>
             {/* <IconButton size="small" color="primary" className='tableActionIcons' onClick={handleClickOpen}>
                 <MoreVertIcon />
             </IconButton> */}
-            <IconButton size="small" color="primary" className='tableActionIcons' onClick={handleClickDeleteAlert}>
+            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handleClickDeleteAlert(e ,tableMeta)}>
               <DeleteIcon />
             </IconButton>
           </>
@@ -246,6 +272,7 @@ function PerformanceMatrixList() {
     rowsPerPage: 10,
     page: 0,
     import: true,
+    pagination : false
   };
 
   const history = useHistory();
@@ -262,10 +289,21 @@ function PerformanceMatrixList() {
 //     );
 //   };
 
-  const handlePerformanceMatrixEditPush = async () => {
-    history.push(
-      '/app/compliance-config/performance-matrix/edit'
+  const [allMatrixData , setAllMatrixData] = useState([])
+  const [matrixIdData , setMatrixIdData] = useState({})
+
+  const handlePerformanceMatrixEditPush = async ( e , columnValue) => {
+    let data = {}
+     for(let i = 0; i < allMatrixData.length; i++){
+       if(allMatrixData[i].id === columnValue.rowData[0]){
+        data = allMatrixData[i]
+       }
+     }
+    history.push({pathname : `/app/compliance-config/performance-matrix/edit/` , state : data}
     );
+    // history.push(
+    //   '/app/compliance-config/performance-matrix/edit'
+    // );
   };
 
   // const handlePerformanceMatrixViewPush = async () => {
@@ -274,7 +312,75 @@ function PerformanceMatrixList() {
   //   );
   // };
 
+  const [matrixData, setMatrixData] = useState([])
 
+
+  const fetchMatrixData = async () => {
+    const res = await api.get(`/api/v1/configaudits/matrix/?company=1&project=1&projectStructure=`)
+    const result = res.data.data.results
+    setAllMatrixData(result)
+    await setTotalData(res.data.data.metadata.count)
+    await setPageData(res.data.data.metadata.count / 25)
+    let pageCount = Math.ceil(res.data.data.metadata.count / 25)
+    await setPageCount(pageCount)
+    let temp = []
+    for(let i = 0; i < result.length; i++) {
+      temp.push([
+        result[i].id,
+         result[i].matrixConstant,
+         result[i].matrixConstantName,
+         result[i].matrixConstantColor,
+         result[i].status,
+        
+      ])
+    }
+    await setMatrixData(temp)
+    await setIsLoading(true)
+  }
+
+  const handleChange = async(event, value) => {
+    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+      .projectName.projectId;
+   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
+    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+      ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : null;
+    const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
+    ? JSON.parse(localStorage.getItem('userDetails')).id
+    : null;
+  let struct = "";
+  
+  for (const i in selectBreakdown) {
+    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+  }
+  const fkProjectStructureIds = struct.slice(0, -1);
+  const res = await api.get(
+    `/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=${fkProjectStructureIds}&&page=${value}`
+  );
+  const result = res.data.data.results;
+  setAllFectorData(result)
+  let temp = [];
+    for (let i = 0; i < result.length; i++) {
+      temp.push([
+        result[i].id,
+         result[i].matrixConstant,
+         result[i].matrixConstantName,
+         result[i].matrixConstantColor,
+         result[i].status,
+      ]);
+    }
+    await setMatrixData(temp);
+    await setPage(value)
+  };
+
+  const handleDelete = async () => {
+    let res = await api.delete(`/api/v1/configaudits/matrix/${matrixIdData.id}/?company=${matrixIdData.fkCompanyId}&project=${matrixIdData.fkProjectId}`).then(res => {fetchMatrixData() , setDeleteQ(false)}).catch(error => console.log(error))
+  } 
+
+  useEffect(() => {
+    fetchMatrixData()
+  },[])
   return (
     <>
       <Grid container spacing={3}>
@@ -291,18 +397,23 @@ function PerformanceMatrixList() {
           </Tooltip> */}
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
+          {isLoading ? <>
           <TableContainer component={Paper}>
               <Grid component={Paper}>
               <MUIDataTable
                   //title="Actions List"
                   className="dataTableSectionDesign performanceFactorTable"
-                  data={data}
+                  data={matrixData}
                   columns={columns}
                   options={options}
                   //className="classes.dataTableNew"
               />
               </Grid>
           </TableContainer>
+          <div className={classes.pagination}>
+      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div></>: <Loader />}
         </Grid>
       </Grid>
 
@@ -347,7 +458,7 @@ function PerformanceMatrixList() {
                 </FormControl>
               </Grid>
               <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                  <Button color="primary" variant="contained" className="spacerRight buttonStyle">
+                  <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
                     Yes
                   </Button>
                   <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn">

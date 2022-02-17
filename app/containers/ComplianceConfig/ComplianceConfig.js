@@ -126,12 +126,14 @@ class ComplianceConfig extends React.Component {
     this.state = {
       files: [],
       filestwo: [],
-      value: 0,
+      value: localStorage.getItem("configTab") != null ? parseInt(localStorage.getItem("configTab")) : 0,
       auditQuestions: "",
     };
   }
+  
 
   handleChange = (event, value) => {
+    localStorage.setItem("configTab", value)
     this.setState({ value });
   };
 
@@ -155,6 +157,8 @@ class ComplianceConfig extends React.Component {
     //   </li>
     // ));
 
+    
+
     return (
       // <PapperBlock title="Settings" icon="ion-md-settings">
       <CustomPapperBlock
@@ -177,7 +181,7 @@ class ComplianceConfig extends React.Component {
               <Tab label="Performance matrix" />
             </Tabs>
           </AppBar>
-          {value === 0 && (
+          {value == 0 && (
             <TabContainer>
               <>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -255,7 +259,7 @@ class ComplianceConfig extends React.Component {
             </TabContainer>
           )}
 
-          {value === 1 && (
+          {value == 1 && (
             <TabContainer>
               <>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -322,7 +326,7 @@ class ComplianceConfig extends React.Component {
               </>
             </TabContainer>
           )}
-          {value === 2 && (
+          {value == 2 && (
             <TabContainer>
               <>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
