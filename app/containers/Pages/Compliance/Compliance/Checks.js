@@ -74,6 +74,8 @@ import FormSideBar from "../../../Forms/FormSideBar";
 import { COMPLIANCE } from "../Constants/Constants";
 import { useParams, useHistory } from "react-router-dom";
 import api from "../../../../utils/axios";
+import ActionTracker from "../../../Forms/ActionTracker";
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -450,41 +452,49 @@ const Checks = () => {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
+
+      
       const res = await api.get(
-        `/api/v1/configaudits/auditquestions/groups/${groupName}/subgroups/${subGroupName}/?company=8&project=15`
+        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=8&project=15`
       );
       const result2 = res.data.data.results;
-      console.log(result2);
+      // console.log(result2);
       temp.push(result2);
     }
-    console.log(temp);
-    temp.map((value, i) => {
+    // console.log(temp);
+    temp.map((tempvalue, i) => {
+      console.log(tempvalue)
       temp[i].map((value, index) => {
+        console.log("....",tempvalue[index].id)
         tempCheckData.push({
           questionId: value.id,
           question: value.question,
           criticality: "",
           auditStatus: "",
           performance: "",
-          groupId: temp[i].id,
+          groupId: null,
           groupName: value.groupName,
-          subGroupId: temp[i].id,
+          subGroupId: null,
           subGroupName: value.subGroupName,
           defaultResponse: "",
           score: "",
           findings: "",
+          attachment : null,
           status: "Active",
           createdBy: 1,
           updatedBy: 0,
           fkAuditId: localStorage.getItem("fkComplianceId"),
         });
-        console.log(tempCheckData);
+        // console.log(tempCheckData);
         categoriesData[value["groupName"]].push(value);
       });
     });
+    // handelCommonObject("commonObject", "audit", "assessmentIds", temp);
+
     await setCheckData(tempCheckData);
     await setCategories(categoriesData);
   };
+  // console.log(checkData);
   const handelSubmit = async () => {
     if (checkData[0].id) {
       console.log("put");
@@ -526,6 +536,21 @@ const Checks = () => {
     const result = res.data.data.results;
     await setCheckData(result);
   };
+
+  const handleFile = (value , field, index, id) => {
+    let temp = [...checkData];
+    for (let i = 0; i < temp.length; i++) {
+      console.log(temp[i]['questionId'] , id)
+      if (temp[i]["questionId"] == id) {
+        console.log('acceptedFiles')
+        temp[i][field] = value;
+      }
+    }
+    setCheckData(temp);
+    console.log("safae")
+  }
+  console.log('acceptedFiles' , checkData)
+
 
   useEffect(() => {
     //fetchCheklist();
@@ -631,9 +656,7 @@ const Checks = () => {
                       <FormLabel className="checkRadioLabel" component="legend">
                         {key}
                       </FormLabel>
-                      {value.map((value, index) => (
-                        <>
-                          <span className={classes.accordingHeaderContentleft}>
+                      <span className={classes.accordingHeaderContentleft}>
                             <ListItem
                               className={classes.accordingHeaderContent}
                             >
@@ -653,6 +676,9 @@ const Checks = () => {
                               />
                             </ListItem>
                           </span>
+                      {value.map((value, index) => (
+                        <>
+                          
 
                           <Grid container item xs={12}>
                             <Grid item md={12}>
@@ -809,7 +835,42 @@ const Checks = () => {
                                           >
                                             Create Action{" "}
                                           </FormLabel>
-                                          <Button
+                                          <Grid
+                                    item
+                                    xs={6}
+                                    className={classes.createHazardbox}
+                                  >
+                                    <ActionTracker
+                                      actionContext="audit:question"
+                                      enitityReferenceId={`${localStorage.getItem(
+                                        "fkComplianceId"
+                                      )}:${value.id}`}
+                                      setUpdatePage={setUpdatePage}
+                                      fkCompanyId={
+                                        JSON.parse(
+                                          localStorage.getItem("company")
+                                        ).fkCompanyId
+                                      }
+                                      fkProjectId={
+                                        JSON.parse(
+                                          localStorage.getItem("projectName")
+                                        ).projectName.projectId
+                                      }
+                                      fkProjectStructureIds={
+                                        JSON.parse(
+                                          localStorage.getItem("commonObject")
+                                        )["aha"]["projectStruct"]
+                                      }
+                                      createdBy={
+                                        JSON.parse(
+                                          localStorage.getItem("userDetails")
+                                        ).id
+                                      }
+                                      updatePage={updatePage}
+                                      handelShowData={handelActionTracker}
+                                    />
+                                  </Grid>
+                                          {/* <Button
                                             variant="outlined"
                                             size="medium"
                                             className={classes.custmSubmitBtn}
@@ -847,7 +908,7 @@ const Checks = () => {
                                                 </g>
                                               </g>
                                             </svg>
-                                          </Button>
+                                          </Button> */}
                                         </Grid>
                                         <Grid item md={12} xs={12}>
                                           <Table
@@ -1006,10 +1067,14 @@ const Checks = () => {
                                             Attachment{" "}
                                           </FormLabel>
                                           <Typography className="viewLabelValue">
-                                            <div
+                                                <input type="file" onChange={(e) => handleFile(e.target.files[0], "attachment",
+                                                index,
+                                                value.id)}/>
+                                            {/* <div
                                               {...getRootProps({
                                                 className: "dropzone",
                                               })}
+                                              // onClick={() => handleFile() }
                                             >
                                               <input {...getInputProps()} />
                                               <span align="center">
@@ -1062,15 +1127,15 @@ const Checks = () => {
                                                   </g>
                                                 </svg>
                                               </span>
-                                              <p className="chooseFileDesign">
+                                              <p className="chooseFileDesign" >
                                                 Drag and drop here or{" "}
                                                 <span>Choose file</span>
                                               </p>
-                                            </div>
-                                            <aside>
-                                              {/* <h4>Files</h4> */}
-                                              {/* <ul>{files}</ul> */}
-                                              <ul className="attachfileListBox">
+                                            </div> */}
+                                            {/* <aside>
+                                              <h4>Files</h4>
+                                              <ul>{files}</ul> */}
+                                              {/* <ul className="attachfileListBox">
                                                 <li>
                                                   <img
                                                     src={icoExcel}
@@ -1121,8 +1186,8 @@ const Checks = () => {
                                                     <DeleteIcon />
                                                   </IconButton>
                                                 </li>
-                                              </ul>
-                                            </aside>
+                                              </ul> */}
+                                            {/* </aside> */}
                                           </Typography>
                                         </Grid>
                                       </Grid>
