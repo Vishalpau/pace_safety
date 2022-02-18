@@ -342,7 +342,7 @@ const ComplianceDetails = () => {
           let result = response.data.data.results;
           let complianceId = result.id;
           localStorage.setItem("fkComplianceId", complianceId);
-          handelCommonObject("commonObject", "audit", "projectStruct", fkProjectStructureIds)
+          handelCommonObject("commonObject", "audit", "projectStruct", response.data.data.results.fkProjectStructureIds)
           history.push("/app/pages/compliance/categories"), setLoading(false);
         })
         .catch((error) => {
