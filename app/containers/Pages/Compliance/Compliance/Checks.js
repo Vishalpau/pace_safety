@@ -535,6 +535,10 @@ const Checks = () => {
   };
   // console.log(checkData);
   const handelSubmit = async () => {
+    const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
       let tempUpdatedQuestion = []
       let tempNewQuestion = []
       checkData.map((data) => {
@@ -544,29 +548,82 @@ const Checks = () => {
           tempNewQuestion.push(data)
         }
       })
+      console.log(tempNewQuestion,"LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
       let updatedQuestion = []
       let newQuestion = []
-      console.log(updatedQuestion)
-      console.log(newQuestion)
-      for(var i=0; i<tempUpdatedQuestion.length; i++){
+      if(tempNewQuestion.length >0){
+
         const data = new FormData();
-            data.append("evidenceCheck", form[i].evidenceCheck);
-            data.append("evidenceNumber", form[i].evidenceNumber);
-            data.append("evidenceCategory", form[i].evidenceCategory);
-            data.append("evidenceRemark", form[i].evidenceRemark);
-            if (typeof form[i].evidenceDocument !== "string") {
-              if (form[i].evidenceDocument !== null) {
-                data.append("evidenceDocument", form[i].evidenceDocument);
+        for(var i=0; i<tempNewQuestion.length; i++){
+          data.append("questionId", tempNewQuestion[i].questionId);
+              data.append("question", tempNewQuestion[i].question);
+              data.append("criticality", tempNewQuestion[i].criticality);
+              data.append("performance", tempNewQuestion[i].performance);
+              data.append("groupId", tempNewQuestion[i].groupId);
+              data.append("groupName", tempNewQuestion[i].groupName);
+              data.append("subGroupId", tempNewQuestion[i].subGroupId);
+              data.append("subGroupName", tempNewQuestion[i].subGroupName);
+              data.append("defaultResponse", tempNewQuestion[i].defaultResponse);
+              data.append("score", tempNewQuestion[i].score);
+              data.append("findings", tempNewQuestion[i].findings);
+              data.append("score", tempNewQuestion[i].score);
+              data.append("auditStatus", tempNewQuestion[i].auditStatus);
+              if (typeof tempNewQuestion[i].attachment !== "string") {
+                if (tempNewQuestion[i].attachment !== null) {
+                  data.append("attachment", tempNewQuestion[i].attachment);
+                }
               }
+              data.append("status", "Active");
+              data.append("fkAuditId", tempNewQuestion[i].fkAuditId);
+              data.append("createdAt", new Date().toISOString());
+              data.append("createdBy", tempNewQuestion[i].createdBy);
+              newQuestion.push(data);
             }
-            data.append("status", "Active");
-            data.append("updatedAt", new Date().toISOString());
-            data.append("updatedBy", form[i].updatedBy);
-            data.append("fkIncidentId", form[i].fkIncidentId);
-            data.append("createdAt", new Date().toISOString());
-            data.append("createdBy", form[i].createdBy);
-            updatedQuestion.push(data);
+             const resNew = await api.post(
+        `/api/v1/audits/${localStorage.getItem(
+          "fkComplianceId"
+        )}/auditresponse/`,
+        newQuestion
+      );
       }
+      if(tempUpdatedQuestion.length >0){
+
+        for(var i=0; i<tempUpdatedQuestion.length; i++){
+          const data = new FormData();
+          data.append("questionId", tempUpdatedQuestion[i].questionId);
+              data.append("question", tempUpdatedQuestion[i].question);
+              data.append("criticality", tempUpdatedQuestion[i].criticality);
+              data.append("performance", tempUpdatedQuestion[i].performance);
+              data.append("groupId", tempUpdatedQuestion[i].groupId);
+              data.append("groupName", tempUpdatedQuestion[i].groupName);
+              data.append("subGroupId", tempUpdatedQuestion[i].subGroupId);
+              data.append("subGroupName", tempUpdatedQuestion[i].subGroupName);
+              data.append("defaultResponse", tempUpdatedQuestion[i].defaultResponse);
+              data.append("score", tempUpdatedQuestion[i].score);
+              data.append("findings", tempUpdatedQuestion[i].findings);
+              data.append("score", tempUpdatedQuestion[i].score);
+              data.append("auditStatus", tempUpdatedQuestion[i].auditStatus);
+              if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+                if (tempUpdatedQuestion[i].attachment !== null) {
+                  data.append("attachment", tempUpdatedQuestion[i].attachment);
+                }
+              }
+              data.append("status", "Active");
+              data.append("fkAuditId", tempUpdatedQuestion[i].fkAuditId);
+              data.append("createdAt", new Date().toISOString());
+              data.append("createdBy", tempUpdatedQuestion[i].createdBy);
+              data.append("updatedBy", parseInt(userId));
+              updatedQuestion.push(data);
+            }
+            const resUpdate = await api.put(
+        `/api/v1/audits/${localStorage.getItem(
+          "fkComplianceId"
+        )}/auditresponse/`,
+        updatedQuestion
+      );
+      }
+          console.log(updatedQuestion)
+          console.log(newQuestion)
       // const resUpdate = await api.put(
       //   `/api/v1/audits/${localStorage.getItem(
       //     "fkComplianceId"
@@ -613,6 +670,7 @@ const Checks = () => {
         temp[i][field] = value;
       }
     }
+    console.log(temp)
     setCheckData(temp);
   };
   console.log("acceptedFiles", checkData);
@@ -969,8 +1027,12 @@ const Checks = () => {
                                             />
                                           </Grid>
                                         </Grid>
-
-                                        <Grid item md={12} xs={12}>
+                                        {actionData.map((val) => (
+                                                <>
+                                                  {val.id == value.id ? (
+                                                    <>
+                                                      {val.action.length > 0 &&
+                                                        <Grid item md={12} xs={12}>
                                           <Table
                                             component={Paper}
                                             className="simpleTableSection"
@@ -1050,6 +1112,9 @@ const Checks = () => {
                                         </Grid>
 
                                         
+                                                  }</> ) : null}
+                                                </>
+                                              ))}
 
                                         <Grid
                                           item
