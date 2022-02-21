@@ -670,6 +670,8 @@ function Actions(props) {
   //view comments
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [hiddenn, setHiddenn] = useState(false);
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+
 
   const handleCommentsClick = () => {
     setCommentsOpen(!open);
@@ -741,13 +743,15 @@ function Actions(props) {
   const classes = useStyles();
 
   const handleDelete = async (item) => {
-    console.log(item[1].id)
-    let data = item[1]
-    data.status = "Delete"
-    delete data.attachment
-    console.log(data, "!!!!!!!!!")
-    await setIsLoading(false)
-    const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
+    if(checkACL('safety', 'delete_observations')) {
+      let data = item[1]
+      data.status = "Delete"
+      delete data.attachment
+      await setIsLoading(false)
+      const res1 = await api.put(`/api/v1/observations/${data.id}/`, data).then(response => fetchInitialiObservation()).catch(err => console.log(err))
+    } else {
+      
+    }    
   }
 
   useEffect(() => {
@@ -757,7 +761,9 @@ function Actions(props) {
     } else {
       fetchInitialiObservation();
     }
-  }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status]);
+    setCheckDeletePermission(checkACL('safety', 'delete_observations'))
+    setTimeout(() => setCheckDeletePermission(checkACL('safety', 'delete_observations')), 2500)
+  }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status, checkDeletePermission]);
 
   return (
     <>
@@ -1000,7 +1006,7 @@ function Actions(props) {
                                   <Typography variant="body1" display="inline">
 
                                     {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
-                                    {!checkACL('safety', 'delete_observations') ? '' : (
+                                    {!checkDeletePermission ? '' : (
                                       <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
                                     )}
                                   </Typography>
