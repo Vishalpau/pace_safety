@@ -548,11 +548,8 @@ const Checks = () => {
           tempNewQuestion.push(data)
         }
       })
-      console.log(tempNewQuestion,"LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-      let updatedQuestion = []
-      let newQuestion = []
       if(tempNewQuestion.length >0){
-
+        
         const data = new FormData();
         for(var i=0; i<tempNewQuestion.length; i++){
           data.append("questionId", tempNewQuestion[i].questionId);
@@ -577,19 +574,14 @@ const Checks = () => {
               data.append("fkAuditId", tempNewQuestion[i].fkAuditId);
               data.append("createdAt", new Date().toISOString());
               data.append("createdBy", tempNewQuestion[i].createdBy);
-              newQuestion.push(data);
             }
-             const resNew = await api.post(
-        `/api/v1/audits/${localStorage.getItem(
-          "fkComplianceId"
-        )}/auditresponse/`,
-        newQuestion
-      );
+            
+             const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,data);
       }
       if(tempUpdatedQuestion.length >0){
 
+        const data = new FormData();
         for(var i=0; i<tempUpdatedQuestion.length; i++){
-          const data = new FormData();
           data.append("questionId", tempUpdatedQuestion[i].questionId);
               data.append("question", tempUpdatedQuestion[i].question);
               data.append("criticality", tempUpdatedQuestion[i].criticality);
@@ -613,17 +605,14 @@ const Checks = () => {
               data.append("createdAt", new Date().toISOString());
               data.append("createdBy", tempUpdatedQuestion[i].createdBy);
               data.append("updatedBy", parseInt(userId));
-              updatedQuestion.push(data);
             }
             const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           "fkComplianceId"
         )}/auditresponse/`,
-        updatedQuestion
+        data
       );
       }
-          console.log(updatedQuestion)
-          console.log(newQuestion)
       // const resUpdate = await api.put(
       //   `/api/v1/audits/${localStorage.getItem(
       //     "fkComplianceId"
@@ -638,7 +627,7 @@ const Checks = () => {
       //   checkData
       // );
     
-    // history.push("/app/pages/compliance/performance-summary");
+    history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
 
@@ -904,6 +893,7 @@ const Checks = () => {
                                             Score
                                           </FormLabel>
                                         </Grid>
+                                        {value.scoreType === "Star" &&
                                         <Grid item md={4} sm={4} xs={12}>
                                           <Rating
                                             name="simple-controlled"
@@ -917,7 +907,8 @@ const Checks = () => {
                                               )
                                             }
                                           />
-                                        </Grid>
+                                        </Grid>}
+                                        {value.scoreType === "1-10" &&
                                         <Grid item md={4} sm={4} xs={12}>
                                           <FormControl
                                             variant="outlined"
@@ -954,7 +945,8 @@ const Checks = () => {
                                               <MenuItem value={10}>10</MenuItem>
                                             </Select>
                                           </FormControl>
-                                        </Grid>
+                                        </Grid>}
+                                        {value.scoreType === "%" &&
                                         <Grid item md={4} sm={4} xs={12}>
                                           <TextField
                                             label="Percentage"
@@ -967,13 +959,13 @@ const Checks = () => {
                                             onChange={(e) =>
                                               handleChangeData(
                                                 e.target.value,
-                                                "performance",
+                                                "score",
                                                 index,
                                                 value.id
                                               )
                                             }
                                           />
-                                        </Grid>
+                                        </Grid>}
                                         <Grid item md={12} xs={12}>
                                           <FormLabel
                                             className="checkRadioLabel"
@@ -1050,10 +1042,6 @@ const Checks = () => {
                                             <TableBody>
                                               {actionData.map((val) => (
                                                 <>
-                                                  {console.log(
-                                                    val.action.number,
-                                                    value.id
-                                                  )}
                                                   {val.id == value.id ? (
                                                     <>
                                                       {val.action.length > 0 &&
@@ -1243,7 +1231,7 @@ const Checks = () => {
                                             onChange={(e) =>
                                               handleChangeData(
                                                 e.target.value,
-                                                "performance",
+                                                "score",
                                                 index,
                                                 value.id
                                               )
