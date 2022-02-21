@@ -180,8 +180,12 @@ const ObservationSummary = () => {
 
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
+    if(res.data.status_code == 400){
+      
+    }else{
     const result = res.data.data.results
     await setInitialData(result)
+    }
   }
   if (localStorage.getItem("update") === "Pending") {
     setObservationInitialNotification(true)
