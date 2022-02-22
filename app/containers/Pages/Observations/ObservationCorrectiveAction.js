@@ -240,14 +240,12 @@ function ObservationCorrectiveAction() {
 
 
   const handleSubmit = async () => {
-    if(checkACL('action_tracker', 'view_actions')) {
+    
       const { error, isValid } = CorrectiveActionValidator(form, actionData, "submit");
       await setError(error);
       if (!isValid) {
         return "Data is not valid";
       }
-
-    }
 
     await setLoading(true)
     if (comment.id) {
