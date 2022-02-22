@@ -1,4 +1,5 @@
 import validator from "validator";
+import {checkACL} from '../../../utils/helper'
 
 function CorrectiveActionValidator(data ,action,button) {
   
@@ -23,18 +24,18 @@ console.log(action.length);
 
   }
   
-  if (data.isCorrectiveActionTaken === null) {
-    error.isCorrectiveActionTaken = "Select any one";
-    isValid = false;
-  }
+  if(checkACL('action_tracker', 'view_actions')) {
+    if (data.isCorrectiveActionTaken === null) {
+      error.isCorrectiveActionTaken = "Select any one";
+      isValid = false;
+    }
+    
+    if (data.isCorrectiveActionTaken === "Yes") {
 
-
-  
-  if (data.isCorrectiveActionTaken === "Yes") {
-
-  if(action.length == 0){
-    error.action = "create atleast one action";
-    isValid = false;
+    if(action.length == 0){
+      error.action = "create atleast one action";
+      isValid = false;
+    }
   }
 }
   console.log(error)
