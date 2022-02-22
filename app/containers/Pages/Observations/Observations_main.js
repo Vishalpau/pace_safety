@@ -215,6 +215,7 @@ export default function Observations() {
   const [value, setValue] = useState(0);
   const history = useHistory();
   const [acls, setAcls] = useState('');
+  const [showHTML, setShowHTML] = useState(false)
 
 
   const handleChange = (event, newValue) => {
@@ -243,11 +244,12 @@ export default function Observations() {
       }, 100)
     } else {
       allPickListDataValue()
+      setShowHTML(true)
     }
     
   }, [acls])
 
-  return  (<Acl 
+  return  ( !showHTML ? '' : <Acl 
     module='safety'
     action='view_observations'
     html={
