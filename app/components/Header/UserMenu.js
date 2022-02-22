@@ -201,7 +201,6 @@ function UserMenu(props) {
         localStorage.clear();
         window.location.href = `${LOGOUT_URL}`;
       });
-    console.log('sub', data)
     setSubscriptions(data);
     setIsLoading(true)
   }
@@ -241,20 +240,15 @@ function UserMenu(props) {
           localStorage.clear();
           window.location.href = `${LOGOUT_URL}`;
         });
-      console.log('apps', data)
       const modules = data.map(subscription => subscription.modules)
-      console.log({ modules: modules })
       var temp = []
       modules.map((module) =>
-      // console.log({code_in:module})
       {
         temp = [...temp]
         if (module.length > 0) {
           (module.map((mod) => {
-            console.log({ code_in: mod })
             if (mod.subscriptionStatus == 'active') {
               temp.push(mod.moduleCode)
-              console.log({ temp: temp })
               setApps(temp)
               return temp
             }
@@ -264,7 +258,6 @@ function UserMenu(props) {
       }
       )
     }
-    console.log({ active_modules: apps })
   }
 
   const handleClosea = (event) => {

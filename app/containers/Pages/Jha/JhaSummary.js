@@ -909,7 +909,6 @@ function JhaSummary() {
                                       >
                                         Conditions when the work must be stopped
                                       </Typography>
-
                                       {checkValue(assessment.workStopCondition).split(",").map((value) => (
                                         <p>
                                           {checkListAssessment[value]}

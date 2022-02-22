@@ -474,7 +474,7 @@ const AssessmentAndNotification = () => {
       data.append("permitToPerform", ahaform.permitToPerform),
       data.append("picApprovalUser", ahaform.picApprovalUser),
       data.append("signedUser", ahaform.signedUser),
-      data.append("signedDateTime", ahaform.signedDateTime),
+      // data.append("signedDateTime", ahaform.signedDateTime),
       data.append("ahaStatus", ahaform.ahaStatus),
       data.append("ahaStage", ahaform.ahaStage),
       data.append("badgeNumber", ahaform.badgeNumber),

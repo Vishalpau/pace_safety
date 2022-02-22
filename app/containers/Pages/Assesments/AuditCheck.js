@@ -357,7 +357,6 @@ const FlhaDetails = (props) => {
     const parts = history.location.pathname.split('/');
     let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
     let ProjectStructureId = parts[parts.length - 1];
-    console.log(ProjectStructureId, last_part, 'pp')
     setProjectStr(ProjectStructureId)
     const res = api.get(`/api/v1/flhas/${last_part}/auditchecks/`)
       .then(response => {

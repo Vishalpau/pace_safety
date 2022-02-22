@@ -573,16 +573,6 @@ const FlhaDetails = (props) => {
     await setTaskForm(temp);
   };
 
-  const handleIndiv = async () => {
-    const config = {
-      method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/company-users/`,
-      headers: HEADER_AUTH,
-    };
-    const res = await api(config);
-    let data=res.data.data.results.users.map(cd => cd.name)
-    setCompanyUser(data);
-  };
 
   const [jobConfirmation, setJobConfirmation] = useState([
     {
@@ -939,7 +929,6 @@ const FlhaDetails = (props) => {
   }
 
   useEffect(() => {
-    handleIndiv()
     getSupervisors();
     getFieldContractors();
     getDepartments();
@@ -1640,19 +1629,6 @@ const FlhaDetails = (props) => {
                     ))}
                   </FormGroup>
                 </Grid>
-                <Grid item md={12} sm={12} xs={12} >
-                  {/* <FormLabel className="checkRadioLabel" component="legend">Individual roles</FormLabel> */}
-                  <Autocomplete
-                    multiple
-                    id="combo-box-demo"
-                    options={companyUser}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} className="formControl" multiline
-                      variant="outlined"
-                      rows="1" label="Individual" />}
-                  />
-                </Grid>
-
               </Grid>
             </Paper>
           </Grid>
