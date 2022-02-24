@@ -136,6 +136,7 @@ const CloseOut = (props) => {
     temp.fkProjectId = fkProjectId;
     const res = await api.get('/api/v1/flhas/' + id + '/')
     const flha = res.data.data.results;
+    console.log(flha)
     setJobForm({
       preUseInspection: flha.preUseInspection,
       warningRibbon: flha.warningRibbon,
@@ -153,6 +154,9 @@ const CloseOut = (props) => {
       fkProjectId: flha.fkProjectId,
       flhaStage: flha.flhaStage
     })
+    if (flha.flhaStage == "Close"){
+    await setDisableForm(true)
+    }
   };
 
   const handleJobFormChange = async (e, fieldname) => {

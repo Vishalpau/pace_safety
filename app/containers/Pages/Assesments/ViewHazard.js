@@ -327,21 +327,23 @@ const FlhaDetails = (props) => {
 
   const [open, setOpen] = useState(false);
   const handleRiskChange = (rating) => {
+    console.log(rating,'rating')
     let colorRating = ''
-    if (rating === "2 Trivial" || rating === "4 Trivial") {
+   if (rating === "1 Trivial" || rating === "2 Trivial" || rating === "3 Trivial" || rating === "4 Trivial") {
       colorRating = '#009933'
-    } else if (rating === "6 Tolerable" || rating === "8 Tolerable") {
+    } else if (rating === "5 Tolerable" || rating === "6 Tolerable" || rating === "7 Tolerable" || rating === "8 Tolerable") {
       colorRating = '#8da225'
 
-    } else if (rating === "12 Moderate" || rating === "16 Moderate") {
+    } else if (rating === "9 Moderate" || rating === "10 Moderate" || rating === "11 Moderate" || rating === "12 Moderate" ||
+    rating === "13 Moderate" || rating === "14 Moderate" || rating === "15 Moderate" || rating === "16 Moderate") {
       colorRating = '#FFBF00'
 
-    } else if (rating === "18 Substantial" || rating === "24 Substantial") {
+    } else if (rating === "17 Substantial" || rating === "18 Substantial" || rating === "19 Substantial" || rating === "20 Substantial"
+    || rating === "21 Substantial" || rating === "22 Substantial" || rating === "23 Substantial" || rating === "24 Substantial") {
       colorRating = '#990000'
     }
     else {
-
-      colorRating = '#ff0000'
+      colorRating = '#FFBF00'
     }
     return colorRating
   };
@@ -385,8 +387,9 @@ const FlhaDetails = (props) => {
   };
 
   useEffect(() => {
-    if (props.notifyToValues != undefined){
-    setNotify(props.notifyToValues[props.flha.notifyTo])}
+    if (props.notifyToValues != undefined) {
+      setNotify(props.notifyToValues[props.flha.notifyTo])
+    }
     fetchNotificationSent(props.flha.notifyTo)
     setFlha(props.flha)
     if (open) {
@@ -582,19 +585,19 @@ const FlhaDetails = (props) => {
                                 <TableCell align="left">{visualConf.visualConfirmationType}</TableCell>
                                 <TableCell className="attachFileStylethum" align="left">
                                   <div className="attachFileThumb">
-                                    {visualConf.visualConfirmationStatus ? visualConf.visualConfirmationStatus:'-'}
+                                    {visualConf.visualConfirmationStatus ? visualConf.visualConfirmationStatus : '-'}
                                   </div>
                                 </TableCell>
                                 <TableCell align="left">
-                                {visualConf.visualConfirmationAttachment ?
-                                  <Typography >
-                                    {visualConf.visualConfirmationAttachment ===
-                                      null ? null : typeof visualConf.visualConfirmationAttachment ===
-                                        "string" ? (
-                                      <Attachment value={visualConf.visualConfirmationAttachment ?visualConf.visualConfirmationAttachment:'-'} />
-                                    ) : null}
-                                  </Typography>
-                                  :'-'}
+                                  {visualConf.visualConfirmationAttachment ?
+                                    <Typography >
+                                      {visualConf.visualConfirmationAttachment ===
+                                        null ? null : typeof visualConf.visualConfirmationAttachment ===
+                                          "string" ? (
+                                        <Attachment value={visualConf.visualConfirmationAttachment ? visualConf.visualConfirmationAttachment : '-'} />
+                                      ) : null}
+                                    </Typography>
+                                    : '-'}
                                 </TableCell>
                               </TableRow>
                             ))) : <TableRow className={classes.cellHeight}>No Data Available</TableRow>}
@@ -671,8 +674,8 @@ const FlhaDetails = (props) => {
                             Roles
                           </Typography>
                           <Typography className="viewLabelValue">
-                            
-                            {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"} 
+
+                            {notificationSentValue.length > 0 ? notificationSentValue.map((value) => value.roleName) : "-"}
                           </Typography>
                         </Grid>
                       </Grid>

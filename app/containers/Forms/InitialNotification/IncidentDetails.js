@@ -664,10 +664,7 @@ const IncidentDetails = (props) => {
 
   const isDesktop = useMediaQuery("(min-width:992px)");
 
-  return (<Acl 
-    module='safety'
-    action='add_observations'
-    html={ 
+  return ( 
     <PapperBlock icon="ion-md-list-box" title="Initial Notification">
       {isLoading ? (
         <Row>
@@ -1195,7 +1192,7 @@ const IncidentDetails = (props) => {
       ) : (
         <Loader />
       )}
-    </PapperBlock> } />
+    </PapperBlock>
   );
 };
 
