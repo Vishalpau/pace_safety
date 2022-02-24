@@ -235,18 +235,14 @@ export default function Observations() {
   };
 
   useEffect(() => {
-    if(localStorage.getItem('app_acl') == null) {
       let int = setInterval(() => {
         if(localStorage.getItem('app_acl') != null) {
           clearInterval(int)
           setAcls(localStorage.getItem('app_acl'))
+          setShowHTML(true)
+          allPickListDataValue()
         }
-      }, 100)
-    } else {
-      allPickListDataValue()
-      setShowHTML(true)
-    }
-    
+      }, 100)    
   }, [acls])
 
   return  ( !showHTML ? '' : <Acl 
