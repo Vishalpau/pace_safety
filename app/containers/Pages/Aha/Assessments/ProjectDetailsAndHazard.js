@@ -283,7 +283,6 @@ const ProjectDetailsAndHazard = () => {
       "picApprovalUser": "",
       "picApprovalDateTime": null,
       "signedUser": "",
-      "signedDateTime": "2021-08-17T09:55:30.900000Z",
       "ahaStatus": "Open",
       "ahaStage": "Open",
       "typeOfPermit" : "",

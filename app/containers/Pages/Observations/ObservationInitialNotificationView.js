@@ -15,7 +15,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router";
+import { useParams, useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
 import api from "../../../utils/axios";
 import { handelDateTime } from '../../../utils/CheckerValue';
@@ -24,7 +24,6 @@ import {
 } from "../../../utils/constants";
 import Attachment from "../../Attachment/Attachment";
 import FormLabel from '@material-ui/core/FormLabel';
-
 import Paper from '@material-ui/core/Paper';
 import Loader from "../Loader"
 
@@ -126,6 +125,7 @@ const ObservationInitialNotificationView = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectDepthAndId, setSelectDepthAndId] = useState([])
 
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -146,12 +146,14 @@ const ObservationInitialNotificationView = () => {
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     localStorage.setItem('fkobservationId', id)
+    if(res.data.status_code == 400){
+      history.push('/app/error/')
+    }else{
     const result = res.data.data.results
     await setInitialData(result)
     await handelWorkArea(result)
     await setIsLoading(true)
-
-
+    }
   }
   const fetchTags = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)

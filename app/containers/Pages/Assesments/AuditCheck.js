@@ -318,7 +318,7 @@ const FlhaDetails = (props) => {
       return " data not valid"
     }
     ninetimeCall('Identification information complete', remark1, step1)
-    ninetimeCall('Job described accuratly', remark2, step2)
+    ninetimeCall('Job described accurately', remark2, step2)
     ninetimeCall('Critical tasks identified', remark3, step3)
     ninetimeCall('Applicable hazards identified', remark4, step4)
     ninetimeCall('Controlled developed for hazards identified', remark5, step5)
@@ -357,43 +357,41 @@ const FlhaDetails = (props) => {
     const parts = history.location.pathname.split('/');
     let last_part = parts[parts.length - 2].replace('-', ' ') * 1;
     let ProjectStructureId = parts[parts.length - 1];
-    console.log(ProjectStructureId, last_part, 'pp')
     setProjectStr(ProjectStructureId)
     const res = api.get(`/api/v1/flhas/${last_part}/auditchecks/`)
       .then(response => {
 
         if (response.data.data.results.length) {
+          setAuditName(response.data.data.results[0].auditor)
           setStep1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditCheck)
-          setStep2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditCheck)
+          setStep2(response.data.data.results.filter(data => data.auditType == 'Job described accurately')[0].auditCheck)
           setStep3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditCheck)
           setStep4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditCheck)
           setStep5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditCheck)
           setStep6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditCheck)
           setStep7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditCheck)
-          setStep8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditCheck)
+          setStep8(response.data.data.results.filter(data => data.auditType == 'Re-assessment of hazards completed after pause and restart')[0].auditCheck)
           setStep9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditCheck)
 
           setId1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].id)
-          setId2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].id)
+          setId2(response.data.data.results.filter(data => data.auditType == 'Job described accurately')[0].id)
           setId3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].id)
           setId4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].id)
           setId5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].id)
           setId6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].id)
           setId7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].id)
-          setId8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].id)
+          setId8(response.data.data.results.filter(data => data.auditType == 'Re-assessment of hazards completed after pause and restart')[0].id)
           setId9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].id)
 
           setRemark1(response.data.data.results.filter(data => data.auditType == 'Identification information complete')[0].auditRemarks)
-          setRemark2(response.data.data.results.filter(data => data.auditType == 'Job described accuratly')[0].auditRemarks)
+          setRemark2(response.data.data.results.filter(data => data.auditType == 'Job described accurately')[0].auditRemarks)
           setRemark3(response.data.data.results.filter(data => data.auditType == 'Critical tasks identified')[0].auditRemarks)
           setRemark4(response.data.data.results.filter(data => data.auditType == 'Applicable hazards identified')[0].auditRemarks)
           setRemark5(response.data.data.results.filter(data => data.auditType == 'Controlled developed for hazards identified')[0].auditRemarks)
           setRemark6(response.data.data.results.filter(data => data.auditType == 'All present earnings identified at the job site')[0].auditRemarks)
           setRemark7(response.data.data.results.filter(data => data.auditType == 'Energies isolated or controlled')[0].auditRemarks)
-          setRemark8(response.data.data.results.filter(data => data.auditType == 'Re-assesment of hazards completed after pause and resart')[0].auditRemarks)
+          setRemark8(response.data.data.results.filter(data => data.auditType == 'Re-assessment of hazards completed after pause and restart')[0].auditRemarks)
           setRemark9(response.data.data.results.filter(data => data.auditType == 'Agreement signed')[0].auditRemarks)
-
-          setAuditName(response.data.data.results[0].auditor)
           setIsLock(true)
         }
       })
@@ -463,13 +461,12 @@ const FlhaDetails = (props) => {
               <Paper elevation={1} className="paperSection">
                 <Grid container spacing={3}>
                   <Grid item md={6} sm={6} xs={12}>
-
                     {!isLock ?
                       <Autocomplete
                         id="combo-box-demo"
                         className={classes.mtTen}
                         options={users}
-                        defaultValue={auditName}
+                        defaultValue={auditName ?auditName : "" }
                         getOptionLabel={(option) => option.title}
                         onChange={(e) => setAuditForm({ ...auditForm, auditor: e.currentTarget.innerHTML })}
                         renderInput={(params) => <TextField {...params} label="Auditor" variant="outlined" />}
