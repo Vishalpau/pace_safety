@@ -27,7 +27,6 @@ import {
 import ActionTracker from "../../Forms/ActionTracker";
 import ActionShow from "../../Forms/ActionShow"
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
-import flhaLogoSymbol from 'dan-images/flhaLogoSymbol.png';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -324,7 +323,7 @@ const FlhaDetails = (props) => {
     ninetimeCall('Controlled developed for hazards identified', remark5, step5)
     ninetimeCall('All present earnings identified at the job site', remark6, step6)
     ninetimeCall('Energies isolated or controlled', remark7, step7)
-    ninetimeCall('Re-assesment of hazards completed after pause and resart', remark8, step8)
+    ninetimeCall('Re-assessment of hazards completed after pause and restart', remark8, step8)
     ninetimeCall('Agreement signed', remark9, step9)
   }
 
@@ -536,6 +535,7 @@ const FlhaDetails = (props) => {
                                 label=""
                                 onChange={(e) => setRemark1(e.currentTarget.value)}
                                 value={remark1}
+                                disabled={isLock ? true : false}
                                 className={classes.fullWidth}
                               />
                             </TableCell>
@@ -585,6 +585,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark2}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark2(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -633,6 +634,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark3}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark3(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -682,6 +684,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark4}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark4(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -731,6 +734,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark5}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark5(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -780,6 +784,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark6}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark6(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -829,6 +834,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark7}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark7(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -838,7 +844,7 @@ const FlhaDetails = (props) => {
                           <TableRow>
                             <TableCell align="left">8</TableCell>
                             <TableCell align="left">
-                              Re-assesment of hazards completed after pause and resart
+                              Re-assessment of hazards completed after pause and restart
                             </TableCell>
                             <TableCell align="left">
                               <Checkbox inputProps={{ 'aria-label': 'uncontrolled-checkbox' }} disabled={isLock ? true : false} checked={step8 == 'Yes' ? true : false} onClick={() => setStep8('Yes')} />
@@ -878,6 +884,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark8}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark8(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />
@@ -927,6 +934,7 @@ const FlhaDetails = (props) => {
                                 rows="1"
                                 label=""
                                 value={remark9}
+                                disabled={isLock ? true : false}
                                 onChange={(e) => setRemark9(e.currentTarget.value)}
                                 className={classes.fullWidth}
                               />

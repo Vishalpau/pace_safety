@@ -819,8 +819,8 @@ function xflha(props) {
   let debounce = (fn, v, d) => {
     return function () {
       clearTimeout(timer)
-      
-      timer = setTimeout(() => setSeacrhFlha(v),d)
+
+      timer = setTimeout(() => setSeacrhFlha(v), d)
     }
   }
   const handleSearch = e => debounce(fetchData, e.target.value.toLowerCase(), 500)()
