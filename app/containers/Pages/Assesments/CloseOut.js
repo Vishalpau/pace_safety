@@ -136,7 +136,6 @@ const CloseOut = (props) => {
     temp.fkProjectId = fkProjectId;
     const res = await api.get('/api/v1/flhas/' + id + '/')
     const flha = res.data.data.results;
-    console.log(flha)
     setJobForm({
       preUseInspection: flha.preUseInspection,
       warningRibbon: flha.warningRibbon,

@@ -564,6 +564,16 @@ ul.MuiMenu-list a ul li.userName {
   color: #ffffff;
 }
 
+.simpleTableDesign thead tr th:first-child {
+  border-top-left-radius: 8px;
+}
+.simpleTableDesign thead tr th:last-child {
+  border-top-right-radius: 8px;
+}
+.simpleTableDesign tbody tr td a {
+  cursor: pointer;
+}
+
 /*Kanban css*/
 .MuiTypography-subtitle2 {
   font-family: Montserrat-Regular !important;

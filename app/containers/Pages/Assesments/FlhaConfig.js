@@ -432,11 +432,9 @@ const FlhaDetails = (props) => {
   const fkCompanyId = JSON.parse(localStorage.getItem('company')) !== null
     ? JSON.parse(localStorage.getItem('company')).fkCompanyId
     : null;
-  console.log('company', fkCompanyId);
   const projectName = JSON.parse(localStorage.getItem('projectName')) !== null
     ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
     : null;
-  console.log('project', projectName);
 
   const handleDepartment = (id, name) => {
     setForm({ ...form, fkDepartmentId: id, fkDeparmentName: name });

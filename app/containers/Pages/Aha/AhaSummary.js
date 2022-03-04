@@ -493,7 +493,6 @@ function AhaSummary() {
     setLessionAction(allAction)
   };
 
-  // console.log(projectSturcturedData,"lkklklklkl")
   const [form, setForm] = useState([]);
   const fetchHzardsData = async () => {
     let ahaID = localStorage.getItem("fkAHAId")

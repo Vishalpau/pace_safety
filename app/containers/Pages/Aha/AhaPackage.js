@@ -520,7 +520,6 @@ const handleSummaryPush = async (index) => {
   const fkProjectStructureIds = allAHAData[index].fkProjectStructureIds
     localStorage.setItem('fkAHAId', id)
     handelCommonObject("commonObject", "aha", "projectStruct", fkProjectStructureIds)
-  //console.log("Ashutosh")
     localStorage.removeItem('Assessments')
     localStorage.removeItem('Approval')
     localStorage.removeItem('lessonsLearned')
@@ -530,7 +529,6 @@ const handleSummaryPush = async (index) => {
 };
 
 const handleNewAhaPush = async () => {
-  //console.log("Ashutosh")
   localStorage.removeItem('fkAHAId')
   history.push(
     "/app/pages/aha/assessments/project-details"

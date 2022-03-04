@@ -615,7 +615,7 @@ function PersonalDashboard(props) {
             </div> */}
                       <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
                         <div className="hexagontent hexagon_content_box">
-                          <a className="hse_compliance_protocols" onClick={() => handleClick('compliances')}>
+                          <a className="hse_compliance_protocols" onClick={() => history.push('/app/pages/compliance')}>
                             <p>Compliance</p>
                           </a>
                         </div>

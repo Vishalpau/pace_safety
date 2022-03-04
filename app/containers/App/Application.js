@@ -440,6 +440,11 @@ function Application(props) {
           path="/incident/details/:id/"
           component={Summary}
         />
+        {/* {route for git} */}
+        <Route
+          path="/app/incident/details/:id/"
+          component={Summary}
+        />
         {/* from leassionlearned */}
         <Route
           exact

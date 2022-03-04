@@ -543,7 +543,7 @@ const AssessmentAndNotification = () => {
       let newData = temp.filter((item) => item !== value);
 
       setNotifyToList(newData);
-      setForm({ ...form, notifyTo: newData.toString() });
+      setAHAForm({ ...form, notifyTo: newData.toString() });
     }
   };
 
@@ -682,6 +682,7 @@ const AssessmentAndNotification = () => {
       }
     } catch (error) {}
   };
+  console.log(form,'form')
 
   const handelCallBack = async () => {
     await fetchHzardsData();
