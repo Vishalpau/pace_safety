@@ -1,5 +1,5 @@
 export const CONFIG = {
-    "Question group": `/app/compliance-config/`,
-    "Question": `/app/compliance-config/`,
+    "Question group": `/app/compliance-config/question-group/:id`,
+    "Question": `/app/compliance-config/question`,
     }
   

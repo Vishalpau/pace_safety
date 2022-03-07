@@ -83,11 +83,11 @@ var menu = [
         name: 'Check Lists',
         link: '/app/pages/checklist/',
       },
-      // {
-      //   key: 'compliance_config',
-      //   name: 'Compliance Config',
-      //   link: '/app/compliance-config',
-      // },
+      {
+        key: 'compliance_config',
+        name: 'Compliance Config',
+        link: '/app/compliance-config',
+      },
       // {
       //   key: 'xflha_setting',
       //   name: 'X-FLHA Setting',
