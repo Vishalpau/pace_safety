@@ -201,8 +201,8 @@ const Categories = () => {
     const res = await api
       .put(`/api/v1/audits/${form.id}/`, form)
       .then((response) => {
-        history.push("/app/pages/compliance/performance-summary");
-        // history.push("/app/pages/compliance/checks");
+        // history.push("/app/pages/compliance/performance-summary");
+        history.push("/app/pages/compliance/checks");
       })
       .catch((error) => {
         console.log(error);

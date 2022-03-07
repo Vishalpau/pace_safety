@@ -426,6 +426,7 @@ function ComplianceSummary() {
 
   const handleTeamName = (teamName) => {
     let data = teamName.split(",");
+    console.log(data);
     setTeam(data);
   };
   const handleProjectName = (projectId) => {
@@ -1182,7 +1183,6 @@ function ComplianceSummary() {
                               </Paper>
                             </Grid>
 
-                            {false && (
                               <>
                                 <Grid
                                   item
@@ -2542,7 +2542,7 @@ function ComplianceSummary() {
                                   </Paper>
                                 </Grid>
                               </>
-                            )}
+                           
 
                             <Grid
                               item

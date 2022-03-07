@@ -50,6 +50,7 @@ import { FormHelperText } from "@material-ui/core";
 import api from "../../../../utils/axios";
 import { CircularProgress } from "@material-ui/core";
 import Loader from "../../Loader";
+import { handelCommonObject } from "../../../../utils/CheckerValue"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -341,6 +342,7 @@ const ComplianceDetails = () => {
           let result = response.data.data.results;
           let complianceId = result.id;
           localStorage.setItem("fkComplianceId", complianceId);
+          handelCommonObject("commonObject", "audit", "projectStruct", response.data.data.results.fkProjectStructureIds)
           history.push("/app/pages/compliance/categories"), setLoading(false);
         })
         .catch((error) => {

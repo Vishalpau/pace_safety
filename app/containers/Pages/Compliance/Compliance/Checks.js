@@ -74,6 +74,23 @@ import FormSideBar from "../../../Forms/FormSideBar";
 import { COMPLIANCE } from "../Constants/Constants";
 import { useParams, useHistory } from "react-router-dom";
 import api from "../../../../utils/axios";
+import ActionTracker from "../../../Forms/ActionTracker";
+import {
+  handelIncidentId,
+  checkValue,
+  handelCommonObject,
+  handelActionData,
+} from "../../../../utils/CheckerValue";
+import ActionShow from "../../../Forms/ActionShow";
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../../utils/constants";
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -269,6 +286,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     //color: '#ffffff'
   },
+  actionLinkAudit: {
+    inlineSize: "max-content",
+  },
 }));
 
 const styles = (theme) => ({
@@ -288,6 +308,8 @@ const Checks = () => {
   const history = useHistory();
   const [form, setForm] = useState({});
   const [checkData, setCheckData] = useState([]);
+  const [updatePage, setUpdatePage] = useState(false);
+  const [actionData, setActionData] = useState([]);
   //const [expanded, setExpanded] = React.useState('panel1');
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel4"
@@ -437,12 +459,16 @@ const Checks = () => {
           }
         }
         setForm(result);
-        fetchCheklist(tempSubGroup);
+        fetchCheklist(tempSubGroup,result.groups , result.subGroups);
       })
       .catch((error) => console.log(error));
   };
 
-  const fetchCheklist = async (data) => {
+  const fetchCheklist = async (data , groups , subGroups) => {
+    const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
     let temp = [];
     let tempCheckData = [];
     let categoriesData = {};
@@ -450,59 +476,157 @@ const Checks = () => {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
+
       const res = await api.get(
-        `/api/v1/configaudits/auditquestions/groups/${groupName}/subgroups/${subGroupName}/?company=8&project=15`
+        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=8&project=15`
       );
       const result2 = res.data.data.results;
-      console.log(result2);
+      // console.log(result2);
       temp.push(result2);
     }
-    console.log(temp);
-    temp.map((value, i) => {
+    let tempQuestionId = [];
+    // console.log(temp);
+    temp.map((tempvalue, i) => {
+      console.log(tempvalue);
       temp[i].map((value, index) => {
+        tempQuestionId.push({ id: value.id });
+        console.log("....", tempvalue[index].id);
         tempCheckData.push({
           questionId: value.id,
           question: value.question,
           criticality: "",
           auditStatus: "",
           performance: "",
-          groupId: temp[i].id,
+          groupId: null,
           groupName: value.groupName,
-          subGroupId: temp[i].id,
+          subGroupId: null,
           subGroupName: value.subGroupName,
           defaultResponse: "",
           score: "",
           findings: "",
+          attachment: null,
           status: "Active",
-          createdBy: 1,
-          updatedBy: 0,
+          createdBy: parseInt(userId),
           fkAuditId: localStorage.getItem("fkComplianceId"),
         });
-        console.log(tempCheckData);
+        // console.log(tempCheckData);
         categoriesData[value["groupName"]].push(value);
       });
     });
+    for(let i = 0; i< tempCheckData.length ; i++ ){
+      for(let j = 0; j < groups.length; j++){
+        if(groups[j]['checkListLabel'] == tempCheckData[i]['groupName']){
+          tempCheckData[i]['groupId'] = groups[j]['id']
+        }
+      }
+    }
+    for(let i = 0; i< tempCheckData.length ; i++ ){
+      for(let j = 0; j < subGroups.length; j++){
+        if(subGroups[j]['inputLabel'] == tempCheckData[i]['subGroupName']){
+          tempCheckData[i]['subGroupId'] = subGroups[j]['id']
+        }
+      }
+    }
+    // handelCommonObject("commonObject", "audit", "assessmentIds", temp);
+    handelCommonObject("commonObject", "audit", "qustionsIds", tempQuestionId);
     await setCheckData(tempCheckData);
     await setCategories(categoriesData);
+    await handelActionTracker();
   };
+  // console.log(checkData);
   const handelSubmit = async () => {
-    if (checkData[0].id) {
-      console.log("put");
-      const res = await api.put(
+    const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
+      let tempUpdatedQuestion = []
+      let tempNewQuestion = []
+      checkData.map((data) => {
+        if(data.id){
+          tempUpdatedQuestion.push(data)
+        }else{
+          tempNewQuestion.push(data)
+        }
+      })
+      if(tempNewQuestion.length >0){
+        
+        const data = new FormData();
+        for(var i=0; i<tempNewQuestion.length; i++){
+          data.append("questionId", tempNewQuestion[i].questionId);
+              data.append("question", tempNewQuestion[i].question);
+              data.append("criticality", tempNewQuestion[i].criticality);
+              data.append("performance", tempNewQuestion[i].performance);
+              data.append("groupId", tempNewQuestion[i].groupId);
+              data.append("groupName", tempNewQuestion[i].groupName);
+              data.append("subGroupId", tempNewQuestion[i].subGroupId);
+              data.append("subGroupName", tempNewQuestion[i].subGroupName);
+              data.append("defaultResponse", tempNewQuestion[i].defaultResponse);
+              data.append("score", tempNewQuestion[i].score);
+              data.append("findings", tempNewQuestion[i].findings);
+              data.append("score", tempNewQuestion[i].score);
+              data.append("auditStatus", tempNewQuestion[i].auditStatus);
+              if (typeof tempNewQuestion[i].attachment !== "string") {
+                if (tempNewQuestion[i].attachment !== null) {
+                  data.append("attachment", tempNewQuestion[i].attachment);
+                }
+              }
+              data.append("status", "Active");
+              data.append("fkAuditId", tempNewQuestion[i].fkAuditId);
+              data.append("createdAt", new Date().toISOString());
+              data.append("createdBy", tempNewQuestion[i].createdBy);
+            }
+            
+             const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,data);
+      }
+      if(tempUpdatedQuestion.length >0){
+
+        const data = new FormData();
+        for(var i=0; i<tempUpdatedQuestion.length; i++){
+          data.append("questionId", tempUpdatedQuestion[i].questionId);
+              data.append("question", tempUpdatedQuestion[i].question);
+              data.append("criticality", tempUpdatedQuestion[i].criticality);
+              data.append("performance", tempUpdatedQuestion[i].performance);
+              data.append("groupId", tempUpdatedQuestion[i].groupId);
+              data.append("groupName", tempUpdatedQuestion[i].groupName);
+              data.append("subGroupId", tempUpdatedQuestion[i].subGroupId);
+              data.append("subGroupName", tempUpdatedQuestion[i].subGroupName);
+              data.append("defaultResponse", tempUpdatedQuestion[i].defaultResponse);
+              data.append("score", tempUpdatedQuestion[i].score);
+              data.append("findings", tempUpdatedQuestion[i].findings);
+              data.append("score", tempUpdatedQuestion[i].score);
+              data.append("auditStatus", tempUpdatedQuestion[i].auditStatus);
+              if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+                if (tempUpdatedQuestion[i].attachment !== null) {
+                  data.append("attachment", tempUpdatedQuestion[i].attachment);
+                }
+              }
+              data.append("status", "Active");
+              data.append("fkAuditId", tempUpdatedQuestion[i].fkAuditId);
+              data.append("createdAt", new Date().toISOString());
+              data.append("createdBy", tempUpdatedQuestion[i].createdBy);
+              data.append("updatedBy", parseInt(userId));
+            }
+            const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           "fkComplianceId"
         )}/auditresponse/`,
-        checkData
+        data
       );
-    } else {
-      console.log("post");
-      const res = await api.post(
-        `/api/v1/audits/${localStorage.getItem(
-          "fkComplianceId"
-        )}/auditresponse/`,
-        checkData
-      );
-    }
+      }
+      // const resUpdate = await api.put(
+      //   `/api/v1/audits/${localStorage.getItem(
+      //     "fkComplianceId"
+      //   )}/auditresponse/`,
+      //   checkData
+      // );
+      // console.log("post");
+      // const resNew = await api.post(
+      //   `/api/v1/audits/${localStorage.getItem(
+      //     "fkComplianceId"
+      //   )}/auditresponse/`,
+      //   checkData
+      // );
+    
     history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
@@ -525,6 +649,27 @@ const Checks = () => {
     );
     const result = res.data.data.results;
     await setCheckData(result);
+  };
+
+  const handleFile = (value, field, index, id) => {
+    let temp = [...checkData];
+    for (let i = 0; i < temp.length; i++) {
+      console.log(temp[i]["questionId"], id);
+      if (temp[i]["questionId"] == id) {
+        temp[i][field] = value;
+      }
+    }
+    console.log(temp)
+    setCheckData(temp);
+  };
+  console.log("acceptedFiles", checkData);
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkComplianceId");
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+      "qustionsIds"
+    ];
+    let allAction = await handelActionData(jhaId, apiData);
+    setActionData(allAction);
   };
 
   useEffect(() => {
@@ -631,29 +776,24 @@ const Checks = () => {
                       <FormLabel className="checkRadioLabel" component="legend">
                         {key}
                       </FormLabel>
+                      <span className={classes.accordingHeaderContentleft}>
+                        <ListItem className={classes.accordingHeaderContent}>
+                          <ListItemText
+                            className="viewLabelValueListTag"
+                            primary="Total score: "
+                            secondary="25"
+                          />
+                        </ListItem>
+                        <ListItem className={classes.accordingHeaderContent}>
+                          <ListItemText
+                            className="viewLabelValueListTag"
+                            primary="Acceptable score: "
+                            secondary="<as per admin config>"
+                          />
+                        </ListItem>
+                      </span>
                       {value.map((value, index) => (
                         <>
-                          <span className={classes.accordingHeaderContentleft}>
-                            <ListItem
-                              className={classes.accordingHeaderContent}
-                            >
-                              <ListItemText
-                                className="viewLabelValueListTag"
-                                primary="Total score: "
-                                secondary="25"
-                              />
-                            </ListItem>
-                            <ListItem
-                              className={classes.accordingHeaderContent}
-                            >
-                              <ListItemText
-                                className="viewLabelValueListTag"
-                                primary="Acceptable score: "
-                                secondary="<as per admin config>"
-                              />
-                            </ListItem>
-                          </span>
-
                           <Grid container item xs={12}>
                             <Grid item md={12}>
                               <div>
@@ -753,15 +893,22 @@ const Checks = () => {
                                             Score
                                           </FormLabel>
                                         </Grid>
+                                        {value.scoreType === "Star" &&
                                         <Grid item md={4} sm={4} xs={12}>
                                           <Rating
                                             name="simple-controlled"
                                             value={value}
-                                            onChange={(event, newValue) => {
-                                              setValue(newValue);
-                                            }}
+                                            onChange={(e,newValue) =>
+                                              handleChangeData(
+                                                newValue,
+                                                "score",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           />
-                                        </Grid>
+                                        </Grid>}
+                                        {value.scoreType === "1-10" &&
                                         <Grid item md={4} sm={4} xs={12}>
                                           <FormControl
                                             variant="outlined"
@@ -777,6 +924,14 @@ const Checks = () => {
                                               label="Counts"
                                               className="formControl"
                                               fullWidth
+                                              onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "score",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                             >
                                               <MenuItem value={1}>1</MenuItem>
                                               <MenuItem value={2}>2</MenuItem>
@@ -790,7 +945,8 @@ const Checks = () => {
                                               <MenuItem value={10}>10</MenuItem>
                                             </Select>
                                           </FormControl>
-                                        </Grid>
+                                        </Grid>}
+                                        {value.scoreType === "%" &&
                                         <Grid item md={4} sm={4} xs={12}>
                                           <TextField
                                             label="Percentage"
@@ -800,8 +956,16 @@ const Checks = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "score",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           />
-                                        </Grid>
+                                        </Grid>}
                                         <Grid item md={12} xs={12}>
                                           <FormLabel
                                             className="checkRadioLabel"
@@ -809,47 +973,58 @@ const Checks = () => {
                                           >
                                             Create Action{" "}
                                           </FormLabel>
-                                          <Button
-                                            variant="outlined"
-                                            size="medium"
-                                            className={classes.custmSubmitBtn}
-                                            onClick={(e) =>
-                                              handleMyUserPClickOpen(e)
-                                            }
+                                          <Grid
+                                            item
+                                            xs={6}
+                                            className={classes.createHazardbox}
                                           >
-                                            <svg
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              width="60"
-                                              height="30"
-                                              viewBox="0 0 75 50"
-                                            >
-                                              <g
-                                                id="Group_336"
-                                                data-name="Group 336"
-                                                transform="translate(-338 -858)"
-                                              >
-                                                <g
-                                                  id="baseline-flash_auto-24px"
-                                                  transform="translate(364 871)"
-                                                >
-                                                  <path
-                                                    id="Path_1634"
-                                                    data-name="Path 1634"
-                                                    d="M0,0H24V24H0Z"
-                                                    fill="none"
-                                                  />
-                                                  <path
-                                                    id="Path_1635"
-                                                    data-name="Path 1635"
-                                                    d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z"
-                                                    fill="#ffffff"
-                                                  />
-                                                </g>
-                                              </g>
-                                            </svg>
-                                          </Button>
+                                            <ActionTracker
+                                              actionContext="audit:question"
+                                              enitityReferenceId={`${localStorage.getItem(
+                                                "fkComplianceId"
+                                              )}:${value.id}`}
+                                              setUpdatePage={setUpdatePage}
+                                              fkCompanyId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "company"
+                                                  )
+                                                ).fkCompanyId
+                                              }
+                                              fkProjectId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "projectName"
+                                                  )
+                                                ).projectName.projectId
+                                              }
+                                              fkProjectStructureIds={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "commonObject"
+                                                  )
+                                                )["audit"]["projectStruct"]
+                                              }
+                                              createdBy={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "userDetails"
+                                                  )
+                                                ).id
+                                              }
+                                              updatePage={updatePage}
+                                              handelShowData={
+                                                handelActionTracker
+                                              }
+                                            />
+                                          </Grid>
                                         </Grid>
-                                        <Grid item md={12} xs={12}>
+                                        {actionData.map((val) => (
+                                                <>
+                                                  {val.id == value.id ? (
+                                                    <>
+                                                      {val.action.length > 0 &&
+                                                        <Grid item md={12} xs={12}>
                                           <Table
                                             component={Paper}
                                             className="simpleTableSection"
@@ -865,132 +1040,69 @@ const Checks = () => {
                                               </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
+                                              {actionData.map((val) => (
+                                                <>
+                                                  {val.id == value.id ? (
+                                                    <>
+                                                      {val.action.length > 0 &&
+                                                        val.action.map(
+                                                          (valueAction) => (
+                                                            <TableRow>
+                                                              <TableCell align="left">
+                                                                <Link
+                                                                  className={
+                                                                    classes.actionLinkAudit
+                                                                  }
+                                                                  display="block"
+                                                                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                    localStorage.getItem(
+                                                                      "BaseUrl"
+                                                                    )
+                                                                  )[
+                                                                    "actionClientID"
+                                                                    ]
+                                                                    }&response_type=code&companyId=${JSON.parse(
+                                                                      localStorage.getItem(
+                                                                        "company"
+                                                                      )
+                                                                    )
+                                                                      .fkCompanyId
+                                                                    }&projectId=${JSON.parse(
+                                                                      localStorage.getItem(
+                                                                        "projectName"
+                                                                      )
+                                                                    )
+                                                                      .projectName
+                                                                      .projectId
+                                                                    }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                    }`}
+                                                                  target="_blank"
+                                                                >
+                                                                  {
+                                                                    valueAction.number
+                                                                  }
+                                                                </Link>
+                                                              </TableCell>
+                                                              <TableCell>
+                                                                {
+                                                                  valueAction.title
+                                                                }
+                                                              </TableCell>
+                                                            </TableRow>
+                                                          )
+                                                        )}
+                                                    </>
+                                                  ) : null}
+                                                </>
+                                              ))}
                                             </TableBody>
                                           </Table>
                                         </Grid>
 
-                                        <Dialog
-                                          onClose={handleMyUserPClose}
-                                          aria-labelledby="customized-dialog-title"
-                                          open={myUserPOpen}
-                                        >
-                                          <DialogTitle
-                                            id="customized-dialog-title"
-                                            onClose={handleMyUserPClose}
-                                          >
-                                            Create a new action
-                                          </DialogTitle>
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Grid container spacing={3}>
-                                                <Grid item md={12} xs={12}>
-                                                  <TextField
-                                                    label="Location*"
-                                                    //margin="dense"
-                                                    name="location"
-                                                    id="location"
-                                                    defaultValue=""
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  />
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    //required
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Assignee
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="assignee"
-                                                      labelId="assigneelabel"
-                                                      label="Assignee"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
-                                                  >
-                                                    <KeyboardDateTimePicker
-                                                      className="formControl"
-                                                      //margin="dense"
-                                                      fullWidth
-                                                      label="Due Date*"
-                                                      value={selectedActionDate}
-                                                      onChange={
-                                                        handleActionDateChange
-                                                      }
-                                                      inputVariant="outlined"
-                                                    />
-                                                  </MuiPickersUtilsProvider>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Severity
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="severity"
-                                                      labelId="Severitylabel"
-                                                      label="Severity"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                              </Grid>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                          <DialogActions>
-                                            <Button
-                                              variant="outlined"
-                                              size="medium"
-                                              align="left"
-                                              className={classes.custmSubmitBtn}
-                                            >
-                                              Create Action
-                                            </Button>
-                                          </DialogActions>
-                                        </Dialog>
+                                        
+                                                  }</> ) : null}
+                                                </>
+                                              ))}
 
                                         <Grid
                                           item
@@ -1006,123 +1118,18 @@ const Checks = () => {
                                             Attachment{" "}
                                           </FormLabel>
                                           <Typography className="viewLabelValue">
-                                            <div
-                                              {...getRootProps({
-                                                className: "dropzone",
-                                              })}
-                                            >
-                                              <input {...getInputProps()} />
-                                              <span align="center">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="39.4"
-                                                  height="28.69"
-                                                  viewBox="0 0 39.4 28.69"
-                                                >
-                                                  <g
-                                                    id="upload-outbox-svgrepo-com"
-                                                    transform="translate(0 0)"
-                                                  >
-                                                    <g
-                                                      id="Group_4970"
-                                                      data-name="Group 4970"
-                                                      transform="translate(13.004)"
-                                                    >
-                                                      <g
-                                                        id="Group_4969"
-                                                        data-name="Group 4969"
-                                                      >
-                                                        <path
-                                                          id="Path_3322"
-                                                          data-name="Path 3322"
-                                                          d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z"
-                                                          transform="translate(-166.342 -68.504)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                    <g
-                                                      id="Group_4972"
-                                                      data-name="Group 4972"
-                                                      transform="translate(0 12.502)"
-                                                    >
-                                                      <g
-                                                        id="Group_4971"
-                                                        data-name="Group 4971"
-                                                      >
-                                                        <path
-                                                          id="Path_3323"
-                                                          data-name="Path 3323"
-                                                          d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z"
-                                                          transform="translate(0 -228.424)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                  </g>
-                                                </svg>
-                                              </span>
-                                              <p className="chooseFileDesign">
-                                                Drag and drop here or{" "}
-                                                <span>Choose file</span>
-                                              </p>
-                                            </div>
-                                            <aside>
-                                              {/* <h4>Files</h4> */}
-                                              {/* <ul>{files}</ul> */}
-                                              <ul className="attachfileListBox">
-                                                <li>
-                                                  <img
-                                                    src={icoExcel}
-                                                    alt="excel-icon"
-                                                  />{" "}
-                                                  DocExcel - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPDF}
-                                                    alt="pdf-icon"
-                                                  />{" "}
-                                                  DocPDF - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPng}
-                                                    alt="image-icon"
-                                                  />{" "}
-                                                  ImageFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoAudio}
-                                                    alt="audio-icon"
-                                                  />{" "}
-                                                  AudioFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoVideo}
-                                                    alt="video-icon"
-                                                  />{" "}
-                                                  VideoFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                              </ul>
-                                            </aside>
+                                            <input
+                                              type="file"
+                                              onChange={(e) =>
+                                                handleFile(
+                                                  e.target.files[0],
+                                                  "attachment",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            />
+                                            
                                           </Typography>
                                         </Grid>
                                       </Grid>
@@ -1163,6 +1170,15 @@ const Checks = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "criticality",
+                                                index,
+                                                value.id
+                                              )
+                                            }
+                                            
                                           >
                                             {Criticality.map((option) => (
                                               <MenuItem
@@ -1183,6 +1199,14 @@ const Checks = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "auditStatus",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           >
                                             {Status.map((option) => (
                                               <MenuItem
@@ -1204,6 +1228,14 @@ const Checks = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "score",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           />
                                         </Grid>
                                         {/* 
@@ -1221,6 +1253,14 @@ const Checks = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "findings",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           />
                                         </Grid>
                                         <Grid item md={12} sm={12} xs={12}>
@@ -1232,12 +1272,17 @@ const Checks = () => {
                                           </FormLabel>
                                         </Grid>
                                         <Grid item md={4} sm={4} xs={12}>
-                                          <Rating
+                                        <Rating
                                             name="simple-controlled"
                                             value={value}
-                                            onChange={(event, newValue) => {
-                                              setValue(newValue);
-                                            }}
+                                            onChange={(e,newValue) =>
+                                              handleChangeData(
+                                                newValue,
+                                                "score",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           />
                                         </Grid>
                                         <Grid item md={4} sm={4} xs={12}>
@@ -1255,6 +1300,14 @@ const Checks = () => {
                                               label="Counts"
                                               className="formControl"
                                               fullWidth
+                                              onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "score",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                             >
                                               <MenuItem value={1}>1</MenuItem>
                                               <MenuItem value={2}>2</MenuItem>
@@ -1278,9 +1331,16 @@ const Checks = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            onChange={(e) =>
+                                              handleChangeData(
+                                                e.target.value,
+                                                "performance",
+                                                index,
+                                                value.id
+                                              )
+                                            }
                                           />
                                         </Grid>
-
                                         <Grid item md={12} xs={12}>
                                           <FormLabel
                                             className="checkRadioLabel"
@@ -1288,46 +1348,53 @@ const Checks = () => {
                                           >
                                             Create Action{" "}
                                           </FormLabel>
-                                          <Button
-                                            variant="outlined"
-                                            size="medium"
-                                            className={classes.custmSubmitBtn}
-                                            onClick={(e) =>
-                                              handleMyUserPClickOpen(e)
-                                            }
+                                          <Grid
+                                            item
+                                            xs={6}
+                                            className={classes.createHazardbox}
                                           >
-                                            <svg
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              width="60"
-                                              height="30"
-                                              viewBox="0 0 75 50"
-                                            >
-                                              <g
-                                                id="Group_336"
-                                                data-name="Group 336"
-                                                transform="translate(-338 -858)"
-                                              >
-                                                <g
-                                                  id="baseline-flash_auto-24px"
-                                                  transform="translate(364 871)"
-                                                >
-                                                  <path
-                                                    id="Path_1634"
-                                                    data-name="Path 1634"
-                                                    d="M0,0H24V24H0Z"
-                                                    fill="none"
-                                                  />
-                                                  <path
-                                                    id="Path_1635"
-                                                    data-name="Path 1635"
-                                                    d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z"
-                                                    fill="#ffffff"
-                                                  />
-                                                </g>
-                                              </g>
-                                            </svg>
-                                          </Button>
+                                            <ActionTracker
+                                              actionContext="audit:question"
+                                              enitityReferenceId={`${localStorage.getItem(
+                                                "fkComplianceId"
+                                              )}:${value.id}`}
+                                              setUpdatePage={setUpdatePage}
+                                              fkCompanyId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "company"
+                                                  )
+                                                ).fkCompanyId
+                                              }
+                                              fkProjectId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "projectName"
+                                                  )
+                                                ).projectName.projectId
+                                              }
+                                              fkProjectStructureIds={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "commonObject"
+                                                  )
+                                                )["audit"]["projectStruct"]
+                                              }
+                                              createdBy={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "userDetails"
+                                                  )
+                                                ).id
+                                              }
+                                              updatePage={updatePage}
+                                              handelShowData={
+                                                handelActionTracker
+                                              }
+                                            />
+                                          </Grid>
                                         </Grid>
+                                        
                                         <Grid item md={12} xs={12}>
                                           <Table
                                             component={Paper}
@@ -1344,133 +1411,68 @@ const Checks = () => {
                                               </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
+                                              {actionData.map((val) => (
+                                                <>
+                                                  {console.log(
+                                                    val.action.number,
+                                                    value.id
+                                                  )}
+                                                  {val.id == value.id ? (
+                                                    <>
+                                                      {val.action.length > 0 &&
+                                                        val.action.map(
+                                                          (valueAction) => (
+                                                            <TableRow>
+                                                              <TableCell align="left">
+                                                                <Link
+                                                                  className={
+                                                                    classes.actionLinkAudit
+                                                                  }
+                                                                  display="block"
+                                                                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                    localStorage.getItem(
+                                                                      "BaseUrl"
+                                                                    )
+                                                                  )[
+                                                                    "actionClientID"
+                                                                    ]
+                                                                    }&response_type=code&companyId=${JSON.parse(
+                                                                      localStorage.getItem(
+                                                                        "company"
+                                                                      )
+                                                                    )
+                                                                      .fkCompanyId
+                                                                    }&projectId=${JSON.parse(
+                                                                      localStorage.getItem(
+                                                                        "projectName"
+                                                                      )
+                                                                    )
+                                                                      .projectName
+                                                                      .projectId
+                                                                    }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                    }`}
+                                                                  target="_blank"
+                                                                >
+                                                                  {
+                                                                    valueAction.number
+                                                                  }
+                                                                </Link>
+                                                              </TableCell>
+                                                              <TableCell>
+                                                                {
+                                                                  valueAction.title
+                                                                }
+                                                              </TableCell>
+                                                            </TableRow>
+                                                          )
+                                                        )}
+                                                    </>
+                                                  ) : null}
+                                                </>
+                                              ))}
                                             </TableBody>
                                           </Table>
                                         </Grid>
-
-                                        <Dialog
-                                          onClose={handleMyUserPClose}
-                                          aria-labelledby="customized-dialog-title"
-                                          open={myUserPOpen}
-                                        >
-                                          <DialogTitle
-                                            id="customized-dialog-title"
-                                            onClose={handleMyUserPClose}
-                                          >
-                                            Create a new action
-                                          </DialogTitle>
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Grid container spacing={3}>
-                                                <Grid item md={12} xs={12}>
-                                                  <TextField
-                                                    label="Location*"
-                                                    //margin="dense"
-                                                    name="location"
-                                                    id="location"
-                                                    defaultValue=""
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  />
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    //required
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Assignee
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="assignee"
-                                                      labelId="assigneelabel"
-                                                      label="Assignee"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
-                                                  >
-                                                    <KeyboardDateTimePicker
-                                                      className="formControl"
-                                                      //margin="dense"
-                                                      fullWidth
-                                                      label="Due Date*"
-                                                      value={selectedActionDate}
-                                                      onChange={
-                                                        handleActionDateChange
-                                                      }
-                                                      inputVariant="outlined"
-                                                    />
-                                                  </MuiPickersUtilsProvider>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Severity
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="severity"
-                                                      labelId="Severitylabel"
-                                                      label="Severity"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                              </Grid>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                          <DialogActions>
-                                            <Button
-                                              variant="outlined"
-                                              size="medium"
-                                              align="left"
-                                              className={classes.custmSubmitBtn}
-                                            >
-                                              Create Action
-                                            </Button>
-                                          </DialogActions>
-                                        </Dialog>
-
                                         <Grid
                                           item
                                           md={12}
@@ -1485,123 +1487,18 @@ const Checks = () => {
                                             Attachment{" "}
                                           </FormLabel>
                                           <Typography className="viewLabelValue">
-                                            <div
-                                              {...getRootProps({
-                                                className: "dropzone",
-                                              })}
-                                            >
-                                              <input {...getInputProps()} />
-                                              <span align="center">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="39.4"
-                                                  height="28.69"
-                                                  viewBox="0 0 39.4 28.69"
-                                                >
-                                                  <g
-                                                    id="upload-outbox-svgrepo-com"
-                                                    transform="translate(0 0)"
-                                                  >
-                                                    <g
-                                                      id="Group_4970"
-                                                      data-name="Group 4970"
-                                                      transform="translate(13.004)"
-                                                    >
-                                                      <g
-                                                        id="Group_4969"
-                                                        data-name="Group 4969"
-                                                      >
-                                                        <path
-                                                          id="Path_3322"
-                                                          data-name="Path 3322"
-                                                          d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z"
-                                                          transform="translate(-166.342 -68.504)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                    <g
-                                                      id="Group_4972"
-                                                      data-name="Group 4972"
-                                                      transform="translate(0 12.502)"
-                                                    >
-                                                      <g
-                                                        id="Group_4971"
-                                                        data-name="Group 4971"
-                                                      >
-                                                        <path
-                                                          id="Path_3323"
-                                                          data-name="Path 3323"
-                                                          d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z"
-                                                          transform="translate(0 -228.424)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                  </g>
-                                                </svg>
-                                              </span>
-                                              <p className="chooseFileDesign">
-                                                Drag and drop here or{" "}
-                                                <span>Choose file</span>
-                                              </p>
-                                            </div>
-                                            <aside>
-                                              {/* <h4>Files</h4> */}
-                                              {/* <ul>{files}</ul> */}
-                                              <ul className="attachfileListBox">
-                                                <li>
-                                                  <img
-                                                    src={icoExcel}
-                                                    alt="excel-icon"
-                                                  />{" "}
-                                                  DocExcel - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPDF}
-                                                    alt="pdf-icon"
-                                                  />{" "}
-                                                  DocPDF - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPng}
-                                                    alt="image-icon"
-                                                  />{" "}
-                                                  ImageFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoAudio}
-                                                    alt="audio-icon"
-                                                  />{" "}
-                                                  AudioFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoVideo}
-                                                    alt="video-icon"
-                                                  />{" "}
-                                                  VideoFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                              </ul>
-                                            </aside>
+                                            <input
+                                              type="file"
+                                              onChange={(e) =>
+                                                handleFile(
+                                                  e.target.files[0],
+                                                  "attachment",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            />
+                                            
                                           </Typography>
                                         </Grid>
                                       </Grid>
