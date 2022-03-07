@@ -1002,7 +1002,7 @@ function Actions(props) {
                                   {/* <Typography variant="body1" display="inline">
                                     <Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                   </Typography> */}
-                                  <span item xs={1} className={classes.sepHeightTen}></span>
+                                  {/* <span item xs={1} className={classes.sepHeightTen}></span> */}
                                   <Typography variant="body1" display="inline">
 
                                     {/* <button onClick={() => handleDelete(index)}>Delete</button> */}

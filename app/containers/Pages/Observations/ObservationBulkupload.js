@@ -33,7 +33,13 @@ const useStyles = makeStyles((theme) => ({
   pagination: {
     padding: "1rem 0",
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    width: '100%',
+    '& span': {
+      paddingTop: '5px',
+      color: '#333333',
+      fontFamily: 'Montserrat-Medium',
+    },
   },
   search: {
     position: 'relative',
@@ -312,7 +318,7 @@ function ObservationBulkupload() {
               <Table component={Paper} className="simpleTableDesign">
                 <TableHead>
                   <TableRow>
-                    <TableCell className="tableHeadCellFirst">File name</TableCell>
+                    <TableCell className="tableHeadCellFirst">File</TableCell>
                     <TableCell className="tableHeadCellSecond">Number of records</TableCell>
                     <TableCell className="tableHeadCellSecond">Processed records</TableCell>
                     <TableCell className="tableHeadCellSecond">Failed record</TableCell>
@@ -326,33 +332,34 @@ function ObservationBulkupload() {
                   {data.map(row =>
                     <TableRow>
                       <TableCell align="left">
-                        <Link to="#">{row.filename}</Link>
+                        {/* <Link to="#">{row.filename}</Link> */}
+                        <Attachment value={row.filename}/>
                       </TableCell>
                       <TableCell>
-                        {row.numberOfRecords}
+                        {row.numberOfRecords ? row.numberOfRecords : "-"}
                       </TableCell>
                       <TableCell>
-                        {row.processedRecords}
+                        {row.processedRecords ? row.processedRecords : "-"}
                       </TableCell>
                       <TableCell>
                         {/* <Link to="#"> */}
-                         {row.failedRecordFile != 'null' ? 
+                         {row.failedRecordFile != null ? 
                          <Attachment value={row.failedRecordFile}/>
                          : '-'}
                           {/* {row.failedRecordFile} */}
                         {/* </Link> */}
                       </TableCell>
                       <TableCell>
-                        {row.uploadStatus}
+                        {row.uploadStatus ? row.uploadStatus : "-"}
                       </TableCell>
                       <TableCell>
-                        {row.processer}
+                        {row.processer ? row.processer : "-" }
                       </TableCell>
                       <TableCell>
-                        {handelDateTime(row.uploadedDate)}
+                        {handelDateTime(row.uploadedDate) ? handelDateTime(row.uploadedDate) : "-"}
                       </TableCell>
                       <TableCell>
-                        {handelDateTime(row.processedDate)}
+                        {handelDateTime(row.processedDate) ? handelDateTime(row.processedDate) : '-'}
                       </TableCell>
                     </TableRow>)}
                 </TableBody>
@@ -360,7 +367,7 @@ function ObservationBulkupload() {
             </div>
           </Grid>
           <div className={classes.pagination}>
-            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+          <span>{totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}</span>
             <Pagination count={pageCount} page={page} 
             onChange={handleChange}
              />

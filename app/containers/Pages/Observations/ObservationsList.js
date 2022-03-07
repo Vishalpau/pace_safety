@@ -28,7 +28,11 @@ const useStyles = makeStyles((theme) => ({
   pagination: {
     padding: "1rem 0",
     display: "flex",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    '& span': {
+      paddingTop: '5px',
+      color: '#333333',
+    },
   },
   root: {
     flexGrow: 1,
@@ -557,9 +561,9 @@ function ObservationsList(props) {
               />
             </Grid>
             <div className={classes.pagination}>
-            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div>
+              <span>{totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}</span>
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
+            </div>
           </TableContainer>
           </> 
           :

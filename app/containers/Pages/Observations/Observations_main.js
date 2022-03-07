@@ -259,7 +259,7 @@ export default function Observations() {
             <Grid item sm={5} xs={12}>
 
 
-              {false && 
+              {/* {false &&  */}
               <Button
                 variant="contained"
                 size="small"
@@ -271,7 +271,7 @@ export default function Observations() {
               >
                 Upload
               </Button>
-              }
+              {/* } */}
               {!checkACL('safety', 'add_observations') ? '' : (
                 <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
                   <AddIcon className={classes.floatR} /> Add new
