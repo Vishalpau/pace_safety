@@ -18,14 +18,14 @@ var menu = [
     multilevel: false,
     linkParent: "/incidents/",
   },
-  // {
-  //   key: 'compliance',
-  //   acl: 'incidents',
-  //   name: 'Compliance',
-  //   icon: "ion-ios-list-box",
-  //   multilevel: false,
-  //   linkParent: "/app/pages/compliance",
-  // },
+  {
+    key: 'compliance',
+    acl: 'incidents',
+    name: 'Compliance',
+    icon: "ion-ios-list-box",
+    multilevel: false,
+    linkParent: "/app/pages/compliance",
+  },
   {
     key: "assessments",
     acl: "assessments",

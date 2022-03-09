@@ -114,7 +114,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   borderTop: {
-    marginTop: '20px',
     borderBottom: '1px solid #ccc',
     paddingBottom: '10px',
     '& .MuiTypography-h5': {
@@ -259,18 +258,18 @@ export default function Observations() {
             <Grid item sm={5} xs={12}>
 
 
-              {/* {false &&  */}
-              <Button
-                variant="contained"
-                size="small"
-                className={classNames(classes.buttonsNew, classes.floatR)}
-                disableElevation
-                startIcon={<CloudUploadIcon />}
-                style={{ marginLeft: '10px' }}
-                onClick={() => handleBulkUploadfilePush()}
-              >
-                Upload
-              </Button>
+              {/* {false && */}
+                <Button
+                  variant="contained"
+                  size="small"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  disableElevation
+                  startIcon={<CloudUploadIcon />}
+                  style={{ marginLeft: '10px' }}
+                  onClick={() => handleBulkUploadfilePush()}
+                >
+                  Upload
+                </Button>
               {/* } */}
               {!checkACL('safety', 'add_observations') ? '' : (
                 <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>

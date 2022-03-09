@@ -11,6 +11,7 @@ import { useHistory, useParams } from 'react-router';
 import { useDropzone } from 'react-dropzone';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import appapi from "../../../utils/axios";
+import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,10 +71,24 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: '1rem',
     },
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 function ObservationBulkupload() {
   const [listToggle, setListToggle] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const history = useHistory();
   const classes = useStyles();
@@ -100,13 +115,14 @@ function ObservationBulkupload() {
     setUploadForm(temp)
 
   }
-  const handlsubmit =  () => {
+  const handlsubmit = () => {
     setMessageShow('We are processing file please wait until is loading...')
     let data = new FormData();
     data.append("fkProjectId", uploadFrom.fkProjectId),
-    data.append("entityContext", uploadFrom.entityContext),
-    data.append("processer", uploadFrom.processer)
+      data.append("entityContext", uploadFrom.entityContext),
+      data.append("processer", uploadFrom.processer)
     data.append("filename", uploadFrom.filename)
+    setLoading(true)
     const res =  appapi.post(`/api/v1/core/modifiedrevisedocrform/?fkCompanyId=${fkCompanyId}`, data).then((res)=>
     history.push('/app/icare-bulkupload')
     ).catch((error)=>console.log(error))
@@ -164,14 +180,23 @@ function ObservationBulkupload() {
         </Grid>
 
         <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-          <Button size="medium" disableElevation onClick={(e) => handlsubmit(e)} variant="contained" color="primary" className="buttonStyle">
-            Upload
-          </Button>
+          <div className={classes.loadingWrapper}>
+            <Button size="medium" disableElevation onClick={(e) => handlsubmit(e)} variant="contained" color="primary" className="buttonStyle" disabled={loading}>
+              Upload
+            </Button>
+            {loading && (
+              <CircularProgress
+                size={24}
+                className={classes.buttonProgress}
+              />
+            )}
+          </div>
+
         </Grid>
 
-        <Card className={classes.msgUploadSection}>
+        {/* <Card className={classes.msgUploadSection}>
           <CardContent>{messageShow}</CardContent>
-        </Card>
+        </Card> */}
       </Grid>
     </CustomPapperBlock>
   );

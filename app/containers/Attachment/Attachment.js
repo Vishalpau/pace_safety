@@ -37,9 +37,8 @@ export const Attachment = ({ value }) => {
     const classes = useStyles();
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
-    let extension = fileName.split(".");
-
-    if (extension[1].toLowerCase() === "pdf") {
+    let extension = fileName.split(".").pop();
+    if (extension.toLowerCase() === "pdf") {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
@@ -49,8 +48,8 @@ export const Attachment = ({ value }) => {
             </IconButton>
         );
     } else if (
-        extension[1].toLowerCase() === "xls" ||
-        extension[1].toLowerCase() === "xlsx"
+        extension.toLowerCase() === "xls" ||
+        extension.toLowerCase() === "xlsx"
     ) {
         return (
             <IconButton>
@@ -61,9 +60,9 @@ export const Attachment = ({ value }) => {
             </IconButton>
         );
     } else if (
-        extension[1].toLowerCase() === "word" ||
-        extension[1].toLowerCase() === "docx" ||
-        extension[1].toLowerCase() === "doc"
+        extension.toLowerCase() === "word" ||
+        extension.toLowerCase() === "docx" ||
+        extension.toLowerCase() === "doc"
     ) {
         return (
             <IconButton>
@@ -73,7 +72,7 @@ export const Attachment = ({ value }) => {
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
         );
-    } else if (extension[1].toLowerCase() === "pptx" || extension[1].toLowerCase() === "ppt") {
+    } else if (extension.toLowerCase() === "pptx" || extension.toLowerCase() === "ppt") {
         return (
             <IconButton>
                 <Tooltip title={fileName}>

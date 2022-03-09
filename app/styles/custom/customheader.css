@@ -573,6 +573,9 @@ ul.MuiMenu-list a ul li.userName {
 .simpleTableDesign tbody tr td a {
   cursor: pointer;
 }
+.simpleTableDesign tbody tr td.MuiTableCell-root, .simpleTableDesign thead tr th.MuiTableCell-root {
+  text-align: center;
+}
 
 /*Kanban css*/
 .MuiTypography-subtitle2 {
@@ -1160,7 +1163,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .complianceMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .complianceMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu, .compliance_configMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -1282,7 +1285,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left sub menu custom style */
-.flhaMenu, .jhaMenu, .ahaMenu , .dropdown_listsMenu, .check_listsMenu {
+.flhaMenu, .jhaMenu, .ahaMenu , .dropdown_listsMenu, .check_listsMenu, .compliance_configMenu{
   position: relative;
 }
 .MuiList-dense.MuiList-padding {
@@ -1292,7 +1295,8 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu .MuiTypography-colorTextSecondary,
 .ahaMenu .MuiTypography-colorTextSecondary,
 .dropdown_listsMenu .MuiTypography-colorTextSecondary,
-.check_listsMenu .MuiTypography-colorTextSecondary
+.check_listsMenu .MuiTypography-colorTextSecondary,
+.compliance_configMenu .MuiTypography-colorTextSecondary
  {
   position: absolute;
   left: 72px;
@@ -1303,14 +1307,17 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu .MuiListItemText-inset,
 .ahaMenu .MuiListItemText-inset,
 .dropdown_listsMenu .MuiListItemText-inset,
-.check_listsMenu .MuiListItemText-inset {
+.check_listsMenu .MuiListItemText-inset,
+.compliance_configMenu .MuiListItemText-inset
+{
   padding-left: 60px;
 }
 .flhaMenu .MuiListItemText-inset > span,
 .jhaMenu .MuiListItemText-inset > span,
 .ahaMenu .MuiListItemText-inset > span,
 .dropdown_listsMenu .MuiListItemText-inset > span,
-.check_listsMenu .MuiListItemText-inset > span {
+.check_listsMenu .MuiListItemText-inset > span,
+.compliance_configMenu .MuiListItemText-inset > span {
   padding-left: 48px;
 }
 
@@ -1318,7 +1325,9 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .dropdown_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg,
-.check_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg {
+.check_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.compliance_configMenu .MuiTypography-colorTextSecondary .leftCustomImg 
+  {
   position: absolute;
   top: 0px;
   left: 90px;
@@ -1399,7 +1408,9 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu:hover .MuiListItemText-root span,
 .ahaMenu:hover .MuiListItemText-root span,
 .dropdown_listsMenu:hover .MuiListItemText-root span,
-.check_listsMenu:hover .MuiListItemText-root span
+.check_listsMenu:hover .MuiListItemText-root span,
+.compliance_configMenu:hover .MuiListItemText-root span
+
  {
   background-position-y: -80px;
 }
@@ -1554,13 +1565,7 @@ ul.MuiMenu-list a ul li.userName {
   right: 90px;
   top: 235px;
 }
-.customDropdownPageIcon {
-  height: 2.5rem;
-  width: 2.5rem;
-  display: block;
-  background: url(../../../public/images/leftMenuIcons.png) no-repeat;
-  float: left;
-}
+
 .complianceConfigPageIcon {
   background-position: -82.563rem -25.313rem;
 }
