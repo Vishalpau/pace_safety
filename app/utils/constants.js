@@ -17,6 +17,9 @@ const getSSOUrl = () => {
   if (window.location.hostname === 'safety.pace-os.com') {
     return "https://accounts.pace-os.com";
   }
+  if (window.location.hostname === 'qa-safety.pace-os.com') {
+    return "https://qa-accounts.pace-os.com";
+  }
 
 }
 
@@ -48,6 +51,9 @@ const getSSOClientSecret = () => {
   if (window.location.hostname === 'safety.pace-os.com') {
     return "wsmcncXGHar4Sts2WtsDCpleuxhvgSEIgoEFaDHEKKxdcsuOpoa5p3nEj7wa29LGUgaaumUVGIjafw5GMMlVVz3oiSDlGtCjdg4pRdtwMfdzSVTBdpwf89tu6ljdFrfE";
   }
+  if (window.location.hostname === 'qa-safety.pace-os.com') {
+    return "nLj0xu4IGFrTEe1TXehC0VMD4CPVcn1WzKXWQzN1FlSFTVP2BFFvFyQsbw2P5wRQ4wRhusCmSwz0LcVqo74NQhpBX5qwcHlOJopEFBZjhbqR6t4y7hoC9KdIHQ787OaC";
+  }
 }
 export const SSO_CLIENT_SECRET = getSSOClientSecret()
 // Dev
@@ -70,6 +76,9 @@ const getSSOClientId = () => {
   }
   if (window.location.hostname === 'safety.pace-os.com') {
     return "bls6JqU6D6T2FlbSZdwzu7qV38KoTcSIWM6O7e8Q";
+  }
+  if (window.location.hostname === 'qa-safety.pace-os.com') {
+    return "1SBHU8yXJJUQoYXa4aRMeR4g2ht6KM96iZEOJk5F";
   }
 }
 export const SSO_CLIENT_ID = getSSOClientId()

@@ -421,7 +421,10 @@ const ObservationInitialNotificationView = () => {
                   Observed On
                 </FormLabel>
                 <Typography className="viewLabelValue">
-                  {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"}
+                {moment(initialData["observedAt"]).format(
+                    "Do MMMM YYYY, h:mm:ss a"
+                  )}
+                  {/* {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"} */}
                 </Typography>
               </Grid>
 
@@ -459,6 +462,8 @@ const ObservationInitialNotificationView = () => {
                   {moment(initialData["createdAt"]).format(
                     "Do MMMM YYYY, h:mm:ss a"
                   )}
+                {/* {initialData["createdAt"] ? handelDateTime(initialData["createdAt"]) : "-"} */}
+
                 </Typography>
               </Grid>
               <Grid item md={4} sm={4} xs={12}>
