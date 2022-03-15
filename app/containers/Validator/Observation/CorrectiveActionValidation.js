@@ -8,7 +8,7 @@ console.log(action.length);
   let isValid = true;
   if(button === "submit"){
     if (data.reviewedByName === null) {
-      error.reviewedByName = "Select the reviewedBy";
+      error.reviewedByName = "Select the reviewed by";
       isValid = false;
     }
     

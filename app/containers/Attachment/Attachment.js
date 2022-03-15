@@ -37,7 +37,8 @@ export const Attachment = ({ value }) => {
     const classes = useStyles();
     const fileNameArray = value.split("/");
     const fileName = fileNameArray[fileNameArray.length - 1];
-    let extension = fileName.split(".").pop();
+    // let extension = fileName.split("?").pop();
+    let extension = fileName.split(/[#?]/)[0].split('.').pop().trim()
     if (extension.toLowerCase() === "pdf") {
         return (
             <IconButton>

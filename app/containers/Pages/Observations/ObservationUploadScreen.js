@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -107,25 +105,34 @@ function ObservationBulkupload() {
     processer: 'OCR',
     filename: ''
   })
-
+  const [fileError, setFileError] = useState("");
   const [messageShow, setMessageShow] = useState('')
+  const [uploadBtn, setUploadBtn] = useState(false)
   const handleUpload = (e) => {
-    let temp = { ...uploadFrom }
-    temp.filename = e.currentTarget.files[0];
-    setUploadForm(temp)
-
+    let fileNameExt = e.currentTarget.files[0].name.split(".").pop();
+    if (fileNameExt == "pdf") {
+      let temp = {...uploadFrom}
+      temp.filename = e.currentTarget.files[0];
+      setUploadForm(temp)
+      setFileError("")
+      setUploadBtn(true)
+    } else {
+      setUploadBtn(false)
+      setFileError("Please choose .pdf file")
+    }
   }
+
   const handlsubmit = () => {
     setMessageShow('We are processing file please wait until is loading...')
     let data = new FormData();
     data.append("fkProjectId", uploadFrom.fkProjectId),
-      data.append("entityContext", uploadFrom.entityContext),
-      data.append("processer", uploadFrom.processer)
+    data.append("entityContext", uploadFrom.entityContext),
+    data.append("processer", uploadFrom.processer)
     data.append("filename", uploadFrom.filename)
     setLoading(true)
-    const res =  appapi.post(`/api/v1/core/modifiedrevisedocrform/?fkCompanyId=${fkCompanyId}`, data).then((res)=>
-    history.push('/app/icare-bulkupload')
-    ).catch((error)=>console.log(error))
+    const res = appapi.post(`/api/v1/core/modifiedrevisedocrform/?fkCompanyId=${fkCompanyId}`, data).then((res) =>
+      history.push('/app/icare-bulkupload')
+    ).catch((error) => console.log(error))
   }
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -168,20 +175,22 @@ function ObservationBulkupload() {
                   <input
                     type="file"
                     id="attachment"
-                    accept=".png, .jpg , .xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf ,  .mp4, .mov, .flv, .avi, .mkv"
+                    accept=".pdf"
                     onChange={(e) => {
                       handleUpload(e);
                     }} />
                 </Typography>
                 {messageShow}
               </Grid>
+              <div style={{ color: "red" }}>{fileError}</div>
+
             </Grid>
           </Paper>
         </Grid>
 
         <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
           <div className={classes.loadingWrapper}>
-            <Button size="medium" disableElevation onClick={(e) => handlsubmit(e)} variant="contained" color="primary" className="buttonStyle" disabled={loading}>
+            <Button size="medium"  onClick={(e) => handlsubmit(e)} variant="contained" color="primary" className="buttonStyle" disabled={loading || !uploadBtn}>
               Upload
             </Button>
             {loading && (

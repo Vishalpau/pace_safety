@@ -1,43 +1,22 @@
 import React, { useEffect, useState, Component } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { PapperBlock } from "dan-components";
 import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import PropTypes from "prop-types";
 import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 // import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from "@material-ui/core/FormGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import {
-  DateTimePicker,
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-import DateFnsUtils from "@date-io/date-fns";
-import { useDropzone } from "react-dropzone";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import Avatar from "@material-ui/core/Avatar";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Paper from "@material-ui/core/Paper";
 import FormSideBar from "../../../Forms/FormSideBar";
 import { COMPLIANCE } from "../Constants/Constants";
 import { useParams, useHistory } from "react-router-dom";
 import api from "../../../../utils/axios";
-import { subDays } from "date-fns/esm";
 import Loader from "../../Loader";
 import { CircularProgress } from "@material-ui/core";
+import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -169,6 +148,8 @@ const Categories = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [groupId, setGroupId] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [complianceData, setComplianceData] = useState({});
+
   const [subGroupId, setSubGroupId] = useState([]);
   const userId =
     JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -232,6 +213,7 @@ const Categories = () => {
         let subGroupIds = result.subGroupIds.split(",");
         setGroupId(groupIds);
         setSubGroupId(subGroupIds);
+        setComplianceData(result)
         let tempGroup = [];
         let tempSubGroup = [];
         for (let i = 0; i < groupIds.length; i++) {
@@ -299,33 +281,18 @@ const Categories = () => {
     }
   };
 
-  const handleCancel = () => {
-    history.push("/app/pages/compliance/performance-summary");
-  };
-  console.log(checkGroups, "LLLLLLLLLLLLLLLLLLLLLLLLLLL");
-  // const fetchCategoryData = async (data) => {
-  //   const res = await api.get(
-  //     `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
-  //   );
-  //   const result = res.data.data.results;
-  //   await setCheckListGroupsData(result)
-  //   let temp = {}
-  //   for(let i = 0; i < result.length; i++) {
-  //     for(var j in data) {
-  //       if(result[i]['groupName'] === j){
-  //         temp[j] = data[j]
-  //       }
-  //     }
-  //   }
-  //   await setCheckData(temp)
-  //   await setIsLoading(true)
-  // };
   useEffect(() => {
     fetchCheklist();
-    fetchComplianceData();
-    // fetchCategoryData();
+   
   }, []);
   return (
+    <CustomPapperBlock
+    title={`Compliance number: ${
+      complianceData.auditNumber ? complianceData.auditNumber : ""
+    }`}
+    icon="customDropdownPageIcon compliancePageIcon"
+    whiteBg
+  >
     <>
       {isLoading ? (
         <>
@@ -474,7 +441,13 @@ const Categories = () => {
                 variant="contained"
                 color="secondary"
                 className="buttonStyle custmCancelBtn"
-                onClick={handleCancel}
+                onClick={() =>
+                  history.push(
+                    `/app/pages/compliance/compliance-summary/${localStorage.getItem(
+                      "fkComplianceId"
+                    )}`
+                  )
+                }
               >
                 Cancel
               </Button>
@@ -485,6 +458,8 @@ const Categories = () => {
         <Loader />
       )}
     </>
+    </CustomPapperBlock>
+
   );
 };
 
