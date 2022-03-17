@@ -350,7 +350,24 @@ const ObservationSummary = () => {
                 Quick Actions
               </Typography>
               <List component="nav" aria-label="main mailbox folders">
-              {!checkACL('safety', 'change_observations') ? '' : (
+              {!checkACL('safety', 'change_observations') ? 
+                <ListItem button>
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                <Link
+                  variant="subtitle"
+                  onClick={(e) => handelObservationInitialNotificationUpdate(e)}
+
+                  style={{
+                    color: '#c0c0c0', 
+                    cursor: 'not-allowed'
+                  }}
+                >
+                  <ListItemText primary="Update iCare" />
+                </Link>
+              </ListItem>
+              : (
                   <ListItem button>
                     <ListItemIcon>
                       <Edit />

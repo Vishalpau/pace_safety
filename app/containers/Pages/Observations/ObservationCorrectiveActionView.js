@@ -219,7 +219,7 @@ const ObservationCorrectiveActionView = () => {
       (
     
     <>
-    {checkACL('action_tracker', 'view_actions') ? 
+    
       <>
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
         <Typography variant="h6" className="sectionHeading">
@@ -231,7 +231,7 @@ const ObservationCorrectiveActionView = () => {
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
         <Paper elevation={1} className="paperSection">
 
-
+        {checkACL('action_tracker', 'view_actions') ? 
           <Grid container spacing={3} >
 
 
@@ -288,12 +288,13 @@ const ObservationCorrectiveActionView = () => {
                 </Table>
               </TableContainer> : null}
             </Grid>
-
+            
           </Grid>
+          : 'You do not have permissions to access actions.'}
         </Paper>
       </Grid>
       </>
-      : ''}
+      
       <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
         <Typography variant="h6" className="sectionHeading">
           <svg id="outline-assignment-24px" xmlns="http://www.w3.org/2000/svg" width="30.2" height="30.2" viewBox="0 0 40.2 40.2">

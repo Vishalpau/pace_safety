@@ -258,24 +258,34 @@ export default function Observations() {
             <Grid item sm={5} xs={12}>
 
 
-              {/* {false && */}
-                <Button
-                  variant="contained"
-                  size="small"
-                  className={classNames(classes.buttonsNew, classes.floatR)}
-                  disableElevation
-                  startIcon={<CloudUploadIcon />}
-                  style={{ marginLeft: '10px' }}
-                  onClick={() => handleBulkUploadfilePush()}
+            {/* {false &&  */}
+              <Button
+                variant="contained"
+                size="small"
+                className={classNames(classes.buttonsNew, classes.floatR)}
+                disableElevation
+                startIcon={<CloudUploadIcon />}
+                style={{ marginLeft: '10px' }}
+                onClick={() => handleBulkUploadfilePush()}
+              >
+                Upload
+              </Button>
+            {/* } */}
+             {/* {!checkACL('safety', 'add_observations') ? '' : ( */}
+              <Button 
+                size="medium" 
+                variant="contained" 
+                className={classNames(classes.buttonsNew, classes.floatR)} 
+                color="primary" 
+                onClick={() => handleInitialNotificationPush()}
+                style={{
+                  background: checkACL('safety', 'add_observations') ? '#06425c' : '#c0c0c0', 
+                  cursor: checkACL('safety', 'add_observations') ? 'pointer' : 'not-allowed'
+                }}
                 >
-                  Upload
-                </Button>
-              {/* } */}
-              {!checkACL('safety', 'add_observations') ? '' : (
-                <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
-                  <AddIcon className={classes.floatR} /> Add new
-                </Button>
-              )}
+                <AddIcon className={classes.floatR} /> Add new
+              </Button>
+            {/* )} */}
 
             </Grid>
 

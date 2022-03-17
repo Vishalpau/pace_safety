@@ -25,6 +25,8 @@ import {
 } from "../../../utils/constants";
 import InitialNotificationValidator from "../../Validator/Observation/InitialNotificationValidation";
 import Loader from "../Loader"
+import Acl from "../../../components/Error/acl"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -594,6 +596,10 @@ const ObservationInitialNotificationUpdate = () => {
         icon="ion-md-list-box"
       > */}
       {isLoading ?
+         <Acl 
+         module='safety'
+         action='change_observations'
+         html={
         <Grid container spacing={3} className={classes.observationNewSection}>
         {tagData.length > 0 ? (<>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1013,7 +1019,7 @@ const ObservationInitialNotificationUpdate = () => {
             </div>
 
           </Grid>
-        </Grid>
+        </Grid>} />
         :
         <Loader />
       }

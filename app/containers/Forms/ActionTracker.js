@@ -14,22 +14,16 @@ import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import CloseIcon from "@material-ui/icons/Close";
-import FlashOnIcon from "@material-ui/icons/FlashOn";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
 } from "@material-ui/pickers";
-import axios from "axios";
+import {checkACL} from '../../utils/helper' //'../../../utils/helper'
 import moment from "moment";
 
 import apiAction from "../../utils/axiosActionTracker";
-import {
-  access_token,
-  ACCOUNT_API_URL,
-} from "../../utils/constants";
 import { handelCommonObject, fetchReportedBy, fetchDepartmentName } from "../../utils/CheckerValue";
-import { values } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -259,14 +253,14 @@ export default function ActionTracker(props) {
   }, [])
 
   return (
-    <>
-
+      <>
       {props.isCorrectiveActionTaken === null ?
         <Button
           variant="contained"
           color="primary"
           onClick={handleClickOpen}
           disabled={props.isCorrectiveActionTaken === null ? true : false}
+          
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 75 50">
             <g id="Group_336" data-name="Group 336" transform="translate(-338 -858)">
