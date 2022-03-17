@@ -186,9 +186,7 @@ function PersonalDashboard(props) {
   const getSubscriptions = async (compId) => {
     const companyId = compId ||
       JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
-
     if (companyId) {
-
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
@@ -201,7 +199,6 @@ function PersonalDashboard(props) {
           .catch(function (error) {
             console.log(error);
           });
-
 
         await setSubscriptions(data)
         // redirectionAccount()
@@ -526,8 +523,9 @@ function PersonalDashboard(props) {
     let redback = ''
     let tarPage = ''
     let tarId = 0
-    if (state !== null) {
+    
 
+    if (state !== null) {
       await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct, state.tarId)
     } else {
 
@@ -615,7 +613,7 @@ function PersonalDashboard(props) {
             </div> */}
                       <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
                         <div className="hexagontent hexagon_content_box">
-                          <a className="hse_compliance_protocols" onClick={() => handleClick('compliances')}>
+                          <a className="hse_compliance_protocols" onClick={() => history.push('/app/pages/compliance')}>
                             <p>Compliance</p>
                           </a>
                         </div>

@@ -74,6 +74,24 @@ import FormSideBar from "../../../Forms/FormSideBar";
 import { COMPLIANCE } from "../Constants/Constants";
 import { useParams, useHistory } from "react-router-dom";
 import api from "../../../../utils/axios";
+import ActionTracker from "../../../Forms/ActionTracker";
+import {
+  handelIncidentId,
+  checkValue,
+  handelCommonObject,
+  handelActionData,
+} from "../../../../utils/CheckerValue";
+import ActionShow from "../../../Forms/ActionShow";
+import {
+  access_token,
+  ACCOUNT_API_URL,
+  HEADER_AUTH,
+  INITIAL_NOTIFICATION_FORM,
+  LOGIN_URL,
+  SSO_URL,
+} from "../../../../utils/constants";
+import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
+
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
@@ -269,6 +287,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     //color: '#ffffff'
   },
+  actionLinkAudit: {
+    inlineSize: "max-content",
+  },
 }));
 
 const styles = (theme) => ({
@@ -288,7 +309,11 @@ const Checks = () => {
   const history = useHistory();
   const [form, setForm] = useState({});
   const [checkData, setCheckData] = useState([]);
+  const [updatePage, setUpdatePage] = useState(false);
+  const [actionData, setActionData] = useState([]);
   //const [expanded, setExpanded] = React.useState('panel1');
+  const [complianceData, setComplianceData] = useState({});
+
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel4"
   );
@@ -306,6 +331,16 @@ const Checks = () => {
   //     checkedF: true,
   //     checkedG: true,
   //   });
+
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -385,7 +420,7 @@ const Checks = () => {
   const fetchCheklistData = async () => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/8/projects/15/compliance/`
+      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
     const result = res.data.data.results;
     // await setIsLoading(true)
@@ -413,6 +448,7 @@ const Checks = () => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
+        setComplianceData(result)
         let groupIds = result.groupIds.split(",");
         let subGroupIds = result.subGroupIds.split(",");
         let tempGroup = [];
@@ -437,12 +473,16 @@ const Checks = () => {
           }
         }
         setForm(result);
-        fetchCheklist(tempSubGroup);
+        fetchCheklist(tempSubGroup, result.groups, result.subGroups);
       })
       .catch((error) => console.log(error));
   };
 
-  const fetchCheklist = async (data) => {
+  const fetchCheklist = async (data, groups, subGroups) => {
+    const userId =
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
     let temp = [];
     let tempCheckData = [];
     let categoriesData = {};
@@ -450,59 +490,157 @@ const Checks = () => {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
+
       const res = await api.get(
-        `/api/v1/configaudits/auditquestions/groups/${groupName}/subgroups/${subGroupName}/?company=8&project=15`
+        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}`
       );
       const result2 = res.data.data.results;
-      console.log(result2);
+      // console.log(result2);
       temp.push(result2);
     }
-    console.log(temp);
-    temp.map((value, i) => {
+    let tempQuestionId = [];
+    // console.log(temp);
+    temp.map((tempvalue, i) => {
+      console.log(tempvalue);
       temp[i].map((value, index) => {
+        tempQuestionId.push({ id: value.id });
+        console.log("....", tempvalue[index].id);
         tempCheckData.push({
           questionId: value.id,
           question: value.question,
           criticality: "",
           auditStatus: "",
           performance: "",
-          groupId: temp[i].id,
+          groupId: null,
           groupName: value.groupName,
-          subGroupId: temp[i].id,
+          subGroupId: null,
           subGroupName: value.subGroupName,
           defaultResponse: "",
           score: "",
           findings: "",
+          attachment: null,
           status: "Active",
-          createdBy: 1,
-          updatedBy: 0,
+          createdBy: parseInt(userId),
           fkAuditId: localStorage.getItem("fkComplianceId"),
         });
-        console.log(tempCheckData);
+        // console.log(tempCheckData);
         categoriesData[value["groupName"]].push(value);
       });
     });
+    for (let i = 0; i < tempCheckData.length; i++) {
+      for (let j = 0; j < groups.length; j++) {
+        if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
+          tempCheckData[i]['groupId'] = groups[j]['id']
+        }
+      }
+    }
+    for (let i = 0; i < tempCheckData.length; i++) {
+      for (let j = 0; j < subGroups.length; j++) {
+        if (subGroups[j]['inputLabel'] == tempCheckData[i]['subGroupName']) {
+          tempCheckData[i]['subGroupId'] = subGroups[j]['id']
+        }
+      }
+    }
+    // handelCommonObject("commonObject", "audit", "assessmentIds", temp);
+    handelCommonObject("commonObject", "audit", "qustionsIds", tempQuestionId);
     await setCheckData(tempCheckData);
     await setCategories(categoriesData);
+    await handelActionTracker();
   };
+  // console.log(checkData);
   const handelSubmit = async () => {
-    if (checkData[0].id) {
-      console.log("put");
-      const res = await api.put(
+    const userId =
+      JSON.parse(localStorage.getItem("userDetails")) !== null
+        ? JSON.parse(localStorage.getItem("userDetails")).id
+        : null;
+    let tempUpdatedQuestion = []
+    let tempNewQuestion = []
+    checkData.map((data) => {
+      if (data.id) {
+        tempUpdatedQuestion.push(data)
+      } else {
+        tempNewQuestion.push(data)
+      }
+    })
+    if (tempNewQuestion.length > 0) {
+
+      const data = new FormData();
+      for (var i = 0; i < tempNewQuestion.length; i++) {
+        data.append("questionId", tempNewQuestion[i].questionId);
+        data.append("question", tempNewQuestion[i].question);
+        data.append("criticality", tempNewQuestion[i].criticality);
+        data.append("performance", tempNewQuestion[i].performance);
+        data.append("groupId", tempNewQuestion[i].groupId);
+        data.append("groupName", tempNewQuestion[i].groupName);
+        data.append("subGroupId", tempNewQuestion[i].subGroupId);
+        data.append("subGroupName", tempNewQuestion[i].subGroupName);
+        data.append("defaultResponse", tempNewQuestion[i].defaultResponse);
+        data.append("score", tempNewQuestion[i].score);
+        data.append("findings", tempNewQuestion[i].findings);
+        data.append("score", tempNewQuestion[i].score);
+        data.append("auditStatus", tempNewQuestion[i].auditStatus);
+        if (typeof tempNewQuestion[i].attachment !== "string") {
+          if (tempNewQuestion[i].attachment !== null) {
+            data.append("attachment", tempNewQuestion[i].attachment);
+          }
+        }
+        data.append("status", "Active");
+        data.append("fkAuditId", tempNewQuestion[i].fkAuditId);
+        data.append("createdAt", new Date().toISOString());
+        data.append("createdBy", tempNewQuestion[i].createdBy);
+      }
+
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, data);
+    }
+    if (tempUpdatedQuestion.length > 0) {
+
+      const data = new FormData();
+      for (var i = 0; i < tempUpdatedQuestion.length; i++) {
+        data.append("questionId", tempUpdatedQuestion[i].questionId);
+        data.append("question", tempUpdatedQuestion[i].question);
+        data.append("criticality", tempUpdatedQuestion[i].criticality);
+        data.append("performance", tempUpdatedQuestion[i].performance);
+        data.append("groupId", tempUpdatedQuestion[i].groupId);
+        data.append("groupName", tempUpdatedQuestion[i].groupName);
+        data.append("subGroupId", tempUpdatedQuestion[i].subGroupId);
+        data.append("subGroupName", tempUpdatedQuestion[i].subGroupName);
+        data.append("defaultResponse", tempUpdatedQuestion[i].defaultResponse);
+        data.append("score", tempUpdatedQuestion[i].score);
+        data.append("findings", tempUpdatedQuestion[i].findings);
+        data.append("score", tempUpdatedQuestion[i].score);
+        data.append("auditStatus", tempUpdatedQuestion[i].auditStatus);
+        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+          if (tempUpdatedQuestion[i].attachment !== null) {
+            data.append("attachment", tempUpdatedQuestion[i].attachment);
+          }
+        }
+        data.append("status", "Active");
+        data.append("fkAuditId", tempUpdatedQuestion[i].fkAuditId);
+        data.append("createdAt", new Date().toISOString());
+        data.append("createdBy", tempUpdatedQuestion[i].createdBy);
+        data.append("updatedBy", parseInt(userId));
+      }
+      const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           "fkComplianceId"
         )}/auditresponse/`,
-        checkData
-      );
-    } else {
-      console.log("post");
-      const res = await api.post(
-        `/api/v1/audits/${localStorage.getItem(
-          "fkComplianceId"
-        )}/auditresponse/`,
-        checkData
+        data
       );
     }
+    // const resUpdate = await api.put(
+    //   `/api/v1/audits/${localStorage.getItem(
+    //     "fkComplianceId"
+    //   )}/auditresponse/`,
+    //   checkData
+    // );
+    // console.log("post");
+    // const resNew = await api.post(
+    //   `/api/v1/audits/${localStorage.getItem(
+    //     "fkComplianceId"
+    //   )}/auditresponse/`,
+    //   checkData
+    // );
+
     history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
@@ -527,189 +665,211 @@ const Checks = () => {
     await setCheckData(result);
   };
 
+  const handleFile = (value, field, index, id) => {
+    let temp = [...checkData];
+    for (let i = 0; i < temp.length; i++) {
+      console.log(temp[i]["questionId"], id);
+      if (temp[i]["questionId"] == id) {
+        temp[i][field] = value;
+      }
+    }
+    console.log(temp)
+    setCheckData(temp);
+  };
+  console.log("acceptedFiles", checkData);
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkComplianceId");
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+      "qustionsIds"
+    ];
+    let allAction = await handelActionData(jhaId, apiData);
+    setActionData(allAction);
+  };
+
   useEffect(() => {
     //fetchCheklist();
     fetchCheklistData();
     fetchData();
   }, []);
   return (
-    <>
-      <Grid container spacing={3}>
-        <Grid container spacing={3} item xs={12} md={9}>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Typography variant="h6" className="sectionHeading">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="28"
-                viewBox="0 0 49.737 39"
-              >
-                <g id="check-30" transform="translate(-100.352 -178.176)">
-                  <path
-                    id="Path_6414"
-                    data-name="Path 6414"
-                    d="M100.352,178.176v33.94h39.493v-33.94Zm37.025,31.348H102.82v-28.88h34.557Z"
-                    transform="translate(0)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6415"
-                    data-name="Path 6415"
-                    d="M192.512,333.824h4.32v3.456h-4.32Z"
-                    transform="translate(-86.606 -146.268)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6416"
-                    data-name="Path 6416"
-                    d="M286.72,352.256h21.968v1.234H286.72Z"
-                    transform="translate(-175.137 -163.59)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6417"
-                    data-name="Path 6417"
-                    d="M286.72,466.944h21.968v1.234H286.72Z"
-                    transform="translate(-175.137 -271.366)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6418"
-                    data-name="Path 6418"
-                    d="M286.72,585.728h21.968v1.234H286.72Z"
-                    transform="translate(-175.137 -382.992)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6419"
-                    data-name="Path 6419"
-                    d="M192.512,448.512h4.32v3.456h-4.32Z"
-                    transform="translate(-86.606 -254.045)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6420"
-                    data-name="Path 6420"
-                    d="M192.512,567.3h4.32v3.456h-4.32Z"
-                    transform="translate(-86.606 -365.671)"
-                    fill="#06425c"
-                  />
-                  <path
-                    id="Path_6421"
-                    data-name="Path 6421"
-                    d="M308.978,300.173l-3.826,2.962s9.75,8.269,15.3,16.044c0,0,3.456-13.452,22.092-30.361l-.864-2.1s-10.861,5.06-23.7,21.1A79.707,79.707,0,0,0,308.978,300.173Z"
-                    transform="translate(-192.458 -102.003)"
-                    fill="#06425c"
-                  />
-                </g>
-              </svg>{" "}
-              Checks
-            </Typography>
-          </Grid>
-          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-            <Paper elevation={1} className="paperSection">
-              <Grid container spacing={3}>
-                <Grid item md={6} xs={12}>
-                  <FormLabel component="legend" className="viewLabel">
-                    Compliance type
-                  </FormLabel>
-                  <Typography className="viewLabelValue">
-                    {form.auditType}
-                  </Typography>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <FormLabel component="legend" className="viewLabel">
-                    Work area information
-                  </FormLabel>
-                  <Typography className="viewLabelValue">
-                    Work area 11
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  {Object.entries(categories).map(([key, value]) => (
-                    <>
-                      <FormLabel className="checkRadioLabel" component="legend">
-                        {key}
-                      </FormLabel>
-                      {value.map((value, index) => (
-                        <>
-                          <span className={classes.accordingHeaderContentleft}>
-                            <ListItem
-                              className={classes.accordingHeaderContent}
-                            >
-                              <ListItemText
-                                className="viewLabelValueListTag"
-                                primary="Total score: "
-                                secondary="25"
-                              />
-                            </ListItem>
-                            <ListItem
-                              className={classes.accordingHeaderContent}
-                            >
-                              <ListItemText
-                                className="viewLabelValueListTag"
-                                primary="Acceptable score: "
-                                secondary="<as per admin config>"
-                              />
-                            </ListItem>
-                          </span>
-
-                          <Grid container item xs={12}>
-                            <Grid item md={12}>
-                              <div>
-                                {value.responseType === "Yes-No-NA" ? (
-                                  <Accordion
-                                    expanded={
-                                      expandedTableDetail === `panel6 ${index}`
-                                    }
-                                    onChange={handleTDChange(`panel6 ${index}`)}
-                                    className="backPaperAccordian"
-                                  >
-                                    <AccordionSummary
-                                      expandIcon={<ExpandMoreIcon />}
-                                      aria-controls="panel1bh-content"
-                                      id="panel1bh-header"
-                                      className="accordionHeaderSection"
+    <CustomPapperBlock
+      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
+        }`}
+      icon="customDropdownPageIcon compliancePageIcon"
+      whiteBg
+    >
+      <>
+        <Grid container spacing={3}>
+          <Grid container spacing={3} item xs={12} md={9}>
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Typography variant="h6" className="sectionHeading">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="28"
+                  viewBox="0 0 49.737 39"
+                >
+                  <g id="check-30" transform="translate(-100.352 -178.176)">
+                    <path
+                      id="Path_6414"
+                      data-name="Path 6414"
+                      d="M100.352,178.176v33.94h39.493v-33.94Zm37.025,31.348H102.82v-28.88h34.557Z"
+                      transform="translate(0)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6415"
+                      data-name="Path 6415"
+                      d="M192.512,333.824h4.32v3.456h-4.32Z"
+                      transform="translate(-86.606 -146.268)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6416"
+                      data-name="Path 6416"
+                      d="M286.72,352.256h21.968v1.234H286.72Z"
+                      transform="translate(-175.137 -163.59)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6417"
+                      data-name="Path 6417"
+                      d="M286.72,466.944h21.968v1.234H286.72Z"
+                      transform="translate(-175.137 -271.366)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6418"
+                      data-name="Path 6418"
+                      d="M286.72,585.728h21.968v1.234H286.72Z"
+                      transform="translate(-175.137 -382.992)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6419"
+                      data-name="Path 6419"
+                      d="M192.512,448.512h4.32v3.456h-4.32Z"
+                      transform="translate(-86.606 -254.045)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6420"
+                      data-name="Path 6420"
+                      d="M192.512,567.3h4.32v3.456h-4.32Z"
+                      transform="translate(-86.606 -365.671)"
+                      fill="#06425c"
+                    />
+                    <path
+                      id="Path_6421"
+                      data-name="Path 6421"
+                      d="M308.978,300.173l-3.826,2.962s9.75,8.269,15.3,16.044c0,0,3.456-13.452,22.092-30.361l-.864-2.1s-10.861,5.06-23.7,21.1A79.707,79.707,0,0,0,308.978,300.173Z"
+                      transform="translate(-192.458 -102.003)"
+                      fill="#06425c"
+                    />
+                  </g>
+                </svg>{" "}
+                Checks
+              </Typography>
+            </Grid>
+            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+              <Paper elevation={1} className="paperSection">
+                <Grid container spacing={3}>
+                  <Grid item md={6} xs={12}>
+                    <FormLabel component="legend" className="viewLabel">
+                      Compliance type
+                    </FormLabel>
+                    <Typography className="viewLabelValue">
+                      {form.auditType}
+                    </Typography>
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <FormLabel component="legend" className="viewLabel">
+                      Work area information
+                    </FormLabel>
+                    <Typography className="viewLabelValue">
+                      {form.area ? form.area : '-'}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {Object.entries(categories).map(([key, value]) => (
+                      <>
+                        <FormLabel className="checkRadioLabel" component="legend">
+                          {key}
+                        </FormLabel>
+                        <span className={classes.accordingHeaderContentleft}>
+                          <ListItem className={classes.accordingHeaderContent}>
+                            <ListItemText
+                              className="viewLabelValueListTag"
+                              primary="Total score: "
+                              secondary="25"
+                            />
+                          </ListItem>
+                          <ListItem className={classes.accordingHeaderContent}>
+                            <ListItemText
+                              className="viewLabelValueListTag"
+                              primary="Acceptable score: "
+                              secondary="<as per admin config>"
+                            />
+                          </ListItem>
+                        </span>
+                        {value.map((value, index) => (
+                          <>
+                            <Grid container item xs={12}>
+                              <Grid item md={12}>
+                                <div>
+                                  {value.responseType === "Yes-No-NA" ? (
+                                    <Accordion
+                                      expanded={
+                                        expandedTableDetail === `panel6 ${index}`
+                                      }
+                                      onChange={handleTDChange(`panel6 ${index}`)}
+                                      className="backPaperAccordian"
                                     >
-                                      <List className={classes.heading}>
-                                        <ListItem
-                                          className={
-                                            classes.accordingHeaderContentLeft
-                                          }
-                                        >
-                                          <ListItemText
-                                            primary={value.question}
-                                          />
-                                        </ListItem>
-                                      </List>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                      <Grid container spacing={2}>
-                                        <Grid item md={12} xs={12}>
-                                          <FormControl component="fieldset">
-                                            <RadioGroup
-                                              row
-                                              aria-label="select-typeof-compliance"
-                                              name="select-typeof-compliance"
-                                            >
-                                              {radioDecide.map((option) => (
-                                                <FormControlLabel
-                                                  value={option}
-                                                  className="selectLabel"
-                                                  control={<Radio />}
-                                                  onChange={(e) =>
-                                                    handleChangeData(
-                                                      e.target.value,
-                                                      "defaultResponse",
-                                                      index,
-                                                      value.id
-                                                    )
-                                                  }
-                                                  label={option}
-                                                />
-                                              ))}
+                                      <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1bh-content"
+                                        id="panel1bh-header"
+                                        className="accordionHeaderSection"
+                                      >
+                                        <List className={classes.heading}>
+                                          <ListItem
+                                            className={
+                                              classes.accordingHeaderContentLeft
+                                            }
+                                          >
+                                            <ListItemText
+                                              primary={value.question}
+                                            />
+                                          </ListItem>
+                                        </List>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                        <Grid container spacing={2}>
+                                          <Grid item md={12} xs={12}>
+                                            <FormControl component="fieldset">
+                                              <RadioGroup
+                                                row
+                                                aria-label="select-typeof-compliance"
+                                                name="select-typeof-compliance"
+                                              >
+                                                {radioDecide.map((option) => (
+                                                  <FormControlLabel
+                                                    value={option}
+                                                    className="selectLabel"
+                                                    control={<Radio />}
+                                                    onChange={(e) =>
+                                                      handleChangeData(
+                                                        e.target.value,
+                                                        "defaultResponse",
+                                                        index,
+                                                        value.id
+                                                      )
+                                                    }
+                                                    label={option}
+                                                  />
+                                                ))}
 
-                                              {/* <FormControlLabel
+                                                {/* <FormControlLabel
                                                 value="workarea-compliance"
                                                 className="selectLabel"
                                                 control={<Radio />}
@@ -721,943 +881,705 @@ const Checks = () => {
                                                 control={<Radio />}
                                                 label="NA"
                                               /> */}
-                                            </RadioGroup>
-                                          </FormControl>
-                                        </Grid>
-                                        <Grid item md={12} xs={12}>
-                                          <TextField
-                                            label="Findings"
-                                            name="findings"
-                                            id="findings"
-                                            onChange={(e) =>
-                                              handleChangeData(
-                                                e.target.value,
-                                                "findings",
-                                                index,
-                                                value.id
-                                              )
-                                            }
-                                            multiline
-                                            rows={4}
-                                            defaultValue=""
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          />
-                                        </Grid>
-                                        <Grid item md={12} sm={12} xs={12}>
-                                          <FormLabel
-                                            className="checkRadioLabel marginB5"
-                                            component="legend"
-                                          >
-                                            Score
-                                          </FormLabel>
-                                        </Grid>
-                                        <Grid item md={4} sm={4} xs={12}>
-                                          <Rating
-                                            name="simple-controlled"
-                                            value={value}
-                                            onChange={(event, newValue) => {
-                                              setValue(newValue);
-                                            }}
-                                          />
-                                        </Grid>
-                                        <Grid item md={4} sm={4} xs={12}>
-                                          <FormControl
-                                            variant="outlined"
-                                            className="formControl"
-                                          >
-                                            <InputLabel id="demo-simple-select-outlined-label">
-                                              Counts
-                                            </InputLabel>
-                                            <Select
-                                              labelId="scoreCount"
-                                              id="scoreCount"
-                                              // onChange={handleChangeOne}
-                                              label="Counts"
-                                              className="formControl"
+                                              </RadioGroup>
+                                            </FormControl>
+                                          </Grid>
+                                          <Grid item md={12} xs={12}>
+                                            <TextField
+                                              label="Findings"
+                                              name="findings"
+                                              id="findings"
+                                              onChange={(e) =>
+                                                handleChangeData(
+                                                  e.target.value,
+                                                  "findings",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                              multiline
+                                              rows={4}
+                                              defaultValue=""
                                               fullWidth
+                                              variant="outlined"
+                                              className="formControl"
+                                            />
+                                          </Grid>
+                                          <Grid item md={12} sm={12} xs={12}>
+                                            <FormLabel
+                                              className="checkRadioLabel marginB5"
+                                              component="legend"
                                             >
-                                              <MenuItem value={1}>1</MenuItem>
-                                              <MenuItem value={2}>2</MenuItem>
-                                              <MenuItem value={3}>3</MenuItem>
-                                              <MenuItem value={4}>4</MenuItem>
-                                              <MenuItem value={5}>5</MenuItem>
-                                              <MenuItem value={6}>6</MenuItem>
-                                              <MenuItem value={7}>7</MenuItem>
-                                              <MenuItem value={8}>8</MenuItem>
-                                              <MenuItem value={9}>9</MenuItem>
-                                              <MenuItem value={10}>10</MenuItem>
-                                            </Select>
-                                          </FormControl>
-                                        </Grid>
-                                        <Grid item md={4} sm={4} xs={12}>
-                                          <TextField
-                                            label="Percentage"
-                                            name="performancerating"
-                                            id="performancerating"
-                                            // defaultValue="20%"
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          />
-                                        </Grid>
-                                        <Grid item md={12} xs={12}>
-                                          <FormLabel
-                                            className="checkRadioLabel"
-                                            component="legend"
+                                              Score
+                                            </FormLabel>
+                                          </Grid>
+                                          {value.scoreType === "Star" &&
+                                            <Grid item md={4} sm={4} xs={12}>
+                                              <Rating
+                                                name="simple-controlled"
+                                                value={value}
+                                                onChange={(e, newValue) =>
+                                                  handleChangeData(
+                                                    newValue,
+                                                    "score",
+                                                    index,
+                                                    value.id
+                                                  )
+                                                }
+                                              />
+                                            </Grid>}
+                                          {value.scoreType === "1-10" &&
+                                            <Grid item md={4} sm={4} xs={12}>
+                                              <FormControl
+                                                variant="outlined"
+                                                className="formControl"
+                                              >
+                                                <InputLabel id="demo-simple-select-outlined-label">
+                                                  Counts
+                                                </InputLabel>
+                                                <Select
+                                                  labelId="scoreCount"
+                                                  id="scoreCount"
+                                                  // onChange={handleChangeOne}
+                                                  label="Counts"
+                                                  className="formControl"
+                                                  fullWidth
+                                                  onChange={(e) =>
+                                                    handleChangeData(
+                                                      e.target.value,
+                                                      "score",
+                                                      index,
+                                                      value.id
+                                                    )
+                                                  }
+                                                >
+                                                  <MenuItem value={1}>1</MenuItem>
+                                                  <MenuItem value={2}>2</MenuItem>
+                                                  <MenuItem value={3}>3</MenuItem>
+                                                  <MenuItem value={4}>4</MenuItem>
+                                                  <MenuItem value={5}>5</MenuItem>
+                                                  <MenuItem value={6}>6</MenuItem>
+                                                  <MenuItem value={7}>7</MenuItem>
+                                                  <MenuItem value={8}>8</MenuItem>
+                                                  <MenuItem value={9}>9</MenuItem>
+                                                  <MenuItem value={10}>10</MenuItem>
+                                                </Select>
+                                              </FormControl>
+                                            </Grid>}
+                                          {value.scoreType === "%" &&
+                                            <Grid item md={4} sm={4} xs={12}>
+                                              <TextField
+                                                label="Percentage"
+                                                name="performancerating"
+                                                id="performancerating"
+                                                // defaultValue="20%"
+                                                fullWidth
+                                                variant="outlined"
+                                                className="formControl"
+                                                onChange={(e) =>
+                                                  handleChangeData(
+                                                    e.target.value,
+                                                    "score",
+                                                    index,
+                                                    value.id
+                                                  )
+                                                }
+                                              />
+                                            </Grid>}
+                                          <Grid item md={12} xs={12}>
+                                            <FormLabel
+                                              className="checkRadioLabel"
+                                              component="legend"
+                                            >
+                                              Create Action{" "}
+                                            </FormLabel>
+                                            <Grid
+                                              item
+                                              xs={6}
+                                              className={classes.createHazardbox}
+                                            >
+                                              <ActionTracker
+                                                actionContext="audit:question"
+                                                enitityReferenceId={`${localStorage.getItem(
+                                                  "fkComplianceId"
+                                                )}:${value.id}`}
+                                                setUpdatePage={setUpdatePage}
+                                                fkCompanyId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "company"
+                                                    )
+                                                  ).fkCompanyId
+                                                }
+                                                fkProjectId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "projectName"
+                                                    )
+                                                  ).projectName.projectId
+                                                }
+                                                fkProjectStructureIds={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "commonObject"
+                                                    )
+                                                  )["audit"]["projectStruct"]
+                                                }
+                                                createdBy={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "userDetails"
+                                                    )
+                                                  ).id
+                                                }
+                                                updatePage={updatePage}
+                                                handelShowData={
+                                                  handelActionTracker
+                                                }
+                                              />
+                                            </Grid>
+                                          </Grid>
+                                          {actionData.map((val) => (
+                                            <>
+                                              {val.id == value.id ? (
+                                                <>
+                                                  {val.action.length > 0 &&
+                                                    <Grid item md={12} xs={12}>
+                                                      <Table
+                                                        component={Paper}
+                                                        className="simpleTableSection"
+                                                      >
+                                                        <TableHead>
+                                                          <TableRow>
+                                                            <TableCell className="tableHeadCellFirst">
+                                                              Action number
+                                                            </TableCell>
+                                                            <TableCell className="tableHeadCellSecond">
+                                                              Action title
+                                                            </TableCell>
+                                                          </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                          {actionData.map((val) => (
+                                                            <>
+                                                              {val.id == value.id ? (
+                                                                <>
+                                                                  {val.action.length > 0 &&
+                                                                    val.action.map(
+                                                                      (valueAction) => (
+                                                                        <TableRow>
+                                                                          <TableCell align="left">
+                                                                            <Link
+                                                                              className={
+                                                                                classes.actionLinkAudit
+                                                                              }
+                                                                              display="block"
+                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                                localStorage.getItem(
+                                                                                  "BaseUrl"
+                                                                                )
+                                                                              )[
+                                                                                "actionClientID"
+                                                                              ]
+                                                                                }&response_type=code&companyId=${JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "company"
+                                                                                  )
+                                                                                )
+                                                                                  .fkCompanyId
+                                                                                }&projectId=${JSON.parse(
+                                                                                  localStorage.getItem(
+                                                                                    "projectName"
+                                                                                  )
+                                                                                )
+                                                                                  .projectName
+                                                                                  .projectId
+                                                                                }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                }`}
+                                                                              target="_blank"
+                                                                            >
+                                                                              {
+                                                                                valueAction.number
+                                                                              }
+                                                                            </Link>
+                                                                          </TableCell>
+                                                                          <TableCell>
+                                                                            {
+                                                                              valueAction.title
+                                                                            }
+                                                                          </TableCell>
+                                                                        </TableRow>
+                                                                      )
+                                                                    )}
+                                                                </>
+                                                              ) : null}
+                                                            </>
+                                                          ))}
+                                                        </TableBody>
+                                                      </Table>
+                                                    </Grid>
+
+
+                                                  }</>) : null}
+                                            </>
+                                          ))}
+
+                                          <Grid
+                                            item
+                                            md={12}
+                                            sm={12}
+                                            xs={12}
+                                            className={classes.formBox}
                                           >
-                                            Create Action{" "}
-                                          </FormLabel>
-                                          <Button
-                                            variant="outlined"
-                                            size="medium"
-                                            className={classes.custmSubmitBtn}
-                                            onClick={(e) =>
-                                              handleMyUserPClickOpen(e)
+                                            <FormLabel
+                                              className="checkRadioLabel"
+                                              component="legend"
+                                            >
+                                              Attachment{" "}
+                                            </FormLabel>
+                                            <Typography className="viewLabelValue">
+                                              <input
+                                                type="file"
+                                                onChange={(e) =>
+                                                  handleFile(
+                                                    e.target.files[0],
+                                                    "attachment",
+                                                    index,
+                                                    value.id
+                                                  )
+                                                }
+                                              />
+
+                                            </Typography>
+                                          </Grid>
+                                        </Grid>
+                                      </AccordionDetails>
+                                    </Accordion>
+                                  ) : (
+                                    <Accordion
+                                      key={index}
+                                      expanded={expandedTableDetail === "panel4"}
+                                      onChange={handleTDChange("panel4")}
+                                      defaultExpanded
+                                      className="backPaperAccordian"
+                                    >
+                                      <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1bh-content"
+                                        id="panel1bh-header"
+                                        className="accordionHeaderSection"
+                                      >
+                                        <List className={classes.heading}>
+                                          <ListItem
+                                            className={
+                                              classes.accordingHeaderContentLeft
                                             }
                                           >
-                                            <svg
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              width="60"
-                                              height="30"
-                                              viewBox="0 0 75 50"
-                                            >
-                                              <g
-                                                id="Group_336"
-                                                data-name="Group 336"
-                                                transform="translate(-338 -858)"
-                                              >
-                                                <g
-                                                  id="baseline-flash_auto-24px"
-                                                  transform="translate(364 871)"
-                                                >
-                                                  <path
-                                                    id="Path_1634"
-                                                    data-name="Path 1634"
-                                                    d="M0,0H24V24H0Z"
-                                                    fill="none"
-                                                  />
-                                                  <path
-                                                    id="Path_1635"
-                                                    data-name="Path 1635"
-                                                    d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z"
-                                                    fill="#ffffff"
-                                                  />
-                                                </g>
-                                              </g>
-                                            </svg>
-                                          </Button>
-                                        </Grid>
-                                        <Grid item md={12} xs={12}>
-                                          <Table
-                                            component={Paper}
-                                            className="simpleTableSection"
-                                          >
-                                            <TableHead>
-                                              <TableRow>
-                                                <TableCell className="tableHeadCellFirst">
-                                                  Action number
-                                                </TableCell>
-                                                <TableCell className="tableHeadCellSecond">
-                                                  Action title
-                                                </TableCell>
-                                              </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
-                                            </TableBody>
-                                          </Table>
-                                        </Grid>
-
-                                        <Dialog
-                                          onClose={handleMyUserPClose}
-                                          aria-labelledby="customized-dialog-title"
-                                          open={myUserPOpen}
-                                        >
-                                          <DialogTitle
-                                            id="customized-dialog-title"
-                                            onClose={handleMyUserPClose}
-                                          >
-                                            Create a new action
-                                          </DialogTitle>
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Grid container spacing={3}>
-                                                <Grid item md={12} xs={12}>
-                                                  <TextField
-                                                    label="Location*"
-                                                    //margin="dense"
-                                                    name="location"
-                                                    id="location"
-                                                    defaultValue=""
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  />
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    //required
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Assignee
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="assignee"
-                                                      labelId="assigneelabel"
-                                                      label="Assignee"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
-                                                  >
-                                                    <KeyboardDateTimePicker
-                                                      className="formControl"
-                                                      //margin="dense"
-                                                      fullWidth
-                                                      label="Due Date*"
-                                                      value={selectedActionDate}
-                                                      onChange={
-                                                        handleActionDateChange
-                                                      }
-                                                      inputVariant="outlined"
-                                                    />
-                                                  </MuiPickersUtilsProvider>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Severity
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="severity"
-                                                      labelId="Severitylabel"
-                                                      label="Severity"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                              </Grid>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                          <DialogActions>
-                                            <Button
+                                            <ListItemText primary="Welding machines used are tested and properly connected" />
+                                          </ListItem>
+                                        </List>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                        <Grid container spacing={2}>
+                                          <Grid item md={4} xs={12}>
+                                            <TextField
+                                              label="Criticality*"
+                                              name="criticality"
+                                              id="criticality"
+                                              select
+                                              fullWidth
                                               variant="outlined"
-                                              size="medium"
-                                              align="left"
-                                              className={classes.custmSubmitBtn}
-                                            >
-                                              Create Action
-                                            </Button>
-                                          </DialogActions>
-                                        </Dialog>
+                                              className="formControl"
+                                              onChange={(e) =>
+                                                handleChangeData(
+                                                  e.target.value,
+                                                  "criticality",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
 
-                                        <Grid
-                                          item
-                                          md={12}
-                                          sm={12}
-                                          xs={12}
-                                          className={classes.formBox}
-                                        >
-                                          <FormLabel
-                                            className="checkRadioLabel"
-                                            component="legend"
-                                          >
-                                            Attachment{" "}
-                                          </FormLabel>
-                                          <Typography className="viewLabelValue">
-                                            <div
-                                              {...getRootProps({
-                                                className: "dropzone",
-                                              })}
                                             >
-                                              <input {...getInputProps()} />
-                                              <span align="center">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="39.4"
-                                                  height="28.69"
-                                                  viewBox="0 0 39.4 28.69"
+                                              {Criticality.map((option) => (
+                                                <MenuItem
+                                                  key={option.value}
+                                                  value={option.value}
                                                 >
-                                                  <g
-                                                    id="upload-outbox-svgrepo-com"
-                                                    transform="translate(0 0)"
-                                                  >
-                                                    <g
-                                                      id="Group_4970"
-                                                      data-name="Group 4970"
-                                                      transform="translate(13.004)"
-                                                    >
-                                                      <g
-                                                        id="Group_4969"
-                                                        data-name="Group 4969"
-                                                      >
-                                                        <path
-                                                          id="Path_3322"
-                                                          data-name="Path 3322"
-                                                          d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z"
-                                                          transform="translate(-166.342 -68.504)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                    <g
-                                                      id="Group_4972"
-                                                      data-name="Group 4972"
-                                                      transform="translate(0 12.502)"
-                                                    >
-                                                      <g
-                                                        id="Group_4971"
-                                                        data-name="Group 4971"
-                                                      >
-                                                        <path
-                                                          id="Path_3323"
-                                                          data-name="Path 3323"
-                                                          d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z"
-                                                          transform="translate(0 -228.424)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                  </g>
-                                                </svg>
-                                              </span>
-                                              <p className="chooseFileDesign">
-                                                Drag and drop here or{" "}
-                                                <span>Choose file</span>
-                                              </p>
-                                            </div>
-                                            <aside>
-                                              {/* <h4>Files</h4> */}
-                                              {/* <ul>{files}</ul> */}
-                                              <ul className="attachfileListBox">
-                                                <li>
-                                                  <img
-                                                    src={icoExcel}
-                                                    alt="excel-icon"
-                                                  />{" "}
-                                                  DocExcel - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPDF}
-                                                    alt="pdf-icon"
-                                                  />{" "}
-                                                  DocPDF - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPng}
-                                                    alt="image-icon"
-                                                  />{" "}
-                                                  ImageFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoAudio}
-                                                    alt="audio-icon"
-                                                  />{" "}
-                                                  AudioFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoVideo}
-                                                    alt="video-icon"
-                                                  />{" "}
-                                                  VideoFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                              </ul>
-                                            </aside>
-                                          </Typography>
-                                        </Grid>
-                                      </Grid>
-                                    </AccordionDetails>
-                                  </Accordion>
-                                ) : (
-                                  <Accordion
-                                    key={index}
-                                    expanded={expandedTableDetail === "panel4"}
-                                    onChange={handleTDChange("panel4")}
-                                    defaultExpanded
-                                    className="backPaperAccordian"
-                                  >
-                                    <AccordionSummary
-                                      expandIcon={<ExpandMoreIcon />}
-                                      aria-controls="panel1bh-content"
-                                      id="panel1bh-header"
-                                      className="accordionHeaderSection"
-                                    >
-                                      <List className={classes.heading}>
-                                        <ListItem
-                                          className={
-                                            classes.accordingHeaderContentLeft
-                                          }
-                                        >
-                                          <ListItemText primary="Welding machines used are tested and properly connected" />
-                                        </ListItem>
-                                      </List>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                      <Grid container spacing={2}>
-                                        <Grid item md={4} xs={12}>
-                                          <TextField
-                                            label="Criticality*"
-                                            name="criticality"
-                                            id="criticality"
-                                            select
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          >
-                                            {Criticality.map((option) => (
-                                              <MenuItem
-                                                key={option.value}
-                                                value={option.value}
-                                              >
-                                                {option.label}
-                                              </MenuItem>
-                                            ))}
-                                          </TextField>
-                                        </Grid>
-                                        <Grid item md={4} xs={12}>
-                                          <TextField
-                                            label="Status*"
-                                            name="status"
-                                            id="status"
-                                            select
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          >
-                                            {Status.map((option) => (
-                                              <MenuItem
-                                                key={option.value}
-                                                value={option.value}
-                                              >
-                                                {option.label}
-                                              </MenuItem>
-                                            ))}
-                                          </TextField>
-                                        </Grid>
-                                        <Grid item md={4} xs={12}>
-                                          <TextField
-                                            label="Performance rating"
-                                            //margin="dense"
-                                            name="performancerating"
-                                            id="performancerating"
-                                            defaultValue="35%"
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          />
-                                        </Grid>
-                                        {/* 
+                                                  {option.label}
+                                                </MenuItem>
+                                              ))}
+                                            </TextField>
+                                          </Grid>
+                                          <Grid item md={4} xs={12}>
+                                            <TextField
+                                              label="Status*"
+                                              name="status"
+                                              id="status"
+                                              select
+                                              fullWidth
+                                              variant="outlined"
+                                              className="formControl"
+                                              onChange={(e) =>
+                                                handleChangeData(
+                                                  e.target.value,
+                                                  "auditStatus",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            >
+                                              {Status.map((option) => (
+                                                <MenuItem
+                                                  key={option.value}
+                                                  value={option.value}
+                                                >
+                                                  {option.label}
+                                                </MenuItem>
+                                              ))}
+                                            </TextField>
+                                          </Grid>
+                                          <Grid item md={4} xs={12}>
+                                            <TextField
+                                              label="Performance rating"
+                                              //margin="dense"
+                                              name="performancerating"
+                                              id="performancerating"
+                                              defaultValue="35%"
+                                              fullWidth
+                                              variant="outlined"
+                                              className="formControl"
+                                              onChange={(e) =>
+                                                handleChangeData(
+                                                  e.target.value,
+                                                  "score",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            />
+                                          </Grid>
+                                          {/* 
                                                         <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>                
                                                             50% Risk
                                                         </Grid> */}
-                                        <Grid item md={12} sm={12} xs={12}>
-                                          <TextField
-                                            label="Findings"
-                                            name="findings"
-                                            id="findings"
-                                            multiline
-                                            rows={4}
-                                            defaultValue=""
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          />
-                                        </Grid>
-                                        <Grid item md={12} sm={12} xs={12}>
-                                          <FormLabel
-                                            className="checkRadioLabel marginB5"
-                                            component="legend"
-                                          >
-                                            Score
-                                          </FormLabel>
-                                        </Grid>
-                                        <Grid item md={4} sm={4} xs={12}>
-                                          <Rating
-                                            name="simple-controlled"
-                                            value={value}
-                                            onChange={(event, newValue) => {
-                                              setValue(newValue);
-                                            }}
-                                          />
-                                        </Grid>
-                                        <Grid item md={4} sm={4} xs={12}>
-                                          <FormControl
-                                            variant="outlined"
-                                            className="formControl"
-                                          >
-                                            <InputLabel id="demo-simple-select-outlined-label">
-                                              Counts
-                                            </InputLabel>
-                                            <Select
-                                              labelId="scoreCount"
-                                              id="scoreCount"
-                                              // onChange={handleChangeOne}
-                                              label="Counts"
-                                              className="formControl"
+                                          <Grid item md={12} sm={12} xs={12}>
+                                            <TextField
+                                              label="Findings"
+                                              name="findings"
+                                              id="findings"
+                                              multiline
+                                              rows={4}
+                                              defaultValue=""
                                               fullWidth
-                                            >
-                                              <MenuItem value={1}>1</MenuItem>
-                                              <MenuItem value={2}>2</MenuItem>
-                                              <MenuItem value={3}>3</MenuItem>
-                                              <MenuItem value={4}>4</MenuItem>
-                                              <MenuItem value={5}>5</MenuItem>
-                                              <MenuItem value={6}>6</MenuItem>
-                                              <MenuItem value={7}>7</MenuItem>
-                                              <MenuItem value={8}>8</MenuItem>
-                                              <MenuItem value={9}>9</MenuItem>
-                                              <MenuItem value={10}>10</MenuItem>
-                                            </Select>
-                                          </FormControl>
-                                        </Grid>
-                                        <Grid item md={4} sm={4} xs={12}>
-                                          <TextField
-                                            label="Percentage"
-                                            name="performancerating"
-                                            id="performancerating"
-                                            // defaultValue="20%"
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                          />
-                                        </Grid>
-
-                                        <Grid item md={12} xs={12}>
-                                          <FormLabel
-                                            className="checkRadioLabel"
-                                            component="legend"
-                                          >
-                                            Create Action{" "}
-                                          </FormLabel>
-                                          <Button
-                                            variant="outlined"
-                                            size="medium"
-                                            className={classes.custmSubmitBtn}
-                                            onClick={(e) =>
-                                              handleMyUserPClickOpen(e)
-                                            }
-                                          >
-                                            <svg
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              width="60"
-                                              height="30"
-                                              viewBox="0 0 75 50"
-                                            >
-                                              <g
-                                                id="Group_336"
-                                                data-name="Group 336"
-                                                transform="translate(-338 -858)"
-                                              >
-                                                <g
-                                                  id="baseline-flash_auto-24px"
-                                                  transform="translate(364 871)"
-                                                >
-                                                  <path
-                                                    id="Path_1634"
-                                                    data-name="Path 1634"
-                                                    d="M0,0H24V24H0Z"
-                                                    fill="none"
-                                                  />
-                                                  <path
-                                                    id="Path_1635"
-                                                    data-name="Path 1635"
-                                                    d="M3,2V14H6v9l7-12H9l4-9ZM19,2H17l-3.2,9h1.9l.7-2h3.2l.7,2h1.9ZM16.85,7.65,18,4l1.15,3.65Z"
-                                                    fill="#ffffff"
-                                                  />
-                                                </g>
-                                              </g>
-                                            </svg>
-                                          </Button>
-                                        </Grid>
-                                        <Grid item md={12} xs={12}>
-                                          <Table
-                                            component={Paper}
-                                            className="simpleTableSection"
-                                          >
-                                            <TableHead>
-                                              <TableRow>
-                                                <TableCell className="tableHeadCellFirst">
-                                                  Action number
-                                                </TableCell>
-                                                <TableCell className="tableHeadCellSecond">
-                                                  Action title
-                                                </TableCell>
-                                              </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
-                                              <TableRow>
-                                                <TableCell align="left">
-                                                  <Link to="#">
-                                                    AT-211004-012
-                                                  </Link>
-                                                </TableCell>
-                                                <TableCell>
-                                                  Action 1 for iCare-211004-002
-                                                </TableCell>
-                                              </TableRow>
-                                            </TableBody>
-                                          </Table>
-                                        </Grid>
-
-                                        <Dialog
-                                          onClose={handleMyUserPClose}
-                                          aria-labelledby="customized-dialog-title"
-                                          open={myUserPOpen}
-                                        >
-                                          <DialogTitle
-                                            id="customized-dialog-title"
-                                            onClose={handleMyUserPClose}
-                                          >
-                                            Create a new action
-                                          </DialogTitle>
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Grid container spacing={3}>
-                                                <Grid item md={12} xs={12}>
-                                                  <TextField
-                                                    label="Location*"
-                                                    //margin="dense"
-                                                    name="location"
-                                                    id="location"
-                                                    defaultValue=""
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  />
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    //required
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Assignee
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="assignee"
-                                                      labelId="assigneelabel"
-                                                      label="Assignee"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <MuiPickersUtilsProvider
-                                                    utils={DateFnsUtils}
-                                                  >
-                                                    <KeyboardDateTimePicker
-                                                      className="formControl"
-                                                      //margin="dense"
-                                                      fullWidth
-                                                      label="Due Date*"
-                                                      value={selectedActionDate}
-                                                      onChange={
-                                                        handleActionDateChange
-                                                      }
-                                                      inputVariant="outlined"
-                                                    />
-                                                  </MuiPickersUtilsProvider>
-                                                </Grid>
-                                                <Grid item md={12} xs={12}>
-                                                  <FormControl
-                                                    variant="outlined"
-                                                    className="formControl"
-                                                  >
-                                                    <InputLabel id="project-name-label">
-                                                      Severity
-                                                    </InputLabel>
-                                                    <Select
-                                                      id="severity"
-                                                      labelId="Severitylabel"
-                                                      label="Severity"
-                                                    >
-                                                      <MenuItem value="Prakash">
-                                                        Prakash
-                                                      </MenuItem>
-                                                      <MenuItem value="Mayank">
-                                                        Mayank
-                                                      </MenuItem>
-                                                    </Select>
-                                                  </FormControl>
-                                                </Grid>
-                                              </Grid>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                          <DialogActions>
-                                            <Button
                                               variant="outlined"
-                                              size="medium"
-                                              align="left"
-                                              className={classes.custmSubmitBtn}
+                                              className="formControl"
+                                              onChange={(e) =>
+                                                handleChangeData(
+                                                  e.target.value,
+                                                  "findings",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            />
+                                          </Grid>
+                                          <Grid item md={12} sm={12} xs={12}>
+                                            <FormLabel
+                                              className="checkRadioLabel marginB5"
+                                              component="legend"
                                             >
-                                              Create Action
-                                            </Button>
-                                          </DialogActions>
-                                        </Dialog>
+                                              Score
+                                            </FormLabel>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <Rating
+                                              name="simple-controlled"
+                                              value={value}
+                                              onChange={(e, newValue) =>
+                                                handleChangeData(
+                                                  newValue,
+                                                  "score",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            />
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <FormControl
+                                              variant="outlined"
+                                              className="formControl"
+                                            >
+                                              <InputLabel id="demo-simple-select-outlined-label">
+                                                Counts
+                                              </InputLabel>
+                                              <Select
+                                                labelId="scoreCount"
+                                                id="scoreCount"
+                                                // onChange={handleChangeOne}
+                                                label="Counts"
+                                                className="formControl"
+                                                fullWidth
+                                                onChange={(e) =>
+                                                  handleChangeData(
+                                                    e.target.value,
+                                                    "score",
+                                                    index,
+                                                    value.id
+                                                  )
+                                                }
+                                              >
+                                                <MenuItem value={1}>1</MenuItem>
+                                                <MenuItem value={2}>2</MenuItem>
+                                                <MenuItem value={3}>3</MenuItem>
+                                                <MenuItem value={4}>4</MenuItem>
+                                                <MenuItem value={5}>5</MenuItem>
+                                                <MenuItem value={6}>6</MenuItem>
+                                                <MenuItem value={7}>7</MenuItem>
+                                                <MenuItem value={8}>8</MenuItem>
+                                                <MenuItem value={9}>9</MenuItem>
+                                                <MenuItem value={10}>10</MenuItem>
+                                              </Select>
+                                            </FormControl>
+                                          </Grid>
+                                          <Grid item md={4} sm={4} xs={12}>
+                                            <TextField
+                                              label="Percentage"
+                                              name="performancerating"
+                                              id="performancerating"
+                                              // defaultValue="20%"
+                                              fullWidth
+                                              variant="outlined"
+                                              className="formControl"
+                                              onChange={(e) =>
+                                                handleChangeData(
+                                                  e.target.value,
+                                                  "performance",
+                                                  index,
+                                                  value.id
+                                                )
+                                              }
+                                            />
+                                          </Grid>
+                                          <Grid item md={12} xs={12}>
+                                            <FormLabel
+                                              className="checkRadioLabel"
+                                              component="legend"
+                                            >
+                                              Create Action{" "}
+                                            </FormLabel>
+                                            <Grid
+                                              item
+                                              xs={6}
+                                              className={classes.createHazardbox}
+                                            >
+                                              <ActionTracker
+                                                actionContext="audit:question"
+                                                enitityReferenceId={`${localStorage.getItem(
+                                                  "fkComplianceId"
+                                                )}:${value.id}`}
+                                                setUpdatePage={setUpdatePage}
+                                                fkCompanyId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "company"
+                                                    )
+                                                  ).fkCompanyId
+                                                }
+                                                fkProjectId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "projectName"
+                                                    )
+                                                  ).projectName.projectId
+                                                }
+                                                fkProjectStructureIds={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "commonObject"
+                                                    )
+                                                  )["audit"]["projectStruct"]
+                                                }
+                                                createdBy={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "userDetails"
+                                                    )
+                                                  ).id
+                                                }
+                                                updatePage={updatePage}
+                                                handelShowData={
+                                                  handelActionTracker
+                                                }
+                                              />
+                                            </Grid>
+                                          </Grid>
 
-                                        <Grid
-                                          item
-                                          md={12}
-                                          sm={12}
-                                          xs={12}
-                                          className={classes.formBox}
-                                        >
-                                          <FormLabel
-                                            className="checkRadioLabel"
-                                            component="legend"
+                                          <Grid item md={12} xs={12}>
+                                            <Table
+                                              component={Paper}
+                                              className="simpleTableSection"
+                                            >
+                                              <TableHead>
+                                                <TableRow>
+                                                  <TableCell className="tableHeadCellFirst">
+                                                    Action number
+                                                  </TableCell>
+                                                  <TableCell className="tableHeadCellSecond">
+                                                    Action title
+                                                  </TableCell>
+                                                </TableRow>
+                                              </TableHead>
+                                              <TableBody>
+                                                {actionData.map((val) => (
+                                                  <>
+                                                    {console.log(
+                                                      val.action.number,
+                                                      value.id
+                                                    )}
+                                                    {val.id == value.id ? (
+                                                      <>
+                                                        {val.action.length > 0 &&
+                                                          val.action.map(
+                                                            (valueAction) => (
+                                                              <TableRow>
+                                                                <TableCell align="left">
+                                                                  <Link
+                                                                    className={
+                                                                      classes.actionLinkAudit
+                                                                    }
+                                                                    display="block"
+                                                                    href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                      localStorage.getItem(
+                                                                        "BaseUrl"
+                                                                      )
+                                                                    )[
+                                                                      "actionClientID"
+                                                                    ]
+                                                                      }&response_type=code&companyId=${JSON.parse(
+                                                                        localStorage.getItem(
+                                                                          "company"
+                                                                        )
+                                                                      )
+                                                                        .fkCompanyId
+                                                                      }&projectId=${JSON.parse(
+                                                                        localStorage.getItem(
+                                                                          "projectName"
+                                                                        )
+                                                                      )
+                                                                        .projectName
+                                                                        .projectId
+                                                                      }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                      }`}
+                                                                    target="_blank"
+                                                                  >
+                                                                    {
+                                                                      valueAction.number
+                                                                    }
+                                                                  </Link>
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                  {
+                                                                    valueAction.title
+                                                                  }
+                                                                </TableCell>
+                                                              </TableRow>
+                                                            )
+                                                          )}
+                                                      </>
+                                                    ) : null}
+                                                  </>
+                                                ))}
+                                              </TableBody>
+                                            </Table>
+                                          </Grid>
+                                          <Grid
+                                            item
+                                            md={12}
+                                            sm={12}
+                                            xs={12}
+                                            className={classes.formBox}
                                           >
-                                            Attachment{" "}
-                                          </FormLabel>
-                                          <Typography className="viewLabelValue">
-                                            <div
-                                              {...getRootProps({
-                                                className: "dropzone",
-                                              })}
+                                            <FormLabel
+                                              className="checkRadioLabel"
+                                              component="legend"
                                             >
-                                              <input {...getInputProps()} />
-                                              <span align="center">
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  width="39.4"
-                                                  height="28.69"
-                                                  viewBox="0 0 39.4 28.69"
-                                                >
-                                                  <g
-                                                    id="upload-outbox-svgrepo-com"
-                                                    transform="translate(0 0)"
-                                                  >
-                                                    <g
-                                                      id="Group_4970"
-                                                      data-name="Group 4970"
-                                                      transform="translate(13.004)"
-                                                    >
-                                                      <g
-                                                        id="Group_4969"
-                                                        data-name="Group 4969"
-                                                      >
-                                                        <path
-                                                          id="Path_3322"
-                                                          data-name="Path 3322"
-                                                          d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z"
-                                                          transform="translate(-166.342 -68.504)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                    <g
-                                                      id="Group_4972"
-                                                      data-name="Group 4972"
-                                                      transform="translate(0 12.502)"
-                                                    >
-                                                      <g
-                                                        id="Group_4971"
-                                                        data-name="Group 4971"
-                                                      >
-                                                        <path
-                                                          id="Path_3323"
-                                                          data-name="Path 3323"
-                                                          d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z"
-                                                          transform="translate(0 -228.424)"
-                                                          fill="#7890a4"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                  </g>
-                                                </svg>
-                                              </span>
-                                              <p className="chooseFileDesign">
-                                                Drag and drop here or{" "}
-                                                <span>Choose file</span>
-                                              </p>
-                                            </div>
-                                            <aside>
-                                              {/* <h4>Files</h4> */}
-                                              {/* <ul>{files}</ul> */}
-                                              <ul className="attachfileListBox">
-                                                <li>
-                                                  <img
-                                                    src={icoExcel}
-                                                    alt="excel-icon"
-                                                  />{" "}
-                                                  DocExcel - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPDF}
-                                                    alt="pdf-icon"
-                                                  />{" "}
-                                                  DocPDF - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoPng}
-                                                    alt="image-icon"
-                                                  />{" "}
-                                                  ImageFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoAudio}
-                                                    alt="audio-icon"
-                                                  />{" "}
-                                                  AudioFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                                <li>
-                                                  <img
-                                                    src={icoVideo}
-                                                    alt="video-icon"
-                                                  />{" "}
-                                                  VideoFile - 234bytes{" "}
-                                                  <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                </li>
-                                              </ul>
-                                            </aside>
-                                          </Typography>
+                                              Attachment{" "}
+                                            </FormLabel>
+                                            <Typography className="viewLabelValue">
+                                              <input
+                                                type="file"
+                                                onChange={(e) =>
+                                                  handleFile(
+                                                    e.target.files[0],
+                                                    "attachment",
+                                                    index,
+                                                    value.id
+                                                  )
+                                                }
+                                              />
+
+                                            </Typography>
+                                          </Grid>
                                         </Grid>
-                                      </Grid>
-                                    </AccordionDetails>
-                                  </Accordion>
-                                )}
-                              </div>
+                                      </AccordionDetails>
+                                    </Accordion>
+                                  )}
+                                </div>
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        </>
-                      ))}
-                    </>
-                  ))}
+                          </>
+                        ))}
+                      </>
+                    ))}
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
+              </Paper>
+            </Grid>
 
-          <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              className="spacerRight buttonStyle"
-              onClick={(e) => handelSubmit()}
-            >
-              Next
-            </Button>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              className="spacerRight buttonStyle"
-            >
-              Save
-            </Button>
-            <Button
-              size="medium"
-              variant="contained"
-              color="secondary"
-              className="buttonStyle custmCancelBtn"
-            >
-              Cancel
-            </Button>
+            <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                className="spacerRight buttonStyle"
+                onClick={(e) => handelSubmit()}
+              >
+                Next
+              </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                className="spacerRight buttonStyle"
+              >
+                Save
+              </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                color="secondary"
+                className="buttonStyle custmCancelBtn"
+                onClick={() =>
+                  history.push(
+                    '/app/pages/compliance/categories'
+                  )
+                }
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <FormSideBar
+              deleteForm={[1, 2, 3]}
+              listOfItems={COMPLIANCE}
+              selectedItem="Checks"
+            />
           </Grid>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <FormSideBar
-            deleteForm={[1, 2, 3]}
-            listOfItems={COMPLIANCE}
-            selectedItem="Checks"
-          />
-        </Grid>
-      </Grid>
 
-      {/* <Grid container spacing={3} className={classes.observationNewSection}>
+        {/* <Grid container spacing={3} className={classes.observationNewSection}>
                 
                 
                 <Grid
@@ -1671,7 +1593,9 @@ const Checks = () => {
                     <Button variant="outlined" size="medium" className={classes.custmCancelBtn}>Cancel</Button>
                 </Grid>
             </Grid> */}
-    </>
+      </>
+    </CustomPapperBlock>
+
   );
 };
 

@@ -564,6 +564,19 @@ ul.MuiMenu-list a ul li.userName {
   color: #ffffff;
 }
 
+.simpleTableDesign thead tr th:first-child {
+  border-top-left-radius: 8px;
+}
+.simpleTableDesign thead tr th:last-child {
+  border-top-right-radius: 8px;
+}
+.simpleTableDesign tbody tr td a {
+  cursor: pointer;
+}
+.simpleTableDesign tbody tr td.MuiTableCell-root, .simpleTableDesign thead tr th.MuiTableCell-root {
+  text-align: center;
+}
+
 /*Kanban css*/
 .MuiTypography-subtitle2 {
   font-family: Montserrat-Regular !important;
@@ -1150,7 +1163,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left menu custom style */
-.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .complianceMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu{
+.incident-managementMenu, .homeMenu, .icareMenu, .assessmentsMenu, .complianceMenu, .administrationMenu, .controlTowerMenu, .flhaMenu, .jhaMenu, .ahaMenu, .dropdown_listsMenu, .check_listsMenu, .compliance_configMenu{
   border-radius: 0 0px 0px 0 !important;
   padding-left: 15px !important;
 }
@@ -1272,7 +1285,7 @@ ul.MuiMenu-list a ul li.userName {
 
 
 /* Left sub menu custom style */
-.flhaMenu, .jhaMenu, .ahaMenu , .dropdown_listsMenu, .check_listsMenu {
+.flhaMenu, .jhaMenu, .ahaMenu , .dropdown_listsMenu, .check_listsMenu, .compliance_configMenu{
   position: relative;
 }
 .MuiList-dense.MuiList-padding {
@@ -1282,7 +1295,8 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu .MuiTypography-colorTextSecondary,
 .ahaMenu .MuiTypography-colorTextSecondary,
 .dropdown_listsMenu .MuiTypography-colorTextSecondary,
-.check_listsMenu .MuiTypography-colorTextSecondary
+.check_listsMenu .MuiTypography-colorTextSecondary,
+.compliance_configMenu .MuiTypography-colorTextSecondary
  {
   position: absolute;
   left: 72px;
@@ -1293,14 +1307,17 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu .MuiListItemText-inset,
 .ahaMenu .MuiListItemText-inset,
 .dropdown_listsMenu .MuiListItemText-inset,
-.check_listsMenu .MuiListItemText-inset {
+.check_listsMenu .MuiListItemText-inset,
+.compliance_configMenu .MuiListItemText-inset
+{
   padding-left: 60px;
 }
 .flhaMenu .MuiListItemText-inset > span,
 .jhaMenu .MuiListItemText-inset > span,
 .ahaMenu .MuiListItemText-inset > span,
 .dropdown_listsMenu .MuiListItemText-inset > span,
-.check_listsMenu .MuiListItemText-inset > span {
+.check_listsMenu .MuiListItemText-inset > span,
+.compliance_configMenu .MuiListItemText-inset > span {
   padding-left: 48px;
 }
 
@@ -1308,7 +1325,9 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .ahaMenu .MuiTypography-colorTextSecondary .leftCustomImg,
 .dropdown_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg,
-.check_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg {
+.check_listsMenu .MuiTypography-colorTextSecondary .leftCustomImg,
+.compliance_configMenu .MuiTypography-colorTextSecondary .leftCustomImg 
+  {
   position: absolute;
   top: 0px;
   left: 90px;
@@ -1330,6 +1349,10 @@ ul.MuiMenu-list a ul li.userName {
 }
 .check_listsMenu .leftCustomImg {
   background: url(../../../public/images/leftMenuIcons.png) no-repeat -30.188rem -1rem;
+}
+
+.compliance_configMenu .leftCustomImg {
+  background: url(../../../public/images/leftMenuIcons.png) no-repeat -62.125rem -1rem;
 }
 
 .flhaMenu.selectmenu .MuiListItemText-root span,
@@ -1385,9 +1408,25 @@ ul.MuiMenu-list a ul li.userName {
 .jhaMenu:hover .MuiListItemText-root span,
 .ahaMenu:hover .MuiListItemText-root span,
 .dropdown_listsMenu:hover .MuiListItemText-root span,
-.check_listsMenu:hover .MuiListItemText-root span
+.check_listsMenu:hover .MuiListItemText-root span,
+.compliance_configMenu:hover .MuiListItemText-root span
+
  {
   background-position-y: -80px;
+}
+
+.compliance_configMenu.selectmenu .MuiListItemText-root span,
+.compliance_configMenu.selectmenu .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.compliance_configMenu.selectmenu:hover .MuiListItemText-root .MuiListItemText-secondary .leftCustomImg,
+.compliance_configMenu.selectmenu:hover .MuiListItemText-root span,
+/* .compliance_configMenu:hover .MuiListItemText-root span, */
+.compliance_configMenu:hover,
+.compliance_configMenu.selectmenu:hover,
+.compliance_configMenu.selectmenu
+{
+  background-position-y: -5rem;
+  color: #ffffff !important;
+  background-color: #ff8533 !important;
 }
 
 .leftCustomImg {
@@ -1501,3 +1540,44 @@ ul.MuiMenu-list a ul li.userName {
   float: right;
 }
 
+.tableActionIcons {
+  padding: 0.625rem !important;
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.customColorPickerSection {
+  position: absolute;
+  z-index: 1;
+  display: contents;
+}
+.customColorPickerSection .customColorDisplay {
+  /* padding: 8px 17px;
+  border-radius: 100%; */
+  padding: 27px;
+  border-radius: 4px;
+  position: absolute;
+  top: 190px;
+  right: 12px;
+  cursor: pointer;
+}
+.customColorPickerSection .sketch-picker {
+  position: absolute;
+  right: 90px;
+  top: 235px;
+}
+
+.complianceConfigPageIcon {
+  background-position: -82.563rem -25.313rem;
+}
+.complianceQuestionPageIcon {
+  background-position: -102.626rem -25.313rem;
+}
+.complianceBulkUplQPageIcon {
+  background-position: -107.626rem -25.313rem;
+}
+.compliancePerFactorPageIcon {
+  background-position: -97.626rem -25.313rem;
+}
+.compliancePerMatrixPageIcon {
+  background-position: -92.626rem -25.313rem;
+}

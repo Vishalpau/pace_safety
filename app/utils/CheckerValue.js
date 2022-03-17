@@ -172,6 +172,9 @@ export const handelActionDataAssessment = async (incidentId, apiData, type = "al
 }
 
 export const handelDateTime = (value) => {
+    if(value== null){
+        return
+    }
     let observedDateAndTime = value.split("T")
     let observedDate = moment(value.split("T")[0]).format('MMMM Do YYYY')
     let observedTime = observedDateAndTime[1].replace("Z", "")

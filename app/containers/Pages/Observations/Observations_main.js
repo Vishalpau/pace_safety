@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from "react-router";
 import "../../../styles/custom/customheader.css";
 import Acl from "../../../components/Error/acl"
-import {checkACL} from '../../../utils/helper'
+import { checkACL } from '../../../utils/helper'
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
 
 const ObservationSearchSection = lazy(() => import('./ObservationSearchSection'));
@@ -114,7 +114,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   borderTop: {
-    marginTop: '20px',
     borderBottom: '1px solid #ccc',
     paddingBottom: '10px',
     '& .MuiTypography-h5': {
@@ -235,42 +234,43 @@ export default function Observations() {
   };
 
   useEffect(() => {
-      let int = setInterval(() => {
-        if(localStorage.getItem('app_acl') != null) {
-          clearInterval(int)
-          setAcls(localStorage.getItem('app_acl'))
-          setShowHTML(true)
-          allPickListDataValue()
-        }
-      }, 100)    
+    let int = setInterval(() => {
+      if (localStorage.getItem('app_acl') != null) {
+        clearInterval(int)
+        setAcls(localStorage.getItem('app_acl'))
+        setShowHTML(true)
+        allPickListDataValue()
+      }
+    }, 100)
   }, [acls])
 
-  return  ( !showHTML ? '' : <Acl 
+  return (!showHTML ? '' : <Acl
     module='safety'
     action='view_observations'
     html={
-    <div className={classes.root}>
-      <Grid item sm={12} xs={12} className={classes.borderTop}>
-        <Grid container spacing={3}>
-          <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
-            <img src={obsIcon} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> iCare </Typography>
-          </Grid>
-          <Grid item sm={5} xs={12}>
+      <div className={classes.root}>
+        <Grid item sm={12} xs={12} className={classes.borderTop}>
+          <Grid container spacing={3}>
+            <Grid item sm={7} xs={12} className={classes.pLFiveHt40}>
+              <img src={obsIcon} className={classes.attachImg} alt="decoration" />
+              <Typography variant="h5"> iCare </Typography>
+            </Grid>
+            <Grid item sm={5} xs={12}>
 
 
-            {false && <Button
-              variant="contained"
-              size="small"
-              className={classNames(classes.buttonsNew, classes.floatR)}
-              disableElevation
-              startIcon={<CloudUploadIcon />}
-              style={{ marginLeft: '10px' }}
-              onClick={() => handleBulkUploadfilePush()}
-            >
-              Upload
-            </Button>
-            }
+            {/* {false &&  */}
+              <Button
+                variant="contained"
+                size="small"
+                className={classNames(classes.buttonsNew, classes.floatR)}
+                disableElevation
+                startIcon={<CloudUploadIcon />}
+                style={{ marginLeft: '10px' }}
+                onClick={() => handleBulkUploadfilePush()}
+              >
+                Upload
+              </Button>
+            {/* } */}
              {/* {!checkACL('safety', 'add_observations') ? '' : ( */}
               <Button 
                 size="medium" 
@@ -287,38 +287,38 @@ export default function Observations() {
               </Button>
             {/* )} */}
 
-          </Grid>
+            </Grid>
 
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item sm={8} xs={12} className={classes.listViewTab}>
-          <AppBar position="static" className={classes.navTabBack}>
-            <div className={classes.floatL}>
-              <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
-                <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-              </Tabs>
-            </div>
-          </AppBar>
-        </Grid>
-        <Grid item sm={4} xs={12}>
-          <Grid className={classes.Lheight}>
-            <div className={classes.floatR}>
-            </div>
           </Grid>
         </Grid>
-      </Grid>
-      <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <ObservationSearchSection value={value} />
-      </TabPanel>
-      <TabPanel value={value} index={1} className={classes.paddLRzero}>
-        <ObservationSearchSection value={value} />
-      </TabPanel>
-      <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <ObservationsBarCharts />
-      </TabPanel>
-    </div>} />
-    )
-  
+        <Grid container spacing={3}>
+          <Grid item sm={8} xs={12} className={classes.listViewTab}>
+            <AppBar position="static" className={classes.navTabBack}>
+              <div className={classes.floatL}>
+                <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                  <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
+                  <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+                </Tabs>
+              </div>
+            </AppBar>
+          </Grid>
+          <Grid item sm={4} xs={12}>
+            <Grid className={classes.Lheight}>
+              <div className={classes.floatR}>
+              </div>
+            </Grid>
+          </Grid>
+        </Grid>
+        <TabPanel value={value} index={0} className={classes.paddLRzero}>
+          <ObservationSearchSection value={value} />
+        </TabPanel>
+        <TabPanel value={value} index={1} className={classes.paddLRzero}>
+          <ObservationSearchSection value={value} />
+        </TabPanel>
+        <TabPanel value={value} index={2} className={classes.paddLRzero}>
+          <ObservationsBarCharts />
+        </TabPanel>
+      </div>} />
+  )
+
 }

@@ -153,6 +153,9 @@ const CloseOut = (props) => {
       fkProjectId: flha.fkProjectId,
       flhaStage: flha.flhaStage
     })
+    if (flha.flhaStage == "Close"){
+    await setDisableForm(true)
+    }
   };
 
   const handleJobFormChange = async (e, fieldname) => {

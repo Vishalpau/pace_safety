@@ -581,10 +581,17 @@ const FlhaDetails = () => {
             }
           }
           if (hazardData[j].riskSeverity !== "") {
-            if (hazardData[j].riskSeverity === "Sightly harmful") {
+            console.log(hazardData[j],'1')
+
+            if (hazardData[j].riskSeverity === "Slightly harmful") {
+              console.log(hazardData[j],'2')
+
               hazardData[j].riskSeverityValue = 2
+              console.log(hazardData[j],'3')
+
             } else if (hazardData[j].riskSeverity === "Harmful") {
               hazardData[j].riskSeverityValue = 4
+
             } else if (hazardData[j].riskSeverity === "Very harmful") {
               hazardData[j].riskSeverityValue = 6
             } else if (hazardData[j].riskSeverity === "Extremely harmful") {
@@ -608,12 +615,14 @@ const FlhaDetails = () => {
           }
         }
       }
+      console.log(tasksData,'data')
       setTaskForm(tasksData)
     }
   }
 
   const handelTaskData = async (version = "") => {
     let taskData = await api.get(`${taskUrl}`)
+    console.log(taskData,'cccc')
     let task = taskData.data.data.results
     let tasksData = task["tasks"]
     handelTaskPerVersion(task)
@@ -744,15 +753,15 @@ const FlhaDetails = () => {
   const handelVisualConfirmation = (index, value) => {
 
     let temp = [...jobVisualConfirmation]
-    if(value==='Yes'){
-    temp[index].visualConfirmationType = visualType[index]
-    temp[index].visualConfirmationStatus = value
-    setJobVisualConfirmation(temp)
-    }else{
+    if (value === 'Yes') {
+      temp[index].visualConfirmationType = visualType[index]
+      temp[index].visualConfirmationStatus = value
+      setJobVisualConfirmation(temp)
+    } else {
       // temp[index].visualConfirmationAttachment = null 
       temp[index].visualConfirmationType = visualType[index]
-    temp[index].visualConfirmationStatus = value
-    setJobVisualConfirmation(temp)
+      temp[index].visualConfirmationStatus = value
+      setJobVisualConfirmation(temp)
     }
   }
 
@@ -1180,6 +1189,7 @@ const FlhaDetails = () => {
                       <div>
 
                         {/* task */}
+                        {console.log(taskForm,'taskForm')}
                         {taskForm.map((value, index) => (
                           <>
                             <Accordion
@@ -1217,6 +1227,7 @@ const FlhaDetails = () => {
                                   </Grid>
 
                                   {/* hazard */}
+                                  {console.log(value,'val')}
                                   {value["hazards"].map((valueHazard, indexHazard) => (
                                     <Accordion
                                       expanded1={expanded1 === `panell${indexHazard}`}
@@ -1351,6 +1362,8 @@ const FlhaDetails = () => {
                                                       <InputLabel id="demo-simple-select-label">
                                                         Risk severity
                                                       </InputLabel>
+                                                      {console.log(valueHazard,'ser')}
+
                                                       <Select
                                                         labelId="incident-type-label"
                                                         id="incident-type"
@@ -1361,12 +1374,11 @@ const FlhaDetails = () => {
                                                         {Object.entries(colorSeverityObj).map(([key, valueSeverity]) => (
                                                           <MenuItem
                                                             value={valueSeverity}
+                                                            selected={value.riskSeverityValue == valueSeverity}
                                                           >
                                                             {key}
                                                           </MenuItem>
                                                         ))}
-
-
                                                       </Select>
                                                     </FormControl>
                                                   </Grid>
@@ -1402,7 +1414,7 @@ const FlhaDetails = () => {
 
                                                   {/* risk color */}
 
-                                                  <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "16px" }}>
+                                                  <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange} style={{ backgroundColor: valueHazard.riskRatingColour, marginTop: "10px" }}>
                                                     {valueHazard.riskRatingLevel ? `${valueHazard.riskRatingLevel} risk` : ''}
                                                   </Grid>
 
@@ -1500,7 +1512,7 @@ const FlhaDetails = () => {
                                   </TableCell>
 
                                   <TableCell align="left">
-                                  
+
                                     <input
                                       className="tableFileAttach"
                                       id="icon-button-file"
@@ -1513,13 +1525,13 @@ const FlhaDetails = () => {
                                       }}
                                       disabled={handelJobVisualAttachment(index)}
                                     />
-                                   
+
                                     {jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
                                       null ? null : typeof jobVisualConfirmation[index]["visualConfirmationAttachment"] ===
                                         "string" ? (
                                       <Attachment value={jobVisualConfirmation[index]["visualConfirmationAttachment"]} />
                                     ) : null}
-                                   
+
 
                                     {/* <IconButton aria-label="delete" align="right">
                                       <DeleteIcon onClick={(e) => handelVisualAttachmentRemove(index)} />

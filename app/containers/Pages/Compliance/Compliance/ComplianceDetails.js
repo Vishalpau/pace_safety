@@ -50,6 +50,8 @@ import { FormHelperText } from "@material-ui/core";
 import api from "../../../../utils/axios";
 import { CircularProgress } from "@material-ui/core";
 import Loader from "../../Loader";
+import { handelCommonObject } from "../../../../utils/CheckerValue"
+import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -268,13 +270,6 @@ const ComplianceDetails = () => {
     </li>
   ));
 
-  const [positiveObservation, setPositiveObservation] = useState(true);
-  const [riskObservation, setRiskObservation] = useState(true);
-
-  const [addressSituation, setAddressSituation] = useState(true);
-
-  const [inspectionType, setInspectionType] = useState(false);
-
   const handelTeam = (e) => {
     if (Object.keys(team).length < 100) {
       let newData = team.filter((item, key) => key !== undefined);
@@ -322,8 +317,22 @@ const ComplianceDetails = () => {
       .map((depth) => {
         return depth;
       })
-      .join(":");
-    form["fkProjectStructureIds"] = fkProjectStructureId;
+      
+    form["fkProjectStructureIds"] = fkProjectStructureId.join(":");
+    let projectStr = fkProjectStructureId[fkProjectStructureId.length-1]
+    let parentStr = fkProjectStructureId[fkProjectStructureId.length-2]
+    console.log(parentStr,'kkkk')
+
+    let depth = projectStr.split('L')[0] + 'L'
+    let strId = parentStr.split('L')[1]
+    let strUrl = JSON.parse(localStorage.getItem("projectName")).projectName.breakdown.filter(bd => bd.depth == depth)[0].structure[0].url + strId
+    const api_work_area = axios.create({
+      baseURL: SSO_URL,
+      headers: HEADER_AUTH
+    });
+    const workArea = await api_work_area.get(strUrl);
+    let area = workArea.data.data.results.filter(st => st.id == projectStr.split('L')[1] )[0].structureName
+    form["area"] = area;
     if (form.id) {
       form["updatedBy"] = userId;
       const res = await api
@@ -341,6 +350,7 @@ const ComplianceDetails = () => {
           let result = response.data.data.results;
           let complianceId = result.id;
           localStorage.setItem("fkComplianceId", complianceId);
+          handelCommonObject("commonObject", "audit", "projectStruct", response.data.data.results.fkProjectStructureIds)
           history.push("/app/pages/compliance/categories"), setLoading(false);
         })
         .catch((error) => {
@@ -379,6 +389,7 @@ const ComplianceDetails = () => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
+    console.log(projectBreakdown,'projectBreakdown')
     const projectData = JSON.parse(localStorage.getItem("projectName"));
     let breakdownLength = projectData.projectName.breakdown.length;
     setLevelLenght(breakdownLength);
@@ -499,6 +510,10 @@ const ComplianceDetails = () => {
   }, []);
 
   return (
+    <CustomPapperBlock title="Compliance"
+    icon="customDropdownPageIcon compliancePageIcon"
+    whiteBg
+  >
     <>
       {isLoading ? (
         <Grid container spacing={3}>
@@ -748,7 +763,7 @@ const ComplianceDetails = () => {
                         id="clientRep"
                         className="formControl"
                         options={clientRep}
-                        className={classes.mT30}
+                        // className={classes.mT30}
                         getOptionLabel={(option) => option}
                         value={
                           form.hseRepresentative ? form.hseRepresentative : ""
@@ -830,7 +845,7 @@ const ComplianceDetails = () => {
                         id="clientRep"
                         className="formControl"
                         options={contractor.current}
-                        className={classes.mT30}
+                        // className={classes.mT30}
                         getOptionLabel={(option) => option}
                         value={form.contractor ? form.contractor : ""}
                         onSelect={(e) =>
@@ -875,7 +890,7 @@ const ComplianceDetails = () => {
                         id="clientRep"
                         className="formControl"
                         options={subContractor.current}
-                        className={classes.mT30}
+                        // className={classes.mT30}
                         getOptionLabel={(option) => option}
                         value={form.subContractor ? form.subContractor : ""}
                         onSelect={(e) =>
@@ -1116,7 +1131,10 @@ const ComplianceDetails = () => {
       ) : (
         <Loader />
       )}
+
     </>
+    </CustomPapperBlock>
+
   );
 };
 

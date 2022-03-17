@@ -190,11 +190,12 @@ const BulkUploadQuestion = () => {
     const classes = useStyles();
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
+    // console.log(acceptedFiles)
+    // const [uploadFile , setUploadFile] = useState(acceptedFiles)
+    // console.log(uploadFile)
     const files = acceptedFiles.map(file => (
-
-    <li key={file.path}>
-      <LinearProgress variant="determinate" className={classes.uploadProgressBox} color="secondary" value="10" />
+        <li key={file.path}>
+      <LinearProgress variant="determinate" className={classes.uploadProgressBox} color="secondary" value="100" />
       <span className={classes.uploadFileDetail}>
         {file.path}
         {' '}
@@ -216,6 +217,22 @@ const BulkUploadQuestion = () => {
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+
+    const handleFileUpload = (event) => {
+        console.log(event.target.files)
+    }
+
+    const handleUpload = () => {
+        let temp = []
+        acceptedFiles.map((value, index) => { 
+        const data = new FormData();
+        data.append("pk", acceptedFiles[index])
+        temp.push(data);
+    }
+        )
+        console.log(temp)
+    }
+    
 
     return (
         <>
@@ -557,7 +574,6 @@ const BulkUploadQuestion = () => {
                                             <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
                                         </div>
                                         <aside>
-                                            {/* <h4>Files</h4> */}
                                             <ul>{files}</ul>
                                         </aside>
                                     </Typography>
@@ -569,7 +585,7 @@ const BulkUploadQuestion = () => {
             </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-                <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle">
+                <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle" onClick={() => handleUpload()}>
                     Upload
                 </Button>
             </Grid>

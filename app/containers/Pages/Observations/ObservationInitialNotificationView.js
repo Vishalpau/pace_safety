@@ -30,14 +30,14 @@ import Loader from "../Loader"
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
-  root:{
-      '& .MuiAvatar-root.MuiAvatar-square.attachFileStyle': {
-        width: '120px !important' ,
-        height: '80px !important',
-        overflow: 'visible',
-  
+  root: {
+    '& .MuiAvatar-root.MuiAvatar-square.attachFileStyle': {
+      width: '120px !important',
+      height: '80px !important',
+      overflow: 'visible',
+
     },
-  },  
+  },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
@@ -146,13 +146,16 @@ const ObservationInitialNotificationView = () => {
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
     localStorage.setItem('fkobservationId', id)
-    if(res.data.status_code == 400){
+    if (res.data.status_code == 400) {
       history.push('/app/error/')
-    }else{
-    const result = res.data.data.results
-    await setInitialData(result)
-    await handelWorkArea(result)
-    await setIsLoading(true)
+    } else {
+      const result = res.data.data.results
+      await setInitialData(result)
+      if (result.fkProjectStructureIds != "Not Mentioned") {
+        await handelWorkArea(result)
+      }
+      await setIsLoading(true)
+
     }
   }
   const fetchTags = async () => {
@@ -337,38 +340,38 @@ const ObservationInitialNotificationView = () => {
 
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>         
-             <Grid item md={12}>
-             <FormLabel component="legend" className="viewLabel">
-                           iCare Type
-            </FormLabel>
-            <Typography className="viewLabelValue">
-              {initialData.observationType ? initialData.observationType : "-"}
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-          <FormLabel component="legend" className="viewLabel">
-                        iCare Title
-            </FormLabel>
-            <Typography className="viewLabelValue">
-              {initialData.observationTitle ? initialData.observationTitle : "-"}
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-          <FormLabel component="legend" className="viewLabel">
-                        iCare Description
-            </FormLabel>
-            <Typography className="viewLabelValue">
-              {initialData.observationDetails ? initialData.observationDetails : "-"}
-            </Typography>
-          </Grid>
-          <Grid item md={12}>
-          <FormLabel component="legend" className="viewLabel">
-                        Details of immediate actions taken
-            </FormLabel>
-            <Typography className="viewLabelValue">
-              {initialData.actionTaken ? initialData.actionTaken : "-"}
-            </Typography>
+            <Grid container spacing={3}>
+              <Grid item md={12}>
+                <FormLabel component="legend" className="viewLabel">
+                  iCare Type
+                </FormLabel>
+                <Typography className="viewLabelValue">
+                  {initialData.observationType ? initialData.observationType : "-"}
+                </Typography>
+              </Grid>
+              <Grid item md={12}>
+                <FormLabel component="legend" className="viewLabel">
+                  iCare Title
+                </FormLabel>
+                <Typography className="viewLabelValue">
+                  {initialData.observationTitle ? initialData.observationTitle : "-"}
+                </Typography>
+              </Grid>
+              <Grid item md={12}>
+                <FormLabel component="legend" className="viewLabel">
+                  iCare Description
+                </FormLabel>
+                <Typography className="viewLabelValue">
+                  {initialData.observationDetails ? initialData.observationDetails : "-"}
+                </Typography>
+              </Grid>
+              <Grid item md={12}>
+                <FormLabel component="legend" className="viewLabel">
+                  Details of immediate actions taken
+                </FormLabel>
+                <Typography className="viewLabelValue">
+                  {initialData.actionTaken ? initialData.actionTaken : "-"}
+                </Typography>
 
               </Grid>
             </Grid>
@@ -418,7 +421,10 @@ const ObservationInitialNotificationView = () => {
                   Observed On
                 </FormLabel>
                 <Typography className="viewLabelValue">
-                  {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"}
+                {moment(initialData["observedAt"]).format(
+                    "Do MMMM YYYY, h:mm:ss a"
+                  )}
+                  {/* {initialData["observedAt"] ? handelDateTime(initialData["observedAt"]) : "-"} */}
                 </Typography>
               </Grid>
 
@@ -456,6 +462,8 @@ const ObservationInitialNotificationView = () => {
                   {moment(initialData["createdAt"]).format(
                     "Do MMMM YYYY, h:mm:ss a"
                   )}
+                {/* {initialData["createdAt"] ? handelDateTime(initialData["createdAt"]) : "-"} */}
+
                 </Typography>
               </Grid>
               <Grid item md={4} sm={4} xs={12}>
@@ -474,8 +482,8 @@ const ObservationInitialNotificationView = () => {
               <g id="Bounding_Boxes">
                 <path id="Path_2274" data-name="Path 2274" d="M0,0H40V40H0Z" fill="none" />
               </g>
-              <path id="enrollment" d="M14.947,31.057a.874.874,0,0,1,0,1.743H1.981A2.008,2.008,0,0,1,0,30.771V2.029A2.008,2.008,0,0,1,1.981,0H25.64a1.96,1.96,0,0,1,1.407.591,2.056,2.056,0,0,1,.585,1.437V16.443a2.91,2.91,0,0,1-.023.382H25.919V2.029a.288.288,0,0,0-.279-.286H1.981a.286.286,0,0,0-.2.083.305.305,0,0,0-.081.2v28.74a.27.27,0,0,0,.083.2.289.289,0,0,0,.2.085Zm9.137.035-4.272,1.495.034-4.871,4.246,3.377Zm-3.039-5.008,4.609-6.406a.411.411,0,0,1,.5-.149l3.775,2.893a.374.374,0,0,1,.039.55l-4.679,6.492ZM7.593,16.774a1.778,1.778,0,0,1-.052-.9c.12-.948.36-1.124,1.215-1.367a8.85,8.85,0,0,0,2.867-.873,2.936,2.936,0,0,0,.193-.382c.1-.227.185-.472.24-.641a8.154,8.154,0,0,1-.631-.921l-.639-1.041a1.941,1.941,0,0,1-.36-.95.777.777,0,0,1,.065-.342.613.613,0,0,1,.219-.267.5.5,0,0,1,.154-.08,17.114,17.114,0,0,1-.031-1.868,2.694,2.694,0,0,1,.078-.424,2.508,2.508,0,0,1,1.079-1.4,3.35,3.35,0,0,1,.9-.411c.2-.059-.175-.723.036-.745A5.144,5.144,0,0,1,16.295,5.79a2.561,2.561,0,0,1,.623,1.6l-.039,1.7h0a.46.46,0,0,1,.326.355,1.481,1.481,0,0,1-.175.892h0v.024l-.73,1.225a6.339,6.339,0,0,1-.891,1.26l.1.144a4.478,4.478,0,0,0,.464.625.043.043,0,0,1,.016.021,10.373,10.373,0,0,0,2.813.892c.782.211,1.069.267,1.243,1.142a1.937,1.937,0,0,1-.023,1.1Zm-.641,9.356a.885.885,0,0,1,0-1.764H18.508l-.016.024h0V24.4h0v.013h0v.408h0v.035h0v.021h0v.211h0v.032H18.38l-.018.013H18.33l-.016.016h-.029l-.016.013h-.016l-.016.016h-.013l-.016.016h0l-.016.016h0l-.016.016h0v.016h0v.029h0v.016h0l-.016.016v.016h-.013v.016h0v.016h0l-.013.016h0v.016h0v.035h0v.035h0l-.013.016v.016h0v.019h0v.019h0v.019h0v.037h0V25.6Zm.331-4.847a.847.847,0,0,1-.777-.421.891.891,0,0,1,0-.9.847.847,0,0,1,.777-.421H19.754a.847.847,0,0,1,.777.421.891.891,0,0,1,0,.9.847.847,0,0,1-.777.421Z" transform="translate(5.333 4.2)" fill="#06425c"/>
-            </svg>iCare classification 
+              <path id="enrollment" d="M14.947,31.057a.874.874,0,0,1,0,1.743H1.981A2.008,2.008,0,0,1,0,30.771V2.029A2.008,2.008,0,0,1,1.981,0H25.64a1.96,1.96,0,0,1,1.407.591,2.056,2.056,0,0,1,.585,1.437V16.443a2.91,2.91,0,0,1-.023.382H25.919V2.029a.288.288,0,0,0-.279-.286H1.981a.286.286,0,0,0-.2.083.305.305,0,0,0-.081.2v28.74a.27.27,0,0,0,.083.2.289.289,0,0,0,.2.085Zm9.137.035-4.272,1.495.034-4.871,4.246,3.377Zm-3.039-5.008,4.609-6.406a.411.411,0,0,1,.5-.149l3.775,2.893a.374.374,0,0,1,.039.55l-4.679,6.492ZM7.593,16.774a1.778,1.778,0,0,1-.052-.9c.12-.948.36-1.124,1.215-1.367a8.85,8.85,0,0,0,2.867-.873,2.936,2.936,0,0,0,.193-.382c.1-.227.185-.472.24-.641a8.154,8.154,0,0,1-.631-.921l-.639-1.041a1.941,1.941,0,0,1-.36-.95.777.777,0,0,1,.065-.342.613.613,0,0,1,.219-.267.5.5,0,0,1,.154-.08,17.114,17.114,0,0,1-.031-1.868,2.694,2.694,0,0,1,.078-.424,2.508,2.508,0,0,1,1.079-1.4,3.35,3.35,0,0,1,.9-.411c.2-.059-.175-.723.036-.745A5.144,5.144,0,0,1,16.295,5.79a2.561,2.561,0,0,1,.623,1.6l-.039,1.7h0a.46.46,0,0,1,.326.355,1.481,1.481,0,0,1-.175.892h0v.024l-.73,1.225a6.339,6.339,0,0,1-.891,1.26l.1.144a4.478,4.478,0,0,0,.464.625.043.043,0,0,1,.016.021,10.373,10.373,0,0,0,2.813.892c.782.211,1.069.267,1.243,1.142a1.937,1.937,0,0,1-.023,1.1Zm-.641,9.356a.885.885,0,0,1,0-1.764H18.508l-.016.024h0V24.4h0v.013h0v.408h0v.035h0v.021h0v.211h0v.032H18.38l-.018.013H18.33l-.016.016h-.029l-.016.013h-.016l-.016.016h-.013l-.016.016h0l-.016.016h0l-.016.016h0v.016h0v.029h0v.016h0l-.016.016v.016h-.013v.016h0v.016h0l-.013.016h0v.016h0v.035h0v.035h0l-.013.016v.016h0v.019h0v.019h0v.019h0v.037h0V25.6Zm.331-4.847a.847.847,0,0,1-.777-.421.891.891,0,0,1,0-.9.847.847,0,0,1,.777-.421H19.754a.847.847,0,0,1,.777.421.891.891,0,0,1,0,.9.847.847,0,0,1-.777.421Z" transform="translate(5.333 4.2)" fill="#06425c" />
+            </svg>iCare classification
           </Typography>
         </Grid>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -572,13 +580,13 @@ const ObservationInitialNotificationView = () => {
                 </Typography>
               </Grid>
               {initialData.fkCompanyId === 3 ?
-              <Grid item md={12} sm={12} xs={12}>
-                <FormLabel component="legend" className="viewLabel">Confirm if the foreman was present at the time of your observation</FormLabel>
-                <Typography className="viewLabelValue">
-                  {initialData.isSupervisorPresent ? initialData.isSupervisorPresent : "-"}
-                </Typography>
-              </Grid>
-            :null}
+                <Grid item md={12} sm={12} xs={12}>
+                  <FormLabel component="legend" className="viewLabel">Confirm if the foreman was present at the time of your observation</FormLabel>
+                  <Typography className="viewLabelValue">
+                    {initialData.isSupervisorPresent ? initialData.isSupervisorPresent : "-"}
+                  </Typography>
+                </Grid>
+                : null}
             </Grid>
           </Paper>
         </Grid>
@@ -629,33 +637,33 @@ const ObservationInitialNotificationView = () => {
           </Paper>
         </Grid>
 
-        
+
         {initialData['assigneeName'] && <>
-        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Typography variant="h6" className="sectionHeading">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30.217" height="24.92" viewBox="0 0 37.217 27.92">
-              <path id="project-management" d="M27.194,13.612a.624.624,0,0,0-.3.082.285.285,0,0,0-.094.106.424.424,0,0,0-.03.17,1.515,1.515,0,0,0,.3.739h0l.636,1.012a5.453,5.453,0,0,0,.854,1.124,1.745,1.745,0,0,0,1.212.488,1.781,1.781,0,0,0,1.288-.512,5.583,5.583,0,0,0,.882-1.212l.715-1.178a1.148,1.148,0,0,0,.151-.627c-.018-.073-.1-.106-.23-.115h-.245a1.075,1.075,0,0,1-.194,0l.245-1.085c-1.818.3-3.181-1.063-5.1-.27l.133,1.3a1.039,1.039,0,0,1-.218,0Zm-4.847,8.407c.17-2.187-.261-2.218,1.575-2.905a17.629,17.629,0,0,0,2.924-1.3l1.572,4.208Zm14.845,0c-.167-2.187.261-2.218-1.572-2.905a17.772,17.772,0,0,1-2.927-1.3L31.12,22.019Zm-6.968-2.293h.218a.364.364,0,0,0,.361-.361v-.582a.361.361,0,0,0-.361-.361h-1.3a.361.361,0,0,0-.361.361v.585a.364.364,0,0,0,.361.361h.23l-.424,2.293h1.7l-.409-2.293Zm-20.153.13.248.245a.17.17,0,0,1,0,.236l-.2.2a1.351,1.351,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.167.167,0,0,1-.167.167h-.282a1.382,1.382,0,0,1-.145.318l.182.185a.17.17,0,0,1,0,.236l-.248.245a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.264a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167V22.44a1.339,1.339,0,0,1-.321-.145l-.182.182a.164.164,0,0,1-.236,0l-.245-.245a.164.164,0,0,1,0-.236l.2-.2a1.233,1.233,0,0,1-.121-.33H7.4a.164.164,0,0,1-.167-.167v-.354a.167.167,0,0,1,.167-.167h.282a1.212,1.212,0,0,1,.145-.3l-.182-.182a.164.164,0,0,1,0-.236l.245-.248a.17.17,0,0,1,.236,0l.2.2a1.351,1.351,0,0,1,.33-.124v-.258a.167.167,0,0,1,.167-.167h.348a.167.167,0,0,1,.167.167v.282a1.212,1.212,0,0,1,.318.145l.182-.182a.164.164,0,0,1,.236,0Zm-1.124.606a.688.688,0,1,1-.688.688A.688.688,0,0,1,8.947,20.462Zm4.193-4.756a.657.657,0,0,1-.585-.7.642.642,0,0,1,.585-.7h7.48a.66.66,0,0,1,.588.7.645.645,0,0,1-.588.7Zm0,6.147a.66.66,0,0,1-.585-.7.645.645,0,0,1,.585-.706h5.1a.66.66,0,0,1,.585.706.642.642,0,0,1-.585.7ZM8.929,10.491a.4.4,0,0,1-.539-.07l-.045-.048L7.593,9.6a.427.427,0,0,1,.07-.606.5.5,0,0,1,.657-.021l.4.418,1.315-1.054a.409.409,0,0,1,.585.145.47.47,0,0,1-.03.648l-1.642,1.36ZM13.1,9.885c-.327,0-.545-.33-.545-.706s.218-.7.545-.7h8.565a.657.657,0,0,1,.585.7.645.645,0,0,1-.585.706Zm-8.64-6.28H30.181a.724.724,0,0,1,.721.721V6.411H29.566V4.784H4.463V20.234h0a.436.436,0,0,1-.373.433c-3.923.609-4.108,5.253-.118,5.92H29.566V24.636H30.9V27.2a.721.721,0,0,1-.212.509h0a.727.727,0,0,1-.509.212H3.942a4.59,4.59,0,0,1-3.187-1.73,5.155,5.155,0,0,1-.773-3.269V6.059C-.018,3.187-.045.073,3.972,0h.048a.442.442,0,0,1,.442.442ZM1.028,20.974a3.391,3.391,0,0,1,2.405-1.251V.909c-2.745.27-2.424,2.808-2.424,5.165v14.9ZM10.071,13.7l.248.248a.17.17,0,0,1,0,.236l-.2.2a1.4,1.4,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.17.17,0,0,1-.167.17h-.282a1.445,1.445,0,0,1-.145.3l.182.182a.17.17,0,0,1,0,.236l-.248.248a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.258a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167v-.282a1.466,1.466,0,0,1-.321-.145l-.182.182a.17.17,0,0,1-.236,0l-.245-.248a.164.164,0,0,1,0-.236l.2-.2a1.269,1.269,0,0,1-.121-.33H7.4a.167.167,0,0,1-.167-.167V14.8a.164.164,0,0,1,.167-.167h.282a1.188,1.188,0,0,1,.145-.321l-.182-.182a.164.164,0,0,1,0-.236l.245-.245a.164.164,0,0,1,.236,0l.2.2a1.233,1.233,0,0,1,.33-.121v-.258a.167.167,0,0,1,.167-.17h.348a.17.17,0,0,1,.167.17v.279a1.445,1.445,0,0,1,.318.145l.182-.182a.17.17,0,0,1,.236,0Zm-1.124.624a.688.688,0,1,1-.688.685A.688.688,0,0,1,8.947,14.327Zm23.873-.951a.46.46,0,0,1,.333.348,1.412,1.412,0,0,1-.173.869h0a.064.064,0,0,1,0,.018l-.724,1.194a5.959,5.959,0,0,1-.939,1.275,2.139,2.139,0,0,1-1.536.606,2.072,2.072,0,0,1-1.46-.585,5.614,5.614,0,0,1-.909-1.194L26.776,14.9a1.818,1.818,0,0,1-.361-.924.724.724,0,0,1,.061-.33.63.63,0,0,1,.218-.254.821.821,0,0,1,.155-.079,16.419,16.419,0,0,1-.03-1.818,2.527,2.527,0,0,1,.079-.412c.957-3.169,5.8-2.9,5.962.654l-.039,1.648Z" transform="translate(0.025)" fill="#06425c" />
-            </svg> Accountability
-          </Typography>
-        </Grid>
-        <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <FormLabel component="legend" className="viewLabel">Assign to</FormLabel>
-                <Typography className="viewLabelValue">
-                  {initialData['assigneeName'] ? initialData['assigneeName'] : "-"}
-                </Typography>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Typography variant="h6" className="sectionHeading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30.217" height="24.92" viewBox="0 0 37.217 27.92">
+                <path id="project-management" d="M27.194,13.612a.624.624,0,0,0-.3.082.285.285,0,0,0-.094.106.424.424,0,0,0-.03.17,1.515,1.515,0,0,0,.3.739h0l.636,1.012a5.453,5.453,0,0,0,.854,1.124,1.745,1.745,0,0,0,1.212.488,1.781,1.781,0,0,0,1.288-.512,5.583,5.583,0,0,0,.882-1.212l.715-1.178a1.148,1.148,0,0,0,.151-.627c-.018-.073-.1-.106-.23-.115h-.245a1.075,1.075,0,0,1-.194,0l.245-1.085c-1.818.3-3.181-1.063-5.1-.27l.133,1.3a1.039,1.039,0,0,1-.218,0Zm-4.847,8.407c.17-2.187-.261-2.218,1.575-2.905a17.629,17.629,0,0,0,2.924-1.3l1.572,4.208Zm14.845,0c-.167-2.187.261-2.218-1.572-2.905a17.772,17.772,0,0,1-2.927-1.3L31.12,22.019Zm-6.968-2.293h.218a.364.364,0,0,0,.361-.361v-.582a.361.361,0,0,0-.361-.361h-1.3a.361.361,0,0,0-.361.361v.585a.364.364,0,0,0,.361.361h.23l-.424,2.293h1.7l-.409-2.293Zm-20.153.13.248.245a.17.17,0,0,1,0,.236l-.2.2a1.351,1.351,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.167.167,0,0,1-.167.167h-.282a1.382,1.382,0,0,1-.145.318l.182.185a.17.17,0,0,1,0,.236l-.248.245a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.264a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167V22.44a1.339,1.339,0,0,1-.321-.145l-.182.182a.164.164,0,0,1-.236,0l-.245-.245a.164.164,0,0,1,0-.236l.2-.2a1.233,1.233,0,0,1-.121-.33H7.4a.164.164,0,0,1-.167-.167v-.354a.167.167,0,0,1,.167-.167h.282a1.212,1.212,0,0,1,.145-.3l-.182-.182a.164.164,0,0,1,0-.236l.245-.248a.17.17,0,0,1,.236,0l.2.2a1.351,1.351,0,0,1,.33-.124v-.258a.167.167,0,0,1,.167-.167h.348a.167.167,0,0,1,.167.167v.282a1.212,1.212,0,0,1,.318.145l.182-.182a.164.164,0,0,1,.236,0Zm-1.124.606a.688.688,0,1,1-.688.688A.688.688,0,0,1,8.947,20.462Zm4.193-4.756a.657.657,0,0,1-.585-.7.642.642,0,0,1,.585-.7h7.48a.66.66,0,0,1,.588.7.645.645,0,0,1-.588.7Zm0,6.147a.66.66,0,0,1-.585-.7.645.645,0,0,1,.585-.706h5.1a.66.66,0,0,1,.585.706.642.642,0,0,1-.585.7ZM8.929,10.491a.4.4,0,0,1-.539-.07l-.045-.048L7.593,9.6a.427.427,0,0,1,.07-.606.5.5,0,0,1,.657-.021l.4.418,1.315-1.054a.409.409,0,0,1,.585.145.47.47,0,0,1-.03.648l-1.642,1.36ZM13.1,9.885c-.327,0-.545-.33-.545-.706s.218-.7.545-.7h8.565a.657.657,0,0,1,.585.7.645.645,0,0,1-.585.706Zm-8.64-6.28H30.181a.724.724,0,0,1,.721.721V6.411H29.566V4.784H4.463V20.234h0a.436.436,0,0,1-.373.433c-3.923.609-4.108,5.253-.118,5.92H29.566V24.636H30.9V27.2a.721.721,0,0,1-.212.509h0a.727.727,0,0,1-.509.212H3.942a4.59,4.59,0,0,1-3.187-1.73,5.155,5.155,0,0,1-.773-3.269V6.059C-.018,3.187-.045.073,3.972,0h.048a.442.442,0,0,1,.442.442ZM1.028,20.974a3.391,3.391,0,0,1,2.405-1.251V.909c-2.745.27-2.424,2.808-2.424,5.165v14.9ZM10.071,13.7l.248.248a.17.17,0,0,1,0,.236l-.2.2a1.4,1.4,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.17.17,0,0,1-.167.17h-.282a1.445,1.445,0,0,1-.145.3l.182.182a.17.17,0,0,1,0,.236l-.248.248a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.258a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167v-.282a1.466,1.466,0,0,1-.321-.145l-.182.182a.17.17,0,0,1-.236,0l-.245-.248a.164.164,0,0,1,0-.236l.2-.2a1.269,1.269,0,0,1-.121-.33H7.4a.167.167,0,0,1-.167-.167V14.8a.164.164,0,0,1,.167-.167h.282a1.188,1.188,0,0,1,.145-.321l-.182-.182a.164.164,0,0,1,0-.236l.245-.245a.164.164,0,0,1,.236,0l.2.2a1.233,1.233,0,0,1,.33-.121v-.258a.167.167,0,0,1,.167-.17h.348a.17.17,0,0,1,.167.17v.279a1.445,1.445,0,0,1,.318.145l.182-.182a.17.17,0,0,1,.236,0Zm-1.124.624a.688.688,0,1,1-.688.685A.688.688,0,0,1,8.947,14.327Zm23.873-.951a.46.46,0,0,1,.333.348,1.412,1.412,0,0,1-.173.869h0a.064.064,0,0,1,0,.018l-.724,1.194a5.959,5.959,0,0,1-.939,1.275,2.139,2.139,0,0,1-1.536.606,2.072,2.072,0,0,1-1.46-.585,5.614,5.614,0,0,1-.909-1.194L26.776,14.9a1.818,1.818,0,0,1-.361-.924.724.724,0,0,1,.061-.33.63.63,0,0,1,.218-.254.821.821,0,0,1,.155-.079,16.419,16.419,0,0,1-.03-1.818,2.527,2.527,0,0,1,.079-.412c.957-3.169,5.8-2.9,5.962.654l-.039,1.648Z" transform="translate(0.025)" fill="#06425c" />
+              </svg> Accountability
+            </Typography>
+          </Grid>
+          <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+            <Paper elevation={1} className="paperSection">
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <FormLabel component="legend" className="viewLabel">Assign to</FormLabel>
+                  <Typography className="viewLabelValue">
+                    {initialData['assigneeName'] ? initialData['assigneeName'] : "-"}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormLabel component="legend" className="viewLabel">Department</FormLabel>
+                  <Typography className="viewLabelValue">
+                    {initialData['departmentName'] ? initialData['departmentName'] : "-"}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <FormLabel component="legend" className="viewLabel">Department</FormLabel>
-                <Typography className="viewLabelValue">
-                  {initialData['departmentName'] ? initialData['departmentName'] : "-"}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid> </>}
+            </Paper>
+          </Grid> </>}
 
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">

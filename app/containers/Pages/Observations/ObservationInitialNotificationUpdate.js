@@ -1,7 +1,6 @@
 import { Button, CircularProgress, Grid, TextField, Typography } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import { KeyboardDatePicker } from '@material-ui/pickers';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -218,7 +217,6 @@ const ObservationInitialNotificationUpdate = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(initialData['assigneeName'], "LLLL")
     const { error, isValid } = InitialNotificationValidator(initialData, selectDepthAndId);
     await setError(error);
 
@@ -329,10 +327,6 @@ const ObservationInitialNotificationUpdate = () => {
 
     let sorting = temp.sort((a, b) => a.id - b.id);
     await setTagData(sorting);
-    // const res = await api.get(`/api/v1/tags/`)
-    // const result = res.data.data.results.results
-    // let sorting = result.sort((a, b) => a.id - b.id)
-    // await setTagData(sorting)
   }
 
   const fetchTagsData = async () => {
@@ -348,7 +342,6 @@ const ObservationInitialNotificationUpdate = () => {
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/application/${appId}/users/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)
@@ -402,7 +395,6 @@ const ObservationInitialNotificationUpdate = () => {
 
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
       });
   };
 
@@ -413,7 +405,6 @@ const ObservationInitialNotificationUpdate = () => {
       url: `${ACCOUNT_API_URL}api/v1/companies/${fkCompanyId}/departments/`,
       headers: {
         Authorization: `Bearer ${access_token}`,
-        // 'Cookie': 'csrftoken=IDCzPfvqWktgdVTZcQK58AQMeHXO9QGNDEJJgpMBSqMvh1OjsHrO7n4Y2WuXEROY; sessionid=da5zu0yqn2qt14h0pbsay7eslow9l68k'
       },
     };
     axios(config)
@@ -424,17 +415,11 @@ const ObservationInitialNotificationUpdate = () => {
           user = result;
           for (var i in result) {
             filterDepartmentName.push(result[i]);
-            // filterReportedById.push(result[i].id);
           }
-          // setReportedByName(filterReportedByName);
           setDepartmentName(filterDepartmentName);
         }
-        // else{
-        //   window.location.href = {LOGIN_URL}
-        // }
       })
       .catch((error) => {
-        // window.location.href = {LOGIN_URL}
       });
   };
 

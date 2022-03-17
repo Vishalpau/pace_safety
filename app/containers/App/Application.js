@@ -186,6 +186,18 @@ import {
   ComplianceComment,
   ComplianceActivity,
   ComplianceConfig,
+  ComplianceConfigNewQ,
+  QuestionsGroup,
+  Questions,
+  ComplianceConfigBulkUploadQ,
+  ComplianceConfigEditQ,
+  ComplianceConfigViewQ,
+  PerformanceFactorAdd,
+  PerformanceFactorEdit,
+  PerformanceFactorView,
+  PerformanceMatrixAdd,
+  PerformanceMatrixEdit,
+  PerformanceMatrixView,
 } from "../pageListAsync";
 // import PrintFlha from '../Pages/Assesments/PrintFlha';
 
@@ -440,6 +452,11 @@ function Application(props) {
           path="/incident/details/:id/"
           component={Summary}
         />
+        {/* {route for git} */}
+        <Route
+          path="/app/incident/details/:id/"
+          component={Summary}
+        />
         {/* from leassionlearned */}
         <Route
           exact
@@ -640,9 +657,22 @@ function Application(props) {
         <Route path="/app/pages/compliance-activity" component={ComplianceActivity} />
 
         {/* Administrations */}
-        <Route path="/app/compliance-config/:id" exact component={ComplianceConfig} />
         <Route path="/app/compliance-config/" exact component={ComplianceConfig} />
-        <Route path="/app/compliance-config/new" exact component={ComplianceConfig} />
+        <Route path="/app/compliance-config/question-group" exact component={QuestionsGroup} />
+        <Route path="/app/compliance-config/question" exact component={Questions} />
+        <Route path="/app/compliance-config/new-question" exact component={ComplianceConfigNewQ} />
+        <Route path="/app/compliance-config/bulk-upload" exact component={ComplianceConfigBulkUploadQ} />
+        <Route path="/app/compliance-config/edit/:id" exact component={ComplianceConfigEditQ} />
+        <Route path="/app/compliance-config/view/:id" exact component={ComplianceConfigViewQ} />
+
+        <Route path="/app/compliance-config/performance-factor/add" exact component={PerformanceFactorAdd} />
+        <Route path="/app/compliance-config/performance-factor/edit" exact component={PerformanceFactorEdit} />
+        <Route path="/app/compliance-config/performance-factor/view" exact component={PerformanceFactorView} />
+
+        <Route path="/app/compliance-config/performance-matrix/add" exact component={PerformanceMatrixAdd} />
+        <Route path="/app/compliance-config/performance-matrix/edit" exact component={PerformanceMatrixEdit} />
+        <Route path="/app/compliance-config/performance-matrix/view" exact component={PerformanceMatrixView} />
+
         {/* Default */}
         <Route component={NotFound} />
 

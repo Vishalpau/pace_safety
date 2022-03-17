@@ -576,10 +576,10 @@ const styles = (theme) => ({
     minWidth: 150,
   },
   userLogo: {
-    maxWidth: '80px',
-    minWidth: '80px',
+    display: 'inline-block',
+    width: 'auto',
     marginRight: '16px',
-    display: "inline-block",
+    height: '40px',
   },
   userControls: {
     display: "inline-flex",

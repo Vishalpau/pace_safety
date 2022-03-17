@@ -153,10 +153,6 @@ const Comments = () => {
         
         if (parentId > 0) {
           pId.push(parentId)
-          // console.log({parentId:parentId})
-          // let replyData = await fetchReplyComment(parentId)
-          // // [...newData, {data:replyData}]
-          // console.log(replyData)
         }
       }
       let uniquePId = [...new Set(pId)];

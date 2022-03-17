@@ -658,10 +658,10 @@ const FlhaDetails = (props) => {
     }).join(':');
 
     jobForm["notifyTo"] == null ?
-      jobForm["notifyTo"] = "null" :
-      jobForm["notifyTo"].length > 0 ?
-        jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
-        jobForm["notifyTo"] = "null"
+    jobForm["notifyTo"] = "null" :
+    jobForm["notifyTo"].length > 0 ?
+    jobForm["notifyTo"] = jobForm["notifyTo"].toString() :
+    jobForm["notifyTo"] = "null"
 
     const formDataPost = new FormData();
     formDataPost.append('fkCompanyId', fkCompanyId);
@@ -1012,6 +1012,8 @@ const FlhaDetails = (props) => {
                     }}
                     value={jobForm.jobTitle}
                     disabled={disableForm}
+                    inputProps={{ maxLength: 255 }}
+
                   />
                   <div style={{ color: "red" }}>{jobForm.jobTitle ? '' : error.jobTitle}</div>
                 </Grid>
@@ -1102,6 +1104,7 @@ const FlhaDetails = (props) => {
                     }}
                     value={jobForm.jobDetails}
                     disabled={disableForm}
+                    inputProps={{ maxLength: 255 }}
                   />
                   <div style={{ color: "red" }}>{jobForm.jobDetails ? '' : error.jobDetails}</div>
 
@@ -1114,6 +1117,7 @@ const FlhaDetails = (props) => {
                     label="Department"
                     className="formControl"
                     value={(departmentList != null && departmentList.departmentName != undefined) ? departmentList.departmentName : ''}
+                    inputProps={{ maxLength: 255 }}
                   />
                 </Grid>
               </Grid>
@@ -1189,6 +1193,7 @@ const FlhaDetails = (props) => {
                             onChange={(e) => handleHazardForm(e, null, taskIndex, 'taskIdentification')
                             }
                             disabled={disableForm}
+
                           />
                         </Grid>
                         {taskValue.hazards.map((item, indexHazard) => (
@@ -1220,7 +1225,7 @@ const FlhaDetails = (props) => {
                                   >
                                     {(taskForm[taskIndex]["hazards"][indexHazard]["hazard"]) && indexHazard === 0 && isSelectedJob ?
                                       <TextField
-                                        disabled={true}
+                                        // disabled={true}
                                         variant="outlined"
                                         rows="1"
                                         id="taskIdentification"

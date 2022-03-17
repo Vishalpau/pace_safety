@@ -44,6 +44,7 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../../utils/constants";
+import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -134,6 +135,8 @@ const PerformanceSummary = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState("");
   const [loading, setLoading] = useState(false);
+  const [complianceData, setComplianceData] = useState({});
+
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
@@ -145,6 +148,7 @@ const PerformanceSummary = () => {
       .then((response) => {
         let result = response.data.data.results;
         setForm(result);
+        setComplianceData(result)
         setIsLoading(true);
       })
       .catch((error) => console.log(error));
@@ -208,6 +212,13 @@ const PerformanceSummary = () => {
     fetchComplianceData();
   }, []);
   return (
+    <CustomPapperBlock
+    title={`Compliance number: ${
+      complianceData.auditNumber ? complianceData.auditNumber : ""
+    }`}
+    icon="customDropdownPageIcon compliancePageIcon"
+    whiteBg
+  >
     <>
       {isLoading ? (
         <Grid container spacing={3} className={classes.observationNewSection}>
@@ -358,6 +369,8 @@ const PerformanceSummary = () => {
         <Loader />
       )}
     </>
+    </CustomPapperBlock>
+
   );
 };
 
