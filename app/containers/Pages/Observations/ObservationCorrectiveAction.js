@@ -573,7 +573,7 @@ function ObservationCorrectiveAction() {
             {form.assigneeName ? form.assigneeName : "-"}
           </Typography>
         </Grid> */}
-        {!ATACLStatus ? '' : (
+        
           <>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
@@ -585,6 +585,7 @@ function ObservationCorrectiveAction() {
 
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Paper elevation={1} className="paperSection">
+          {!ATACLStatus ? 'You do not have permissions to view the actions.' : (
             <Grid container spacing={3}>
               <Grid
                 item
@@ -627,22 +628,39 @@ function ObservationCorrectiveAction() {
                     <Typography className={classes.labelValue}>
                       {handelActionShow(id)}
                     </Typography>
-                    {!checkACL('action_tracker', 'add_actions') ? '' : 
-                    <Typography className={classes.increaseRowBox}>
-                      <ActionTracker
-                        actionContext="iCare"
-                        enitityReferenceId={id}
-                        setUpdatePage={setUpdatePage}
-                        fkCompanyId={fkCompanyId}
-                        fkProjectId={projectId}
-                        fkProjectStructureIds={fkProjectStructureIds}
-                        isCorrectiveActionTaken={form.isCorrectiveActionTaken}
-                        createdBy={userId}
-                        updatePage={updatePage}
-                        handelShowData={handelActionTracker}
-                      />
+                    {!checkACL('action_tracker', 'add_actions') ? 
+                      <Typography className={classes.increaseRowBox}>
+                        <ActionTracker
+                          actionContext="iCare"
+                          enitityReferenceId={id}
+                          setUpdatePage={setUpdatePage}
+                          fkCompanyId={fkCompanyId}
+                          fkProjectId={projectId}
+                          fkProjectStructureIds={fkProjectStructureIds}
+                          isCorrectiveActionTaken={null}
+                          createdBy={userId}
+                          updatePage={updatePage}
+                          handelShowData={handelActionTracker}
+                        />
 
-                    </Typography> }
+                      </Typography> 
+                      : 
+                      <Typography className={classes.increaseRowBox}>
+                        <ActionTracker
+                          actionContext="iCare"
+                          enitityReferenceId={id}
+                          setUpdatePage={setUpdatePage}
+                          fkCompanyId={fkCompanyId}
+                          fkProjectId={projectId}
+                          fkProjectStructureIds={fkProjectStructureIds}
+                          isCorrectiveActionTaken={form.isCorrectiveActionTaken}
+                          createdBy={userId}
+                          updatePage={updatePage}
+                          handelShowData={handelActionTracker}
+                        />
+
+                      </Typography> 
+                } 
                   </>
                 )
                   :
@@ -650,12 +668,12 @@ function ObservationCorrectiveAction() {
 
               </Grid>
 
-            </Grid>
+            </Grid>)
+    }
           </Paper>
         </Grid>
         </>
-        )
-    }
+        
         {/* <Grid item md={4}>
            <TextField
             label="Action taken"

@@ -1006,8 +1006,22 @@ function Actions(props) {
                                   <Typography variant="body1" display="inline">
 
                                     {/* <button onClick={() => handleDelete(index)}>Delete</button> */}
-                                    {!checkDeletePermission ? '' : (
-                                      <Link href="#" className={classes.mLeftR5} ><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+                                    {!checkDeletePermission ? 
+                                    <DeleteForeverOutlinedIcon 
+                                      className={classes.iconteal} 
+                                      style={{
+                                        color: '#c0c0c0', 
+                                        cursor: 'not-allowed'
+                                      }}
+                                    />
+                                    : (
+                                      <Link 
+                                        href="#" 
+                                        className={classes.mLeftR5} >
+                                          <DeleteForeverOutlinedIcon 
+                                            className={classes.iconteal} 
+                                            onClick={(e) => handleDelete(item)} />
+                                      </Link>
                                     )}
                                   </Typography>
                                 </div>

@@ -271,11 +271,21 @@ export default function Observations() {
               Upload
             </Button>
             }
-             {!checkACL('safety', 'add_observations') ? '' : (
-              <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={() => handleInitialNotificationPush()}>
+             {/* {!checkACL('safety', 'add_observations') ? '' : ( */}
+              <Button 
+                size="medium" 
+                variant="contained" 
+                className={classNames(classes.buttonsNew, classes.floatR)} 
+                color="primary" 
+                onClick={() => handleInitialNotificationPush()}
+                style={{
+                  background: checkACL('safety', 'add_observations') ? '#06425c' : '#c0c0c0', 
+                  cursor: checkACL('safety', 'add_observations') ? 'pointer' : 'not-allowed'
+                }}
+                >
                 <AddIcon className={classes.floatR} /> Add new
               </Button>
-            )}
+            {/* )} */}
 
           </Grid>
 
