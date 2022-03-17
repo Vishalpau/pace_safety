@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { PapperBlock } from "dan-components";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import AccessTime from "@material-ui/icons/AccessTime";
-import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import classNames from "classnames";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import projectpj from "dan-images/projectpj.png";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -24,37 +14,21 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import { useHistory, useParams } from "react-router";
 
 // Icons
-import Print from "@material-ui/icons/Print";
-import Share from "@material-ui/icons/Share";
-import Close from "@material-ui/icons/Close";
-import Comment from "@material-ui/icons/Comment";
-import History from "@material-ui/icons/History";
 import Edit from "@material-ui/icons/Edit";
 import Add from "@material-ui/icons/Add";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-
-import Styles from "dan-styles/Summary.scss";
-import Fonts from "dan-styles/Fonts.scss";
-
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-
-import ImageIcon from "@material-ui/icons/Image";
-import Avatar from "@material-ui/core/Avatar";
 import Link from "@material-ui/core/Link";
-
-import MenuOpenOutlinedIcon from "@material-ui/icons/MenuOpenOutlined";
 
 // Table
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
@@ -66,16 +40,11 @@ import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-
-import complianceLogoSymbol from "dan-images/complianceLogoSymbol.png";
-
 import { ReactVideo } from "reactjs-media";
 import { ReactAudio } from "reactjs-media";
 
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import api from "../../../utils/axios";
 import {

@@ -356,7 +356,7 @@ function ObservationBulkupload() {
                         {row.processer ? row.processer : "-" }
                       </TableCell>
                       <TableCell>
-                        {handelDateTime(row.uploadedDate) ? handelDateTime(row.uploadedDate) : "-"}
+                        {handelDateTime(row.uploadedDate) ? handelDateTime(row.uploadedDate, false) : "-"}
                       </TableCell>
                       <TableCell>
                         {handelDateTime(row.processedDate) ? handelDateTime(row.processedDate) : '-'}

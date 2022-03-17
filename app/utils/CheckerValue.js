@@ -171,7 +171,7 @@ export const handelActionDataAssessment = async (incidentId, apiData, type = "al
     }
 }
 
-export const handelDateTime = (value) => {
+export const handelDateTime = (value, showTime=true) => {
     if(value== null){
         return
     }
@@ -183,7 +183,9 @@ export const handelDateTime = (value) => {
     var h = H % 12 || 12;
     var ampm = (H < 12 || H === 24) ? " AM" : " PM";
     timeString = h + timeString.substr(2, 3) + ampm;
-    return `${observedDate} ${timeString}`
+
+    return showTime ? `${observedDate} ${timeString}` : observedDate
+    
 }
 
 export const handelValueToLabel = (value) => {
