@@ -321,17 +321,17 @@ const ComplianceDetails = () => {
     form["fkProjectStructureIds"] = fkProjectStructureId.join(":");
     let projectStr = fkProjectStructureId[fkProjectStructureId.length-1]
     let parentStr = fkProjectStructureId[fkProjectStructureId.length-2]
-    console.log(parentStr,'kkkk')
-
     let depth = projectStr.split('L')[0] + 'L'
-    let strId = parentStr.split('L')[1]
+    // let strId = parentStr.split('L')[1]
+    let strId = (parentStr != undefined) ?  parentStr.split('L')[1] : projectStr.split('L')[1]
     let strUrl = JSON.parse(localStorage.getItem("projectName")).projectName.breakdown.filter(bd => bd.depth == depth)[0].structure[0].url + strId
     const api_work_area = axios.create({
       baseURL: SSO_URL,
       headers: HEADER_AUTH
     });
     const workArea = await api_work_area.get(strUrl);
-    let area = workArea.data.data.results.filter(st => st.id == projectStr.split('L')[1] )[0].structureName
+    let areaStr = workArea.data.data.results.filter(st => st.id == projectStr.split('L')[1])
+    let area = ( typeof areaStr[0] != 'undefined' ) ? areaStr[0].structureName : null
     form["area"] = area;
     if (form.id) {
       form["updatedBy"] = userId;

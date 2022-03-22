@@ -186,7 +186,9 @@ function PersonalDashboard(props) {
   const getSubscriptions = async (compId) => {
     const companyId = compId ||
       JSON.parse(localStorage.getItem('company')) !== null && JSON.parse(localStorage.getItem('company')).fkCompanyId
+
     if (companyId) {
+
       try {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
@@ -199,6 +201,7 @@ function PersonalDashboard(props) {
           .catch(function (error) {
             console.log(error);
           });
+
 
         await setSubscriptions(data)
         // redirectionAccount()
@@ -523,9 +526,8 @@ function PersonalDashboard(props) {
     let redback = ''
     let tarPage = ''
     let tarId = 0
-    
-
     if (state !== null) {
+
       await fetchUserDetails(state.comId, state.proId, state.tarPage, state.tarProjectStruct, state.tarId)
     } else {
 
