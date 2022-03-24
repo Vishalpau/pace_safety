@@ -1,31 +1,33 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import { PapperBlock } from "dan-components";
-import Settings from "@material-ui/icons/Settings";
-import SettingsApplications from "@material-ui/icons/SettingsApplications";
-import SettingsInputSvideo from "@material-ui/icons/SettingsInputSvideo";
-import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import MenuItem from "@material-ui/core/MenuItem";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import Dropzone from "react-dropzone";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { PapperBlock } from 'dan-components';
+import Settings from '@material-ui/icons/Settings';
+import SettingsApplications from '@material-ui/icons/SettingsApplications';
+import SettingsInputSvideo from '@material-ui/icons/SettingsInputSvideo';
+import {
+  Grid, Typography, TextField, Button
+} from '@material-ui/core';
+import MenuItem from '@material-ui/core/MenuItem';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import Dropzone from 'react-dropzone';
 
-import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import settingLogoSymbol from "dan-images/settingLogoSymbol.png";
-import Paper from "@material-ui/core/Paper";
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import settingLogoSymbol from 'dan-images/settingLogoSymbol.png';
+import Paper from '@material-ui/core/Paper';
 
-import CrudTablePerformanceFactor from "./CrudTablePerformanceFactor";
-import CrudTablePerformanceMatrix from "./CrudTablePerformanceMatrix";
-import QuestionsForm from "./AuditQuestions/QuestionsForm";
+import AddIcon from '@material-ui/icons/Add';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CrudTablePerformanceFactor from './crudTablePerformanceFactor';
+import CrudTablePerformanceMatrix from './CrudTablePerformanceMatrix';
+import QuestionsForm from './AuditQuestions/QuestionsForm';
 
-import AddIcon from "@material-ui/icons/Add";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import QuestionsList from "./AuditQuestions/QuestionsList";
+import QuestionsList from './AuditQuestions/QuestionsList';
 import PerformanceFactorList from './PerformanceFactor/PerformanceFactorList';
 import PerformanceMatrixList from './PerformanceMatrix/PerformanceMatrixList';
 function TabContainer(props) {
@@ -34,7 +36,7 @@ function TabContainer(props) {
   return (
     <Typography
       component="div"
-      style={{ background: "#fafafa", marginTop: "0rem" }}
+      style={{ background: '#fafafa', marginTop: '0rem' }}
     >
       {children}
     </Typography>
@@ -48,69 +50,69 @@ TabContainer.propTypes = {
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    width: "100%",
+    width: '100%',
     // backgroundColor: theme.palette.background.paper,
   },
   tabTitleLabel: {
-    color: "#042b3c",
-    position: "relative",
-    fontSize: "24px",
-    fontWeight: "400",
-    marginBottom: "0",
-    display: "inline-block",
-    "& svg": {
-      color: "#ffffff",
-      padding: "2px",
-      backgroundColor: "#06425c",
+    color: '#042b3c',
+    position: 'relative',
+    fontSize: '24px',
+    fontWeight: '400',
+    marginBottom: '0',
+    display: 'inline-block',
+    '& svg': {
+      color: '#ffffff',
+      padding: '2px',
+      backgroundColor: '#06425c',
     },
   },
   customTooltip: {
     maxWidth: 110,
   },
   infoIconBox: {
-    "& svg": {
-      fontSize: "32px",
-      color: "#06425c",
+    '& svg': {
+      fontSize: '32px',
+      color: '#06425c',
     },
   },
   custmSubmitBtn: {
-    color: "#ffffff",
-    backgroundColor: "#06425c",
-    lineHeight: "30px",
-    border: "none",
-    marginTop: "30px",
-    "&:hover": {
-      backgroundColor: "#ff8533",
-      border: "none",
+    color: '#ffffff',
+    backgroundColor: '#06425c',
+    lineHeight: '30px',
+    border: 'none',
+    marginTop: '30px',
+    '&:hover': {
+      backgroundColor: '#ff8533',
+      border: 'none',
     },
   },
   formBox: {
-    "& .dropzone": {
-      flex: "1",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "35px",
-      borderWidth: "2px",
-      borderRadius: "2px",
-      borderColor: "#06425c",
-      borderStyle: "dashed",
-      backgroundColor: "#fafafa",
-      color: "#bdbdbd",
-      outline: "none",
-      transition: "border .24s ease-in-out",
-      marginTop: "10px",
-      cursor: "pointer",
+    '& .dropzone': {
+      flex: '1',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '35px',
+      borderWidth: '2px',
+      borderRadius: '2px',
+      borderColor: '#06425c',
+      borderStyle: 'dashed',
+      backgroundColor: '#fafafa',
+      color: '#bdbdbd',
+      outline: 'none',
+      transition: 'border .24s ease-in-out',
+      marginTop: '10px',
+      cursor: 'pointer',
     },
   },
   AttaLabelName: {
-    fontSize: "0.88rem",
-    fontWeight: "400",
-    lineHeight: "1.2",
-    color: "#737373",
+    fontSize: '0.88rem',
+    fontWeight: '400',
+    lineHeight: '1.2',
+    color: '#737373',
   },
   marginR8: {
-    marginRight: "0.5rem !important",
+    marginRight: '0.5rem !important',
   },
 });
 
@@ -126,19 +128,19 @@ class ComplianceConfig extends React.Component {
     this.state = {
       files: [],
       filestwo: [],
-      value: localStorage.getItem("configTab") != null ? parseInt(localStorage.getItem("configTab")) : 0,
-      auditQuestions: "",
+      value: localStorage.getItem('configTab') != null ? parseInt(localStorage.getItem('configTab')) : 0,
+      auditQuestions: '',
     };
   }
-  
+
 
   handleChange = (event, value) => {
-    localStorage.setItem("configTab", value)
+    localStorage.setItem('configTab', value);
     this.setState({ value });
   };
 
   handleClick = () => {
-    this.setState({ auditQuestions: "questionForm" });
+    this.setState({ auditQuestions: 'questionForm' });
   };
 
   render() {
@@ -157,7 +159,6 @@ class ComplianceConfig extends React.Component {
     //   </li>
     // ));
 
-    
 
     return (
       // <PapperBlock title="Settings" icon="ion-md-settings">
@@ -217,12 +218,13 @@ class ComplianceConfig extends React.Component {
                           />
                         </g>
                       </g>
-                    </svg>{" "}
+                    </svg>
+                    {' '}
                     Compliance questions
                   </Typography>
                 </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  {/* {this.state.auditQuestions === '' ? 
+                  {/* {this.state.auditQuestions === '' ?
                         <> */}
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
@@ -301,7 +303,8 @@ class ComplianceConfig extends React.Component {
                           </g>
                         </g>
                       </g>
-                    </svg>{" "}
+                    </svg>
+                    {' '}
                     Performance factors
                   </Typography>
                 </Grid>
@@ -363,7 +366,8 @@ class ComplianceConfig extends React.Component {
                           />
                         </g>
                       </g>
-                    </svg>{" "}
+                    </svg>
+                    {' '}
                     Performance matrix
                   </Typography>
                 </Grid>

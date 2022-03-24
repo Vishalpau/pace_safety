@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import styles from './appStyles-jss';
 
 function Outer(props) {
+  console.log(props, 'hii');
   const {
     classes,
     children,
