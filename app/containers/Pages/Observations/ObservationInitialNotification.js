@@ -507,7 +507,7 @@ const ObservationInitialNotification = (props) => {
       data.append("vendor", form.vendor),
       data.append("vendorReferenceId", form.vendorReferenceId);
     const res = await api.post("/api/v1/observations/", data).then(res => {
-      if (res.status === 201) {
+      if (res.status === 201 || res.status === 200) {
         const id = res.data.data.results;
         const fkObservatioId = id.id;
         localStorage.setItem("fkobservationId", fkObservatioId);
@@ -518,27 +518,25 @@ const ObservationInitialNotification = (props) => {
               "fkobservationId"
             );
           }
-          const resCategory = api.post(
-            `/api/v1/observations/${localStorage.getItem(
-              "fkobservationId"
-            )}/observationtags/`,
+          const response = api.post(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/observationtags/`,
             catagory
           ).then(res => {
             if (res.status === 200 || res.status === 201) {
               const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
+              setLoading(false);
               history.push(
                 `/app/icare/details/${localStorage.getItem(
                   "fkobservationId"
                 )}`
               );
-              setLoading(false);
             }
           }).catch(err => {
+            console.log(err);
             setLoading(false);
-
           })
 
-        } else {
+        } 
+        else {
           const notificationSent = api.get(`/api/v1/observations/${localStorage.getItem("fkobservationId")}/sentnotification/`)
 
           history.push(
@@ -581,7 +579,7 @@ const ObservationInitialNotification = (props) => {
         updatedBy: 0,
       });
     }
-    await setCatagory(temp);
+    setCatagory(temp);
   };
 
   const handleClose = (event, reason) => {

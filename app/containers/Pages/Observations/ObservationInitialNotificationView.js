@@ -150,14 +150,14 @@ const ObservationInitialNotificationView = () => {
       history.push('/app/error/')
     } else {
       const result = res.data.data.results
-      await setInitialData(result)
+      setInitialData(result)
       if (result.fkProjectStructureIds != "Not Mentioned") {
         await handelWorkArea(result)
       }
-      await setIsLoading(true)
-
     }
+    setIsLoading(false);
   }
+
   const fetchTags = async () => {
     const response = await api.get(`/api/v1/observations/${id}/observationtags/`)
     const tags = response.data.data.results.results
@@ -248,7 +248,7 @@ const ObservationInitialNotificationView = () => {
     const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
       ? JSON.parse(localStorage.getItem('userDetails')).companies
       : null;
-    const abc = userName.filter((user) => user.companyId === initialData.fkCompanyId)
+    const abc = userName.filter((user) => user.companyId === initialData.fkCompanyId);
     const dd = abc[0].projects.filter((user) => user.projectId === projectId)
     return dd[0].projectName
   }
@@ -273,8 +273,7 @@ const ObservationInitialNotificationView = () => {
   }, [])
   return (
     <>
-      {isLoading ? (<>
-
+      {!isLoading ? (<>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
             <svg xmlns="http://www.w3.org/2000/svg" width="24.913" height="24.902" viewBox="0 0 24.913 24.902">
@@ -678,7 +677,7 @@ const ObservationInitialNotificationView = () => {
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12}>
                 <Typography gutterBottom className="labelValue">
-                  {handleProjectName(initialData.fkProjectId)}
+                  {initialData.fkProjectId && handleProjectName(initialData.fkProjectId)}
                 </Typography>
                 <Typography className="labelValue">
                   {projectStructName.map(value => { return value }).join(" : ")}
@@ -755,7 +754,7 @@ const ObservationInitialNotificationView = () => {
           </DialogContent>
         </Dialog>
       </>)
-        :
+      :
         <Loader />
       }
     </>

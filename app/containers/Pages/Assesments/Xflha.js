@@ -1270,16 +1270,39 @@ function xflha(props) {
                                 <Typography variant="body2" display="inline">
                                   <span>
                                     {/* <Link href="#"
-                   onClick={handleVisibility}
-                   color="secondary"
-                   aria-haspopup="true" 
-                   className={classes.mLeftR5}
-                   disable={true}
-                   > */}
+                                    onClick={handleVisibility}
+                                    color="secondary"
+                                    aria-haspopup="true" 
+                                    className={classes.mLeftR5}
+                                    disable={true}
+                                    > */}
                                     {" " + item[1].attachmentCount}
                                     {/* </Link> */}
                                   </span>
                                 </Typography>
+                                <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                                <div className={classes.floatR}>
+                                  <Typography variant="body1" display="inline">
+                                    {/* {!checkDeletePermission ? 
+                                    <DeleteForeverOutlinedIcon
+                                      className={classes.iconteal} 
+                                      style={{
+                                        color: '#c0c0c0', 
+                                        cursor: 'not-allowed'
+                                      }}
+                                    />
+                                    : ( */}
+                                      <Link 
+                                        href="#" 
+                                        className={classes.mLeftR5} >
+                                          <DeleteForeverOutlinedIcon 
+                                            className={classes.iconteal} 
+                                            onClick={(e) => handleDelete(item)} />
+                                      </Link>
+                                    {/* )} */}
+                                  </Typography>
+                                </div>
+                              </Grid>
                                 {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography
                                     variant="body1"
