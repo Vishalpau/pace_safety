@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import Print from '@material-ui/icons/Print';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import StatusFilter from './StatusFilter';
 import AddIcon from '@material-ui/icons/Add';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -49,7 +48,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Fonts from 'dan-styles/Fonts.scss';
 import moment from 'moment';
 import { useHistory, useParams } from 'react-router';
-import api from '../../../utils/axios';
 import paceLogoSymbol from 'dan-images/paceLogoSymbol.png';
 import in_progress_small from 'dan-images/in_progress_small.png';
 import draft_small from 'dan-images/draft_small.png';
@@ -69,18 +67,20 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import FormControl from '@material-ui/core/FormControl';
-import Loader from "../Loader";
 
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Pagination from '@material-ui/lab/Pagination';
-import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
 // react-redux
-import { connect } from "react-redux";
-import { projectName, company } from '../../../redux/actions/initialDetails';
+import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import axios from "axios";
-import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import axios from 'axios';
+import { projectName, company } from '../../../redux/actions/initialDetails';
+import { SELF_API, HEADER_AUTH } from '../../../utils/constants';
+import Loader from '../Loader';
+import api from '../../../utils/axios';
+import StatusFilter from './StatusFilter';
+import allPickListDataValue from '../../../utils/Picklist/allPickList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -175,7 +175,7 @@ const useStyles = makeStyles((theme) => ({
   mLeftR5: {
     marginLeft: '5px',
     marginRight: '15px',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       marginLeft: '3px',
       marginRight: '3px',
     },
@@ -268,7 +268,7 @@ const useStyles = makeStyles((theme) => ({
   marginTopBottom: {
     marginBottom: '16px',
     borderRadius: '8px',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       paddingTop: '55px',
     },
   },
@@ -305,14 +305,14 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     margin: '15px 15px 15px 8px',
     fontSize: '10px',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       margin: '10px 5px 10px 5px',
     },
   },
   floatR: {
     float: 'right',
     textTransform: 'capitalize',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       float: 'left',
     },
   },
@@ -320,7 +320,7 @@ const useStyles = makeStyles((theme) => ({
     float: 'right',
     marginTop: '5px',
     textTransform: 'capitalize',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       float: 'left',
     },
   },
@@ -367,7 +367,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textRight: {
     textAlign: 'right',
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       textAlign: 'left',
       padding: '0px 8px 15px 8px !important',
     },
@@ -393,14 +393,14 @@ const useStyles = makeStyles((theme) => ({
     padding: '14px',
     cursor: 'pointer',
     textDecoration: 'none !important',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       paddingTop: '85px',
     }
   },
   userPictureBox: {
     position: 'absolute',
     right: '0px',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       right: 'auto',
     },
   },
@@ -417,12 +417,12 @@ const useStyles = makeStyles((theme) => ({
   },
   cardBottomSection: {
     '& p': {
-      ['@media (max-width:480px)']: {
+      '@media (max-width:480px)': {
         fontSize: '12px !important',
       },
     },
     // '& p': {
-    //   ['@media (max-width:375px)']: { 
+    //   ['@media (max-width:375px)']: {
     //     fontSize: '12px !important',
     //   },
     // },
@@ -432,7 +432,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '30px',
   },
   cardActionBottomBox: {
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       padding: '8px !important',
     },
   },
@@ -484,9 +484,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   pagination: {
-    padding: "1rem 0",
-    display: "flex",
-    justifyContent: "flex-end"
+    padding: '1rem 0',
+    display: 'flex',
+    justifyContent: 'flex-end'
   },
 
   viewAttachmentDialog: {
@@ -531,8 +531,8 @@ const useStyles = makeStyles((theme) => ({
     color: '#06425c',
   },
   popUpButton: {
-    paddingRight: "5px",
-    marginLeft: "12px",
+    paddingRight: '5px',
+    marginLeft: '12px',
     '& .MuiDialogActions-root, img': {
       justifyContent: 'flex-start',
     },
@@ -541,7 +541,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
     marginTop: '13px',
     '& button': {
-      ['@media (max-width:480px)']: {
+      '@media (max-width:480px)': {
         fontSize: '9px',
       },
     },
@@ -569,7 +569,7 @@ const useStyles = makeStyles((theme) => ({
       minHeight: '40px',
       marginLeft: '5px',
       padding: '10px',
-      ['@media (max-width:480px)']: {
+      '@media (max-width:480px)': {
         minWidth: 'auto',
         marginLeft: '2px',
         marginRight: '2px',
@@ -601,11 +601,11 @@ const useStyles = makeStyles((theme) => ({
   },
   searchSetionBox: {
     paddingRight: '0px',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       padding: '0px 12px !important',
     },
     '& .MuiPaper-root': {
-      ['@media (max-width:800px)']: {
+      '@media (max-width:800px)': {
         margin: '0px 0px 0px 8px',
       },
     },
@@ -613,10 +613,10 @@ const useStyles = makeStyles((theme) => ({
   statusIconBox: {
     textAlign: 'center',
     padding: '24px 0px !important',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       padding: '0px 0px 25px 0px !important',
     },
-    ['@media (max-width:480px)']: {
+    '@media (max-width:480px)': {
       padding: '12px 0px 25px 16px !important',
       textAlign: 'left',
     },
@@ -626,7 +626,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#06425c',
     padding: '7px 10px 7px 10px',
     float: 'right',
-    ['@media (max-width:800px)']: {
+    '@media (max-width:800px)': {
       marginTop: '0px',
     },
   },
@@ -676,7 +676,6 @@ const styles = theme => ({
 });
 const handleAttachClose = () => {
   setAttachOpen(false);
-
 };
 
 function a11yProps(index) {
@@ -705,14 +704,14 @@ function xflha(props) {
   const [openAttachment, setopenAttachment] = React.useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [pageCount, setPageCount] = useState(0);
-  const [pageData, setPageData] = useState(0)
-  const [status, setStatus] = useState('')
+  const [pageData, setPageData] = useState(0);
+  const [status, setStatus] = useState('');
   const [totalData, setTotalData] = useState(0);
-  const [page, setPage] = useState(1)
-  const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(2);
-  const [assessments, setAssessments] = useState("My Assessments");
+  const [assessments, setAssessments] = useState('My Assessments');
 
   const dispatch = useDispatch();
 
@@ -728,9 +727,9 @@ function xflha(props) {
   };
 
   const handleFlhaSummaryPush = async (id) => {
-    localStorage.setItem("flhaId", id)
+    localStorage.setItem('flhaId', id);
     history.push(
-      "/app/pages/assesments/flhasummary/" + id
+      '/app/pages/assesments/flhasummary/' + id
     );
   };
   const handleClickOpenAttachment = () => {
@@ -780,50 +779,47 @@ function xflha(props) {
     ? JSON.parse(localStorage.getItem('userDetails')).id
     : null;
   const fetchData = async () => {
-    await setPage(1)
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+    await setPage(1);
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem('projectName'))
       .projectName.projectId;
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+        ? JSON.parse(localStorage.getItem('selectBreakDown'))
         : null;
-    let struct = "";
+    let struct = '';
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
     const fkProjectStructureIds = struct.slice(0, -1);
-    if (assessments === "My Assessments") {
+    if (assessments === 'My Assessments') {
       const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}&createdBy=${createdBy}`);
-      const result = res.data.data.results.results
-      await setFlhas(result)
+      const result = res.data.data.results.results;
+      await setFlhas(result);
 
-      await setTotalData(res.data.data.results.count)
-      await setPageData(res.data.data.results.count / 25)
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
+      const pageCount = Math.ceil(res.data.data.results.count / 25);
+      await setPageCount(pageCount);
     } else {
       const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&flhastatus=${status}`);
-      const result = res.data.data.results.results
-      await setFlhas(result)
-      await setTotalData(res.data.data.results.count)
-      await setPageData(res.data.data.results.count / 25)
-      let pageCount = Math.ceil(res.data.data.results.count / 25)
-      await setPageCount(pageCount)
+      const result = res.data.data.results.results;
+      await setFlhas(result);
+      await setTotalData(res.data.data.results.count);
+      await setPageData(res.data.data.results.count / 25);
+      const pageCount = Math.ceil(res.data.data.results.count / 25);
+      await setPageCount(pageCount);
     }
-    await setIsLoading(true)
-
+    await setIsLoading(true);
   };
 
-  let timer
-  let debounce = (fn, v, d) => {
-    return function () {
-      clearTimeout(timer)
+  let timer;
+  const debounce = (fn, v, d) => function () {
+    clearTimeout(timer);
 
-      timer = setTimeout(() => setSeacrhFlha(v), d)
-    }
-  }
-  const handleSearch = e => debounce(fetchData, e.target.value.toLowerCase(), 500)()
+    timer = setTimeout(() => setSeacrhFlha(v), d);
+  };
+  const handleSearch = e => debounce(fetchData, e.target.value.toLowerCase(), 500)();
 
   // const handleDelete = async (item) => {
   //   console.log(item[1].id)
@@ -863,11 +859,11 @@ function xflha(props) {
   const handleAssment = (event, newValue) => {
     setValue(newValue);
     if (newValue === 0) {
-      setAssessments("My Assessments")
-      setStatus('')
+      setAssessments('My Assessments');
+      setStatus('');
     } else if (newValue === 1) {
-      setAssessments("Big Picture")
-      setStatus('')
+      setAssessments('Big Picture');
+      setStatus('');
     }
   };
 
@@ -900,70 +896,67 @@ function xflha(props) {
     // window.location.href = `/${tagetPage}`
     try {
       if (compId) {
-
-        let config = {
-          method: "get",
+        const config = {
+          method: 'get',
           url: `${SELF_API}`,
           headers: HEADER_AUTH,
         };
         // localStorage.setItem("loading", JSON.stringify({companyId:compId,projectId:projectId,tagetPage:tagetPage}));
 
         await api(config)
-          .then(function (response) {
+          .then((response) => {
             if (response.status === 200) {
-              console.log(response)
-              let hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
-                .subscriptions.filter(subs => subs.appCode === "safety")[0]
-                .hostings[0].apiDomain
+              console.log(response);
+              const hosting = response.data.data.results.data.companies.filter(company => company.companyId == compId)[0]
+                .subscriptions.filter(subs => subs.appCode === 'safety')[0]
+                .hostings[0].apiDomain;
 
-              console.log(hosting)
-              let data1 = {
-                method: "get",
+              console.log(hosting);
+              const data1 = {
+                method: 'get',
                 url: `${hosting}/api/v1/core/companies/select/${compId}/`,
                 headers: HEADER_AUTH,
               };
-              console.log(data1)
+              console.log(data1);
               axios(data1).then((res) => {
-                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data))
+                localStorage.setItem('userDetails', JSON.stringify(response.data.data.results.data));
 
                 if (compId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  const companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
 
-                  let companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName }
-                  localStorage.setItem('company', JSON.stringify(companeyData))
-                  console.log("storage company in xlfha")
-                  dispatch(company(companeyData))
+                  const companeyData = { fkCompanyId: companies[0].companyId, fkCompanyName: companies[0].companyName };
+                  localStorage.setItem('company', JSON.stringify(companeyData));
+                  console.log('storage company in xlfha');
+                  dispatch(company(companeyData));
                 }
                 if (proId) {
-                  let companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
-                  let project = companies[0].projects.filter(item => item.projectId == proId)
+                  const companies = response.data.data.results.data.companies.filter(item => item.companyId == compId);
+                  const project = companies[0].projects.filter(item => item.projectId == proId);
 
-                  localStorage.setItem("projectName", JSON.stringify(project[0]))
-                  dispatch(projectName(project[0]))
+                  localStorage.setItem('projectName', JSON.stringify(project[0]));
+                  dispatch(projectName(project[0]));
                 }
                 // fetchPermissionData();
-                localStorage.removeItem("direct_loading")
-              })
-
-
+                localStorage.removeItem('direct_loading');
+              });
             }
           })
-          .catch(function (error) {
+          .catch((error) => {
           });
       }
     } catch (error) {
     }
-  }
+  };
 
   const handleChange = async (event, value) => {
-    const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
+    const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
+    const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem('projectName'))
       .projectName.projectId;
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
-      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+      : JSON.parse(localStorage.getItem('selectBreakDown')) !== null
+        ? JSON.parse(localStorage.getItem('selectBreakDown'))
         : null;
-    let struct = "";
+    let struct = '';
 
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -971,23 +964,20 @@ function xflha(props) {
     const fkProjectStructureIds = struct.slice(0, -1);
     const res = await api.get(`api/v1/flhas/?search=${searchFlha}&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`);
     await setFlhas(res.data.data.results.results);
-    await setPage(value)
+    await setPage(value);
   };
 
   useEffect(() => {
-
-    let state = JSON.parse(localStorage.getItem('direct_loading'))
+    const state = JSON.parse(localStorage.getItem('direct_loading'));
     if (state !== null) {
-
-      userDetails(state.comId, state.proId)
+      userDetails(state.comId, state.proId);
     } else {
       fetchData();
     }
-
   }, [props.projectName.breakDown, searchFlha, status, assessments]);
 
   useEffect(() => {
-    allPickListDataValue()
+    allPickListDataValue();
   }, []);
 
   return (
@@ -1001,9 +991,13 @@ function xflha(props) {
             <Typography variant="h5">Field Level Hazard Assessment</Typography>
           </Grid>
           <Grid item md={5} sm={6} xs={12}>
-            <Button size="medium" variant="contained" color="primary"
+            <Button
+              size="medium"
+              variant="contained"
+              color="primary"
               className={classNames(classes.buttonsNew, classes.floatR)}
-              onClick={() => history.push("/app/pages/assesments/flhaadd")} >
+              onClick={() => history.push('/app/pages/assesments/flhaadd')}
+            >
               <AddIcon className={classes.floatR} />
               {' '}
               Add new
@@ -1011,168 +1005,190 @@ function xflha(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Box> {isLoading ? <>
+      <Box>
+        {' '}
+        {isLoading ? (
+          <>
 
 
-        <Grid container spacing={3}>
-          <Grid item sm={6} xs={12} className={classes.listViewTab}>
-            <AppBar position="static" className={classes.topNavTabBack}>
-              <div className={classes.floatLTabs}>
-                <Tabs className={classes.minwdTab} value={value} onChange={fetchData} aria-label="Tabs" indicatorColor="none">
-                  <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} onClick={(e) => handelView(e)} />
-                  <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} onClick={(e) => handelViewTabel(e)} />
-                  {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+            <Grid container spacing={3}>
+              <Grid item sm={6} xs={12} className={classes.listViewTab}>
+                <AppBar position="static" className={classes.topNavTabBack}>
+                  <div className={classes.floatLTabs}>
+                    <Tabs className={classes.minwdTab} value={value} onChange={fetchData} aria-label="Tabs" indicatorColor="none">
+                      <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} onClick={(e) => handelView(e)} />
+                      <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} onClick={(e) => handelViewTabel(e)} />
+                      {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
                 <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} /> */}
-                </Tabs>
-              </div>
-            </AppBar>
-          </Grid>
-          <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
-            <Grid className={classes.Lheight}>
-              <div className={classes.floatRR}>
-                {/* <span className={classes.pLTen}>
+                    </Tabs>
+                  </div>
+                </AppBar>
+              </Grid>
+              <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+                <Grid className={classes.Lheight}>
+                  <div className={classes.floatRR}>
+                    {/* <span className={classes.pLTen}>
                   <Button size="small" className={classes.buttonsNTwo} variant="contained">
                     <PermIdentityIcon /> GIS
                   </Button>
                 </span> */}
 
-                {/* <span className={classes.pLTen}>
+                    {/* <span className={classes.pLTen}>
               <Button size="small" className={classes.buttonsNTwo} variant="contained">
                 <DateRangeOutlinedIcon />iPlanner
               </Button>
             </span>
-				
+
 			  <span className={classes.pLTen}>
 				<Button size="small" className={classes.buttonsNTwo} variant="contained">
 				  <GamesOutlinedIcon /> 3D
 				</Button>
-				</span>*/}
-              </div>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item md={12} className={classes.AppBarHeader}>
-          <Grid container spacing={3}>
-            <Grid item md={7} sm={12} xs={12}>
-              <AppBar position="static" className={classes.navTabBack}>
-                <div className={classes.floatL}>
-                  <Tabs className={classes.minwdTab} value={value} onChange={handleAssment} aria-label="Tabs" indicatorColor="none">
-                    <Tab label="My Assessments" {...a11yProps(3)} className={classes.hoverA} />
-                    {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
-                    <Tab label="Big Picture" {...a11yProps(4)} className={classes.hoverB} />
-                    {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
-                  </Tabs>
-                </div>
-              </AppBar>
-            </Grid>
-            <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
-              <div className={classes.search}>
-                <Paper elevation={1}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
+				</span> */}
                   </div>
-                  <InputBase
-                    placeholder="Search…"
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                    onChange={(e) => handleSearch(e)}
-                  />
-                </Paper>
-              </div>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
-              <span className={classes.mR10}>
-                <img src={preplanning} onClick={() => setStatus("Open")} />
-                <img src={completed} onClick={() => setStatus("Closed")} />
-              </span>
+
+            <Grid item md={12} className={classes.AppBarHeader}>
+              <Grid container spacing={3}>
+                <Grid item md={7} sm={12} xs={12}>
+                  <AppBar position="static" className={classes.navTabBack}>
+                    <div className={classes.floatL}>
+                      <Tabs className={classes.minwdTab} value={value} onChange={handleAssment} aria-label="Tabs" indicatorColor="none">
+                        <Tab label="My Assessments" {...a11yProps(3)} className={classes.hoverA} />
+                        {/* <Tab label="Team's Assessments" {...a11yProps(1)} className={classes.hoverB} /> */}
+                        <Tab label="Big Picture" {...a11yProps(4)} className={classes.hoverB} />
+                        {/* <Tab icon={<StarsIcon className={classes.buckmarkIcon} />} {...a11yProps(3)} className={classNames(classes.hoverB, classes.minWd55)} /> */}
+                      </Tabs>
+                    </div>
+                  </AppBar>
+                </Grid>
+                <Grid item md={3} sm={6} xs={12} className={classes.searchSetionBox}>
+                  <div className={classes.search}>
+                    <Paper elevation={1}>
+                      <div className={classes.searchIcon}>
+                        <SearchIcon />
+                      </div>
+                      <InputBase
+                        placeholder="Search…"
+                        classes={{
+                          root: classes.inputRoot,
+                          input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                        onChange={(e) => handleSearch(e)}
+                      />
+                    </Paper>
+                  </div>
+                </Grid>
+                <Grid item md={2} sm={6} xs={12} className={classes.statusIconBox}>
+                  <span className={classes.mR10}>
+                    <img src={preplanning} onClick={() => setStatus('Open')} />
+                    <img src={completed} onClick={() => setStatus('Closed')} />
+                  </span>
+                </Grid>
+              </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-        {listToggle == false ? (
-          <div>
-            <div className="gridView">
-              {Object.entries(flhas)
-                .map((item, index) => (
-                  <Box>
-                    <Grid className={classes.marginTopBottom}>
-                      <div className="gridView">
-                        <Card variant="outlined" className={classes.card}>
-                          <CardContent>
-                            <Grid container spacing={3} className={classes.cardContentSection}>
-                              <Grid item md={2} sm={4} xs={12}
-                                className={classes.userPictureBox}
-                              >
-                                <Button className={classNames(classes.floatR)}  >
-                                  <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} /> {item[1].username}
-                                </Button>
-                              </Grid>
-                              <Link
-                                onClick={() => handleFlhaSummaryPush(item[1].id)}
-                                className={classes.cardLinkAction}
-                              >
-                                <Grid item xs={12}>
-                                  <Grid container spacing={3} alignItems="flex-start">
-                                    <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+            {listToggle == false ? (
+              <div>
+                <div className="gridView">
+                  {Object.entries(flhas)
+                    .map((item, index) => (
+                      <Box>
+                        <Grid className={classes.marginTopBottom}>
+                          <div className="gridView">
+                            <Card variant="outlined" className={classes.card}>
+                              <CardContent>
+                                <Grid container spacing={3} className={classes.cardContentSection}>
+                                  <Grid
+                                    item
+                                    md={2}
+                                    sm={4}
+                                    xs={12}
+                                    className={classes.userPictureBox}
+                                  >
+                                    <Button className={classNames(classes.floatR)}>
+                                      <img src={item[1].avatar !== null ? item[1].avatar : paceLogoSymbol} className={classes.userImage} />
+                                      {' '}
+                                      {item[1].username}
+                                    </Button>
+                                  </Grid>
+                                  <Link
+                                    onClick={() => handleFlhaSummaryPush(item[1].id)}
+                                    className={classes.cardLinkAction}
+                                  >
+                                    <Grid item xs={12}>
                                       <Grid container spacing={3} alignItems="flex-start">
-                                        <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
-                                          <Typography
-                                            className={classes.title}
-                                            variant="h6"
-                                          >
-                                            {item[1].jobTitle}
-                                          </Typography>
-                                          <Typography
-                                            display="inline"
-                                            className={classes.listingLabelName}
-                                          >
-                                            Number: <span>
-                                              <Link
-                                                href={`/app/pages/assesments/flhasummary/${item[1].id}`}
+                                        <Grid item sm={12} xs={12} className={classes.listHeadColor}>
+                                          <Grid container spacing={3} alignItems="flex-start">
+                                            <Grid item md={10} sm={12} xs={12} className={classes.pr0}>
+                                              <Typography
+                                                className={classes.title}
                                                 variant="h6"
-                                                className={classes.mLeftfont}
                                               >
-                                                <span className={classes.listingLabelValue}>{item[1].flhaNumber}</span>
-                                              </Link></span>
-                                          </Typography>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          <Typography
-                                            variant="body1"
-                                            gutterBottom
-                                            display="inline"
-                                            color="textPrimary"
-                                            className={classes.listingLabelName}
-                                          >
-                                            Category: <span className={classes.listingLabelValue}>FLHA</span>
-                                          </Typography>
-                                          <span item xs={1} className={classes.sepHeightOne}></span>
-                                          <Typography
-                                            variant="body1"
-                                            gutterBottom
-                                            display="inline"
-                                            color="textPrimary"
-                                            className={classes.listingLabelName}
-                                          >
-                                            {/* Assignee: <span className={classes.listingLabelValue}>NA</span>
+                                                {item[1].jobTitle}
+                                              </Typography>
+                                              <Typography
+                                                display="inline"
+                                                className={classes.listingLabelName}
+                                              >
+                                            Number:
+                                                {' '}
+                                                <span>
+                                                  <Link
+                                                    href={`/app/pages/assesments/flhasummary/${item[1].id}`}
+                                                    variant="h6"
+                                                    className={classes.mLeftfont}
+                                                  >
+                                                    <span className={classes.listingLabelValue}>{item[1].flhaNumber}</span>
+                                                  </Link>
+                                                </span>
+                                              </Typography>
+                                              <span item xs={1} className={classes.sepHeightOne} />
+                                              <Typography
+                                                variant="body1"
+                                                gutterBottom
+                                                display="inline"
+                                                color="textPrimary"
+                                                className={classes.listingLabelName}
+                                              >
+                                            Category:
+                                                {' '}
+                                                <span className={classes.listingLabelValue}>FLHA</span>
+                                              </Typography>
+                                              <span item xs={1} className={classes.sepHeightOne} />
+                                              <Typography
+                                                variant="body1"
+                                                gutterBottom
+                                                display="inline"
+                                                color="textPrimary"
+                                                className={classes.listingLabelName}
+                                              >
+                                                {/* Assignee: <span className={classes.listingLabelValue}>NA</span>
                                               <span item xs={1} className={classes.sepHeightOne}></span> */}
-                                            Stage: <span className={classes.listingLabelValue}>{item[1].flhaStage}  <img src={draft_small} className={classes.smallImage} /></span>
-                                            <span item xs={1} className={classes.sepHeightOne}> </span>
-                                            Status: <span className="listingLabelValue statusColor_complete">{item[1].flhaStatus}</span>
-                                          </Typography>
+                                            Stage:
+                                                {' '}
+                                                <span className={classes.listingLabelValue}>
+                                                  {item[1].flhaStage}
+                                                  {' '}
+                                                  <img src={draft_small} className={classes.smallImage} />
+                                                </span>
+                                                <span item xs={1} className={classes.sepHeightOne} />
+                                            Status:
+                                                {' '}
+                                                <span className="listingLabelValue statusColor_complete">{item[1].flhaStatus}</span>
+                                              </Typography>
 
+                                            </Grid>
+
+                                          </Grid>
                                         </Grid>
-
                                       </Grid>
                                     </Grid>
-                                  </Grid>
-                                </Grid>
 
-                                <Grid item sm={12} xs={12}>
-                                  <Grid container spacing={3}>
-                                    {/* <Grid item md={3} sm={6} xs={12}>
+                                    <Grid item sm={12} xs={12}>
+                                      <Grid container spacing={3}>
+                                        {/* <Grid item md={3} sm={6} xs={12}>
                                         <Typography
                                           variant="body1"
                                           gutterBottom
@@ -1186,11 +1202,11 @@ function xflha(props) {
                                           gutterBottom
                                           className={classes.listingLabelValue}
                                         > */}
-                                    {/* {item[1]["incidentReportedByName"]} */}
-                                    {/* Not found
+                                        {/* {item[1]["incidentReportedByName"]} */}
+                                        {/* Not found
                                         </Typography>
                                       </Grid> */}
-                                    {/* <Grid item md={3} sm={6} xs={12}>
+                                        {/* <Grid item md={3} sm={6} xs={12}>
                                         <Typography
                                           variant="body1"
                                           color="textPrimary"
@@ -1207,103 +1223,105 @@ function xflha(props) {
                                         </Typography>
                                       </Grid> */}
 
-                                    <Grid item md={3} sm={6} xs={12}>
-                                      <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                        gutterBottom
-                                        className={classes.listingLabelName}
-                                      >
+                                        <Grid item md={3} sm={6} xs={12}>
+                                          <Typography
+                                            variant="body1"
+                                            color="textPrimary"
+                                            gutterBottom
+                                            className={classes.listingLabelName}
+                                          >
                                         Created on:
-                                      </Typography>
+                                          </Typography>
 
-                                      <Typography
+                                          <Typography
 
-                                        className={classes.listingLabelValue}
-                                      >
-                                        {moment(item[1].createdAt).format(
-                                          'Do MMMM YYYY, h:mm:ss a'
-                                        )}
-                                      </Typography>
-                                    </Grid>
+                                            className={classes.listingLabelValue}
+                                          >
+                                            {moment(item[1].createdAt).format(
+                                              'Do MMMM YYYY, h:mm:ss a'
+                                            )}
+                                          </Typography>
+                                        </Grid>
 
-                                    <Grid item md={3} sm={6} xs={12}>
-                                      <Typography
-                                        variant="body1"
-                                        color="textPrimary"
-                                        gutterBottom
-                                        className={classes.listingLabelName}
-                                      >
+                                        <Grid item md={3} sm={6} xs={12}>
+                                          <Typography
+                                            variant="body1"
+                                            color="textPrimary"
+                                            gutterBottom
+                                            className={classes.listingLabelName}
+                                          >
                                         Created by:
-                                      </Typography>
+                                          </Typography>
 
-                                      <Typography
+                                          <Typography
 
-                                        className={classes.listingLabelValue}
-                                      >
-                                        {item[1].createdByName}
-                                      </Typography>
+                                            className={classes.listingLabelValue}
+                                          >
+                                            {item[1].createdByName}
+                                          </Typography>
+                                        </Grid>
+                                      </Grid>
                                     </Grid>
-                                  </Grid>
+                                  </Link>
                                 </Grid>
-                              </Link>
-                            </Grid>
-                          </CardContent>
-                          <Divider />
-                          <CardActions className={Incidents.cardActions}>
-                            <Grid
-                              container
-                              spacing={2}
-                              justify="flex-end"
-                              alignItems="left"
-                            >
-                              <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
-                                <Typography
-                                  variant="body1"
-                                  display="inline"
-                                  color="textPrimary"
-
+                              </CardContent>
+                              <Divider />
+                              <CardActions className={Incidents.cardActions}>
+                                <Grid
+                                  container
+                                  spacing={2}
+                                  justify="flex-end"
+                                  alignItems="left"
                                 >
-                                  <AttachmentIcon className={classes.mright5} />
+                                  <Grid item xs={12} md={5} sm={12} className={classes.pt15}>
+                                    <Typography
+                                      variant="body1"
+                                      display="inline"
+                                      color="textPrimary"
+
+                                    >
+                                      <AttachmentIcon className={classes.mright5} />
                                   Attachments:
-                                </Typography>
-                                <Typography variant="body2" display="inline">
-                                  <span>
-                                    {/* <Link href="#"
+                                    </Typography>
+                                    <Typography variant="body2" display="inline">
+                                      <span>
+                                        {/* <Link href="#"
                                     onClick={handleVisibility}
                                     color="secondary"
-                                    aria-haspopup="true" 
+                                    aria-haspopup="true"
                                     className={classes.mLeftR5}
                                     disable={true}
                                     > */}
-                                    {" " + item[1].attachmentCount}
-                                    {/* </Link> */}
-                                  </span>
-                                </Typography>
-                                <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                                <div className={classes.floatR}>
-                                  <Typography variant="body1" display="inline">
-                                    {/* {!checkDeletePermission ? 
+                                        {' ' + item[1].attachmentCount}
+                                        {/* </Link> */}
+                                      </span>
+                                    </Typography>
+                                    <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                                      <div className={classes.floatR}>
+                                        <Typography variant="body1" display="inline">
+                                          {/* {!checkDeletePermission ?
                                     <DeleteForeverOutlinedIcon
-                                      className={classes.iconteal} 
+                                      className={classes.iconteal}
                                       style={{
-                                        color: '#c0c0c0', 
+                                        color: '#c0c0c0',
                                         cursor: 'not-allowed'
                                       }}
                                     />
                                     : ( */}
-                                      <Link 
-                                        href="#" 
-                                        className={classes.mLeftR5} >
-                                          <DeleteForeverOutlinedIcon 
-                                            className={classes.iconteal} 
-                                            onClick={(e) => handleDelete(item)} />
-                                      </Link>
-                                    {/* )} */}
-                                  </Typography>
-                                </div>
-                              </Grid>
-                                {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                                          <Link
+                                            href="#"
+                                            className={classes.mLeftR5}
+                                          >
+                                            <DeleteForeverOutlinedIcon
+                                              className={classes.iconteal}
+                                              onClick={(e) => handleDelete(item)}
+                                            />
+                                          </Link>
+                                          {/* )} */}
+                                        </Typography>
+                                      </div>
+                                    </Grid>
+                                    {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography
                                     variant="body1"
                                     display="inline"
@@ -1311,11 +1329,11 @@ function xflha(props) {
                                     className={classes.mLeft}
                                   >
                                     <InsertCommentOutlinedIcon className={classes.mright5} />
-                                 
+
                                     Comments:
 
                                   </Typography> */}
-                                {/* <Typography variant="body2" display="inline" className={classes.mLeft}>
+                                    {/* <Typography variant="body2" display="inline" className={classes.mLeft}>
                                     <span>
                                       <Link href="#"
                                         color="secondary"
@@ -1325,459 +1343,472 @@ function xflha(props) {
                                       </Link>
                                     </span>
                                   </Typography> */}
-                              </Grid>
+                                  </Grid>
 
-                              <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                                <div className={classes.floatR}>
-                                  {/* <Typography variant="body1" display="inline">
+                                  <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                                    <div className={classes.floatR}>
+                                      {/* <Typography variant="body1" display="inline">
                 <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                 </Typography>
                 <span item xs={1} className={classes.sepHeightTen}></span> */}
-                                  {/* <Typography variant="body1" display="inline">
+                                      {/* <Typography variant="body1" display="inline">
                                       <PrintOutlinedIcon className={classes.iconColor} /> <Link href="/app/pages/general-observation-prints" className={classes.mLeftR5}>Print</Link>
                                     </Typography>
                                     <span item xs={1} className={classes.sepHeightTen}></span>
                                     <Typography variant="body1" display="inline"><Link href="#" className={classes.mLeftR5}><StarsIcon className={classes.iconteal} /></Link>
                                     </Typography> */}
-                                  {/* <span item xs={1} className={classes.sepHeightTen}></span>
+                                      {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                     <Typography variant="body1" display="inline">
                                       <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
                                     </Typography> */}
-                                </div>
-                              </Grid>
-                            </Grid>
-                          </CardActions>
-                        </Card>
-                        <Grid
-                          item
-                          md={12}
-                          sm={12}
-                          xs={12}
-                          hidden={!hidden}
-                          onBlur={handleAttachClose}
-                          onClick={handleAttachClick}
-                          onClose={handleAttachClose}
-                          onFocus={handleAttachOpen}
-                          onMouseEnter={handleAttachOpen}
-                          onMouseLeave={handleAttachClose}
-                          open={attachOpen}
-                          className="paddTBRemove attactmentShowSection"
-                        >
-                          <Paper elevation={1} className="paperSection">
-                            <Grid container spacing={3}>
-                              <Grid item md={12} sm={12} xs={12}>
-                                <List>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                  <ListItem>
-                                    <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
-                                  </ListItem>
-                                </List>
-                              </Grid>
-                            </Grid>
-                          </Paper>
-                        </Grid>
-                      </div>
-                      <div>
-                        <Grid
-                          item
-                          md={12}
-                          sm={12}
-                          xs={12}
-                          hidden={!hiddenn}
-                          onBlur={handleCommentsClose}
-                          onClick={handleCommentsClick}
-                          onClose={handleCommentsClose}
-                          onFocus={handleCommentsOpen}
-                          onMouseEnter={handleCommentsOpen}
-                          onMouseLeave={handleCommentsClose}
-                          open={commentsOpen}
-                          className="commentsShowSection"
-                        >
-                          <Paper elevation={1} className="paperSection">
-                            <Grid container spacing={3}>
-                              <Grid item md={12} xs={12}>
-                                <Box padding={3}>
-                                  <Grid container spacing={2}>
-                                    <Grid item xs={12}>
-                                      <TextField
-                                        multiline
-                                        variant="outlined"
-                                        rows="1"
-                                        id="JobTitle"
-                                        label="Add your comments here"
-                                        className="formControl"
-                                      />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                      <input type="file" />
-                                    </Grid>
-                                    <Grid item xs={9}>
-                                      <AddCircleOutlineIcon className={classes.plusIcon} />
-                                      <RemoveCircleOutlineIcon className={classes.minusIcon} />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                      <Button
-                                        variant="contained"
-                                        color="primary"
-                                        size="small"
-                                        className="spacerRight buttonStyle"
-                                        disableElevation
-
-                                      >
-                                        Respond
-                                      </Button>
-                                      <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        size="small"
-                                        className="buttonStyle custmCancelBtn"
-                                        disableElevation
-
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </Grid>
+                                    </div>
                                   </Grid>
-                                </Box>
-                              </Grid>
+                                </Grid>
+                              </CardActions>
+                            </Card>
+                            <Grid
+                              item
+                              md={12}
+                              sm={12}
+                              xs={12}
+                              hidden={!hidden}
+                              onBlur={handleAttachClose}
+                              onClick={handleAttachClick}
+                              onClose={handleAttachClose}
+                              onFocus={handleAttachOpen}
+                              onMouseEnter={handleAttachOpen}
+                              onMouseLeave={handleAttachClose}
+                              open={attachOpen}
+                              className="paddTBRemove attactmentShowSection"
+                            >
+                              <Paper elevation={1} className="paperSection">
+                                <Grid container spacing={3}>
+                                  <Grid item md={12} sm={12} xs={12}>
+                                    <List>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                      <ListItem>
+                                        <img src={projectpj} onClick={handleClickOpenAttachment} className="hoverIcon" />
+                                      </ListItem>
+                                    </List>
+                                  </Grid>
+                                </Grid>
+                              </Paper>
                             </Grid>
-                          </Paper>
-                        </Grid>
-                      </div>
-                      <div>
-                        <Dialog
-                          open={openAttachment}
-                          onClose={handleCloseAttachment}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                          classNames={classes.viewAttachmentDialog}
-                        >
-                          <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
-                          <DialogContent classNames={classes.imageSectionHeight}>
-                            <Grid container spacing={3} classNames={classes.viewImageSection}>
-                              <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
-                                <ul classNames={classes.viewImageSection}>
-                                  <li className={classes.viewattch1}>View Attachment</li>
-                                  <li className={classes.viewattch2}>Download Attachment</li>
-                                </ul>
-                              </Grid>
+                          </div>
+                          <div>
+                            <Grid
+                              item
+                              md={12}
+                              sm={12}
+                              xs={12}
+                              hidden={!hiddenn}
+                              onBlur={handleCommentsClose}
+                              onClick={handleCommentsClick}
+                              onClose={handleCommentsClose}
+                              onFocus={handleCommentsOpen}
+                              onMouseEnter={handleCommentsOpen}
+                              onMouseLeave={handleCommentsClose}
+                              open={commentsOpen}
+                              className="commentsShowSection"
+                            >
+                              <Paper elevation={1} className="paperSection">
+                                <Grid container spacing={3}>
+                                  <Grid item md={12} xs={12}>
+                                    <Box padding={3}>
+                                      <Grid container spacing={2}>
+                                        <Grid item xs={12}>
+                                          <TextField
+                                            multiline
+                                            variant="outlined"
+                                            rows="1"
+                                            id="JobTitle"
+                                            label="Add your comments here"
+                                            className="formControl"
+                                          />
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                          <input type="file" />
+                                        </Grid>
+                                        <Grid item xs={9}>
+                                          <AddCircleOutlineIcon className={classes.plusIcon} />
+                                          <RemoveCircleOutlineIcon className={classes.minusIcon} />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            size="small"
+                                            className="spacerRight buttonStyle"
+                                            disableElevation
+
+                                          >
+                                        Respond
+                                          </Button>
+                                          <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            size="small"
+                                            className="buttonStyle custmCancelBtn"
+                                            disableElevation
+
+                                          >
+                                        Cancel
+                                          </Button>
+                                        </Grid>
+                                      </Grid>
+                                    </Box>
+                                  </Grid>
+                                </Grid>
+                              </Paper>
                             </Grid>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={handleCloseAttachment} color="primary" autoFocus>
+                          </div>
+                          <div>
+                            <Dialog
+                              open={openAttachment}
+                              onClose={handleCloseAttachment}
+                              aria-labelledby="alert-dialog-title"
+                              aria-describedby="alert-dialog-description"
+                              classNames={classes.viewAttachmentDialog}
+                            >
+                              <DialogTitle id="alert-dialog-title">Viw Attachment</DialogTitle>
+                              <DialogContent classNames={classes.imageSectionHeight}>
+                                <Grid container spacing={3} classNames={classes.viewImageSection}>
+                                  <Grid item md={12} sm={12} xs={12} classNames={classes.mb10}>
+                                    <ul classNames={classes.viewImageSection}>
+                                      <li className={classes.viewattch1}>View Attachment</li>
+                                      <li className={classes.viewattch2}>Download Attachment</li>
+                                    </ul>
+                                  </Grid>
+                                </Grid>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button onClick={handleCloseAttachment} color="primary" autoFocus>
                               Close
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
-                      </div>
-                      <Dialog
-                        open={myUserPOpen}
-                        onClose={handleMyUserPClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                        fullWidth={true}
-                        maxWidth={'sm'}
-                      >
-                        <DialogTitle classNames={classes.mb10} id="alert-dialog-title"><img src={paceLogoSymbol} className={classes.userImage} /> {"Admin"}</DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            <Grid
-                              item md={12} sm={12} xs={12}
-                              className={classes.usrProfileListBox}
-                            >
-                              <h6>Change ownership</h6>
-                              <FormControl variant="outlined" className={classes.formControlOwnership}>
-                                <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
-                                <Select
-                                  labelId="demo-simple-select-outlined-label"
-                                  id="demo-simple-select-outlined"
-                                  value="Ashutosh"
-                                  onChange={handleChangeOne}
-                                  label="Ownership"
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                          </div>
+                          <Dialog
+                            open={myUserPOpen}
+                            onClose={handleMyUserPClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            fullWidth
+                            maxWidth="sm"
+                          >
+                            <DialogTitle classNames={classes.mb10} id="alert-dialog-title">
+                              <img src={paceLogoSymbol} className={classes.userImage} />
+                              {' '}
+                              {'Admin'}
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                <Grid
+                                  item
+                                  md={12}
+                                  sm={12}
+                                  xs={12}
+                                  className={classes.usrProfileListBox}
                                 >
-                                  <MenuItem value={10}>Self</MenuItem>
-                                  <MenuItem value={10}>Prakash</MenuItem>
-                                  <MenuItem value={20}>Ashutosh</MenuItem>
-                                  <MenuItem value={30}>Saddam</MenuItem>
-                                  <MenuItem value={30}>Sunil</MenuItem>
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                            <Grid
-                              item md={12} sm={12} xs={12}
-                              className={classes.usrProfileListBox}
-                            >
-                              <h3>Basic information</h3>
-                              <List>
-                                <ListItem>
-                                  {/* <ListItemAvatar>
+                                  <h6>Change ownership</h6>
+                                  <FormControl variant="outlined" className={classes.formControlOwnership}>
+                                    <InputLabel id="demo-simple-select-outlined-label">Ownership</InputLabel>
+                                    <Select
+                                      labelId="demo-simple-select-outlined-label"
+                                      id="demo-simple-select-outlined"
+                                      value="Ashutosh"
+                                      onChange={handleChangeOne}
+                                      label="Ownership"
+                                    >
+                                      <MenuItem value={10}>Self</MenuItem>
+                                      <MenuItem value={10}>Prakash</MenuItem>
+                                      <MenuItem value={20}>Ashutosh</MenuItem>
+                                      <MenuItem value={30}>Saddam</MenuItem>
+                                      <MenuItem value={30}>Sunil</MenuItem>
+                                    </Select>
+                                  </FormControl>
+                                </Grid>
+                                <Grid
+                                  item
+                                  md={12}
+                                  sm={12}
+                                  xs={12}
+                                  className={classes.usrProfileListBox}
+                                >
+                                  <h3>Basic information</h3>
+                                  <List>
+                                    <ListItem>
+                                      {/* <ListItemAvatar>
                       <Avatar>
                         <ImageIcon />
                       </Avatar>
                     </ListItemAvatar> */}
-                                  <ListItemText primary="Full Name:" secondary="Prakash" />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText primary="Organization Role:" secondary="N/A" />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText primary="Role Title:" secondary="N/A" />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
-                                </ListItem>
-                              </List>
-                            </Grid>
+                                      <ListItemText primary="Full Name:" secondary="Prakash" />
+                                    </ListItem>
+                                    <ListItem>
+                                      <ListItemText primary="Organization Type:" secondary="Epc ORGANIZATION" />
+                                    </ListItem>
+                                    <ListItem>
+                                      <ListItemText primary="Organization Role:" secondary="N/A" />
+                                    </ListItem>
+                                    <ListItem>
+                                      <ListItemText primary="Role Title:" secondary="N/A" />
+                                    </ListItem>
+                                    <ListItem>
+                                      <ListItemText primary="Current Location:" secondary="Delhi » NCT » India" />
+                                    </ListItem>
+                                  </List>
+                                </Grid>
 
-                            <Grid
-                              item md={12} sm={12} xs={12}
-                              className={classes.usrProfileListBox}
-                            >
-                              <h3>Company information</h3>
-                              <List>
-                                <ListItem>
-                                  <ListItemText primary="Company Name:" secondary="JWIL" />
-                                </ListItem>
-                                <ListItem>
-                                  <ListItemText primary="Location:" secondary="Italy" />
-                                </ListItem>
-                              </List>
-                            </Grid>
-                          </DialogContentText>
-                        </DialogContent>
-                        <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                          <DialogActions align="left" className="marginB10">
-                            <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
+                                <Grid
+                                  item
+                                  md={12}
+                                  sm={12}
+                                  xs={12}
+                                  className={classes.usrProfileListBox}
+                                >
+                                  <h3>Company information</h3>
+                                  <List>
+                                    <ListItem>
+                                      <ListItemText primary="Company Name:" secondary="JWIL" />
+                                    </ListItem>
+                                    <ListItem>
+                                      <ListItemText primary="Location:" secondary="Italy" />
+                                    </ListItem>
+                                  </List>
+                                </Grid>
+                              </DialogContentText>
+                            </DialogContent>
+                            <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+                              <DialogActions align="left" className="marginB10">
+                                <Button onClick={handleMyUserPClose} color="secondary" variant="contained" className="buttonStyle custmCancelBtn">
                               Close
-                            </Button>
-                          </DialogActions>
-                        </Grid>
-                        {/* <DialogActions>
+                                </Button>
+                              </DialogActions>
+                            </Grid>
+                            {/* <DialogActions>
             <Button onClick={handleMyUserPClose} className="buttonStyle custmCancelBtn" variant="contained" autoFocus>
               Close
             </Button>
           </DialogActions> */}
-                      </Dialog>
+                          </Dialog>
 
-                    </Grid>
+                        </Grid>
 
 
-                  </Box>
+                      </Box>
 
-                ))}
-              {Object.keys(flhas).length === 0 && "Sorry, no matching records found"}
-            </div>
+                    ))}
+                  {Object.keys(flhas).length === 0 && 'Sorry, no matching records found'}
+                </div>
 
-            <div className="gridView">
-              {Object.entries(incidents).map((item, index) => (
-                <Card variant="outlined" className={Incidents.card} key={index}>
-                  {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
-                  <CardContent>
-                    {/* {console.log(item[index].incidentTitle)} */}
-                    <Grid container spacing={3}>
-                      <Grid item xs={12}>
-                        <Grid container spacing={3} alignItems="flex-start">
-                          <Grid item xs={9} className={classes.chipAction}>
-                            <Chip
-                              avatar={<Avatar src="/images/pp_boy.svg" />}
-                              label={item[1].username}
-                            />
+                <div className="gridView">
+                  {Object.entries(incidents).map((item, index) => (
+                    <Card variant="outlined" className={Incidents.card} key={index}>
+                      {/* <CardHeader disableTypography title="Incident with No Injury" /> */}
+                      <CardContent>
+                        {/* {console.log(item[index].incidentTitle)} */}
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <Grid container spacing={3} alignItems="flex-start">
+                              <Grid item xs={9} className={classes.chipAction}>
+                                <Chip
+                                  avatar={<Avatar src="/images/pp_boy.svg" />}
+                                  label={item[1].username}
+                                />
+                              </Grid>
+                              <Grid item md={3} sm={6} xs={12}>
+                                <Typography>
+                              Work fell down in site
+                                  {/* {item[index]["incidentTitle"]} */}
+                                </Typography>
+                              </Grid>
+
+
+                            </Grid>
+                          </Grid>
+
+                          <Grid item xs={12}>
+                            <div className={Incidents.statusRow}>
+                              <Typography
+
+                                display="inline"
+                                className={classes.listingLabelName}
+                              >
+                            Number
+                                {''}
+                                <Link
+                                  href="/app/ActionSummary"
+                                  variant="subtitle"
+                                  className={Incidents.incidentNumber}
+                                  style={{ textDecoration: 'underline' }}
+                                >
+                                  {item[1].flhaNumber}
+                                </Link>
+                              </Typography>
+
+                              <Chip
+                                variant="outlined"
+                                label={item[1].flhaStage}
+                                color="primary"
+                                size="small"
+                              />
+
+                              <Typography
+                                variant="body1"
+                                // color="textSecondary"
+                                display="inline"
+                              >
+
+                                <i className="ion-ios-calendar-outline" />
+                                <span className={Incidents.dateValue}>
+                              24 june 2021
+                                </span>
+                              </Typography>
+                            </div>
+                          </Grid>
+
+                          <Grid item md={3} sm={6} xs={12}>
+                            <Typography
+
+                              gutterBottom
+                              className={classes.listingLabelName}
+                            >
+                          Type
+                            </Typography>
+
+                            <Typography
+                              variant="body1"
+                              color="textSecondary"
+                              className={classes.listingLabelValue}
+                            >
+                              {/* {item[1]["incidentReportedByName"]} */}
+                          Not found
+                            </Typography>
                           </Grid>
                           <Grid item md={3} sm={6} xs={12}>
-                            <Typography>
-                              Work fell down in site
-                              {/* {item[index]["incidentTitle"]} */}
+                            <Typography
+
+                              gutterBottom
+                              className={classes.listingLabelName}
+                            >
+                          Location
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              color="textSecondary"
+                              className={classes.listingLabelValue}
+                            >
+                          Delhi
                             </Typography>
                           </Grid>
 
+                          <Grid item md={3} sm={6} xs={12}>
+                            <Typography
 
-                        </Grid>
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <div className={Incidents.statusRow}>
-                          <Typography
-
-                            display="inline"
-                            className={classes.listingLabelName}
-                          >
-                            Number
-                            {''}
-                            <Link
-                              href="/app/ActionSummary"
-                              variant="subtitle"
-                              className={Incidents.incidentNumber}
-                              style={{ textDecoration: 'underline' }}
+                              gutterBottom
+                              className={classes.listingLabelName}
                             >
-                              {item[1].flhaNumber}
-                            </Link>
-                          </Typography>
-
-                          <Chip
-                            variant="outlined"
-                            label={item[1].flhaStage}
-                            color="primary"
-                            size="small"
-                          />
-
-                          <Typography
-                            variant="body1"
-                            // color="textSecondary"
-                            display="inline"
-                          >
-
-                            <i className="ion-ios-calendar-outline" />
-                            <span className={Incidents.dateValue}>
-                              24 june 2021
-                            </span>
-                          </Typography>
-                        </div>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Type
-                        </Typography>
-
-                        <Typography
-                          variant="body1"
-                          color="textSecondary"
-                          className={classes.listingLabelValue}
-                        >
-                          {/* {item[1]["incidentReportedByName"]} */}
-                          Not found
-                        </Typography>
-                      </Grid>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
-                          Location
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          color="textSecondary"
-                          className={classes.listingLabelValue}
-                        >
-                          Delhi
-                        </Typography>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
                           Reported on
-                        </Typography>
+                            </Typography>
 
-                        <Typography
-                          variant="body1"
-                          color="textSecondary"
-                          className={classes.listingLabelValue}
-                        >
+                            <Typography
+                              variant="body1"
+                              color="textSecondary"
+                              className={classes.listingLabelValue}
+                            >
                           24 june 2021
-                        </Typography>
-                      </Grid>
+                            </Typography>
+                          </Grid>
 
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
+                          <Grid item md={3} sm={6} xs={12}>
+                            <Typography
 
-                          gutterBottom
-                          className={classes.listingLabelName}
-                        >
+                              gutterBottom
+                              className={classes.listingLabelName}
+                            >
                           Reported By
-                        </Typography>
+                            </Typography>
 
-                        <Typography
-                          variant="body1"
-                          color="textSecondary"
-                          className={classes.listingLabelValue}
-                        >
+                            <Typography
+                              variant="body1"
+                              color="textSecondary"
+                              className={classes.listingLabelValue}
+                            >
                           Person
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                  <Divider />
-                  <CardActions className={Incidents.cardActions}>
-                    <Grid
-                      container
-                      spacing={2}
-                      justify="flex-end"
-                      alignItems="center"
-                    >
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Incidents.actionsLabel}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                      <Divider />
+                      <CardActions className={Incidents.cardActions}>
+                        <Grid
+                          container
+                          spacing={2}
+                          justify="flex-end"
+                          alignItems="center"
                         >
-                          <AttachmentIcon />
-                          {' '}
+                          <Grid item md={3} sm={6} xs={12}>
+                            <Typography
+                              variant="body2"
+                              display="inline"
+                              className={Incidents.actionsLabel}
+                            >
+                              <AttachmentIcon />
+                              {' '}
                           Comments:
-                        </Typography>
-                        <Typography variant="body2" display="inline" className={classes.mLeft}>
-                          <Link href="#">3</Link>
-                        </Typography>
-                      </Grid>
+                            </Typography>
+                            <Typography variant="body2" display="inline" className={classes.mLeft}>
+                              <Link href="#">3</Link>
+                            </Typography>
+                          </Grid>
 
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Incidents.actionsLabel}
-                        >
-                          <AttachmentIcon />
-                          {' '}
+                          <Grid item md={3} sm={6} xs={12}>
+                            <Typography
+                              variant="body2"
+                              display="inline"
+                              className={Incidents.actionsLabel}
+                            >
+                              <AttachmentIcon />
+                              {' '}
                           Actions:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <Link href="#" className={classes.mLeft}>3</Link>
-                        </Typography>
-                      </Grid>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <Typography
-                          variant="body2"
-                          display="inline"
-                          className={Incidents.actionsLabel}
-                        >
-                          <AttachmentIcon />
-                          {' '}
+                            </Typography>
+                            <Typography variant="body2" display="inline">
+                              <Link href="#" className={classes.mLeft}>3</Link>
+                            </Typography>
+                          </Grid>
+                          <Grid item md={3} sm={6} xs={12}>
+                            <Typography
+                              variant="body2"
+                              display="inline"
+                              className={Incidents.actionsLabel}
+                            >
+                              <AttachmentIcon />
+                              {' '}
                           Evidences:
-                        </Typography>
-                        <Typography variant="body2" display="inline">
-                          <Link href="#" className={classes.mLeft}>3</Link>
-                        </Typography>
-                      </Grid>
-                      {/* <Grid item xs={6} md={3} lg={3}>
+                            </Typography>
+                            <Typography variant="body2" display="inline">
+                              <Link href="#" className={classes.mLeft}>3</Link>
+                            </Typography>
+                          </Grid>
+                          {/* <Grid item xs={6} md={3} lg={3}>
           <Typography
             variant="body2"
             display="inline"
@@ -1794,7 +1825,7 @@ function xflha(props) {
            Initial Action
           </Typography>
         </Grid> */}
-                      {/* <Grid item md={3} sm={6} xs={12}>
+                          {/* <Grid item md={3} sm={6} xs={12}>
                           <Button
                             size="small"
                             color="secondary"
@@ -1815,52 +1846,53 @@ function xflha(props) {
                             Share
                           </Button>
                         </Grid> */}
-                    </Grid>
-                  </CardActions>
-                </Card>
-              ))}
+                        </Grid>
+                      </CardActions>
+                    </Card>
+                  ))}
+                </div>
+
+              </div>
+            // listview end
+
+            ) : (
+              <Box>
+                <TableContainer component={Paper}>
+                  <Grid component={Paper}>
+                    <MUIDataTable
+                      className="dataTableSectionDesign"
+                      title="FLHA's"
+                      data={Object.entries(flhas).map((item) => [
+
+                        item[1].flhaNumber,
+                        item[1].jobTitle,
+                        item[1].flhaStage,
+                        item[1].flhaStatus,
+                        item[1].createdByName,
+                        // item[1].dateTimeFlha,
+                        moment(item[1].createdAt).format(
+                          'Do MMMM YYYY'
+                        ),
+                        item[1].closedDate !== null ? moment(item[1].closedDate).format(
+                          'Do MMMM YYYY'
+                        ) : '-',
+                        item[1].closedByName ? item[1].closedByName : '-',
+
+                      ])}
+                      columns={columns}
+                      options={options}
+                    />
+                  </Grid>
+                </TableContainer>
+              </Box>
+            )}
+
+            <div className={classes.pagination}>
+              {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
             </div>
-
-          </div>
-          // listview end
-
-        ) : (
-          <Box>
-            <TableContainer component={Paper}>
-              <Grid component={Paper}>
-                <MUIDataTable
-                  className="dataTableSectionDesign"
-                  title="FLHA's"
-                  data={Object.entries(flhas).map((item) => [
-
-                    item[1].flhaNumber,
-                    item[1].jobTitle,
-                    item[1].flhaStage,
-                    item[1].flhaStatus,
-                    item[1].createdByName,
-                    // item[1].dateTimeFlha,
-                    moment(item[1]["createdAt"]).format(
-                      "Do MMMM YYYY"
-                    ),
-                    item[1]['closedDate'] !== null ? moment(item[1]["closedDate"]).format(
-                      "Do MMMM YYYY"
-                    ) : "-",
-                    item[1]["closedByName"] ? item[1]["closedByName"] : "-",
-
-                  ])}
-                  columns={columns}
-                  options={options}
-                />
-              </Grid>
-            </TableContainer>
-          </Box>
-        )}
-
-        <div className={classes.pagination}>
-          {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
-          <Pagination count={pageCount} page={page} onChange={handleChange} />
-        </div>
-      </> : <Loader />}
+          </>
+        ) : <Loader />}
       </Box>
 
     </>
@@ -1869,12 +1901,10 @@ function xflha(props) {
 }
 
 // export default Actions;
-const mapStateToProps = state => {
-  return {
-    projectName: state.getIn(["InitialDetailsReducer"]),
-    todoIncomplete: state
+const mapStateToProps = state => ({
+  projectName: state.getIn(['InitialDetailsReducer']),
+  todoIncomplete: state
 
-  }
-}
+});
 
 export default connect(mapStateToProps, null)(xflha);
