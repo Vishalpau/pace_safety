@@ -81,6 +81,7 @@ import Loader from '../Loader';
 import api from '../../../utils/axios';
 import StatusFilter from './StatusFilter';
 import allPickListDataValue from '../../../utils/Picklist/allPickList';
+import { checkACL } from '../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -712,6 +713,7 @@ function xflha(props) {
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [value, setValue] = React.useState(2);
   const [assessments, setAssessments] = useState('My Assessments');
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -810,7 +812,7 @@ function xflha(props) {
       const pageCount = Math.ceil(res.data.data.results.count / 25);
       await setPageCount(pageCount);
     }
-    await setIsLoading(true);
+    await setIsLoading(false);
   };
 
   let timer;
@@ -967,6 +969,31 @@ function xflha(props) {
     await setPage(value);
   };
 
+  const handleDelete = async (item) => {
+    // console.log(item);
+    if(checkACL('safety', 'delete_flha')) {
+      const data = {
+        fkCompanyId: item[1].fkCompanyId,
+        fkProjectId: item[1].fkProjectId,
+        jobTitle: item[1].jobTitle,
+        jobDetails: item[1].jobDetails,
+        status: "Delete"
+      }
+      // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
+      // let data = item[1];
+      // console.log(data);
+      // data.status = "Delete";
+      // delete data.attachment
+      setIsLoading(false)
+      const res1 = await api.put(`/api/v1/flhas/${item[1].id}/`, data)
+      .then(response => {
+        console.log(response);
+        fetchData();
+      })
+      .catch(err => console.log(err))
+    }   
+  }
+
   useEffect(() => {
     const state = JSON.parse(localStorage.getItem('direct_loading'));
     if (state !== null) {
@@ -974,6 +1001,7 @@ function xflha(props) {
     } else {
       fetchData();
     }
+    setCheckDeletePermission(checkACL('safety', 'delete_flha'))
   }, [props.projectName.breakDown, searchFlha, status, assessments]);
 
   useEffect(() => {
@@ -1007,7 +1035,7 @@ function xflha(props) {
       </Grid>
       <Box>
         {' '}
-        {isLoading ? (
+        {!isLoading ? (
           <>
 
 
@@ -1296,31 +1324,9 @@ function xflha(props) {
                                         {/* </Link> */}
                                       </span>
                                     </Typography>
-                                    <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
-                                      <div className={classes.floatR}>
-                                        <Typography variant="body1" display="inline">
-                                          {/* {!checkDeletePermission ?
-                                    <DeleteForeverOutlinedIcon
-                                      className={classes.iconteal}
-                                      style={{
-                                        color: '#c0c0c0',
-                                        cursor: 'not-allowed'
-                                      }}
-                                    />
-                                    : ( */}
-                                          <Link
-                                            href="#"
-                                            className={classes.mLeftR5}
-                                          >
-                                            <DeleteForeverOutlinedIcon
-                                              className={classes.iconteal}
-                                              onClick={(e) => handleDelete(item)}
-                                            />
-                                          </Link>
-                                          {/* )} */}
-                                        </Typography>
-                                      </div>
-                                    </Grid>
+                                    {/* <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}> */}
+                                      
+                                    {/* </Grid> */}
                                     {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography
                                     variant="body1"
@@ -1347,6 +1353,27 @@ function xflha(props) {
 
                                   <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
                                     <div className={classes.floatR}>
+                                        <Typography variant="body1" display="inline">
+                                          {!checkDeletePermission ?
+                                    <DeleteForeverOutlinedIcon
+                                      className={classes.iconteal}
+                                      style={{
+                                        color: '#c0c0c0',
+                                        cursor: 'not-allowed'
+                                      }}
+                                    />
+                                    : (
+                                          <Link
+                                            href="#"
+                                            className={classes.mLeftR5}
+                                          >
+                                            <DeleteForeverOutlinedIcon
+                                              className={classes.iconteal}
+                                              onClick={(e) => handleDelete(item)}
+                                            />
+                                          </Link>
+                                           )} 
+                                        </Typography>
                                       {/* <Typography variant="body1" display="inline">
                 <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                 </Typography>
