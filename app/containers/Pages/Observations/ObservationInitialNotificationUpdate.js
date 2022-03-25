@@ -1004,7 +1004,6 @@ const ObservationInitialNotificationUpdate = () => {
 
             <div className={classes.loadingWrapper}>
               <Button
-                variant="outlined"
                 onClick={(e) => handleSubmit()}
                 size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
                 disabled={loading}
