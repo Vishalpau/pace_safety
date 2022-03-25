@@ -55,10 +55,16 @@ import {
   LOGIN_URL,
   SSO_URL,
 } from "../../../utils/constants";
+import {
+  handelIncidentId,
+  checkValue,
+  handelCommonObject,
+  handelActionData,
+} from "../../../utils/CheckerValue";
 import axios from "axios";
 import moment from "moment";
 import Loader from "../Loader";
-
+import { handelActionTracker } from "./Compliance/Checks"
 // Sidebar Links Helper Function
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
@@ -208,11 +214,12 @@ function ComplianceSummary() {
   const [team, setTeam] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const [subGroupData, setSubGroupData] = useState([]);
-  // const [lessonsLearned, setLessonsLearned] = useState(false);
+  const [quesData, setQueData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const { id } = useParams();
   const [notificationSentValue, setNotificationSentValue] = useState([]);
+  const [actionData, setActionData] = useState([]);
 
   const [expanded, setExpanded] = React.useState("panel1");
   const handleExpand = (panel) => (event, isExpanded) => {
@@ -384,8 +391,7 @@ function ComplianceSummary() {
         headers: HEADER_AUTH,
       });
       const workArea = await api_work_area.get(
-        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${
-          workAreaId[0]
+        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
       structName.push(workArea.data.data.results[0]["structureName"]);
@@ -448,20 +454,42 @@ function ComplianceSummary() {
         }
         await setNotificationSentValue(data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
+
+  const auditQueData = async () => {
+    const res = await api.get(
+      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+    );
+    const result = res.data.data.results;
+    setQueData(result)
+  };
+
+  const handelActionTracker = async () => {
+    let jhaId = localStorage.getItem("fkComplianceId");
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+      "qustionsIds"
+    ];
+    let allAction = await handelActionData(jhaId, apiData);
+    setActionData(allAction);
+  };
+
+
 
   useEffect(() => {
     if (id) {
+      auditQueData()
+      // fetchCheklist()
       fetchCheklistData();
+      // handelActionData()
+      handelActionTracker()
     }
   }, []);
 
   return (
     <CustomPapperBlock
-      title={`Compliance number: ${
-        complianceData.auditNumber ? complianceData.auditNumber : ""
-      }`}
+      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
+        }`}
       icon="customDropdownPageIcon compliancePageIcon"
       whiteBg
     >
@@ -767,7 +795,7 @@ function ComplianceSummary() {
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["hseRepresentative"] !==
-                                      ""
+                                        ""
                                         ? complianceData["hseRepresentative"]
                                         : "-"}
                                     </Typography>
@@ -823,7 +851,7 @@ function ComplianceSummary() {
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["contractorRepNumber"] !==
-                                      ""
+                                        ""
                                         ? complianceData["contractorRepNumber"]
                                         : "-"}
                                     </Typography>
@@ -855,8 +883,8 @@ function ComplianceSummary() {
                                         "contractorSupervisorName"
                                       ] !== ""
                                         ? complianceData[
-                                            "contractorSupervisorName"
-                                          ]
+                                        "contractorSupervisorName"
+                                        ]
                                         : "-"}
                                     </Typography>
                                   </Grid>
@@ -871,13 +899,13 @@ function ComplianceSummary() {
                                     </Typography>
                                     {team.length > 0
                                       ? team.map((item) => (
-                                          <Typography
-                                            display="block"
-                                            className="viewLabelValue"
-                                          >
-                                            {item}
-                                          </Typography>
-                                        ))
+                                        <Typography
+                                          display="block"
+                                          className="viewLabelValue"
+                                        >
+                                          {item}
+                                        </Typography>
+                                      ))
                                       : "-"}
                                   </Grid>
 
@@ -1152,111 +1180,108 @@ function ComplianceSummary() {
                               </Paper>
                             </Grid>
 
-                              <>
-                                <Grid
-                                  item
-                                  md={12}
-                                  sm={12}
-                                  xs={12}
-                                  className="paddTBRemove"
+                            <>
+                              <Grid
+                                item
+                                md={12}
+                                sm={12}
+                                xs={12}
+                                className="paddTBRemove"
+                              >
+                                <Typography
+                                  variant="h6"
+                                  className="sectionHeading"
                                 >
-                                  <Typography
-                                    variant="h6"
-                                    className="sectionHeading"
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="35"
+                                    height="28"
+                                    viewBox="0 0 49.737 39"
                                   >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="35"
-                                      height="28"
-                                      viewBox="0 0 49.737 39"
+                                    <g
+                                      id="check-30"
+                                      transform="translate(-100.352 -178.176)"
                                     >
-                                      <g
-                                        id="check-30"
-                                        transform="translate(-100.352 -178.176)"
-                                      >
-                                        <path
-                                          id="Path_6414"
-                                          data-name="Path 6414"
-                                          d="M100.352,178.176v33.94h39.493v-33.94Zm37.025,31.348H102.82v-28.88h34.557Z"
-                                          transform="translate(0)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6415"
-                                          data-name="Path 6415"
-                                          d="M192.512,333.824h4.32v3.456h-4.32Z"
-                                          transform="translate(-86.606 -146.268)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6416"
-                                          data-name="Path 6416"
-                                          d="M286.72,352.256h21.968v1.234H286.72Z"
-                                          transform="translate(-175.137 -163.59)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6417"
-                                          data-name="Path 6417"
-                                          d="M286.72,466.944h21.968v1.234H286.72Z"
-                                          transform="translate(-175.137 -271.366)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6418"
-                                          data-name="Path 6418"
-                                          d="M286.72,585.728h21.968v1.234H286.72Z"
-                                          transform="translate(-175.137 -382.992)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6419"
-                                          data-name="Path 6419"
-                                          d="M192.512,448.512h4.32v3.456h-4.32Z"
-                                          transform="translate(-86.606 -254.045)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6420"
-                                          data-name="Path 6420"
-                                          d="M192.512,567.3h4.32v3.456h-4.32Z"
-                                          transform="translate(-86.606 -365.671)"
-                                          fill="#06425c"
-                                        />
-                                        <path
-                                          id="Path_6421"
-                                          data-name="Path 6421"
-                                          d="M308.978,300.173l-3.826,2.962s9.75,8.269,15.3,16.044c0,0,3.456-13.452,22.092-30.361l-.864-2.1s-10.861,5.06-23.7,21.1A79.707,79.707,0,0,0,308.978,300.173Z"
-                                          transform="translate(-192.458 -102.003)"
-                                          fill="#06425c"
-                                        />
-                                      </g>
-                                    </svg>{" "}
-                                    Checks
-                                  </Typography>
-                                </Grid>
-                                <Grid
-                                  item
-                                  md={12}
-                                  sm={12}
-                                  xs={12}
-                                  className="paddTBRemove"
-                                >
-                                  <Paper elevation={1} className="paperSection">
-                                    <Grid container spacing={3}>
-                                      <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                        className="paddBRemove"
-                                      >
+                                      <path
+                                        id="Path_6414"
+                                        data-name="Path 6414"
+                                        d="M100.352,178.176v33.94h39.493v-33.94Zm37.025,31.348H102.82v-28.88h34.557Z"
+                                        transform="translate(0)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6415"
+                                        data-name="Path 6415"
+                                        d="M192.512,333.824h4.32v3.456h-4.32Z"
+                                        transform="translate(-86.606 -146.268)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6416"
+                                        data-name="Path 6416"
+                                        d="M286.72,352.256h21.968v1.234H286.72Z"
+                                        transform="translate(-175.137 -163.59)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6417"
+                                        data-name="Path 6417"
+                                        d="M286.72,466.944h21.968v1.234H286.72Z"
+                                        transform="translate(-175.137 -271.366)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6418"
+                                        data-name="Path 6418"
+                                        d="M286.72,585.728h21.968v1.234H286.72Z"
+                                        transform="translate(-175.137 -382.992)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6419"
+                                        data-name="Path 6419"
+                                        d="M192.512,448.512h4.32v3.456h-4.32Z"
+                                        transform="translate(-86.606 -254.045)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6420"
+                                        data-name="Path 6420"
+                                        d="M192.512,567.3h4.32v3.456h-4.32Z"
+                                        transform="translate(-86.606 -365.671)"
+                                        fill="#06425c"
+                                      />
+                                      <path
+                                        id="Path_6421"
+                                        data-name="Path 6421"
+                                        d="M308.978,300.173l-3.826,2.962s9.75,8.269,15.3,16.044c0,0,3.456-13.452,22.092-30.361l-.864-2.1s-10.861,5.06-23.7,21.1A79.707,79.707,0,0,0,308.978,300.173Z"
+                                        transform="translate(-192.458 -102.003)"
+                                        fill="#06425c"
+                                      />
+                                    </g>
+                                  </svg>{" "}
+                                  Checks
+                                </Typography>
+                              </Grid>
+                              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                                <Paper elevation={1} className="paperSection">
+                                  <Grid container spacing={3}>
+                                    <Grid
+                                      item
+                                      md={12}
+                                      xs={12}
+                                      className="paddBRemove"
+                                    >
+                                      {groupData.map((value, index) =>
                                         <FormLabel
                                           className="checkRadioLabel"
                                           component="legend"
                                         >
-                                          Environment
+
+                                          {value.checkListName}
                                         </FormLabel>
-                                        <span
+                                      )}
+                                      {/* <span
                                           className={
                                             classes.accordingHeaderContentleft
                                           }
@@ -1283,8 +1308,9 @@ function ComplianceSummary() {
                                               secondary="<as per admin config>"
                                             />
                                           </ListItem>
-                                        </span>
+                                        </span> */}
 
+                                      {quesData.map((value, index) =>
                                         <Accordion
                                           expanded={
                                             expandedTableDetail === "panel3"
@@ -1305,7 +1331,7 @@ function ComplianceSummary() {
                                                   classes.accordingHeaderContentLeft
                                                 }
                                               >
-                                                <ListItemText primary="Welding machines used are tested and properly connected" />
+                                                <ListItemText primary={value.question} />
                                               </ListItem>
                                             </List>
                                           </AccordionSummary>
@@ -1338,7 +1364,7 @@ function ComplianceSummary() {
                                                   Is this control applicable ?
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  Yes
+                                                  {(value.defaultResponse ? value.defaultResponse : '-')}
                                                 </Typography>
                                               </Grid>
                                               <Grid
@@ -1354,7 +1380,7 @@ function ComplianceSummary() {
                                                   Findings
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  NA
+                                                  {(value.findings ? value.findings : '-')}
                                                 </Typography>
                                               </Grid>
                                               <Grid
@@ -1382,11 +1408,13 @@ function ComplianceSummary() {
                                                     Percentage
                                                   </FormLabel>
                                                   <Typography className="viewLabelValue">
-                                                    20%
+                                                    {(value.score ? value.score : '-')}
+
                                                   </Typography>
                                                 </Grid>
                                               </Grid>
-                                              <Grid item md={12} xs={12}>
+                                              {console.log(actionData)}
+                                              {/* <Grid item md={12} xs={12}>
                                                 <FormLabel
                                                   component="legend"
                                                   className="checkRadioLabel"
@@ -1441,7 +1469,97 @@ function ComplianceSummary() {
                                                     </TableRow>
                                                   </TableBody>
                                                 </Table>
-                                              </Grid>
+                                              </Grid> */}
+
+                                              
+                                              {actionData.map((val) => (
+                                                
+                                                <>
+                                                {console.log(val,value.questionId,'val')}
+                                                  {val.id == value.questionId ? (
+                                                    
+                                                    <>
+                                                      {val.action.length > 0 &&
+                                                        <Grid item md={12} xs={12}>
+                                                          <Table
+                                                            component={Paper}
+                                                            className="simpleTableSection"
+                                                          >
+                                                            <TableHead>
+                                                              <TableRow>
+                                                                <TableCell className="tableHeadCellFirst">
+                                                                  Action number
+                                                                </TableCell>
+                                                                <TableCell className="tableHeadCellSecond">
+                                                                  Action title
+                                                                </TableCell>
+                                                              </TableRow>
+                                                            </TableHead>
+                                                            <TableBody>
+                                                              {actionData.map((val) => (
+                                                                <>
+                                                                  {val.id == value.questionId ? (
+                                                                    <>
+                                                                      {val.action.length > 0 &&
+                                                                      
+                                                                        val.action.map(
+                                                                          
+                                                                          (valueAction) => (
+                                                                            <TableRow>
+                                                                              <TableCell align="left">
+                                                                                <Link
+                                                                                  className={
+                                                                                    classes.actionLinkAudit
+                                                                                  }
+                                                                                  display="block"
+                                                                                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                                    localStorage.getItem(
+                                                                                      "BaseUrl"
+                                                                                    )
+                                                                                  )[
+                                                                                    "actionClientID"
+                                                                                  ]
+                                                                                    }&response_type=code&companyId=${JSON.parse(
+                                                                                      localStorage.getItem(
+                                                                                        "company"
+                                                                                      )
+                                                                                    )
+                                                                                      .fkCompanyId
+                                                                                    }&projectId=${JSON.parse(
+                                                                                      localStorage.getItem(
+                                                                                        "projectName"
+                                                                                      )
+                                                                                    )
+                                                                                      .projectName
+                                                                                      .projectId
+                                                                                    }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                    }`}
+                                                                                  target="_blank"
+                                                                                >
+                                                                                  {
+                                                                                    valueAction.number
+                                                                                  }
+                                                                                </Link>
+                                                                              </TableCell>
+                                                                              <TableCell>
+                                                                                {
+                                                                                  valueAction.title
+                                                                                }
+                                                                              </TableCell>
+                                                                            </TableRow>
+                                                                          )
+                                                                        )}
+                                                                    </>
+                                                                  ) : null}
+                                                                </>
+                                                              ))}
+                                                            </TableBody>
+                                                          </Table>
+                                                        </Grid>
+                                                      }</>) : null}
+                                                </>
+                                              ))}
+
                                               <Grid
                                                 item
                                                 md={12}
@@ -1454,19 +1572,20 @@ function ComplianceSummary() {
                                                 >
                                                   Attachments
                                                 </FormLabel>
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
+                                                {value.attachment ? value.attachmen.map(att =>
+                                                  <div className="attachFileThumb">
+                                                    <img
+                                                      src={att.attachment}
+                                                      className="attachFileStyle"
+                                                      alt="attachment"
+                                                    />
+                                                    <div className="attachContent">
+                                                      <p>construction.jpg</p>
+                                                      <p>125kb</p>
+                                                    </div>
+                                                  </div>) : "-"}
 
-                                                <div className="attachFileThumb">
+                                                {/* <div className="attachFileThumb">
                                                   <img
                                                     src={projectpj}
                                                     className="attachFileStyle"
@@ -1847,82 +1966,83 @@ function ComplianceSummary() {
                                                     <p>PDFfile.pdf</p>
                                                     <p>125 bytes</p>
                                                   </div>
-                                                </div>
+                                                </div> */}
                                               </Grid>
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
-                                      </Grid>
+                                      )}
+                                    </Grid>
 
-                                      <div>
-                                        <Dialog
-                                          open={myVideoOpen}
-                                          onClose={handleMyVideoClose}
-                                          aria-labelledby="alert-dialog-title"
-                                          aria-describedby="alert-dialog-description"
-                                          fullWidth={true}
-                                          maxWidth={"sm"}
-                                        >
-                                          {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                                className={
-                                                  classes.usrProfileListBox
-                                                }
-                                              >
-                                                <ReactVideo
-                                                  src="https://www.example.com/url_to_video.mp4"
-                                                  poster="https://www.example.com/poster.png"
-                                                  primaryColor="red"
-                                                />
-                                              </Grid>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                        </Dialog>
-                                      </div>
-
-                                      <div>
-                                        <Dialog
-                                          open={myAudioOpen}
-                                          onClose={handleMyAudioClose}
-                                          aria-labelledby="alert-dialog-title"
-                                          aria-describedby="alert-dialog-description"
-                                          fullWidth={true}
-                                          maxWidth={"sm"}
-                                        >
-                                          <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                                className={
-                                                  classes.usrProfileListBox
-                                                }
-                                              >
-                                                <ReactAudio
-                                                  src="/audio.mp4"
-                                                  poster="/poster.png"
-                                                />
-                                              </Grid>
-                                            </DialogContentText>
-                                          </DialogContent>
-                                        </Dialog>
-                                      </div>
-
-                                      <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                        className="paddTBRemove"
+                                    <div>
+                                      <Dialog
+                                        open={myVideoOpen}
+                                        onClose={handleMyVideoClose}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                        fullWidth={true}
+                                        maxWidth={"sm"}
                                       >
-                                        <Accordion
+                                        {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
+                                        <DialogContent>
+                                          <DialogContentText id="alert-dialog-description">
+                                            <Grid
+                                              item
+                                              md={12}
+                                              sm={12}
+                                              xs={12}
+                                              className={
+                                                classes.usrProfileListBox
+                                              }
+                                            >
+                                              <ReactVideo
+                                                src="https://www.example.com/url_to_video.mp4"
+                                                poster="https://www.example.com/poster.png"
+                                                primaryColor="red"
+                                              />
+                                            </Grid>
+                                          </DialogContentText>
+                                        </DialogContent>
+                                      </Dialog>
+                                    </div>
+
+                                    <div>
+                                      <Dialog
+                                        open={myAudioOpen}
+                                        onClose={handleMyAudioClose}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                        fullWidth={true}
+                                        maxWidth={"sm"}
+                                      >
+                                        <DialogContent>
+                                          <DialogContentText id="alert-dialog-description">
+                                            <Grid
+                                              item
+                                              md={12}
+                                              sm={12}
+                                              xs={12}
+                                              className={
+                                                classes.usrProfileListBox
+                                              }
+                                            >
+                                              <ReactAudio
+                                                src="/audio.mp4"
+                                                poster="/poster.png"
+                                              />
+                                            </Grid>
+                                          </DialogContentText>
+                                        </DialogContent>
+                                      </Dialog>
+                                    </div>
+
+                                    <Grid
+                                      item
+                                      md={12}
+                                      xs={12}
+                                      className="paddTBRemove"
+                                    >
+                                      {/* <Accordion
                                           expanded={
                                             expandedTableDetail === "panel11"
                                           }
@@ -1944,11 +2064,7 @@ function ComplianceSummary() {
                                               >
                                                 <ListItemText primary="Welding machines used are tested and properly connected" />
                                               </ListItem>
-                                              {/* <span className={classes.accordingHeaderContentRight}>
-                                                  <ListItem className={classes.accordingHeaderContent}>
-                                                      <ListItemText primary="Performance rating: " secondary="<as per input>" />
-                                                  </ListItem>
-                                              </span> */}
+                                            
                                             </List>
                                           </AccordionSummary>
                                           <AccordionDetails>
@@ -2098,16 +2214,16 @@ function ComplianceSummary() {
                                               </Grid>
                                             </Grid>
                                           </AccordionDetails>
-                                        </Accordion>
-                                      </Grid>
+                                        </Accordion> */}
+                                    </Grid>
 
-                                      <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                        className="paddTBRemove"
-                                      >
-                                        {/* <Typography variant="label" gutterBottom className={classNames(classes.firstLabelTitle, Fonts.labelName)}>
+                                    <Grid
+                                      item
+                                      md={12}
+                                      xs={12}
+                                      className="paddTBRemove"
+                                    >
+                                      {/* <Typography variant="label" gutterBottom className={classNames(classes.firstLabelTitle, Fonts.labelName)}>
                                         Group - Category#2
                                     </Typography>
                                     <span className={classes.accordingHeaderContentleft}>
@@ -2119,7 +2235,7 @@ function ComplianceSummary() {
                                         </ListItem>
                                     </span> */}
 
-                                        <FormLabel
+                                      {/* <FormLabel
                                           className="checkRadioLabel"
                                           component="legend"
                                         >
@@ -2152,9 +2268,9 @@ function ComplianceSummary() {
                                               secondary="<as per admin config>"
                                             />
                                           </ListItem>
-                                        </span>
+                                        </span> */}
 
-                                        <Accordion
+                                      {/* <Accordion
                                           expanded={
                                             expandedTableDetail === "panel9"
                                           }
@@ -2325,16 +2441,16 @@ function ComplianceSummary() {
                                               </Grid>
                                             </Grid>
                                           </AccordionDetails>
-                                        </Accordion>
-                                      </Grid>
+                                        </Accordion> */}
+                                    </Grid>
 
-                                      <Grid
-                                        item
-                                        md={12}
-                                        xs={12}
-                                        className="paddTBRemove"
-                                      >
-                                        <Accordion
+                                    <Grid
+                                      item
+                                      md={12}
+                                      xs={12}
+                                      className="paddTBRemove"
+                                    >
+                                      {/* <Accordion
                                           expanded={
                                             expandedTableDetail === "panel10"
                                           }
@@ -2505,13 +2621,13 @@ function ComplianceSummary() {
                                               </Grid>
                                             </Grid>
                                           </AccordionDetails>
-                                        </Accordion>
-                                      </Grid>
+                                        </Accordion> */}
                                     </Grid>
-                                  </Paper>
-                                </Grid>
-                              </>
-                           
+                                  </Grid>
+                                </Paper>
+                              </Grid>
+                            </>
+
 
                             <Grid
                               item
@@ -2576,7 +2692,7 @@ function ComplianceSummary() {
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
                                       {complianceData["performanceSummary"] !==
-                                      null
+                                        null
                                         ? complianceData["performanceSummary"]
                                         : "-"}
                                     </Typography>
@@ -2590,13 +2706,13 @@ function ComplianceSummary() {
                                     </FormLabel>
                                     {notificationSentValue.length > 0
                                       ? notificationSentValue.map((value) => (
-                                          <Typography
-                                            display="block"
-                                            className="viewLabelValue"
-                                          >
-                                            {value.roleName}
-                                          </Typography>
-                                        ))
+                                        <Typography
+                                          display="block"
+                                          className="viewLabelValue"
+                                        >
+                                          {value.roleName}
+                                        </Typography>
+                                      ))
                                       : "-"}
                                   </Grid>
                                 </Grid>

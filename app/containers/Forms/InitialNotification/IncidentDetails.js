@@ -780,7 +780,6 @@ const IncidentDetails = (props) => {
                   <KeyboardDateTimePicker
                     required
                     error={error.incidentOccuredOn}
-                    required
                     className={classes.formControl}
                     label="Incident date & time"
                     helperText={

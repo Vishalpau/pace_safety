@@ -245,12 +245,16 @@ const QuestionEdit = (props) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  const fetchAuditData = async () => {
+
+  const fetchAuditData = async (id) => {
+    console.log(id,'id')
+
     const res = await api.get(
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${
         project.projectId
       }&projectStructure=${fkProjectStructureIds}`
     );
+    console.log(res,'res')
     await setAuditData(res.data.data.results[0]);
     await fetchChecklist(res.data.data.results[0].groupName);
     await fetchBreakDownData(res.data.data.results[0].fkProjectStructureIds);
@@ -323,6 +327,7 @@ const QuestionEdit = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
+    if (projectBreakdown){
     const projectData = JSON.parse(localStorage.getItem("projectName"));
     let breakdownLength = projectData.projectName.breakdown.length;
     let selectBreakDown = [];
@@ -407,7 +412,8 @@ const QuestionEdit = (props) => {
           });
       }
     }
-  };
+  }
+};
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -452,7 +458,7 @@ const QuestionEdit = (props) => {
   };
   console.log("Checklist", auditData);
   useEffect(() => {
-    fetchAuditData();
+    fetchAuditData(id);
     fetchChecklist();
   }, []);
 

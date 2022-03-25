@@ -576,7 +576,7 @@ const AssessmentAndDocument = () => {
                                                         value.hazard == 'N/A' ? null :
                                                         <Accordion
                                                             defaultExpanded
-                                                            className={classes.backPaper}
+                                                            // className={classes.backPaper}
                                                             key={index}
                                                             className="backPaperSubAccordianWithMargin"
                                                         >

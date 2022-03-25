@@ -311,6 +311,8 @@ const Checks = () => {
   const [checkData, setCheckData] = useState([]);
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([]);
+  const [showCheckData, setShowCheckData] = useState({});
+
   //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
@@ -324,13 +326,6 @@ const Checks = () => {
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
-
-  //   const [state, setState] = React.useState({
-  //     checkedA: true,
-  //     checkedB: true,
-  //     checkedF: true,
-  //     checkedG: true,
-  //   });
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -423,23 +418,7 @@ const Checks = () => {
       `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
     const result = res.data.data.results;
-    // await setIsLoading(true)
-
-    // result.map((value) => {
-    //   temp[value["checkListName"]] = [];
-    //   value.checklistValues.map((checkListOptions) => {
-    //     let checkObj = {};
-    //     if (checkListOptions !== undefined) {
-    //       checkObj["inputLabel"] = checkListOptions.inputLabel;
-    //       checkObj["inputValue"] = checkListOptions.inputValue;
-    //       checkObj["id"] = checkListOptions.id;
-    //       temp[value["checkListName"]].push(checkObj);
-    //     }
-    //   });
-    // });
-    //await fetchCategoryData(temp)
     await fetchComplianceData(result);
-    // await setCheckListGroups(result);
   };
 
   const fetchComplianceData = async (data) => {
@@ -486,6 +465,7 @@ const Checks = () => {
     let temp = [];
     let tempCheckData = [];
     let categoriesData = {};
+
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
@@ -494,38 +474,39 @@ const Checks = () => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}`
       );
+      console.log(res,'res')
       const result2 = res.data.data.results;
-      // console.log(result2);
       temp.push(result2);
     }
     let tempQuestionId = [];
-    // console.log(temp);
+    let fd = await fetchData()
     temp.map((tempvalue, i) => {
-      console.log(tempvalue);
-      temp[i].map((value, index) => {
-        tempQuestionId.push({ id: value.id });
-        console.log("....", tempvalue[index].id);
-        tempCheckData.push({
-          questionId: value.id,
-          question: value.question,
-          criticality: "",
-          auditStatus: "",
-          performance: "",
-          groupId: null,
-          groupName: value.groupName,
-          subGroupId: null,
-          subGroupName: value.subGroupName,
-          defaultResponse: "",
-          score: "",
-          findings: "",
-          attachment: null,
-          status: "Active",
-          createdBy: parseInt(userId),
-          fkAuditId: localStorage.getItem("fkComplianceId"),
+      if (tempvalue['message'] === undefined) {
+        tempvalue.map((value, index) => {
+          tempQuestionId.push({ id: value.id });
+
+          tempCheckData.push({
+            id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
+            questionId: value.id,
+            question: value.question,
+            criticality: "",
+            auditStatus: "",
+            performance: "",
+            groupId: null,
+            groupName: value.groupName,
+            subGroupId: null,
+            subGroupName: value.subGroupName,
+            defaultResponse: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].findings : '',
+            score: "",
+            findings: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].findings : '',
+            attachment: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].attachment : null,
+            status: "Active",
+            createdBy: parseInt(userId),
+            fkAuditId: localStorage.getItem("fkComplianceId"),
+          });
+          categoriesData[value["groupName"]].push(value);
         });
-        // console.log(tempCheckData);
-        categoriesData[value["groupName"]].push(value);
-      });
+      }
     });
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
@@ -547,7 +528,6 @@ const Checks = () => {
     await setCategories(categoriesData);
     await handelActionTracker();
   };
-  // console.log(checkData);
   const handelSubmit = async () => {
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -555,6 +535,7 @@ const Checks = () => {
         : null;
     let tempUpdatedQuestion = []
     let tempNewQuestion = []
+
     checkData.map((data) => {
       if (data.id) {
         tempUpdatedQuestion.push(data)
@@ -563,93 +544,84 @@ const Checks = () => {
       }
     })
     if (tempNewQuestion.length > 0) {
-
-      const data = new FormData();
+      let dataCheck = [];
+      // let data = {};
       for (var i = 0; i < tempNewQuestion.length; i++) {
-        data.append("questionId", tempNewQuestion[i].questionId);
-        data.append("question", tempNewQuestion[i].question);
-        data.append("criticality", tempNewQuestion[i].criticality);
-        data.append("performance", tempNewQuestion[i].performance);
-        data.append("groupId", tempNewQuestion[i].groupId);
-        data.append("groupName", tempNewQuestion[i].groupName);
-        data.append("subGroupId", tempNewQuestion[i].subGroupId);
-        data.append("subGroupName", tempNewQuestion[i].subGroupName);
-        data.append("defaultResponse", tempNewQuestion[i].defaultResponse);
-        data.append("score", tempNewQuestion[i].score);
-        data.append("findings", tempNewQuestion[i].findings);
-        data.append("score", tempNewQuestion[i].score);
-        data.append("auditStatus", tempNewQuestion[i].auditStatus);
+        let data = {};
+        data["questionId"] = tempNewQuestion[i].questionId
+        data["question"] = tempNewQuestion[i].question
+        data["criticality"] = tempNewQuestion[i].criticality
+        data["performance"] = tempNewQuestion[i].performance
+        data["groupId"] = tempNewQuestion[i].groupId
+        data["groupName"] = tempNewQuestion[i].groupName
+        data["subGroupId"] = tempNewQuestion[i].subGroupId
+        data["subGroupName"] = tempNewQuestion[i].subGroupName
+        data["defaultResponse"] = tempNewQuestion[i].defaultResponse
+        data["score"] = tempNewQuestion[i].score
+        data["findings"] = tempNewQuestion[i].findings
+        data["score"] = tempNewQuestion[i].score
+        data["auditStatus"] = tempNewQuestion[i].auditStatus
+
         if (typeof tempNewQuestion[i].attachment !== "string") {
           if (tempNewQuestion[i].attachment !== null) {
-            data.append("attachment", tempNewQuestion[i].attachment);
+            data["attachment"] = tempNewQuestion[i].attachment
           }
         }
-        data.append("status", "Active");
-        data.append("fkAuditId", tempNewQuestion[i].fkAuditId);
-        data.append("createdAt", new Date().toISOString());
-        data.append("createdBy", tempNewQuestion[i].createdBy);
+        data["status", "Active"]
+        data["fkAuditId"] = tempNewQuestion[i].fkAuditId
+        data["createdAt"] = new Date().toISOString()
+        data["createdBy"] = tempNewQuestion[i].createdBy
+        dataCheck[i] = data
       }
-
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, data);
+      console.log(dataCheck,'dataCheck1')
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
     }
     if (tempUpdatedQuestion.length > 0) {
 
-      const data = new FormData();
+      let dataCheck = [];
       for (var i = 0; i < tempUpdatedQuestion.length; i++) {
-        data.append("questionId", tempUpdatedQuestion[i].questionId);
-        data.append("question", tempUpdatedQuestion[i].question);
-        data.append("criticality", tempUpdatedQuestion[i].criticality);
-        data.append("performance", tempUpdatedQuestion[i].performance);
-        data.append("groupId", tempUpdatedQuestion[i].groupId);
-        data.append("groupName", tempUpdatedQuestion[i].groupName);
-        data.append("subGroupId", tempUpdatedQuestion[i].subGroupId);
-        data.append("subGroupName", tempUpdatedQuestion[i].subGroupName);
-        data.append("defaultResponse", tempUpdatedQuestion[i].defaultResponse);
-        data.append("score", tempUpdatedQuestion[i].score);
-        data.append("findings", tempUpdatedQuestion[i].findings);
-        data.append("score", tempUpdatedQuestion[i].score);
-        data.append("auditStatus", tempUpdatedQuestion[i].auditStatus);
+        let data = {};
+        data["id"] = tempUpdatedQuestion[i].id
+        data["questionId"] = tempUpdatedQuestion[i].questionId
+        data["question"] = tempUpdatedQuestion[i].question
+        data["criticality"] = tempUpdatedQuestion[i].criticality
+        data["performance"] = tempUpdatedQuestion[i].performance
+        data["groupId"] = tempUpdatedQuestion[i].groupId
+        data["groupName"] = tempUpdatedQuestion[i].groupName
+        data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
+        data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
+        data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
+        data["score"] = tempUpdatedQuestion[i].score
+        data["findings"] = tempUpdatedQuestion[i].findings
+        data["score"] = tempUpdatedQuestion[i].score
+        data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
         if (typeof tempUpdatedQuestion[i].attachment !== "string") {
           if (tempUpdatedQuestion[i].attachment !== null) {
-            data.append("attachment", tempUpdatedQuestion[i].attachment);
+            data["attachment"] = tempUpdatedQuestion[i].attachment
           }
         }
-        data.append("status", "Active");
-        data.append("fkAuditId", tempUpdatedQuestion[i].fkAuditId);
-        data.append("createdAt", new Date().toISOString());
-        data.append("createdBy", tempUpdatedQuestion[i].createdBy);
-        data.append("updatedBy", parseInt(userId));
+        data["status", "Active"]
+        data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
+        data["createdAt"] = new Date().toISOString()
+        data["createdBy"] = tempUpdatedQuestion[i].createdBy
+        dataCheck[i] = data
       }
+    console.log(dataCheck,'dataCheck2')
       const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           "fkComplianceId"
         )}/auditresponse/`,
-        data
+        dataCheck
       );
     }
-    // const resUpdate = await api.put(
-    //   `/api/v1/audits/${localStorage.getItem(
-    //     "fkComplianceId"
-    //   )}/auditresponse/`,
-    //   checkData
-    // );
-    // console.log("post");
-    // const resNew = await api.post(
-    //   `/api/v1/audits/${localStorage.getItem(
-    //     "fkComplianceId"
-    //   )}/auditresponse/`,
-    //   checkData
-    // );
 
     history.push("/app/pages/compliance/performance-summary");
   };
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
-    // console.log(e, field , index);
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
-      // console.log(temp[i]['questionId'] , id)
       if (temp[i]["questionId"] == id) {
         temp[i][field] = value;
       }
@@ -662,21 +634,23 @@ const Checks = () => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
     );
     const result = res.data.data.results;
+    await setShowCheckData(result)
     await setCheckData(result);
+    return result
   };
 
   const handleFile = (value, field, index, id) => {
+    console.log(id, 'value')
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
-      console.log(temp[i]["questionId"], id);
-      if (temp[i]["questionId"] == id) {
+      if (temp[i]["question"] == id) {
         temp[i][field] = value;
       }
     }
-    console.log(temp)
+    console.log(temp, 'temp')
+
     setCheckData(temp);
   };
-  console.log("acceptedFiles", checkData);
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkComplianceId");
     let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
@@ -687,9 +661,10 @@ const Checks = () => {
   };
 
   useEffect(() => {
-    //fetchCheklist();
-    fetchCheklistData();
+    // fetchCheklist();
     fetchData();
+    fetchCheklistData();
+
   }, []);
   return (
     <CustomPapperBlock
@@ -796,7 +771,7 @@ const Checks = () => {
                         <FormLabel className="checkRadioLabel" component="legend">
                           {key}
                         </FormLabel>
-                        <span className={classes.accordingHeaderContentleft}>
+                        {/* <span className={classes.accordingHeaderContentleft}>
                           <ListItem className={classes.accordingHeaderContent}>
                             <ListItemText
                               className="viewLabelValueListTag"
@@ -811,7 +786,7 @@ const Checks = () => {
                               secondary="<as per admin config>"
                             />
                           </ListItem>
-                        </span>
+                        </span> */}
                         {value.map((value, index) => (
                           <>
                             <Grid container item xs={12}>
@@ -851,6 +826,7 @@ const Checks = () => {
                                                 row
                                                 aria-label="select-typeof-compliance"
                                                 name="select-typeof-compliance"
+                                                defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
                                               >
                                                 {radioDecide.map((option) => (
                                                   <FormControlLabel
@@ -899,7 +875,7 @@ const Checks = () => {
                                               }
                                               multiline
                                               rows={4}
-                                              defaultValue=""
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
@@ -1145,7 +1121,7 @@ const Checks = () => {
                                                     e.target.files[0],
                                                     "attachment",
                                                     index,
-                                                    value.id
+                                                    value.question
                                                   )
                                                 }
                                               />
