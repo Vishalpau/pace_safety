@@ -972,28 +972,28 @@ function xflha(props) {
 
   const handleDelete = async (item) => {
     // console.log(item);
-    if(checkACL('safety', 'delete_flha')) {
+    if (checkACL('safety', 'delete_flha')) {
       const data = {
         fkCompanyId: item[1].fkCompanyId,
         fkProjectId: item[1].fkProjectId,
         jobTitle: item[1].jobTitle,
         jobDetails: item[1].jobDetails,
-        status: "Delete"
-      }
+        status: 'Delete'
+      };
       // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
       // let data = item[1];
       // console.log(data);
       // data.status = "Delete";
       // delete data.attachment
-      setIsLoading(false)
+      setIsLoading(false);
       const res1 = await api.put(`/api/v1/flhas/${item[1].id}/`, data)
-      .then(response => {
-        console.log(response);
-        fetchData();
-      })
-      .catch(err => console.log(err))
-    }   
-  }
+        .then(response => {
+          console.log(response);
+          fetchData();
+        })
+        .catch(err => console.log(err));
+    }
+  };
 
   useEffect(() => {
     const state = JSON.parse(localStorage.getItem('direct_loading'));
@@ -1002,7 +1002,7 @@ function xflha(props) {
     } else {
       fetchData();
     }
-    setCheckDeletePermission(checkACL('safety', 'delete_flha'))
+    setCheckDeletePermission(checkACL('safety', 'delete_flha'));
   }, [props.projectName.breakDown, searchFlha, status, assessments]);
 
   useEffect(() => {
@@ -1011,9 +1011,9 @@ function xflha(props) {
 
   return (
     <Acl
-      module='safety'
-      action='view_flha'
-      html={
+      module="safety"
+      action="view_flha"
+      html={(
         <div>
 
           <Grid item sm={12} xs={12} className={classes.borderTop}>
@@ -1031,7 +1031,7 @@ function xflha(props) {
                   className={classNames(classes.buttonsNew, classes.floatR)}
                   onClick={() => history.push('/app/pages/assesments/flhaadd')}
                   style={{
-                    background: checkACL('safety', 'add_flha') ? '#06425c' : '#c0c0c0', 
+                    background: checkACL('safety', 'add_flha') ? '#06425c' : '#c0c0c0',
                     cursor: checkACL('safety', 'add_flha') ? 'pointer' : 'not-allowed'
                   }}
                 >
@@ -1330,7 +1330,7 @@ function xflha(props) {
                                       </span>
                                     </Typography>
                                     {/* <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}> */}
-                                      
+
                                     {/* </Grid> */}
                                     {/* <span item xs={1} className={classes.sepHeightTen}></span>
                                   <Typography
@@ -1358,27 +1358,29 @@ function xflha(props) {
 
                                   <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
                                     <div className={classes.floatR}>
-                                        <Typography variant="body1" display="inline">
-                                          {!checkDeletePermission ?
-                                    <DeleteForeverOutlinedIcon
-                                      className={classes.iconteal}
-                                      style={{
-                                        color: '#c0c0c0',
-                                        cursor: 'not-allowed'
-                                      }}
-                                    />
-                                    : (
-                                          <Link
-                                            href="#"
-                                            className={classes.mLeftR5}
-                                          >
+                                      <Typography variant="body1" display="inline">
+                                        {!checkDeletePermission
+                                          ? (
                                             <DeleteForeverOutlinedIcon
                                               className={classes.iconteal}
-                                              onClick={(e) => handleDelete(item)}
+                                              style={{
+                                                color: '#c0c0c0',
+                                                cursor: 'not-allowed'
+                                              }}
                                             />
-                                          </Link>
-                                           )} 
-                                        </Typography>
+                                          )
+                                          : (
+                                            <Link
+                                              href="#"
+                                              className={classes.mLeftR5}
+                                            >
+                                              <DeleteForeverOutlinedIcon
+                                                className={classes.iconteal}
+                                                onClick={(e) => handleDelete(item)}
+                                              />
+                                            </Link>
+                                          )}
+                                      </Typography>
                                       {/* <Typography variant="body1" display="inline">
                 <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>
                 </Typography>
@@ -1658,7 +1660,7 @@ function xflha(props) {
                       <CardContent>
                         {/* {console.log(item[index].incidentTitle)} */}
                         <Grid container spacing={3}>
-                          <Grid item xs={12}>
+                  <Grid item xs={12}>
                             <Grid container spacing={3} alignItems="flex-start">
                               <Grid item xs={9} className={classes.chipAction}>
                                 <Chip
@@ -1677,7 +1679,7 @@ function xflha(props) {
                             </Grid>
                           </Grid>
 
-                          <Grid item xs={12}>
+                  <Grid item xs={12}>
                             <div className={Incidents.statusRow}>
                               <Typography
 
@@ -1717,7 +1719,7 @@ function xflha(props) {
                             </div>
                           </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1735,7 +1737,7 @@ function xflha(props) {
                           Not found
                             </Typography>
                           </Grid>
-                          <Grid item md={3} sm={6} xs={12}>
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1752,7 +1754,7 @@ function xflha(props) {
                             </Typography>
                           </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1770,7 +1772,7 @@ function xflha(props) {
                             </Typography>
                           </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1787,17 +1789,17 @@ function xflha(props) {
                           Person
                             </Typography>
                           </Grid>
-                        </Grid>
+                </Grid>
                       </CardContent>
                       <Divider />
                       <CardActions className={Incidents.cardActions}>
                         <Grid
-                          container
-                          spacing={2}
-                          justify="flex-end"
-                          alignItems="center"
-                        >
-                          <Grid item md={3} sm={6} xs={12}>
+                  container
+                  spacing={2}
+                  justify="flex-end"
+                  alignItems="center"
+                >
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body2"
                               display="inline"
@@ -1812,7 +1814,7 @@ function xflha(props) {
                             </Typography>
                           </Grid>
 
-                          <Grid item md={3} sm={6} xs={12}>
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body2"
                               display="inline"
@@ -1826,7 +1828,7 @@ function xflha(props) {
                               <Link href="#" className={classes.mLeft}>3</Link>
                             </Typography>
                           </Grid>
-                          <Grid item md={3} sm={6} xs={12}>
+                  <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body2"
                               display="inline"
@@ -1840,7 +1842,7 @@ function xflha(props) {
                               <Link href="#" className={classes.mLeft}>3</Link>
                             </Typography>
                           </Grid>
-                          {/* <Grid item xs={6} md={3} lg={3}>
+                  {/* <Grid item xs={6} md={3} lg={3}>
           <Typography
             variant="body2"
             display="inline"
@@ -1857,7 +1859,7 @@ function xflha(props) {
            Initial Action
           </Typography>
         </Grid> */}
-                          {/* <Grid item md={3} sm={6} xs={12}>
+                  {/* <Grid item md={3} sm={6} xs={12}>
                           <Button
                             size="small"
                             color="secondary"
@@ -1878,7 +1880,7 @@ function xflha(props) {
                             Share
                           </Button>
                         </Grid> */}
-                        </Grid>
+                </Grid>
                       </CardActions>
                     </Card>
                   ))}
@@ -1923,10 +1925,11 @@ function xflha(props) {
               {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
               <Pagination count={pageCount} page={page} onChange={handleChange} />
             </div>
-          ) 
+          )
           </Box>
         </div>
-        }/>
+      )}
+    />
   );
 }
 
