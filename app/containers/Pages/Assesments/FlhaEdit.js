@@ -58,6 +58,7 @@ import api from "../../../utils/axios";
 import { companyId, HEADER_AUTH, projectId, SSO_URL, userId } from '../../../utils/constants';
 import Attachment from "../../Attachment/Attachment";
 import { checkValue } from "../../../utils/CheckerValue"
+import Acl from '../../../components/Error/acl';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -642,9 +643,11 @@ const FlhaDetails = () => {
     setProjectData({ ...projectData, projectName: projectName })
   }
   let pickListValuesData = JSON.parse(localStorage.getItem("pickList"))
+  console.log(pickListValuesData);
 
   const handelPickListValues = async () => {
     let reasonReportingPickList = await pickListValuesData["84"]
+    // console.log(reasonReportingPickList,'reasonReporting');
     let hazardPickList = await pickListValuesData["83"]
     let permitTypeCheckList = await pickListValuesData["81"]
     await setPickListValues({ "resonReporting": reasonReportingPickList, "hazard": hazardPickList, "permitType": permitTypeCheckList })
@@ -880,8 +883,10 @@ const FlhaDetails = () => {
   const classes = useStyles();
 
   return (
-    <>
-
+      <Acl
+      module='safety'
+      action='change_flha'
+      html={
       <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         {isLoading == false ?
           <Grid container spacing={3}>
@@ -1848,7 +1853,7 @@ const FlhaDetails = () => {
           </Grid>
           : "Loading..."}
       </CustomPapperBlock>
-    </>
+      }/>
   );
 };
 

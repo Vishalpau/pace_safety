@@ -82,6 +82,7 @@ import api from '../../../utils/axios';
 import StatusFilter from './StatusFilter';
 import allPickListDataValue from '../../../utils/Picklist/allPickList';
 import { checkACL } from '../../../utils/helper';
+import Acl from '../../../components/Error/acl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1009,36 +1010,40 @@ function xflha(props) {
   }, []);
 
   return (
+    <Acl
+      module='safety'
+      action='view_flha'
+      html={
+        <div>
 
-    <>
-      <Grid item sm={12} xs={12} className={classes.borderTop}>
-        <Grid container spacing={3}>
-          <Grid item md={7} sm={6} xs={12} className="mainPageTitleBox">
-            <img src={flhaLogoSymbol} className={classes.attachImg} alt="decoration" />
-            <span className="customDropdownPageFlhaIcon assessmentPageIcon" />
-            <Typography variant="h5">Field Level Hazard Assessment</Typography>
+          <Grid item sm={12} xs={12} className={classes.borderTop}>
+            <Grid container spacing={3}>
+              <Grid item md={7} sm={6} xs={12} className="mainPageTitleBox">
+                <img src={flhaLogoSymbol} className={classes.attachImg} alt="decoration" />
+                <span className="customDropdownPageFlhaIcon assessmentPageIcon" />
+                <Typography variant="h5">Field Level Hazard Assessment</Typography>
+              </Grid>
+              <Grid item md={5} sm={6} xs={12}>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="primary"
+                  className={classNames(classes.buttonsNew, classes.floatR)}
+                  onClick={() => history.push('/app/pages/assesments/flhaadd')}
+                  style={{
+                    background: checkACL('safety', 'add_flha') ? '#06425c' : '#c0c0c0', 
+                    cursor: checkACL('safety', 'add_flha') ? 'pointer' : 'not-allowed'
+                  }}
+                >
+                  <AddIcon className={classes.floatR} />
+                  {' '}
+                  Add new
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item md={5} sm={6} xs={12}>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              className={classNames(classes.buttonsNew, classes.floatR)}
-              onClick={() => history.push('/app/pages/assesments/flhaadd')}
-            >
-              <AddIcon className={classes.floatR} />
-              {' '}
-              Add new
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Box>
-        {' '}
-        {!isLoading ? (
-          <>
-
-
+          <Box>
+            {' '}
             <Grid container spacing={3}>
               <Grid item sm={6} xs={12} className={classes.listViewTab}>
                 <AppBar position="static" className={classes.topNavTabBack}>
@@ -1918,12 +1923,10 @@ function xflha(props) {
               {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
               <Pagination count={pageCount} page={page} onChange={handleChange} />
             </div>
-          </>
-        ) : <Loader />}
-      </Box>
-
-    </>
-
+          ) 
+          </Box>
+        </div>
+        }/>
   );
 }
 

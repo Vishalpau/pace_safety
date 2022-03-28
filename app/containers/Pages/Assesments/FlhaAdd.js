@@ -56,6 +56,7 @@ import {
 import { getPicklistvalues, handelNotifyToValues } from '../../../utils/helper';
 import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import validate from '../../Validator/jobFormValidation';
+import Acl from '../../../components/Error/acl';
 
 
 
@@ -946,7 +947,11 @@ const FlhaDetails = (props) => {
 
 
   return (
-    <div>
+    <Acl
+    module='safety'
+    action='change_flha'
+    html={
+      <div>
       <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1852,6 +1857,8 @@ const FlhaDetails = (props) => {
         </Grid>
       </CustomPapperBlock>
     </div>
+    }
+    />
   );
 };
 
