@@ -1660,7 +1660,7 @@ function xflha(props) {
                       <CardContent>
                         {/* {console.log(item[index].incidentTitle)} */}
                         <Grid container spacing={3}>
-                  <Grid item xs={12}>
+                          <Grid item xs={12}>
                             <Grid container spacing={3} alignItems="flex-start">
                               <Grid item xs={9} className={classes.chipAction}>
                                 <Chip
@@ -1679,7 +1679,7 @@ function xflha(props) {
                             </Grid>
                           </Grid>
 
-                  <Grid item xs={12}>
+                          <Grid item xs={12}>
                             <div className={Incidents.statusRow}>
                               <Typography
 
@@ -1719,7 +1719,7 @@ function xflha(props) {
                             </div>
                           </Grid>
 
-                  <Grid item md={3} sm={6} xs={12}>
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1737,7 +1737,7 @@ function xflha(props) {
                           Not found
                             </Typography>
                           </Grid>
-                  <Grid item md={3} sm={6} xs={12}>
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1754,7 +1754,7 @@ function xflha(props) {
                             </Typography>
                           </Grid>
 
-                  <Grid item md={3} sm={6} xs={12}>
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1772,7 +1772,7 @@ function xflha(props) {
                             </Typography>
                           </Grid>
 
-                  <Grid item md={3} sm={6} xs={12}>
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
 
                               gutterBottom
@@ -1789,17 +1789,17 @@ function xflha(props) {
                           Person
                             </Typography>
                           </Grid>
-                </Grid>
+                        </Grid>
                       </CardContent>
                       <Divider />
                       <CardActions className={Incidents.cardActions}>
                         <Grid
-                  container
-                  spacing={2}
-                  justify="flex-end"
-                  alignItems="center"
-                >
-                  <Grid item md={3} sm={6} xs={12}>
+                          container
+                          spacing={2}
+                          justify="flex-end"
+                          alignItems="center"
+                        >
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body2"
                               display="inline"
@@ -1814,7 +1814,7 @@ function xflha(props) {
                             </Typography>
                           </Grid>
 
-                  <Grid item md={3} sm={6} xs={12}>
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body2"
                               display="inline"
@@ -1828,7 +1828,7 @@ function xflha(props) {
                               <Link href="#" className={classes.mLeft}>3</Link>
                             </Typography>
                           </Grid>
-                  <Grid item md={3} sm={6} xs={12}>
+                          <Grid item md={3} sm={6} xs={12}>
                             <Typography
                               variant="body2"
                               display="inline"
@@ -1842,7 +1842,7 @@ function xflha(props) {
                               <Link href="#" className={classes.mLeft}>3</Link>
                             </Typography>
                           </Grid>
-                  {/* <Grid item xs={6} md={3} lg={3}>
+                          {/* <Grid item xs={6} md={3} lg={3}>
           <Typography
             variant="body2"
             display="inline"
@@ -1859,7 +1859,7 @@ function xflha(props) {
            Initial Action
           </Typography>
         </Grid> */}
-                  {/* <Grid item md={3} sm={6} xs={12}>
+                          {/* <Grid item md={3} sm={6} xs={12}>
                           <Button
                             size="small"
                             color="secondary"
@@ -1880,7 +1880,7 @@ function xflha(props) {
                             Share
                           </Button>
                         </Grid> */}
-                </Grid>
+                        </Grid>
                       </CardActions>
                     </Card>
                   ))}
