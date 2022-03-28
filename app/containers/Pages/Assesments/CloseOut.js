@@ -19,6 +19,7 @@ import { useHistory } from 'react-router';
 import api from '../../../utils/axios';
 import CloseOutFlhaValidation from "./validation/CloseOutValidation";
 import { INITIAL_NOTIFICATION_FORM_NEW } from "../../../utils/constants"
+import Acl from '../../../components/Error/acl';
 
 
 
@@ -194,6 +195,10 @@ const CloseOut = (props) => {
   }, [open]);
 
   return (
+    <Acl
+      module="safety"
+      action="change_flha"
+      html={(
     <CustomPapperBlock title="FLHA - Close Out" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
       {loading == false ?
         <Grid container spacing={3}>
@@ -511,6 +516,7 @@ const CloseOut = (props) => {
         // </Paper>
         : "Loading..."}
     </CustomPapperBlock>
+      )}/>
   );
 };
 

@@ -27,6 +27,7 @@ import {
 import ActionTracker from "../../Forms/ActionTracker";
 import ActionShow from "../../Forms/ActionShow"
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import Acl from '../../../components/Error/acl';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -444,7 +445,11 @@ const FlhaDetails = (props) => {
   }, [updatePage]);
 
   return (
-    <div>
+    <Acl
+    module="safety"
+    action="change_flha"
+    html={(
+      <div>
       <CustomPapperBlock title="FLHA - Initial Assessment" icon='customDropdownPageIcon flhaPageIcon' whiteBg>
         <Grid container spacing={3}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -974,6 +979,7 @@ const FlhaDetails = (props) => {
         </Grid>
       </CustomPapperBlock>
     </div>
+    )}/>
   );
 };
 

@@ -938,7 +938,7 @@ const FlhaDetails = (props) => {
   return (
     <Acl
       module="safety"
-      action="change_flha"
+      action="add_flha"
       html={(
         <div>
           <CustomPapperBlock title="FLHA - Initial Assessment" icon="customDropdownPageIcon flhaPageIcon" whiteBg>
