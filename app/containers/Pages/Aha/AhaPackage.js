@@ -52,6 +52,7 @@ import { connect } from "react-redux";
 import Pagination from '@material-ui/lab/Pagination';
 import { handelCommonObject } from "../../../utils/CheckerValue"
 import Loader from "../Loader"
+import { checkACL } from '../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -475,6 +476,8 @@ function AhaPackage(props) {
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+
   const search = props.search
   const status = props.status
   const handleClick = (event) => {
@@ -630,6 +633,7 @@ const classes = useStyles();
 
 useEffect(() => {
   fetchAllAHAData()
+  setCheckDeletePermission(checkACL('safety', 'delete_aha'));
   // handleProjectList()
 },[props.projectName.breakDown,props.search,props.assessments,props.status])
 
@@ -859,7 +863,31 @@ useEffect(() => {
                       </Typography> */}
                       <span item xs={1} className={classes.sepHeightTen}></span>
                       <Typography variant="body1" display="inline">
-                      <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} /></Link>
+
+                      {!checkDeletePermission
+                        ? (
+                          <DeleteForeverOutlinedIcon
+                            className={classes.iconteal}
+                            style={{
+                              color: '#c0c0c0',
+                              cursor: 'not-allowed'
+                            }}
+                          />
+                        )
+                        : (
+                          <Link
+                            href="#"
+                            className={classes.mLeftR5}
+                          >
+                            <DeleteForeverOutlinedIcon
+                              className={classes.iconteal}
+                              onClick={(e) => handleDelete(item)}
+                            />
+                          </Link>
+                      )}
+                        {/* <Link href="#" className={classes.mLeftR5}>
+                          <DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(item)} />
+                        </Link> */}
                       </Typography>
                       </div>
                     </Grid>

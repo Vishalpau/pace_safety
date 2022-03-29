@@ -30,6 +30,8 @@ import completed from 'dan-images/completed.png';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory, useParams } from 'react-router';
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import Acl from '../../../components/Error/acl';
+import { checkACL } from '../../../utils/helper';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -264,7 +266,11 @@ export default function AhaMain() {
   }, [])
 
   return (
-    <div className={classes.root}>
+    <Acl 
+      module="safety"
+      action="view_aha" 
+      html={(
+        <div className={classes.root}>
       <Grid item sm={12} xs={12} className={classes.borderTop}>
         <Grid container spacing={3}>
           <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
@@ -272,7 +278,17 @@ export default function AhaMain() {
             <Typography variant="h5"> Area Hazard Assessments</Typography>
           </Grid>
           <Grid item md={5} sm={6} xs={12}>
-            <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={(e) => handleNewAhaPush(e)}>
+            <Button 
+              size="medium" 
+              variant="contained" 
+              className={classNames(classes.buttonsNew, classes.floatR)} 
+              color="primary" 
+              onClick={(e) => handleNewAhaPush(e)}
+              style={{
+                background: checkACL('safety', 'add_aha') ? '#06425c' : '#c0c0c0',
+                cursor: checkACL('safety', 'add_aha') ? 'pointer' : 'not-allowed'
+              }}
+              >
               <AddIcon className={classes.floatR} /> Add new
             </Button>
           </Grid>
@@ -328,5 +344,8 @@ export default function AhaMain() {
         <AhaBarCharts />
       </TabPanel>
     </div>
+      )}
+    />
+    
   );
 }

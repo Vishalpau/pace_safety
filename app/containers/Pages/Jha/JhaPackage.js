@@ -59,6 +59,7 @@ import { connect } from "react-redux";
 import api from "../../../utils/axios";
 import { handelCommonObject } from "../../../utils/CheckerValue";
 import Loader from "../Loader";
+import { checkACL } from '../../../utils/helper';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -485,6 +486,8 @@ function JhaPackage(props) {
   const [openAttachment, setopenAttachment] = React.useState(false);
   const [attachOpen, setAttachOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+
 
   const handleClickOpenAttachment = () => {
     setopenAttachment(true);
@@ -673,6 +676,7 @@ function JhaPackage(props) {
 
   useEffect(() => {
     fetchData()
+    setCheckDeletePermission(checkACL('safety', 'delete_jha'));
   }, [props.projectName.breakDown,props.search,props.assessment,props.status])
 
   return (
@@ -885,7 +889,28 @@ function JhaPackage(props) {
                         </Typography> */}
                         <span item xs={1} className={classes.sepHeightTen}></span>
                         <Typography variant="body1" display="inline">
-                          <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link>
+                            {!checkDeletePermission
+                            ? (
+                              <DeleteForeverOutlinedIcon
+                                className={classes.iconteal}
+                                style={{
+                                  color: '#c0c0c0',
+                                  cursor: 'not-allowed'
+                                }}
+                              />
+                            )
+                            : (
+                              <Link
+                                href="#"
+                                className={classes.mLeftR5}
+                              >
+                                <DeleteForeverOutlinedIcon
+                                  className={classes.iconteal}
+                                  onClick={(e) => handleDelete(value)}
+                                />
+                              </Link>
+                          )}
+                          {/* <Link href="#" className={classes.mLeftR5}><DeleteForeverOutlinedIcon className={classes.iconteal} onClick={(e) => handleDelete(value)} /></Link> */}
                         </Typography>
                       </div>
                     </Grid>
