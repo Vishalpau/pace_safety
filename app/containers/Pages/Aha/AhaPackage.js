@@ -633,7 +633,7 @@ const classes = useStyles();
 
 useEffect(() => {
   fetchAllAHAData()
-  setCheckDeletePermission(checkACL('safety', 'delete_aha'));
+  setCheckDeletePermission(checkACL('safety-aha', 'delete_aha'));
   // handleProjectList()
 },[props.projectName.breakDown,props.search,props.assessments,props.status])
 

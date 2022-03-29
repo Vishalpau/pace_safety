@@ -561,7 +561,7 @@ const ComplianceDetails = () => {
     <>
     {/* {isLoading ? ( */}
       <Acl
-        module="safety"
+        module="safety-compliance"
         action={id ? "change_compliance" : 'add_compliance'}
         html={
           <CustomPapperBlock title="Compliance"

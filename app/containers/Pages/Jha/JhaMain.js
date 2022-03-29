@@ -265,7 +265,7 @@ export default function JhaMain() {
 
   return (
     <Acl 
-      module="safety"
+      module="safety-jha"
       action="view_jha"
       html={(
         <div className={classes.root}>
@@ -283,8 +283,8 @@ export default function JhaMain() {
                     color="primary" 
                     onClick={(e) => handleNewJhaPush(e)}
                     style={{
-                      background: checkACL('safety', 'add_jha') ? '#06425c' : '#c0c0c0',
-                      cursor: checkACL('safety', 'add_jha') ? 'pointer' : 'not-allowed'
+                      background: checkACL('safety-jha', 'add_jha') ? '#06425c' : '#c0c0c0',
+                      cursor: checkACL('safety-jha', 'add_jha') ? 'pointer' : 'not-allowed'
                     }}
                     >
                     <AddIcon className={classes.floatR} /> Add new

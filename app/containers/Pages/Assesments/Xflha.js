@@ -972,7 +972,7 @@ function xflha(props) {
 
   const handleDelete = async (item) => {
     // console.log(item);
-    if (checkACL('safety', 'delete_flha')) {
+    if (checkACL('safety-flha', 'delete_flha')) {
       const data = {
         fkCompanyId: item[1].fkCompanyId,
         fkProjectId: item[1].fkProjectId,
@@ -1002,7 +1002,7 @@ function xflha(props) {
     } else {
       fetchData();
     }
-    setCheckDeletePermission(checkACL('safety', 'delete_flha'));
+    setCheckDeletePermission(checkACL('safety-flha', 'delete_flha'));
   }, [props.projectName.breakDown, searchFlha, status, assessments]);
 
   useEffect(() => {
@@ -1011,7 +1011,7 @@ function xflha(props) {
 
   return (
     <Acl
-      module="safety"
+      module="safety-flha"
       action="view_flha"
       html={(
         <div>
@@ -1031,8 +1031,8 @@ function xflha(props) {
                   className={classNames(classes.buttonsNew, classes.floatR)}
                   onClick={() => history.push('/app/pages/assesments/flhaadd')}
                   style={{
-                    background: checkACL('safety', 'add_flha') ? '#06425c' : '#c0c0c0',
-                    cursor: checkACL('safety', 'add_flha') ? 'pointer' : 'not-allowed'
+                    background: checkACL('safety-flha', 'add_flha') ? '#06425c' : '#c0c0c0',
+                    cursor: checkACL('safety-flha', 'add_flha') ? 'pointer' : 'not-allowed'
                   }}
                 >
                   <AddIcon className={classes.floatR} />

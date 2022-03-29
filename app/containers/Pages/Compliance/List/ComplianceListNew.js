@@ -791,7 +791,7 @@ function ComplianceListNew(props) {
 
   useEffect(() => {
     fetchAllComplianceData();
-    setCheckDeletePermission(checkACL('safety', 'delete_compliance'));
+    setCheckDeletePermission(checkACL('safety-compliance', 'delete_compliance'));
   }, [
     props.projectName.breakDown,
     props.compliance,

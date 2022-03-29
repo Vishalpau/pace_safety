@@ -267,7 +267,7 @@ export default function AhaMain() {
 
   return (
     <Acl 
-      module="safety"
+      module="safety-aha"
       action="view_aha" 
       html={(
         <div className={classes.root}>
@@ -285,8 +285,8 @@ export default function AhaMain() {
               color="primary" 
               onClick={(e) => handleNewAhaPush(e)}
               style={{
-                background: checkACL('safety', 'add_aha') ? '#06425c' : '#c0c0c0',
-                cursor: checkACL('safety', 'add_aha') ? 'pointer' : 'not-allowed'
+                background: checkACL('safety-aha', 'add_aha') ? '#06425c' : '#c0c0c0',
+                cursor: checkACL('safety-aha', 'add_aha') ? 'pointer' : 'not-allowed'
               }}
               >
               <AddIcon className={classes.floatR} /> Add new

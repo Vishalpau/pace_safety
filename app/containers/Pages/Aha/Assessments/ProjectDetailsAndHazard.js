@@ -699,7 +699,7 @@ const ProjectDetailsAndHazard = () => {
   return (
     <>
       <Acl
-        module="safety"
+        module="safety-aha"
         action={id ? "change_aha" : "add_aha"}
         html={(
           <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon ahaPageIcon'whiteBg>

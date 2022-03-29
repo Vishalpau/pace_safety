@@ -937,7 +937,7 @@ const FlhaDetails = (props) => {
 
   return (
     <Acl
-      module="safety"
+      module="safety-flha"
       action="add_flha"
       html={(
         <div>

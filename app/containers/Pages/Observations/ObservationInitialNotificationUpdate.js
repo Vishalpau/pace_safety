@@ -597,7 +597,7 @@ const ObservationInitialNotificationUpdate = () => {
       > */}
       {isLoading ?
          <Acl 
-         module='safety'
+         module='safety-observations'
          action='change_observations'
          html={
         <Grid container spacing={3} className={classes.observationNewSection}>

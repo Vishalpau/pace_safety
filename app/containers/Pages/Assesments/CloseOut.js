@@ -194,7 +194,7 @@ const CloseOut = (props) => {
 
   return (
     <Acl
-      module="safety"
+      module="safety-flha"
       action="change_flha"
       html={(
         <CustomPapperBlock title="FLHA - Close Out" icon="customDropdownPageIcon flhaPageIcon" whiteBg>

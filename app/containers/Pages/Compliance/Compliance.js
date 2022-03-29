@@ -259,7 +259,7 @@ export default function Compliance() {
 
   return (
     <Acl
-      module="safety"
+      module="safety-compliance"
       action="view_compliance"
       html={
         <div className={classes.root}>
@@ -278,8 +278,8 @@ export default function Compliance() {
                 color="primary"
                 onClick={(e) => handleNewCompliancePush(e)}
                 style={{
-                  background: checkACL('safety', 'add_compliance') ? '#06425c' : '#c0c0c0',
-                  cursor: checkACL('safety', 'add_compliance') ? 'pointer' : 'not-allowed'
+                  background: checkACL('safety-compliance', 'add_compliance') ? '#06425c' : '#c0c0c0',
+                  cursor: checkACL('safety-compliance', 'add_compliance') ? 'pointer' : 'not-allowed'
                 }}
               >
                 <AddIcon className={classes.spacerRight} /> Add New

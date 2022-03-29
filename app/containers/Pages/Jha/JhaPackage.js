@@ -676,7 +676,7 @@ function JhaPackage(props) {
 
   useEffect(() => {
     fetchData()
-    setCheckDeletePermission(checkACL('safety', 'delete_jha'));
+    setCheckDeletePermission(checkACL('safety-jha', 'delete_jha'));
   }, [props.projectName.breakDown,props.search,props.assessment,props.status])
 
   return (
