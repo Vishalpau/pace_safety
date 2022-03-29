@@ -53,6 +53,7 @@ import { connect } from "react-redux";
 import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../../Loader";
 import moment from "moment";
+import { checkACL } from "../../../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -483,6 +484,8 @@ function ComplianceListNew(props) {
   const [pageData, setPageData] = useState(0);
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1);
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+
   const handleVisibility = () => {
     setAttachOpen(true);
     setHidden(!hidden);
@@ -788,6 +791,7 @@ function ComplianceListNew(props) {
 
   useEffect(() => {
     fetchAllComplianceData();
+    setCheckDeletePermission(checkACL('safety-compliance', 'delete_compliance'));
   }, [
     props.projectName.breakDown,
     props.compliance,
@@ -1105,13 +1109,35 @@ function ComplianceListNew(props) {
                               xs={1}
                               className={classes.sepHeightTen}
                             />
+                            
                             <Typography variant="body1" display="inline">
                               <Link href="#" className={classes.mLeftR5}>
-                                <IconButton onClick={() => handleDelete(value)}>
+                                {!checkDeletePermission
+                                  ? (
+                                    <DeleteForeverOutlinedIcon
+                                      className={classes.iconteal}
+                                      style={{
+                                        color: '#c0c0c0',
+                                        cursor: 'not-allowed'
+                                      }}
+                                    />
+                                  )
+                                  : (
+                                    <Link
+                                      href="#"
+                                      className={classes.mLeftR5}
+                                    >
+                                      <DeleteForeverOutlinedIcon
+                                        className={classes.iconteal}
+                                        onClick={() => handleDelete(value)}
+                                      />
+                                    </Link>
+                                  )}
+                                {/* <IconButton onClick={() => handleDelete(value)}>
                                   <DeleteForeverOutlinedIcon
                                     className={classes.iconteal}
                                   />
-                                </IconButton>
+                                </IconButton> */}
                               </Link>
                             </Typography>
                           </Grid>

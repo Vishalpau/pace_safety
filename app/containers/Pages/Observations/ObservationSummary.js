@@ -350,7 +350,7 @@ const ObservationSummary = () => {
                 Quick Actions
               </Typography>
               <List component="nav" aria-label="main mailbox folders">
-              {!checkACL('safety', 'change_observations') ? 
+              {!checkACL('safety-observations', 'change_observations') ? 
                 <ListItem button>
                 <ListItemIcon>
                   <Edit />

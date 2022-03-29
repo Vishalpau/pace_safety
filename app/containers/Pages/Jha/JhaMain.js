@@ -22,6 +22,8 @@ import JhaSearchSectionKanban from './JhaSearchSectionKanban';
 import JhaSearchSectionList from './JhaSearchSectionList';
 import JhaSearchSectionTrend from './JhaSearchSectionTrend';
 import allPickListDataValue from "../../../utils/Picklist/allPickList"
+import Acl from '../../../components/Error/acl';
+import { checkACL } from '../../../utils/helper';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -262,56 +264,71 @@ export default function JhaMain() {
   }, [])
 
   return (
-    <div className={classes.root}>
-      <Grid item sm={12} xs={12} className={classes.borderTop}>
-        <Grid container spacing={3}>
-          <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
-            <img src={jhaLogoSymbol} className={classes.attachImg} alt="decoration" />
-            <Typography variant="h5"> Job Safety Assessments</Typography>
+    <Acl 
+      module="safety-jha"
+      action="view_jha"
+      html={(
+        <div className={classes.root}>
+            <Grid item sm={12} xs={12} className={classes.borderTop}>
+              <Grid container spacing={3}>
+                <Grid item md={7} sm={6} xs={12} className={classes.pLFiveHt40}>
+                  <img src={jhaLogoSymbol} className={classes.attachImg} alt="decoration" />
+                  <Typography variant="h5"> Job Safety Assessments</Typography>
+                </Grid>
+                <Grid item md={5} sm={6} xs={12}>
+                  <Button 
+                    size="medium" 
+                    variant="contained" 
+                    className={classNames(classes.buttonsNew, classes.floatR)} 
+                    color="primary" 
+                    onClick={(e) => handleNewJhaPush(e)}
+                    style={{
+                      background: checkACL('safety-jha', 'add_jha') ? '#06425c' : '#c0c0c0',
+                      cursor: checkACL('safety-jha', 'add_jha') ? 'pointer' : 'not-allowed'
+                    }}
+                    >
+                    <AddIcon className={classes.floatR} /> Add new
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+              <Grid item sm={6} xs={12} className={classes.listViewTab}>
+                <AppBar position="static" className={classes.navTabBack}>
+                  <div className={classes.floatLTabs}>
+                    <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
+                      <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
+                      <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
+                    /
+                    </Tabs>
+                  </div>
+                </AppBar>
+              </Grid>
+            {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+              <Grid className={classes.Lheight}>
+                <div className={classes.floatR}>
+                  <span className={classes.pLTen}>
+                    <Button size="small" className={classes.buttonsNTwo} variant="contained">
+                      <PermIdentityIcon /> GIS
+                    </Button>
+                  </span>
+                </div>
+              </Grid>
+            </Grid> */}
           </Grid>
-          <Grid item md={5} sm={6} xs={12}>
-            <Button size="medium" variant="contained" className={classNames(classes.buttonsNew, classes.floatR)} color="primary" onClick={(e) => handleNewJhaPush(e)}>
-              <AddIcon className={classes.floatR} /> Add new
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item sm={6} xs={12} className={classes.listViewTab}>
-          <AppBar position="static" className={classes.navTabBack}>
-            <div className={classes.floatLTabs}>
-              <Tabs className={classes.minwdTab} value={value} onChange={handleChange} aria-label="Tabs" indicatorColor="none">
-                <Tab label="Card" {...a11yProps(0)} icon={<DashboardIcon className={classNames(classes.pL0)} />} />
-                <Tab label="List" {...a11yProps(1)} icon={<ReorderIcon />} classNames={classes.pLTen} />
-               /
-              </Tabs>
-            </div>
-          </AppBar>
-        </Grid>
-        {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
-          <Grid className={classes.Lheight}>
-            <div className={classes.floatR}>
-              <span className={classes.pLTen}>
-                <Button size="small" className={classes.buttonsNTwo} variant="contained">
-                  <PermIdentityIcon /> GIS
-                </Button>
-              </span>
-            </div>
-          </Grid>
-        </Grid> */}
-      </Grid>
-      <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <JhaSearchSection />
-      </TabPanel>
-      <TabPanel value={value} index={1} className={classes.paddLRzero}>
-        <JhaSearchSectionList />
-      </TabPanel>
-      <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <JhaSearchSectionKanban />
-      </TabPanel>
-      <TabPanel value={value} index={3} className={classes.paddLRzero}>
-        <JhaSearchSectionTrend />
-      </TabPanel>
-    </div>
+          <TabPanel value={value} index={0} className={classes.paddLRzero}>
+            <JhaSearchSection />
+          </TabPanel>
+          <TabPanel value={value} index={1} className={classes.paddLRzero}>
+            <JhaSearchSectionList />
+          </TabPanel>
+          <TabPanel value={value} index={2} className={classes.paddLRzero}>
+            <JhaSearchSectionKanban />
+          </TabPanel>
+          <TabPanel value={value} index={3} className={classes.paddLRzero}>
+            <JhaSearchSectionTrend />
+          </TabPanel>
+        </div>
+      )}/>    
   );
 }

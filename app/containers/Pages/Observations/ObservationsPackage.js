@@ -743,7 +743,7 @@ function Actions(props) {
   const classes = useStyles();
 
   const handleDelete = async (item) => {
-    if(checkACL('safety', 'delete_observations')) {
+    if(checkACL('safety-observations', 'delete_observations')) {
       let data = item[1]
       data.status = "Delete"
       delete data.attachment
@@ -761,8 +761,8 @@ function Actions(props) {
     } else {
       fetchInitialiObservation();
     }
-    setCheckDeletePermission(checkACL('safety', 'delete_observations'))
-    setTimeout(() => setCheckDeletePermission(checkACL('safety', 'delete_observations')), 2500)
+    setCheckDeletePermission(checkACL('safety-observations', 'delete_observations'))
+    setTimeout(() => setCheckDeletePermission(checkACL('safety-observations', 'delete_observations')), 2500)
   }, [props.projectName.breakDown, props.projectName.projectName, props.type, searchIncident, props.status, checkDeletePermission]);
 
   return (
