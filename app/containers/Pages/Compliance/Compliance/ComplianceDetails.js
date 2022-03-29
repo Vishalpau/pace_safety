@@ -825,7 +825,7 @@ const ComplianceDetails = () => {
                           renderInput={(params) => (
                             <TextField
                               {...params}
-                              label="Client HSE rep"
+                              label="Safety representative name"
                               variant="outlined"
                             />
                           )}
@@ -833,7 +833,7 @@ const ComplianceDetails = () => {
                       </Grid>
                       <Grid item md={6} xs={12}>
                         <TextField
-                          label="Client rep number"
+                          label="Safety representative number"
                           name="clientrepnu"
                           id="clientrepnu"
                           fullWidth
@@ -916,7 +916,7 @@ const ComplianceDetails = () => {
 
                       <Grid item md={6} xs={12}>
                         <TextField
-                          label="Contractor rep number"
+                          label="Contractor representative number"
                           name="contractorrapnu"
                           id="contractorrapnu"
                           value={
@@ -949,7 +949,7 @@ const ComplianceDetails = () => {
                           renderInput={(params) => (
                             <TextField
                               {...params}
-                              label="Sub-Contractor name* "
+                              label="Sub-Contractor name "
                               variant="outlined"
                               // error={error.subContractor}
                               // helperText={

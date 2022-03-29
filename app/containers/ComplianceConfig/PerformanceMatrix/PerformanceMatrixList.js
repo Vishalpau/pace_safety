@@ -277,6 +277,16 @@ function PerformanceMatrixList() {
 
   const history = useHistory();
 
+  const fkCompanyId =
+  JSON.parse(localStorage.getItem("company")) !== null
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
+
+const project =
+  JSON.parse(localStorage.getItem("projectName")) !== null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null;
+
   const handleNewPerformanceMatrixAddPush = async () => {
     history.push(
       '/app/compliance-config/performance-matrix/add'
@@ -316,7 +326,7 @@ function PerformanceMatrixList() {
 
 
   const fetchMatrixData = async () => {
-    const res = await api.get(`/api/v1/configaudits/matrix/?company=1&project=1&projectStructure=`)
+    const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     setAllMatrixData(result)
     await setTotalData(res.data.data.metadata.count)

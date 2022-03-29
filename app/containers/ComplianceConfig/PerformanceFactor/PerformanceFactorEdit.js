@@ -25,8 +25,19 @@ const PerformanceFactorEdit = () => {
     const classes = useStyles();
     const history = useHistory();
     const [fectorData , setFectorData] = React.useState(history.location.state)
-    console.log(fectorData);
-
+    console.log(fectorData,'ppp');
+    const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+  const userId =
+    JSON.parse(localStorage.getItem("userDetails")) !== null
+      ? JSON.parse(localStorage.getItem("userDetails")).id
+      : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
     const handleStatusChange = (e) => {
         let temp = {...fectorData}
         if(e.target.checked === true) {
@@ -102,7 +113,10 @@ const PerformanceFactorEdit = () => {
                                         onChange={(e) => setFectorData({...fectorData , factorName : e.target.value})}
                                         >
                                             <MenuItem value="High">High</MenuItem>
+                                            <MenuItem value="Medium">Medium</MenuItem>
                                             <MenuItem value="Low">Low</MenuItem>
+                                            <MenuItem value="Partially compliance">Partially compliance</MenuItem>
+                                            <MenuItem value="Fully compliance">Fully compliance</MenuItem>
                                         </Select>
                                         
                                     </FormControl>
@@ -122,9 +136,11 @@ const PerformanceFactorEdit = () => {
                                         value={fectorData.factorConstant ? fectorData.factorConstant : ""}
                                         onChange={(e) => setFectorData({...fectorData , factorConstant : e.target.value})}
                                         >
-                                            <MenuItem value="2">2</MenuItem>
-                                            <MenuItem value="4">4</MenuItem>
-                                            <MenuItem value="6">6</MenuItem>
+                                            <MenuItem value="0.5">0.5</MenuItem>
+                                            <MenuItem value="1">1</MenuItem>
+                                            <MenuItem value="3">3</MenuItem>
+                                            <MenuItem value="3">2</MenuItem>
+
                                         </Select>
                                         
                                     </FormControl>

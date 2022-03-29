@@ -334,7 +334,7 @@ const ProjectStructure = (props) => {
           <Select
             labelId="filter3-label"
             id={item.breakdownLabel}
-            value={item.selectValue}
+            // value={item.selectValue}
             disabled={item.breakdownValue.length > 0 ? false : true}
             onChange={(e) => {
               handleBreakdown(e, (item.index), item.breakdownLabel);
@@ -389,7 +389,7 @@ const ProjectStructure = (props) => {
               <Select
                 labelId="filter3-label"
                 id={item.breakdownLabel}
-                value={item.selectValue}
+                // value={item.selectValue}
                 disabled={item.breakdownValue.length > 0 ? false : true}
                 onChange={(e) => {
                   handleBreakdown(e, (item.index), item.breakdownLabel);
@@ -444,7 +444,7 @@ const ProjectStructure = (props) => {
               <Select
                 labelId="filter3-label"
                 id={item.breakdownLabel}
-                value={item.selectValue}
+                // value={item.selectValue}
                 disabled={item.breakdownValue.length > 0 ? false : true}
                 onChange={(e) => {
                   handleBreakdown(e, (item.index), item.breakdownLabel);

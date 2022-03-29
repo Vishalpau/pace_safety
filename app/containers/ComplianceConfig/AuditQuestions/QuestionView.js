@@ -199,7 +199,6 @@ const QuestionView = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [auditDetial, setAuditDetial] = useState({});
   const [projectStructName, setProjectStructName] = useState([]);
-  console.log(id, ":::::::::::::");
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
@@ -226,7 +225,6 @@ const QuestionView = (props) => {
 
   const handleProjectName = (projectId) => {
     if (projectId != null) {
-      console.log(projectId, "<<<<<<<<<<<<<<<<<<<");
       const userName =
         JSON.parse(localStorage.getItem("userDetails")) !== null
           ? JSON.parse(localStorage.getItem("userDetails")).companies
@@ -242,6 +240,8 @@ const QuestionView = (props) => {
   };
 
   const handelWorkArea = async (complianceData) => {
+    
+    if(complianceData.fkProjectStructureIds){
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -262,15 +262,15 @@ const QuestionView = (props) => {
         baseURL: SSO_URL,
         headers: HEADER_AUTH,
       });
-      console.log(workAreaId, ":::::::::::::::::::::::");
       const workArea = await api_work_area.get(
-        `/api/v1/companies/1/projects/1/projectstructure/1L/1/`
+        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
+        }/${workAreaId[1]}/`
       );
-      console.log(workArea);
       structName.push(workArea.data.data.results[0]["structureName"]);
     }
     setProjectStructName(structName);
   };
+}
 
   const handleBack = () => {
     history.push(`/app/compliance-config/`);
