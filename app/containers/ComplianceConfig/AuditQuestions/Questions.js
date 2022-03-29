@@ -397,21 +397,25 @@ const Questions = () => {
     const res = await api.post(
       "/api/v1/configaudits/auditquestions/bulk/",
       data
-    ).then(res => history.push({pathname : '/app/compliance-config/' , state: {
+    ).then(res => history.push({
+      pathname: '/app/compliance-config/', state: {
         fkProjectStructureIds: data[0].fkProjectStructureIds,
         CompanyId: data[0].fkCompanyId,
         projectId: data[0].fkProjectId,
-      }, })).catch(err => console.log(error))
+      },
+    })).catch(err => console.log(error))
   };
 
   const handleProjectName = (projectId) => {
+    console.log(projectId, 'projectId')
     const userName =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).companies
         : null;
     const fetchCompany = userName.filter(
-      (user) => user.companyId === history.location.state.projectId
+      (user) => user.companyId === history.location.state.CompanyId
     );
+    console.log(fetchCompany, 'fetchCompany')
     const fetchProject = fetchCompany[0].projects.filter(
       (user) => user.projectId === projectId
     );
@@ -443,8 +447,7 @@ const Questions = () => {
         headers: HEADER_AUTH,
       });
       const workArea = await api_work_area.get(
-        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${
-          workAreaId[0]
+        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
       structName.push(workArea.data.data.results[0]["structureName"]);
@@ -452,13 +455,36 @@ const Questions = () => {
     setProjectStructName(structName);
   };
 
+
+
+  const handleReset = () => {
+    console.log(checkData, 'checkData')
+    let temp = [...checkData];
+
+    temp.map((value, index) =>
+      value.question.map((item, key) => {
+        item.question = "",
+        item.attachment = "",
+        item.evidenceType = "",
+        item.geoLocation = "",
+        item.question = "",
+        item.responseType = "",
+        item.scoreType = ""
+      },
+      )
+    )
+    console.log(temp, 'temp')
+    setCheckData(temp)
+  }
+
+  console.log(history.location.state, 'oo')
   useEffect(() => {
     fetchChecks();
     handelWorkArea();
   }, []);
 
   return (
-    <>{isLoading ? 
+    <>{isLoading ?
       <Grid container spacing={3}>
         <Grid container spacing={3} item xs={12} md={9}>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -489,6 +515,7 @@ const Questions = () => {
               Work area information
             </Typography>
           </Grid>
+
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
             <Paper elevation={1} className="paperSection">
               <Grid container spacing={3}>
@@ -522,7 +549,7 @@ const Questions = () => {
                   transform="translate(0.001)"
                   fill="#06425c"
                 />
-              </svg>
+              </svg> Material
             </Typography>
           </Grid>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -535,17 +562,19 @@ const Questions = () => {
                         className="checkRadioLabel marginB15"
                         component="legend"
                       >
+
                         {value["subGroupName"]}
                       </FormLabel>
                       <Grid container>
-                        <Grid
-                          item
-                          md={12}
-                          sm={12}
-                          xs={12}
-                          className="positionRelative"
-                        >
-                          {value["question"].map((dd, index) => (
+                        {value["question"].map((dd, index) => (
+                          <Grid
+                            item
+                            md={12}
+                            sm={12}
+                            xs={12}
+                            className="positionRelative"
+                          >
+
                             <>
                               {value["question"].length > 1 ? (
                                 <IconButton
@@ -590,7 +619,7 @@ const Questions = () => {
                                         label="Question"
                                         name="question"
                                         id="question"
-                                        defaultValue=""
+                                        value={dd.question || ""}
                                         error={dd["errorquestion"]}
                                         helperText={
                                           dd["errorquestion"] !== undefined
@@ -625,6 +654,7 @@ const Questions = () => {
                                           row
                                           aria-label="gender"
                                           name="gender1"
+                                          value={dd.responseType || ""}
                                           onChange={(e) =>
                                             handleQuestionData(
                                               e.target.value,
@@ -662,6 +692,7 @@ const Questions = () => {
                                           row
                                           aria-label="gender"
                                           name="gender1"
+                                          value={dd.geoLocation || ""}
                                           onChange={(e) =>
                                             handleQuestionData(
                                               e.target.value,
@@ -697,6 +728,7 @@ const Questions = () => {
                                               id="scores"
                                               labelId="scores"
                                               label="Scores"
+                                              value={dd.scoreType || ""}
                                               onChange={(e) =>
                                                 handleQuestionData(
                                                   e.target.value,
@@ -729,6 +761,7 @@ const Questions = () => {
                                           row
                                           aria-label="gender"
                                           name="gender1"
+                                          value={dd.evidenceType || ""}
                                           onChange={(e) =>
                                             handleQuestionData(
                                               e.target.value,
@@ -761,6 +794,7 @@ const Questions = () => {
                                           row
                                           aria-label="gender"
                                           name="gender1"
+                                          value={dd.attachment || ""}
                                           onChange={(e) =>
                                             handleQuestionData(
                                               e.target.value,
@@ -785,24 +819,24 @@ const Questions = () => {
                                 </AccordionDetails>
                               </Accordion>
                             </>
-                          ))}
-                          <Grid item md={12} sm={12} xs={12}>
-                            <IconButton
-                              variant="contained"
-                              color="primary"
-                              className="marginB15 customAddButton"
-                              onClick={() =>
-                                handleMoreQuestionCatgry(
-                                  key,
-                                  value["groupName"],
-                                  value["subGroupName"]
-                                )
-                              }
-                            >
-                              <AddCircleIcon className="marginR5" /> More
-                              question
-                            </IconButton>
                           </Grid>
+                        ))}
+                        <Grid item md={12} sm={12} xs={12}>
+                          <IconButton
+                            variant="contained"
+                            color="primary"
+                            className="marginB15 customAddButton"
+                            onClick={() =>
+                              handleMoreQuestionCatgry(
+                                key,
+                                value["groupName"],
+                                value["subGroupName"]
+                              )
+                            }
+                          >
+                            <AddCircleIcon className="marginR5" /> More
+                            question
+                          </IconButton>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -835,11 +869,12 @@ const Questions = () => {
             variant="contained"
             color="secondary"
             className="buttonStyle custmCancelBtn"
+            onClick={handleReset}
           >
             Reset
           </Button>
         </Grid>
-      </Grid>: <Loader />}
+      </Grid> : <Loader />}
     </>
   );
 };

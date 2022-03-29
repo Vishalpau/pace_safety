@@ -305,16 +305,21 @@ function PerformanceFactorList() {
     );
   };
 
-  // const handlePerformanceFactorViewPush = async () => {
-  //   history.push(
-  //     '/app/compliance-config/performance-factor/view'
-  //   );
-  // };
+  const fkCompanyId =
+  JSON.parse(localStorage.getItem("company")) !== null
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
+
+const project =
+  JSON.parse(localStorage.getItem("projectName")) !== null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null;
+
   const [fectorData , setFectorData] = React.useState([])
   const [allFectorData ,setAllFectorData] = React.useState([])
 
   const fetchFectorData = async () =>{
-    let res = await api.get('/api/v1/configaudits/factors/?company=1&project=1&projectStructure=')
+    let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     await setTotalData(res.data.data.metadata.count)
     await setPageData(res.data.data.metadata.count / 25)

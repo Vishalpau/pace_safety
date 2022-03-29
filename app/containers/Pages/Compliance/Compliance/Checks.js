@@ -474,7 +474,7 @@ const Checks = () => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}`
       );
-      console.log(res,'res')
+      console.log(res, 'res')
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -489,15 +489,15 @@ const Checks = () => {
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
-            criticality: "",
+            criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: "",
-            performance: "",
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
             subGroupName: value.subGroupName,
-            defaultResponse: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].findings : '',
-            score: "",
+            defaultResponse: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].defaultResponse : '',
+            score: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].score : '',
             findings: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].findings : '',
             attachment: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].attachment : null,
             status: "Active",
@@ -573,7 +573,7 @@ const Checks = () => {
         data["createdBy"] = tempNewQuestion[i].createdBy
         dataCheck[i] = data
       }
-      console.log(dataCheck,'dataCheck1')
+      console.log(dataCheck, 'dataCheck1')
       const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
     }
     if (tempUpdatedQuestion.length > 0) {
@@ -606,7 +606,7 @@ const Checks = () => {
         data["createdBy"] = tempUpdatedQuestion[i].createdBy
         dataCheck[i] = data
       }
-    console.log(dataCheck,'dataCheck2')
+      console.log(dataCheck, 'dataCheck2')
       const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           "fkComplianceId"
@@ -1165,6 +1165,7 @@ const Checks = () => {
                                               select
                                               fullWidth
                                               variant="outlined"
+                                              value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : ""}
                                               className="formControl"
                                               onChange={(e) =>
                                                 handleChangeData(
@@ -1191,6 +1192,7 @@ const Checks = () => {
                                               label="Status*"
                                               name="status"
                                               id="status"
+                                              value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
                                               select
                                               fullWidth
                                               variant="outlined"
@@ -1220,7 +1222,8 @@ const Checks = () => {
                                               //margin="dense"
                                               name="performancerating"
                                               id="performancerating"
-                                              defaultValue="35%"
+                                              value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
@@ -1234,10 +1237,7 @@ const Checks = () => {
                                               }
                                             />
                                           </Grid>
-                                          {/* 
-                                                        <Grid item md={4} sm={4} xs={12} className={classes.ratioColororange}>                
-                                                            50% Risk
-                                                        </Grid> */}
+
                                           <Grid item md={12} sm={12} xs={12}>
                                             <TextField
                                               label="Findings"
@@ -1245,7 +1245,7 @@ const Checks = () => {
                                               id="findings"
                                               multiline
                                               rows={4}
-                                              defaultValue=""
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
@@ -1267,35 +1267,69 @@ const Checks = () => {
                                               Score
                                             </FormLabel>
                                           </Grid>
-                                          <Grid item md={4} sm={4} xs={12}>
-                                            <Rating
-                                              name="simple-controlled"
-                                              value={value}
-                                              onChange={(e, newValue) =>
-                                                handleChangeData(
-                                                  newValue,
-                                                  "score",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
-                                            />
-                                          </Grid>
-                                          <Grid item md={4} sm={4} xs={12}>
-                                            <FormControl
-                                              variant="outlined"
-                                              className="formControl"
-                                            >
-                                              <InputLabel id="demo-simple-select-outlined-label">
-                                                Counts
-                                              </InputLabel>
-                                              <Select
-                                                labelId="scoreCount"
-                                                id="scoreCount"
-                                                // onChange={handleChangeOne}
-                                                label="Counts"
+                                          {value.scoreType === "Star" &&
+                                            <Grid item md={4} sm={4} xs={12}>
+                                              <Rating
+                                                name="simple-controlled"
+                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                onChange={(e, newValue) =>
+                                                  handleChangeData(
+                                                    newValue,
+                                                    "score",
+                                                    index,
+                                                    value.id
+                                                  )
+                                                }
+                                              />
+                                            </Grid>}
+                                          {value.scoreType === "1-10" &&
+                                            <Grid item md={4} sm={4} xs={12}>
+                                              <FormControl
+                                                variant="outlined"
                                                 className="formControl"
+                                              >
+                                                <InputLabel id="demo-simple-select-outlined-label">
+                                                  Counts
+                                                </InputLabel>
+                                                <Select
+                                                  labelId="scoreCount"
+                                                  id="scoreCount"
+                                                  value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                  label="Counts"
+                                                  className="formControl"
+                                                  fullWidth
+                                                  onChange={(e) =>
+                                                    handleChangeData(
+                                                      e.target.value,
+                                                      "score",
+                                                      index,
+                                                      value.id
+                                                    )
+                                                  }
+                                                >
+                                                  <MenuItem value={1}>1</MenuItem>
+                                                  <MenuItem value={2}>2</MenuItem>
+                                                  <MenuItem value={3}>3</MenuItem>
+                                                  <MenuItem value={4}>4</MenuItem>
+                                                  <MenuItem value={5}>5</MenuItem>
+                                                  <MenuItem value={6}>6</MenuItem>
+                                                  <MenuItem value={7}>7</MenuItem>
+                                                  <MenuItem value={8}>8</MenuItem>
+                                                  <MenuItem value={9}>9</MenuItem>
+                                                  <MenuItem value={10}>10</MenuItem>
+                                                </Select>
+                                              </FormControl>
+                                            </Grid>}
+                                          {value.scoreType === "%" &&
+                                            <Grid item md={4} sm={4} xs={12}>
+                                              <TextField
+                                                label="Percentage"
+                                                name="performancerating"
+                                                id="performancerating"
+                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                 fullWidth
+                                                variant="outlined"
+                                                className="formControl"
                                                 onChange={(e) =>
                                                   handleChangeData(
                                                     e.target.value,
@@ -1304,39 +1338,9 @@ const Checks = () => {
                                                     value.id
                                                   )
                                                 }
-                                              >
-                                                <MenuItem value={1}>1</MenuItem>
-                                                <MenuItem value={2}>2</MenuItem>
-                                                <MenuItem value={3}>3</MenuItem>
-                                                <MenuItem value={4}>4</MenuItem>
-                                                <MenuItem value={5}>5</MenuItem>
-                                                <MenuItem value={6}>6</MenuItem>
-                                                <MenuItem value={7}>7</MenuItem>
-                                                <MenuItem value={8}>8</MenuItem>
-                                                <MenuItem value={9}>9</MenuItem>
-                                                <MenuItem value={10}>10</MenuItem>
-                                              </Select>
-                                            </FormControl>
-                                          </Grid>
-                                          <Grid item md={4} sm={4} xs={12}>
-                                            <TextField
-                                              label="Percentage"
-                                              name="performancerating"
-                                              id="performancerating"
-                                              // defaultValue="20%"
-                                              fullWidth
-                                              variant="outlined"
-                                              className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "performance",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
-                                            />
-                                          </Grid>
+                                              />
+                                            </Grid>}
+
                                           <Grid item md={12} xs={12}>
                                             <FormLabel
                                               className="checkRadioLabel"
@@ -1523,14 +1527,14 @@ const Checks = () => {
               >
                 Next
               </Button>
-              <Button
+              {/* <Button
                 size="medium"
                 variant="contained"
                 color="primary"
                 className="spacerRight buttonStyle"
               >
                 Save
-              </Button>
+              </Button> */}
               <Button
                 size="medium"
                 variant="contained"

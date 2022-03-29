@@ -175,7 +175,7 @@ const ObservationInitialNotificationView = () => {
       ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
       : null;
     const structName = [];
-    const projectStructId = assessment.fkProjectStructureIds.split(':');
+    const projectStructId = assessment[0].fkProjectStructureIds.split(':');
 
     for (const key in projectStructId) {
       const workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)];

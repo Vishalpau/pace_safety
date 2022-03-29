@@ -161,7 +161,6 @@ class ComplianceConfig extends React.Component {
 
 
     return (
-      // <PapperBlock title="Settings" icon="ion-md-settings">
       <CustomPapperBlock
         title="Compliance config"
         icon="customDropdownPageIcon complianceConfigPageIcon"
@@ -185,44 +184,40 @@ class ComplianceConfig extends React.Component {
           {value == 0 && (
             <TabContainer>
               <>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Typography variant="h6" className="sectionHeading">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 32 32"
-                    >
-                      <g
-                        id="audit-question-32"
-                        transform="translate(-180 -1793)"
-                      >
-                        <path
-                          id="Subtraction_27"
-                          data-name="Subtraction 27"
-                          d="M-3094.008,29.719a2.577,2.577,0,0,1-1.23-.315l-11.368-6.178A2.692,2.692,0,0,1-3108,20.854V8.868a2.685,2.685,0,0,1,1.392-2.371l11.369-6.183A2.587,2.587,0,0,1-3094.008,0a2.591,2.591,0,0,1,1.23.314l11.368,6.179a2.686,2.686,0,0,1,1.392,2.371V20.851a2.692,2.692,0,0,1-1.391,2.372l-11.369,6.18A2.589,2.589,0,0,1-3094.008,29.719Zm2.036-8.735h0l-2.553,2.558,1.124,1.124,2.552-2.559-.187-.187.719-.721a2.965,2.965,0,0,0,1.7.534,3,3,0,0,0,2.216-.982,2.99,2.99,0,0,0-.21-4.217,3.078,3.078,0,0,0-2.195-.755l-.161,0h-.023a2.823,2.823,0,0,0-1.839.962,2.968,2.968,0,0,0-.239,3.708l-.718.72-.188-.187ZM-3095.727,6a4.056,4.056,0,0,0-2.97,1.2,5.374,5.374,0,0,0-1.391,3.869,5.192,5.192,0,0,0,2.123,4.341v.025a5.9,5.9,0,0,0-3.658,1.271,4.246,4.246,0,0,0-1.378,3.35v2.965h7.285l2.742-2.749.188.188.082-.083a3.5,3.5,0,0,1,.5-3.971,3.465,3.465,0,0,1,.375-.356,2.255,2.255,0,0,0-1.663-.616v-.025a5.191,5.191,0,0,0,2.123-4.341,5.372,5.372,0,0,0-1.39-3.869A4.056,4.056,0,0,0-3095.727,6Zm7.112,14.675a1.922,1.922,0,0,1-1.294-.5,1.932,1.932,0,0,1-.135-2.725,1.933,1.933,0,0,1,1.431-.633,1.926,1.926,0,0,1,1.294.5,1.933,1.933,0,0,1,.134,2.725A1.933,1.933,0,0,1-3088.615,20.675Z"
-                          transform="translate(3290 1794)"
-                          fill="#06425c"
-                        />
-                        <g
-                          id="audit-question-32-2"
-                          data-name="audit-question-32"
-                        >
-                          <rect
-                            id="Rectangle_2114"
-                            data-name="Rectangle 2114"
-                            width="32"
-                            height="32"
-                            transform="translate(180 1793)"
-                            fill="none"
-                          />
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                    <g id="compliance-question-40" transform="translate(-785 -309)">
+                      <g id="Group_6927" data-name="Group 6927" transform="translate(785 309)">
+                        <g id="compliance-protocols-24" transform="translate(0)">
+                          <g id="Group_6245" data-name="Group 6245">
+                            <g id="action-tracker-24">
+                              <g id="Group_5789" data-name="Group 5789">
+                                <g id="Group_5787" data-name="Group 5787">
+                                  <g id="Group_5778" data-name="Group 5778">
+                                    <g id="Group_5762" data-name="Group 5762">
+                                      <g id="Group_5739" data-name="Group 5739">
+                                        <rect id="Rectangle_1883" data-name="Rectangle 1883" width="32" height="32" fill="none" />
+                                      </g>
+                                    </g>
+                                  </g>
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                          <g id="Group_5382" data-name="Group 5382" transform="translate(0)">
+                            <path id="Path_5175" data-name="Path 5175" d="M28.158,4.311a13.262,13.262,0,0,0-18.807,0A13.285,13.285,0,0,0,7.708,21.143L1.59,26.584c-.113.057-.17.17-.283.227A3.054,3.054,0,0,0,.4,28.964a3.087,3.087,0,0,0,5.268,2.21,1.236,1.236,0,0,0,.227-.283l5.438-6.177a13.281,13.281,0,0,0,16.825-20.4ZM18.811,25.053a11.335,11.335,0,1,1,11.33-11.335A11.329,11.329,0,0,1,18.811,25.053Z" transform="translate(-0.4 -0.4)" fill="#06425c" />
+                          </g>
                         </g>
                       </g>
-                    </svg>
-                    {' '}
-                    Compliance questions
-                  </Typography>
-                </Grid>
+                      <g id="noun-question-322257" transform="translate(798.458 314.542)">
+                        <path id="Path_6901" data-name="Path 6901" d="M156.953,81.5c0,2.778-3.092,3.473-3.092,4.75v1.188h-3.607v-1.7c0-1.972,3.092-3.092,3.092-4.257a1.405,1.405,0,0,0-1.434-1.322c-.829,0-1.524.739-2.2,1.591l-2.263-2.106c1.344-1.77,2.935-2.845,4.884-2.845a4.47,4.47,0,0,1,4.615,4.705Z" transform="translate(-147.453 -76.799)" fill="#06425c" />
+                        <path id="Path_6902" data-name="Path 6902" d="M209.008,341.051a2.106,2.106,0,1,1-2.106-2.106,2.106,2.106,0,0,1,2.106,2.106" transform="translate(-202.287 -327.473)" fill="#06425c" />
+                      </g>
+                    </g>
+                  </svg> Compliance questions
+                </Typography>
+              </Grid>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   {/* {this.state.auditQuestions === '' ?
                         <> */}

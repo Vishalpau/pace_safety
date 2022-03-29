@@ -1550,6 +1550,18 @@ ul.MuiMenu-list a ul li.userName {
   z-index: 1;
   display: contents;
 }
+
+.customAddButton {
+  background-color: #7890A4 !important;
+  font-size: 0.875rem !important;
+  text-transform: none !important;
+  color: #ffffff !important;
+  padding: 0.6rem 0.8em !important;
+  border-radius: 1.875rem !important;
+}
+.customAddButton:hover {
+  background-color: #F28705 !important;
+}
 .customColorPickerSection .customColorDisplay {
   /* padding: 8px 17px;
   border-radius: 100%; */
@@ -1565,7 +1577,17 @@ ul.MuiMenu-list a ul li.userName {
   right: 90px;
   top: 235px;
 }
+.accordionCloseIcon {
+  position: absolute !important;
+  top: 4px;
+  right: 45px;
+  color: #ffffff !important;
+  z-index: 9;
+}
 
+.positionRelative {
+  position: relative;
+}
 .complianceConfigPageIcon {
   background-position: -82.563rem -25.313rem;
 }

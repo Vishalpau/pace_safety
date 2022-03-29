@@ -27,7 +27,7 @@ const PerformanceMatrixView = () => {
 
     return (
         <>
-        <CustomPapperBlock title="Performance Matrix" icon='customDropdownPageIcon complianceConfigPageIcon' whiteBg>
+        <CustomPapperBlock title="Performances Matrix" icon='customDropdownPageIcon complianceConfigPageIcon' whiteBg>
             <Grid container spacing={3}>
                 <Grid
                     item
