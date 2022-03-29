@@ -474,7 +474,6 @@ const Checks = () => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}`
       );
-      console.log(res, 'res')
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -573,7 +572,6 @@ const Checks = () => {
         data["createdBy"] = tempNewQuestion[i].createdBy
         dataCheck[i] = data
       }
-      console.log(dataCheck, 'dataCheck1')
       const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
     }
     if (tempUpdatedQuestion.length > 0) {
@@ -606,7 +604,6 @@ const Checks = () => {
         data["createdBy"] = tempUpdatedQuestion[i].createdBy
         dataCheck[i] = data
       }
-      console.log(dataCheck, 'dataCheck2')
       const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           "fkComplianceId"
@@ -640,15 +637,12 @@ const Checks = () => {
   };
 
   const handleFile = (value, field, index, id) => {
-    console.log(id, 'value')
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["question"] == id) {
         temp[i][field] = value;
       }
     }
-    console.log(temp, 'temp')
-
     setCheckData(temp);
   };
   const handelActionTracker = async () => {
@@ -1413,10 +1407,7 @@ const Checks = () => {
                                               <TableBody>
                                                 {actionData.map((val) => (
                                                   <>
-                                                    {console.log(
-                                                      val.action.number,
-                                                      value.id
-                                                    )}
+                                                  
                                                     {val.id == value.id ? (
                                                       <>
                                                         {val.action.length > 0 &&

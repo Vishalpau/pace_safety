@@ -134,7 +134,16 @@ span.makeStyles-mR10-2491 img {
     margin-left: 8px;
 }
 }
+.marginB15 {margin-bottom: 1rem;}
+.marginR5 {margin-right: 0.5rem !important;}
+.marginL5 {margin-left: 0.5rem !important;}
 
+.performanceFactorTable table thead tr th:nth-last-child(1) {
+  width: 130px;
+}
+.performanceFactorTable table thead tr th:nth-child(4) {
+  width: 80px;
+}
 /*card attachment section*/
 #long-menu .MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded {
   top: 380px!important;
@@ -1446,6 +1455,9 @@ ul.MuiMenu-list a ul li.userName {
 .loginLogoHead {
   margin-bottom: 30px;
 }
+.tableActionwidth table thead tr th:nth-last-child(1) {
+  width: 124px;
+}
 @media (max-width: 800px) {
   .catDrawerSection {
     top: 55px;
@@ -1544,13 +1556,10 @@ ul.MuiMenu-list a ul li.userName {
   padding: 0.625rem !important;
   color: rgba(0, 0, 0, 0.54) !important;
 }
-
-.customColorPickerSection {
-  position: absolute;
-  z-index: 1;
-  display: contents;
+.errorMsgTxt {
+  color: #ff0101 !important;
+  font-size: 0.75rem !important;
 }
-
 .customAddButton {
   background-color: #7890A4 !important;
   font-size: 0.875rem !important;
@@ -1562,20 +1571,25 @@ ul.MuiMenu-list a ul li.userName {
 .customAddButton:hover {
   background-color: #F28705 !important;
 }
+.customColorPickerSection {
+  position: absolute;
+  z-index: 1;
+  display: contents;
+}
 .customColorPickerSection .customColorDisplay {
   /* padding: 8px 17px;
   border-radius: 100%; */
   padding: 27px;
   border-radius: 4px;
   position: absolute;
-  top: 190px;
+  top: 12px;
   right: 12px;
   cursor: pointer;
 }
 .customColorPickerSection .sketch-picker {
   position: absolute;
   right: 90px;
-  top: 235px;
+  top: 55px;
 }
 .accordionCloseIcon {
   position: absolute !important;

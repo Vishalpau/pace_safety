@@ -230,7 +230,6 @@ const BulkUploadQuestion = () => {
         temp.push(data);
     }
         )
-        console.log(temp)
     }
     
 

@@ -299,7 +299,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Questions = () => {
   const history = useHistory();
-  console.log(history);
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel1"
   );
@@ -350,7 +349,6 @@ const Questions = () => {
 
   const fetchChecks = () => {
     let data = JSON.parse(localStorage.getItem("auditChecks"));
-    //   console.log(data)
     let temp = [...data];
     for (let i = 0; i < temp.length; i++) {
       temp[i]["question"] = [
@@ -377,9 +375,7 @@ const Questions = () => {
 
   const handleQuestionData = (value, index, key, field) => {
     let temp = [...checkData];
-    console.log(temp[key]["question"][index]);
     temp[key]["question"][index][field] = value;
-    console.log(temp);
     setCheckData(temp);
   };
 
@@ -407,7 +403,6 @@ const Questions = () => {
   };
 
   const handleProjectName = (projectId) => {
-    console.log(projectId, 'projectId')
     const userName =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).companies
@@ -415,7 +410,6 @@ const Questions = () => {
     const fetchCompany = userName.filter(
       (user) => user.companyId === history.location.state.CompanyId
     );
-    console.log(fetchCompany, 'fetchCompany')
     const fetchProject = fetchCompany[0].projects.filter(
       (user) => user.projectId === projectId
     );
@@ -436,7 +430,6 @@ const Questions = () => {
     let projectStructId = history.location.state.fkProjectStructureIds.split(
       ":"
     );
-    console.log(projectStructId, ">>>>>>>>>>>>>>>>>");
     for (let key in projectStructId) {
       let workAreaId = [
         projectStructId[key].substring(0, 2),
@@ -458,7 +451,6 @@ const Questions = () => {
 
 
   const handleReset = () => {
-    console.log(checkData, 'checkData')
     let temp = [...checkData];
 
     temp.map((value, index) =>
@@ -473,11 +465,9 @@ const Questions = () => {
       },
       )
     )
-    console.log(temp, 'temp')
     setCheckData(temp)
   }
 
-  console.log(history.location.state, 'oo')
   useEffect(() => {
     fetchChecks();
     handelWorkArea();

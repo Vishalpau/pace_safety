@@ -203,6 +203,8 @@ const ComplianceDetails = () => {
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [error, setError] = useState({});
   const [team, setTeam] = useState([{ name: "" }]);
+  const [departments, setDepartments] = useState([]);
+
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -236,7 +238,7 @@ const ComplianceDetails = () => {
     contractorSupervisorName: "",
     subContractor: "",
     auditDateTime: new Date(),
-    hseRepresentative: "",
+    hseRepresentative: departments,
     inspectionTeam: "",
     auditType: "",
     status: "Active",
@@ -294,7 +296,6 @@ const ComplianceDetails = () => {
       await setTeam(newData);
     }
   };
-  //  console.log(team)
 
   const clientRep = ["Operation", "Functional", "Foundation", "Production"];
 
@@ -334,7 +335,6 @@ const ComplianceDetails = () => {
     let area = (typeof areaStr[0] != 'undefined') ? areaStr[0].structureName : null
     form["area"] = area;
     if (form.id) {
-      console.log(form.fkProjectStructureIds,'fkProjectStructureIds')
       form["updatedBy"] = userId;
       const res = await api
         .put(`/api/v1/audits/${form.id}/`, form)
@@ -390,7 +390,6 @@ const ComplianceDetails = () => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    console.log(projectBreakdown, 'projectBreakdown')
     const projectData = JSON.parse(localStorage.getItem("projectName"));
     let breakdownLength = projectData.projectName.breakdown.length;
     setLevelLenght(breakdownLength);
@@ -500,8 +499,6 @@ const ComplianceDetails = () => {
   };
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
-    console.log(fetchSelectBreakDownList,'fetchSelectBreakDownList')
-
     const projectData = JSON.parse(localStorage.getItem('projectName'));
 
     const value = e.target.value;
@@ -545,9 +542,23 @@ const ComplianceDetails = () => {
       }
     }
   };
-  console.log(selectDepthAndId,'selectDepthAndId')
+
+  const getDepartments = async () => {
+    const config = {
+      method: 'get',
+      url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/departments/`,
+      headers: HEADER_AUTH,
+    };
+    const res = await api(config);
+    let rep = res.data.data.results.map((value, index) => value.departmentName)
+    setDepartments(rep);
+    
+  };
+  
+  
   useEffect(() => {
     pickListValue();
+    getDepartments();
     if (id) {
       fetchComplianceData();
     } else {
@@ -810,7 +821,7 @@ const ComplianceDetails = () => {
                         <Autocomplete
                           id="clientRep"
                           className="formControl"
-                          options={clientRep}
+                          options={departments}
                           // className={classes.mT30}
                           getOptionLabel={(option) => option}
                           value={
@@ -1079,7 +1090,7 @@ const ComplianceDetails = () => {
                             className={classes.inputFieldWithLabel}
                           >
                             <TextField
-                              label="Inspection team member name"
+                              label="Member name"
                               name="inspectionteammem"
                               id="inspectionteammem"
                               multiline

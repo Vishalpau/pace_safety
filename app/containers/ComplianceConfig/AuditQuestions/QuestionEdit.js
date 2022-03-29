@@ -222,13 +222,10 @@ const QuestionEdit = (props) => {
 
 
   const fetchAuditData = async (id) => {
-    console.log(id, 'id')
-
     const res = await api.get(
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${project.projectId
       }&projectStructure=${fkProjectStructureIds}`
     );
-    console.log(res, 'res')
     await setAuditData(res.data.data.results[0]);
     await fetchChecklist(res.data.data.results[0].groupName);
     await fetchBreakDownData(res.data.data.results[0].fkProjectStructureIds);
@@ -252,7 +249,6 @@ const QuestionEdit = (props) => {
   };
 
   const handleGroup = async (value, gName) => {
-    console.log(value);
     let temp = { ...auditData };
     temp.groupName = gName;
     temp.subGroupName = "";
@@ -282,8 +278,6 @@ const QuestionEdit = (props) => {
       return "data not valid";
     }
     auditData["fkProjectStructureIds"] = selectDepthAndId.join(":");
-
-    console.log(selectDepthAndId);
     const res = await api
       .put(
         `/api/v1/configaudits/auditquestions/${id}/?company=${auditData.fkCompanyId
@@ -300,7 +294,6 @@ const QuestionEdit = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    console.log(projectBreakdown,'projectBreakdown')
     if (projectBreakdown) {
       const projectData = JSON.parse(localStorage.getItem("projectName"));
       let breakdownLength = projectData.projectName.breakdown.length;
@@ -427,7 +420,6 @@ const QuestionEdit = (props) => {
       }
     }
   };
-  console.log("Checklist", fetchSelectBreakDownList);
   useEffect(() => {
     fetchAuditData(id);
     fetchChecklist();

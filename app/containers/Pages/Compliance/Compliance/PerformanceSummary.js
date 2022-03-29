@@ -191,7 +191,6 @@ const PerformanceSummary = (props) => {
       const res = await api(config);
       if (res.status === 200) {
         const result = res.data.data.results;
-        console.log(result, "LLLLLL");
         setNotificationSentValue(result);
       }
     } catch (error) { }

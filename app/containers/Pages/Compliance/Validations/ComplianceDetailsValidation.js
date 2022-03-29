@@ -26,10 +26,10 @@ function ComplianceValidation(data, projecStructureLength) {
     isValid = false;
   }
 
-  if (data.subContractor === "") {
-    error.subContractor = "Please select a substractor";
-    isValid = false;
-  }
+  // if (data.subContractor === "") {
+  //   error.subContractor = "Please select a substractor";
+  //   isValid = false;
+  // }
 
   return { error, isValid };
 }

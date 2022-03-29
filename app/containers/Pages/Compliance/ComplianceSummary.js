@@ -401,7 +401,6 @@ function ComplianceSummary() {
 
   const handleTeamName = (teamName) => {
     let data = teamName.split(",");
-    console.log(data);
     setTeam(data);
   };
   const handleProjectName = (projectId) => {
@@ -752,7 +751,7 @@ function ComplianceSummary() {
                                       gutterBottom
                                       className="viewLabel"
                                     >
-                                      Select the type of compliance check
+                                      Type of compliance check
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["auditType"]}
@@ -769,7 +768,7 @@ function ComplianceSummary() {
                                     <Typography className="viewLabelValue">
                                       {moment(
                                         complianceData["createdAt"]
-                                      ).format("Do MMMM YYYY, h:mm:ss a")}
+                                      ).format("Do MMMM YYYY, h:mm A")}
                                     </Typography>
                                   </Grid>
                                   <Grid
@@ -791,7 +790,7 @@ function ComplianceSummary() {
                                       gutterBottom
                                       className="viewLabel"
                                     >
-                                      Client HSE rep
+                                      Safety representative
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["hseRepresentative"] !==
@@ -806,7 +805,7 @@ function ComplianceSummary() {
                                       gutterBottom
                                       className="viewLabel"
                                     >
-                                      Client rep number
+                                      Safety representative number
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["hseRepNumber"] !== ""
@@ -847,7 +846,7 @@ function ComplianceSummary() {
                                       gutterBottom
                                       className="viewLabel"
                                     >
-                                      Contractor rep number
+                                      Contractor representative number
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {complianceData["contractorRepNumber"] !==
@@ -1475,7 +1474,6 @@ function ComplianceSummary() {
                                               {actionData.map((val) => (
                                                 
                                                 <>
-                                                {console.log(val,value.questionId,'val')}
                                                   {val.id == value.questionId ? (
                                                     
                                                     <>
