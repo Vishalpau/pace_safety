@@ -1159,7 +1159,7 @@ const Checks = () => {
                                               select
                                               fullWidth
                                               variant="outlined"
-                                              value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : ""}
+                                              defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : "")}
                                               className="formControl"
                                               onChange={(e) =>
                                                 handleChangeData(
@@ -1186,7 +1186,7 @@ const Checks = () => {
                                               label="Status*"
                                               name="status"
                                               id="status"
-                                              value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
+                                              defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : "")}
                                               select
                                               fullWidth
                                               variant="outlined"
