@@ -70,10 +70,6 @@ export const formatNames = (names) => {
 export const checkACL = (module, action) => {
   
   let acls = JSON.parse(localStorage.getItem('app_acl'))
-    // console.log(acls[module],module,Object.keys(acls).includes(`${module}`));
-    // console.log(acls[module][action]);
-    console.log(acls);
-    console.log(acls[module][action])
     let default_return = true
     if(acls == null) {
       return default_return;
