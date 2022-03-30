@@ -1005,131 +1005,9 @@ const Checks = () => {
                                               xs={6}
                                               className={classes.createHazardbox}
                                             >
-                                              <ActionTracker
-                                              actionContext="audit:question"
-                                              enitityReferenceId={`${localStorage.getItem(
-                                                "fkComplianceId"
-                                              )}:${value.id}`}
-                                              setUpdatePage={setUpdatePage}
-                                              fkCompanyId={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "company"
-                                                  )
-                                                ).fkCompanyId
-                                              }
-                                              fkProjectId={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "projectName"
-                                                  )
-                                                ).projectName.projectId
-                                              }
-                                              fkProjectStructureIds={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "commonObject"
-                                                  )
-                                                )["audit"]["projectStruct"]
-                                              }
-                                              createdBy={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "userDetails"
-                                                  )
-                                                ).id
-                                              }
-                                              updatePage={updatePage}
-                                              handelShowData={
-                                                handelActionTracker
-                                              }
-                                            />
+
                                             </Grid>
                                           </Grid>
-                                          {actionData.map((val) => (
-                                            <>
-                                              {val.id == value.id ? (
-                                                <>
-                                                  {val.action.length > 0 &&
-                                                    <Grid item md={12} xs={12}>
-                                                      <Table
-                                                        component={Paper}
-                                                        className="simpleTableSection"
-                                                      >
-                                                        <TableHead>
-                                                          <TableRow>
-                                                            <TableCell className="tableHeadCellFirst">
-                                                              Action number
-                                                            </TableCell>
-                                                            <TableCell className="tableHeadCellSecond">
-                                                              Action title
-                                                            </TableCell>
-                                                          </TableRow>
-                                                        </TableHead>
-                                                        <TableBody>
-                                                          {actionData.map((val) => (
-                                                            <>
-                                                              {val.id == value.id ? (
-                                                                <>
-                                                                  {val.action.length > 0 &&
-                                                                    val.action.map(
-                                                                      (valueAction) => (
-                                                                        <TableRow>
-                                                                          <TableCell align="left">
-                                                                            <Link
-                                                                              className={
-                                                                                classes.actionLinkAudit
-                                                                              }
-                                                                              display="block"
-                                                                              href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                                localStorage.getItem(
-                                                                                  "BaseUrl"
-                                                                                )
-                                                                              )[
-                                                                                "actionClientID"
-                                                                              ]
-                                                                                }&response_type=code&companyId=${JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "company"
-                                                                                  )
-                                                                                )
-                                                                                  .fkCompanyId
-                                                                                }&projectId=${JSON.parse(
-                                                                                  localStorage.getItem(
-                                                                                    "projectName"
-                                                                                  )
-                                                                                )
-                                                                                  .projectName
-                                                                                  .projectId
-                                                                                }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                                }`}
-                                                                              target="_blank"
-                                                                            >
-                                                                              {
-                                                                                valueAction.number
-                                                                              }
-                                                                            </Link>
-                                                                          </TableCell>
-                                                                          <TableCell>
-                                                                            {
-                                                                              valueAction.title
-                                                                            }
-                                                                          </TableCell>
-                                                                        </TableRow>
-                                                                      )
-                                                                    )}
-                                                                </>
-                                                              ) : null}
-                                                            </>
-                                                          ))}
-                                                        </TableBody>
-                                                      </Table>
-                                                    </Grid>
-
-
-                                                  }</>) : null}
-                                            </>
-                                          ))}
 
                                           <Grid
                                             item
@@ -1393,44 +1271,44 @@ const Checks = () => {
                                               className={classes.createHazardbox}
                                             >
                                               <ActionTracker
-                                              actionContext="audit:question"
-                                              enitityReferenceId={`${localStorage.getItem(
-                                                "fkComplianceId"
-                                              )}:${value.id}`}
-                                              setUpdatePage={setUpdatePage}
-                                              fkCompanyId={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "company"
-                                                  )
-                                                ).fkCompanyId
-                                              }
-                                              fkProjectId={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "projectName"
-                                                  )
-                                                ).projectName.projectId
-                                              }
-                                              fkProjectStructureIds={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "commonObject"
-                                                  )
-                                                )["audit"]["projectStruct"]
-                                              }
-                                              createdBy={
-                                                JSON.parse(
-                                                  localStorage.getItem(
-                                                    "userDetails"
-                                                  )
-                                                ).id
-                                              }
-                                              updatePage={updatePage}
-                                              handelShowData={
-                                                handelActionTracker
-                                              }
-                                            />
+                                                actionContext="audit:question"
+                                                enitityReferenceId={`${localStorage.getItem(
+                                                  "fkComplianceId"
+                                                )}:${value.id}`}
+                                                setUpdatePage={setUpdatePage}
+                                                fkCompanyId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "company"
+                                                    )
+                                                  ).fkCompanyId
+                                                }
+                                                fkProjectId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "projectName"
+                                                    )
+                                                  ).projectName.projectId
+                                                }
+                                                fkProjectStructureIds={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "commonObject"
+                                                    )
+                                                  )["audit"]["projectStruct"]
+                                                }
+                                                createdBy={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "userDetails"
+                                                    )
+                                                  ).id
+                                                }
+                                                updatePage={updatePage}
+                                                handelShowData={
+                                                  handelActionTracker
+                                                }
+                                              />
                                             </Grid>
                                           </Grid>
 
@@ -1442,7 +1320,7 @@ const Checks = () => {
                                               <TableHead>
                                                 <TableRow>
                                                   <TableCell className="tableHeadCellFirst">
-                                                    Action number
+                                                    Action number 1
                                                   </TableCell>
                                                   <TableCell className="tableHeadCellSecond">
                                                     Action title
