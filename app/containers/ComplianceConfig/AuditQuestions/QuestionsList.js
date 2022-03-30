@@ -202,7 +202,6 @@ function QuestionsList(props) {
         setData(auditIdDetails[i]);
       }
     }
-    console.log(value);
     setAuditId(value[0]);
     setOpen(true);
   };
@@ -266,7 +265,6 @@ function QuestionsList(props) {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => (
           <>
-            {console.log(tableMeta)}
             <IconButton
               size="small"
               color="primary"
@@ -333,7 +331,6 @@ function QuestionsList(props) {
   };
 
   const handleDelete = async () => {
-    console.log(data);
     data["status"] = "Delete";
     const res = await api
       .put(
@@ -478,6 +475,7 @@ function QuestionsList(props) {
               </Tooltip>
               <Tooltip title="Bulk upload">
                 <Button
+                disabled
                   size="medium"
                   variant="contained"
                   color="primary"
@@ -492,7 +490,7 @@ function QuestionsList(props) {
                 <Grid component={Paper}>
                   <MUIDataTable
                     //title="Actions List"
-                    className="dataTableSectionDesign"
+                    className="dataTableSectionDesign tableActionwidth"
                     data={auditData}
                     columns={columns}
                     options={options}

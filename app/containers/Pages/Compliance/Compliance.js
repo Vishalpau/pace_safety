@@ -27,6 +27,8 @@ import ComplianceSearchSectionList from "./List/ComplianceSearchSectionList";
 import { useHistory, useParams } from "react-router";
 import "../../../styles/FontsFamily.css";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
+import { checkACL } from "../../../utils/helper";
+import Acl from "../../../components/Error/acl";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -256,83 +258,94 @@ export default function Compliance() {
   }, []);
 
   return (
-    <div className={classes.root}>
-      <Grid item sm={12} xs={12} className={classes.borderTop}>
-        <Grid container spacing={3}>
-          <Grid item sm={8} xs={9} className="mainPageTitleBox">
-            {/* <img src={complianceLogoSymbol} className={classes.attachImg} alt="decoration" /> */}
-            <span className="customDropdownPageIcon compliancePageIcon" />
-            <Typography variant="h5"> Compliance</Typography>
-          </Grid>
-          <Grid item sm={4} xs={3}>
-            <Button
-              size="medium"
-              variant="contained"
-              className={classNames(classes.buttonsNew, classes.floatR)}
-              color="primary"
-              onClick={(e) => handleNewCompliancePush(e)}
-            >
-              <AddIcon className={classes.spacerRight} /> Add New
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        <Grid item sm={6} xs={12} className={classes.listViewTab}>
-          <AppBar position="static" className={classes.navTabBack}>
-            <div className={classes.floatLTabs}>
-              <Tabs
-                className={classes.minwdTab}
-                value={value}
-                onChange={handleChange}
-                aria-label="Tabs"
-                indicatorColor="none"
+    <Acl
+      module="safety-compliance"
+      action="view_compliance"
+      html={
+        <div className={classes.root}>
+        <Grid item sm={12} xs={12} className={classes.borderTop}>
+          <Grid container spacing={3}>
+            <Grid item sm={8} xs={9} className="mainPageTitleBox">
+              {/* <img src={complianceLogoSymbol} className={classes.attachImg} alt="decoration" /> */}
+              <span className="customDropdownPageIcon compliancePageIcon" />
+              <Typography variant="h5"> Compliance</Typography>
+            </Grid>
+            <Grid item sm={4} xs={3}>
+              <Button
+                size="medium"
+                variant="contained"
+                className={classNames(classes.buttonsNew, classes.floatR)}
+                color="primary"
+                onClick={(e) => handleNewCompliancePush(e)}
+                style={{
+                  background: checkACL('safety-compliance', 'add_compliance') ? '#06425c' : '#c0c0c0',
+                  cursor: checkACL('safety-compliance', 'add_compliance') ? 'pointer' : 'not-allowed'
+                }}
               >
-                <Tab
-                  label="Card"
-                  {...a11yProps(0)}
-                  icon={
-                    <DashboardIcon
-                      className={classNames(classes.pL0, classes.active)}
-                    />
-                  }
-                />
-                <Tab
-                  label="List"
-                  {...a11yProps(1)}
-                  icon={<ReorderIcon />}
-                  classNames={classes.pLTen}
-                />
-                {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
-                <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />  */}
-              </Tabs>
-            </div>
-          </AppBar>
-        </Grid>
-        {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
-          <Grid className={classes.Lheight}>
-            <div className={classes.floatR}>
-              <span className={classes.pLTen}>
-                <Button size="small" className={classes.buttonsNTwo} variant="contained">
-                <DateRangeOutlinedIcon /> iPlanner
-                </Button>
-              </span>
-            </div>
+                <AddIcon className={classes.spacerRight} /> Add New
+              </Button>
+            </Grid>
           </Grid>
-        </Grid> */}
-      </Grid>
-      <TabPanel value={value} index={0} className={classes.paddLRzero}>
-        <ComplianceSearchSectionCard />
-      </TabPanel>
-      <TabPanel value={value} index={1} className={classes.paddLRzero}>
-        <ComplianceSearchSectionList />
-      </TabPanel>
-      <TabPanel value={value} index={2} className={classes.paddLRzero}>
-        <ComplianceSearchSectionKanban />
-      </TabPanel>
-      <TabPanel value={value} index={3} className={classes.paddLRzero}>
-        <ComplianceSearchSectionTrend />
-      </TabPanel>
-    </div>
+        </Grid>
+        <Grid container spacing={3}>
+          <Grid item sm={6} xs={12} className={classes.listViewTab}>
+            <AppBar position="static" className={classes.navTabBack}>
+              <div className={classes.floatLTabs}>
+                <Tabs
+                  className={classes.minwdTab}
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="Tabs"
+                  indicatorColor="none"
+                >
+                  <Tab
+                    label="Card"
+                    {...a11yProps(0)}
+                    icon={
+                      <DashboardIcon
+                        className={classNames(classes.pL0, classes.active)}
+                      />
+                    }
+                  />
+                  <Tab
+                    label="List"
+                    {...a11yProps(1)}
+                    icon={<ReorderIcon />}
+                    classNames={classes.pLTen}
+                  />
+                  {/* <Tab label="Kanban" {...a11yProps(2)} icon={<ViewWeekIcon classNames={classes.pLTen} />} />
+                  <Tab label="Trend" {...a11yProps(3)} icon={<EqualizerIcon classNames={classes.pLTen} />} />  */}
+                </Tabs>
+              </div>
+            </AppBar>
+          </Grid>
+          {/* <Grid item sm={6} xs={12} className={classes.iplnGisDSection}>
+            <Grid className={classes.Lheight}>
+              <div className={classes.floatR}>
+                <span className={classes.pLTen}>
+                  <Button size="small" className={classes.buttonsNTwo} variant="contained">
+                  <DateRangeOutlinedIcon /> iPlanner
+                  </Button>
+                </span>
+              </div>
+            </Grid>
+          </Grid> */}
+        </Grid>
+        <TabPanel value={value} index={0} className={classes.paddLRzero}>
+          <ComplianceSearchSectionCard />
+        </TabPanel>
+        <TabPanel value={value} index={1} className={classes.paddLRzero}>
+          <ComplianceSearchSectionList />
+        </TabPanel>
+        <TabPanel value={value} index={2} className={classes.paddLRzero}>
+          <ComplianceSearchSectionKanban />
+        </TabPanel>
+        <TabPanel value={value} index={3} className={classes.paddLRzero}>
+          <ComplianceSearchSectionTrend />
+        </TabPanel>
+      </div>
+      }
+    />
+   
   );
 }

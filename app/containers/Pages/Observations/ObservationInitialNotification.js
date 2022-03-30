@@ -755,7 +755,7 @@ const ObservationInitialNotification = (props) => {
   }, [props.initialValues.breakDown]);
   return (
     <Acl
-      module="safety"
+      module="safety-observations"
       action="add_observations"
       html={(
         <>

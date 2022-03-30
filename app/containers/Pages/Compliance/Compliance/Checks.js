@@ -506,7 +506,6 @@ bytes
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}`
       );
-      console.log(res, 'res');
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -521,9 +520,9 @@ bytes
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
-            criticality: '',
-            auditStatus: '',
-            performance: '',
+            criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
+            auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -604,8 +603,7 @@ bytes
         data.createdBy = tempNewQuestion[i].createdBy;
         dataCheck[i] = data;
       }
-      console.log(dataCheck, 'dataCheck1');
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`, dataCheck);
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
     }
     if (tempUpdatedQuestion.length > 0) {
       const dataCheck = [];
@@ -636,7 +634,6 @@ bytes
         data.createdBy = tempUpdatedQuestion[i].createdBy;
         dataCheck[i] = data;
       }
-      console.log(dataCheck, 'dataCheck2');
       const resUpdate = await api.put(
         `/api/v1/audits/${localStorage.getItem(
           'fkComplianceId'
@@ -670,15 +667,12 @@ bytes
   };
 
   const handleFile = (value, field, index, id) => {
-    console.log(id, 'value');
-    const temp = [...checkData];
+    let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i].question == id) {
         temp[i][field] = value;
       }
     }
-    console.log(temp, 'temp');
-
     setCheckData(temp);
   };
   const handelActionTracker = async () => {
@@ -1433,10 +1427,7 @@ bytes
                                               <TableBody>
                                                 {actionData.map((val) => (
                                                   <>
-                                                    {console.log(
-                                                      val.action.number,
-                                                      value.id
-                                                    )}
+                                                  
                                                     {val.id == value.id ? (
                                                       <>
                                                         {val.action.length > 0

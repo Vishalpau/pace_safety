@@ -305,7 +305,6 @@ function ComplianceQuestionsList(props) {
       })
     }
     await setAuditData(result)
-    console.log(res,">>>>>>>>>>>>>>>>>>>>>>>>")
   }
 
   const handleDelete = async () => {

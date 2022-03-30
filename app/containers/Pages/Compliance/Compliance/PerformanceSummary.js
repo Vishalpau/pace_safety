@@ -185,13 +185,12 @@ const PerformanceSummary = (props) => {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom&projectStructure=${fkProjectStructureIds}`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
       if (res.status === 200) {
         const result = res.data.data.results;
-        console.log(result, "LLLLLL");
         setNotificationSentValue(result);
       }
     } catch (error) { }

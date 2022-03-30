@@ -194,7 +194,6 @@ const QuestionsGroup = (props) => {
     const result = res.data.data.results;
 
     let data = JSON.parse(localStorage.getItem("auditChecks"));
-    console.log(data, "???????????????????");
     if (data !== null) {
       await setSubGroupId(data);
       let temp = [];
@@ -323,7 +322,6 @@ const QuestionsGroup = (props) => {
     } else if (e.target.checked) {
       temp.push({ groupName: gName, subGroupName: sGName });
     }
-    console.log(temp);
     setSubGroupId(temp);
   };
 
@@ -390,7 +388,7 @@ const QuestionsGroup = (props) => {
       <CustomPapperBlock title="Compliance question" icon='customDropdownPageIcon complianceQuestionPageIcon' whiteBg>
         {isLoading ?
           <Grid container spacing={3} className={classes.observationNewSection}>
-            <Grid container spacing={3} item xs={12} md={9}>
+            <Grid item xs={12} md={9}>
               <Grid container spacing={3}>
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Typography variant="h6" className="sectionHeading">
@@ -420,75 +418,13 @@ const QuestionsGroup = (props) => {
                     Work area information
                   </Typography>
                 </Grid>
-                {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
                         <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
                       </Grid>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Sections</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-name-label"
-                            label="Sections"
-                          >
-                            <MenuItem value="Phase">All sections</MenuItem>
-                            <MenuItem value="Phase1">Section 1</MenuItem>
-                          </Select>
 
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Unit</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-unit-label"
-                            label="Unit"
-                          >
-                            <MenuItem value="unit">All unit</MenuItem>
-                            <MenuItem value="unit1">Unit1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Work area</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-unit-label"
-                            label="Work area"
-                          >
-                            <MenuItem value="WA1">All work areas</MenuItem>
-                            <MenuItem value="WA2">P1-WA1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid> */}
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Paper elevation={1} className="paperSection">
-
-                    <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
-
-                    <Grid container spacing={3}>
                       {id ? (
                         fetchSelectBreakDownList.map((data, key) => (
                           <Grid item xs={3} md={3} key={key}>
@@ -551,219 +487,215 @@ const QuestionsGroup = (props) => {
                   </Paper>
                 </Grid>
               </Grid>
-
-              <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
-                <Typography variant="h6" className="sectionHeading">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                  >
-                    <g id="group-32" transform="translate(-611.999 -210.999)">
-                      <g
-                        id="Rectangle_1911"
-                        data-name="Rectangle 1911"
-                        transform="translate(611.999 210.999)"
-                        fill="none"
-                        stroke="#707070"
-                        stroke-width="1"
-                        opacity="0"
+              <Grid item md={12} sm={12} xs={12} className="paddRemove">
+                <Grid container spacing={3}>
+                  <Grid item md={9} sm={8} xs={8} className="paddRemove">
+                    <Typography variant="h6" className="sectionHeading">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 32 32"
                       >
-                        <rect width="32" height="32" stroke="none" />
-                        <rect x="0.5" y="0.5" width="31" height="31" fill="none" />
-                      </g>
-                      <g
-                        id="noun-group-3455272-FF9C34"
-                        transform="translate(611.999 216.333)"
-                      >
-                        <path
-                          id="Path_6440"
-                          data-name="Path 6440"
-                          d="M418.276,226.952a5.476,5.476,0,1,1,5.476-5.476A5.483,5.483,0,0,1,418.276,226.952Zm0-8.846a3.37,3.37,0,1,0,3.37,3.37A3.371,3.371,0,0,0,418.276,218.106Z"
-                          transform="translate(-402.294 -216)"
-                          fill="#06425c"
-                        />
-                        <path
-                          id="Path_6441"
-                          data-name="Path 6441"
-                          d="M816.4,339.2a4,4,0,1,1,4-4A4,4,0,0,1,816.4,339.2Zm0-5.9a1.9,1.9,0,1,0,1.9,1.9A1.888,1.888,0,0,0,816.4,333.306Z"
-                          transform="translate(-790.406 -327.83)"
-                          fill="#06425c"
-                        />
-                        <path
-                          id="Path_6442"
-                          data-name="Path 6442"
-                          d="M118,339.2a4,4,0,1,1,4-4A4,4,0,0,1,118,339.2Zm0-5.9a1.9,1.9,0,1,0,1.9,1.9A1.888,1.888,0,0,0,118,333.306Z"
-                          transform="translate(-112.034 -327.83)"
-                          fill="#06425c"
-                        />
-                        <path
-                          id="Path_6443"
-                          data-name="Path 6443"
-                          d="M765.182,543.828a21.412,21.412,0,0,1-3.089-.176l-.878-.14v-1.018a6.989,6.989,0,0,0-1.264-3.967L759.6,538l.281-.562a6.053,6.053,0,0,1,5.265-3.44,6.3,6.3,0,0,1,6,6.318c0,3.51-3.3,3.51-5.968,3.51Zm-1.9-2.176c.6.035,1.264.07,1.9.07,3.545,0,3.861-.351,3.861-1.4a4.223,4.223,0,0,0-3.9-4.212,3.808,3.808,0,0,0-3.089,1.755,8.933,8.933,0,0,1,1.229,3.791Z"
-                          transform="translate(-739.152 -524.697)"
-                          fill="#06425c"
-                        />
-                        <path
-                          id="Path_6444"
-                          data-name="Path 6444"
-                          d="M52.768,543.829c-2.668,0-5.968,0-5.968-3.51A6.227,6.227,0,0,1,52.768,534a6.03,6.03,0,0,1,5.265,3.44l.281.562-.351.527a6.99,6.99,0,0,0-1.229,3.967v1.053l-.878.105a21.4,21.4,0,0,1-3.089.176Zm0-7.723a4.143,4.143,0,0,0-3.861,4.212c0,1.053.316,1.4,3.861,1.4a17.447,17.447,0,0,0,1.9-.07,9.387,9.387,0,0,1,1.194-3.791,3.809,3.809,0,0,0-3.089-1.755Z"
-                          transform="translate(-46.8 -524.698)"
-                          fill="#06425c"
-                        />
-                        <path
-                          id="Path_6445"
-                          data-name="Path 6445"
-                          d="M321.389,532.02c-3.837,0-8.189,0-8.189-4.7,0-4.844,3.735-8.916,8.189-8.916s8.189,4.072,8.189,8.916C329.577,532.02,325.226,532.02,321.389,532.02Zm0-11.514c-3.255,0-6.133,3.194-6.133,6.81,0,2.141,1.1,2.6,6.133,2.6s6.133-.456,6.133-2.6C327.521,523.7,324.643,520.506,321.389,520.506Z"
-                          transform="translate(-305.407 -509.554)"
-                          fill="#06425c"
-                        />
-                      </g>
-                    </g>
-                  </svg>{" "}
-                  Groups
-                </Typography>
-              </Grid>
-              <Grid item md={3} sm={4} xs={4} className="paddBRemove" align="right">
-                <IconButton
-                  variant="contained"
-                  color="primary"
-                  className="customAddButton"
-                  onClick={(e) => handleNewPickListPush(e)}
-                >
-                  <AddCircleIcon className="marginR5" /> New groups
-                </IconButton>
-              </Grid>
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={6} xs={12}>
-                      <FormLabel className="checkRadioLabel" component="legend">
-                        Group name
-                      </FormLabel>
-                      <FormGroup className={classes.customCheckBoxList}>
-                        {checkGroups.map((value, index) => (
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                name={index}
-                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                                checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              />
-                            }
-                            className="selectLabel"
-                            label={value.checkListLabel}
-                            checked={handelSelectOption(value.checkListLabel)}
-                            onChange={async (e) =>
-                              handlePhysicalHazards(e, value, index)
-                            }
-                          />
-                        ))}
-                      </FormGroup>
-                    </Grid>
-
-                    <Grid item md={6} xs={12}>
-                      <Grid container spacing={3}>
-                        {checkData.map((value, index) => (
-                          <Grid item md={6} xs={12} className={classes.formBox}>
-                            <FormControl component="fieldset">
-                              <FormLabel
-                                className="checkRadioLabel"
-                                component="legend"
-                              >
-                                {value["checkListLabel"]}
-                              </FormLabel>
-                              <FormGroup>
-                                {value["checklistValues"].map((option, index) => (
-                                  <FormControlLabel
-                                    className="selectLabel"
-                                    control={
-                                      <Checkbox
-                                        icon={
-                                          <CheckBoxOutlineBlankIcon fontSize="small" />
-                                        }
-                                        checkedIcon={
-                                          <CheckBoxIcon fontSize="small" />
-                                        }
-                                        name="checkedI"
-                                      />
-                                    }
-                                    label={option.inputLabel}
-                                    checked={handelSelectOptionSubGroup(
-                                      option.inputLabel
-                                    )}
-                                    onChange={async (e) =>
-                                      handleGroups(
-                                        e,
-                                        option.id,
-                                        index,
-                                        value.checkListLabel,
-                                        option.inputLabel
-                                      )
-                                    }
-                                  />
-                                ))}
-                              </FormGroup>
-                            </FormControl>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-
-              <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                {/* <Typography variant="h6" className="sectionHeading">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                         <g id="group-32" transform="translate(-611.999 -210.999)">
-                          <g id="Rectangle_1911" data-name="Rectangle 1911" transform="translate(611.999 210.999)" fill="none" stroke="#707070" stroke-width="1" opacity="0">
-                            <rect width="32" height="32" stroke="none"/>
-                            <rect x="0.5" y="0.5" width="31" height="31" fill="none"/>
+                          <g
+                            id="Rectangle_1911"
+                            data-name="Rectangle 1911"
+                            transform="translate(611.999 210.999)"
+                            fill="none"
+                            stroke="#707070"
+                            stroke-width="1"
+                            opacity="0"
+                          >
+                            <rect width="32" height="32" stroke="none" />
+                            <rect x="0.5" y="0.5" width="31" height="31" fill="none" />
                           </g>
-                          <g id="noun-group-3455272-FF9C34" transform="translate(611.999 216.333)">
-                            <path id="Path_6440" data-name="Path 6440" d="M418.276,226.952a5.476,5.476,0,1,1,5.476-5.476A5.483,5.483,0,0,1,418.276,226.952Zm0-8.846a3.37,3.37,0,1,0,3.37,3.37A3.371,3.371,0,0,0,418.276,218.106Z" transform="translate(-402.294 -216)" fill="#06425c"/>
-                            <path id="Path_6441" data-name="Path 6441" d="M816.4,339.2a4,4,0,1,1,4-4A4,4,0,0,1,816.4,339.2Zm0-5.9a1.9,1.9,0,1,0,1.9,1.9A1.888,1.888,0,0,0,816.4,333.306Z" transform="translate(-790.406 -327.83)" fill="#06425c"/>
-                            <path id="Path_6442" data-name="Path 6442" d="M118,339.2a4,4,0,1,1,4-4A4,4,0,0,1,118,339.2Zm0-5.9a1.9,1.9,0,1,0,1.9,1.9A1.888,1.888,0,0,0,118,333.306Z" transform="translate(-112.034 -327.83)" fill="#06425c"/>
-                            <path id="Path_6443" data-name="Path 6443" d="M765.182,543.828a21.412,21.412,0,0,1-3.089-.176l-.878-.14v-1.018a6.989,6.989,0,0,0-1.264-3.967L759.6,538l.281-.562a6.053,6.053,0,0,1,5.265-3.44,6.3,6.3,0,0,1,6,6.318c0,3.51-3.3,3.51-5.968,3.51Zm-1.9-2.176c.6.035,1.264.07,1.9.07,3.545,0,3.861-.351,3.861-1.4a4.223,4.223,0,0,0-3.9-4.212,3.808,3.808,0,0,0-3.089,1.755,8.933,8.933,0,0,1,1.229,3.791Z" transform="translate(-739.152 -524.697)" fill="#06425c"/>
-                            <path id="Path_6444" data-name="Path 6444" d="M52.768,543.829c-2.668,0-5.968,0-5.968-3.51A6.227,6.227,0,0,1,52.768,534a6.03,6.03,0,0,1,5.265,3.44l.281.562-.351.527a6.99,6.99,0,0,0-1.229,3.967v1.053l-.878.105a21.4,21.4,0,0,1-3.089.176Zm0-7.723a4.143,4.143,0,0,0-3.861,4.212c0,1.053.316,1.4,3.861,1.4a17.447,17.447,0,0,0,1.9-.07,9.387,9.387,0,0,1,1.194-3.791,3.809,3.809,0,0,0-3.089-1.755Z" transform="translate(-46.8 -524.698)" fill="#06425c"/>
-                            <path id="Path_6445" data-name="Path 6445" d="M321.389,532.02c-3.837,0-8.189,0-8.189-4.7,0-4.844,3.735-8.916,8.189-8.916s8.189,4.072,8.189,8.916C329.577,532.02,325.226,532.02,321.389,532.02Zm0-11.514c-3.255,0-6.133,3.194-6.133,6.81,0,2.141,1.1,2.6,6.133,2.6s6.133-.456,6.133-2.6C327.521,523.7,324.643,520.506,321.389,520.506Z" transform="translate(-305.407 -509.554)" fill="#06425c"/>
+                          <g
+                            id="noun-group-3455272-FF9C34"
+                            transform="translate(611.999 216.333)"
+                          >
+                            <path
+                              id="Path_6440"
+                              data-name="Path 6440"
+                              d="M418.276,226.952a5.476,5.476,0,1,1,5.476-5.476A5.483,5.483,0,0,1,418.276,226.952Zm0-8.846a3.37,3.37,0,1,0,3.37,3.37A3.371,3.371,0,0,0,418.276,218.106Z"
+                              transform="translate(-402.294 -216)"
+                              fill="#06425c"
+                            />
+                            <path
+                              id="Path_6441"
+                              data-name="Path 6441"
+                              d="M816.4,339.2a4,4,0,1,1,4-4A4,4,0,0,1,816.4,339.2Zm0-5.9a1.9,1.9,0,1,0,1.9,1.9A1.888,1.888,0,0,0,816.4,333.306Z"
+                              transform="translate(-790.406 -327.83)"
+                              fill="#06425c"
+                            />
+                            <path
+                              id="Path_6442"
+                              data-name="Path 6442"
+                              d="M118,339.2a4,4,0,1,1,4-4A4,4,0,0,1,118,339.2Zm0-5.9a1.9,1.9,0,1,0,1.9,1.9A1.888,1.888,0,0,0,118,333.306Z"
+                              transform="translate(-112.034 -327.83)"
+                              fill="#06425c"
+                            />
+                            <path
+                              id="Path_6443"
+                              data-name="Path 6443"
+                              d="M765.182,543.828a21.412,21.412,0,0,1-3.089-.176l-.878-.14v-1.018a6.989,6.989,0,0,0-1.264-3.967L759.6,538l.281-.562a6.053,6.053,0,0,1,5.265-3.44,6.3,6.3,0,0,1,6,6.318c0,3.51-3.3,3.51-5.968,3.51Zm-1.9-2.176c.6.035,1.264.07,1.9.07,3.545,0,3.861-.351,3.861-1.4a4.223,4.223,0,0,0-3.9-4.212,3.808,3.808,0,0,0-3.089,1.755,8.933,8.933,0,0,1,1.229,3.791Z"
+                              transform="translate(-739.152 -524.697)"
+                              fill="#06425c"
+                            />
+                            <path
+                              id="Path_6444"
+                              data-name="Path 6444"
+                              d="M52.768,543.829c-2.668,0-5.968,0-5.968-3.51A6.227,6.227,0,0,1,52.768,534a6.03,6.03,0,0,1,5.265,3.44l.281.562-.351.527a6.99,6.99,0,0,0-1.229,3.967v1.053l-.878.105a21.4,21.4,0,0,1-3.089.176Zm0-7.723a4.143,4.143,0,0,0-3.861,4.212c0,1.053.316,1.4,3.861,1.4a17.447,17.447,0,0,0,1.9-.07,9.387,9.387,0,0,1,1.194-3.791,3.809,3.809,0,0,0-3.089-1.755Z"
+                              transform="translate(-46.8 -524.698)"
+                              fill="#06425c"
+                            />
+                            <path
+                              id="Path_6445"
+                              data-name="Path 6445"
+                              d="M321.389,532.02c-3.837,0-8.189,0-8.189-4.7,0-4.844,3.735-8.916,8.189-8.916s8.189,4.072,8.189,8.916C329.577,532.02,325.226,532.02,321.389,532.02Zm0-11.514c-3.255,0-6.133,3.194-6.133,6.81,0,2.141,1.1,2.6,6.133,2.6s6.133-.456,6.133-2.6C327.521,523.7,324.643,520.506,321.389,520.506Z"
+                              transform="translate(-305.407 -509.554)"
+                              fill="#06425c"
+                            />
                           </g>
                         </g>
-                      </svg> Groups
-                    </Typography> */}
-                <FormLabel
-                  component="legend"
-                  className="checkRadioLabel errorMsgTxt"
-                >
-                  Compliance groups and sub-groups have not been configured!
-                </FormLabel>
-              </Grid>
-              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                <Paper elevation={1} className="paperSection">
-                  <Grid container spacing={3}>
-                    <Grid item md={12} sm={12} xs={12} className="paddBRemove">
-                      <FormLabel component="legend" className="checkRadioLabel">
-                        Please configure groups and subgroups before this
-                        configuration{" "}
-                      </FormLabel>
-                    </Grid>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <IconButton
-                        variant="contained"
-                        color="primary"
-                        className="customAddButton"
-                        // onClick={handleClickOpen('paper')}
-                        onClick={(e) => handleNewPickListPush(e)}
-                      >
-                        <AddCircleIcon className="marginR5" /> New groups
-                      </IconButton>
-                    </Grid>
+                      </svg>{" "}
+                      Groups
+                    </Typography>
                   </Grid>
-                </Paper>
+                  <Grid item md={3} sm={4} xs={4} className="paddBRemove" align='right'>
+                    <IconButton
+                      variant="contained"
+                      color="primary"
+                      className="customAddButton marginT15"
+                      onClick={(e) => handleNewPickListPush(e)}
+                    >
+                      <AddCircleIcon className="marginR5" /> New groups
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </Grid>
+              {checkGroups.length > 0 ?
+
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                      <Grid item md={6} xs={12}>
+                        <FormLabel className="checkRadioLabel" component="legend">
+                          Group name
+                        </FormLabel>
+                        <FormGroup className={classes.customCheckBoxList}>
+                          {checkGroups.map((value, index) => (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  name={index}
+                                  icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                  checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                />
+                              }
+                              className="selectLabel"
+                              label={value.checkListLabel}
+                              checked={handelSelectOption(value.checkListLabel)}
+                              onChange={async (e) =>
+                                handlePhysicalHazards(e, value, index)
+                              }
+                            />
+                          ))}
+                        </FormGroup>
+                      </Grid>
+
+                      <Grid item md={6} xs={12}>
+                        <Grid container spacing={3}>
+                          {checkData.map((value, index) => (
+                            <Grid item md={6} xs={12} className={classes.formBox}>
+                              <FormControl component="fieldset">
+                                <FormLabel
+                                  className="checkRadioLabel"
+                                  component="legend"
+                                >
+                                  {value["checkListLabel"]}
+                                </FormLabel>
+                                <FormGroup>
+                                  {value["checklistValues"].map((option, index) => (
+                                    <FormControlLabel
+                                      className="selectLabel"
+                                      control={
+                                        <Checkbox
+                                          icon={
+                                            <CheckBoxOutlineBlankIcon fontSize="small" />
+                                          }
+                                          checkedIcon={
+                                            <CheckBoxIcon fontSize="small" />
+                                          }
+                                          name="checkedI"
+                                        />
+                                      }
+                                      label={option.inputLabel}
+                                      checked={handelSelectOptionSubGroup(
+                                        option.inputLabel
+                                      )}
+                                      onChange={async (e) =>
+                                        handleGroups(
+                                          e,
+                                          option.id,
+                                          index,
+                                          value.checkListLabel,
+                                          option.inputLabel
+                                        )
+                                      }
+                                    />
+                                  ))}
+                                </FormGroup>
+                              </FormControl>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                </Grid>
+
+                :
+                <>
+                  <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                    <FormLabel
+                      component="legend"
+                      className="checkRadioLabel errorMsgTxt"
+                    >
+                      Compliance groups and sub-groups have not been configured!
+                    </FormLabel>
+                  </Grid>
+
+
+
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                    <Paper elevation={1} className="paperSection">
+                      <Grid container spacing={3}>
+                        <Grid item md={12} sm={12} xs={12} className="paddBRemove">
+                          <FormLabel component="legend" className="checkRadioLabel">
+                            Please configure groups and subgroups before this
+                            configuration{" "}
+                          </FormLabel>
+                        </Grid>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <IconButton
+                            variant="contained"
+                            color="primary"
+                            className="customAddButton"
+                            // onClick={handleClickOpen('paper')}
+                            onClick={(e) => handleNewPickListPush(e)}
+                          >
+                            <AddCircleIcon className="marginR5" /> New groups
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+
+                </>
+              }
             </Grid>
+
             <Grid item xs={12} md={3}>
               <FormSideBar
                 deleteForm={[1, 2, 3]}

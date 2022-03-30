@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
 
 const PerformanceFactorAdd = () => {
     const [error, setError] = useState({});
+    const [performError, setPerformError] = useState('');
+
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -67,20 +69,16 @@ const PerformanceFactorAdd = () => {
     const history = useHistory();
 
     const handleSave = async () => {
-
         const { error, isValid } = FectorValidation(fectorForm)
-        console.log(error)
         setError(error)
         if (!isValid) {
             return "data not valid"
         }
         const res = await api.post(`/api/v1/configaudits/factors/`, fectorForm).then(res => { localStorage.setItem("configTab", 1), history.goBack() }).catch(err => console.log(error))
-
+        setPerformError('The combination of factor type is already exist in database.')
     }
-
     useEffect(() => {
-        console.log(fectorForm,'fectorForm')
-      }, [fectorForm]);
+    }, []);
 
 
     return (
@@ -136,73 +134,91 @@ const PerformanceFactorAdd = () => {
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>
-                                        {fectorForm.factorType === 'Status' ?(
-                                            <FormControl
-                                                variant="outlined"
-                                                className="formControl"
-                                                error={error.factorName}
-                                            >
-                                                <InputLabel id="project-name-label">Factor name *</InputLabel>
-                                               
-                                                <Select
-                                                    id="project-name"
-                                                    labelId="project-unit-label"
-                                                    label="Factor name *"
-                                                    value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                                    onChange={(e) => { console.log(e,'factorName');setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                            {fectorForm.factorType === 'Status' ? (
+                                                <FormControl
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                    error={error.factorName}
                                                 >
-                                                  
-                                                    
-                                                    
-                                                    <MenuItem value="Partially compliance">Partially compliance</MenuItem>
-                                                    <MenuItem value="Fully compliance">Fully compliance</MenuItem>
-                                                    
-                            
-                                                    
-                                                
-                                                    
-                                                </Select>
-                                                {error && error[`factorName`] && (
-                                                    <FormHelperText>
-                                                        {error[`factorName`]}
-                                                    </FormHelperText>
-                                                )}
-                                            </FormControl>
-                                        ): 
-                                        (<FormControl
-                                        variant="outlined"
-                                        className="formControl"
-                                        error={error.factorName}
-                                    >
-                                        <InputLabel id="project-name-label">Factor name *</InputLabel>
-                                       
-                                        <Select
-                                            id="project-name"
-                                            labelId="project-unit-label"
-                                            label="Factor name *"
-                                            value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                            onChange={(e) => { console.log(e,'factorName');setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
-                            
-                                            >
-                                          
-                                                                                              
-                                            <MenuItem value="High">High</MenuItem>
-                                            <MenuItem value="Medium">Medium</MenuItem>
-                                            <MenuItem value="Low">Low</MenuItem>
-                                            
-                                        
-                                            
-                                        </Select>
-                                        {error && error[`factorName`] && (
-                                            <FormHelperText>
-                                                {error[`factorName`]}
-                                            </FormHelperText>
-                                        )}
-                                    </FormControl>)}
+                                                    <InputLabel id="project-name-label">Factor name *</InputLabel>
+                                                    <Select
+                                                        id="project-name"
+                                                        labelId="project-unit-label"
+                                                        label="Factor name *"
+                                                        value={fectorForm.factorName ? fectorForm.factorName : ""}
+                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                    >
+                                                        <MenuItem value="Not in compliance -stop work">Not in compliance -stop work</MenuItem>
+                                                        <MenuItem value="Not in compliance - Action required">Not in compliance - Action required</MenuItem>
+                                                        <MenuItem value="Partial compliance">Partial compliance</MenuItem>
+                                                        <MenuItem value="Compliant- Needs improvement">Compliant- Needs improvement</MenuItem>
+                                                        <MenuItem value="Fully compliance">Fully compliant</MenuItem>
+                                                        <MenuItem value="Fully compliant & excellent">Fully compliant & excellent</MenuItem>
+                                                    </Select>
+                                                    {error && error[`factorName`] && (
+                                                        <FormHelperText>
+                                                            {error[`factorName`]}
+                                                        </FormHelperText>
+                                                    )}
+                                                </FormControl>
+                                            ) :
+                                                (<FormControl
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                    error={error.factorName}
+                                                >
+                                                    <InputLabel id="project-name-label">Factor name *</InputLabel>
+
+                                                    <Select
+                                                        id="project-name"
+                                                        labelId="project-unit-label"
+                                                        label="Factor name *"
+                                                        value={fectorForm.factorName ? fectorForm.factorName : ""}
+                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                    >
+                                                        <MenuItem value="High">High</MenuItem>
+                                                        <MenuItem value="Medium">Medium</MenuItem>
+                                                        <MenuItem value="Low">Low</MenuItem>
+                                                    </Select>
+                                                    {error && error[`factorName`] && (
+                                                        <FormHelperText>
+                                                            {error[`factorName`]}
+                                                        </FormHelperText>
+                                                    )}
+                                                </FormControl>)}
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>
-                                            <FormControl
+                                            {fectorForm.factorType === 'Status' ? (
+                                                <FormControl
+                                                    //required
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                    error={error.factorConstant}
+                                                >
+                                                    <InputLabel id="project-name-label">Factor constant *</InputLabel>
+                                                    <Select
+                                                        id="project-name"
+                                                        labelId="project-unit-label"
+                                                        label="Factor constant *"
+                                                        required
+                                                        value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
+                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
+                                                    >
+                                                        <MenuItem value="0">0</MenuItem>
+                                                        <MenuItem value="1">1</MenuItem>
+                                                        <MenuItem value="2">2</MenuItem>
+                                                        <MenuItem value="3">3</MenuItem>
+                                                        <MenuItem value="4">4</MenuItem>
+                                                        <MenuItem value="5">5</MenuItem>
+                                                    </Select>
+                                                    {error && error[`factorConstant`] && (
+                                                        <FormHelperText>
+                                                            {error[`factorConstant`]}
+                                                        </FormHelperText>
+                                                    )}
+                                                </FormControl>
+                                            ) : (<FormControl
                                                 //required
                                                 variant="outlined"
                                                 className="formControl"
@@ -217,17 +233,17 @@ const PerformanceFactorAdd = () => {
                                                     value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
                                                     onChange={(e) => { setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
                                                 >
-                                                    <MenuItem value="0.5">0.5</MenuItem>
-                                                    <MenuItem value="1">1</MenuItem>
-                                                    <MenuItem value="3">3</MenuItem>
-                                                    <MenuItem value="3">2</MenuItem>
+                                                    <MenuItem value="1" selected={fectorForm.factorConstant == 1}>1</MenuItem>
+                                                    <MenuItem value="0.3" selected={fectorForm.factorConstant == 0.3}>0.3</MenuItem>
+                                                    <MenuItem value="0.6" selected={fectorForm.factorConstant == .60}>0.6</MenuItem>
                                                 </Select>
                                                 {error && error[`factorConstant`] && (
                                                     <FormHelperText>
                                                         {error[`factorConstant`]}
                                                     </FormHelperText>
                                                 )}
-                                            </FormControl>
+                                            </FormControl>)}
+
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>
@@ -247,8 +263,10 @@ const PerformanceFactorAdd = () => {
                                             />
                                         </Grid>
                                     </Grid>
+                                    <div style={{ color: "red" }}>{performError}</div>
                                 </Paper>
                             </Grid>
+
                         </Grid>
 
                     </Grid>
