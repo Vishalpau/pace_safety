@@ -352,35 +352,49 @@ const Checks = () => {
 
   const Criticality = [
     {
-      value: "none",
-      label: "None",
+      value: "High",
+      label: "High",
     },
     {
-      value: "criticality",
-      label: "Criticality",
+      value: "Medium",
+      label: "Medium",
     },
     {
-      value: "criticality1",
-      label: "Criticality 1",
+      value: "Low",
+      label: "Low",
     },
   ];
   const Status = [
     {
-      value: "none",
-      label: "None",
+      value: "Not in compliance -stop work",
+      label: "Not in compliance -stop work",
     },
     {
-      value: "status",
-      label: "Status",
+      value: "Not in compliance - Action required",
+      label: "Not in compliance - Action required",
     },
     {
-      value: "status1",
-      label: "Status 1",
+      value: "Partial compliance",
+      label: "Partial compliance",
+    },
+    {
+      value: "Compliant- Needs improvement",
+      label: "Compliant- Needs improvement",
+    },
+    {
+      value: "Fully compliant",
+      label: "Fully compliant",
+    },
+    {
+      value: "Fully compliant & excellent",
+      label: "Fully compliant & excellent",
     },
   ];
 
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
+  const [criticalityData, setCriticalityData] = useState([]);
+  const [statusData, setStatusData] = useState([])
   const handleActionDateChange = (date) => {
     setSelectedActionDate(date);
   };
@@ -654,8 +668,31 @@ const Checks = () => {
     setActionData(allAction);
   };
 
+
+  const fetchFectorData = async () => {
+    let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
+    const result = res.data.data.results
+    const factorCriticality = result.filter(item =>
+      item.factorType === "Criticality"
+    )
+    setCriticalityData(factorCriticality)
+    const factorStatus = result.filter(item =>
+      item.factorType === "Status"
+    )
+    setStatusData(factorStatus)
+  }
+
+  console.log(statusData, criticalityData)
+
+  const handleCriticality = async (id, name) => {
+    console.log(id, name, 'ooo')
+
+    await setForm({ ...form, id: id, factorName: name });
+  };
+
   useEffect(() => {
     // fetchCheklist();
+    fetchFectorData();
     fetchData();
     fetchCheklistData();
 
@@ -969,44 +1006,44 @@ const Checks = () => {
                                               className={classes.createHazardbox}
                                             >
                                               <ActionTracker
-                                                actionContext="audit:question"
-                                                enitityReferenceId={`${localStorage.getItem(
-                                                  "fkComplianceId"
-                                                )}:${value.id}`}
-                                                setUpdatePage={setUpdatePage}
-                                                fkCompanyId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "company"
-                                                    )
-                                                  ).fkCompanyId
-                                                }
-                                                fkProjectId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "projectName"
-                                                    )
-                                                  ).projectName.projectId
-                                                }
-                                                fkProjectStructureIds={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "commonObject"
-                                                    )
-                                                  )["audit"]["projectStruct"]
-                                                }
-                                                createdBy={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "userDetails"
-                                                    )
-                                                  ).id
-                                                }
-                                                updatePage={updatePage}
-                                                handelShowData={
-                                                  handelActionTracker
-                                                }
-                                              />
+                                              actionContext="audit:question"
+                                              enitityReferenceId={`${localStorage.getItem(
+                                                "fkComplianceId"
+                                              )}:${value.id}`}
+                                              setUpdatePage={setUpdatePage}
+                                              fkCompanyId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "company"
+                                                  )
+                                                ).fkCompanyId
+                                              }
+                                              fkProjectId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "projectName"
+                                                  )
+                                                ).projectName.projectId
+                                              }
+                                              fkProjectStructureIds={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "commonObject"
+                                                  )
+                                                )["audit"]["projectStruct"]
+                                              }
+                                              createdBy={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "userDetails"
+                                                  )
+                                                ).id
+                                              }
+                                              updatePage={updatePage}
+                                              handelShowData={
+                                                handelActionTracker
+                                              }
+                                            />
                                             </Grid>
                                           </Grid>
                                           {actionData.map((val) => (
@@ -1171,12 +1208,16 @@ const Checks = () => {
                                               }
 
                                             >
-                                              {Criticality.map((option) => (
+                                              {criticalityData.map((option) => (
                                                 <MenuItem
-                                                  key={option.value}
-                                                  value={option.value}
+                                                  key={option.id}
+                                                  value={option.id}
+                                                  id={option.id}
+                                                  onClick={(e) => {
+                                                    handleCriticality(option.id, option.factorName);
+                                                  }}
                                                 >
-                                                  {option.label}
+                                                  {option.factorName}
                                                 </MenuItem>
                                               ))}
                                             </TextField>
@@ -1186,7 +1227,7 @@ const Checks = () => {
                                               label="Status*"
                                               name="status"
                                               id="status"
-                                              defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : "")}
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
                                               select
                                               fullWidth
                                               variant="outlined"
@@ -1200,12 +1241,16 @@ const Checks = () => {
                                                 )
                                               }
                                             >
-                                              {Status.map((option) => (
+                                              {statusData.map((option) => (
                                                 <MenuItem
-                                                  key={option.value}
-                                                  value={option.value}
+                                                  key={option.id}
+                                                  value={option.id}
+                                                  id={option.id}
+                                                  onClick={(e) => {
+                                                    handleCriticality(option.id, option.factorName);
+                                                  }}
                                                 >
-                                                  {option.label}
+                                                  {option.factorName}
                                                 </MenuItem>
                                               ))}
                                             </TextField>
@@ -1288,7 +1333,7 @@ const Checks = () => {
                                                 <Select
                                                   labelId="scoreCount"
                                                   id="scoreCount"
-                                                  value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : "")}
                                                   label="Counts"
                                                   className="formControl"
                                                   fullWidth
@@ -1348,44 +1393,44 @@ const Checks = () => {
                                               className={classes.createHazardbox}
                                             >
                                               <ActionTracker
-                                                actionContext="audit:question"
-                                                enitityReferenceId={`${localStorage.getItem(
-                                                  "fkComplianceId"
-                                                )}:${value.id}`}
-                                                setUpdatePage={setUpdatePage}
-                                                fkCompanyId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "company"
-                                                    )
-                                                  ).fkCompanyId
-                                                }
-                                                fkProjectId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "projectName"
-                                                    )
-                                                  ).projectName.projectId
-                                                }
-                                                fkProjectStructureIds={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "commonObject"
-                                                    )
-                                                  )["audit"]["projectStruct"]
-                                                }
-                                                createdBy={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "userDetails"
-                                                    )
-                                                  ).id
-                                                }
-                                                updatePage={updatePage}
-                                                handelShowData={
-                                                  handelActionTracker
-                                                }
-                                              />
+                                              actionContext="audit:question"
+                                              enitityReferenceId={`${localStorage.getItem(
+                                                "fkComplianceId"
+                                              )}:${value.id}`}
+                                              setUpdatePage={setUpdatePage}
+                                              fkCompanyId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "company"
+                                                  )
+                                                ).fkCompanyId
+                                              }
+                                              fkProjectId={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "projectName"
+                                                  )
+                                                ).projectName.projectId
+                                              }
+                                              fkProjectStructureIds={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "commonObject"
+                                                  )
+                                                )["audit"]["projectStruct"]
+                                              }
+                                              createdBy={
+                                                JSON.parse(
+                                                  localStorage.getItem(
+                                                    "userDetails"
+                                                  )
+                                                ).id
+                                              }
+                                              updatePage={updatePage}
+                                              handelShowData={
+                                                handelActionTracker
+                                              }
+                                            />
                                             </Grid>
                                           </Grid>
 
@@ -1407,7 +1452,7 @@ const Checks = () => {
                                               <TableBody>
                                                 {actionData.map((val) => (
                                                   <>
-                                                  
+
                                                     {val.id == value.id ? (
                                                       <>
                                                         {val.action.length > 0 &&

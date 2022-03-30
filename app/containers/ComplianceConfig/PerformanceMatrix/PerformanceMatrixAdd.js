@@ -115,7 +115,7 @@ const PerformanceMatrixAdd = () => {
                                             variant="outlined"
                                             className="formControl"
                                             inputProps={{
-                                                min: -1,
+                                                min: 0,
                                                 max: 5,
                                                 // step: 2,
                                                 onKeyDown: (event) => {
