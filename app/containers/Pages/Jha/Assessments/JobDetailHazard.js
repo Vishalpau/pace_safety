@@ -37,6 +37,7 @@ import JobDetailsValidate from '../Validation/JobDetailsValidate';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import Loader from "../../Loader"
+import Acl from '../../../../components/Error/acl';
 
 
 
@@ -193,6 +194,8 @@ const JobDetails = (props) => {
 
     const { id } = useParams();
     const history = useHistory();
+    const history_state = history.location.state; 
+    console.log(history.location.state);
     const [error, setError] = useState({})
     const [loading, setLoading] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
@@ -743,7 +746,11 @@ const JobDetails = (props) => {
     }, []);
 
     return (
-        <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
+        <Acl
+            module="safety-jha"
+            action={history_state ? 'add_jha' : 'change_jha'}
+            html={( 
+                <CustomPapperBlock title="Assessments" icon='customDropdownPageIcon jsaPageIcon' whiteBg>
             {/* {console.log(departmentName)} */}
             {loading == false ?
                 <Row>
@@ -1389,6 +1396,7 @@ const JobDetails = (props) => {
                 </Row>
                 : <Loader />}
         </CustomPapperBlock >
+            )}/>
     );
 };
 

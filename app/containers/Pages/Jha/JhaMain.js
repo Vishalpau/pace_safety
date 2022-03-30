@@ -256,7 +256,10 @@ export default function JhaMain() {
     localStorage.removeItem('JSAAssessments')
     localStorage.removeItem('JSAApproval')
     localStorage.removeItem('JSAlessonsLearned')
-    history.push("/app/pages/jha/assessments/Job-hazards");
+    history.push({
+      pathname:"/app/pages/jha/assessments/Job-hazards",
+      state: 'add_new'
+    });
   };
 
   useEffect(() => {
