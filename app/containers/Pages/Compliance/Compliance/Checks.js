@@ -489,7 +489,7 @@ const Checks = () => {
             questionId: value.id,
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
-            auditStatus: "",
+            auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
             performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,

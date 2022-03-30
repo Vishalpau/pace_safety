@@ -399,8 +399,7 @@ const CloseOut = () => {
                   format="yyyy/MM/dd HH:mm"
                   inputVariant="outlined"
                   id="date-picker-dialog"
-                  format="yyyy/MM/dd HH:mm"
-                  inputVariant="outlined"
+                  // format="yyyy/MM/dd HH:mm"
                   label="Closed on"
                   onClick={(e) => setIsDateShow(true)}
                   open={isDateShow}
