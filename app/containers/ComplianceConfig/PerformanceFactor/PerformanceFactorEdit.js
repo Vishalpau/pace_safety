@@ -118,11 +118,7 @@ const PerformanceFactorEdit = () => {
                                                         <MenuItem value="Fully compliance">Fully compliant</MenuItem>
                                                         <MenuItem value="Fully compliant & excellent">Fully compliant & excellent</MenuItem>
                                                     </Select>
-                                                    {/* {error && error[`factorName`] && (
-                                                        <FormHelperText>
-                                                            {error[`factorName`]}
-                                                        </FormHelperText>
-                                                    )} */}
+
                                                 </FormControl>
                                             ) :
                                                 (<FormControl
@@ -142,58 +138,51 @@ const PerformanceFactorEdit = () => {
                                                         <MenuItem value="Medium">Medium</MenuItem>
                                                         <MenuItem value="Low">Low</MenuItem>
                                                     </Select>
-                                                    {/* {error && error[`factorName`] && (
-                                                        <FormHelperText>
-                                                            {error[`factorName`]}
-                                                        </FormHelperText>
-                                                    )} */}
                                                 </FormControl>)}
                                         </Grid>
-                                        {/* <Grid item md={4} sm={6} xs={12}>
-                                    <FormControl
-                                        variant="outlined"
-                                        className="formControl"
-                                    >
-                                        <InputLabel id="project-name-label">Factor name</InputLabel>
-                                        <Select
-                                        id="project-name"
-                                        labelId="project-unit-label"
-                                        label="Factor name"
-                                        value={fectorData.factorName ? fectorData.factorName : ""}
-                                        onChange={(e) => setFectorData({...fectorData , factorName : e.target.value})}
-                                        >
-                                            <MenuItem value="High">High</MenuItem>
-                                            <MenuItem value="Medium">Medium</MenuItem>
-                                            <MenuItem value="Low">Low</MenuItem>
-                                            <MenuItem value="Partially compliance">Partially compliance</MenuItem>
-                                            <MenuItem value="Fully compliance">Fully compliance</MenuItem>
-                                        </Select>
-                                        
-                                    </FormControl>
-                                </Grid> */}
 
                                         <Grid item md={4} sm={6} xs={12}>
-                                            <FormControl
-                                                //required
-                                                variant="outlined"
-                                                className="formControl"
-                                            >
-                                                <InputLabel id="project-name-label">Factor constant</InputLabel>
-                                                {console.log(fectorData.factorConstant,'fectorData.factorConstant')}
-                                                <Select
-                                                    id="project-name"
-                                                    labelId="project-unit-label"
-                                                    label="Factor constant"
-                                                    value={fectorData.factorConstant ? fectorData.factorConstant : ""}
-                                                    onChange={(e) => setFectorData({ ...fectorData, factorConstant: e.target.value })}
+                                            {fectorData.factorType === 'Status' ? (
+                                                <FormControl
+                                                    variant="outlined"
+                                                    className="formControl"
                                                 >
-                                                    <MenuItem value="1">1</MenuItem>
-                                                    <MenuItem value=".60">.60</MenuItem>
-                                                    <MenuItem value=".30">.30</MenuItem>
+                                                    <InputLabel id="project-name-label">Factor constant *</InputLabel>
+                                                    <Select
+                                                        id="project-name"
+                                                        labelId="project-unit-label"
+                                                        label="Factor constant *"
+                                                        value={fectorData.factorConstant ? fectorData.factorConstant : ""}
+                                                        onChange={(e) => { console.log(e, 'factorConstant'); setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
+                                                    >
+                                                        <MenuItem value="0">0</MenuItem>
+                                                        <MenuItem value="1">1</MenuItem>
+                                                        <MenuItem value="2">2</MenuItem>
+                                                        <MenuItem value="3">3</MenuItem>
+                                                        <MenuItem value="4">4</MenuItem>
+                                                        <MenuItem value="5">5</MenuItem>
+                                                    </Select>
 
-                                                </Select>
+                                                </FormControl>
+                                            ) :
+                                                (<FormControl
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                >
+                                                    <InputLabel id="project-name-label">Factor constant *</InputLabel>
 
-                                            </FormControl>
+                                                    <Select
+                                                        id="project-name"
+                                                        labelId="project-unit-label"
+                                                        label="Factor constant *"
+                                                        value={fectorData.factorConstant ? fectorData.factorConstant : ""}
+                                                        onChange={(e) => { console.log(e, 'factorConstant'); setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
+                                                    >
+                                                        <MenuItem value="1" selected={fectorData.factorConstant==1}>1</MenuItem>
+                                                        <MenuItem value="0.3"  selected={fectorData.factorConstant==0.3}>0.3</MenuItem>
+                                                        <MenuItem value="0.6"  selected={fectorData.factorConstant==.60}>0.6</MenuItem>
+                                                    </Select>
+                                                </FormControl>)}
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>

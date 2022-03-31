@@ -130,7 +130,7 @@ function ObservationBulkupload() {
     data.append("processer", uploadFrom.processer)
     data.append("filename", uploadFrom.filename)
     setLoading(true)
-    const res = appapi.post(`/api/v1/core/modifiedrevisedocrform/?fkCompanyId=${fkCompanyId}`, data).then((res) =>
+    const res = appapi.post(`/api/v1/core/uploadmultipleocrform/?fkCompanyId=${fkCompanyId}`, data).then((res) =>
       history.push('/app/icare-bulkupload')
     ).catch((error) => console.log(error))
   }

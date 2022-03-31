@@ -436,7 +436,7 @@ function ComplianceSummary() {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -1336,19 +1336,26 @@ function ComplianceSummary() {
                                           </AccordionSummary>
                                           <AccordionDetails>
                                             <Grid container spacing={2}>
-                                              {/* <Grid item md={4} sm={4} xs={12}>
-                                            <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
-                                            <Typography className="viewLabelValue">
-                                              NA
-                                            </Typography>
-                                          </Grid>
-                                          
-                                          <Grid item md={4} sm={4} xs={12}>
-                                            <FormLabel component="legend" className="viewLabel">Status</FormLabel>
-                                            <Typography className="viewLabelValue">
-                                              NA
-                                            </Typography>
-                                          </Grid> */}
+                                              <Grid item md={4} sm={4} xs={12}>
+                                                <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  {value.criticality ? value.criticality : '-'}
+                                                </Typography>
+                                              </Grid>
+
+                                              <Grid item md={4} sm={4} xs={12}>
+                                                <FormLabel component="legend" className="viewLabel">Status</FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  {value.auditStatus ? value.auditStatus : '-'}
+                                                </Typography>
+                                              </Grid>
+
+                                              <Grid item md={4} sm={4} xs={12}>
+                                                <FormLabel component="legend" className="viewLabel">Performance Rating</FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  NA
+                                                </Typography>
+                                              </Grid>
 
                                               <Grid
                                                 item
@@ -1412,7 +1419,7 @@ function ComplianceSummary() {
                                                   </Typography>
                                                 </Grid>
                                               </Grid>
-                                              {console.log(actionData)}
+
                                               {/* <Grid item md={12} xs={12}>
                                                 <FormLabel
                                                   component="legend"
@@ -1470,12 +1477,12 @@ function ComplianceSummary() {
                                                 </Table>
                                               </Grid> */}
 
-                                              
+
                                               {actionData.map((val) => (
-                                                
+
                                                 <>
                                                   {val.id == value.questionId ? (
-                                                    
+
                                                     <>
                                                       {val.action.length > 0 &&
                                                         <Grid item md={12} xs={12}>
@@ -1499,9 +1506,9 @@ function ComplianceSummary() {
                                                                   {val.id == value.questionId ? (
                                                                     <>
                                                                       {val.action.length > 0 &&
-                                                                      
+
                                                                         val.action.map(
-                                                                          
+
                                                                           (valueAction) => (
                                                                             <TableRow>
                                                                               <TableCell align="left">

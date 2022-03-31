@@ -146,7 +146,7 @@ const PerformanceFactorAdd = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                                        onChange={(e) => { console.log(e, 'factorName'); setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
                                                     >
                                                         <MenuItem value="Not in compliance -stop work">Not in compliance -stop work</MenuItem>
                                                         <MenuItem value="Not in compliance - Action required">Not in compliance - Action required</MenuItem>
@@ -174,7 +174,7 @@ const PerformanceFactorAdd = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                                        onChange={(e) => { console.log(e, 'factorName'); setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
                                                     >
                                                         <MenuItem value="High">High</MenuItem>
                                                         <MenuItem value="Medium">Medium</MenuItem>
@@ -189,7 +189,36 @@ const PerformanceFactorAdd = () => {
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>
-                                            <FormControl
+                                            {fectorForm.factorType === 'Status' ? (
+                                                <FormControl
+                                                    //required
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                    error={error.factorConstant}
+                                                >
+                                                    <InputLabel id="project-name-label">Factor constant *</InputLabel>
+                                                    <Select
+                                                        id="project-name"
+                                                        labelId="project-unit-label"
+                                                        label="Factor constant *"
+                                                        required
+                                                        value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
+                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
+                                                    >
+                                                        <MenuItem value="0">0</MenuItem>
+                                                        <MenuItem value="1">1</MenuItem>
+                                                        <MenuItem value="2">2</MenuItem>
+                                                        <MenuItem value="3">3</MenuItem>
+                                                        <MenuItem value="4">4</MenuItem>
+                                                        <MenuItem value="5">5</MenuItem>
+                                                    </Select>
+                                                    {error && error[`factorConstant`] && (
+                                                        <FormHelperText>
+                                                            {error[`factorConstant`]}
+                                                        </FormHelperText>
+                                                    )}
+                                                </FormControl>
+                                            ) : (<FormControl
                                                 //required
                                                 variant="outlined"
                                                 className="formControl"
@@ -204,16 +233,17 @@ const PerformanceFactorAdd = () => {
                                                     value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
                                                     onChange={(e) => { setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
                                                 >
-                                                    <MenuItem value="1">1</MenuItem>
-                                                    <MenuItem value=".60">.60</MenuItem>
-                                                    <MenuItem value=".30">.30</MenuItem>
+                                                    <MenuItem value="1" selected={fectorForm.factorConstant == 1}>1</MenuItem>
+                                                    <MenuItem value="0.3" selected={fectorForm.factorConstant == 0.3}>0.3</MenuItem>
+                                                    <MenuItem value="0.6" selected={fectorForm.factorConstant == .60}>0.6</MenuItem>
                                                 </Select>
                                                 {error && error[`factorConstant`] && (
                                                     <FormHelperText>
                                                         {error[`factorConstant`]}
                                                     </FormHelperText>
                                                 )}
-                                            </FormControl>
+                                            </FormControl>)}
+
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>
@@ -236,7 +266,7 @@ const PerformanceFactorAdd = () => {
                                     <div style={{ color: "red" }}>{performError}</div>
                                 </Paper>
                             </Grid>
-                            
+
                         </Grid>
 
                     </Grid>
