@@ -91,6 +91,7 @@ import {
   SSO_URL,
 } from "../../../../utils/constants";
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
+import { from } from "form-data";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -312,13 +313,42 @@ const Checks = () => {
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([]);
   const [showCheckData, setShowCheckData] = useState({});
-
+  const [ratingColor ,setRatingColor ] = useState('#FFFFFF');
   //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel4"
   );
+
+
+  useEffect(() => {
+    if ( form.menuValue >= 0 && form.statusValue >= 0) {
+      let ratingValue = form.menuValue * form.statusValue;
+      if (ratingValue >=0 && ratingValue <=1){
+        setRatingColor("#009933");
+      }else if (ratingValue >=1 && ratingValue <=2){
+        setRatingColor("#8da225");
+      }else if (ratingValue >=2 && ratingValue <=3){
+        setRatingColor("#FFBF00");
+      }else if (ratingValue >=3 && ratingValue <=4){
+        setRatingColor("#990000");
+      }else if (ratingValue >=4 && ratingValue <=5){
+        setRatingColor("#ff0000");
+      }
+      else {
+        setRatingColor("#ff1111")
+      }
+
+    }
+
+  },[form]) ;
+
+  useEffect(() =>{
+    console.log("ratingColor ",form)
+  },[ratingColor])
+
+
   const radioDecide = ["Yes", "No", "NA"];
   // const handleExpand = (panel) => (event, isExpanded) => {
   //     setExpanded(isExpanded ? panel : false);
@@ -521,6 +551,7 @@ const Checks = () => {
         });
       }
     });
+    console.log(tempCheckData,'tempCheckData')
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
         if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
@@ -684,10 +715,12 @@ const Checks = () => {
 
   console.log(statusData, criticalityData)
 
-  const handleCriticality = async (id, name) => {
-    console.log(id, name, 'ooo')
-
-    await setForm({ ...form, id: id, factorName: name });
+  const handleCriticality = (option, selectType) => {
+    if (selectType === "menuItem") {
+     setForm((data) =>{ return { ...data, id: option.id, factorName: option.factorName, menuValue : option.factorConstant  }});
+     return ;
+    }
+    setForm((data) =>{ return { ...data, id: option.id, factorName: option.factorName, statusValue : option.factorConstant  }});
   };
 
   useEffect(() => {
@@ -1092,7 +1125,7 @@ const Checks = () => {
                                                   value={option.id}
                                                   id={option.id}
                                                   onClick={(e) => {
-                                                    handleCriticality(option.id, option.factorName);
+                                                    handleCriticality(option, "menuItem");
                                                   }}
                                                 >
                                                   {option.factorName}
@@ -1125,7 +1158,7 @@ const Checks = () => {
                                                   value={option.id}
                                                   id={option.id}
                                                   onClick={(e) => {
-                                                    handleCriticality(option.id, option.factorName);
+                                                    handleCriticality(option, "statusItem");
                                                   }}
                                                 >
                                                   {option.factorName}
@@ -1139,19 +1172,13 @@ const Checks = () => {
                                               //margin="dense"
                                               name="performancerating"
                                               id="performancerating"
-                                              value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-
+                                              value={ratingColor || ""}
+                                              // value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+                                              style={{backgroundColor: ratingColor}}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "score",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
+                                  
                                             />
                                           </Grid>
 
