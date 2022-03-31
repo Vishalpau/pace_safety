@@ -141,6 +141,7 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
+    console.log(res.data.data.results[0].actionTaken,'oo')
     localStorage.setItem('fkobservationId', id);
     if (res.data.status_code == 400) {
       history.push('/app/error/');
@@ -349,6 +350,7 @@ iCare details
                   iCare Title
                   </FormLabel>
                   <Typography className="viewLabelValue">
+                    {console.log(initialData.observationTitle ,'pp')}
                     {initialData.observationTitle ? initialData.observationTitle : '-'}
                   </Typography>
                 </Grid>

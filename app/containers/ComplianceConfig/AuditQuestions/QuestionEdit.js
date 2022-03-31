@@ -434,7 +434,7 @@ const QuestionEdit = (props) => {
             <Grid container spacing={2}>
               <Grid item md={12} xs={12}>
                 <Grid container spacing={3}>
-                  {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
                       <svg xmlns="http://www.w3.org/2000/svg" width="32.001" height="25.557" viewBox="0 0 32.001 25.557">
                         <g id="work-area-32" transform="translate(-220 -1887)">
@@ -443,8 +443,8 @@ const QuestionEdit = (props) => {
                         </g>
                       </svg> Work area information
                     </Typography>
-                  </Grid> */}
-                  {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  </Grid>
+                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Paper elevation={1} className="paperSection">
                       <Grid container spacing={3}>
                         <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
@@ -506,8 +506,8 @@ const QuestionEdit = (props) => {
                         </Grid>
                       </Grid>
                     </Paper>
-                  </Grid> */}
-                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  </Grid>
+                  {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -591,7 +591,7 @@ const QuestionEdit = (props) => {
                         ))}
                       </Grid>
                     </Paper>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">

@@ -313,7 +313,7 @@ const Checks = () => {
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([]);
   const [showCheckData, setShowCheckData] = useState({});
-  const [ratingColor ,setRatingColor ] = useState('#FFFFFF');
+  const [ratingColor, setRatingColor] = useState('#FFFFFF');
   //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
@@ -323,17 +323,17 @@ const Checks = () => {
 
 
   useEffect(() => {
-    if ( form.menuValue >= 0 && form.statusValue >= 0) {
+    if (form.menuValue >= 0 && form.statusValue >= 0) {
       let ratingValue = form.menuValue * form.statusValue;
-      if (ratingValue >=0 && ratingValue <=1){
+      if (ratingValue >= 0 && ratingValue <= 1) {
         setRatingColor("#009933");
-      }else if (ratingValue >=1 && ratingValue <=2){
+      } else if (ratingValue >= 1 && ratingValue <= 2) {
         setRatingColor("#8da225");
-      }else if (ratingValue >=2 && ratingValue <=3){
+      } else if (ratingValue >= 2 && ratingValue <= 3) {
         setRatingColor("#FFBF00");
-      }else if (ratingValue >=3 && ratingValue <=4){
+      } else if (ratingValue >= 3 && ratingValue <= 4) {
         setRatingColor("#990000");
-      }else if (ratingValue >=4 && ratingValue <=5){
+      } else if (ratingValue >= 4 && ratingValue <= 5) {
         setRatingColor("#ff0000");
       }
       else {
@@ -342,11 +342,10 @@ const Checks = () => {
 
     }
 
-  },[form]) ;
+  }, [form]);
 
-  useEffect(() =>{
-    console.log("ratingColor ",form)
-  },[ratingColor])
+  useEffect(() => {
+  }, [ratingColor])
 
 
   const radioDecide = ["Yes", "No", "NA"];
@@ -527,14 +526,14 @@ const Checks = () => {
       if (tempvalue['message'] === undefined) {
         tempvalue.map((value, index) => {
           tempQuestionId.push({ id: value.id });
-
+          console.log(index, 'value')
           tempCheckData.push({
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
-            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].ratingColor : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -551,7 +550,6 @@ const Checks = () => {
         });
       }
     });
-    console.log(tempCheckData,'tempCheckData')
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
         if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
@@ -588,6 +586,7 @@ const Checks = () => {
       }
     })
     if (tempNewQuestion.length > 0) {
+      console.log(tempNewQuestion, 'oooo')
       let dataCheck = [];
       // let data = {};
       for (var i = 0; i < tempNewQuestion.length; i++) {
@@ -713,14 +712,13 @@ const Checks = () => {
     setStatusData(factorStatus)
   }
 
-  console.log(statusData, criticalityData)
 
   const handleCriticality = (option, selectType) => {
     if (selectType === "menuItem") {
-     setForm((data) =>{ return { ...data, id: option.id, factorName: option.factorName, menuValue : option.factorConstant  }});
-     return ;
+      setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, menuValue: option.factorConstant } });
+      return;
     }
-    setForm((data) =>{ return { ...data, id: option.id, factorName: option.factorName, statusValue : option.factorConstant  }});
+    setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, statusValue: option.factorConstant } });
   };
 
   useEffect(() => {
@@ -1038,7 +1036,45 @@ const Checks = () => {
                                               xs={6}
                                               className={classes.createHazardbox}
                                             >
-
+                                              <ActionTracker
+                                                actionContext="audit:question"
+                                                enitityReferenceId={`${localStorage.getItem(
+                                                  "fkComplianceId"
+                                                )}:${value.id}`}
+                                                setUpdatePage={setUpdatePage}
+                                                fkCompanyId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "company"
+                                                    )
+                                                  ).fkCompanyId
+                                                }
+                                                fkProjectId={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "projectName"
+                                                    )
+                                                  ).projectName.projectId
+                                                }
+                                                fkProjectStructureIds={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "commonObject"
+                                                    )
+                                                  )["audit"]["projectStruct"]
+                                                }
+                                                createdBy={
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "userDetails"
+                                                    )
+                                                  ).id
+                                                }
+                                                updatePage={updatePage}
+                                                handelShowData={
+                                                  handelActionTracker
+                                                }
+                                              />
                                             </Grid>
                                           </Grid>
 
@@ -1093,7 +1129,7 @@ const Checks = () => {
                                               classes.accordingHeaderContentLeft
                                             }
                                           >
-                                            <ListItemText primary="Welding machines used are tested and properly connected" />
+                                            <ListItemText primary={value.question} />
                                           </ListItem>
                                         </List>
                                       </AccordionSummary>
@@ -1172,13 +1208,12 @@ const Checks = () => {
                                               //margin="dense"
                                               name="performancerating"
                                               id="performancerating"
-                                              value={ratingColor || ""}
-                                              // value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                              style={{backgroundColor: ratingColor}}
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+                                              style={{ backgroundColor: ratingColor }}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
-                                  
+
                                             />
                                           </Grid>
 
