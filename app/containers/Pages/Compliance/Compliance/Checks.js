@@ -464,6 +464,10 @@ const Checks = () => {
     await fetchComplianceData(result);
   };
 
+  useEffect(() => {
+    console.log(categories);
+  },[categories])
+
   const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -570,6 +574,11 @@ const Checks = () => {
     await setCategories(categoriesData);
     await handelActionTracker();
   };
+  const apiCall = async (dataChecks) => {
+    console.log(dataChecks,"alsaas");
+    const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,[...dataChecks]);
+    history.push("/app/pages/compliance/performance-summary");
+  }
   const handelSubmit = async () => {
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -605,9 +614,18 @@ const Checks = () => {
         data["score"] = tempNewQuestion[i].score
         data["auditStatus"] = tempNewQuestion[i].auditStatus
 
-        if (typeof tempNewQuestion[i].attachment !== "string") {
-          if (tempNewQuestion[i].attachment !== null) {
-            data["attachment"] = tempNewQuestion[i].attachment
+        console.log(tempNewQuestion[i].attachment);
+        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+          if (tempUpdatedQuestion[i].attachment !== null) {
+            console.log('attachment', tempUpdatedQuestion[i].attachment)
+            data["attachment"] = {
+              name: tempUpdatedQuestion[i].attachment.name,
+              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
+              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
+              size: tempUpdatedQuestion[i].attachment.size,
+              type: tempUpdatedQuestion[i].attachment.type,
+              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+            }
           }
         }
         data["status", "Active"]
@@ -615,6 +633,7 @@ const Checks = () => {
         data["createdAt"] = new Date().toISOString()
         data["createdBy"] = tempNewQuestion[i].createdBy
         dataCheck[i] = data
+        console.log(dataCheck)
       }
       const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
     }
@@ -639,7 +658,15 @@ const Checks = () => {
         data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
         if (typeof tempUpdatedQuestion[i].attachment !== "string") {
           if (tempUpdatedQuestion[i].attachment !== null) {
-            data["attachment"] = tempUpdatedQuestion[i].attachment
+            console.log('attachment', tempUpdatedQuestion[i].attachment)
+            data["attachment"] = {
+              name: tempUpdatedQuestion[i].attachment.name,
+              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
+              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
+              size: tempUpdatedQuestion[i].attachment.size,
+              type: tempUpdatedQuestion[i].attachment.type,
+              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+            }
           }
         }
         data["status", "Active"]
@@ -648,15 +675,12 @@ const Checks = () => {
         data["createdBy"] = tempUpdatedQuestion[i].createdBy
         dataCheck[i] = data
       }
-      const resUpdate = await api.put(
-        `/api/v1/audits/${localStorage.getItem(
-          "fkComplianceId"
-        )}/auditresponse/`,
-        dataCheck
-      );
+      console.log(dataCheck, 'dataCheck');
+      apiCall(dataCheck)
     }
 
-    history.push("/app/pages/compliance/performance-summary");
+    
+
   };
   const classes = useStyles();
 
@@ -683,7 +707,8 @@ const Checks = () => {
   const handleFile = (value, field, index, id) => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
-      if (temp[i]["question"] == id) {
+      if (temp[i]["question"] === id) {
+        
         temp[i][field] = value;
       }
     }
@@ -728,6 +753,7 @@ const Checks = () => {
     fetchCheklistData();
 
   }, []);
+
   return (
     <CustomPapperBlock
       title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
@@ -828,7 +854,8 @@ const Checks = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    {Object.entries(categories).map(([key, value]) => (
+                    {Object.entries(categories).map(([key, value]) => {
+                      return(
                       <>
                         <FormLabel className="checkRadioLabel" component="legend">
                           {key}
@@ -849,7 +876,10 @@ const Checks = () => {
                             />
                           </ListItem>
                         </span> */}
-                        {value.map((value, index) => (
+                        {value.map((value, index) => {
+                          // console.log(value.question);
+                          // console.log(value.id);
+                          return(
                           <>
                             <Grid container item xs={12}>
                               <Grid item md={12}>
@@ -1470,7 +1500,7 @@ const Checks = () => {
                                                     e.target.files[0],
                                                     "attachment",
                                                     index,
-                                                    value.id
+                                                    value.question
                                                   )
                                                 }
                                               />
@@ -1485,9 +1515,10 @@ const Checks = () => {
                               </Grid>
                             </Grid>
                           </>
-                        ))}
+                        )})}
                       </>
-                    ))}
+                    )})
+                  }
                   </Grid>
                 </Grid>
               </Paper>

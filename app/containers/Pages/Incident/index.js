@@ -31,6 +31,7 @@ import Fonts from "dan-styles/Fonts.scss";
 import Incidents from "dan-styles/IncidentsList.scss";
 import moment from "moment";
 import MUIDataTable from "mui-datatables";
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 
 import { connect, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
@@ -38,6 +39,8 @@ import { company, projectName, tabViewMode } from '../../../redux/actions/initia
 import api from "../../../utils/axios";
 import { HEADER_AUTH, INITIAL_NOTIFICATION_FORM_NEW, SELF_API, SSO_URL } from "../../../utils/constants";
 import allPickListDataValue from "../../../utils/Picklist/allPickList";
+import { checkACL } from "../../../utils/helper";
+import Acl from "../../../components/Error/acl";
 
 const Loader = lazy(() => import("../../Forms/Loader"))
 
@@ -152,8 +155,8 @@ function BlankPage(props) {
   const [page, setPage] = useState(1)
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
-  const [isLoading, setIsLoading] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -369,6 +372,27 @@ function BlankPage(props) {
 
   };
 
+  const handleDelete = async (item) => {
+    // console.log(item);
+    if (checkACL('safety-incident', 'delete_incidents')) {
+      const data = {
+        status: 'Delete'
+      };
+      // const {fkCompanyId,fkProjectId,jobTitle,jobDetails} = item[1];
+      // let data = item[1];
+      // console.log(data);
+      // data.status = "Delete";
+      // delete data.attachment
+      setIsLoading(false);
+      const res1 = await api.put(`/api/v1/incidents/${item[1].id}/`, data)
+        .then(response => {
+          console.log(response);
+          // fetchData();
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
   const handleSearchIncident = (serchValue) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -407,7 +431,9 @@ function BlankPage(props) {
   }
 
   useEffect(() => {
-    handelCallBack()
+    handelCallBack();
+    setCheckDeletePermission(checkACL('safety-incident', 'delete_incidents'));
+    // console.log(props.projectName);
   }, [props.projectName.breakDown, props.projectName.projectName]);
 
   const classes = useStyles();
@@ -415,7 +441,11 @@ function BlankPage(props) {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
+    // <Acl
+    //   module="safety-incident"
+    //   action="view_incidents"
+    //   html={(
+        <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
           <div className={classes.toolbar}>
@@ -466,6 +496,7 @@ function BlankPage(props) {
               </Grid>
               <Grid item xs={7} md={5}>
                 <Box display="flex" justifyContent="flex-end">
+
                   {isDesktop ? (
                     <Tooltip title="New Incident">
                       <Button
@@ -477,6 +508,10 @@ function BlankPage(props) {
                         startIcon={<AddCircleIcon />}
                         className={classes.newIncidentButton}
                         disableElevation
+                        style={{
+                          background: checkACL('safety-incident', 'add_incidents') ? '#06425c' : '#c0c0c0',
+                          cursor: checkACL('safety-incident', 'add_incidents') ? 'pointer' : 'not-allowed'
+                        }}
                       >
                         New Incident
                       </Button>
@@ -693,6 +728,31 @@ function BlankPage(props) {
                           >
                             Print
                           </Button> */}
+                          <div className={classes.floatR}>
+                              <Typography variant="body1" display="inline">
+                                {!checkDeletePermission
+                                  ? (
+                                    <DeleteForeverOutlinedIcon
+                                      className={classes.iconteal}
+                                      style={{
+                                        color: '#c0c0c0',
+                                        cursor: 'not-allowed'
+                                      }}
+                                    />
+                                  )
+                                  : (
+                                    <Link
+                                      href="#"
+                                      className={classes.mLeftR5}
+                                    >
+                                      <DeleteForeverOutlinedIcon
+                                        className={classes.iconteal}
+                                        onClick={(e) => handleDelete(item)}
+                                      />
+                                    </Link>
+                                  )}
+                              </Typography>
+                            </div>
                           </Grid>
                         </Grid>
                       </CardActions>
@@ -758,6 +818,7 @@ function BlankPage(props) {
         <Pagination count={pageCount} page={page} onChange={handleChange} />
       </div>
     </PapperBlock>
+      //  )} />    
   );
 }
 const mapStateToProps = state => {
