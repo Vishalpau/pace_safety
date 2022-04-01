@@ -1,52 +1,54 @@
-import React, { useState, useEffect } from "react";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import CheckCircle from "@material-ui/icons/CheckCircle";
-import Grid from "@material-ui/core/Grid";
-import AccessTime from "@material-ui/icons/AccessTime";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import projectpj from "dan-images/projectpj.png";
-import IconButton from "@material-ui/core/IconButton";
+import React, { useState, useEffect } from 'react';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import Grid from '@material-ui/core/Grid';
+import AccessTime from '@material-ui/icons/AccessTime';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import projectpj from 'dan-images/projectpj.png';
+import IconButton from '@material-ui/core/IconButton';
 
 // List
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { useHistory, useParams } from "react-router";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { useHistory, useParams } from 'react-router';
 
 // Icons
-import Edit from "@material-ui/icons/Edit";
-import Add from "@material-ui/icons/Add";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Link from "@material-ui/core/Link";
+import Edit from '@material-ui/icons/Edit';
+import Add from '@material-ui/icons/Add';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Link from '@material-ui/core/Link';
 
 // Table
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
-import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import { ReactVideo } from "reactjs-media";
-import { ReactAudio } from "reactjs-media";
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import { ReactVideo, ReactAudio } from 'reactjs-media';
 
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
-import api from "../../../utils/axios";
+
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogContent from '@material-ui/core/DialogContent';
+import Dialog from '@material-ui/core/Dialog';
+import axios from 'axios';
+import moment from 'moment';
+import api from '../../../utils/axios';
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -54,17 +56,15 @@ import {
   INITIAL_NOTIFICATION_FORM,
   LOGIN_URL,
   SSO_URL,
-} from "../../../utils/constants";
+} from '../../../utils/constants';
 import {
   handelIncidentId,
   checkValue,
   handelCommonObject,
   handelActionData,
-} from "../../../utils/CheckerValue";
-import axios from "axios";
-import moment from "moment";
-import Loader from "../Loader";
-import { handelActionTracker } from "./Compliance/Checks"
+} from '../../../utils/CheckerValue';
+import Loader from '../Loader';
+import { handelActionTracker } from './Compliance/Checks';
 // Sidebar Links Helper Function
 function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
@@ -72,137 +72,137 @@ function ListItemLink(props) {
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    width: "100%",
+    width: '100%',
   },
   statusButton: {
     borderRadius: 4,
     fontSize: 14,
-    width: "100%",
-    textTransform: "none",
-    fontFamily: "Montserrat-SemiBold !important",
-    lineHeight: "18px",
+    width: '100%',
+    textTransform: 'none',
+    fontFamily: 'Montserrat-SemiBold !important',
+    lineHeight: '18px',
     // border: '1px solid #06425c',
   },
   heading: {
-    width: "100%",
+    width: '100%',
     fontSize: theme.typography.pxToRem(15),
-    //fontWeight: theme.typography.fontWeightMedium,
-    fontWeight: "500",
-    "& p": {
+    // fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: '500',
+    '& p': {
       fontSize: theme.typography.pxToRem(15),
-      //fontWeight: theme.typography.fontWeightMedium,
-      fontWeight: "500",
+      // fontWeight: theme.typography.fontWeightMedium,
+      fontWeight: '500',
     },
-    "& span": {
+    '& span': {
       fontSize: theme.typography.pxToRem(15),
-      //fontWeight: theme.typography.fontWeightMedium,
-      fontWeight: "500",
+      // fontWeight: theme.typography.fontWeightMedium,
+      fontWeight: '500',
     },
   },
   viewSectionHeading: {
-    paddingBottom: "0px !important",
-    marginTop: "5px !important",
-    "& p": {
+    paddingBottom: '0px !important',
+    marginTop: '5px !important',
+    '& p': {
       fontSize: theme.typography.pxToRem(15),
       fontWeight: theme.typography.fontWeightMedium,
-      //fontWeight: '500',
+      // fontWeight: '500',
     },
   },
   aLabelValue: {
-    fontSize: "1rem",
-    fontWeight: "500",
-    color: "#063d55",
-    float: "left",
-    width: "100%",
-    paddingRight: "40px",
-    "& div": {
-      display: "inline-block",
-      float: "right",
+    fontSize: '1rem',
+    fontWeight: '500',
+    color: '#063d55',
+    float: 'left',
+    width: '100%',
+    paddingRight: '40px',
+    '& div': {
+      display: 'inline-block',
+      float: 'right',
     },
   },
   updateLink: {
-    float: "left",
-    fontSize: "0.88rem",
-    fontWeight: "400",
-    lineHeight: "1.2",
-    "& a": {
-      cursor: "pointer",
-      textDecoration: "underline",
+    float: 'left',
+    fontSize: '0.88rem',
+    fontWeight: '400',
+    lineHeight: '1.2',
+    '& a': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
     },
     actionTitleLable: {
-      float: "right",
-      width: "calc(100% - 100px)",
-      textAlign: "right",
+      float: 'right',
+      width: 'calc(100% - 100px)',
+      textAlign: 'right',
     },
   },
   ratioColorgreen: {
-    backgroundColor: "green",
-    padding: "16px!important",
-    height: "56px",
-    marginTop: "7px",
-    borderRadius: "5px",
-    color: "#ffffff",
+    backgroundColor: 'green',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
   },
   ratioColorred: {
-    backgroundColor: "red",
-    padding: "16px!important",
-    height: "56px",
-    marginTop: "7px",
-    borderRadius: "5px",
-    color: "#ffffff",
+    backgroundColor: 'red',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
   },
   ratioColororange: {
-    backgroundColor: "orange",
-    padding: "16px!important",
-    height: "56px",
-    marginTop: "7px",
-    borderRadius: "5px",
-    color: "#ffffff",
+    backgroundColor: 'orange',
+    padding: '16px!important',
+    height: '56px',
+    marginTop: '7px',
+    borderRadius: '5px',
+    color: '#ffffff',
   },
   accordingHeaderContentLeft: {
-    display: "inline-block",
-    width: "auto",
-    padding: "0px",
+    display: 'inline-block',
+    width: 'auto',
+    padding: '0px',
   },
   accordingHeaderContentRight: {
-    display: "inline-block",
-    float: "right",
-    "& li": {
-      paddingTop: "0px",
-      paddingBottom: "0px",
-      "& span": {
-        display: "inline-block",
+    display: 'inline-block',
+    float: 'right',
+    '& li': {
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      '& span': {
+        display: 'inline-block',
       },
-      "& p": {
-        display: "inline-block",
-        fontSize: "1rem !important",
-        fontWeight: "500 !important",
-        color: "#063d55",
-        paddingLeft: "5px",
+      '& p': {
+        display: 'inline-block',
+        fontSize: '1rem !important',
+        fontWeight: '500 !important',
+        color: '#063d55',
+        paddingLeft: '5px',
       },
     },
   },
   accordingHeaderContent: {
-    display: "inline-block",
-    color: "#000",
-    width: "auto",
-    float: "left",
+    display: 'inline-block',
+    color: '#000',
+    width: 'auto',
+    float: 'left',
   },
   accordingHeaderText: {
-    display: "inline-block",
-    width: "auto",
-    paddingLeft: "0px",
-    paddingRight: "30px",
+    display: 'inline-block',
+    width: 'auto',
+    paddingLeft: '0px',
+    paddingRight: '30px',
   },
   checkedUnclick: {
-    pointerEvents: "none",
+    pointerEvents: 'none',
   },
   statusLabel: {
-    fontSize: "14px",
-    fontFamily: "Montserrat-Regular",
-    "& svg": {
-      color: "#06425C",
-      //verticalAlign: 'sub',
+    fontSize: '14px',
+    fontFamily: 'Montserrat-Regular',
+    '& svg': {
+      color: '#06425C',
+      // verticalAlign: 'sub',
     },
   },
 }));
@@ -221,19 +221,19 @@ function ComplianceSummary() {
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [actionData, setActionData] = useState([]);
 
-  const [expanded, setExpanded] = React.useState("panel1");
+  const [expanded, setExpanded] = React.useState('panel1');
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
-    "panel3"
+    'panel3'
   );
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
-  const [expandedTabDetails, setExpandedTabDetails] = React.useState("panel6");
+  const [expandedTabDetails, setExpandedTabDetails] = React.useState('panel6');
   const handleTBChange = (panel) => (event, isExpanded) => {
     setExpandedTabDetails(isExpanded ? panel : false);
   };
@@ -241,17 +241,17 @@ function ComplianceSummary() {
   const handleNewComplianceUpdatePush = async () => {
     history.push(
       `/app/pages/compliance/compliance-details/${localStorage.getItem(
-        "fkComplianceId"
+        'fkComplianceId'
       )}`
     );
   };
 
   const handleComplianceCommentPush = async () => {
-    history.push("/app/pages/compliance-comment");
+    history.push('/app/pages/compliance-comment');
   };
 
   const handleComplianceActivityPush = async () => {
-    history.push("/app/pages/compliance-activity");
+    history.push('/app/pages/compliance-activity');
   };
 
   const [inputState, setInputState] = useState({
@@ -268,7 +268,9 @@ function ComplianceSummary() {
     });
   };
 
-  const { checkedA, checkedB, checkedC, checkedD } = inputState;
+  const {
+    checkedA, checkedB, checkedC, checkedD
+  } = inputState;
 
   const classes = useStyles();
 
@@ -294,26 +296,26 @@ function ComplianceSummary() {
 
   const fetchCheklistData = async () => {
     const res = await api.get(
-      `/api/v1/core/checklists/companies/8/projects/15/compliance/`
+      '/api/v1/core/checklists/companies/8/projects/15/compliance/'
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
   };
 
   const fetchComplianceData = async (data) => {
-    let complianceId = localStorage.getItem("fkComplianceId");
+    const complianceId = localStorage.getItem('fkComplianceId');
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
-        let result = response.data.data.results;
-        let groupIds = result.groupIds.split(",");
-        let subGroupIds = result.subGroupIds.split(",");
-        let tempGroup = [];
-        let temp = {};
-        let tempSubGroup = [];
+        const result = response.data.data.results;
+        const groupIds = result.groupIds.split(',');
+        const subGroupIds = result.subGroupIds.split(',');
+        const tempGroup = [];
+        const temp = {};
+        const tempSubGroup = [];
         for (let i = 0; i < groupIds.length; i++) {
           for (let j = 0; j < data.length; j++) {
-            if (data[j]["checklistId"] == groupIds[i]) {
+            if (data[j].checklistId == groupIds[i]) {
               tempGroup.push(data[j]);
               temp[data[j].checkListName] = [];
             }
@@ -321,11 +323,11 @@ function ComplianceSummary() {
         }
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
-            for (let k = 0; k < tempGroup[j]["checklistValues"].length; k++) {
-              if (tempGroup[j]["checklistValues"][k]["id"] == subGroupIds[i]) {
-                tempSubGroup.push(tempGroup[j]["checklistValues"][k]);
-                temp[tempGroup[j]["checkListName"]].push(
-                  tempGroup[j]["checklistValues"][k]
+            for (let k = 0; k < tempGroup[j].checklistValues.length; k++) {
+              if (tempGroup[j].checklistValues[k].id == subGroupIds[i]) {
+                tempSubGroup.push(tempGroup[j].checklistValues[k]);
+                temp[tempGroup[j].checkListName].push(
+                  tempGroup[j].checklistValues[k]
                 );
               }
             }
@@ -370,19 +372,17 @@ function ComplianceSummary() {
   // };
 
   const handelWorkArea = async (complianceData) => {
-    const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
+    const fkCompanyId = JSON.parse(localStorage.getItem('company')) !== null
+      ? JSON.parse(localStorage.getItem('company')).fkCompanyId
+      : null;
 
-    const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
-    let structName = [];
-    let projectStructId = complianceData.fkProjectStructureIds.split(":");
-    for (let key in projectStructId) {
-      let workAreaId = [
+    const projectId = JSON.parse(localStorage.getItem('projectName')) !== null
+      ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+      : null;
+    const structName = [];
+    const projectStructId = complianceData.fkProjectStructureIds.split(':');
+    for (const key in projectStructId) {
+      const workAreaId = [
         projectStructId[key].substring(0, 2),
         projectStructId[key].substring(2),
       ];
@@ -394,20 +394,19 @@ function ComplianceSummary() {
         `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
-      structName.push(workArea.data.data.results[0]["structureName"]);
+      structName.push(workArea.data.data.results[0].structureName);
     }
     setProjectStructName(structName);
   };
 
   const handleTeamName = (teamName) => {
-    let data = teamName.split(",");
+    const data = teamName.split(',');
     setTeam(data);
   };
   const handleProjectName = (projectId) => {
-    const userName =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails")).companies
-        : null;
+    const userName = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).companies
+      : null;
     const fetchCompanyId = userName.filter(
       (user) => user.companyId === complianceData.fkCompanyId
     );
@@ -423,26 +422,25 @@ function ComplianceSummary() {
     } else {
       history.push(
         `/app/pages/compliance/compliance-details/${localStorage.getItem(
-          "fkComplianceId"
+          'fkComplianceId'
         )}`
       );
     }
   };
 
   const fetchNotificationSent = async (notifyTo) => {
-    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
-    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
-      .projectId;
+    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
+    const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
     try {
-      var config = {
-        method: "get",
+      const config = {
+        method: 'get',
         url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
       if (res.status === 200) {
-        let data = [];
-        let user = notifyTo.split(",");
+        const data = [];
+        const user = notifyTo.split(',');
         const result = res.data.data.results;
         for (let i = 0; i < result.length; i++) {
           for (let j = 0; j < user.length; j++) {
@@ -458,36 +456,35 @@ function ComplianceSummary() {
 
   const auditQueData = async () => {
     const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+      `/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`
     );
     const result = res.data.data.results;
-    setQueData(result)
+    setQueData(result);
   };
 
   const handelActionTracker = async () => {
-    let jhaId = localStorage.getItem("fkComplianceId");
-    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-      "qustionsIds"
-    ];
-    let allAction = await handelActionData(jhaId, apiData);
+    const jhaId = localStorage.getItem('fkComplianceId');
+    const apiData = JSON.parse(localStorage.getItem('commonObject')).audit.qustionsIds;
+    const allAction = await handelActionData(jhaId, apiData);
     setActionData(allAction);
   };
 
 
-
   useEffect(() => {
     if (id) {
-      auditQueData()
+      auditQueData();
       // fetchCheklist()
       fetchCheklistData();
       // handelActionData()
-      handelActionTracker()
+      handelActionTracker();
     }
   }, []);
 
+  console.log(quesData);
+
   return (
     <CustomPapperBlock
-      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
+      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ''
         }`}
       icon="customDropdownPageIcon compliancePageIcon"
       whiteBg
@@ -511,7 +508,8 @@ function ComplianceSummary() {
                         transform="translate(0.026)"
                         fill="#06425c"
                       />
-                    </svg>{" "}
+                    </svg>
+                    {' '}
                     Status & stage
                   </Typography>
                 </Grid>
@@ -530,23 +528,23 @@ function ComplianceSummary() {
                             <Button
                               color={
                                 complianceData.performanceSummary !== null
-                                  ? "secondary"
-                                  : "primary"
+                                  ? 'secondary'
+                                  : 'primary'
                               }
                               variant={
                                 complianceData.performanceSummary !== null
-                                  ? "contained"
-                                  : "outlined"
+                                  ? 'contained'
+                                  : 'outlined'
                               }
                               size="small"
-                              //endIcon={<CheckCircle />}
+                              // endIcon={<CheckCircle />}
                               className={classes.statusButton}
                               onClick={(e) => {
                                 handleComplianceStatusChange();
 
-                                //setApprovals(false);
-                                //setLessonsLearned(false);
-                                //setSummary(false);
+                                // setApprovals(false);
+                                // setLessonsLearned(false);
+                                // setSummary(false);
                               }}
                             >
                               Compliance
@@ -558,8 +556,8 @@ function ComplianceSummary() {
                               align="center"
                             >
                               {complianceData.performanceSummary !== null
-                                ? "Done"
-                                : "Pending"}
+                                ? 'Done'
+                                : 'Pending'}
                               {complianceData.performanceSummary !== null ? (
                                 <CheckCircle />
                               ) : (
@@ -627,7 +625,8 @@ function ComplianceSummary() {
                                     transform="translate(0 0)"
                                     fill="#06425c"
                                   />
-                                </svg>{" "}
+                                </svg>
+                                {' '}
                                 Project information
                               </Typography>
                             </Grid>
@@ -646,15 +645,13 @@ function ComplianceSummary() {
                                       className="labelValue"
                                     >
                                       {handleProjectName(
-                                        complianceData["fkProjectId"]
+                                        complianceData.fkProjectId
                                       )}
                                     </Typography>
                                     <Typography className="labelValue">
                                       {projectStructName
-                                        .map((value) => {
-                                          return value;
-                                        })
-                                        .join(" : ")}
+                                        .map((value) => value)
+                                        .join(' : ')}
                                     </Typography>
                                   </Grid>
                                 </Grid>
@@ -732,7 +729,8 @@ function ComplianceSummary() {
                                       </g>
                                     </g>
                                   </g>
-                                </svg>{" "}
+                                </svg>
+                                {' '}
                                 Compliance Details
                               </Typography>
                             </Grid>
@@ -754,7 +752,7 @@ function ComplianceSummary() {
                                       Type of compliance check
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["auditType"]}
+                                      {complianceData.auditType}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -767,8 +765,8 @@ function ComplianceSummary() {
                                     </Typography>
                                     <Typography className="viewLabelValue">
                                       {moment(
-                                        complianceData["createdAt"]
-                                      ).format("Do MMMM YYYY, h:mm A")}
+                                        complianceData.createdAt
+                                      ).format('Do MMMM YYYY, h:mm A')}
                                     </Typography>
                                   </Grid>
                                   <Grid
@@ -793,10 +791,10 @@ function ComplianceSummary() {
                                       Safety representative
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["hseRepresentative"] !==
-                                        ""
-                                        ? complianceData["hseRepresentative"]
-                                        : "-"}
+                                      {complianceData.hseRepresentative
+                                        !== ''
+                                        ? complianceData.hseRepresentative
+                                        : '-'}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={6} md={6}>
@@ -808,9 +806,9 @@ function ComplianceSummary() {
                                       Safety representative number
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["hseRepNumber"] !== ""
-                                        ? complianceData["hseRepNumber"]
-                                        : "-"}
+                                      {complianceData.hseRepNumber !== ''
+                                        ? complianceData.hseRepNumber
+                                        : '-'}
                                     </Typography>
                                   </Grid>
                                   <Grid
@@ -835,9 +833,9 @@ function ComplianceSummary() {
                                       Contractor name
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["contractor"] !== ""
-                                        ? complianceData["contractor"]
-                                        : "-"}
+                                      {complianceData.contractor !== ''
+                                        ? complianceData.contractor
+                                        : '-'}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -849,10 +847,10 @@ function ComplianceSummary() {
                                       Contractor representative number
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["contractorRepNumber"] !==
-                                        ""
-                                        ? complianceData["contractorRepNumber"]
-                                        : "-"}
+                                      {complianceData.contractorRepNumber
+                                        !== ''
+                                        ? complianceData.contractorRepNumber
+                                        : '-'}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -864,9 +862,9 @@ function ComplianceSummary() {
                                       Sub-Contractor name
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["subContractor"] !== ""
-                                        ? complianceData["subContractor"]
-                                        : "-"}
+                                      {complianceData.subContractor !== ''
+                                        ? complianceData.subContractor
+                                        : '-'}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={6}>
@@ -878,13 +876,9 @@ function ComplianceSummary() {
                                       Contractor supervisor name
                                     </Typography>
                                     <Typography className="viewLabelValue">
-                                      {complianceData[
-                                        "contractorSupervisorName"
-                                      ] !== ""
-                                        ? complianceData[
-                                        "contractorSupervisorName"
-                                        ]
-                                        : "-"}
+                                      {complianceData.contractorSupervisorName !== ''
+                                        ? complianceData.contractorSupervisorName
+                                        : '-'}
                                     </Typography>
                                   </Grid>
 
@@ -905,7 +899,7 @@ function ComplianceSummary() {
                                           {item}
                                         </Typography>
                                       ))
-                                      : "-"}
+                                      : '-'}
                                   </Grid>
 
                                   {/* <Grid item md={12} sm={12} xs={12}>
@@ -1081,7 +1075,8 @@ function ComplianceSummary() {
                                     transform="translate(0.001)"
                                     fill="#06425c"
                                   />
-                                </svg>{" "}
+                                </svg>
+                                {' '}
                                 Categories
                               </Typography>
                             </Grid>
@@ -1106,13 +1101,13 @@ function ComplianceSummary() {
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
-                                              //className={classNames(classes.checkedUnclick, classes.labelValue)}
+                                              // className={classNames(classes.checkedUnclick, classes.labelValue)}
                                               className="checkRadioLabel checkedUnclick"
-                                              control={
+                                              control={(
                                                 <Checkbox
                                                   checked={checkedB}
                                                   onChange={handleChange(
-                                                    "checkedB"
+                                                    'checkedB'
                                                   )}
                                                   value="checkedB"
                                                   classes={{
@@ -1120,7 +1115,7 @@ function ComplianceSummary() {
                                                     checked: classes.checked,
                                                   }}
                                                 />
-                                              }
+                                              )}
                                               label={value.checkListLabel}
                                             />
                                           ))}
@@ -1146,9 +1141,9 @@ function ComplianceSummary() {
                                                 <FormGroup>
                                                   {value.map((value, i) => (
                                                     <FormControlLabel
-                                                      //className={classes.labelValue}
+                                                      // className={classes.labelValue}
                                                       className="checkedUnclick"
-                                                      control={
+                                                      control={(
                                                         <Checkbox
                                                           icon={
                                                             <CheckBoxOutlineBlankIcon fontSize="small" />
@@ -1163,7 +1158,7 @@ function ComplianceSummary() {
                                                           checked={checkedC}
                                                           value="checkedC"
                                                         />
-                                                      }
+                                                      )}
                                                       label={value.inputLabel}
                                                     />
                                                   ))}
@@ -1258,7 +1253,8 @@ function ComplianceSummary() {
                                         fill="#06425c"
                                       />
                                     </g>
-                                  </svg>{" "}
+                                  </svg>
+                                  {' '}
                                   Checks
                                 </Typography>
                               </Grid>
@@ -1271,7 +1267,7 @@ function ComplianceSummary() {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {groupData.map((value, index) =>
+                                      {groupData.map((value, index) => (
                                         <FormLabel
                                           className="checkRadioLabel"
                                           component="legend"
@@ -1279,7 +1275,7 @@ function ComplianceSummary() {
 
                                           {value.checkListName}
                                         </FormLabel>
-                                      )}
+                                      ))}
                                       {/* <span
                                           className={
                                             classes.accordingHeaderContentleft
@@ -1309,12 +1305,12 @@ function ComplianceSummary() {
                                           </ListItem>
                                         </span> */}
 
-                                      {quesData.map((value, index) =>
+                                      {quesData.map((value, index) => (
                                         <Accordion
                                           expanded={
-                                            expandedTableDetail === "panel3"
+                                            expandedTableDetail === 'panel3'
                                           }
-                                          onChange={handleTDChange("panel3")}
+                                          onChange={handleTDChange('panel3')}
                                           defaultExpanded
                                           className="backPaperAccordian"
                                         >
@@ -1336,43 +1332,49 @@ function ComplianceSummary() {
                                           </AccordionSummary>
                                           <AccordionDetails>
                                             <Grid container spacing={2}>
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {value.criticality ? value.criticality : '-'}
-                                                </Typography>
-                                              </Grid>
+                                              {value.criticality ?
+                                                <>
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
+                                                    <Typography className="viewLabelValue">
+                                                      {value.criticality ? value.criticality : '-'}
+                                                    </Typography>
+                                                  </Grid>
 
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel component="legend" className="viewLabel">Status</FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {value.auditStatus ? value.auditStatus : '-'}
-                                                </Typography>
-                                              </Grid>
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormLabel component="legend" className="viewLabel">Status</FormLabel>
+                                                    <Typography className="viewLabelValue">
+                                                      {value.auditStatus ? value.auditStatus : '-'}
+                                                    </Typography>
+                                                  </Grid>
 
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel component="legend" className="viewLabel">Performance Rating</FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormLabel component="legend" className="viewLabel">Performance Rating</FormLabel>
+                                                    <Typography className="viewLabelValue">
+                                                      NA
+                                                    </Typography>
+                                                  </Grid>
+                                                </>
+                                                :
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  sm={12}
+                                                  xs={12}
                                                 >
-                                                  Is this control applicable ?
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {(value.defaultResponse ? value.defaultResponse : '-')}
-                                                </Typography>
-                                              </Grid>
+                                                  <FormLabel
+                                                    component="legend"
+                                                    className="viewLabel"
+                                                  >
+                                                    Is this control applicable ?
+                                                  </FormLabel>
+                                                  <Typography className="viewLabelValue">
+                                                    {(value.defaultResponse ? value.defaultResponse : '-')}
+                                                  </Typography>
+                                                </Grid>
+                                              }
+
+
                                               <Grid
                                                 item
                                                 md={12}
@@ -1484,84 +1486,86 @@ function ComplianceSummary() {
                                                   {val.id == value.questionId ? (
 
                                                     <>
-                                                      {val.action.length > 0 &&
-                                                        <Grid item md={12} xs={12}>
-                                                          <Table
-                                                            component={Paper}
-                                                            className="simpleTableSection"
-                                                          >
-                                                            <TableHead>
-                                                              <TableRow>
-                                                                <TableCell className="tableHeadCellFirst">
-                                                                  Action number
-                                                                </TableCell>
-                                                                <TableCell className="tableHeadCellSecond">
-                                                                  Action title
-                                                                </TableCell>
-                                                              </TableRow>
-                                                            </TableHead>
-                                                            <TableBody>
-                                                              {actionData.map((val) => (
-                                                                <>
-                                                                  {val.id == value.questionId ? (
-                                                                    <>
-                                                                      {val.action.length > 0 &&
+                                                      {val.action.length > 0
+                                                        && (
+                                                          <Grid item md={12} xs={12}>
+                                                            <Table
+                                                              component={Paper}
+                                                              className="simpleTableSection"
+                                                            >
+                                                              <TableHead>
+                                                                <TableRow>
+                                                                  <TableCell className="tableHeadCellFirst">
+                                                                    Action number
+                                                                  </TableCell>
+                                                                  <TableCell className="tableHeadCellSecond">
+                                                                    Action title
+                                                                  </TableCell>
+                                                                </TableRow>
+                                                              </TableHead>
+                                                              <TableBody>
+                                                                {actionData.map((val) => (
+                                                                  <>
+                                                                    {val.id == value.questionId ? (
+                                                                      <>
+                                                                        {val.action.length > 0
 
-                                                                        val.action.map(
+                                                                          && val.action.map(
 
-                                                                          (valueAction) => (
-                                                                            <TableRow>
-                                                                              <TableCell align="left">
-                                                                                <Link
-                                                                                  className={
-                                                                                    classes.actionLinkAudit
-                                                                                  }
-                                                                                  display="block"
-                                                                                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                                    localStorage.getItem(
-                                                                                      "BaseUrl"
-                                                                                    )
-                                                                                  )[
-                                                                                    "actionClientID"
-                                                                                  ]
-                                                                                    }&response_type=code&companyId=${JSON.parse(
+                                                                            (valueAction) => (
+                                                                              <TableRow>
+                                                                                <TableCell align="left">
+                                                                                  <Link
+                                                                                    className={
+                                                                                      classes.actionLinkAudit
+                                                                                    }
+                                                                                    display="block"
+                                                                                    href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
                                                                                       localStorage.getItem(
-                                                                                        "company"
+                                                                                        'BaseUrl'
                                                                                       )
-                                                                                    )
-                                                                                      .fkCompanyId
-                                                                                    }&projectId=${JSON.parse(
-                                                                                      localStorage.getItem(
-                                                                                        "projectName"
+                                                                                    ).actionClientID
+                                                                                      }&response_type=code&companyId=${JSON.parse(
+                                                                                        localStorage.getItem(
+                                                                                          'company'
+                                                                                        )
                                                                                       )
-                                                                                    )
-                                                                                      .projectName
-                                                                                      .projectId
-                                                                                    }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                                    }`}
-                                                                                  target="_blank"
-                                                                                >
+                                                                                        .fkCompanyId
+                                                                                      }&projectId=${JSON.parse(
+                                                                                        localStorage.getItem(
+                                                                                          'projectName'
+                                                                                        )
+                                                                                      )
+                                                                                        .projectName
+                                                                                        .projectId
+                                                                                      }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                      }`}
+                                                                                    target="_blank"
+                                                                                  >
+                                                                                    {
+                                                                                      valueAction.number
+                                                                                    }
+                                                                                  </Link>
+                                                                                </TableCell>
+                                                                                <TableCell>
                                                                                   {
-                                                                                    valueAction.number
+                                                                                    valueAction.title
                                                                                   }
-                                                                                </Link>
-                                                                              </TableCell>
-                                                                              <TableCell>
-                                                                                {
-                                                                                  valueAction.title
-                                                                                }
-                                                                              </TableCell>
-                                                                            </TableRow>
-                                                                          )
-                                                                        )}
-                                                                    </>
-                                                                  ) : null}
-                                                                </>
-                                                              ))}
-                                                            </TableBody>
-                                                          </Table>
-                                                        </Grid>
-                                                      }</>) : null}
+                                                                                </TableCell>
+                                                                              </TableRow>
+                                                                            )
+                                                                          )}
+                                                                      </>
+                                                                    ) : null}
+                                                                  </>
+                                                                ))}
+                                                              </TableBody>
+                                                            </Table>
+                                                          </Grid>
+                                                        )
+                                                      }
+                                                    </>
+                                                  ) : null}
                                                 </>
                                               ))}
 
@@ -1577,7 +1581,7 @@ function ComplianceSummary() {
                                                 >
                                                   Attachments
                                                 </FormLabel>
-                                                {value.attachment ? value.attachmen.map(att =>
+                                                {value.attachment ? value.attachmen.map(att => (
                                                   <div className="attachFileThumb">
                                                     <img
                                                       src={att.attachment}
@@ -1588,7 +1592,8 @@ function ComplianceSummary() {
                                                       <p>construction.jpg</p>
                                                       <p>125kb</p>
                                                     </div>
-                                                  </div>) : "-"}
+                                                  </div>
+                                                )) : '-'}
 
                                                 {/* <div className="attachFileThumb">
                                                   <img
@@ -1976,7 +1981,7 @@ function ComplianceSummary() {
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
-                                      )}
+                                      ))}
                                     </Grid>
 
                                     <div>
@@ -1985,8 +1990,8 @@ function ComplianceSummary() {
                                         onClose={handleMyVideoClose}
                                         aria-labelledby="alert-dialog-title"
                                         aria-describedby="alert-dialog-description"
-                                        fullWidth={true}
-                                        maxWidth={"sm"}
+                                        fullWidth
+                                        maxWidth="sm"
                                       >
                                         {/* <DialogTitle id="alert-dialog-title">{"Admin"}</DialogTitle> */}
                                         <DialogContent>
@@ -2017,8 +2022,8 @@ function ComplianceSummary() {
                                         onClose={handleMyAudioClose}
                                         aria-labelledby="alert-dialog-title"
                                         aria-describedby="alert-dialog-description"
-                                        fullWidth={true}
-                                        maxWidth={"sm"}
+                                        fullWidth
+                                        maxWidth="sm"
                                       >
                                         <DialogContent>
                                           <DialogContentText id="alert-dialog-description">
@@ -2069,7 +2074,7 @@ function ComplianceSummary() {
                                               >
                                                 <ListItemText primary="Welding machines used are tested and properly connected" />
                                               </ListItem>
-                                            
+
                                             </List>
                                           </AccordionSummary>
                                           <AccordionDetails>
@@ -2675,7 +2680,8 @@ function ComplianceSummary() {
                                       fill="#06425c"
                                     />
                                   </g>
-                                </svg>{" "}
+                                </svg>
+                                {' '}
                                 Performance summary
                               </Typography>
                             </Grid>
@@ -2696,10 +2702,10 @@ function ComplianceSummary() {
                                       Describe here
                                     </FormLabel>
                                     <Typography className="viewLabelValue">
-                                      {complianceData["performanceSummary"] !==
-                                        null
-                                        ? complianceData["performanceSummary"]
-                                        : "-"}
+                                      {complianceData.performanceSummary
+                                        !== null
+                                        ? complianceData.performanceSummary
+                                        : '-'}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} md={12}>
@@ -2718,7 +2724,7 @@ function ComplianceSummary() {
                                           {value.roleName}
                                         </Typography>
                                       ))
-                                      : "-"}
+                                      : '-'}
                                   </Grid>
                                 </Grid>
                               </Paper>
@@ -2737,7 +2743,7 @@ function ComplianceSummary() {
                                 <AccordionDetails>
                                   <Grid container item xs={12} spacing={3}>
                                     <>
-                                      <Grid item xs={12} md={6}> 
+                                      <Grid item xs={12} md={6}>
                                         <Typography
                                           variant="label"
                                           gutterBottom
@@ -2796,8 +2802,8 @@ function ComplianceSummary() {
                       <ListItemText
                         primary={
                           complianceData.performanceSummary !== null
-                            ? "Update compliance"
-                            : "Add compliance"
+                            ? 'Update compliance'
+                            : 'Add compliance'
                         }
                       />
                     </Link>

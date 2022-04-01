@@ -1,87 +1,91 @@
-import React, { useEffect, useState, Component } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { PapperBlock } from "dan-components";
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import PropTypes from "prop-types";
-import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import React, { useEffect, useState, Component } from 'react';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { PapperBlock } from 'dan-components';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import {
+  Grid, Typography, TextField, Button
+} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import FormLabel from '@material-ui/core/FormLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { KeyboardDatePicker } from '@material-ui/pickers';
-import FormGroup from "@material-ui/core/FormGroup";
-import Checkbox from "@material-ui/core/Checkbox";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import FormGroup from '@material-ui/core/FormGroup';
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import {
   DateTimePicker,
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
   KeyboardDatePicker,
-} from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
-import DateFnsUtils from "@date-io/date-fns";
-import { useDropzone } from "react-dropzone";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import Avatar from "@material-ui/core/Avatar";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
+} from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+import DateFnsUtils from '@date-io/date-fns';
+import { useDropzone } from 'react-dropzone';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Avatar from '@material-ui/core/Avatar';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Link from "@material-ui/core/Link";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-import classNames from "classnames";
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Link from '@material-ui/core/Link';
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import classNames from 'classnames';
 
-import Styles from "dan-styles/Summary.scss";
-import Fonts from "dan-styles/Fonts.scss";
-import Paper from "@material-ui/core/Paper";
+import Styles from 'dan-styles/Summary.scss';
+import Fonts from 'dan-styles/Fonts.scss';
+import Paper from '@material-ui/core/Paper';
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Dialog from "@material-ui/core/Dialog";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Dialog from '@material-ui/core/Dialog';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
 
-import Rating from "@material-ui/lab/Rating";
-import DeleteIcon from "@material-ui/icons/Delete";
-import icoExcel from "dan-images/icoExcel.svg";
-import icoAudio from "dan-images/icoAudio.svg";
-import icoPDF from "dan-images/icoPDF.svg";
-import icoPng from "dan-images/icoPng.svg";
-import icoVideo from "dan-images/icoVideo.svg";
-import FormSideBar from "../../../Forms/FormSideBar";
-import { COMPLIANCE } from "../Constants/Constants";
-import { useParams, useHistory } from "react-router-dom";
-import api from "../../../../utils/axios";
-import ActionTracker from "../../../Forms/ActionTracker";
+import Rating from '@material-ui/lab/Rating';
+import DeleteIcon from '@material-ui/icons/Delete';
+import icoExcel from 'dan-images/icoExcel.svg';
+import icoAudio from 'dan-images/icoAudio.svg';
+import icoPDF from 'dan-images/icoPDF.svg';
+import icoPng from 'dan-images/icoPng.svg';
+import icoVideo from 'dan-images/icoVideo.svg';
+import { useParams, useHistory } from 'react-router-dom';
+import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
+import { from } from 'form-data';
+import FormSideBar from '../../../Forms/FormSideBar';
+import { COMPLIANCE } from '../Constants/Constants';
+import api from '../../../../utils/axios';
+import ActionTracker from '../../../Forms/ActionTracker';
 import {
   handelIncidentId,
   checkValue,
   handelCommonObject,
   handelActionData,
-} from "../../../../utils/CheckerValue";
-import ActionShow from "../../../Forms/ActionShow";
+} from '../../../../utils/CheckerValue';
+import ActionShow from '../../../Forms/ActionShow';
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -89,70 +93,68 @@ import {
   INITIAL_NOTIFICATION_FORM,
   LOGIN_URL,
   SSO_URL,
-} from "../../../../utils/constants";
-import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import { from } from "form-data";
+} from '../../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightMedium,
-    width: "100%",
+    width: '100%',
   },
   coponentTitleBox: {
-    "& h5": {
-      paddingBottom: "20px",
-      borderBottom: "1px solid #ccc",
+    '& h5': {
+      paddingBottom: '20px',
+      borderBottom: '1px solid #ccc',
     },
   },
   formControl: {
-    "& .MuiInputBase-root": {
-      borderRadius: "4px",
+    '& .MuiInputBase-root': {
+      borderRadius: '4px',
     },
   },
   labelName: {
-    fontSize: "0.88rem",
-    fontWeight: "400",
-    lineHeight: "1.2",
-    color: "#737373",
+    fontSize: '0.88rem',
+    fontWeight: '400',
+    lineHeight: '1.2',
+    color: '#737373',
   },
   labelValue: {
-    fontSize: "1rem",
-    fontWeight: "500",
-    color: "#063d55",
+    fontSize: '1rem',
+    fontWeight: '500',
+    color: '#063d55',
   },
   custmSubmitBtn: {
-    color: "#ffffff",
-    backgroundColor: "#06425c",
-    lineHeight: "30px",
-    border: "none",
-    "&:hover": {
-      backgroundColor: "#ff8533",
-      border: "none",
+    color: '#ffffff',
+    backgroundColor: '#06425c',
+    lineHeight: '30px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: '#ff8533',
+      border: 'none',
     },
   },
   formBox: {
-    "& .dropzone": {
-      flex: "1",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "12px",
-      borderWidth: "2px",
-      borderRadius: "5px",
-      borderColor: "#CBCBCB",
-      borderStyle: "dashed",
-      backgroundColor: "#ffffff",
-      color: "#bdbdbd",
-      outline: "none",
-      transition: "border .24s ease-in-out",
-      marginTop: "10px",
-      marginBottom: "10px",
-      cursor: "pointer",
+    '& .dropzone': {
+      flex: '1',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '12px',
+      borderWidth: '2px',
+      borderRadius: '5px',
+      borderColor: '#CBCBCB',
+      borderStyle: 'dashed',
+      backgroundColor: '#ffffff',
+      color: '#bdbdbd',
+      outline: 'none',
+      transition: 'border .24s ease-in-out',
+      marginTop: '10px',
+      marginBottom: '10px',
+      cursor: 'pointer',
     },
   },
   // customCheckBoxList: {
@@ -165,131 +167,131 @@ const useStyles = makeStyles((theme) => ({
   //   },
   // },
   createHazardbox: {
-    paddingTop: "0px !important",
-    paddingBottom: "0px !important",
-    "& button": {
-      marginTop: "8px",
+    paddingTop: '0px !important',
+    paddingBottom: '0px !important',
+    '& button': {
+      marginTop: '8px',
     },
   },
   inputFieldWithLabel: {
-    paddingTop: "0px !important",
-    paddingBottom: "0px !important",
-    "& button": {
-      marginTop: "8px",
+    paddingTop: '0px !important',
+    paddingBottom: '0px !important',
+    '& button': {
+      marginTop: '8px',
     },
   },
 
   accordingHeaderContentLeft: {
-    display: "inline-block",
-    width: "auto",
-    padding: "0px",
+    display: 'inline-block',
+    width: 'auto',
+    padding: '0px',
   },
   accordingHeaderContentRight: {
-    display: "inline-block",
-    float: "right",
-    "& li": {
-      paddingTop: "0px",
-      paddingBottom: "0px",
-      paddingLeft: "0px",
-      "& span": {
-        display: "inline-block",
+    display: 'inline-block',
+    float: 'right',
+    '& li': {
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      paddingLeft: '0px',
+      '& span': {
+        display: 'inline-block',
       },
-      "& p": {
-        display: "inline-block",
-        fontSize: "1rem !important",
-        fontWeight: "500 !important",
-        color: "#063d55",
-        paddingLeft: "5px",
+      '& p': {
+        display: 'inline-block',
+        fontSize: '1rem !important',
+        fontWeight: '500 !important',
+        color: '#063d55',
+        paddingLeft: '5px',
       },
     },
   },
   accordingHeaderContentleft: {
-    display: "inline-block",
-    float: "left",
-    "& li": {
-      paddingTop: "0px",
-      paddingBottom: "0px",
-      paddingLeft: "0px",
-      "& span": {
-        display: "inline-block",
+    display: 'inline-block',
+    float: 'left',
+    '& li': {
+      paddingTop: '0px',
+      paddingBottom: '0px',
+      paddingLeft: '0px',
+      '& span': {
+        display: 'inline-block',
       },
-      "& p": {
-        display: "inline-block",
-        fontSize: "1rem !important",
-        fontWeight: "500 !important",
-        color: "#063d55",
-        paddingLeft: "5px",
+      '& p': {
+        display: 'inline-block',
+        fontSize: '1rem !important',
+        fontWeight: '500 !important',
+        color: '#063d55',
+        paddingLeft: '5px',
       },
     },
   },
   accordingHeaderContent: {
-    display: "inline-block",
-    color: "#000",
-    width: "auto",
-    float: "left",
+    display: 'inline-block',
+    color: '#000',
+    width: 'auto',
+    float: 'left',
   },
   aLabelValue: {
-    fontSize: "1rem",
-    fontWeight: "500",
-    color: "#063d55",
-    float: "left",
-    width: "100%",
+    fontSize: '1rem',
+    fontWeight: '500',
+    color: '#063d55',
+    float: 'left',
+    width: '100%',
   },
   updateLink: {
-    float: "left",
-    fontSize: "0.88rem",
-    fontWeight: "400",
-    lineHeight: "1.2",
-    "& a": {
-      cursor: "pointer",
-      textDecoration: "underline",
+    float: 'left',
+    fontSize: '0.88rem',
+    fontWeight: '400',
+    lineHeight: '1.2',
+    '& a': {
+      cursor: 'pointer',
+      textDecoration: 'underline',
     },
   },
   actionTitleLable: {
-    float: "right",
-    width: "calc(100% - 100px)",
-    textAlign: "right",
+    float: 'right',
+    width: 'calc(100% - 100px)',
+    textAlign: 'right',
   },
   catSetionSeparatorBox: {
-    marginTop: "15px",
-    marginBottom: "30px",
+    marginTop: '15px',
+    marginBottom: '30px',
   },
   // backPaperAccordian: {
   //     marginBottom: '10px',
   //     border: '1px solid #06425c',
   // },
   custmCancelBtn: {
-    color: "#ffffff",
-    backgroundColor: "#ff8533",
-    lineHeight: "30px",
-    marginLeft: "5px",
-    border: "none",
-    "&:hover": {
-      backgroundColor: "#ff8533",
-      border: "none",
+    color: '#ffffff',
+    backgroundColor: '#ff8533',
+    lineHeight: '30px',
+    marginLeft: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: '#ff8533',
+      border: 'none',
     },
   },
   custmSaveBtn: {
-    color: "#ffffff",
-    backgroundColor: "#06425c",
-    lineHeight: "30px",
-    marginLeft: "5px",
-    border: "none",
-    "&:hover": {
-      backgroundColor: "#ff8533",
-      border: "none",
+    color: '#ffffff',
+    backgroundColor: '#06425c',
+    lineHeight: '30px',
+    marginLeft: '5px',
+    border: 'none',
+    '&:hover': {
+      backgroundColor: '#ff8533',
+      border: 'none',
     },
   },
   ratioColororange: {
-    //backgroundColor: 'orange',
-    padding: "16px!important",
-    height: "70%",
-    marginTop: "7px",
-    borderRadius: "5px",
-    //color: '#ffffff'
+    // backgroundColor: 'orange',
+    padding: '16px!important',
+    height: '70%',
+    marginTop: '7px',
+    borderRadius: '5px',
+    // color: '#ffffff'
   },
   actionLinkAudit: {
-    inlineSize: "max-content",
+    inlineSize: 'max-content',
   },
 }));
 
@@ -299,7 +301,7 @@ const styles = (theme) => ({
     padding: theme.spacing(2),
   },
   closeButton: {
-    position: "absolute",
+    position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
     color: theme.palette.grey[500],
@@ -314,41 +316,39 @@ const Checks = () => {
   const [actionData, setActionData] = useState([]);
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState('#FFFFFF');
-  //const [expanded, setExpanded] = React.useState('panel1');
+  const [ratingColorQuestionId, setRatingColorQuestionId] = useState(null);
+  // const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
-    "panel4"
+    'panel4'
   );
 
 
   useEffect(() => {
     if (form.menuValue >= 0 && form.statusValue >= 0) {
-      let ratingValue = form.menuValue * form.statusValue;
+      const ratingValue = form.menuValue * form.statusValue;
       if (ratingValue >= 0 && ratingValue <= 1) {
-        setRatingColor("#009933");
+        setRatingColor('#009933');
       } else if (ratingValue >= 1 && ratingValue <= 2) {
-        setRatingColor("#8da225");
+        setRatingColor('#8da225');
       } else if (ratingValue >= 2 && ratingValue <= 3) {
-        setRatingColor("#FFBF00");
+        setRatingColor('#FFBF00');
       } else if (ratingValue >= 3 && ratingValue <= 4) {
-        setRatingColor("#990000");
+        setRatingColor('#990000');
       } else if (ratingValue >= 4 && ratingValue <= 5) {
-        setRatingColor("#ff0000");
+        setRatingColor('#ff0000');
+      } else {
+        setRatingColor('#ff1111');
       }
-      else {
-        setRatingColor("#ff1111")
-      }
-
     }
-
   }, [form]);
 
   useEffect(() => {
-  }, [ratingColor])
+  }, [ratingColor]);
 
 
-  const radioDecide = ["Yes", "No", "NA"];
+  const radioDecide = ['Yes', 'No', 'NA'];
   // const handleExpand = (panel) => (event, isExpanded) => {
   //     setExpanded(isExpanded ? panel : false);
   // };
@@ -356,15 +356,13 @@ const Checks = () => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
-  const fkCompanyId =
-    JSON.parse(localStorage.getItem("company")) !== null
-      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-      : null;
+  const fkCompanyId = JSON.parse(localStorage.getItem('company')) !== null
+    ? JSON.parse(localStorage.getItem('company')).fkCompanyId
+    : null;
 
-  const project =
-    JSON.parse(localStorage.getItem("projectName")) !== null
-      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-      : null;
+  const project = JSON.parse(localStorage.getItem('projectName')) !== null
+    ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+    : null;
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -374,56 +372,64 @@ const Checks = () => {
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
-      <img src={icoExcel} alt="excel-icon" /> {file.path} -{file.size} bytes{" "}
+      <img src={icoExcel} alt="excel-icon" />
+      {' '}
+      {file.path}
+      {' '}
+-
+      {file.size}
+      {' '}
+bytes
+      {' '}
       <DeleteIcon />
     </li>
   ));
 
   const Criticality = [
     {
-      value: "High",
-      label: "High",
+      value: 'High',
+      label: 'High',
     },
     {
-      value: "Medium",
-      label: "Medium",
+      value: 'Medium',
+      label: 'Medium',
     },
     {
-      value: "Low",
-      label: "Low",
+      value: 'Low',
+      label: 'Low',
     },
   ];
   const Status = [
     {
-      value: "Not in compliance -stop work",
-      label: "Not in compliance -stop work",
+      value: 'Not in compliance -stop work',
+      label: 'Not in compliance -stop work',
     },
     {
-      value: "Not in compliance - Action required",
-      label: "Not in compliance - Action required",
+      value: 'Not in compliance - Action required',
+      label: 'Not in compliance - Action required',
     },
     {
-      value: "Partial compliance",
-      label: "Partial compliance",
+      value: 'Partial compliance',
+      label: 'Partial compliance',
     },
     {
-      value: "Compliant- Needs improvement",
-      label: "Compliant- Needs improvement",
+      value: 'Compliant- Needs improvement',
+      label: 'Compliant- Needs improvement',
     },
     {
-      value: "Fully compliant",
-      label: "Fully compliant",
+      value: 'Fully compliant',
+      label: 'Fully compliant',
     },
     {
-      value: "Fully compliant & excellent",
-      label: "Fully compliant & excellent",
+      value: 'Fully compliant & excellent',
+      label: 'Fully compliant & excellent',
     },
   ];
 
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [criticalityData, setCriticalityData] = useState([]);
-  const [statusData, setStatusData] = useState([])
+  const [statusData, setStatusData] = useState([]);
   const handleActionDateChange = (date) => {
     setSelectedActionDate(date);
   };
@@ -435,7 +441,9 @@ const Checks = () => {
   };
 
   const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
+    const {
+      children, classes, onClose, ...other
+    } = props;
     return (
       <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
         <Typography variant="h6">{children}</Typography>
@@ -456,7 +464,7 @@ const Checks = () => {
   const [categories, setCategories] = useState([]);
 
   const fetchCheklistData = async () => {
-    let temp = {};
+    const temp = {};
     const res = await api.get(
       `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
@@ -464,35 +472,31 @@ const Checks = () => {
     await fetchComplianceData(result);
   };
 
-  useEffect(() => {
-    console.log(categories);
-  },[categories])
-
   const fetchComplianceData = async (data) => {
-    let complianceId = localStorage.getItem("fkComplianceId");
+    const complianceId = localStorage.getItem('fkComplianceId');
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
-        let result = response.data.data.results;
-        setComplianceData(result)
-        let groupIds = result.groupIds.split(",");
-        let subGroupIds = result.subGroupIds.split(",");
-        let tempGroup = [];
-        let tempSubGroup = [];
+        const result = response.data.data.results;
+        setComplianceData(result);
+        const groupIds = result.groupIds.split(',');
+        const subGroupIds = result.subGroupIds.split(',');
+        const tempGroup = [];
+        const tempSubGroup = [];
         for (let i = 0; i < groupIds.length; i++) {
           for (let j = 0; j < data.length; j++) {
-            if (data[j]["checklistId"] == groupIds[i]) {
+            if (data[j].checklistId == groupIds[i]) {
               tempGroup.push(data[j]);
             }
           }
         }
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
-            tempGroup[j]["checklistValues"].map((value) => {
+            tempGroup[j].checklistValues.map((value) => {
               if (value.id == subGroupIds[i]) {
                 tempSubGroup.push({
-                  groupName: tempGroup[j]["checkListLabel"],
-                  subGroupName: value["inputLabel"],
+                  groupName: tempGroup[j].checkListLabel,
+                  subGroupName: value.inputLabel,
                 });
               }
             });
@@ -505,17 +509,16 @@ const Checks = () => {
   };
 
   const fetchCheklist = async (data, groups, subGroups) => {
-    const userId =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails")).id
-        : null;
-    let temp = [];
-    let tempCheckData = [];
-    let categoriesData = {};
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    const temp = [];
+    const tempCheckData = [];
+    const categoriesData = {};
 
     for (let i = 0; i < data.length; i++) {
-      let groupName = data[i].groupName;
-      let subGroupName = data[i].subGroupName;
+      const { groupName } = data[i];
+      const { subGroupName } = data[i];
       categoriesData[groupName] = [];
 
       const res = await api.get(
@@ -524,13 +527,12 @@ const Checks = () => {
       const result2 = res.data.data.results;
       temp.push(result2);
     }
-    let tempQuestionId = [];
-    let fd = await fetchData()
+    const tempQuestionId = [];
+    const fd = await fetchData();
     temp.map((tempvalue, i) => {
-      if (tempvalue['message'] === undefined) {
+      if (tempvalue.message === undefined) {
         tempvalue.map((value, index) => {
           tempQuestionId.push({ id: value.id });
-          console.log(index, 'value')
           tempCheckData.push({
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
@@ -546,148 +548,137 @@ const Checks = () => {
             score: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].score : '',
             findings: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].findings : '',
             attachment: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].attachment : null,
-            status: "Active",
+            status: 'Active',
             createdBy: parseInt(userId),
-            fkAuditId: localStorage.getItem("fkComplianceId"),
+            fkAuditId: localStorage.getItem('fkComplianceId'),
           });
-          categoriesData[value["groupName"]].push(value);
+          categoriesData[value.groupName].push(value);
         });
       }
     });
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
-        if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
-          tempCheckData[i]['groupId'] = groups[j]['id']
+        if (groups[j].checkListLabel == tempCheckData[i].groupName) {
+          tempCheckData[i].groupId = groups[j].id;
         }
       }
     }
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < subGroups.length; j++) {
-        if (subGroups[j]['inputLabel'] == tempCheckData[i]['subGroupName']) {
-          tempCheckData[i]['subGroupId'] = subGroups[j]['id']
+        if (subGroups[j].inputLabel == tempCheckData[i].subGroupName) {
+          tempCheckData[i].subGroupId = subGroups[j].id;
         }
       }
     }
     // handelCommonObject("commonObject", "audit", "assessmentIds", temp);
-    handelCommonObject("commonObject", "audit", "qustionsIds", tempQuestionId);
+    handelCommonObject('commonObject', 'audit', 'qustionsIds', tempQuestionId);
     await setCheckData(tempCheckData);
     await setCategories(categoriesData);
     await handelActionTracker();
   };
   const apiCall = async (dataChecks) => {
-    console.log(dataChecks,"alsaas");
-    const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,[...dataChecks]);
-    history.push("/app/pages/compliance/performance-summary");
-  }
+    const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`, [...dataChecks]);
+    history.push('/app/pages/compliance/performance-summary');
+  };
   const handelSubmit = async () => {
-    const userId =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails")).id
-        : null;
-    let tempUpdatedQuestion = []
-    let tempNewQuestion = []
+    const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    const tempUpdatedQuestion = [];
+    const tempNewQuestion = [];
 
     checkData.map((data) => {
       if (data.id) {
-        tempUpdatedQuestion.push(data)
+        tempUpdatedQuestion.push(data);
       } else {
-        tempNewQuestion.push(data)
+        tempNewQuestion.push(data);
       }
-    })
+    });
     if (tempNewQuestion.length > 0) {
-      console.log(tempNewQuestion, 'oooo')
-      let dataCheck = [];
+      const dataCheck = [];
       // let data = {};
       for (var i = 0; i < tempNewQuestion.length; i++) {
-        let data = {};
-        data["questionId"] = tempNewQuestion[i].questionId
-        data["question"] = tempNewQuestion[i].question
-        data["criticality"] = tempNewQuestion[i].criticality
-        data["performance"] = tempNewQuestion[i].performance
-        data["groupId"] = tempNewQuestion[i].groupId
-        data["groupName"] = tempNewQuestion[i].groupName
-        data["subGroupId"] = tempNewQuestion[i].subGroupId
-        data["subGroupName"] = tempNewQuestion[i].subGroupName
-        data["defaultResponse"] = tempNewQuestion[i].defaultResponse
-        data["score"] = tempNewQuestion[i].score
-        data["findings"] = tempNewQuestion[i].findings
-        data["score"] = tempNewQuestion[i].score
-        data["auditStatus"] = tempNewQuestion[i].auditStatus
+        const data = {};
+        data.questionId = tempNewQuestion[i].questionId;
+        data.question = tempNewQuestion[i].question;
+        data.criticality = tempNewQuestion[i].criticality;
+        data.performance = tempNewQuestion[i].performance;
+        data.groupId = tempNewQuestion[i].groupId;
+        data.groupName = tempNewQuestion[i].groupName;
+        data.subGroupId = tempNewQuestion[i].subGroupId;
+        data.subGroupName = tempNewQuestion[i].subGroupName;
+        data.defaultResponse = tempNewQuestion[i].defaultResponse;
+        data.score = tempNewQuestion[i].score;
+        data.findings = tempNewQuestion[i].findings;
+        data.score = tempNewQuestion[i].score;
+        data.auditStatus = tempNewQuestion[i].auditStatus;
 
-        console.log(tempNewQuestion[i].attachment);
-        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+        if (typeof tempUpdatedQuestion[i].attachment !== 'string') {
           if (tempUpdatedQuestion[i].attachment !== null) {
-            console.log('attachment', tempUpdatedQuestion[i].attachment)
-            data["attachment"] = {
+            data.attachment = {
               name: tempUpdatedQuestion[i].attachment.name,
               lastModified: tempUpdatedQuestion[i].attachment.lastModified,
               lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
               size: tempUpdatedQuestion[i].attachment.size,
               type: tempUpdatedQuestion[i].attachment.type,
               webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-            }
+            };
           }
         }
-        data["status", "Active"]
-        data["fkAuditId"] = tempNewQuestion[i].fkAuditId
-        data["createdAt"] = new Date().toISOString()
-        data["createdBy"] = tempNewQuestion[i].createdBy
-        dataCheck[i] = data
-        console.log(dataCheck)
+        data['status', 'Active'];
+        data.fkAuditId = tempNewQuestion[i].fkAuditId;
+        data.createdAt = new Date().toISOString();
+        data.createdBy = tempNewQuestion[i].createdBy;
+        dataCheck[i] = data;
+        console.log(dataCheck);
       }
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`, dataCheck);
     }
     if (tempUpdatedQuestion.length > 0) {
-
-      let dataCheck = [];
+      const dataCheck = [];
       for (var i = 0; i < tempUpdatedQuestion.length; i++) {
-        let data = {};
-        data["id"] = tempUpdatedQuestion[i].id
-        data["questionId"] = tempUpdatedQuestion[i].questionId
-        data["question"] = tempUpdatedQuestion[i].question
-        data["criticality"] = tempUpdatedQuestion[i].criticality
-        data["performance"] = tempUpdatedQuestion[i].performance
-        data["groupId"] = tempUpdatedQuestion[i].groupId
-        data["groupName"] = tempUpdatedQuestion[i].groupName
-        data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
-        data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
-        data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
-        data["score"] = tempUpdatedQuestion[i].score
-        data["findings"] = tempUpdatedQuestion[i].findings
-        data["score"] = tempUpdatedQuestion[i].score
-        data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
-        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+        const data = {};
+        data.id = tempUpdatedQuestion[i].id;
+        data.questionId = tempUpdatedQuestion[i].questionId;
+        data.question = tempUpdatedQuestion[i].question;
+        data.criticality = tempUpdatedQuestion[i].criticality;
+        data.performance = tempUpdatedQuestion[i].questionId === ratingColorQuestionId ? ratingColor : tempUpdatedQuestion[i].performance;
+        data.groupId = tempUpdatedQuestion[i].groupId;
+        data.groupName = tempUpdatedQuestion[i].groupName;
+        data.subGroupId = tempUpdatedQuestion[i].subGroupId;
+        data.subGroupName = tempUpdatedQuestion[i].subGroupName;
+        data.defaultResponse = tempUpdatedQuestion[i].defaultResponse;
+        data.score = tempUpdatedQuestion[i].score;
+        data.findings = tempUpdatedQuestion[i].findings;
+        data.score = tempUpdatedQuestion[i].score;
+        data.auditStatus = tempUpdatedQuestion[i].auditStatus;
+        if (typeof tempUpdatedQuestion[i].attachment !== 'string') {
           if (tempUpdatedQuestion[i].attachment !== null) {
-            console.log('attachment', tempUpdatedQuestion[i].attachment)
-            data["attachment"] = {
+            data.attachment = {
               name: tempUpdatedQuestion[i].attachment.name,
               lastModified: tempUpdatedQuestion[i].attachment.lastModified,
               lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
               size: tempUpdatedQuestion[i].attachment.size,
               type: tempUpdatedQuestion[i].attachment.type,
               webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-            }
+            };
           }
         }
-        data["status", "Active"]
-        data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
-        data["createdAt"] = new Date().toISOString()
-        data["createdBy"] = tempUpdatedQuestion[i].createdBy
-        dataCheck[i] = data
+        data['status', 'Active'];
+        data.fkAuditId = tempUpdatedQuestion[i].fkAuditId * 1;
+        data.createdAt = new Date().toISOString();
+        data.createdBy = tempUpdatedQuestion[i].createdBy;
+        dataCheck[i] = data;
       }
-      console.log(dataCheck, 'dataCheck');
-      apiCall(dataCheck)
+      apiCall(dataCheck);
     }
-
-    
-
   };
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
-    let temp = [...checkData];
+    const temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
-      if (temp[i]["questionId"] == id) {
+      if (temp[i].questionId == id) {
         temp[i][field] = value;
       }
     }
@@ -696,54 +687,61 @@ const Checks = () => {
 
   const fetchData = async () => {
     const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+      `/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`
     );
     const result = res.data.data.results;
-    await setShowCheckData(result)
+    await setShowCheckData(result);
     await setCheckData(result);
-    return result
+    return result;
   };
 
   const handleFile = (value, field, index, id) => {
-    let temp = [...checkData];
+    const temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
-      if (temp[i]["question"] === id) {
-        
+      if (temp[i].question === id) {
         temp[i][field] = value;
       }
     }
     setCheckData(temp);
   };
   const handelActionTracker = async () => {
-    let jhaId = localStorage.getItem("fkComplianceId");
-    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-      "qustionsIds"
-    ];
-    let allAction = await handelActionData(jhaId, apiData);
+    const jhaId = localStorage.getItem('fkComplianceId');
+    const apiData = JSON.parse(localStorage.getItem('commonObject')).audit.qustionsIds;
+    const allAction = await handelActionData(jhaId, apiData);
     setActionData(allAction);
   };
 
 
   const fetchFectorData = async () => {
-    let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
-    const result = res.data.data.results
-    const factorCriticality = result.filter(item =>
-      item.factorType === "Criticality"
-    )
-    setCriticalityData(factorCriticality)
-    const factorStatus = result.filter(item =>
-      item.factorType === "Status"
-    )
-    setStatusData(factorStatus)
-  }
+    const res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`);
+    const result = res.data.data.results;
+    const factorCriticality = result.filter(item => item.factorType === 'Criticality'
+    );
+    setCriticalityData(factorCriticality);
+    const factorStatus = result.filter(item => item.factorType === 'Status'
+    );
+    setStatusData(factorStatus);
+  };
 
 
-  const handleCriticality = (option, selectType) => {
-    if (selectType === "menuItem") {
-      setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, menuValue: option.factorConstant } });
+  const handleCriticality = (option, selectType, question) => {
+    if (selectType === 'statusItem') {
+      checkData.map(cd => {
+        if (question === cd.question) {
+          setRatingColorQuestionId(cd.questionId);
+        }
+      });
+    }
+
+    if (selectType === 'menuItem') {
+      setForm((data) => ({
+        ...data, id: option.id, factorName: option.factorName, menuValue: option.factorConstant
+      }));
       return;
     }
-    setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, statusValue: option.factorConstant } });
+    setForm((data) => ({
+      ...data, id: option.id, factorName: option.factorName, statusValue: option.factorConstant
+    }));
   };
 
   useEffect(() => {
@@ -751,13 +749,14 @@ const Checks = () => {
     fetchFectorData();
     fetchData();
     fetchCheklistData();
-
   }, []);
+
+  console.log(checkData);
 
   return (
     <CustomPapperBlock
-      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
-        }`}
+      title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ''
+      }`}
       icon="customDropdownPageIcon compliancePageIcon"
       whiteBg
     >
@@ -830,7 +829,8 @@ const Checks = () => {
                       fill="#06425c"
                     />
                   </g>
-                </svg>{" "}
+                </svg>
+                {' '}
                 Checks
               </Typography>
             </Grid>
@@ -854,8 +854,7 @@ const Checks = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    {Object.entries(categories).map(([key, value]) => {
-                      return(
+                    {Object.entries(categories).map(([key, value]) => (
                       <>
                         <FormLabel className="checkRadioLabel" component="legend">
                           {key}
@@ -876,15 +875,12 @@ const Checks = () => {
                             />
                           </ListItem>
                         </span> */}
-                        {value.map((value, index) => {
-                          // console.log(value.question);
-                          // console.log(value.id);
-                          return(
+                        {value.map((value, index) => (
                           <>
                             <Grid container item xs={12}>
                               <Grid item md={12}>
                                 <div>
-                                  {value.responseType === "Yes-No-NA" ? (
+                                  {value.responseType === 'Yes-No-NA' ? (
                                     <Accordion
                                       expanded={
                                         expandedTableDetail === `panel6 ${index}`
@@ -918,20 +914,19 @@ const Checks = () => {
                                                 row
                                                 aria-label="select-typeof-compliance"
                                                 name="select-typeof-compliance"
-                                                defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
+                                                defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ''}
                                               >
                                                 {radioDecide.map((option) => (
                                                   <FormControlLabel
                                                     value={option}
                                                     className="selectLabel"
                                                     control={<Radio />}
-                                                    onChange={(e) =>
-                                                      handleChangeData(
-                                                        e.target.value,
-                                                        "defaultResponse",
-                                                        index,
-                                                        value.id
-                                                      )
+                                                    onChange={(e) => handleChangeData(
+                                                      e.target.value,
+                                                      'defaultResponse',
+                                                      index,
+                                                      value.id
+                                                    )
                                                     }
                                                     label={option}
                                                   />
@@ -957,17 +952,16 @@ const Checks = () => {
                                               label="Findings"
                                               name="findings"
                                               id="findings"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "findings",
-                                                  index,
-                                                  value.id
-                                                )
+                                              onChange={(e) => handleChangeData(
+                                                e.target.value,
+                                                'findings',
+                                                index,
+                                                value.id
+                                              )
                                               }
                                               multiline
                                               rows={4}
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ''}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
@@ -978,32 +972,32 @@ const Checks = () => {
                                               className="checkRadioLabel marginB5"
                                               component="legend"
                                             >
-                                              Score
+                                                  Score
                                             </FormLabel>
                                           </Grid>
-                                          {value.scoreType === "Star" &&
+                                          {value.scoreType === 'Star' && (
                                             <Grid item md={4} sm={4} xs={12}>
                                               <Rating
                                                 name="simple-controlled"
                                                 value={value}
-                                                onChange={(e, newValue) =>
-                                                  handleChangeData(
-                                                    newValue,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
+                                                onChange={(e, newValue) => handleChangeData(
+                                                  newValue,
+                                                  'score',
+                                                  index,
+                                                  value.id
+                                                )
                                                 }
                                               />
-                                            </Grid>}
-                                          {value.scoreType === "1-10" &&
+                                            </Grid>
+                                          )}
+                                          {value.scoreType === '1-10' && (
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormControl
                                                 variant="outlined"
                                                 className="formControl"
                                               >
                                                 <InputLabel id="demo-simple-select-outlined-label">
-                                                  Counts
+                                                      Counts
                                                 </InputLabel>
                                                 <Select
                                                   labelId="scoreCount"
@@ -1012,13 +1006,12 @@ const Checks = () => {
                                                   label="Counts"
                                                   className="formControl"
                                                   fullWidth
-                                                  onChange={(e) =>
-                                                    handleChangeData(
-                                                      e.target.value,
-                                                      "score",
-                                                      index,
-                                                      value.id
-                                                    )
+                                                  onChange={(e) => handleChangeData(
+                                                    e.target.value,
+                                                    'score',
+                                                    index,
+                                                    value.id
+                                                  )
                                                   }
                                                 >
                                                   <MenuItem value={1}>1</MenuItem>
@@ -1033,8 +1026,9 @@ const Checks = () => {
                                                   <MenuItem value={10}>10</MenuItem>
                                                 </Select>
                                               </FormControl>
-                                            </Grid>}
-                                          {value.scoreType === "%" &&
+                                            </Grid>
+                                          )}
+                                          {value.scoreType === '%' && (
                                             <Grid item md={4} sm={4} xs={12}>
                                               <TextField
                                                 label="Percentage"
@@ -1044,22 +1038,23 @@ const Checks = () => {
                                                 fullWidth
                                                 variant="outlined"
                                                 className="formControl"
-                                                onChange={(e) =>
-                                                  handleChangeData(
-                                                    e.target.value,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
+                                                onChange={(e) => handleChangeData(
+                                                  e.target.value,
+                                                  'score',
+                                                  index,
+                                                  value.id
+                                                )
                                                 }
                                               />
-                                            </Grid>}
+                                            </Grid>
+                                          )}
                                           <Grid item md={12} xs={12}>
                                             <FormLabel
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                              Create Action{" "}
+                                                  Create Action
+                                              {' '}
                                             </FormLabel>
                                             <Grid
                                               item
@@ -1069,34 +1064,34 @@ const Checks = () => {
                                               <ActionTracker
                                                 actionContext="audit:question"
                                                 enitityReferenceId={`${localStorage.getItem(
-                                                  "fkComplianceId"
+                                                  'fkComplianceId'
                                                 )}:${value.id}`}
                                                 setUpdatePage={setUpdatePage}
                                                 fkCompanyId={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "company"
+                                                      'company'
                                                     )
                                                   ).fkCompanyId
                                                 }
                                                 fkProjectId={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "projectName"
+                                                      'projectName'
                                                     )
                                                   ).projectName.projectId
                                                 }
                                                 fkProjectStructureIds={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "commonObject"
+                                                      'commonObject'
                                                     )
-                                                  )["audit"]["projectStruct"]
+                                                  ).audit.projectStruct
                                                 }
                                                 createdBy={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "userDetails"
+                                                      'userDetails'
                                                     )
                                                   ).id
                                                 }
@@ -1119,18 +1114,18 @@ const Checks = () => {
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                              Attachment{" "}
+                                                  Attachment
+                                              {' '}
                                             </FormLabel>
                                             <Typography className="viewLabelValue">
                                               <input
                                                 type="file"
-                                                onChange={(e) =>
-                                                  handleFile(
-                                                    e.target.files[0],
-                                                    "attachment",
-                                                    index,
-                                                    value.question
-                                                  )
+                                                onChange={(e) => handleFile(
+                                                  e.target.files[0],
+                                                  'attachment',
+                                                  index,
+                                                  value.question
+                                                )
                                                 }
                                               />
 
@@ -1142,8 +1137,8 @@ const Checks = () => {
                                   ) : (
                                     <Accordion
                                       key={index}
-                                      expanded={expandedTableDetail === "panel4"}
-                                      onChange={handleTDChange("panel4")}
+                                      expanded={expandedTableDetail === 'panel4'}
+                                      onChange={handleTDChange('panel4')}
                                       defaultExpanded
                                       className="backPaperAccordian"
                                     >
@@ -1173,15 +1168,14 @@ const Checks = () => {
                                               select
                                               fullWidth
                                               variant="outlined"
-                                              defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : "")}
+                                              defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : '')}
                                               className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "criticality",
-                                                  index,
-                                                  value.id
-                                                )
+                                              onChange={(e) => handleChangeData(
+                                                e.target.value,
+                                                'criticality',
+                                                index,
+                                                value.id
+                                              )
                                               }
 
                                             >
@@ -1191,7 +1185,7 @@ const Checks = () => {
                                                   value={option.id}
                                                   id={option.id}
                                                   onClick={(e) => {
-                                                    handleCriticality(option, "menuItem");
+                                                    handleCriticality(option, 'menuItem', value.question);
                                                   }}
                                                 >
                                                   {option.factorName}
@@ -1204,18 +1198,17 @@ const Checks = () => {
                                               label="Status*"
                                               name="status"
                                               id="status"
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ''}
                                               select
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "auditStatus",
-                                                  index,
-                                                  value.id
-                                                )
+                                              onChange={(e) => handleChangeData(
+                                                e.target.value,
+                                                'auditStatus',
+                                                index,
+                                                value.id
+                                              )
                                               }
                                             >
                                               {statusData.map((option) => (
@@ -1224,7 +1217,7 @@ const Checks = () => {
                                                   value={option.id}
                                                   id={option.id}
                                                   onClick={(e) => {
-                                                    handleCriticality(option, "statusItem");
+                                                    handleCriticality(option, 'statusItem', value.question);
                                                   }}
                                                 >
                                                   {option.factorName}
@@ -1235,10 +1228,11 @@ const Checks = () => {
                                           <Grid item md={4} xs={12}>
                                             <TextField
                                               label="Performance rating"
-                                              //margin="dense"
+                                              // margin="dense"
+                                              value={ratingColor || ''}
                                               name="performancerating"
                                               id="performancerating"
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''}
                                               style={{ backgroundColor: ratingColor }}
                                               fullWidth
                                               variant="outlined"
@@ -1254,17 +1248,16 @@ const Checks = () => {
                                               id="findings"
                                               multiline
                                               rows={4}
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
+                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ''}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "findings",
-                                                  index,
-                                                  value.id
-                                                )
+                                              onChange={(e) => handleChangeData(
+                                                e.target.value,
+                                                'findings',
+                                                index,
+                                                value.id
+                                              )
                                               }
                                             />
                                           </Grid>
@@ -1273,47 +1266,46 @@ const Checks = () => {
                                               className="checkRadioLabel marginB5"
                                               component="legend"
                                             >
-                                              Score
+                                                  Score
                                             </FormLabel>
                                           </Grid>
-                                          {value.scoreType === "Star" &&
+                                          {value.scoreType === 'Star' && (
                                             <Grid item md={4} sm={4} xs={12}>
                                               <Rating
                                                 name="simple-controlled"
-                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                onChange={(e, newValue) =>
-                                                  handleChangeData(
-                                                    newValue,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
+                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ''}
+                                                onChange={(e, newValue) => handleChangeData(
+                                                  newValue,
+                                                  'score',
+                                                  index,
+                                                  value.id
+                                                )
                                                 }
                                               />
-                                            </Grid>}
-                                          {value.scoreType === "1-10" &&
+                                            </Grid>
+                                          )}
+                                          {value.scoreType === '1-10' && (
                                             <Grid item md={4} sm={4} xs={12}>
                                               <FormControl
                                                 variant="outlined"
                                                 className="formControl"
                                               >
                                                 <InputLabel id="demo-simple-select-outlined-label">
-                                                  Counts
+                                                      Counts
                                                 </InputLabel>
                                                 <Select
                                                   labelId="scoreCount"
                                                   id="scoreCount"
-                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : "")}
+                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : '')}
                                                   label="Counts"
                                                   className="formControl"
                                                   fullWidth
-                                                  onChange={(e) =>
-                                                    handleChangeData(
-                                                      e.target.value,
-                                                      "score",
-                                                      index,
-                                                      value.id
-                                                    )
+                                                  onChange={(e) => handleChangeData(
+                                                    e.target.value,
+                                                    'score',
+                                                    index,
+                                                    value.id
+                                                  )
                                                   }
                                                 >
                                                   <MenuItem value={1}>1</MenuItem>
@@ -1328,34 +1320,36 @@ const Checks = () => {
                                                   <MenuItem value={10}>10</MenuItem>
                                                 </Select>
                                               </FormControl>
-                                            </Grid>}
-                                          {value.scoreType === "%" &&
+                                            </Grid>
+                                          )}
+                                          {value.scoreType === '%' && (
                                             <Grid item md={4} sm={4} xs={12}>
                                               <TextField
                                                 label="Percentage"
                                                 name="performancerating"
                                                 id="performancerating"
-                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ''}
                                                 fullWidth
                                                 variant="outlined"
                                                 className="formControl"
-                                                onChange={(e) =>
-                                                  handleChangeData(
-                                                    e.target.value,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
+                                                onChange={(e) => handleChangeData(
+                                                  e.target.value,
+                                                  'score',
+                                                  index,
+                                                  value.id
+                                                )
                                                 }
                                               />
-                                            </Grid>}
+                                            </Grid>
+                                          )}
 
                                           <Grid item md={12} xs={12}>
                                             <FormLabel
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                              Create Action{" "}
+                                                  Create Action
+                                              {' '}
                                             </FormLabel>
                                             <Grid
                                               item
@@ -1365,34 +1359,34 @@ const Checks = () => {
                                               <ActionTracker
                                                 actionContext="audit:question"
                                                 enitityReferenceId={`${localStorage.getItem(
-                                                  "fkComplianceId"
+                                                  'fkComplianceId'
                                                 )}:${value.id}`}
                                                 setUpdatePage={setUpdatePage}
                                                 fkCompanyId={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "company"
+                                                      'company'
                                                     )
                                                   ).fkCompanyId
                                                 }
                                                 fkProjectId={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "projectName"
+                                                      'projectName'
                                                     )
                                                   ).projectName.projectId
                                                 }
                                                 fkProjectStructureIds={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "commonObject"
+                                                      'commonObject'
                                                     )
-                                                  )["audit"]["projectStruct"]
+                                                  ).audit.projectStruct
                                                 }
                                                 createdBy={
                                                   JSON.parse(
                                                     localStorage.getItem(
-                                                      "userDetails"
+                                                      'userDetails'
                                                     )
                                                   ).id
                                                 }
@@ -1412,10 +1406,10 @@ const Checks = () => {
                                               <TableHead>
                                                 <TableRow>
                                                   <TableCell className="tableHeadCellFirst">
-                                                    Action number 1
+                                                        Action number 1
                                                   </TableCell>
                                                   <TableCell className="tableHeadCellSecond">
-                                                    Action title
+                                                        Action title
                                                   </TableCell>
                                                 </TableRow>
                                               </TableHead>
@@ -1425,53 +1419,51 @@ const Checks = () => {
 
                                                     {val.id == value.id ? (
                                                       <>
-                                                        {val.action.length > 0 &&
-                                                          val.action.map(
-                                                            (valueAction) => (
-                                                              <TableRow>
-                                                                <TableCell align="left">
-                                                                  <Link
-                                                                    className={
-                                                                      classes.actionLinkAudit
-                                                                    }
-                                                                    display="block"
-                                                                    href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                      localStorage.getItem(
-                                                                        "BaseUrl"
-                                                                      )
-                                                                    )[
-                                                                      "actionClientID"
-                                                                    ]
-                                                                      }&response_type=code&companyId=${JSON.parse(
-                                                                        localStorage.getItem(
-                                                                          "company"
+                                                        {val.action.length > 0
+                                                              && val.action.map(
+                                                                (valueAction) => (
+                                                                  <TableRow>
+                                                                    <TableCell align="left">
+                                                                      <Link
+                                                                        className={
+                                                                          classes.actionLinkAudit
+                                                                        }
+                                                                        display="block"
+                                                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                          localStorage.getItem(
+                                                                            'BaseUrl'
+                                                                          )
+                                                                        ).actionClientID
+                                                                        }&response_type=code&companyId=${JSON.parse(
+                                                                          localStorage.getItem(
+                                                                            'company'
+                                                                          )
                                                                         )
-                                                                      )
-                                                                        .fkCompanyId
-                                                                      }&projectId=${JSON.parse(
-                                                                        localStorage.getItem(
-                                                                          "projectName"
+                                                                          .fkCompanyId
+                                                                        }&projectId=${JSON.parse(
+                                                                          localStorage.getItem(
+                                                                            'projectName'
+                                                                          )
                                                                         )
-                                                                      )
-                                                                        .projectName
-                                                                        .projectId
-                                                                      }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                      }`}
-                                                                    target="_blank"
-                                                                  >
-                                                                    {
-                                                                      valueAction.number
-                                                                    }
-                                                                  </Link>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                  {
-                                                                    valueAction.title
-                                                                  }
-                                                                </TableCell>
-                                                              </TableRow>
-                                                            )
-                                                          )}
+                                                                          .projectName
+                                                                          .projectId
+                                                                        }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                        }`}
+                                                                        target="_blank"
+                                                                      >
+                                                                        {
+                                                                          valueAction.number
+                                                                        }
+                                                                      </Link>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                      {
+                                                                        valueAction.title
+                                                                      }
+                                                                    </TableCell>
+                                                                  </TableRow>
+                                                                )
+                                                              )}
                                                       </>
                                                     ) : null}
                                                   </>
@@ -1490,18 +1482,18 @@ const Checks = () => {
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                              Attachment{" "}
+                                                  Attachment
+                                              {' '}
                                             </FormLabel>
                                             <Typography className="viewLabelValue">
                                               <input
                                                 type="file"
-                                                onChange={(e) =>
-                                                  handleFile(
-                                                    e.target.files[0],
-                                                    "attachment",
-                                                    index,
-                                                    value.question
-                                                  )
+                                                onChange={(e) => handleFile(
+                                                  e.target.files[0],
+                                                  'attachment',
+                                                  index,
+                                                  value.question
+                                                )
                                                 }
                                               />
 
@@ -1515,10 +1507,10 @@ const Checks = () => {
                               </Grid>
                             </Grid>
                           </>
-                        )})}
+                        ))}
                       </>
-                    )})
-                  }
+                    ))
+                    }
                   </Grid>
                 </Grid>
               </Paper>
@@ -1547,10 +1539,9 @@ const Checks = () => {
                 variant="contained"
                 color="secondary"
                 className="buttonStyle custmCancelBtn"
-                onClick={() =>
-                  history.push(
-                    '/app/pages/compliance/categories'
-                  )
+                onClick={() => history.push(
+                  '/app/pages/compliance/categories'
+                )
                 }
               >
                 Cancel
@@ -1567,8 +1558,8 @@ const Checks = () => {
         </Grid>
 
         {/* <Grid container spacing={3} className={classes.observationNewSection}>
-                
-                
+
+
                 <Grid
                 item
                 md={12}
