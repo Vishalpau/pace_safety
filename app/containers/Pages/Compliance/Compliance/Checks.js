@@ -91,7 +91,7 @@ import {
   SSO_URL,
 } from "../../../../utils/constants";
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
-import { from } from "form-data";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -306,12 +306,15 @@ const styles = (theme) => ({
   },
 });
 
-const Checks = () => {
+const Checks = (props) => {
   const history = useHistory();
   const [form, setForm] = useState({});
   const [checkData, setCheckData] = useState([]);
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([]);
+  const [ratingData, setRatingData] = useState([]);
+  const [colordata, setColorData] = useState([]);
+
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState('#FFFFFF');
   //const [expanded, setExpanded] = React.useState('panel1');
@@ -324,28 +327,44 @@ const Checks = () => {
 
   useEffect(() => {
     if (form.menuValue >= 0 && form.statusValue >= 0) {
-      let ratingValue = form.menuValue * form.statusValue;
-      if (ratingValue >= 0 && ratingValue <= 1) {
-        setRatingColor("#009933");
-      } else if (ratingValue >= 1 && ratingValue <= 2) {
-        setRatingColor("#8da225");
-      } else if (ratingValue >= 2 && ratingValue <= 3) {
-        setRatingColor("#FFBF00");
-      } else if (ratingValue >= 3 && ratingValue <= 4) {
-        setRatingColor("#990000");
-      } else if (ratingValue >= 4 && ratingValue <= 5) {
-        setRatingColor("#ff0000");
-      }
-      else {
-        setRatingColor("#ff1111")
-      }
+      let ratingValue = (form.menuValue * form.statusValue)/5*100;
+
+      // if (ratingValue >= 0 && ratingValue <= 1) {
+      //   setRatingColor("#009933");
+      // } else if (ratingValue >= 1 && ratingValue <= 2) {
+      //   setRatingColor("#8da225");
+      // } else if (ratingValue >= 2 && ratingValue <= 3) {
+      //   setRatingColor("#FFBF00");
+      // } else if (ratingValue >= 3 && ratingValue <= 4) {
+      //   setRatingColor("#990000");
+      // } else if (ratingValue >= 4 && ratingValue <= 5) {
+      //   setRatingColor("#ff0000");
+      // }
+      // else {
+      //   setRatingColor("#ff1111")
+      // }
+      colordata.map(colordata=> 
+       { if(ratingValue/100 >=colordata.matrixConstant-1 && ratingValue/100<=colordata.matrixConstant){
+        setRatingColor(colordata.matrixConstantColor)
+       }
+      //  else {
+      //     setRatingColor("#FFFFFF")
+      //   }
+       })
+      //  console.log(colordata.matrixConstant,'matrixconstant') )
+      setRatingData(ratingValue)
 
     }
-
   }, [form]);
-
+  
   useEffect(() => {
   }, [ratingColor])
+
+  const fetchMatrixData = async () => {
+    const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
+    const result = res.data.data.results
+    setColorData(result)
+    }
 
 
   const radioDecide = ["Yes", "No", "NA"];
@@ -509,6 +528,15 @@ const Checks = () => {
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
         : null;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
     let temp = [];
     let tempCheckData = [];
     let categoriesData = {};
@@ -517,10 +545,11 @@ const Checks = () => {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
-
+      
       const res = await api.get(
-        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}`
+        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
+      console.log(groupName,subGroupName,'test')
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -537,7 +566,7 @@ const Checks = () => {
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
-            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].ratingColor : '',
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -575,7 +604,6 @@ const Checks = () => {
     await handelActionTracker();
   };
   const apiCall = async (dataChecks) => {
-    console.log(dataChecks,"alsaas");
     const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,[...dataChecks]);
     history.push("/app/pages/compliance/performance-summary");
   }
@@ -597,7 +625,6 @@ const Checks = () => {
     if (tempNewQuestion.length > 0) {
       console.log(tempNewQuestion, 'oooo')
       let dataCheck = [];
-      // let data = {};
       for (var i = 0; i < tempNewQuestion.length; i++) {
         let data = {};
         data["questionId"] = tempNewQuestion[i].questionId
@@ -609,22 +636,19 @@ const Checks = () => {
         data["subGroupId"] = tempNewQuestion[i].subGroupId
         data["subGroupName"] = tempNewQuestion[i].subGroupName
         data["defaultResponse"] = tempNewQuestion[i].defaultResponse
-        data["score"] = tempNewQuestion[i].score
+        // data["score"] = tempNewQuestion[i].score
         data["findings"] = tempNewQuestion[i].findings
         data["score"] = tempNewQuestion[i].score
         data["auditStatus"] = tempNewQuestion[i].auditStatus
-
-        console.log(tempNewQuestion[i].attachment);
-        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
-          if (tempUpdatedQuestion[i].attachment !== null) {
-            console.log('attachment', tempUpdatedQuestion[i].attachment)
+        if (typeof tempNewQuestion[i].attachment !== "string") {
+          if (tempNewQuestion[i].attachment !== null) {
             data["attachment"] = {
-              name: tempUpdatedQuestion[i].attachment.name,
-              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
-              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
-              size: tempUpdatedQuestion[i].attachment.size,
-              type: tempUpdatedQuestion[i].attachment.type,
-              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+              name: tempNewQuestion[i].attachment.name,
+              lastModified: tempNewQuestion[i].attachment.lastModified,
+              lastModifiedDate: tempNewQuestion[i].attachment.lastModifiedDate,
+              size: tempNewQuestion[i].attachment.size,
+              type: tempNewQuestion[i].attachment.type,
+              webkitRelativePath: tempNewQuestion[i].attachment.webkitRelativePath,
             }
           }
         }
@@ -652,7 +676,7 @@ const Checks = () => {
         data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
         data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
         data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
-        data["score"] = tempUpdatedQuestion[i].score
+        // data["score"] = tempUpdatedQuestion[i].score
         data["findings"] = tempUpdatedQuestion[i].findings
         data["score"] = tempUpdatedQuestion[i].score
         data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
@@ -675,11 +699,10 @@ const Checks = () => {
         data["createdBy"] = tempUpdatedQuestion[i].createdBy
         dataCheck[i] = data
       }
-      console.log(dataCheck, 'dataCheck');
       apiCall(dataCheck)
     }
 
-    
+    history.push("/app/pages/compliance/performance-summary");
 
   };
   const classes = useStyles();
@@ -746,11 +769,13 @@ const Checks = () => {
     setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, statusValue: option.factorConstant } });
   };
 
+
+
   useEffect(() => {
-    // fetchCheklist();
     fetchFectorData();
     fetchData();
     fetchCheklistData();
+    fetchMatrixData();
 
   }, []);
 
@@ -981,7 +1006,7 @@ const Checks = () => {
                                               Score
                                             </FormLabel>
                                           </Grid>
-                                          {value.scoreType === "Star" &&
+                                          {value.scoreType === "Stars" &&
                                             <Grid item md={4} sm={4} xs={12}>
                                               <Rating
                                                 name="simple-controlled"
@@ -1009,6 +1034,7 @@ const Checks = () => {
                                                   labelId="scoreCount"
                                                   id="scoreCount"
                                                   // onChange={handleChangeOne}
+                                                  
                                                   label="Counts"
                                                   className="formControl"
                                                   fullWidth
@@ -1234,12 +1260,13 @@ const Checks = () => {
                                           </Grid>
                                           <Grid item md={4} xs={12}>
                                             <TextField
-                                              label="Performance rating"
+                                              label="Performance rating %"
                                               //margin="dense"
                                               name="performancerating"
                                               id="performancerating"
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                              style={{ backgroundColor: ratingColor }}
+                                              value={ratingData || ""}
+                                              // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+                                              style={{ backgroundColor: ratingColor}}
                                               fullWidth
                                               variant="outlined"
                                               className="formControl"
@@ -1586,4 +1613,17 @@ const Checks = () => {
   );
 };
 
-export default Checks;
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  null
+)(Checks);
+
+// export default Checks;

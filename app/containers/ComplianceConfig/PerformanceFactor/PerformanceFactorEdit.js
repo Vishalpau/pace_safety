@@ -111,12 +111,12 @@ const PerformanceFactorEdit = () => {
                                                         value={fectorData.factorName ? fectorData.factorName : ""}
                                                         onChange={(e) => { console.log(e, 'factorName'); setFectorData({ ...fectorData, factorName: e.target.value }) }}
                                                     >
-                                                        <MenuItem value="Not in compliance -stop work">Not in compliance -stop work</MenuItem>
-                                                        <MenuItem value="Not in compliance - Action required">Not in compliance - Action required</MenuItem>
-                                                        <MenuItem value="Partial compliance">Partial compliance</MenuItem>
-                                                        <MenuItem value="Compliant- Needs improvement">Compliant- Needs improvement</MenuItem>
-                                                        <MenuItem value="Fully compliance">Fully compliant</MenuItem>
-                                                        <MenuItem value="Fully compliant & excellent">Fully compliant & excellent</MenuItem>
+                                                         <MenuItem value="Not in Compliance - Unsafe, Stop Work">Not in Compliance - Unsafe, Stop Work</MenuItem>
+                                                        <MenuItem value="Not in Compliance  - Action required">Not in Compliance  - Action required</MenuItem>
+                                                        <MenuItem value="Partial Compliance - Not satisfactory">Partial Compliance - Not satisfactory</MenuItem>
+                                                        <MenuItem value="Compliant - Needs Improvement">Compliant - Needs Improvement</MenuItem>
+                                                        <MenuItem value="Fully compliant">Fully compliant</MenuItem>
+                                                        <MenuItem value="Full compliance & excellent">Full compliance & excellent</MenuItem>
                                                     </Select>
 
                                                 </FormControl>

@@ -668,6 +668,7 @@ ul.MuiMenu-list a ul li.userName {
 .accordionHeaderSection .MuiAccordionSummary-content ul li .MuiListItemText-root .MuiListItemText-primary {
   font-size: 15px;
   font-family: 'Montserrat-Regular' !important;
+  white-space: break-spaces;
 }
 .accordionSubHeaderSection .MuiAccordionSummary-content ul li .MuiListItemText-root .MuiListItemText-primary {
   font-size: 15px;

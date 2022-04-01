@@ -418,7 +418,7 @@ const QuestionsGroup = (props) => {
                     Work area information
                   </Typography>
                 </Grid>
-                {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
@@ -485,83 +485,7 @@ const QuestionsGroup = (props) => {
                       )}
                     </Grid>
                   </Paper>
-                </Grid> */}
-
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Paper elevation={1} className="paperSection">
-                    <Grid container spacing={3}>
-                      <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
-                        {/* <Typography
-                            variant="label"
-                            gutterBottom
-                            className="viewLabel"
-                        >
-                            (If selected all  compliance questions will be available across the projects)
-                        </Typography> */}
-                        <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
-                      </Grid>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Sections</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-name-label"
-                            label="Sections"
-                          >
-                            <MenuItem value="Phase">All sections</MenuItem>
-                            <MenuItem value="Phase1">Section 1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Unit</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-unit-label"
-                            label="Unit"
-                          >
-                            <MenuItem value="unit">All unit</MenuItem>
-                            <MenuItem value="unit1">Unit1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Work area</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-unit-label"
-                            label="Work area"
-                          >
-                            <MenuItem value="WA1">All work areas</MenuItem>
-                            <MenuItem value="WA2">P1-WA1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                  </Paper>
                 </Grid>
-
-
-
               </Grid>
               <Grid item md={12} sm={12} xs={12} className="paddRemove">
                 <Grid container spacing={3}>

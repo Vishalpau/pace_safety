@@ -114,14 +114,14 @@ const PerformanceMatrixAdd = () => {
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
-                                            inputProps={{
-                                                min: 0,
-                                                max: 5,
-                                                // step: 2,
-                                                onKeyDown: (event) => {
-                                                    event.preventDefault();
-                                                },
-                                            }}                                        
+                                            // inputProps={{
+                                            //     min: 0,
+                                            //     max: 5,
+                                            //     // step: 2,
+                                            //     onKeyDown: (event) => {
+                                            //         event.preventDefault();
+                                            //     },
+                                            // }}                                        
                                             />
                                           
                                         </Grid>
