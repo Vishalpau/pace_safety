@@ -71,7 +71,9 @@ const PerformanceMatrixAdd = () => {
     const handleSave = async () => {
         const { error, isValid } = MatrixValidation(matrixForm)
         setError(error)
-        const res = await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => { localStorage.setItem("configTab", 2), history.goBack() }).catch(err => console.log(error))
+        if (isValid) {
+            await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => { localStorage.setItem("configTab", 2), history.goBack() }).catch(err => console.log(error))
+        }
     }
     return (
         <>
@@ -103,27 +105,25 @@ const PerformanceMatrixAdd = () => {
                                     <Grid container spacing={3}>
                                         <Grid item md={4} sm={6} xs={12}>
                                             <TextField
-                                            label="Matrix constant *"
-                                            name="matrixconstant"
-                                            id="matrixconstant"
-                                            type="number"
-                                            error={error.matrixConstant}
-                                            helperText={error.matrixConstant ? error.matrixConstant : ""}
-                                            value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
-                                            onChange={(e) => {setMatrixForm({...matrixForm,matrixConstant: Number(e.target.value)})}}
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                            inputProps={{
-                                                min: 0,
-                                                max: 5,
-                                                // step: 2,
-                                                onKeyDown: (event) => {
-                                                    event.preventDefault();
-                                                },
-                                            }}                                        
+                                                label="Matrix constant *"
+                                                name="matrixconstant"
+                                                id="matrixconstant"
+                                                type="number"
+                                                error={error.matrixConstant}
+                                                helperText={error.matrixConstant ? error.matrixConstant : ""}
+                                                value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
+                                                onChange={(e) => { setMatrixForm({ ...matrixForm, matrixConstant: Number(e.target.value) }) }}
+                                                fullWidth
+                                                variant="outlined"
+                                                className="formControl"
+                                                inputProps={{
+                                                    min: 0,
+                                                    max: 5,
+                                                    inputMode: 'numeric',
+                                                    pattern: '[0-5]*'
+                                                }}
                                             />
-                                          
+
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>
