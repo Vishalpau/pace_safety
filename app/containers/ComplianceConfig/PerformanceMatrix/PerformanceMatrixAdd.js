@@ -102,7 +102,7 @@ const PerformanceMatrixAdd = () => {
                                 <Paper elevation={1} className="paperSection">
                                     <Grid container spacing={3}>
                                         <Grid item md={4} sm={6} xs={12}>
-                                            <TextField
+                                        <TextField
                                             label="Matrix constant *"
                                             name="matrixconstant"
                                             id="matrixconstant"
@@ -110,10 +110,16 @@ const PerformanceMatrixAdd = () => {
                                             error={error.matrixConstant}
                                             helperText={error.matrixConstant ? error.matrixConstant : ""}
                                             value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
-                                            onChange={(e) => {setMatrixForm({...matrixForm,matrixConstant: Number(e.target.value)})}}
+                                            onChange={(e) => {setMatrixForm({...matrixForm,matrixConstant: (e.target.value)})}}
                                             fullWidth
                                             variant="outlined"
                                             className="formControl"
+                                            inputProps={{
+                                                min: 0,
+                                                max: 5,
+                                                inputMode: 'numeric',
+                                                pattern: '[0-5]*'
+                                            }}
                                             // inputProps={{
                                             //     min: 0,
                                             //     max: 5,

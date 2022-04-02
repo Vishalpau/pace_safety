@@ -314,9 +314,10 @@ const Checks = (props) => {
   const [actionData, setActionData] = useState([]);
   const [ratingData, setRatingData] = useState([]);
   const [colordata, setColorData] = useState([]);
+  const [hover, setHover] = useState(-1);
 
   const [showCheckData, setShowCheckData] = useState({});
-  const [ratingColor, setRatingColor] = useState('#FFFFFF');
+  const [ratingColor, setRatingColor] = useState('');
   //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
@@ -327,36 +328,21 @@ const Checks = (props) => {
 
   useEffect(() => {
     if (form.menuValue >= 0 && form.statusValue >= 0) {
-      let ratingValue = (form.menuValue * form.statusValue)/5*100;
-
-      // if (ratingValue >= 0 && ratingValue <= 1) {
-      //   setRatingColor("#009933");
-      // } else if (ratingValue >= 1 && ratingValue <= 2) {
-      //   setRatingColor("#8da225");
-      // } else if (ratingValue >= 2 && ratingValue <= 3) {
-      //   setRatingColor("#FFBF00");
-      // } else if (ratingValue >= 3 && ratingValue <= 4) {
-      //   setRatingColor("#990000");
-      // } else if (ratingValue >= 4 && ratingValue <= 5) {
-      //   setRatingColor("#ff0000");
-      // }
-      // else {
-      //   setRatingColor("#ff1111")
-      // }
-      colordata.map(colordata=> 
-       { if(ratingValue/100 >=colordata.matrixConstant-1 && ratingValue/100<=colordata.matrixConstant){
-        setRatingColor(colordata.matrixConstantColor)
-       }
-      //  else {
-      //     setRatingColor("#FFFFFF")
-      //   }
-       })
-      //  console.log(colordata.matrixConstant,'matrixconstant') )
+      let ratingValue = (form.menuValue * form.statusValue) / 5 * 100;
+      for (var i = 0; i < colordata.length; i++) {
+        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+          setRatingColor(colordata[i].matrixConstantColor)
+          break; // stop the loop
+        }
+        else {
+          setRatingColor("#FFFFFF")
+        }
+      }
       setRatingData(ratingValue)
 
     }
   }, [form]);
-  
+
   useEffect(() => {
   }, [ratingColor])
 
@@ -364,7 +350,7 @@ const Checks = (props) => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     setColorData(result)
-    }
+  }
 
 
   const radioDecide = ["Yes", "No", "NA"];
@@ -485,7 +471,7 @@ const Checks = (props) => {
 
   useEffect(() => {
     console.log(categories);
-  },[categories])
+  }, [categories])
 
   const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
@@ -545,11 +531,11 @@ const Checks = (props) => {
       let groupName = data[i].groupName;
       let subGroupName = data[i].subGroupName;
       categoriesData[groupName] = [];
-      
+
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
-      console.log(groupName,subGroupName,'test')
+      console.log(groupName, subGroupName, 'test')
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -566,7 +552,7 @@ const Checks = (props) => {
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
-            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
+            performance: ratingData,
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -604,7 +590,7 @@ const Checks = (props) => {
     await handelActionTracker();
   };
   const apiCall = async (dataChecks) => {
-    const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`,[...dataChecks]);
+    const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, [...dataChecks]);
     history.push("/app/pages/compliance/performance-summary");
   }
   const handelSubmit = async () => {
@@ -731,7 +717,7 @@ const Checks = (props) => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["question"] === id) {
-        
+
         temp[i][field] = value;
       }
     }
@@ -763,10 +749,10 @@ const Checks = (props) => {
 
   const handleCriticality = (option, selectType) => {
     if (selectType === "menuItem") {
-      setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, menuValue: option.factorConstant } });
+      setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       return;
     }
-    setForm((data) => { return { ...data, id: option.id, factorName: option.factorName, statusValue: option.factorConstant } });
+    setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
   };
 
 
@@ -880,12 +866,12 @@ const Checks = (props) => {
                   </Grid>
                   <Grid item xs={12}>
                     {Object.entries(categories).map(([key, value]) => {
-                      return(
-                      <>
-                        <FormLabel className="checkRadioLabel" component="legend">
-                          {key}
-                        </FormLabel>
-                        {/* <span className={classes.accordingHeaderContentleft}>
+                      return (
+                        <>
+                          <FormLabel className="checkRadioLabel" component="legend">
+                            {key}
+                          </FormLabel>
+                          {/* <span className={classes.accordingHeaderContentleft}>
                           <ListItem className={classes.accordingHeaderContent}>
                             <ListItemText
                               className="viewLabelValueListTag"
@@ -901,651 +887,638 @@ const Checks = (props) => {
                             />
                           </ListItem>
                         </span> */}
-                        {value.map((value, index) => {
-                          // console.log(value.question);
-                          // console.log(value.id);
-                          return(
-                          <>
-                            <Grid container item xs={12}>
-                              <Grid item md={12}>
-                                <div>
-                                  {value.responseType === "Yes-No-NA" ? (
-                                    <Accordion
-                                      expanded={
-                                        expandedTableDetail === `panel6 ${index}`
-                                      }
-                                      onChange={handleTDChange(`panel6 ${index}`)}
-                                      className="backPaperAccordian"
-                                    >
-                                      <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                        className="accordionHeaderSection"
-                                      >
-                                        <List className={classes.heading}>
-                                          <ListItem
-                                            className={
-                                              classes.accordingHeaderContentLeft
-                                            }
+                          {value.map((value, index) => {
+                            return (
+                              <>
+                                <Grid container item xs={12}>
+                                  <Grid item md={12}>
+                                    <div>
+                                      {value.responseType === "Yes-No-NA" ? (
+                                        <Accordion
+                                          expanded={
+                                            expandedTableDetail === `panel6 ${index}`
+                                          }
+                                          onChange={handleTDChange(`panel6 ${index}`)}
+                                          className="backPaperAccordian"
+                                        >
+                                          <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1bh-content"
+                                            id="panel1bh-header"
+                                            className="accordionHeaderSection"
                                           >
-                                            <ListItemText
-                                              primary={value.question}
-                                            />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails>
-                                        <Grid container spacing={2}>
-                                          <Grid item md={12} xs={12}>
-                                            <FormControl component="fieldset">
-                                              <RadioGroup
-                                                row
-                                                aria-label="select-typeof-compliance"
-                                                name="select-typeof-compliance"
-                                                defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
+                                            <List className={classes.heading}>
+                                              <ListItem
+                                                className={
+                                                  classes.accordingHeaderContentLeft
+                                                }
                                               >
-                                                {radioDecide.map((option) => (
-                                                  <FormControlLabel
-                                                    value={option}
-                                                    className="selectLabel"
-                                                    control={<Radio />}
-                                                    onChange={(e) =>
+                                                <ListItemText
+                                                  primary={value.question}
+                                                />
+                                              </ListItem>
+                                            </List>
+                                          </AccordionSummary>
+                                          <AccordionDetails>
+                                            <Grid container spacing={2}>
+                                              <Grid item md={12} xs={12}>
+                                                <FormControl component="fieldset">
+                                                  <RadioGroup
+                                                    row
+                                                    aria-label="select-typeof-compliance"
+                                                    name="select-typeof-compliance"
+                                                    defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].defaultResponse : ""}
+                                                  >
+                                                    {radioDecide.map((option) => (
+                                                      <FormControlLabel
+                                                        value={option}
+                                                        className="selectLabel"
+                                                        control={<Radio />}
+                                                        onChange={(e) =>
+                                                          handleChangeData(
+                                                            e.target.value,
+                                                            "defaultResponse",
+                                                            index,
+                                                            value.id
+                                                          )
+                                                        }
+                                                        label={option}
+                                                      />
+                                                    ))}
+                                                  </RadioGroup>
+                                                </FormControl>
+                                              </Grid>
+                                              <Grid item md={12} xs={12}>
+                                                <TextField
+                                                  label="Findings"
+                                                  name="findings"
+                                                  id="findings"
+                                                  onChange={(e) =>
+                                                    handleChangeData(
+                                                      e.target.value,
+                                                      "findings",
+                                                      index,
+                                                      value.id
+                                                    )
+                                                  }
+                                                  multiline
+                                                  rows={4}
+                                                  defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
+                                                  fullWidth
+                                                  variant="outlined"
+                                                  className="formControl"
+                                                />
+                                              </Grid>
+                                              <Grid item md={12} sm={12} xs={12}>
+                                                <FormLabel
+                                                  className="checkRadioLabel marginB5"
+                                                  component="legend"
+                                                >
+                                                  Score
+                                                </FormLabel>
+                                              </Grid>
+                                              {value.scoreType === "Stars" &&
+                                                <Grid item md={4} sm={4} xs={12}>
+                                                  <Rating
+                                                    name="simple-controlled"
+                                                    value={value}
+                                                    onChange={(e, newValue) =>
                                                       handleChangeData(
-                                                        e.target.value,
-                                                        "defaultResponse",
+                                                        newValue,
+                                                        "score",
                                                         index,
                                                         value.id
                                                       )
                                                     }
-                                                    label={option}
                                                   />
-                                                ))}
+                                                </Grid>}
+                                              {value.scoreType === "1-10" &&
+                                                <Grid item md={4} sm={4} xs={12}>
+                                                  <FormControl
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                  >
+                                                    <InputLabel id="demo-simple-select-outlined-label">
+                                                      Counts
+                                                    </InputLabel>
+                                                    <Select
+                                                      labelId="scoreCount"
+                                                      id="scoreCount"
+                                                      // onChange={handleChangeOne}
 
-                                                {/* <FormControlLabel
-                                                value="workarea-compliance"
-                                                className="selectLabel"
-                                                control={<Radio />}
-                                                label="No"
-                                              />
-                                              <FormControlLabel
-                                                value="general-compliance"
-                                                className="selectLabel"
-                                                control={<Radio />}
-                                                label="NA"
-                                              /> */}
-                                              </RadioGroup>
-                                            </FormControl>
-                                          </Grid>
-                                          <Grid item md={12} xs={12}>
-                                            <TextField
-                                              label="Findings"
-                                              name="findings"
-                                              id="findings"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "findings",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
-                                              multiline
-                                              rows={4}
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
-                                              fullWidth
-                                              variant="outlined"
-                                              className="formControl"
-                                            />
-                                          </Grid>
-                                          <Grid item md={12} sm={12} xs={12}>
-                                            <FormLabel
-                                              className="checkRadioLabel marginB5"
-                                              component="legend"
-                                            >
-                                              Score
-                                            </FormLabel>
-                                          </Grid>
-                                          {value.scoreType === "Stars" &&
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <Rating
-                                                name="simple-controlled"
-                                                value={value}
-                                                onChange={(e, newValue) =>
-                                                  handleChangeData(
-                                                    newValue,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
-                                                }
-                                              />
-                                            </Grid>}
-                                          {value.scoreType === "1-10" &&
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormControl
-                                                variant="outlined"
-                                                className="formControl"
+                                                      label="Counts"
+                                                      className="formControl"
+                                                      fullWidth
+                                                      onChange={(e) =>
+                                                        handleChangeData(
+                                                          e.target.value,
+                                                          "score",
+                                                          index,
+                                                          value.id
+                                                        )
+                                                      }
+                                                    >
+                                                      <MenuItem value={1}>1</MenuItem>
+                                                      <MenuItem value={2}>2</MenuItem>
+                                                      <MenuItem value={3}>3</MenuItem>
+                                                      <MenuItem value={4}>4</MenuItem>
+                                                      <MenuItem value={5}>5</MenuItem>
+                                                      <MenuItem value={6}>6</MenuItem>
+                                                      <MenuItem value={7}>7</MenuItem>
+                                                      <MenuItem value={8}>8</MenuItem>
+                                                      <MenuItem value={9}>9</MenuItem>
+                                                      <MenuItem value={10}>10</MenuItem>
+                                                    </Select>
+                                                  </FormControl>
+                                                </Grid>}
+                                              {value.scoreType === "%" &&
+                                                <Grid item md={4} sm={4} xs={12}>
+                                                  <TextField
+                                                    label="Percentage"
+                                                    name="performancerating"
+                                                    id="performancerating"
+                                                    // defaultValue="20%"
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                    onChange={(e) =>
+                                                      handleChangeData(
+                                                        e.target.value,
+                                                        "score",
+                                                        index,
+                                                        value.id
+                                                      )
+                                                    }
+                                                  />
+                                                </Grid>}
+                                              <Grid item md={12} xs={12}>
+                                                <FormLabel
+                                                  className="checkRadioLabel"
+                                                  component="legend"
+                                                >
+                                                  Create Action{" "}
+                                                </FormLabel>
+                                                <Grid
+                                                  item
+                                                  xs={6}
+                                                  className={classes.createHazardbox}
+                                                >
+                                                  <ActionTracker
+                                                    actionContext="audit:question"
+                                                    enitityReferenceId={`${localStorage.getItem(
+                                                      "fkComplianceId"
+                                                    )}:${value.id}`}
+                                                    setUpdatePage={setUpdatePage}
+                                                    fkCompanyId={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "company"
+                                                        )
+                                                      ).fkCompanyId
+                                                    }
+                                                    fkProjectId={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "projectName"
+                                                        )
+                                                      ).projectName.projectId
+                                                    }
+                                                    fkProjectStructureIds={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "commonObject"
+                                                        )
+                                                      )["audit"]["projectStruct"]
+                                                    }
+                                                    createdBy={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "userDetails"
+                                                        )
+                                                      ).id
+                                                    }
+                                                    updatePage={updatePage}
+                                                    handelShowData={
+                                                      handelActionTracker
+                                                    }
+                                                  />
+                                                </Grid>
+                                              </Grid>
+
+                                              <Grid
+                                                item
+                                                md={12}
+                                                sm={12}
+                                                xs={12}
+                                                className={classes.formBox}
                                               >
-                                                <InputLabel id="demo-simple-select-outlined-label">
-                                                  Counts
-                                                </InputLabel>
-                                                <Select
-                                                  labelId="scoreCount"
-                                                  id="scoreCount"
-                                                  // onChange={handleChangeOne}
-                                                  
-                                                  label="Counts"
-                                                  className="formControl"
+                                                <FormLabel
+                                                  className="checkRadioLabel"
+                                                  component="legend"
+                                                >
+                                                  Attachment{" "}
+                                                </FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  <input
+                                                    type="file"
+                                                    onChange={(e) =>
+                                                      handleFile(
+                                                        e.target.files[0],
+                                                        "attachment",
+                                                        index,
+                                                        value.question
+                                                      )
+                                                    }
+                                                  />
+
+                                                </Typography>
+                                              </Grid>
+                                            </Grid>
+                                          </AccordionDetails>
+                                        </Accordion>
+                                      ) : (
+                                        <Accordion
+                                          key={index}
+                                          expanded={expandedTableDetail === "panel4"}
+                                          onChange={handleTDChange("panel4")}
+                                          defaultExpanded
+                                          className="backPaperAccordian"
+                                        >
+                                          <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1bh-content"
+                                            id="panel1bh-header"
+                                            className="accordionHeaderSection"
+                                          >
+                                            <List className={classes.heading}>
+                                              <ListItem
+                                                className={
+                                                  classes.accordingHeaderContentLeft
+                                                }
+                                              >
+                                                <ListItemText primary={value.question} />
+                                              </ListItem>
+                                            </List>
+                                          </AccordionSummary>
+                                          <AccordionDetails>
+                                            <Grid container spacing={2}>
+                                              <Grid item md={4} xs={12}>
+                                                <TextField
+                                                  label="Criticality*"
+                                                  name="criticality"
+                                                  id="criticality"
+                                                  select
                                                   fullWidth
+                                                  variant="outlined"
+                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : "")}
+                                                  className="formControl"
                                                   onChange={(e) =>
                                                     handleChangeData(
                                                       e.target.value,
-                                                      "score",
+                                                      "criticality",
+                                                      index,
+                                                      value.id
+                                                    )
+                                                  }
+
+                                                >
+                                                  {criticalityData.map((option) => (
+                                                    <MenuItem
+                                                      key={option.id}
+                                                      value={option.factorName || ""}
+                                                      id={option.id}
+                                                      onClick={(e) => {
+                                                        handleCriticality(option, "menuItem");
+                                                      }}
+                                                    >
+                                                      {option.factorName}
+                                                    </MenuItem>
+                                                  ))}
+                                                </TextField>
+                                              </Grid>
+                                              <Grid item md={4} xs={12}>
+                                                <TextField
+                                                  label="Status*"
+                                                  name="status"
+                                                  id="status"
+                                                  defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
+                                                  select
+                                                  fullWidth
+                                                  variant="outlined"
+                                                  className="formControl"
+                                                  onChange={(e) =>
+                                                    handleChangeData(
+                                                      e.target.value,
+                                                      "auditStatus",
                                                       index,
                                                       value.id
                                                     )
                                                   }
                                                 >
-                                                  <MenuItem value={1}>1</MenuItem>
-                                                  <MenuItem value={2}>2</MenuItem>
-                                                  <MenuItem value={3}>3</MenuItem>
-                                                  <MenuItem value={4}>4</MenuItem>
-                                                  <MenuItem value={5}>5</MenuItem>
-                                                  <MenuItem value={6}>6</MenuItem>
-                                                  <MenuItem value={7}>7</MenuItem>
-                                                  <MenuItem value={8}>8</MenuItem>
-                                                  <MenuItem value={9}>9</MenuItem>
-                                                  <MenuItem value={10}>10</MenuItem>
-                                                </Select>
-                                              </FormControl>
-                                            </Grid>}
-                                          {value.scoreType === "%" &&
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <TextField
-                                                label="Percentage"
-                                                name="performancerating"
-                                                id="performancerating"
-                                                // defaultValue="20%"
-                                                fullWidth
-                                                variant="outlined"
-                                                className="formControl"
-                                                onChange={(e) =>
-                                                  handleChangeData(
-                                                    e.target.value,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
-                                                }
-                                              />
-                                            </Grid>}
-                                          <Grid item md={12} xs={12}>
-                                            <FormLabel
-                                              className="checkRadioLabel"
-                                              component="legend"
-                                            >
-                                              Create Action{" "}
-                                            </FormLabel>
-                                            <Grid
-                                              item
-                                              xs={6}
-                                              className={classes.createHazardbox}
-                                            >
-                                              <ActionTracker
-                                                actionContext="audit:question"
-                                                enitityReferenceId={`${localStorage.getItem(
-                                                  "fkComplianceId"
-                                                )}:${value.id}`}
-                                                setUpdatePage={setUpdatePage}
-                                                fkCompanyId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "company"
-                                                    )
-                                                  ).fkCompanyId
-                                                }
-                                                fkProjectId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "projectName"
-                                                    )
-                                                  ).projectName.projectId
-                                                }
-                                                fkProjectStructureIds={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "commonObject"
-                                                    )
-                                                  )["audit"]["projectStruct"]
-                                                }
-                                                createdBy={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "userDetails"
-                                                    )
-                                                  ).id
-                                                }
-                                                updatePage={updatePage}
-                                                handelShowData={
-                                                  handelActionTracker
-                                                }
-                                              />
-                                            </Grid>
-                                          </Grid>
-
-                                          <Grid
-                                            item
-                                            md={12}
-                                            sm={12}
-                                            xs={12}
-                                            className={classes.formBox}
-                                          >
-                                            <FormLabel
-                                              className="checkRadioLabel"
-                                              component="legend"
-                                            >
-                                              Attachment{" "}
-                                            </FormLabel>
-                                            <Typography className="viewLabelValue">
-                                              <input
-                                                type="file"
-                                                onChange={(e) =>
-                                                  handleFile(
-                                                    e.target.files[0],
-                                                    "attachment",
-                                                    index,
-                                                    value.question
-                                                  )
-                                                }
-                                              />
-
-                                            </Typography>
-                                          </Grid>
-                                        </Grid>
-                                      </AccordionDetails>
-                                    </Accordion>
-                                  ) : (
-                                    <Accordion
-                                      key={index}
-                                      expanded={expandedTableDetail === "panel4"}
-                                      onChange={handleTDChange("panel4")}
-                                      defaultExpanded
-                                      className="backPaperAccordian"
-                                    >
-                                      <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                        className="accordionHeaderSection"
-                                      >
-                                        <List className={classes.heading}>
-                                          <ListItem
-                                            className={
-                                              classes.accordingHeaderContentLeft
-                                            }
-                                          >
-                                            <ListItemText primary={value.question} />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails>
-                                        <Grid container spacing={2}>
-                                          <Grid item md={4} xs={12}>
-                                            <TextField
-                                              label="Criticality*"
-                                              name="criticality"
-                                              id="criticality"
-                                              select
-                                              fullWidth
-                                              variant="outlined"
-                                              defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : "")}
-                                              className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "criticality",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
-
-                                            >
-                                              {criticalityData.map((option) => (
-                                                <MenuItem
-                                                  key={option.id}
-                                                  value={option.id}
-                                                  id={option.id}
-                                                  onClick={(e) => {
-                                                    handleCriticality(option, "menuItem");
-                                                  }}
-                                                >
-                                                  {option.factorName}
-                                                </MenuItem>
-                                              ))}
-                                            </TextField>
-                                          </Grid>
-                                          <Grid item md={4} xs={12}>
-                                            <TextField
-                                              label="Status*"
-                                              name="status"
-                                              id="status"
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
-                                              select
-                                              fullWidth
-                                              variant="outlined"
-                                              className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "auditStatus",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
-                                            >
-                                              {statusData.map((option) => (
-                                                <MenuItem
-                                                  key={option.id}
-                                                  value={option.id}
-                                                  id={option.id}
-                                                  onClick={(e) => {
-                                                    handleCriticality(option, "statusItem");
-                                                  }}
-                                                >
-                                                  {option.factorName}
-                                                </MenuItem>
-                                              ))}
-                                            </TextField>
-                                          </Grid>
-                                          <Grid item md={4} xs={12}>
-                                            <TextField
-                                              label="Performance rating %"
-                                              //margin="dense"
-                                              name="performancerating"
-                                              id="performancerating"
-                                              value={ratingData || ""}
-                                              // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                              style={{ backgroundColor: ratingColor}}
-                                              fullWidth
-                                              variant="outlined"
-                                              className="formControl"
-
-                                            />
-                                          </Grid>
-
-                                          <Grid item md={12} sm={12} xs={12}>
-                                            <TextField
-                                              label="Findings"
-                                              name="findings"
-                                              id="findings"
-                                              multiline
-                                              rows={4}
-                                              defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
-                                              fullWidth
-                                              variant="outlined"
-                                              className="formControl"
-                                              onChange={(e) =>
-                                                handleChangeData(
-                                                  e.target.value,
-                                                  "findings",
-                                                  index,
-                                                  value.id
-                                                )
-                                              }
-                                            />
-                                          </Grid>
-                                          <Grid item md={12} sm={12} xs={12}>
-                                            <FormLabel
-                                              className="checkRadioLabel marginB5"
-                                              component="legend"
-                                            >
-                                              Score
-                                            </FormLabel>
-                                          </Grid>
-                                          {value.scoreType === "Star" &&
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <Rating
-                                                name="simple-controlled"
-                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                onChange={(e, newValue) =>
-                                                  handleChangeData(
-                                                    newValue,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
-                                                }
-                                              />
-                                            </Grid>}
-                                          {value.scoreType === "1-10" &&
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <FormControl
-                                                variant="outlined"
-                                                className="formControl"
-                                              >
-                                                <InputLabel id="demo-simple-select-outlined-label">
-                                                  Counts
-                                                </InputLabel>
-                                                <Select
-                                                  labelId="scoreCount"
-                                                  id="scoreCount"
-                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : "")}
-                                                  label="Counts"
-                                                  className="formControl"
+                                                  {statusData.map((option) => (
+                                                    <MenuItem
+                                                      key={option.id}
+                                                      value={option.factorName || ""}
+                                                      id={option.id}
+                                                      onClick={(e) => {
+                                                        handleCriticality(option, "statusItem");
+                                                      }}
+                                                    >
+                                                      {option.factorName}
+                                                    </MenuItem>
+                                                  ))}
+                                                </TextField>
+                                              </Grid>
+                                              <Grid item md={4} xs={12}>
+                                                <TextField
+                                                  label="Performance rating %"
+                                                  //margin="dense"
+                                                  name="performancerating"
+                                                  id="performancerating"
+                                                  value={ratingData || ""}
+                                                  // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+                                                  style={{ backgroundColor: ratingColor }}
                                                   fullWidth
+                                                  variant="outlined"
+                                                  className="formControl"
+
+                                                />
+                                              </Grid>
+
+                                              <Grid item md={12} sm={12} xs={12}>
+                                                <TextField
+                                                  label="Findings"
+                                                  name="findings"
+                                                  id="findings"
+                                                  multiline
+                                                  rows={4}
+                                                  defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
+                                                  fullWidth
+                                                  variant="outlined"
+                                                  className="formControl"
                                                   onChange={(e) =>
                                                     handleChangeData(
                                                       e.target.value,
-                                                      "score",
+                                                      "findings",
                                                       index,
                                                       value.id
                                                     )
                                                   }
+                                                />
+                                              </Grid>
+                                              <Grid item md={12} sm={12} xs={12}>
+                                                <FormLabel
+                                                  className="checkRadioLabel marginB5"
+                                                  component="legend"
                                                 >
-                                                  <MenuItem value={1}>1</MenuItem>
-                                                  <MenuItem value={2}>2</MenuItem>
-                                                  <MenuItem value={3}>3</MenuItem>
-                                                  <MenuItem value={4}>4</MenuItem>
-                                                  <MenuItem value={5}>5</MenuItem>
-                                                  <MenuItem value={6}>6</MenuItem>
-                                                  <MenuItem value={7}>7</MenuItem>
-                                                  <MenuItem value={8}>8</MenuItem>
-                                                  <MenuItem value={9}>9</MenuItem>
-                                                  <MenuItem value={10}>10</MenuItem>
-                                                </Select>
-                                              </FormControl>
-                                            </Grid>}
-                                          {value.scoreType === "%" &&
-                                            <Grid item md={4} sm={4} xs={12}>
-                                              <TextField
-                                                label="Percentage"
-                                                name="performancerating"
-                                                id="performancerating"
-                                                value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                fullWidth
-                                                variant="outlined"
-                                                className="formControl"
-                                                onChange={(e) =>
-                                                  handleChangeData(
-                                                    e.target.value,
-                                                    "score",
-                                                    index,
-                                                    value.id
-                                                  )
-                                                }
-                                              />
-                                            </Grid>}
+                                                  Score
+                                                </FormLabel>
+                                              </Grid>
+                                              {value.scoreType === "Stars" &&
+                                                <Grid item md={4} sm={4} xs={12}>
+                                                  <Rating
+                                                    name="simple-controlled"
+                                                    value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    onChange={(e, newValue) =>
+                                                      handleChangeData(
+                                                        newValue,
+                                                        "score",
+                                                        index,
+                                                        value.id
+                                                      )
+                                                    }
+                                                  />
+                                                </Grid>}
+                                              {value.scoreType === "1-10" &&
+                                                <Grid item md={4} sm={4} xs={12}>
+                                                  <FormControl
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                  >
+                                                    <InputLabel id="demo-simple-select-outlined-label">
+                                                      Counts
+                                                    </InputLabel>
+                                                    <Select
+                                                      labelId="scoreCount"
+                                                      id="scoreCount"
+                                                      defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : "")}
+                                                      label="Counts"
+                                                      className="formControl"
+                                                      fullWidth
+                                                      onChange={(e) =>
+                                                        handleChangeData(
+                                                          e.target.value,
+                                                          "score",
+                                                          index,
+                                                          value.id
+                                                        )
+                                                      }
+                                                    >
+                                                      <MenuItem value={1}>1</MenuItem>
+                                                      <MenuItem value={2}>2</MenuItem>
+                                                      <MenuItem value={3}>3</MenuItem>
+                                                      <MenuItem value={4}>4</MenuItem>
+                                                      <MenuItem value={5}>5</MenuItem>
+                                                      <MenuItem value={6}>6</MenuItem>
+                                                      <MenuItem value={7}>7</MenuItem>
+                                                      <MenuItem value={8}>8</MenuItem>
+                                                      <MenuItem value={9}>9</MenuItem>
+                                                      <MenuItem value={10}>10</MenuItem>
+                                                    </Select>
+                                                  </FormControl>
+                                                </Grid>}
+                                              {value.scoreType === "%" &&
+                                                <Grid item md={4} sm={4} xs={12}>
+                                                  <TextField
+                                                    label="Percentage"
+                                                    name="performancerating"
+                                                    id="performancerating"
+                                                    value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    className="formControl"
+                                                    onChange={(e) =>
+                                                      handleChangeData(
+                                                        e.target.value,
+                                                        "score",
+                                                        index,
+                                                        value.id
+                                                      )
+                                                    }
+                                                  />
+                                                </Grid>}
 
-                                          <Grid item md={12} xs={12}>
-                                            <FormLabel
-                                              className="checkRadioLabel"
-                                              component="legend"
-                                            >
-                                              Create Action{" "}
-                                            </FormLabel>
-                                            <Grid
-                                              item
-                                              xs={6}
-                                              className={classes.createHazardbox}
-                                            >
-                                              <ActionTracker
-                                                actionContext="audit:question"
-                                                enitityReferenceId={`${localStorage.getItem(
-                                                  "fkComplianceId"
-                                                )}:${value.id}`}
-                                                setUpdatePage={setUpdatePage}
-                                                fkCompanyId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "company"
-                                                    )
-                                                  ).fkCompanyId
-                                                }
-                                                fkProjectId={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "projectName"
-                                                    )
-                                                  ).projectName.projectId
-                                                }
-                                                fkProjectStructureIds={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "commonObject"
-                                                    )
-                                                  )["audit"]["projectStruct"]
-                                                }
-                                                createdBy={
-                                                  JSON.parse(
-                                                    localStorage.getItem(
-                                                      "userDetails"
-                                                    )
-                                                  ).id
-                                                }
-                                                updatePage={updatePage}
-                                                handelShowData={
-                                                  handelActionTracker
-                                                }
-                                              />
-                                            </Grid>
-                                          </Grid>
+                                              <Grid item md={12} xs={12}>
+                                                <FormLabel
+                                                  className="checkRadioLabel"
+                                                  component="legend"
+                                                >
+                                                  Create Action{" "}
+                                                </FormLabel>
+                                                <Grid
+                                                  item
+                                                  xs={6}
+                                                  className={classes.createHazardbox}
+                                                >
+                                                  <ActionTracker
+                                                    actionContext="audit:question"
+                                                    enitityReferenceId={`${localStorage.getItem(
+                                                      "fkComplianceId"
+                                                    )}:${value.id}`}
+                                                    setUpdatePage={setUpdatePage}
+                                                    fkCompanyId={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "company"
+                                                        )
+                                                      ).fkCompanyId
+                                                    }
+                                                    fkProjectId={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "projectName"
+                                                        )
+                                                      ).projectName.projectId
+                                                    }
+                                                    fkProjectStructureIds={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "commonObject"
+                                                        )
+                                                      )["audit"]["projectStruct"]
+                                                    }
+                                                    createdBy={
+                                                      JSON.parse(
+                                                        localStorage.getItem(
+                                                          "userDetails"
+                                                        )
+                                                      ).id
+                                                    }
+                                                    updatePage={updatePage}
+                                                    handelShowData={
+                                                      handelActionTracker
+                                                    }
+                                                  />
+                                                </Grid>
+                                              </Grid>
 
-                                          <Grid item md={12} xs={12}>
-                                            <Table
-                                              component={Paper}
-                                              className="simpleTableSection"
-                                            >
-                                              <TableHead>
-                                                <TableRow>
-                                                  <TableCell className="tableHeadCellFirst">
-                                                    Action number 1
-                                                  </TableCell>
-                                                  <TableCell className="tableHeadCellSecond">
-                                                    Action title
-                                                  </TableCell>
-                                                </TableRow>
-                                              </TableHead>
-                                              <TableBody>
-                                                {actionData.map((val) => (
-                                                  <>
-
-                                                    {val.id == value.id ? (
+                                              <Grid item md={12} xs={12}>
+                                                <Table
+                                                  component={Paper}
+                                                  className="simpleTableSection"
+                                                >
+                                                  <TableHead>
+                                                    <TableRow>
+                                                      <TableCell className="tableHeadCellFirst">
+                                                        Action number
+                                                      </TableCell>
+                                                      <TableCell className="tableHeadCellSecond">
+                                                        Action title
+                                                      </TableCell>
+                                                    </TableRow>
+                                                  </TableHead>
+                                                  <TableBody>
+                                                    {actionData.map((val) => (
                                                       <>
-                                                        {val.action.length > 0 &&
-                                                          val.action.map(
-                                                            (valueAction) => (
-                                                              <TableRow>
-                                                                <TableCell align="left">
-                                                                  <Link
-                                                                    className={
-                                                                      classes.actionLinkAudit
-                                                                    }
-                                                                    display="block"
-                                                                    href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                      localStorage.getItem(
-                                                                        "BaseUrl"
-                                                                      )
-                                                                    )[
-                                                                      "actionClientID"
-                                                                    ]
-                                                                      }&response_type=code&companyId=${JSON.parse(
-                                                                        localStorage.getItem(
-                                                                          "company"
-                                                                        )
-                                                                      )
-                                                                        .fkCompanyId
-                                                                      }&projectId=${JSON.parse(
-                                                                        localStorage.getItem(
-                                                                          "projectName"
-                                                                        )
-                                                                      )
-                                                                        .projectName
-                                                                        .projectId
-                                                                      }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                      }`}
-                                                                    target="_blank"
-                                                                  >
-                                                                    {
-                                                                      valueAction.number
-                                                                    }
-                                                                  </Link>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                  {
-                                                                    valueAction.title
-                                                                  }
-                                                                </TableCell>
-                                                              </TableRow>
-                                                            )
-                                                          )}
-                                                      </>
-                                                    ) : null}
-                                                  </>
-                                                ))}
-                                              </TableBody>
-                                            </Table>
-                                          </Grid>
-                                          <Grid
-                                            item
-                                            md={12}
-                                            sm={12}
-                                            xs={12}
-                                            className={classes.formBox}
-                                          >
-                                            <FormLabel
-                                              className="checkRadioLabel"
-                                              component="legend"
-                                            >
-                                              Attachment{" "}
-                                            </FormLabel>
-                                            <Typography className="viewLabelValue">
-                                              <input
-                                                type="file"
-                                                onChange={(e) =>
-                                                  handleFile(
-                                                    e.target.files[0],
-                                                    "attachment",
-                                                    index,
-                                                    value.question
-                                                  )
-                                                }
-                                              />
 
-                                            </Typography>
-                                          </Grid>
-                                        </Grid>
-                                      </AccordionDetails>
-                                    </Accordion>
-                                  )}
-                                </div>
-                              </Grid>
-                            </Grid>
-                          </>
-                        )})}
-                      </>
-                    )})
-                  }
+                                                        {val.id == value.id ? (
+                                                          <>
+                                                            {val.action.length > 0 &&
+                                                              val.action.map(
+                                                                (valueAction) => (
+                                                                  <TableRow>
+                                                                    <TableCell align="left">
+                                                                      <Link
+                                                                        className={
+                                                                          classes.actionLinkAudit
+                                                                        }
+                                                                        display="block"
+                                                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                          localStorage.getItem(
+                                                                            "BaseUrl"
+                                                                          )
+                                                                        )[
+                                                                          "actionClientID"
+                                                                        ]
+                                                                          }&response_type=code&companyId=${JSON.parse(
+                                                                            localStorage.getItem(
+                                                                              "company"
+                                                                            )
+                                                                          )
+                                                                            .fkCompanyId
+                                                                          }&projectId=${JSON.parse(
+                                                                            localStorage.getItem(
+                                                                              "projectName"
+                                                                            )
+                                                                          )
+                                                                            .projectName
+                                                                            .projectId
+                                                                          }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                          }`}
+                                                                        target="_blank"
+                                                                      >
+                                                                        {
+                                                                          valueAction.number
+                                                                        }
+                                                                      </Link>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                      {
+                                                                        valueAction.title
+                                                                      }
+                                                                    </TableCell>
+                                                                  </TableRow>
+                                                                )
+                                                              )}
+                                                          </>
+                                                        ) : null}
+                                                      </>
+                                                    ))}
+                                                  </TableBody>
+                                                </Table>
+                                              </Grid>
+                                              <Grid
+                                                item
+                                                md={12}
+                                                sm={12}
+                                                xs={12}
+                                                className={classes.formBox}
+                                              >
+                                                <FormLabel
+                                                  className="checkRadioLabel"
+                                                  component="legend"
+                                                >
+                                                  Attachment{" "}
+                                                </FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  <input
+                                                    type="file"
+                                                    onChange={(e) =>
+                                                      handleFile(
+                                                        e.target.files[0],
+                                                        "attachment",
+                                                        index,
+                                                        value.question
+                                                      )
+                                                    }
+                                                  />
+
+                                                </Typography>
+                                              </Grid>
+                                            </Grid>
+                                          </AccordionDetails>
+                                        </Accordion>
+                                      )}
+                                    </div>
+                                  </Grid>
+                                </Grid>
+                              </>
+                            )
+                          })}
+                        </>
+                      )
+                    })
+                    }
                   </Grid>
                 </Grid>
               </Paper>
@@ -1561,14 +1534,6 @@ const Checks = (props) => {
               >
                 Next
               </Button>
-              {/* <Button
-                size="medium"
-                variant="contained"
-                color="primary"
-                className="spacerRight buttonStyle"
-              >
-                Save
-              </Button> */}
               <Button
                 size="medium"
                 variant="contained"
@@ -1592,21 +1557,6 @@ const Checks = (props) => {
             />
           </Grid>
         </Grid>
-
-        {/* <Grid container spacing={3} className={classes.observationNewSection}>
-                
-                
-                <Grid
-                item
-                md={12}
-                xs={12}
-                style={{marginTop: '15px'}}
-                >
-                    <Button variant="outlined" size="medium" className={classes.custmSubmitBtn}>Next</Button>
-                    <Button variant="outlined" size="medium" className={classes.custmSaveBtn}>Save</Button>
-                    <Button variant="outlined" size="medium" className={classes.custmCancelBtn}>Cancel</Button>
-                </Grid>
-            </Grid> */}
       </>
     </CustomPapperBlock>
 
@@ -1625,5 +1575,3 @@ export default connect(
   mapStateToProps,
   null
 )(Checks);
-
-// export default Checks;
