@@ -239,7 +239,7 @@ const ComplianceDetails = () => {
     contractorSupervisorName: "",
     subContractor: "",
     auditDateTime: new Date(),
-    hseRepresentative: departments,
+    hseRepresentative: "",
     inspectionTeam: "",
     auditType: "",
     status: "Active",
@@ -823,7 +823,7 @@ const ComplianceDetails = () => {
                       <Paper elevation={1} className="paperSection">
                         <Grid container spacing={3}>
                           <Grid item md={6} xs={12}>
-                            <Autocomplete
+                            {/* <Autocomplete
                               id="clientRep"
                               className="formControl"
                               options={departments}
@@ -845,6 +845,18 @@ const ComplianceDetails = () => {
                                   variant="outlined"
                                 />
                               )}
+                            /> */}
+                             <TextField
+                              label="Safety representative name"
+                              name="clientrepnu"
+                              id="clientRep"
+                              fullWidth
+                              value={form.hseRepresentative ? form.hseRepresentative : ""}
+                              onChange={(e) =>
+                                setForm({ ...form, hseRepresentative: e.target.value })
+                              }
+                              variant="outlined"
+                              className="formControl"
                             />
                           </Grid>
                           <Grid item md={6} xs={12}>

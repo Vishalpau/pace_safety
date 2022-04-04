@@ -112,7 +112,7 @@ const PerformanceMatrixAdd = () => {
                                                 error={error.matrixConstant}
                                                 helperText={error.matrixConstant ? error.matrixConstant : ""}
                                                 value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
-                                                onChange={(e) => { setMatrixForm({ ...matrixForm, matrixConstant: Number(e.target.value) }) }}
+                                                onChange={(e) => { setMatrixForm({ ...matrixForm, matrixConstant: (e.target.value) }) }}
                                                 fullWidth
                                                 variant="outlined"
                                                 className="formControl"
@@ -122,6 +122,14 @@ const PerformanceMatrixAdd = () => {
                                                     inputMode: 'numeric',
                                                     pattern: '[0-5]*'
                                                 }}
+                                            // inputProps={{
+                                            //     min: 0,
+                                            //     max: 5,
+                                            //     // step: 2,
+                                            //     onKeyDown: (event) => {
+                                            //         event.preventDefault();
+                                            //     },
+                                            // }}                                        
                                             />
 
                                         </Grid>

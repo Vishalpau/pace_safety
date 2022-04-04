@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import CheckCircle from '@material-ui/icons/CheckCircle';
@@ -46,7 +47,6 @@ import { ReactVideo, ReactAudio } from 'reactjs-media';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogContent from '@material-ui/core/DialogContent';
 import Dialog from '@material-ui/core/Dialog';
-import axios from 'axios';
 import moment from 'moment';
 import api from '../../../utils/axios';
 import {
@@ -62,13 +62,14 @@ import {
   checkValue,
   handelCommonObject,
   handelActionData,
-} from '../../../utils/CheckerValue';
-import Loader from '../Loader';
-import { handelActionTracker } from './Compliance/Checks';
+} from "../../../utils/CheckerValue";
+import Loader from "../Loader";
+import { handelActionTracker } from "./Compliance/Checks"
+
 // Sidebar Links Helper Function
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
+// function ListItemLink(props) {
+//   return <ListItem button component="a" {...props} />;
+// }
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -207,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ComplianceSummary() {
+function ComplianceSummary(props) {
   const [compliance, setCompliance] = useState(true);
   const [complianceData, setComplianceData] = useState({});
   const [projectStructName, setProjectStructName] = useState([]);
@@ -225,6 +226,7 @@ function ComplianceSummary() {
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  console.log(props, 'props')
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     'panel3'
@@ -429,12 +431,23 @@ function ComplianceSummary() {
   };
 
   const fetchNotificationSent = async (notifyTo) => {
-    const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
-    const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
+    let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
+    let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
+      .projectId;
+
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
     try {
-      const config = {
-        method: 'get',
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom`,
+      var config = {
+        method: "get",
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -1349,9 +1362,9 @@ function ComplianceSummary() {
                                                   </Grid>
 
                                                   <Grid item md={4} sm={4} xs={12}>
-                                                    <FormLabel component="legend" className="viewLabel">Performance Rating</FormLabel>
+                                                    <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
                                                     <Typography className="viewLabelValue">
-                                                      NA
+                                                      {value.performance ? value.performance : '-'}
                                                     </Typography>
                                                   </Grid>
                                                 </>
@@ -1373,8 +1386,6 @@ function ComplianceSummary() {
                                                   </Typography>
                                                 </Grid>
                                               }
-
-
                                               <Grid
                                                 item
                                                 md={12}
@@ -2715,6 +2726,7 @@ function ComplianceSummary() {
                                     >
                                       Notifications sent to
                                     </FormLabel>
+                                    {console.log(notificationSentValue, 'notificationSentValue')}
                                     {notificationSentValue.length > 0
                                       ? notificationSentValue.map((value) => (
                                         <Typography
@@ -2884,5 +2896,18 @@ function ComplianceSummary() {
     </CustomPapperBlock>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+// export default connect(
+//   mapStateToProps,
+//   null
+// )(ComplianceSummary);
 
 export default ComplianceSummary;
