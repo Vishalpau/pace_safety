@@ -326,27 +326,6 @@ const Checks = (props) => {
     "panel4"
   );
 
-
-  useEffect(() => {
-    if (form.menuValue >= 0 && form.statusValue >= 0) {
-      let ratingValue = (form.menuValue * form.statusValue) / 5 * 100;
-      for (var i = 0; i < colordata.length; i++) {
-        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
-          setRatingColor(colordata[i].matrixConstantColor)
-          break; // stop the loop
-        }
-        else {
-          setRatingColor("#FFFFFF")
-        }
-      }
-      setRatingData(ratingValue)
-
-    }
-  }, [form]);
-
-  useEffect(() => {
-  }, [ratingColor])
-
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -429,6 +408,7 @@ const Checks = (props) => {
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [criticalityData, setCriticalityData] = useState([]);
+  const [criticalQuestions, setCriticalQuestions] = useState([]);
   const [statusData, setStatusData] = useState([])
   const [error, setError] = useState(false)
   const handleActionDateChange = (date) => {
@@ -537,24 +517,33 @@ const Checks = (props) => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
-      console.log(groupName, subGroupName, 'test')
       const result2 = res.data.data.results;
       temp.push(result2);
     }
     let tempQuestionId = [];
-    let fd = await fetchData()
+    let fd = await fetchData();
     temp.map((tempvalue, i) => {
       if (tempvalue['message'] === undefined) {
         tempvalue.map((value, index) => {
           tempQuestionId.push({ id: value.id });
-          console.log(index, 'value')
+          if (value.responseType === 'Criticality') {
+            setCriticalQuestions(data => ([
+              ...data, {
+                questionId: value.id,
+                performance: "",
+                ratingColor: "",
+                menuValue: "",
+                statusValue: ""
+              }
+            ]));
+          }
           tempCheckData.push({
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
-            performance: ratingData,
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -669,7 +658,7 @@ const Checks = (props) => {
           data["questionId"] = tempUpdatedQuestion[i].questionId
           data["question"] = tempUpdatedQuestion[i].question
           data["criticality"] = tempUpdatedQuestion[i].criticality
-          data["performance"] = tempUpdatedQuestion[i].questionId === ratingColorQuestionId ? ratingColor : tempUpdatedQuestion[i].performance;
+          data["performance"] = criticalQuestions.filter(question => question.questionId === tempUpdatedQuestion[i].questionId).length ? criticalQuestions.filter(question => question.questionId === tempUpdatedQuestion[i].questionId)[0].performance : tempUpdatedQuestion[i].performance;
           data["groupId"] = tempUpdatedQuestion[i].groupId
           data["groupName"] = tempUpdatedQuestion[i].groupName
           data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
@@ -763,20 +752,39 @@ const Checks = (props) => {
   }
 
 
-  const handleCriticality = (option, selectType, question) => {
-    if (selectType === 'statusItem') {
-      checkData.map(cd => {
-        if (question === cd.question) {
-          setRatingColorQuestionId(cd.questionId);
+  const handleCriticality = (option, selectType, questionId) => {
+    const criticalQuestionsData = criticalQuestions;
+    criticalQuestionsData.forEach((question, index) => {
+      if (questionId === question.questionId) {
+        if (selectType === "menuItem") {
+          criticalQuestionsData[index].menuValue = option.factorConstant;
         }
-      });
-    }
+        if (selectType === "statusItem") {
+          criticalQuestionsData[index].statusValue = option.factorConstant;
+        }
+
+        let ratingValue = (question.menuValue * question.statusValue) / 5 * 100;
+        for (var i = 0; i < colordata.length; i++) {
+          if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+            criticalQuestionsData[index].ratingColor = colordata[i].matrixConstantColor;
+            break; // stop the loop
+          }
+          else {
+            criticalQuestionsData[index].ratingColor = "#FFFFFF"
+          }
+        }
+        criticalQuestionsData[index].performance = ratingValue;
+      }
+    });
+
+    setCriticalQuestions(criticalQuestionsData);
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       return;
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
   };
+
 
 
 
@@ -1216,7 +1224,7 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
-                                                        handleCriticality(option, "menuItem");
+                                                        handleCriticality(option, "menuItem", value.id);
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1251,7 +1259,7 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
-                                                        handleCriticality(option, "statusItem", value.question);
+                                                        handleCriticality(option, "statusItem", value.id);
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1265,9 +1273,9 @@ const Checks = (props) => {
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
-                                                  value={ratingData || ""}
+                                                  value={criticalQuestions.filter(question => question.questionId === value.id)[0].performance || ""}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  style={{ backgroundColor: ratingColor }}
+                                                  style={{ backgroundColor: criticalQuestions.filter(question => question.questionId === value.id)[0].ratingColor }}
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
