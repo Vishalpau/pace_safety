@@ -332,8 +332,8 @@ const Checks = (props) => {
       for (var i = 0; i < colordata.length; i++) {
         if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
           setRatingColor(colordata[i].matrixConstantColor)
-          console.log(ratingValue,'ratingValue')
-          console.log(colordata[i].matrixConstantColor,'colordata[i].matrixConstantColor')
+          console.log(ratingValue, 'ratingValue')
+          console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
           break; // stop the loop
         }
         else {
@@ -345,7 +345,7 @@ const Checks = (props) => {
     }
   }, [form]);
 
-  console.log(ratingData,'ratingData')
+  console.log(ratingData, 'ratingData')
   useEffect(() => {
   }, [ratingColor])
 

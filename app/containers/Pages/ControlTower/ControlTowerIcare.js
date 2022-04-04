@@ -107,7 +107,7 @@ const ControlTowerIcare = () => {
 
   const [projectOpen, setProjectOpen] = React.useState(false);
   const [config, setConfig] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);  
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const handleProjectOpen = () => {
     setProjectOpen(true);
@@ -634,109 +634,117 @@ const ControlTowerIcare = () => {
 
 
 
-  return  (
+  return (
     isLoading ? <Loader /> :
-    config.length == 0 ? 'Control Tower is not configured yet.' :
-    <>
-      <Grid container spacing={1}>
-        <Grid item sm={12} xs={12} className={classes.borderTop}>
+      config.length == 0 ? 'Control Tower is not configured yet.' :
+        <>
           <Grid container spacing={1}>
-            <Grid item md={5} sm={4} xs={12} className={classes.pLFiveHt40}>
-              <img src={controlTowerIcon} className={classes.attachImg} alt="decoration" />
-              <Typography variant="h5"> Control Tower</Typography>
-            </Grid>
-            <Grid item md={7} sm={8} xs={12}>
-              <AppBar position="static" color="default">
-                <Tabs
-                  value={value}
-                  onChange={handleChangeTab}
-                  //indicatorColor="primary"
-                  textColor="primary"
-                  //variant="scrollable"
-                  variant="fullWidth"
-                  scrollButtons="auto"
-                  aria-label="scrollable auto tabs example"
-                >
-                  {/* <Tab className="customTabLebl" disabled square label="Summary" {...a11yProps(0)} /> */}
-                  <Tab className="customTabLebl" square label={config[0].contextName} {...a11yProps(0)} />
-                  <Tab className="customTabLebl" square label={config[1].contextName} {...a11yProps(1)} />
-                  <Tab className="customTabLebl" square label={config[2].contextName} {...a11yProps(2)} />
-                  {/* <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} /> */}
-                </Tabs>
-              </AppBar>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item md={12} sm={12} xs={12} className="marginT10">
-          <Paper elevation={1} className="paperSection">
-            <Grid container spacing={3}>
-              <Grid item md={12} sm={12} xs={12}>
-
-                <TabPanel className="tabContentArea" value={value} index={0}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
-                        src={config[0].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
-                      >
-                      </iframe>
-                    </Grid>
-                    <Grid
-                      item
-                      md={5}
-                      sm={5}
-                      xs={5}
-                      className="hidLeftBBrand"
+            <Grid item sm={12} xs={12} className={classes.borderTop}>
+              <Grid container spacing={1}>
+                <Grid item md={5} sm={4} xs={12} className={classes.pLFiveHt40}>
+                  <img src={controlTowerIcon} className={classes.attachImg} alt="decoration" />
+                  <Typography variant="h5"> Control Tower</Typography>
+                </Grid>
+                <Grid item md={7} sm={8} xs={12}>
+                  <AppBar position="static" color="default">
+                    <Tabs
+                      value={value}
+                      onChange={handleChangeTab}
+                      //indicatorColor="primary"
+                      textColor="primary"
+                      //variant="scrollable"
+                      variant="fullWidth"
+                      scrollButtons="auto"
+                      aria-label="scrollable auto tabs example"
                     >
-                    </Grid>
-                    <Grid
-                      item
-                      md={5}
-                      sm={5}
-                      xs={5}
-                      className="hidRightBBrand"
-                    >
-                    </Grid>
-                  </Grid>
-                </TabPanel>
-
-                <TabPanel className="tabContentArea" value={value} index={1}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiZTQ1ZmI0NjQtZjM5Zi00ZGExLTljOWMtY2EzNDE3NWFjZTMwIiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection"
-                        src={config[1].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
-                      >
-                      </iframe>
-                    </Grid>
-                  </Grid>
-                </TabPanel>
-
-                <TabPanel className="tabContentArea" value={value} index={2}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
-                        src={config[2].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
-                      >
-                      </iframe>
-                    </Grid>
-                  </Grid>
-                </TabPanel>
-
-                {/* <TabPanel className="tabContentArea" value={value} index={3}>
+                      {/* <Tab className="customTabLebl" disabled square label="Summary" {...a11yProps(0)} /> */}
+                      {config.length > 0 ? <Tab className="customTabLebl" square label={config[0].contextName} {...a11yProps(0)} />
+                       : ''
+                      }
+                      {config.length > 1 ?
+                      <Tab className="customTabLebl" square label={config[1].contextName} {...a11yProps(1)} />
+                      :''}
+                      {config.length > 2 ?
+                      <Tab className="customTabLebl" square label={config[2].contextName} {...a11yProps(2)} />
+                        : ''}
+                      {/* <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} /> */}
+                    </Tabs>
+                  </AppBar>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item md={12} sm={12} xs={12} className="marginT10">
+              <Paper elevation={1} className="paperSection">
+                <Grid container spacing={3}>
+                  <Grid item md={12} sm={12} xs={12}>
+                    {config.length > 0 ? 
+                    <TabPanel className="tabContentArea" value={value} index={0}>
+                      <Grid container spacing={1}>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <iframe
+                            width="1600"
+                            height="1000"
+                            // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
+                            src={config[0].biToolUrl}
+                            frameborder="0"
+                            allowFullScreen="true"
+                          >
+                          </iframe>
+                        </Grid>
+                        <Grid
+                          item
+                          md={5}
+                          sm={5}
+                          xs={5}
+                          className="hidLeftBBrand"
+                        >
+                        </Grid>
+                        <Grid
+                          item
+                          md={5}
+                          sm={5}
+                          xs={5}
+                          className="hidRightBBrand"
+                        >
+                        </Grid>
+                      </Grid>
+                    </TabPanel>
+                      : ''}
+                    {config.length > 1 ?
+                    <TabPanel className="tabContentArea" value={value} index={1}>
+                      <Grid container spacing={1}>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <iframe
+                            width="1600"
+                            height="1000"
+                            // src="https://app.powerbi.com/view?r=eyJrIjoiZTQ1ZmI0NjQtZjM5Zi00ZGExLTljOWMtY2EzNDE3NWFjZTMwIiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection"
+                            src={config[1].biToolUrl}
+                            frameborder="0"
+                            allowFullScreen="true"
+                          >
+                          </iframe>
+                        </Grid>
+                      </Grid>
+                    </TabPanel>
+                      : ""}
+                      {config.length > 2 ?
+                    <TabPanel className="tabContentArea" value={value} index={2}>
+                      <Grid container spacing={1}>
+                        <Grid item md={12} sm={12} xs={12}>
+                          <iframe
+                            width="1600"
+                            height="1000"
+                            // src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
+                            src={config[2].biToolUrl}
+                            frameborder="0"
+                            allowFullScreen="true"
+                          >
+                          </iframe>
+                        </Grid>
+                      </Grid>
+                    </TabPanel>
+                      :""}
+                    {/* <TabPanel className="tabContentArea" value={value} index={3}>
                   <Grid container spacing={1}>
                     <Grid item md={12} sm={12} xs={12}>
                       <iframe
@@ -752,12 +760,12 @@ const ControlTowerIcare = () => {
                   </Grid>
                 </TabPanel> */}
 
-              </Grid>
+                  </Grid>
+                </Grid>
+              </Paper>
             </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
-    </>
+          </Grid>
+        </>
   );
 };
 

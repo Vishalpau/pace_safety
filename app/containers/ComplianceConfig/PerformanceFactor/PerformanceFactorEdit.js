@@ -132,7 +132,7 @@ const PerformanceFactorEdit = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorData.factorName ? fectorData.factorName : ""}
-                                                        onChange={(e) => { console.log(e, 'factorName'); setFectorData({ ...fectorData, factorName: e.target.value }) }}
+                                                        onChange={(e) => {setFectorData({ ...fectorData, factorName: e.target.value }) }}
                                                     >
                                                         <MenuItem value="High">High</MenuItem>
                                                         <MenuItem value="Medium">Medium</MenuItem>
@@ -153,7 +153,7 @@ const PerformanceFactorEdit = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor constant *"
                                                         value={fectorData.factorConstant ? fectorData.factorConstant : ""}
-                                                        onChange={(e) => { console.log(e, 'factorConstant'); setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
+                                                        onChange={(e) => {setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
                                                     >
                                                         <MenuItem value="0">0</MenuItem>
                                                         <MenuItem value="1">1</MenuItem>
