@@ -332,6 +332,8 @@ const Checks = (props) => {
       for (var i = 0; i < colordata.length; i++) {
         if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
           setRatingColor(colordata[i].matrixConstantColor)
+          console.log(ratingValue,'ratingValue')
+          console.log(colordata[i].matrixConstantColor,'colordata[i].matrixConstantColor')
           break; // stop the loop
         }
         else {
@@ -343,6 +345,7 @@ const Checks = (props) => {
     }
   }, [form]);
 
+  console.log(ratingData,'ratingData')
   useEffect(() => {
   }, [ratingColor])
 
@@ -384,46 +387,46 @@ const Checks = (props) => {
     </li>
   ));
 
-  const Criticality = [
-    {
-      value: "High",
-      label: "High",
-    },
-    {
-      value: "Medium",
-      label: "Medium",
-    },
-    {
-      value: "Low",
-      label: "Low",
-    },
-  ];
-  const Status = [
-    {
-      value: "Not in compliance -stop work",
-      label: "Not in compliance -stop work",
-    },
-    {
-      value: "Not in compliance - Action required",
-      label: "Not in compliance - Action required",
-    },
-    {
-      value: "Partial compliance",
-      label: "Partial compliance",
-    },
-    {
-      value: "Compliant- Needs improvement",
-      label: "Compliant- Needs improvement",
-    },
-    {
-      value: "Fully compliant",
-      label: "Fully compliant",
-    },
-    {
-      value: "Fully compliant & excellent",
-      label: "Fully compliant & excellent",
-    },
-  ];
+  // const Criticality = [
+  //   {
+  //     value: "High",
+  //     label: "High",
+  //   },
+  //   {
+  //     value: "Medium",
+  //     label: "Medium",
+  //   },
+  //   {
+  //     value: "Low",
+  //     label: "Low",
+  //   },
+  // ];
+  // const Status = [
+  //   {
+  //     value: "Not in compliance -stop work",
+  //     label: "Not in compliance -stop work",
+  //   },
+  //   {
+  //     value: "Not in compliance - Action required",
+  //     label: "Not in compliance - Action required",
+  //   },
+  //   {
+  //     value: "Partial compliance",
+  //     label: "Partial compliance",
+  //   },
+  //   {
+  //     value: "Compliant- Needs improvement",
+  //     label: "Compliant- Needs improvement",
+  //   },
+  //   {
+  //     value: "Fully compliant",
+  //     label: "Fully compliant",
+  //   },
+  //   {
+  //     value: "Fully compliant & excellent",
+  //     label: "Fully compliant & excellent",
+  //   },
+  // ];
 
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
@@ -552,7 +555,7 @@ const Checks = (props) => {
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
-            performance: ratingData,
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
