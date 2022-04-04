@@ -319,6 +319,7 @@ const Checks = () => {
   const [ratingColorQuestionId, setRatingColorQuestionId] = useState(null);
   // const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
+  const [error, setError] = useState(false);
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     'panel4'
@@ -376,10 +377,10 @@ const Checks = () => {
       {' '}
       {file.path}
       {' '}
--
+      -
       {file.size}
       {' '}
-bytes
+      bytes
       {' '}
       <DeleteIcon />
     </li>
@@ -586,91 +587,105 @@ bytes
       : null;
     const tempUpdatedQuestion = [];
     const tempNewQuestion = [];
+    let errorFlag = false;
 
     checkData.map((data) => {
       if (data.id) {
+        if (data.criticality) {
+          if (!data.auditStatus || !data.findings)
+            errorFlag = true;
+        } else {
+          if (!data.defaultResponse || !data.findings) {
+            errorFlag = true;
+          }
+        }
         tempUpdatedQuestion.push(data);
       } else {
         tempNewQuestion.push(data);
       }
     });
-    if (tempNewQuestion.length > 0) {
-      const dataCheck = [];
-      // let data = {};
-      for (var i = 0; i < tempNewQuestion.length; i++) {
-        const data = {};
-        data.questionId = tempNewQuestion[i].questionId;
-        data.question = tempNewQuestion[i].question;
-        data.criticality = tempNewQuestion[i].criticality;
-        data.performance = tempNewQuestion[i].performance;
-        data.groupId = tempNewQuestion[i].groupId;
-        data.groupName = tempNewQuestion[i].groupName;
-        data.subGroupId = tempNewQuestion[i].subGroupId;
-        data.subGroupName = tempNewQuestion[i].subGroupName;
-        data.defaultResponse = tempNewQuestion[i].defaultResponse;
-        data.score = tempNewQuestion[i].score;
-        data.findings = tempNewQuestion[i].findings;
-        data.score = tempNewQuestion[i].score;
-        data.auditStatus = tempNewQuestion[i].auditStatus;
+    if (!errorFlag) {
+      setError(false)
+      if (tempNewQuestion.length > 0) {
+        const dataCheck = [];
+        // let data = {};
+        for (var i = 0; i < tempNewQuestion.length; i++) {
+          const data = {};
+          data.questionId = tempNewQuestion[i].questionId;
+          data.question = tempNewQuestion[i].question;
+          data.criticality = tempNewQuestion[i].criticality;
+          data.performance = tempNewQuestion[i].performance;
+          data.groupId = tempNewQuestion[i].groupId;
+          data.groupName = tempNewQuestion[i].groupName;
+          data.subGroupId = tempNewQuestion[i].subGroupId;
+          data.subGroupName = tempNewQuestion[i].subGroupName;
+          data.defaultResponse = tempNewQuestion[i].defaultResponse;
+          data.score = tempNewQuestion[i].score;
+          data.findings = tempNewQuestion[i].findings;
+          data.score = tempNewQuestion[i].score;
+          data.auditStatus = tempNewQuestion[i].auditStatus;
 
-        if (typeof tempUpdatedQuestion[i].attachment !== 'string') {
-          if (tempUpdatedQuestion[i].attachment !== null) {
-            data.attachment = {
-              name: tempUpdatedQuestion[i].attachment.name,
-              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
-              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
-              size: tempUpdatedQuestion[i].attachment.size,
-              type: tempUpdatedQuestion[i].attachment.type,
-              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-            };
+          if (typeof tempUpdatedQuestion[i].attachment !== 'string') {
+            if (tempUpdatedQuestion[i].attachment !== null) {
+              data.attachment = {
+                name: tempUpdatedQuestion[i].attachment.name,
+                lastModified: tempUpdatedQuestion[i].attachment.lastModified,
+                lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
+                size: tempUpdatedQuestion[i].attachment.size,
+                type: tempUpdatedQuestion[i].attachment.type,
+                webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+              };
+            }
           }
+          data['status', 'Active'];
+          data.fkAuditId = tempNewQuestion[i].fkAuditId;
+          data.createdAt = new Date().toISOString();
+          data.createdBy = tempNewQuestion[i].createdBy;
+          dataCheck[i] = data;
+          console.log(dataCheck);
         }
-        data['status', 'Active'];
-        data.fkAuditId = tempNewQuestion[i].fkAuditId;
-        data.createdAt = new Date().toISOString();
-        data.createdBy = tempNewQuestion[i].createdBy;
-        dataCheck[i] = data;
-        console.log(dataCheck);
+        const resNew = await api.post(`/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`, dataCheck);
       }
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem('fkComplianceId')}/auditresponse/`, dataCheck);
-    }
-    if (tempUpdatedQuestion.length > 0) {
-      const dataCheck = [];
-      for (var i = 0; i < tempUpdatedQuestion.length; i++) {
-        const data = {};
-        data.id = tempUpdatedQuestion[i].id;
-        data.questionId = tempUpdatedQuestion[i].questionId;
-        data.question = tempUpdatedQuestion[i].question;
-        data.criticality = tempUpdatedQuestion[i].criticality;
-        data.performance = tempUpdatedQuestion[i].questionId === ratingColorQuestionId ? ratingColor : tempUpdatedQuestion[i].performance;
-        data.groupId = tempUpdatedQuestion[i].groupId;
-        data.groupName = tempUpdatedQuestion[i].groupName;
-        data.subGroupId = tempUpdatedQuestion[i].subGroupId;
-        data.subGroupName = tempUpdatedQuestion[i].subGroupName;
-        data.defaultResponse = tempUpdatedQuestion[i].defaultResponse;
-        data.score = tempUpdatedQuestion[i].score;
-        data.findings = tempUpdatedQuestion[i].findings;
-        data.score = tempUpdatedQuestion[i].score;
-        data.auditStatus = tempUpdatedQuestion[i].auditStatus;
-        if (typeof tempUpdatedQuestion[i].attachment !== 'string') {
-          if (tempUpdatedQuestion[i].attachment !== null) {
-            data.attachment = {
-              name: tempUpdatedQuestion[i].attachment.name,
-              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
-              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
-              size: tempUpdatedQuestion[i].attachment.size,
-              type: tempUpdatedQuestion[i].attachment.type,
-              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-            };
+      if (tempUpdatedQuestion.length > 0) {
+        const dataCheck = [];
+        for (var i = 0; i < tempUpdatedQuestion.length; i++) {
+          const data = {};
+          data.id = tempUpdatedQuestion[i].id;
+          data.questionId = tempUpdatedQuestion[i].questionId;
+          data.question = tempUpdatedQuestion[i].question;
+          data.criticality = tempUpdatedQuestion[i].criticality;
+          data.performance = tempUpdatedQuestion[i].questionId === ratingColorQuestionId ? ratingColor : tempUpdatedQuestion[i].performance;
+          data.groupId = tempUpdatedQuestion[i].groupId;
+          data.groupName = tempUpdatedQuestion[i].groupName;
+          data.subGroupId = tempUpdatedQuestion[i].subGroupId;
+          data.subGroupName = tempUpdatedQuestion[i].subGroupName;
+          data.defaultResponse = tempUpdatedQuestion[i].defaultResponse;
+          data.score = tempUpdatedQuestion[i].score;
+          data.findings = tempUpdatedQuestion[i].findings;
+          data.score = tempUpdatedQuestion[i].score;
+          data.auditStatus = tempUpdatedQuestion[i].auditStatus;
+          if (typeof tempUpdatedQuestion[i].attachment !== 'string') {
+            if (tempUpdatedQuestion[i].attachment !== null) {
+              data.attachment = {
+                name: tempUpdatedQuestion[i].attachment.name,
+                lastModified: tempUpdatedQuestion[i].attachment.lastModified,
+                lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
+                size: tempUpdatedQuestion[i].attachment.size,
+                type: tempUpdatedQuestion[i].attachment.type,
+                webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+              };
+            }
           }
+          data['status', 'Active'];
+          data.fkAuditId = tempUpdatedQuestion[i].fkAuditId * 1;
+          data.createdAt = new Date().toISOString();
+          data.createdBy = tempUpdatedQuestion[i].createdBy;
+          dataCheck[i] = data;
         }
-        data['status', 'Active'];
-        data.fkAuditId = tempUpdatedQuestion[i].fkAuditId * 1;
-        data.createdAt = new Date().toISOString();
-        data.createdBy = tempUpdatedQuestion[i].createdBy;
-        dataCheck[i] = data;
+        apiCall(dataCheck);
       }
-      apiCall(dataCheck);
+    } else {
+      setError(true)
     }
   };
   const classes = useStyles();
@@ -751,12 +766,10 @@ bytes
     fetchCheklistData();
   }, []);
 
-  console.log(checkData);
-
   return (
     <CustomPapperBlock
       title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ''
-      }`}
+        }`}
       icon="customDropdownPageIcon compliancePageIcon"
       whiteBg
     >
@@ -945,6 +958,7 @@ bytes
                                                 label="NA"
                                               /> */}
                                               </RadioGroup>
+                                              {((error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].defaultResponse ? false : true) : false)) ? true : false) && (<p style={{ color: "#f44336", fontSize: '12px', fontFamily: 'Open Sans,sans-serif', fontWeight: '400' }}>pLease select a response</p>)}
                                             </FormControl>
                                           </Grid>
                                           <Grid item md={12} xs={12}>
@@ -961,6 +975,8 @@ bytes
                                               }
                                               multiline
                                               rows={4}
+                                              error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
+                                              helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
                                               defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ''}
                                               fullWidth
                                               variant="outlined"
@@ -972,7 +988,7 @@ bytes
                                               className="checkRadioLabel marginB5"
                                               component="legend"
                                             >
-                                                  Score
+                                              Score
                                             </FormLabel>
                                           </Grid>
                                           {value.scoreType === 'Star' && (
@@ -997,7 +1013,7 @@ bytes
                                                 className="formControl"
                                               >
                                                 <InputLabel id="demo-simple-select-outlined-label">
-                                                      Counts
+                                                  Counts
                                                 </InputLabel>
                                                 <Select
                                                   labelId="scoreCount"
@@ -1053,7 +1069,7 @@ bytes
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                                  Create Action
+                                              Create Action
                                               {' '}
                                             </FormLabel>
                                             <Grid
@@ -1114,7 +1130,7 @@ bytes
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                                  Attachment
+                                              Attachment
                                               {' '}
                                             </FormLabel>
                                             <Typography className="viewLabelValue">
@@ -1168,6 +1184,8 @@ bytes
                                               select
                                               fullWidth
                                               variant="outlined"
+                                              error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? true : false}
+                                              helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? "please enter criticality" : ""}
                                               defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : '')}
                                               className="formControl"
                                               onChange={(e) => handleChangeData(
@@ -1198,6 +1216,8 @@ bytes
                                               label="Status*"
                                               name="status"
                                               id="status"
+                                              error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? true : false}
+                                              helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? "please enter audit status" : ""}
                                               defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ''}
                                               select
                                               fullWidth
@@ -1248,6 +1268,8 @@ bytes
                                               id="findings"
                                               multiline
                                               rows={4}
+                                              error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
+                                              helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
                                               defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ''}
                                               fullWidth
                                               variant="outlined"
@@ -1266,7 +1288,7 @@ bytes
                                               className="checkRadioLabel marginB5"
                                               component="legend"
                                             >
-                                                  Score
+                                              Score
                                             </FormLabel>
                                           </Grid>
                                           {value.scoreType === 'Star' && (
@@ -1291,7 +1313,7 @@ bytes
                                                 className="formControl"
                                               >
                                                 <InputLabel id="demo-simple-select-outlined-label">
-                                                      Counts
+                                                  Counts
                                                 </InputLabel>
                                                 <Select
                                                   labelId="scoreCount"
@@ -1348,7 +1370,7 @@ bytes
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                                  Create Action
+                                              Create Action
                                               {' '}
                                             </FormLabel>
                                             <Grid
@@ -1406,10 +1428,10 @@ bytes
                                               <TableHead>
                                                 <TableRow>
                                                   <TableCell className="tableHeadCellFirst">
-                                                        Action number 1
+                                                    Action number 1
                                                   </TableCell>
                                                   <TableCell className="tableHeadCellSecond">
-                                                        Action title
+                                                    Action title
                                                   </TableCell>
                                                 </TableRow>
                                               </TableHead>
@@ -1420,50 +1442,50 @@ bytes
                                                     {val.id == value.id ? (
                                                       <>
                                                         {val.action.length > 0
-                                                              && val.action.map(
-                                                                (valueAction) => (
-                                                                  <TableRow>
-                                                                    <TableCell align="left">
-                                                                      <Link
-                                                                        className={
-                                                                          classes.actionLinkAudit
-                                                                        }
-                                                                        display="block"
-                                                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                          localStorage.getItem(
-                                                                            'BaseUrl'
-                                                                          )
-                                                                        ).actionClientID
-                                                                        }&response_type=code&companyId=${JSON.parse(
-                                                                          localStorage.getItem(
-                                                                            'company'
-                                                                          )
+                                                          && val.action.map(
+                                                            (valueAction) => (
+                                                              <TableRow>
+                                                                <TableCell align="left">
+                                                                  <Link
+                                                                    className={
+                                                                      classes.actionLinkAudit
+                                                                    }
+                                                                    display="block"
+                                                                    href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                      localStorage.getItem(
+                                                                        'BaseUrl'
+                                                                      )
+                                                                    ).actionClientID
+                                                                      }&response_type=code&companyId=${JSON.parse(
+                                                                        localStorage.getItem(
+                                                                          'company'
                                                                         )
-                                                                          .fkCompanyId
-                                                                        }&projectId=${JSON.parse(
-                                                                          localStorage.getItem(
-                                                                            'projectName'
-                                                                          )
+                                                                      )
+                                                                        .fkCompanyId
+                                                                      }&projectId=${JSON.parse(
+                                                                        localStorage.getItem(
+                                                                          'projectName'
                                                                         )
-                                                                          .projectName
-                                                                          .projectId
-                                                                        }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                        }`}
-                                                                        target="_blank"
-                                                                      >
-                                                                        {
-                                                                          valueAction.number
-                                                                        }
-                                                                      </Link>
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                      {
-                                                                        valueAction.title
-                                                                      }
-                                                                    </TableCell>
-                                                                  </TableRow>
-                                                                )
-                                                              )}
+                                                                      )
+                                                                        .projectName
+                                                                        .projectId
+                                                                      }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                      }`}
+                                                                    target="_blank"
+                                                                  >
+                                                                    {
+                                                                      valueAction.number
+                                                                    }
+                                                                  </Link>
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                  {
+                                                                    valueAction.title
+                                                                  }
+                                                                </TableCell>
+                                                              </TableRow>
+                                                            )
+                                                          )}
                                                       </>
                                                     ) : null}
                                                   </>
@@ -1482,7 +1504,7 @@ bytes
                                               className="checkRadioLabel"
                                               component="legend"
                                             >
-                                                  Attachment
+                                              Attachment
                                               {' '}
                                             </FormLabel>
                                             <Typography className="viewLabelValue">
