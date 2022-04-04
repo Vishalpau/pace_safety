@@ -45,7 +45,7 @@ import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import { CONFIG } from "../ComplianceconfigConstants";
 import FormSideBar from "../../Forms/FormSideBar";
-import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
+import ComplianceProjectStructureInit from "../../ProjectStructureId/complianceStructId";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -259,6 +259,7 @@ const QuestionsGroup = (props) => {
   };
 
   const [error, setError] = useState({});
+  const [structureId, setStructureId] = useState("");
 
   const handleNext = async () => {
     const fkCompanyId =
@@ -273,7 +274,7 @@ const QuestionsGroup = (props) => {
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName
         : null;
-    const fkpsId = selectDepthAndId.join(":");
+    // const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
     if (!isValid) {
@@ -283,7 +284,7 @@ const QuestionsGroup = (props) => {
     history.push({
       pathname: "/app/compliance-config/question",
       state: {
-        fkProjectStructureIds: fkpsId,
+        fkProjectStructureIds: structureId,
         CompanyId: fkCompanyId,
         projectId: project.projectId,
       },
@@ -336,6 +337,15 @@ const QuestionsGroup = (props) => {
       }
     }
   };
+
+  const handleSelectStructure = (fkProjectStructureIds,newArr) => {
+    setStructureId(fkProjectStructureIds);
+    setSelectDepthAndId(newArr);
+  }
+
+  // useEffect(() => {
+  //   console.log(levelLenght,'hhiiii');
+  // },[setLevelLenght])
 
   const handelSelectOptionSubGroup = (key) => {
     let temp = [...checkData];
@@ -440,7 +450,8 @@ const QuestionsGroup = (props) => {
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label={data.breakDownLabel}
+                                label={data.breakDownLabel}￼
+
                                 value={data.selectValue.id || ""}
                                 disabled={data.breakDownData.length === 0}
                                 onChange={(e) => {
@@ -500,62 +511,10 @@ const QuestionsGroup = (props) => {
                         </Typography> */}
                         <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
                       </Grid>
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Sections</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-name-label"
-                            label="Sections"
-                          >
-                            <MenuItem value="Phase">All sections</MenuItem>
-                            <MenuItem value="Phase1">Section 1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Unit</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-unit-label"
-                            label="Unit"
-                          >
-                            <MenuItem value="unit">All unit</MenuItem>
-                            <MenuItem value="unit1">Unit1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item md={3} sm={6} xs={12}>
-                        <FormControl
-                          //required
-                          variant="outlined"
-                          className="formControl"
-                        >
-                          <InputLabel id="project-name-label">Work area</InputLabel>
-                          <Select
-                            id="project-name"
-                            labelId="project-unit-label"
-                            label="Work area"
-                          >
-                            <MenuItem value="WA1">All work areas</MenuItem>
-                            <MenuItem value="WA2">P1-WA1</MenuItem>
-                          </Select>
-
-                        </FormControl>
-                      </Grid>
+                      <ComplianceProjectStructureInit
+                        error={error}
+                        handleStructureSelect={(fkProjectStructureIds, newArr) => handleSelectStructure(fkProjectStructureIds,newArr)}
+                      />
                     </Grid>
                   </Paper>
                 </Grid>
