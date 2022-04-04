@@ -191,7 +191,7 @@ export default function ActionTracker(props) {
         form.plannedEndDate = new Date()
       }
       let res = await apiAction.post("api/v1/actions/", form).then().catch(() => setLoading(false));
-      if (res.status == 201) {
+      if (res.status == 200) {
         await setError({ actionTitle: "" });
         await handelCloseAndSubmit()
         await setOpen(false);

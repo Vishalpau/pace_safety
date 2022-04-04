@@ -496,7 +496,7 @@ const QuestionsGroup = (props) => {
                       )}
                     </Grid>
                   </Paper>
-                </Grid> */}
+                </Grid> */} 
 
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
@@ -518,9 +518,6 @@ const QuestionsGroup = (props) => {
                     </Grid>
                   </Paper>
                 </Grid>
-
-
-
               </Grid>
               <Grid item md={12} sm={12} xs={12} className="paddRemove">
                 <Grid container spacing={3}>

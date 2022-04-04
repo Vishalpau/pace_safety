@@ -436,79 +436,6 @@ const QuestionEdit = (props) => {
                 <Grid container spacing={3}>
                   <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="32.001" height="25.557" viewBox="0 0 32.001 25.557">
-                        <g id="work-area-32" transform="translate(-220 -1887)">
-                          <path id="Subtraction_26" data-name="Subtraction 26" d="M-3076.544,25.557h-30.912a.536.536,0,0,1-.478-.22.555.555,0,0,1,.01-.544L-3103,14.461a.567.567,0,0,1,.468-.3h4.225a.585.585,0,0,1,.391.184c.309.365.614.708.87,1s.547.615.83.947h-5.014a.568.568,0,0,0-.468.3l-3.264,6.844h25.917l-3.263-6.844a.568.568,0,0,0-.468-.3h-5.026c.288-.337.581-.667.83-.947l.011-.012c.27-.3.575-.646.862-.984a.586.586,0,0,1,.39-.183h4.234a.568.568,0,0,1,.468.3l4.927,10.332a.556.556,0,0,1,.01.544A.536.536,0,0,1-3076.544,25.557Zm-15.46-5.7a.513.513,0,0,1-.482-.331,16.937,16.937,0,0,0-3.508-5.2c-1.406-1.579-2.733-3.069-3.135-5.391a7.887,7.887,0,0,1,1.488-6.112,7.01,7.01,0,0,1,4.929-2.791c.234-.023.472-.034.706-.034a7.334,7.334,0,0,1,7.25,7.4c0,3.267-1.511,4.963-3.26,6.928a16.946,16.946,0,0,0-3.51,5.2A.509.509,0,0,1-3092,19.86ZM-3092,2a5.006,5.006,0,0,0-5,5,5.006,5.006,0,0,0,5,5,5.006,5.006,0,0,0,5-5A5.005,5.005,0,0,0-3092,2Z" transform="translate(3328 1887)" fill="#06425c" />
-                          <path id="noun-information-4514363_1_" data-name="noun-information-4514363 (1)" d="M39.177,34.509a.949.949,0,0,1,.944.944.921.921,0,0,1-.944.944.949.949,0,0,1-.944-.944A.922.922,0,0,1,39.177,34.509ZM38.683,43a1.2,1.2,0,0,1-1.168-1.528l.809-2.7a.449.449,0,0,0-.449-.584h-.4a1.646,1.646,0,0,1,1.573-1.123A1.2,1.2,0,0,1,40.211,38.6l-.809,2.7a.449.449,0,0,0,.449.584h.4A1.646,1.646,0,0,1,38.683,43Z" transform="translate(197.137 1855.245)" fill="#06425c" />
-                        </g>
-                      </svg> Work area information
-                    </Typography>
-                  </Grid>
-                  <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                    <Paper elevation={1} className="paperSection">
-                      <Grid container spacing={3}>
-                        <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
-                          <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
-                        </Grid>
-                        <Grid item md={3} sm={6} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            className="formControl"
-                          >
-                            <InputLabel id="project-name-label">Sections</InputLabel>
-                            <Select
-                              id="project-name"
-                              labelId="project-name-label"
-                              label="Sections"
-                            >
-                              <MenuItem value="Phase">All sections</MenuItem>
-                              <MenuItem value="Phase1">Section 1</MenuItem>
-                            </Select>
-
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item md={3} sm={6} xs={12}>
-                          <FormControl
-                            variant="outlined"
-                            className="formControl"
-                          >
-                            <InputLabel id="project-name-label">Unit</InputLabel>
-                            <Select
-                              id="project-name"
-                              labelId="project-unit-label"
-                              label="Unit"
-                            >
-                              <MenuItem value="unit">All unit</MenuItem>
-                              <MenuItem value="unit1">Unit1</MenuItem>
-                            </Select>
-
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item md={3} sm={6} xs={12}>
-                          <FormControl
-                            //required
-                            variant="outlined"
-                            className="formControl"
-                          >
-                            <InputLabel id="project-name-label">Work area</InputLabel>
-                            <Select
-                              id="project-name"
-                              labelId="project-unit-label"
-                              label="Work area"
-                            >
-                              <MenuItem value="WA1">All work areas</MenuItem>
-                              <MenuItem value="WA2">P1-WA1</MenuItem>
-                            </Select>
-
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  </Grid>
-                  {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                    <Typography variant="h6" className="sectionHeading">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="32.001"
@@ -591,7 +518,7 @@ const QuestionEdit = (props) => {
                         ))}
                       </Grid>
                     </Paper>
-                  </Grid> */}
+                  </Grid>
 
                   <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
                     <Typography variant="h6" className="sectionHeading">

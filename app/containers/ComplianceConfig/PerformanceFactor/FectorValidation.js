@@ -6,17 +6,17 @@ export default function FectorValidation(data) {
     let isValid = true
 
     if(data.factorType == "") {
-        error['factorType'] = "Please select fector type"
+        error['factorType'] = "Please select factor type"
         isValid = false
     }
     
     if(data.factorName == "") {
-        error['factorName'] = "Please select fector name"
+        error['factorName'] = "Please select factor name"
         isValid = false
     }
     
     if(data.factorConstant == "") {
-        error['factorConstant'] = "Please select fector constant"
+        error['factorConstant'] = "Please select factor constant"
         isValid = false
     }    
 

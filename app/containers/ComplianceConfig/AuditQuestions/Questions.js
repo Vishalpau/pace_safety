@@ -317,7 +317,7 @@ const Questions = () => {
         : null;
 
   const [isLoading, setIsLoading] = useState(false)
-  const responseType = ["Yes-No-NA", "Critacality Matrix"];
+  const responseType = ["Yes-No-NA", "Criticality Matrix"];
   const scoreType = ["Stars", "1-10", "%"];
   const geoLocation = ["Yes", "No"];
   const evidenceType = ["Yes", "No"];
