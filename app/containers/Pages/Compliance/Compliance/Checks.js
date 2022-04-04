@@ -605,6 +605,14 @@ const Checks = (props) => {
         }
         tempUpdatedQuestion.push(data)
       } else {
+        if (data.criticality) {
+          if (!data.auditStatus || !data.findings)
+            errorFlag = true;
+        } else {
+          if (!data.defaultResponse || !data.findings) {
+            errorFlag = true;
+          }
+        }
         tempNewQuestion.push(data)
       }
     })
