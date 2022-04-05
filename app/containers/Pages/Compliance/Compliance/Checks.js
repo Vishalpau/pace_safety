@@ -804,6 +804,8 @@ const Checks = (props) => {
 
   }, []);
 
+  console.log(showCheckData)
+
   return (
     <CustomPapperBlock
       title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
@@ -985,7 +987,7 @@ const Checks = (props) => {
                                                       />
                                                     ))}
                                                   </RadioGroup>
-                                                  {((error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].defaultResponse ? false : true) : false)) ? true : false) && (<p style={{ color: "#f44336", fontSize: '12px', fontFamily: 'Open Sans,sans-serif', fontWeight: '400' }}>pLease select a response</p>)}
+                                                  {((error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].defaultResponse ? false : true) : false)) ? true : false) && (<p style={{ color: "#f44336", fontSize: '12px', fontFamily: 'Open Sans,sans-serif', fontWeight: '400' }}>pLease select a response</p>)}
                                                 </FormControl>
                                               </Grid>
                                               <Grid item md={12} xs={12}>
@@ -1003,8 +1005,8 @@ const Checks = (props) => {
                                                   }
                                                   multiline
                                                   rows={4}
-                                                  error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
+                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
+                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
                                                   defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
                                                   fullWidth
                                                   variant="outlined"
@@ -1212,8 +1214,8 @@ const Checks = (props) => {
                                                   select
                                                   fullWidth
                                                   variant="outlined"
-                                                  error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? "please enter criticality" : ""}
+                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? true : false}
+                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? "please enter criticality" : ""}
                                                   defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : '')}
                                                   className="formControl"
                                                   onChange={(e) =>
@@ -1245,8 +1247,8 @@ const Checks = (props) => {
                                                   label="Status*"
                                                   name="status"
                                                   id="status"
-                                                  error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? "please enter status" : ""}
+                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? true : false}
+                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? "please enter status" : ""}
                                                   defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
                                                   select
                                                   fullWidth
@@ -1298,8 +1300,8 @@ const Checks = (props) => {
                                                   id="findings"
                                                   multiline
                                                   rows={4}
-                                                  error={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (showCheckData.filter(cd => cd.question === value.question).length ? (showCheckData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
+                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
+                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
                                                   defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
                                                   fullWidth
                                                   variant="outlined"
