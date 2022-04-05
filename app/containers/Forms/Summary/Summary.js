@@ -34,6 +34,7 @@ import apiAction from "../../../utils/axiosActionTracker";
 import { ACCOUNT_API_URL, SELF_API } from '../../../utils/constants';
 import ActivityHistory from '../../Activity/Activity';
 import { Comments } from '../../pageListAsync';
+import Acl from '../../../components/Error/acl';
 
 const CloseOut = lazy(() => import('../../SummaryDetails/CloseOut'));
 const EvidenceSummary = lazy(() => import('../../SummaryDetails/Evidence'));
@@ -556,7 +557,11 @@ const Summary = (props) => {
 
   return (
     <>
-      {isLoading ? (
+      {/* {isLoading ? ( */}
+        <Acl 
+      module="safety-incident"
+      action={history.location.state && "change_incidents"}
+      html={(
         <PapperBlock
           title={`Incident Number: ${incidents.incidentNumber}`}
           icon="ion-md-list-box"
@@ -908,9 +913,11 @@ const Summary = (props) => {
             </Snackbar>
           </Box>
         </PapperBlock>
-      ) : (
+      )} />
+        
+      {/* ) : (
         <Loader />
-      )}
+      )} */}
     </>
   );
 };

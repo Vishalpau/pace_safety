@@ -42,6 +42,7 @@ import Loader from "../Loader";
 import { connect } from 'react-redux'
 import { breakDownDetails, levelBDownDetails } from "../../../redux/actions/initialDetails";
 import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
+import Acl from "../../../components/Error/acl";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -665,533 +666,540 @@ const IncidentDetails = (props) => {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return ( 
-    <PapperBlock icon="ion-md-list-box" title="Initial Notification">
-      {isLoading ? (
-        <Row>
-          <Col md={9}>
-            <Grid container spacing={3}>
-
-              {/* Project Name */}
-              <Grid item xs={3}>
-
-                <Typography
-                  variant="h6"
-                  className={Type.labelName}
-                  gutterBottom
-                  id="project-name-label"
-                >
-                  Project name
-                </Typography>
-
-
-                <Typography className={Type.labelValue}>
-                  {project ? project.projectName : null}
-                </Typography>
-              </Grid>
-              {id ?
-                fetchSelectBreakDownList.map((data, key) =>
-                  <Grid item xs={3} md={3} key={key}>
-                    <FormControl
-                      error={error && error[`projectStructure${[key]}`]}
-                      variant="outlined"
-                      required
-                      className={classes.formControl}
-                    >
-                      <InputLabel id={data.breakDownLabel}>
-                        {data.breakDownLabel}
-                      </InputLabel>
-                      <Select
-                        labelId={data.breakDownLabel}
-                        id={data.breakDownLabel}
-                        label={data.breakDownLabel}
-                        value={data.selectValue.id || ""}
-                        disabled={data.breakDownData.length === 0}
-
-                        onChange={(e) => {
-                          handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
-                        }}
+    <Acl 
+      module="safety-incident"
+      action={history.location.state && "add_incidents"}
+      html={(
+        <PapperBlock icon="ion-md-list-box" title="Initial Notification">
+        {isLoading ? (
+          <Row>
+            <Col md={9}>
+              <Grid container spacing={3}>
+  
+                {/* Project Name */}
+                <Grid item xs={3}>
+  
+                  <Typography
+                    variant="h6"
+                    className={Type.labelName}
+                    gutterBottom
+                    id="project-name-label"
+                  >
+                    Project name
+                  </Typography>
+  
+  
+                  <Typography className={Type.labelValue}>
+                    {project ? project.projectName : null}
+                  </Typography>
+                </Grid>
+                {id ?
+                  fetchSelectBreakDownList.map((data, key) =>
+                    <Grid item xs={3} md={3} key={key}>
+                      <FormControl
+                        error={error && error[`projectStructure${[key]}`]}
+                        variant="outlined"
+                        required
+                        className={classes.formControl}
                       >
-                        {data.breakDownData.length !== 0
-                          ? data.breakDownData.map((selectvalues, index) => (
-                            <MenuItem key={index}
-                              // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
-                              value={selectvalues.id}>
-                              {selectvalues.structureName}
-                            </MenuItem>
-                          ))
-                          : null}
-                      </Select>
-                      {error && error[`projectStructure${[key]}`] && (
-                        <FormHelperText>
-                          {error[`projectStructure${[key]}`]}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                  </Grid>
-
-                ) : <ProjectStructureInit
-                  selectDepthAndId={selectDepthAndId}
-                  setLevelLenght={setLevelLenght}
-                  error={error}
-                  setWorkArea={setWorkArea}
-                  setSelectDepthAndId={setSelectDepthAndId} />
-              }
-              {/* Unit Name */}
-
-              {/* Incident Type */}
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  error={error.incidentType}
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    Incident type
-                  </InputLabel>
-                  <Select
-                    labelId="incident-type-label"
-                    id="incident-type"
-                    label="Incident type"
-                    value={form.incidentType || ""}
-                    onChange={(e) => {
-                      setForm({ ...form, incidentType: e.target.value });
-                    }}
-                  >
-                    {incidentTypeValue.length !== 0
-                      ? incidentTypeValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error.incidentType && (
-                    <FormHelperText>{error.incidentType}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-              {/* Date and Time */}
-              <Grid item xs={12} md={6}>
-                <MuiPickersUtilsProvider
-                  variant="outlined"
-                  utils={DateFnsUtils}
-                >
-                  <KeyboardDateTimePicker
+                        <InputLabel id={data.breakDownLabel}>
+                          {data.breakDownLabel}
+                        </InputLabel>
+                        <Select
+                          labelId={data.breakDownLabel}
+                          id={data.breakDownLabel}
+                          label={data.breakDownLabel}
+                          value={data.selectValue.id || ""}
+                          disabled={data.breakDownData.length === 0}
+  
+                          onChange={(e) => {
+                            handleBreakdown(e, key, data.breakDownLabel, data.selectValue);
+                          }}
+                        >
+                          {data.breakDownData.length !== 0
+                            ? data.breakDownData.map((selectvalues, index) => (
+                              <MenuItem key={index}
+                                // onClick={(e) => handleDepthAndId(selectvalues.depth, selectvalues.id)}
+                                value={selectvalues.id}>
+                                {selectvalues.structureName}
+                              </MenuItem>
+                            ))
+                            : null}
+                        </Select>
+                        {error && error[`projectStructure${[key]}`] && (
+                          <FormHelperText>
+                            {error[`projectStructure${[key]}`]}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+  
+                  ) : <ProjectStructureInit
+                    selectDepthAndId={selectDepthAndId}
+                    setLevelLenght={setLevelLenght}
+                    error={error}
+                    setWorkArea={setWorkArea}
+                    setSelectDepthAndId={setSelectDepthAndId} />
+                }
+                {/* Unit Name */}
+  
+                {/* Incident Type */}
+                <Grid item xs={12} md={6}>
+                  <FormControl
+                    error={error.incidentType}
+                    variant="outlined"
                     required
-                    error={error.incidentOccuredOn}
                     className={classes.formControl}
-                    label="Incident date & time"
-                    helperText={
-                      error.incidentOccuredOn ? error.incidentOccuredOn : null
-                    }
-                    value={form.incidentOccuredOn || null}
+                  >
+                    <InputLabel id="demo-simple-select-label">
+                      Incident type
+                    </InputLabel>
+                    <Select
+                      labelId="incident-type-label"
+                      id="incident-type"
+                      label="Incident type"
+                      value={form.incidentType || ""}
+                      onChange={(e) => {
+                        setForm({ ...form, incidentType: e.target.value });
+                      }}
+                    >
+                      {incidentTypeValue.length !== 0
+                        ? incidentTypeValue.map((selectValues, index) => (
+                          <MenuItem key={index} value={selectValues.inputValue}>
+                            {selectValues.inputLabel}
+                          </MenuItem>
+                        ))
+                        : null}
+                    </Select>
+                    {error && error.incidentType && (
+                      <FormHelperText>{error.incidentType}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                {/* Date and Time */}
+                <Grid item xs={12} md={6}>
+                  <MuiPickersUtilsProvider
+                    variant="outlined"
+                    utils={DateFnsUtils}
+                  >
+                    <KeyboardDateTimePicker
+                      required
+                      error={error.incidentOccuredOn}
+                      className={classes.formControl}
+                      label="Incident date & time"
+                      helperText={
+                        error.incidentOccuredOn ? error.incidentOccuredOn : null
+                      }
+                      value={form.incidentOccuredOn || null}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          incidentOccuredOn: moment(e).toISOString(),
+                        });
+                      }}
+                      onClick={(e) => setIsDateShow(true)}
+                      open={isDateShow}
+                      onClose={(e) => { setIsDateShow(false) }}
+                      InputProps={{ readOnly: true }}
+                      format="yyyy/MM/dd HH:mm"
+                      inputVariant="outlined"
+                      disableFuture="true"
+                    />
+                  </MuiPickersUtilsProvider>
+                </Grid>
+  
+                {/* Incident Title */}
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    required
+                    id="title"
+                    error={error.incidentTitle}
+                    variant="outlined"
+                    label="Title"
+                    className={classes.fullWidth}
+                    value={form.incidentTitle || ""}
+                    helperText={error.incidentTitle ? error.incidentTitle : ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
-                        incidentOccuredOn: moment(e).toISOString(),
+                        incidentTitle: e.target.value,
                       });
                     }}
-                    onClick={(e) => setIsDateShow(true)}
-                    open={isDateShow}
-                    onClose={(e) => { setIsDateShow(false) }}
-                    InputProps={{ readOnly: true }}
-                    format="yyyy/MM/dd HH:mm"
-                    inputVariant="outlined"
-                    disableFuture="true"
                   />
-                </MuiPickersUtilsProvider>
-              </Grid>
-
-              {/* Incident Title */}
-              <Grid item xs={12} md={12}>
-                <TextField
-                  required
-                  id="title"
-                  error={error.incidentTitle}
-                  variant="outlined"
-                  label="Title"
-                  className={classes.fullWidth}
-                  value={form.incidentTitle || ""}
-                  helperText={error.incidentTitle ? error.incidentTitle : ""}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      incidentTitle: e.target.value,
-                    });
-                  }}
-                />
-              </Grid>
-
-              {/* Incident Description */}
-              <Grid item xs={12} md={12}>
-                <TextField
-                  error={error.incidentDetails}
-                  multiline
-                  variant="outlined"
-                  rows="4"
-                  id="description"
-                  label="Description"
-                  value={form.incidentDetails || ""}
-                  className={classes.fullWidth}
-                  helperText={error.incidentDetails && error.incidentDetails}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      incidentDetails: e.target.value,
-                    });
-                  }}
-                />
-              </Grid>
-
-              {/* Incident immediate action taken */}
-              <Grid item xs={12} md={12}>
-                <TextField
-                  variant="outlined"
-                  id="immediate-actions"
-                  multiline
-                  rows="4"
-                  label="Any immediate actions taken"
-                  value={form.immediateActionsTaken || ""}
-                  className={classes.fullWidth}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      immediateActionsTaken: e.target.value,
-                    });
-                  }}
-                />
-              </Grid>
-
-              {/* incident Location */}
-              <Grid item xs={12} md={6}>
-                <TextField
-                  id="initial-detail-location"
-                  variant="outlined"
-                  label="Location"
-                  error={error.incidentLocation}
-                  helperText={
-                    error.incidentLocation ? error.incidentLocation : ""
-                  }
-                  className={classes.fullWidth}
-                  value={form.incidentLocation || ""}
-                  onChange={(e) => {
-                    setForm({
-                      ...form,
-                      incidentLocation: e.target.value,
-                    });
-                  }}
-                />
-              </Grid>
-
-              {/* Contractor */}
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  variant="outlined"
-                  error={error.contractor}
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    Contractor/Agency name
-                  </InputLabel>
-                  <Select
-                    labelId="contractor-type-label"
-                    id="contractor"
-                    label="Contractor/Agency name"
-                    value={form.contractor !== null && form.contractor.trim() || ""}
+                </Grid>
+  
+                {/* Incident Description */}
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    error={error.incidentDetails}
+                    multiline
+                    variant="outlined"
+                    rows="4"
+                    id="description"
+                    label="Description"
+                    value={form.incidentDetails || ""}
+                    className={classes.fullWidth}
+                    helperText={error.incidentDetails && error.incidentDetails}
                     onChange={(e) => {
                       setForm({
                         ...form,
-                        contractor: e.target.value,
+                        incidentDetails: e.target.value,
                       });
                     }}
-                  >
-                    {contractorValue.length !== 0
-                      ? contractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue.trim()}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error.contractor && (
-                    <FormHelperText>{error.contractor}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-
-              {/* Sub-Contractor */}
-              <Grid item xs={12} md={6}>
-                <FormControl
-                  variant="outlined"
-                  error={error.subContractor}
-                  className={classes.formControl}
-                >
-                  <InputLabel id="demo-simple-select-label">
-                    Sub-contractor
-                  </InputLabel>
-                  <Select
-                    labelId="sub-contractor-type-label"
-                    id="sub-contractor"
-                    label="Sub-Contractor"
-                    value={form.subContractor || ""}
+                  />
+                </Grid>
+  
+                {/* Incident immediate action taken */}
+                <Grid item xs={12} md={12}>
+                  <TextField
+                    variant="outlined"
+                    id="immediate-actions"
+                    multiline
+                    rows="4"
+                    label="Any immediate actions taken"
+                    value={form.immediateActionsTaken || ""}
+                    className={classes.fullWidth}
                     onChange={(e) => {
                       setForm({
                         ...form,
-                        subContractor: e.target.value,
+                        immediateActionsTaken: e.target.value,
                       });
                     }}
-                  >
-                    {subContractorValue.length !== 0
-                      ? subContractorValue.map((selectValues, index) => (
-                        <MenuItem key={index} value={selectValues.inputValue}>
-                          {selectValues.inputLabel}
-                        </MenuItem>
-                      ))
-                      : null}
-                  </Select>
-                  {error && error.subContractor && (
-                    <FormHelperText>{error.subContractor}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-
-              {/* Person Affected */}
-              <Grid item xs={12} md={12}>
-                <FormControl
-                  component="fieldset"
-                  required
-                  error={error && error.isPersonAffected}
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Were any person affected during incident?
-                  </FormLabel>
-
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="personaffected"
-                    name="personaffected"
-                    aria-required
-                    value={form.isPersonAffected || ""}
+                  />
+                </Grid>
+  
+                {/* incident Location */}
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    id="initial-detail-location"
+                    variant="outlined"
+                    label="Location"
+                    error={error.incidentLocation}
+                    helperText={
+                      error.incidentLocation ? error.incidentLocation : ""
+                    }
+                    className={classes.fullWidth}
+                    value={form.incidentLocation || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
-                        isPersonAffected: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "People affected",
-                        "personAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        personAffect: e.target.value,
+                        incidentLocation: e.target.value,
                       });
                     }}
+                  />
+                </Grid>
+  
+                {/* Contractor */}
+                <Grid item xs={12} md={6}>
+                  <FormControl
+                    variant="outlined"
+                    error={error.contractor}
+                    className={classes.formControl}
                   >
-                    {personAffectedValue.length !== 0
-                      ? personAffectedValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                      : null}
-                  </RadioGroup>
-
-                  {error && error.isPersonAffected && (
-                    <FormHelperText>{error.isPersonAffected}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-
-              {/* Property Affected */}
-              <Grid item xs={12} md={12}>
-                <FormControl
-                  component="fieldset"
-                  className={classes.formControl}
-                  required
-                  error={error && error.isPropertyDamaged}
-                >
-                  <FormLabel component="legend">
-                    Was any property/material damaged during incident?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="propertyaffected"
-                    name="propertyaffected"
-                    aria-required
-                    value={form.isPropertyDamaged || ""}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        isPropertyDamaged: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "Property/Material affected",
-                        "propertyAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        propertyAffect: e.target.value,
-                      });
-                    }}
+                    <InputLabel id="demo-simple-select-label">
+                      Contractor/Agency name
+                    </InputLabel>
+                    <Select
+                      labelId="contractor-type-label"
+                      id="contractor"
+                      label="Contractor/Agency name"
+                      value={form.contractor !== null && form.contractor.trim() || ""}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          contractor: e.target.value,
+                        });
+                      }}
+                    >
+                      {contractorValue.length !== 0
+                        ? contractorValue.map((selectValues, index) => (
+                          <MenuItem key={index} value={selectValues.inputValue.trim()}>
+                            {selectValues.inputLabel}
+                          </MenuItem>
+                        ))
+                        : null}
+                    </Select>
+                    {error && error.contractor && (
+                      <FormHelperText>{error.contractor}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+  
+                {/* Sub-Contractor */}
+                <Grid item xs={12} md={6}>
+                  <FormControl
+                    variant="outlined"
+                    error={error.subContractor}
+                    className={classes.formControl}
                   >
-                    {propertiesAffectValue.length !== 0
-                      ? propertiesAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                      : null}
-                  </RadioGroup>
-                  {error && error.isPropertyDamaged && (
-                    <FormHelperText>{error.isPropertyDamaged}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-
-              {/* Equipment Damaged */}
-              <Grid item xs={12} md={12}>
-                <FormControl
-                  component="fieldset"
-                  required
-                  error={error && error.isEquipmentDamaged}
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Was there any equipment damaged?
-                  </FormLabel>
-                  <RadioGroup
-                    className={classes.inlineRadioGroup}
-                    aria-label="equiptmenteffected"
-                    name="equiptmenteffected"
-                    aria-required
-                    value={form.isEquipmentDamaged || ""}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        isEquipmentDamaged: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "Equipment affected",
-                        "equipmentAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        equipmentAffect: e.target.value,
-                      });
-                    }}
+                    <InputLabel id="demo-simple-select-label">
+                      Sub-contractor
+                    </InputLabel>
+                    <Select
+                      labelId="sub-contractor-type-label"
+                      id="sub-contractor"
+                      label="Sub-Contractor"
+                      value={form.subContractor || ""}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          subContractor: e.target.value,
+                        });
+                      }}
+                    >
+                      {subContractorValue.length !== 0
+                        ? subContractorValue.map((selectValues, index) => (
+                          <MenuItem key={index} value={selectValues.inputValue}>
+                            {selectValues.inputLabel}
+                          </MenuItem>
+                        ))
+                        : null}
+                    </Select>
+                    {error && error.subContractor && (
+                      <FormHelperText>{error.subContractor}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+  
+                {/* Person Affected */}
+                <Grid item xs={12} md={12}>
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error.isPersonAffected}
+                    className={classes.formControl}
                   >
-                    {eqiptmentAffectValue.length !== 0
-                      ? eqiptmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                      : null}
-                  </RadioGroup>
-                  {error && error.isEquipmentDamaged && (
-                    <FormHelperText>{error.isEquipmentDamaged}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-
-              {/* Environmental Impact */}
-              <Grid item xs={12} md={12}>
-                <FormControl
-                  component="fieldset"
-                  required
-                  error={error && error.isEnviromentalImpacted}
-                  className={classes.formControl}
-                >
-                  <FormLabel component="legend">
-                    Was there any environment impact?
-                  </FormLabel>
-                  <RadioGroup
-                    aria-label="environmentaffected"
-                    aria-required
-                    name="environmentaffected"
-                    className={classes.inlineRadioGroup}
-                    value={form.isEnviromentalImpacted || ""}
-                    onChange={(e) => {
-                      setForm({
-                        ...form,
-                        isEnviromentalImpacted: e.target.value,
-                      });
-                      handleHideAffect(
-                        e.target.value,
-                        "Environment impact",
-                        "environmentAffect"
-                      );
-                      setNextPath({
-                        ...nextPath,
-                        environmentAffect: e.target.value,
-                      });
-                    }}
+                    <FormLabel component="legend">
+                      Were any person affected during incident?
+                    </FormLabel>
+  
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      aria-label="personaffected"
+                      name="personaffected"
+                      aria-required
+                      value={form.isPersonAffected || ""}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          isPersonAffected: e.target.value,
+                        });
+                        handleHideAffect(
+                          e.target.value,
+                          "People affected",
+                          "personAffect"
+                        );
+                        setNextPath({
+                          ...nextPath,
+                          personAffect: e.target.value,
+                        });
+                      }}
+                    >
+                      {personAffectedValue.length !== 0
+                        ? personAffectedValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                        : null}
+                    </RadioGroup>
+  
+                    {error && error.isPersonAffected && (
+                      <FormHelperText>{error.isPersonAffected}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+  
+                {/* Property Affected */}
+                <Grid item xs={12} md={12}>
+                  <FormControl
+                    component="fieldset"
+                    className={classes.formControl}
+                    required
+                    error={error && error.isPropertyDamaged}
                   >
-                    {environmentAffectValue.length !== 0
-                      ? environmentAffectValue.map((value, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={value.inputValue}
-                          control={<Radio />}
-                          label={value.inputLabel}
-                        />
-                      ))
-                      : null}
-                  </RadioGroup>
-                  {error && error.isEnviromentalImpacted && (
-                    <FormHelperText>
-                      {error.isEnviromentalImpacted}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-                {/* Alert Message */}
-                {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
+                    <FormLabel component="legend">
+                      Was any property/material damaged during incident?
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      aria-label="propertyaffected"
+                      name="propertyaffected"
+                      aria-required
+                      value={form.isPropertyDamaged || ""}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          isPropertyDamaged: e.target.value,
+                        });
+                        handleHideAffect(
+                          e.target.value,
+                          "Property/Material affected",
+                          "propertyAffect"
+                        );
+                        setNextPath({
+                          ...nextPath,
+                          propertyAffect: e.target.value,
+                        });
+                      }}
+                    >
+                      {propertiesAffectValue.length !== 0
+                        ? propertiesAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                        : null}
+                    </RadioGroup>
+                    {error && error.isPropertyDamaged && (
+                      <FormHelperText>{error.isPropertyDamaged}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+  
+                {/* Equipment Damaged */}
+                <Grid item xs={12} md={12}>
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error.isEquipmentDamaged}
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was there any equipment damaged?
+                    </FormLabel>
+                    <RadioGroup
+                      className={classes.inlineRadioGroup}
+                      aria-label="equiptmenteffected"
+                      name="equiptmenteffected"
+                      aria-required
+                      value={form.isEquipmentDamaged || ""}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          isEquipmentDamaged: e.target.value,
+                        });
+                        handleHideAffect(
+                          e.target.value,
+                          "Equipment affected",
+                          "equipmentAffect"
+                        );
+                        setNextPath({
+                          ...nextPath,
+                          equipmentAffect: e.target.value,
+                        });
+                      }}
+                    >
+                      {eqiptmentAffectValue.length !== 0
+                        ? eqiptmentAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                        : null}
+                    </RadioGroup>
+                    {error && error.isEquipmentDamaged && (
+                      <FormHelperText>{error.isEquipmentDamaged}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+  
+                {/* Environmental Impact */}
+                <Grid item xs={12} md={12}>
+                  <FormControl
+                    component="fieldset"
+                    required
+                    error={error && error.isEnviromentalImpacted}
+                    className={classes.formControl}
+                  >
+                    <FormLabel component="legend">
+                      Was there any environment impact?
+                    </FormLabel>
+                    <RadioGroup
+                      aria-label="environmentaffected"
+                      aria-required
+                      name="environmentaffected"
+                      className={classes.inlineRadioGroup}
+                      value={form.isEnviromentalImpacted || ""}
+                      onChange={(e) => {
+                        setForm({
+                          ...form,
+                          isEnviromentalImpacted: e.target.value,
+                        });
+                        handleHideAffect(
+                          e.target.value,
+                          "Environment impact",
+                          "environmentAffect"
+                        );
+                        setNextPath({
+                          ...nextPath,
+                          environmentAffect: e.target.value,
+                        });
+                      }}
+                    >
+                      {environmentAffectValue.length !== 0
+                        ? environmentAffectValue.map((value, index) => (
+                          <FormControlLabel
+                            key={index}
+                            value={value.inputValue}
+                            control={<Radio />}
+                            label={value.inputLabel}
+                          />
+                        ))
+                        : null}
+                    </RadioGroup>
+                    {error && error.isEnviromentalImpacted && (
+                      <FormHelperText>
+                        {error.isEnviromentalImpacted}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                  {/* Alert Message */}
+                  {open && <AlertMessage message={message} type={messageType} setOpen={setOpen} open={open} />}
+                </Grid>
+  
+                {/* Go to next button */}
+                <Grid item xs={12} md={12}>
+                  <Button
+                    type="button"
+                    size="medium"
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => handelNext(e)}
+                    disabled={!isNext}
+                  >
+                    Next{isNext ? null : <CircularProgress size={20} />}
+                  </Button>
+                </Grid>
               </Grid>
-
-              {/* Go to next button */}
-              <Grid item xs={12} md={12}>
-                <Button
-                  type="button"
-                  size="medium"
-                  variant="contained"
-                  color="primary"
-                  onClick={(e) => handelNext(e)}
-                  disabled={!isNext}
-                >
-                  Next{isNext ? null : <CircularProgress size={20} />}
-                </Button>
-              </Grid>
-            </Grid>
-          </Col>
-
-          {/* Right Sidebar */}
-          {isDesktop && (
-            <Col md={3}>
-              <FormSideBar
-                deleteForm={hideAffect}
-                listOfItems={INITIAL_NOTIFICATION_FORM}
-                selectedItem="Incident details"
-              />
             </Col>
-          )}
-        </Row>
-      ) : (
-        <Loader />
+  
+            {/* Right Sidebar */}
+            {isDesktop && (
+              <Col md={3}>
+                <FormSideBar
+                  deleteForm={hideAffect}
+                  listOfItems={INITIAL_NOTIFICATION_FORM}
+                  selectedItem="Incident details"
+                />
+              </Col>
+            )}
+          </Row>
+        ) : (
+          <Loader />
+        )}
+      </PapperBlock>
       )}
-    </PapperBlock>
+    />
+  
   );
 };
 
