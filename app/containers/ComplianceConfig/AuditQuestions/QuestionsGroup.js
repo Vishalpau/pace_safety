@@ -45,7 +45,7 @@ import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import { CONFIG } from "../ComplianceconfigConstants";
 import FormSideBar from "../../Forms/FormSideBar";
-import ComplianceProjectStructureInit from "../../ProjectStructureId/complianceStructId";
+import ComplianceProjectStInit from "../../ProjectStructureId/complianceSt";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -511,9 +511,13 @@ const QuestionsGroup = (props) => {
                         </Typography> */}
                         <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
                       </Grid>
-                      <ComplianceProjectStructureInit
+                      <ComplianceProjectStInit
+                        selectDepthAndId={selectDepthAndId}
+                        setLevelLenght={setLevelLenght}
                         error={error}
-                        handleStructureSelect={(fkProjectStructureIds, newArr) => handleSelectStructure(fkProjectStructureIds,newArr)}
+                        setWorkArea={setWorkArea}
+                        setSelectDepthAndId={setSelectDepthAndId}
+                        className="formControl"
                       />
                     </Grid>
                   </Paper>
@@ -771,5 +775,6 @@ const QuestionsGroup = (props) => {
     </>
   );
 };
+
 
 export default QuestionsGroup;
