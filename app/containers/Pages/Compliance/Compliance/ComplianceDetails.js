@@ -1116,6 +1116,7 @@ const ComplianceDetails = () => {
                                   fullWidth
                                   variant="outlined"
                                   className="formControl"
+                                  inputProps={{ maxLength: 255 }}
                                 />
                               </Grid>
                               {team.length > 1 ? (

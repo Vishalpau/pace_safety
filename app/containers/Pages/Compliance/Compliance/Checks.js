@@ -345,7 +345,6 @@ const Checks = (props) => {
     }
   }, [form]);
 
-  console.log(ratingData, 'ratingData')
   useEffect(() => {
   }, [ratingColor])
 
@@ -612,7 +611,6 @@ const Checks = (props) => {
       }
     })
     if (tempNewQuestion.length > 0) {
-      console.log(tempNewQuestion, 'oooo')
       let dataCheck = [];
       for (var i = 0; i < tempNewQuestion.length; i++) {
         let data = {};
@@ -1040,6 +1038,7 @@ const Checks = (props) => {
                                                     label="Percentage"
                                                     name="performancerating"
                                                     id="performancerating"
+                                                    defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     // defaultValue="20%"
                                                     fullWidth
                                                     variant="outlined"
@@ -1330,13 +1329,14 @@ const Checks = (props) => {
                                                     </Select>
                                                   </FormControl>
                                                 </Grid>}
+
                                               {value.scoreType === "%" &&
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <TextField
                                                     label="Percentage"
                                                     name="performancerating"
                                                     id="performancerating"
-                                                    value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     fullWidth
                                                     variant="outlined"
                                                     className="formControl"
