@@ -1282,7 +1282,7 @@ const Checks = (props) => {
                                                   id="performancerating"
                                                   value={criticalQuestions.length ? (criticalQuestions.filter(question => question.questionId === value.id)[0].performance || "") : ""}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  style={{ backgroundColor: criticalQuestions.filter(question => question.questionId === value.id)[0].ratingColor }}
+                                                  style={{ backgroundColor: criticalQuestions.length ? criticalQuestions.filter(question => question.questionId === value.id)[0].ratingColor : "" }}
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
