@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -2915,9 +2916,9 @@ const mapStateToProps = (state) => {
 };
 
 
-// export default connect(
-//   mapStateToProps,
-//   null
-// )(ComplianceSummary);
+export default connect(
+  mapStateToProps,
+  null
+)(ComplianceSummary);
 
-export default ComplianceSummary;
+// export default ComplianceSummary;
