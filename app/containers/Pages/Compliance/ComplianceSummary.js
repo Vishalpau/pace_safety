@@ -226,7 +226,6 @@ function ComplianceSummary(props) {
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  console.log(props, 'props')
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     'panel3'
@@ -278,6 +277,17 @@ function ComplianceSummary(props) {
 
   const [myVideoOpen, setMyVideoOpen] = React.useState(false);
 
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
+
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
+
+
   const handleMyVideoClickOpen = () => {
     setMyVideoOpen(true);
   };
@@ -298,7 +308,7 @@ function ComplianceSummary(props) {
 
   const fetchCheklistData = async () => {
     const res = await api.get(
-      '/api/v1/core/checklists/companies/8/projects/15/compliance/'
+      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
@@ -1111,6 +1121,7 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
+                                        {console.log(groupData, 'groupData')}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
@@ -2726,7 +2737,6 @@ function ComplianceSummary(props) {
                                     >
                                       Notifications sent to
                                     </FormLabel>
-                                    {console.log(notificationSentValue, 'notificationSentValue')}
                                     {notificationSentValue.length > 0
                                       ? notificationSentValue.map((value) => (
                                         <Typography

@@ -364,46 +364,46 @@ const Checks = (props) => {
     </li>
   ));
 
-  const Criticality = [
-    {
-      value: "High",
-      label: "High",
-    },
-    {
-      value: "Medium",
-      label: "Medium",
-    },
-    {
-      value: "Low",
-      label: "Low",
-    },
-  ];
-  const Status = [
-    {
-      value: "Not in compliance -stop work",
-      label: "Not in compliance -stop work",
-    },
-    {
-      value: "Not in compliance - Action required",
-      label: "Not in compliance - Action required",
-    },
-    {
-      value: "Partial compliance",
-      label: "Partial compliance",
-    },
-    {
-      value: "Compliant- Needs improvement",
-      label: "Compliant- Needs improvement",
-    },
-    {
-      value: "Fully compliant",
-      label: "Fully compliant",
-    },
-    {
-      value: "Fully compliant & excellent",
-      label: "Fully compliant & excellent",
-    },
-  ];
+  // const Criticality = [
+  //   {
+  //     value: "High",
+  //     label: "High",
+  //   },
+  //   {
+  //     value: "Medium",
+  //     label: "Medium",
+  //   },
+  //   {
+  //     value: "Low",
+  //     label: "Low",
+  //   },
+  // ];
+  // const Status = [
+  //   {
+  //     value: "Not in compliance -stop work",
+  //     label: "Not in compliance -stop work",
+  //   },
+  //   {
+  //     value: "Not in compliance - Action required",
+  //     label: "Not in compliance - Action required",
+  //   },
+  //   {
+  //     value: "Partial compliance",
+  //     label: "Partial compliance",
+  //   },
+  //   {
+  //     value: "Compliant- Needs improvement",
+  //     label: "Compliant- Needs improvement",
+  //   },
+  //   {
+  //     value: "Fully compliant",
+  //     label: "Fully compliant",
+  //   },
+  //   {
+  //     value: "Fully compliant & excellent",
+  //     label: "Fully compliant & excellent",
+  //   },
+  // ];
 
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);

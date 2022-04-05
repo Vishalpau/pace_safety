@@ -146,7 +146,7 @@ const PerformanceFactorAdd = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                        onChange={(e) => { setPerformError(''), setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
                                                     >
                                                         <MenuItem value="Not in Compliance - Unsafe, Stop Work">Not in Compliance - Unsafe, Stop Work</MenuItem>
                                                         <MenuItem value="Not in Compliance  - Action required">Not in Compliance  - Action required</MenuItem>
@@ -174,7 +174,7 @@ const PerformanceFactorAdd = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                        onChange={(e) => {setPerformError(''), setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
                                                     >
                                                         <MenuItem value="High">High</MenuItem>
                                                         <MenuItem value="Medium">Medium</MenuItem>
@@ -203,7 +203,7 @@ const PerformanceFactorAdd = () => {
                                                         label="Factor constant *"
                                                         required
                                                         value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
-                                                        onChange={(e) => { setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
+                                                        onChange={(e) => { setPerformError(''), setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
                                                     >
                                                         <MenuItem value="0">0</MenuItem>
                                                         <MenuItem value="1">1</MenuItem>
@@ -231,7 +231,7 @@ const PerformanceFactorAdd = () => {
                                                     label="Factor constant *"
                                                     required
                                                     value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
-                                                    onChange={(e) => { setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
+                                                    onChange={(e) => {setPerformError(''), setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
                                                 >
                                                     <MenuItem value="1" selected={fectorForm.factorConstant == 1}>1</MenuItem>
                                                     <MenuItem value="0.3" selected={fectorForm.factorConstant == 0.3}>0.3</MenuItem>
