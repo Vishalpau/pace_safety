@@ -525,12 +525,13 @@ const Checks = (props) => {
     temp.map((tempvalue, i) => {
       if (tempvalue['message'] === undefined) {
         tempvalue.map((value, index) => {
+          console.log(value, "fff")
           tempQuestionId.push({ id: value.id });
           if (value.responseType === 'Criticality') {
             setCriticalQuestions(data => ([
               ...data, {
                 questionId: value.id,
-                performance: "",
+                performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
                 ratingColor: "",
                 menuValue: "",
                 statusValue: ""
@@ -652,10 +653,8 @@ const Checks = (props) => {
           data["createdAt"] = new Date().toISOString()
           data["createdBy"] = tempNewQuestion[i].createdBy
           dataCheck.push(data)
-          console.log(dataCheck, "000")
         }
         const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
-        console.log(resNew, "ooo")
       }
       if (tempUpdatedQuestion.length > 0) {
 
@@ -803,8 +802,6 @@ const Checks = (props) => {
     fetchMatrixData();
 
   }, []);
-
-  console.log(showCheckData)
 
   return (
     <CustomPapperBlock
@@ -1283,7 +1280,7 @@ const Checks = (props) => {
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
-                                                  value={criticalQuestions.filter(question => question.questionId === value.id)[0].performance || ""}
+                                                  value={criticalQuestions.length ? (criticalQuestions.filter(question => question.questionId === value.id)[0].performance || "") : ""}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{ backgroundColor: criticalQuestions.filter(question => question.questionId === value.id)[0].ratingColor }}
                                                   fullWidth
