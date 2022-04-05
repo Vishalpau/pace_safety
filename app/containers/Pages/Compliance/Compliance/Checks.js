@@ -619,14 +619,13 @@ const Checks = (props) => {
     if (!errorFlag) {
       setError(false);
       if (tempNewQuestion.length > 0) {
-        console.log(tempNewQuestion, 'oooo')
         let dataCheck = [];
         for (var i = 0; i < tempNewQuestion.length; i++) {
           let data = {};
           data["questionId"] = tempNewQuestion[i].questionId
           data["question"] = tempNewQuestion[i].question
           data["criticality"] = tempNewQuestion[i].criticality
-          data["performance"] = tempNewQuestion[i].performance
+          data["performance"] = criticalQuestions.filter(question => question.questionId === tempNewQuestion[i].questionId).length ? criticalQuestions.filter(question => question.questionId === tempNewQuestion[i].questionId)[0].performance : tempNewQuestion[i].performance;
           data["groupId"] = tempNewQuestion[i].groupId
           data["groupName"] = tempNewQuestion[i].groupName
           data["subGroupId"] = tempNewQuestion[i].subGroupId
@@ -652,10 +651,11 @@ const Checks = (props) => {
           data["fkAuditId"] = tempNewQuestion[i].fkAuditId
           data["createdAt"] = new Date().toISOString()
           data["createdBy"] = tempNewQuestion[i].createdBy
-          dataCheck[i] = data
-          console.log(dataCheck)
+          dataCheck.push(data)
+          console.log(dataCheck, "000")
         }
         const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
+        console.log(resNew, "ooo")
       }
       if (tempUpdatedQuestion.length > 0) {
 
@@ -696,9 +696,9 @@ const Checks = (props) => {
           dataCheck[i] = data
         }
         apiCall(dataCheck)
-
-        history.push("/app/pages/compliance/performance-summary");
       }
+
+      history.push("/app/pages/compliance/performance-summary");
     } else {
       setError(true)
     }
