@@ -459,7 +459,8 @@ const Checks = (props) => {
     );
   });
 
-  const [value, setValue] = React.useState(1);
+  const [valueStar, setValueStar] = React.useState([]);
+
   const [categories, setCategories] = useState([]);
 
   const fetchCheklistData = async () => {
@@ -982,15 +983,15 @@ const Checks = (props) => {
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
                                                     name="simple-controlled"
-                                                    value={value}
-                                                    onChange={(e, newValue) =>
-                                                      handleChangeData(
-                                                        newValue,
-                                                        "score",
-                                                        index,
-                                                        value.id
-                                                      )
-                                                    }
+                                                    defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    onChange={(event, newValue) => { handleChangeData(
+                                                          newValue,
+                                                          "score",
+                                                          index,
+                                                          value.id
+                                                        )
+                                                      setValueStar(newValue);
+                                                    }}
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1005,8 +1006,8 @@ const Checks = (props) => {
                                                     <Select
                                                       labelId="scoreCount"
                                                       id="scoreCount"
-                                                      // onChange={handleChangeOne}
-
+                                                      defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                      
                                                       label="Counts"
                                                       className="formControl"
                                                       fullWidth
