@@ -657,11 +657,7 @@ const ControlTowerIcare = () => {
                   scrollButtons="auto"
                   aria-label="scrollable auto tabs example"
                 >
-                  {/* <Tab className="customTabLebl" disabled square label="Summary" {...a11yProps(0)} /> */}
-                  <Tab className="customTabLebl" square label={config[0].contextName} {...a11yProps(0)} />
-                  <Tab className="customTabLebl" square label={config[1].contextName} {...a11yProps(1)} />
-                  <Tab className="customTabLebl" square label={config[2].contextName} {...a11yProps(2)} />
-                  {/* <Tab className="customTabLebl" square label="Assessment" {...a11yProps(3)} /> */}
+                  {config.map((val, i) =>  <Tab className="customTabLebl" square label={val.contextName} {...a11yProps(i)} />)}
                 </Tabs>
               </AppBar>
             </Grid>
@@ -671,87 +667,39 @@ const ControlTowerIcare = () => {
           <Paper elevation={1} className="paperSection">
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12}>
-
-                <TabPanel className="tabContentArea" value={value} index={0}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
-                        src={config[0].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
+                {config.map((val, i) => 
+                  <TabPanel className="tabContentArea" value={value} index={i}>
+                    <Grid container spacing={1}>
+                      <Grid item md={12} sm={12} xs={12}>
+                        <iframe
+                          width="1600"
+                          height="1000"
+                          // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
+                          src={val.biToolUrl}
+                          frameborder="0"
+                          allowFullScreen="true"
+                        >
+                        </iframe>
+                      </Grid>
+                      <Grid
+                        item
+                        md={5}
+                        sm={5}
+                        xs={5}
+                        className="hidLeftBBrand"
                       >
-                      </iframe>
-                    </Grid>
-                    <Grid
-                      item
-                      md={5}
-                      sm={5}
-                      xs={5}
-                      className="hidLeftBBrand"
-                    >
-                    </Grid>
-                    <Grid
-                      item
-                      md={5}
-                      sm={5}
-                      xs={5}
-                      className="hidRightBBrand"
-                    >
-                    </Grid>
-                  </Grid>
-                </TabPanel>
-
-                <TabPanel className="tabContentArea" value={value} index={1}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiZTQ1ZmI0NjQtZjM5Zi00ZGExLTljOWMtY2EzNDE3NWFjZTMwIiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection"
-                        src={config[1].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
+                      </Grid>
+                      <Grid
+                        item
+                        md={5}
+                        sm={5}
+                        xs={5}
+                        className="hidRightBBrand"
                       >
-                      </iframe>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </TabPanel>
-
-                <TabPanel className="tabContentArea" value={value} index={2}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiNjg1MjFhNTgtN2RmZi00N2RiLWJhMjgtNDQxNDJiNjNkNjc1IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection3f4f03a5548c0a980117"
-                        src={config[2].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
-                      >
-                      </iframe>
-                    </Grid>
-                  </Grid>
-                </TabPanel>
-
-                {/* <TabPanel className="tabContentArea" value={value} index={3}>
-                  <Grid container spacing={1}>
-                    <Grid item md={12} sm={12} xs={12}>
-                      <iframe
-                        width="1600"
-                        height="1000"
-                        // src="https://app.powerbi.com/view?r=eyJrIjoiYzRhZTE2NDQtYmEyMS00ZmZmLWExZTctYTYzZjdmOTI3NDU4IiwidCI6Ijc5OTMyYTAzLWYzOTMtNDUwMC05YmUxLTFkNTIwNGZlZGJiZiJ9&pageName=ReportSection2bc500b1b920bdbbdc03"
-                        src={config[3].biToolUrl}
-                        frameborder="0"
-                        allowFullScreen="true"
-                      >
-                      </iframe>
-                    </Grid>
-                  </Grid>
-                </TabPanel> */}
-
+                  </TabPanel>
+                )}
               </Grid>
             </Grid>
           </Paper>

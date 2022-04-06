@@ -108,7 +108,7 @@ const PerformanceMatrixEdit = () => {
                                                 }}
                                             /> */}
                                             <TextField
-                                                label="Matrix constant name"
+                                                label="Matrix constant *"
                                                 name="matrixconstantname"
                                                 id="matrixconstantname"
                                                 value={matrixData.matrixConstant}

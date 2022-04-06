@@ -141,12 +141,12 @@ const ObservationInitialNotificationView = () => {
     : null;
   const fetchInitialiObservation = async () => {
     const res = await api.get(`/api/v1/observations/${id}/`);
-    console.log(res.data.data.results[0].actionTaken,'oo')
     localStorage.setItem('fkobservationId', id);
     if (res.data.status_code == 400) {
       history.push('/app/error/');
     } else {
       const result = res.data.data.results;
+      console.log(res.data.data.results,'result')
       setInitialData(result);
       if (result.fkProjectStructureIds != 'Not Mentioned') {
         await handelWorkArea(result);
@@ -176,7 +176,7 @@ const ObservationInitialNotificationView = () => {
       ? JSON.parse(localStorage.getItem('projectName')).projectName.projectId
       : null;
     const structName = [];
-    const projectStructId = assessment[0].fkProjectStructureIds.split(':');
+    const projectStructId = assessment.fkProjectStructureIds.split(':');
 
     for (const key in projectStructId) {
       const workAreaId = [projectStructId[key].substring(0, 2), projectStructId[key].substring(2)];
@@ -350,7 +350,6 @@ iCare details
                   iCare Title
                   </FormLabel>
                   <Typography className="viewLabelValue">
-                    {console.log(initialData.observationTitle ,'pp')}
                     {initialData.observationTitle ? initialData.observationTitle : '-'}
                   </Typography>
                 </Grid>

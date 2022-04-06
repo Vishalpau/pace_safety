@@ -227,7 +227,6 @@ function ComplianceSummary(props) {
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  console.log(props,'props')
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel3"
@@ -277,6 +276,17 @@ function ComplianceSummary(props) {
 
   const [myVideoOpen, setMyVideoOpen] = React.useState(false);
 
+  const fkCompanyId =
+      JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
+    const projectId =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+        : null;
+
+
   const handleMyVideoClickOpen = () => {
     setMyVideoOpen(true);
   };
@@ -297,7 +307,7 @@ function ComplianceSummary(props) {
 
   const fetchCheklistData = async () => {
     const res = await api.get(
-      `/api/v1/core/checklists/companies/8/projects/15/compliance/`
+      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
@@ -373,15 +383,6 @@ function ComplianceSummary(props) {
   // };
 
   const handelWorkArea = async (complianceData) => {
-    const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
-
-    const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
     let structName = [];
     let projectStructId = complianceData.fkProjectStructureIds.split(":");
     for (let key in projectStructId) {
@@ -1116,6 +1117,7 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
+                                        {console.log(groupData,'groupData')}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
@@ -1321,7 +1323,7 @@ function ComplianceSummary(props) {
                                             />
                                           </ListItem>
                                         </span> */}
-
+                                      {console.log(quesData,'quesData')}
                                       {quesData.map((value, index) =>
                                         <Accordion
                                           expanded={
@@ -1349,47 +1351,47 @@ function ComplianceSummary(props) {
                                           </AccordionSummary>
                                           <AccordionDetails>
                                             <Grid container spacing={2}>
-                                            {value.criticality ?
-                                            <>
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {value.criticality ? value.criticality : '-'}
-                                                </Typography>
-                                              </Grid>
+                                              {value.criticality ?
+                                                <>
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
+                                                    <Typography className="viewLabelValue">
+                                                      {value.criticality ? value.criticality : '-'}
+                                                    </Typography>
+                                                  </Grid>
 
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel component="legend" className="viewLabel">Status</FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {value.auditStatus ? value.auditStatus : '-'}
-                                                </Typography>
-                                              </Grid>
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormLabel component="legend" className="viewLabel">Status</FormLabel>
+                                                    <Typography className="viewLabelValue">
+                                                      {value.auditStatus ? value.auditStatus : '-'}
+                                                    </Typography>
+                                                  </Grid>
 
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {value.performance ? value.performance : '-'}
-                                                </Typography>
-                                              </Grid>
-                                              </>
-                                              :
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
+                                                    <Typography className="viewLabelValue">
+                                                      {value.performance ? value.performance : '-'}
+                                                    </Typography>
+                                                  </Grid>
+                                                </>
+                                                :
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  sm={12}
+                                                  xs={12}
                                                 >
-                                                  Is this control applicable ?
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {(value.defaultResponse ? value.defaultResponse : '-')}
-                                                </Typography>
-                                              </Grid>
-                      }
+                                                  <FormLabel
+                                                    component="legend"
+                                                    className="viewLabel"
+                                                  >
+                                                    Is this control applicable ?
+                                                  </FormLabel>
+                                                  <Typography className="viewLabelValue">
+                                                    {(value.defaultResponse ? value.defaultResponse : '-')}
+                                                  </Typography>
+                                                </Grid>
+                                              }
                                               <Grid
                                                 item
                                                 md={12}
@@ -2726,7 +2728,6 @@ function ComplianceSummary(props) {
                                     >
                                       Notifications sent to
                                     </FormLabel>
-                                    {console.log(notificationSentValue,'notificationSentValue')}
                                     {notificationSentValue.length > 0
                                       ? notificationSentValue.map((value) => (
                                         <Typography

@@ -293,7 +293,7 @@ function Observations(props) {
           <div className={classes.root}>
             <AppBar position="static" color="transparent">
               <Toolbar>
-                <div className="leftSide" className={classes.leftSide}>
+                <div className="leftSide">
                   <div className={classes.search}>
                     <Paper>
                       <div

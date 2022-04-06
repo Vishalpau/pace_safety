@@ -332,6 +332,8 @@ const Checks = (props) => {
       for (var i = 0; i < colordata.length; i++) {
         if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
           setRatingColor(colordata[i].matrixConstantColor)
+          console.log(ratingValue, 'ratingValue')
+          console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
           break; // stop the loop
         }
         else {
@@ -384,46 +386,46 @@ const Checks = (props) => {
     </li>
   ));
 
-  const Criticality = [
-    {
-      value: "High",
-      label: "High",
-    },
-    {
-      value: "Medium",
-      label: "Medium",
-    },
-    {
-      value: "Low",
-      label: "Low",
-    },
-  ];
-  const Status = [
-    {
-      value: "Not in compliance -stop work",
-      label: "Not in compliance -stop work",
-    },
-    {
-      value: "Not in compliance - Action required",
-      label: "Not in compliance - Action required",
-    },
-    {
-      value: "Partial compliance",
-      label: "Partial compliance",
-    },
-    {
-      value: "Compliant- Needs improvement",
-      label: "Compliant- Needs improvement",
-    },
-    {
-      value: "Fully compliant",
-      label: "Fully compliant",
-    },
-    {
-      value: "Fully compliant & excellent",
-      label: "Fully compliant & excellent",
-    },
-  ];
+  // const Criticality = [
+  //   {
+  //     value: "High",
+  //     label: "High",
+  //   },
+  //   {
+  //     value: "Medium",
+  //     label: "Medium",
+  //   },
+  //   {
+  //     value: "Low",
+  //     label: "Low",
+  //   },
+  // ];
+  // const Status = [
+  //   {
+  //     value: "Not in compliance -stop work",
+  //     label: "Not in compliance -stop work",
+  //   },
+  //   {
+  //     value: "Not in compliance - Action required",
+  //     label: "Not in compliance - Action required",
+  //   },
+  //   {
+  //     value: "Partial compliance",
+  //     label: "Partial compliance",
+  //   },
+  //   {
+  //     value: "Compliant- Needs improvement",
+  //     label: "Compliant- Needs improvement",
+  //   },
+  //   {
+  //     value: "Fully compliant",
+  //     label: "Fully compliant",
+  //   },
+  //   {
+  //     value: "Fully compliant & excellent",
+  //     label: "Fully compliant & excellent",
+  //   },
+  // ];
 
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
@@ -457,7 +459,8 @@ const Checks = (props) => {
     );
   });
 
-  const [value, setValue] = React.useState(1);
+  const [valueStar, setValueStar] = React.useState([]);
+
   const [categories, setCategories] = useState([]);
 
   const fetchCheklistData = async () => {
@@ -552,7 +555,7 @@ const Checks = (props) => {
             question: value.question,
             criticality: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '',
             auditStatus: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '',
-            performance: ratingData,
+            performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
             groupId: null,
             groupName: value.groupName,
             subGroupId: null,
@@ -609,7 +612,6 @@ const Checks = (props) => {
       }
     })
     if (tempNewQuestion.length > 0) {
-      console.log(tempNewQuestion, 'oooo')
       let dataCheck = [];
       for (var i = 0; i < tempNewQuestion.length; i++) {
         let data = {};
@@ -981,15 +983,16 @@ const Checks = (props) => {
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
                                                     name="simple-controlled"
-                                                    value={value}
-                                                    onChange={(e, newValue) =>
+                                                    defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    onChange={(event, newValue) => {
                                                       handleChangeData(
                                                         newValue,
                                                         "score",
                                                         index,
                                                         value.id
                                                       )
-                                                    }
+                                                      setValueStar(newValue);
+                                                    }}
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1004,7 +1007,7 @@ const Checks = (props) => {
                                                     <Select
                                                       labelId="scoreCount"
                                                       id="scoreCount"
-                                                      // onChange={handleChangeOne}
+                                                      defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
 
                                                       label="Counts"
                                                       className="formControl"
@@ -1037,6 +1040,7 @@ const Checks = (props) => {
                                                     label="Percentage"
                                                     name="performancerating"
                                                     id="performancerating"
+                                                    defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     // defaultValue="20%"
                                                     fullWidth
                                                     variant="outlined"
@@ -1105,7 +1109,7 @@ const Checks = (props) => {
                                                 </Grid>
                                               </Grid>
 
-                                              <Grid
+                                              {/* <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
@@ -1131,6 +1135,43 @@ const Checks = (props) => {
                                                     }
                                                   />
 
+                                                </Typography>
+                                              </Grid> */}
+
+                                              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                                                <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  <div {...getRootProps({ className: 'dropzone' })}>
+                                                    <input {...getInputProps()} />
+                                                    <span align="center">
+                                                      <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
+                                                        <g id="upload-outbox-svgrepo-com" transform="translate(0 0)">
+                                                          <g id="Group_4970" data-name="Group 4970" transform="translate(13.004)">
+                                                            <g id="Group_4969" data-name="Group 4969">
+                                                              <path id="Path_3322" data-name="Path 3322" d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z" transform="translate(-166.342 -68.504)" fill="#7890a4" />
+                                                            </g>
+                                                          </g>
+                                                          <g id="Group_4972" data-name="Group 4972" transform="translate(0 12.502)">
+                                                            <g id="Group_4971" data-name="Group 4971">
+                                                              <path id="Path_3323" data-name="Path 3323" d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z" transform="translate(0 -228.424)" fill="#7890a4" />
+                                                            </g>
+                                                          </g>
+                                                        </g>
+                                                      </svg>
+                                                    </span>
+                                                    <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
+                                                  </div>
+                                                  <aside>
+                                                    {/* <h4>Files</h4> */}
+                                                    {/* <ul>{files}</ul> */}
+                                                    <ul className="attachfileListBox">
+                                                      <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoPng} alt="image-icon" /> ImageFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoAudio} alt="audio-icon" /> AudioFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoVideo} alt="video-icon" /> VideoFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                    </ul>
+                                                  </aside>
                                                 </Typography>
                                               </Grid>
                                             </Grid>
@@ -1327,13 +1368,14 @@ const Checks = (props) => {
                                                     </Select>
                                                   </FormControl>
                                                 </Grid>}
+
                                               {value.scoreType === "%" &&
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <TextField
                                                     label="Percentage"
                                                     name="performancerating"
                                                     id="performancerating"
-                                                    value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     fullWidth
                                                     variant="outlined"
                                                     className="formControl"
@@ -1477,7 +1519,7 @@ const Checks = (props) => {
                                                   </TableBody>
                                                 </Table>
                                               </Grid>
-                                              <Grid
+                                              {/* <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
@@ -1503,6 +1545,42 @@ const Checks = (props) => {
                                                     }
                                                   />
 
+                                                </Typography>
+                                              </Grid> */}
+                                              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                                                <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  <div {...getRootProps({ className: 'dropzone' })}>
+                                                    <input {...getInputProps()} />
+                                                    <span align="center">
+                                                      <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
+                                                        <g id="upload-outbox-svgrepo-com" transform="translate(0 0)">
+                                                          <g id="Group_4970" data-name="Group 4970" transform="translate(13.004)">
+                                                            <g id="Group_4969" data-name="Group 4969">
+                                                              <path id="Path_3322" data-name="Path 3322" d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z" transform="translate(-166.342 -68.504)" fill="#7890a4" />
+                                                            </g>
+                                                          </g>
+                                                          <g id="Group_4972" data-name="Group 4972" transform="translate(0 12.502)">
+                                                            <g id="Group_4971" data-name="Group 4971">
+                                                              <path id="Path_3323" data-name="Path 3323" d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z" transform="translate(0 -228.424)" fill="#7890a4" />
+                                                            </g>
+                                                          </g>
+                                                        </g>
+                                                      </svg>
+                                                    </span>
+                                                    <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
+                                                  </div>
+                                                  <aside>
+                                                    {/* <h4>Files</h4> */}
+                                                    {/* <ul>{files}</ul> */}
+                                                    <ul className="attachfileListBox">
+                                                      <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoPng} alt="image-icon" /> ImageFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoAudio} alt="audio-icon" /> AudioFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                      <li><img src={icoVideo} alt="video-icon" /> VideoFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
+                                                    </ul>
+                                                  </aside>
                                                 </Typography>
                                               </Grid>
                                             </Grid>
