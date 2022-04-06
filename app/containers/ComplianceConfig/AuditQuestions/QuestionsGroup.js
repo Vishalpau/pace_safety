@@ -291,6 +291,7 @@ const QuestionsGroup = (props) => {
     });
   };
 
+
   const handlePhysicalHazards = async (e, value, index) => {
     let temp = [...checkData];
     let tempsub = [...subGroupId];
