@@ -30,7 +30,6 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate }) => {
     }
 
     const handleStatusChange = async (e, checkListId, checkListGroupId) => {
-        console.log(e.target.checked)
         let editForm = {}
         editForm["status"] = e.target.checked == true ? "active" : "inactive"
         editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
