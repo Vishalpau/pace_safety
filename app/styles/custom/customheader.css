@@ -729,6 +729,22 @@ ul.MuiMenu-list a ul li.userName {
   margin: 0px;
 }
 
+.attachfileListBox {
+  max-width: 24rem;
+  width: 100%;
+  float: left;
+  display: block;
+}
+.attachfileListBox li {
+  padding: 0.375rem 0rem;
+}
+.attachfileListBox li button {
+  float: right;
+  margin-top: 0.125rem;
+}
+.attachfileListBox li button svg {
+  color: #7890a4;
+}
 
 .sectionSubHeading .subsectiontitle {
   background-color: #ffffff;
