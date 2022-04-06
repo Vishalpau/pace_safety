@@ -803,6 +803,8 @@ const Checks = (props) => {
 
   }, []);
 
+  console.log(checkData, 'abcd')
+
   return (
     <CustomPapperBlock
       title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""

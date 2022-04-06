@@ -104,9 +104,9 @@ function CheckList() {
         <TableBody>
           <TableRow>
             <TableCell className={classes.columunBorder}>Sr.</TableCell>
-            <TableCell className={classes.columunBorder}>Group Name</TableCell>
-            <TableCell className={classes.columunBorder}>Group Type</TableCell>
-            <TableCell className={classes.columunBorder}>Group Label</TableCell>
+            {/* <TableCell className={classes.columunBorder}>Group Name</TableCell> */}
+            <TableCell className={classes.columunBorder}>Input Type</TableCell>
+            <TableCell className={classes.columunBorder}>CheckList Name</TableCell>
             <TableCell className={classes.columunBorder}>Select</TableCell>
             <TableCell className={classes.columunBorder}>Has group?</TableCell>
             <TableCell className={classes.columunBorder}>Status</TableCell>
@@ -115,12 +115,12 @@ function CheckList() {
           {chekListData.map((value) => (
             <TableRow>
               <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
-              <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell>
+              {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
               <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
               <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
               <TableCell className={classes.tabelBorder}>0</TableCell>
               <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
-              <TableCell className={classes.tabelBorder}>0</TableCell>
+              <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
               <TableCell className={classes.tabelBorder}>
                 <IconButton size="small" color="primary">
                   <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
