@@ -20,10 +20,13 @@ const complianceSt = (props) => {
 
     const [selectBreakDown, setSelectBreakDown] = useState([]);
 
+    const [datas, setDatas] = useState([])
+
     const [labelList, setLabelList] = useState([])
 
     const [lenghtBreaddown, setLengthBreakDown] = useState(0)
 
+    // const datas = [];
 
     // fetch breakdown Data
     const fetchCallBack = async (select, projectData) => {
@@ -52,6 +55,7 @@ const complianceSt = (props) => {
             };
             const res = await Axios(config)
             if (res.status === 200) {
+                console.log(res.data.data.results, 'resultsssss');
                 labellist[0].breakdownValue = res.data.data.results;
 
                 setLabelList(labellist)
@@ -116,7 +120,9 @@ const complianceSt = (props) => {
 
                         await Axios(config)
                             .then(async (response) => {
+                                console.log(response.data.data.results);
                                 labellist[key].breakdownValue = response.data.data.results;
+                                // labellist[key].breakdownValue = 
                                 // labellist[key].selectValue= select[key].id;
                                 setLabelList(labellist)
                             })
@@ -130,79 +136,94 @@ const complianceSt = (props) => {
         }
     };
 
-    const handleBreakdown = async (e, index, label) => {
-        let projectData = JSON.parse(localStorage.getItem('projectName'))
+    const handleBreakdown = async (e, index, label, name) => {
+
+        console.log(e.target, index, 'indexxxxxxx');
+        let projectData = JSON.parse(localStorage.getItem('projectName'));
         const value = e.target.value;
         let temp = [...labelList]
-        temp[index][`selectValue`] = value;
-        // handleDepthId(value,`${index+1}L`)
-        let tempdeptid = [...props.selectDepthAndId]
-        let depthId = tempdeptid.filter(item => item.slice(0, 2) !== `${index + 1}L`)
-        let slicedepthId = depthId.slice(0, index)
-        let newDepthId = [...slicedepthId, `${index + 1}L${value}`]
-        props.setSelectDepthAndId(newDepthId)
-        if (selectBreakDown.filter(filterItem => filterItem.depth === `${index + 1}L`).length > 0) {
-            for (var i in temp) {
-                if (i > index) {
-                    temp[i].breakdownValue = []
-                }
-
-            }
-            let removeSelectBreakDown = selectBreakDown.slice(0, index)
-
-            let name = temp[index].breakdownValue.map(
-                async (item) => {
-                    if (item.id === value) {
-                        setSelectBreakDown([
-                            ...removeSelectBreakDown,
-                            { depth: item.depth, id: item.id, name: item.name, label: label },
-                        ]);
-                        return;
-                    }
-
-                }
-            );
+        if (e.target.value === 'All') {
+            // console.log(tempdeptid, 'tempdeptid');
+            temp[index].breakdownValue.map(a => {
+                // datas.push(`${index + 1}L${a.id}`);
+                setDatas(`${index + 1}L${a.id}`);
+                temp[index][`selectValue`] = value;
+                console.log(temp, 'lsfkdsfdskfdsfsdfdsfdsdfkdsjkfdsk');
+            })
         }
         else {
-            // temp[key].selectValue= e.target.value;
-            let name = temp[index].breakdownValue.map(
-                async (item) => {
-                    if (item.id === value) {
-                        await setSelectBreakDown([
-                            ...selectBreakDown,
-                            { depth: item.depth, id: item.id, name: item.name, label: label },
-                        ]);
-
-                        return;
+            temp[index][`selectValue`] = value;
+            let tempdeptid = [...props.selectDepthAndId];
+            let depthId = tempdeptid.filter(item => item.slice(0, 2) !== `${index + 1}L`)
+            let slicedepthId = depthId.slice(0, index)
+            let newDepthId = [...slicedepthId, `${index + 1}L${value}`];
+            console.log(newDepthId);
+            setDatas([])
+            props.setSelectDepthAndId(newDepthId)
+            if (selectBreakDown.filter(filterItem => filterItem.depth === `${index + 1}L`).length > 0) {
+                for (var i in temp) {
+                    if (i > index) {
+                        temp[i].breakdownValue = []
                     }
 
                 }
-            );
-        }
+                let removeSelectBreakDown = selectBreakDown.slice(0, index)
 
-        if (projectData.projectName.breakdown.length !== index + 1) {
-            for (var key in projectData.projectName.breakdown) {
-                if (key == index + 1) {
-                    var config = {
-                        method: "get",
-                        url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-                            }${value}`,
-                        headers: HEADER_AUTH,
-                    };
+                let name = temp[index].breakdownValue.map(
+                    async (item) => {
+                        if (item.id === value) {
+                            setSelectBreakDown([
+                                ...removeSelectBreakDown,
+                                { depth: item.depth, id: item.id, name: item.name, label: label },
+                            ]);
+                            return;
+                        }
 
-                    await Axios(config)
-                        .then(function (response) {
-                            if (response.status === 200) {
-                                temp[key].breakdownValue = response.data.data.results;
-                                setLabelList(temp)
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    }
+                );
+            }
+            else {
+                // temp[key].selectValue= e.target.value;
+                let name = temp[index].breakdownValue.map(
+                    async (item) => {
+                        if (item.id === value) {
+                            await setSelectBreakDown([
+                                ...selectBreakDown,
+                                { depth: item.depth, id: item.id, name: item.name, label: label },
+                            ]);
+
+                            return;
+                        }
+
+                    }
+                );
+            }
+
+            if (projectData.projectName.breakdown.length !== index + 1) {
+                for (var key in projectData.projectName.breakdown) {
+                    if (key == index + 1) {
+                        var config = {
+                            method: "get",
+                            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                                }${value}`,
+                            headers: HEADER_AUTH,
+                        };
+
+                        await Axios(config)
+                            .then(function (response) {
+                                if (response.status === 200) {
+                                    temp[key].breakdownValue = response.data.data.results;
+                                    setLabelList(temp)
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
                 }
             }
         }
+
     };
 
     useEffect(() => {
@@ -220,10 +241,13 @@ const complianceSt = (props) => {
         fetchCallBack(select, projectData);
 
     }, [props.initialValues]);
+
+    useEffect(() => {
+        console.log(datas.length);
+    }, [datas])
     return (
         <>
             {labelList.length > 0 && labelList.map((item, index) => {
-                console.log(item.breakdownValue.length, 'ldfs');
                 return (
                     <Grid item md={3} sm={3} xs={12}>
                         <FormControl
@@ -245,8 +269,9 @@ const complianceSt = (props) => {
                                 onChange={(e) => {
                                     handleBreakdown(e, (item.index), item.breakdownLabel);
                                 }}
-                                value={item.selectValue !== "" ? parseInt(item.selectValue) : ""}
+                                value={datas.length > 1 ? 'All' : item.selectValue !== "" ? parseInt(item.selectValue) : ''}
                                 label={item.breakdownLabel}
+                                name={item.breakdownLabel}
                                 style={{ width: "100%" }}
                             >
                                 {item.breakdownValue.length > 0
@@ -260,11 +285,15 @@ const complianceSt = (props) => {
                                             </MenuItem>
                                         )
                                     )
-                                    : <MenuItem
-
-                                    >
+                                    : <MenuItem>
                                         No Data
-                                    </MenuItem>}
+                                    </MenuItem>
+                                }
+                                {/* {item.breakdownLabel === "Phase" && */}
+                                    <MenuItem key="All" value="All">
+                                        All
+                                    </MenuItem>
+                                {/* } */}
                             </Select>
                             {props.selectDepthAndId[item.index] != undefined ? null : <p style={{ color: "red" }}>{props.error[`projectStructure${[item.index]}`]}</p>
                             }
@@ -283,6 +312,6 @@ const complianceSt = (props) => {
 
 const complianceSts = connect((state) => ({
     initialValues: state.getIn(['InitialDetailsReducer']),
-  }))(complianceSt);
+}))(complianceSt);
 
 export default complianceSts;
