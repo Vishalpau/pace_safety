@@ -175,6 +175,14 @@ function Pickvalues(props) {
     { label: 'No', value: '0' }
   ];
 
+  const isvalidate = (text, column, id) => {
+    const val = pickValues.filter(value => value[column] == text);
+    if (val.length && column == 'name') {
+      return false;
+    }
+    return true;
+  };
+
   const _pickvalues = list => list.map(listItem => (
     <tr>
       <td>
@@ -184,6 +192,7 @@ function Pickvalues(props) {
           value={listItem.inputLabel}
           column="label"
           save={save}
+          isvalidate={isvalidate}
         />
       </td>
       <td>
@@ -193,6 +202,7 @@ function Pickvalues(props) {
           value={listItem.inputValue}
           column="value"
           save={save}
+          isvalidate={isvalidate}
         />
       </td>
       <td>

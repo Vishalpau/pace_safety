@@ -191,7 +191,7 @@ function Picklists(props) {
   ];
 
   const isvalidate = (text, column, id) => {
-    const val = picklists.filter(value => value.listName == text);
+    const val = picklists.filter(value => value == text);
     if (val.length && column == 'name') {
       return false;
     }
