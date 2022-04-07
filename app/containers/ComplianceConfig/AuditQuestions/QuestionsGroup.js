@@ -278,7 +278,7 @@ const QuestionsGroup = (props) => {
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName
         : null;
-    // const fkpsId = selectDepthAndId.join(":");
+    const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
     if (!isValid) {
@@ -288,7 +288,7 @@ const QuestionsGroup = (props) => {
     history.push({
       pathname: "/app/compliance-config/question",
       state: {
-        fkProjectStructureIds: structureId,
+        fkProjectStructureIds: fkpsId,
         CompanyId: fkCompanyId,
         projectId: project.projectId,
       },

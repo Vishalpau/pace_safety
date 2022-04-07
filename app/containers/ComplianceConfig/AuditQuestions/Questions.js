@@ -454,7 +454,9 @@ const Questions = () => {
         `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
-      structName.push(workArea.data.data.results[0]["structureName"]);
+      if (workArea.data.data) {
+        structName.push(workArea.data.data.results[0]["structureName"]);
+      }
     }
     setProjectStructName(structName);
   };

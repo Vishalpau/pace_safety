@@ -139,17 +139,20 @@ const complianceSt = (props) => {
     };
 
     const handleBreakdown = async (e, index, label, name) => {
+        console.log(index);
+        console.log(index === labelList.length-1);
 
-        // console.log(e.target, index, 'indexxxxxxx');
-        let projectData = JSON.parse(localStorage.getItem('projectName'));
         const value = e.target.value;
+        // console.log(tempA)
+        let projectData = JSON.parse(localStorage.getItem('projectName'));
         let temp = [...labelList];
 
         temp[index][`selectValue`] = value;
+        if (index === labelList.length -1) {
+            console.log('i think this is working');
+            setLabelList(temp);
+        }
 
-        
-
-        // setLabelList(temp);
         // let tempdeptid = [...props.selectDepthAndId];
         if (selectBreakDown.filter(filterItem => filterItem.depth === `${index + 1}L`).length > 0) {
             for (var i in temp) {
