@@ -503,7 +503,7 @@ function Picklists(props) {
         <div>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={4}>
-              <TextField id="outlined-basic" label="Search Checklist" onChange={(e) => handleSearchFilterChange(e.target.value, 'search')} variant="outlined" style={{ width: '100%' }} />
+              <TextField id="outlined-basic" label="Search Picklist" onChange={(e) => handleSearchFilterChange(e.target.value, 'search')} variant="outlined" style={{ width: '100%' }} />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <FormControl sx={{ m: 1, minWidth: 120 }}>
