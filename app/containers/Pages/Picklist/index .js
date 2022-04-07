@@ -200,7 +200,8 @@ function Picklists(props) {
       </td>
 
       <td>
-        <Editor
+        {listItem.listType}
+        {/* <Editor
           type="select"
           options={select_type_options}
           id={listItem.id}
@@ -209,20 +210,20 @@ function Picklists(props) {
           save={save}
           edit={listItem.isSystem == 0}
           isvalidate={isvalidate}
-        />
+        /> */}
       </td>
       <td>
         {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
       </td>
       <td>
-        {listItem.isSystem == 0 ? 'No' : 'Yes'}
+        {listItem.isSystem == 0 ? 'Yes' : 'No'}
       </td>
       <td>
         <Link
           to={'/app/pages/picklist/value/' + listItem.id}
           onClick={redirectto}
         >
-          Values
+          Update values
         </Link>
       </td>
     </tr>
@@ -265,7 +266,7 @@ function Picklists(props) {
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
             <Toolbar>
-              <div className="leftSide" className={classes.leftSide}>
+              <div className={classes.leftSide}>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -289,7 +290,7 @@ function Picklists(props) {
           <table id="picklistmanage_table" className="table table-striped table-bordered datatable_section width100">
             <thead>
               <tr>
-                <th>List Name</th>
+                <th>List Key</th>
                 <th>List Label</th>
                 <th>Type</th>
                 <th>Parent</th>

@@ -305,6 +305,17 @@ const Questions = () => {
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
+
+  const project =
+      JSON.parse(localStorage.getItem("projectName")) !== null
+        ? JSON.parse(localStorage.getItem("projectName")).projectName
+        : null;
+
+        const fkCompanyId =
+        JSON.parse(localStorage.getItem("company")) !== null
+        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+        : null;
+
   const [isLoading, setIsLoading] = useState(false)
   const responseType = ["Yes-No-NA", "Criticality Matrix"];
   const scoreType = ["Stars", "1-10", "%"];
@@ -324,8 +335,8 @@ const Questions = () => {
       attachment: "",
       createdBy: 1,
       evidenceType: "",
-      fkCompanyId: history.location.state.CompanyId,
-      fkProjectId: history.location.state.projectId,
+      fkCompanyId: fkCompanyId,
+      fkProjectId: project.projectId,
       fkProjectStructureIds: history.location.state.fkProjectStructureIds,
       geoLocation: "",
       groupName: groupName,
@@ -356,8 +367,8 @@ const Questions = () => {
           attachment: "",
           createdBy: 1,
           evidenceType: "",
-          fkCompanyId: history.location.state.CompanyId,
-          fkProjectId: history.location.state.projectId,
+          fkCompanyId: fkCompanyId,
+          fkProjectId: project.projectId,
           fkProjectStructureIds: history.location.state.fkProjectStructureIds,
           geoLocation: "",
           groupName: temp[i]["groupName"],
@@ -408,7 +419,7 @@ const Questions = () => {
         ? JSON.parse(localStorage.getItem("userDetails")).companies
         : null;
     const fetchCompany = userName.filter(
-      (user) => user.companyId === history.location.state.CompanyId
+      (user) => user.companyId === fkCompanyId
     );
     const fetchProject = fetchCompany[0].projects.filter(
       (user) => user.projectId === projectId
@@ -511,7 +522,7 @@ const Questions = () => {
               <Grid container spacing={3}>
                 <Grid item md={12} sm={12} xs={12}>
                   <Typography gutterBottom className="labelValue">
-                    {handleProjectName(history.location.state.projectId)}
+                    {handleProjectName(project.projectId)}
                   </Typography>
                   <Typography className="labelValue">
                     {projectStructName

@@ -85,6 +85,8 @@ const ProjectStructure = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
+  console.log(fkProjectStructureIds);
+
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
 
@@ -194,6 +196,7 @@ const ProjectStructure = (props) => {
       }
     }
   };
+
   const handleBreakdown = async (e, index, label) => {
     let projectData = JSON.parse(localStorage.getItem('projectName'))
     const value = e.target.value;
@@ -317,7 +320,9 @@ const ProjectStructure = (props) => {
         </Typography>
       </Grid>)}
 
-    {labelList.length === 1 ? labelList.map((item, index) => (
+    {labelList.length === 1 ? labelList.map((item, index) => {
+      console.log(item.breakdownLabel);
+      return(
       <Grid item md={3} sm={3} xs={12}>
         <FormControl
           key={index}
@@ -370,7 +375,7 @@ const ProjectStructure = (props) => {
           )} */}
         </FormControl>
       </Grid>
-    ))
+    )})
       : labelList.length === selectBreakdown.length ?
         labelList.slice(selectBreakdown.length - 1).map((item, index) => (
           <Grid item md={3} sm={3} xs={12}>

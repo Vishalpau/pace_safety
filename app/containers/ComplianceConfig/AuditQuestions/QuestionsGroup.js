@@ -45,7 +45,7 @@ import { useHistory, useParams } from "react-router";
 import api from "../../../utils/axios";
 import { CONFIG } from "../ComplianceconfigConstants";
 import FormSideBar from "../../Forms/FormSideBar";
-import ProjectStructureInit from "../../ProjectStructureId/ProjectStructureId";
+import ComplianceProjectStInit from "../../ProjectStructureId/complianceSt";
 import {
   access_token,
   ACCOUNT_API_URL,
@@ -259,6 +259,7 @@ const QuestionsGroup = (props) => {
   };
 
   const [error, setError] = useState({});
+  const [structureId, setStructureId] = useState("");
 
   const handleNext = async () => {
     const fkCompanyId =
@@ -273,7 +274,7 @@ const QuestionsGroup = (props) => {
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName
         : null;
-    const fkpsId = selectDepthAndId.join(":");
+    // const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
     if (!isValid) {
@@ -283,12 +284,13 @@ const QuestionsGroup = (props) => {
     history.push({
       pathname: "/app/compliance-config/question",
       state: {
-        fkProjectStructureIds: fkpsId,
+        fkProjectStructureIds: structureId,
         CompanyId: fkCompanyId,
         projectId: project.projectId,
       },
     });
   };
+
 
   const handlePhysicalHazards = async (e, value, index) => {
     let temp = [...checkData];
@@ -336,6 +338,15 @@ const QuestionsGroup = (props) => {
       }
     }
   };
+
+  const handleSelectStructure = (fkProjectStructureIds,newArr) => {
+    setStructureId(fkProjectStructureIds);
+    setSelectDepthAndId(newArr);
+  }
+
+  // useEffect(() => {
+  //   console.log(levelLenght,'hhiiii');
+  // },[setLevelLenght])
 
   const handelSelectOptionSubGroup = (key) => {
     let temp = [...checkData];
@@ -418,7 +429,7 @@ const QuestionsGroup = (props) => {
                     Work area information
                   </Typography>
                 </Grid>
-                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
@@ -440,7 +451,8 @@ const QuestionsGroup = (props) => {
                               <Select
                                 labelId="incident-type-label"
                                 id="incident-type"
-                                label={data.breakDownLabel}
+                                label={data.breakDownLabel}￼
+
                                 value={data.selectValue.id || ""}
                                 disabled={data.breakDownData.length === 0}
                                 onChange={(e) => {
@@ -483,6 +495,31 @@ const QuestionsGroup = (props) => {
                           isCompliance={true}
                         />
                       )}
+                    </Grid>
+                  </Paper>
+                </Grid> */} 
+
+                <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                  <Paper elevation={1} className="paperSection">
+                    <Grid container spacing={3}>
+                      <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
+                        {/* <Typography
+                            variant="label"
+                            gutterBottom
+                            className="viewLabel"
+                        >
+                            (If selected all  compliance questions will be available across the projects)
+                        </Typography> */}
+                        <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
+                      </Grid>
+                      <ComplianceProjectStInit
+                        selectDepthAndId={selectDepthAndId}
+                        setLevelLenght={setLevelLenght}
+                        error={error}
+                        setWorkArea={setWorkArea}
+                        setSelectDepthAndId={setSelectDepthAndId}
+                        className="formControl"
+                      />
                     </Grid>
                   </Paper>
                 </Grid>
@@ -739,5 +776,6 @@ const QuestionsGroup = (props) => {
     </>
   );
 };
+
 
 export default QuestionsGroup;

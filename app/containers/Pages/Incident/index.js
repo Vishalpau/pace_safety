@@ -291,7 +291,10 @@ function BlankPage(props) {
   }
 
   const handlePush = async () => {
-    history.push(INITIAL_NOTIFICATION_FORM_NEW['Incident details']);
+    history.push({
+      pathname:INITIAL_NOTIFICATION_FORM_NEW['Incident details'],
+      state: 'new incident'
+    });
   };
 
   const columns = [
@@ -441,10 +444,10 @@ function BlankPage(props) {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   return (
-    // <Acl
-    //   module="safety-incident"
-    //   action="view_incidents"
-    //   html={(
+    <Acl
+      module="safety-incident"
+      action="view_incidents"
+      html={(
         <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
       <div className={classes.root}>
         <AppBar position="static" color="transparent">
@@ -590,7 +593,10 @@ function BlankPage(props) {
                                 >
                                   Number:
                                   <ILink
-                                    onClick={(e) => history.push(`/incident/details/${item[1].id}/`)}
+                                    onClick={(e) => history.push({
+                                      pathname: `/incident/details/${item[1].id}/`,
+                                      state: 'change_incident'
+                                  })}
                                     variant="subtitle2"
                                     className={Fonts.listingLabelValue}
                                   >
@@ -818,7 +824,7 @@ function BlankPage(props) {
         <Pagination count={pageCount} page={page} onChange={handleChange} />
       </div>
     </PapperBlock>
-      //  )} />    
+       )} />    
   );
 }
 const mapStateToProps = state => {
