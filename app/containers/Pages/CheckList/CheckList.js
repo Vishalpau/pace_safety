@@ -19,7 +19,6 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useHistory, useParams } from 'react-router';
 import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 import api from '../../../utils/axios';
 
