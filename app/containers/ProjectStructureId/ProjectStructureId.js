@@ -85,8 +85,6 @@ const ProjectStructure = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-  console.log(fkProjectStructureIds);
-
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
 

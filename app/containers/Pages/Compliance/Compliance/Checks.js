@@ -312,7 +312,7 @@ const Checks = (props) => {
   const [checkData, setCheckData] = useState([]);
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([]);
-  const [ratingData, setRatingData] = useState([]);
+  // const [ratingData, setRatingData] = useState([]);
   const [colordata, setColorData] = useState([]);
   const [hover, setHover] = useState(-1);
 
@@ -325,28 +325,13 @@ const Checks = (props) => {
     "panel4"
   );
 
-
   useEffect(() => {
-    if (form.menuValue >= 0 && form.statusValue >= 0) {
-      let ratingValue = (form.menuValue * form.statusValue) / 5 * 100;
-      for (var i = 0; i < colordata.length; i++) {
-        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
-          setRatingColor(colordata[i].matrixConstantColor)
-          console.log(ratingValue, 'ratingValue')
-          console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
-          break; // stop the loop
-        }
-        else {
-          setRatingColor("#FFFFFF")
-        }
-      }
-      setRatingData(ratingValue)
+    console.log(checkData);
+  }, [checkData])
 
-    }
-  }, [form]);
-
-  useEffect(() => {
-  }, [ratingColor])
+  // useEffect(() => {
+  //   console.log(ratingData);
+  // }, [ratingData])
 
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
@@ -430,6 +415,9 @@ const Checks = (props) => {
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [criticalityData, setCriticalityData] = useState([]);
+  const [criticalityId, setCriticalityId] = useState([]);
+  // const [selectId, setSelectId] = useState('');
+
   const [statusData, setStatusData] = useState([])
   const handleActionDateChange = (date) => {
     setSelectedActionDate(date);
@@ -463,6 +451,10 @@ const Checks = (props) => {
 
   const [categories, setCategories] = useState([]);
 
+  useEffect(() => {
+    console.log(categories, 'categoriesssssssssssssss');
+  }, [categories])
+
   const fetchCheklistData = async () => {
     let temp = {};
     const res = await api.get(
@@ -472,9 +464,9 @@ const Checks = (props) => {
     await fetchComplianceData(result);
   };
 
-  useEffect(() => {
-    console.log(categories);
-  }, [categories])
+  // useEffect(() => {
+  //   console.log(criticalityData);
+  // }, [criticalityData])
 
   const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
@@ -538,7 +530,7 @@ const Checks = (props) => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
-      console.log(groupName, subGroupName, 'test')
+      // console.log(groupName, subGroupName, 'test')
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -548,7 +540,7 @@ const Checks = (props) => {
       if (tempvalue['message'] === undefined) {
         tempvalue.map((value, index) => {
           tempQuestionId.push({ id: value.id });
-          console.log(index, 'value')
+          // console.log(index, 'value')
           tempCheckData.push({
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
@@ -592,6 +584,11 @@ const Checks = (props) => {
     await setCategories(categoriesData);
     await handelActionTracker();
   };
+
+  useEffect(() => {
+    console.log(categories);
+  }, [categories])
+
   const apiCall = async (dataChecks) => {
     const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, [...dataChecks]);
     history.push("/app/pages/compliance/performance-summary");
@@ -696,35 +693,46 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
+    // console.log(value, field, index, id);
+    setCriticalityId(id)
+
+    // console.log(id);
+    // setSelectId(id);
     let temp = [...checkData];
+    // console.log(temp);
     for (let i = 0; i < temp.length; i++) {
-      if (temp[i]["questionId"] == id) {
+      if (temp[i]["questionId"] === id) {
         temp[i][field] = value;
       }
     }
     setCheckData(temp);
   };
+
+  useEffect(() => {
+    console.log(criticalityId, 'criticality');
+  }, [criticalityId])
 
   const fetchData = async () => {
     const res = await api.get(
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
     );
     const result = res.data.data.results;
+    console.log(result);
     await setShowCheckData(result)
     await setCheckData(result);
     return result
   };
 
-  const handleFile = (value, field, index, id) => {
-    let temp = [...checkData];
-    for (let i = 0; i < temp.length; i++) {
-      if (temp[i]["question"] === id) {
+  // const handleFile = (value, field, index, id) => {
+  //   let temp = [...checkData];
+  //   for (let i = 0; i < temp.length; i++) {
+  //     if (temp[i]["question"] === id) {
 
-        temp[i][field] = value;
-      }
-    }
-    setCheckData(temp);
-  };
+  //       temp[i][field] = value;
+  //     }
+  //   }
+  //   setCheckData(temp);
+  // };
   const handelActionTracker = async () => {
     let jhaId = localStorage.getItem("fkComplianceId");
     let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
@@ -748,8 +756,35 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
+  useEffect(() => {
+    // console.log('formssssss')
+    if (form.menuValue >= 0 && form.statusValue >= 0) {
+      let ratingValue = (form.menuValue * form.statusValue) / 5 * 100;
+      for (var i = 0; i < colordata.length; i++) {
+        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+          setRatingColor(colordata[i].matrixConstantColor)
+          // console.log(ratingValue, 'ratingValue')
+          // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
+          break; // stop the loop
+        }
+        else {
+          setRatingColor("#FFFFFF")
+        }
+      }
 
-  const handleCriticality = (option, selectType) => {
+      let temp = [...checkData];
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i]["questionId"] === criticalityId) {
+          console.log('perforn')
+          temp[i]['performance'] = ratingValue;
+        }
+      }
+      setCheckData(temp);
+    }
+  }, [form]);
+
+
+  const handleCriticality = (option, selectType, id) => {
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       return;
@@ -868,6 +903,7 @@ const Checks = (props) => {
                   </Grid>
                   <Grid item xs={12}>
                     {Object.entries(categories).map(([key, value]) => {
+                      // console.log(key,value);
                       return (
                         <>
                           <FormLabel className="checkRadioLabel" component="legend">
@@ -890,6 +926,7 @@ const Checks = (props) => {
                           </ListItem>
                         </span> */}
                           {value.map((value, index) => {
+                            // console.log(value);
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -1229,7 +1266,7 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
-                                                        handleCriticality(option, "menuItem");
+                                                        handleCriticality(option, "menuItem", option.id);
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1256,7 +1293,9 @@ const Checks = (props) => {
                                                     )
                                                   }
                                                 >
-                                                  {statusData.map((option) => (
+                                                  {statusData.map((option) => {
+                                                    // console.log(option);
+                                                    return(
                                                     <MenuItem
                                                       key={option.id}
                                                       value={option.factorName || ""}
@@ -1267,16 +1306,21 @@ const Checks = (props) => {
                                                     >
                                                       {option.factorName}
                                                     </MenuItem>
-                                                  ))}
+                                                  )})}
                                                 </TextField>
                                               </Grid>
                                               <Grid item md={4} xs={12}>
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
-                                                  name="performancerating"
+                                                  name="performance"
                                                   id="performancerating"
-                                                  value={ratingData || ""}
+                                                  // value={checkData.find(a =>{console.log(a.auditStatus) ; if(a.auditStatus&&a.auditStatus!=="") return a.groupName === key ;else return false })&&checkData.find(a =>{if(a.auditStatus) return a.groupName === key ;else return false }).performance
+                                                  // }
+                                                  value={
+                                                    checkData[index].performance
+                                                  }
+                                                  // value={'mohit'}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{ backgroundColor: ratingColor }}
                                                   fullWidth
