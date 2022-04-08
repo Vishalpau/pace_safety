@@ -186,8 +186,8 @@ const Categories = () => {
 
   const handelSubmit = async () => {
     console.log(groupId, subGroupId, 'subGroupId')
-    form["groupIds"] = groupId.toString();
-    form["subGroupIds"] = subGroupId.toString();
+    form["groupIds"] = groupId.join(',');
+    form["subGroupIds"] = subGroupId.join(',');
     form["updatedBy"] = userId;
     setLoading(true);
     const res = await api
@@ -220,20 +220,24 @@ const Categories = () => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        let groupIds = result.groupIds.split(",");
-        let subGroupIds = result.subGroupIds.split(",");
+        let groupIds = result.groupIds.split(",").map(i => i * 1);
+        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         setGroupId(groupIds);
         setSubGroupId(subGroupIds);
         setComplianceData(result)
         let tempGroup = [];
         let tempSubGroup = [];
-        for (let i = 0; i < groupIds.length; i++) {
+        // console.log(data, 'd')
+        // console.log(groupIds, 'gids')
+        
           for (let j = 0; j < data.length; j++) {
-            if (data[j]["checklistgroupId"] == groupIds[i]) {
-              tempGroup.push(data[j]);
+            for(let i = 0; i < data[j]['checklistGroups'].length; i++) {
+              if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
+                tempGroup.push(data[j]['checklistGroups'][i]);
+              }
             }
           }
-        }
+        
         setCheckData(tempGroup);
         setForm(result);
       })
@@ -243,9 +247,9 @@ const Categories = () => {
   const handlePhysicalHazards = async (e, value, index) => {
     let tempGroupId = [...groupId];
     let temp = [...checkData];
+
     if (e.target.checked == false) {
       temp.map((data, key) => {
-        console.log(data["checklistgroupId"], 'grp')
         if (data["checklistgroupId"] == value["checklistgroupId"]) {
           temp.splice(key, 1);
         }
@@ -256,7 +260,8 @@ const Categories = () => {
         }
       });
     } else {
-      tempGroupId.push(value.checkListValues.map(gpId => gpId.id));
+
+      tempGroupId.push(value.checklistgroupId);
       temp.push(value);
     }
     await setGroupId(tempGroupId);
@@ -267,7 +272,6 @@ const Categories = () => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
       temp.map((data, index) => {
-        console.log(data, 'sub')
         if (data == value) {
           temp.splice(index, 1);
         }
@@ -279,8 +283,9 @@ const Categories = () => {
   };
 
   const handelSelectOption = (key) => {
+    console.log(key)
     for (let i = 0; i <= groupId.length; i++) {
-      if (groupId[i] != undefined && groupId[i] == key["checklistId"]) {
+      if (groupId[i] != undefined && groupId[i] == key["checklistgroupId"]) {
         return true;
       }
     }
@@ -368,6 +373,7 @@ const Categories = () => {
                           </FormControl>
                           <Grid item md={6} xs={12}>
                             <Grid container spacing={3}>
+                              {console.log(checkData)}
                               {checkData.map((value, index) => (
                                 <Grid
                                   item
