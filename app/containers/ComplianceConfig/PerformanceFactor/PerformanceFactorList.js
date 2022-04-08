@@ -1,4 +1,4 @@
-import React , {useState , useEffect} from 'react';  
+import React, { useState, useEffect } from 'react';
 import { PapperBlock } from 'dan-components';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 0px 20px 0px",
     display: "flex",
     justifyContent: "flex-end",
-    marginTop : '12px',
+    marginTop: '12px',
   },
 }));
 
@@ -165,61 +165,62 @@ function PerformanceFactorList() {
 
   const [open, setOpen] = useState(false);
   const [deleteQ, setDeleteQ] = useState(false);
-  const [factorIdData , setFactorIdData] = useState({})
+  const [factorIdData, setFactorIdData] = useState({})
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
-  const [page , setPage] = useState(1)
+  const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
   // const handleClickOpen = () => {
   //   setOpen(true);
   // };
-  const handleClickDeleteAlert = (e ,columnValue) => {
+  const handleClickDeleteAlert = (e, columnValue) => {
     let data = {}
-     for(let i = 0; i < allFectorData.length; i++){
-       if(allFectorData[i].id === columnValue.rowData[0]){
+    for (let i = 0; i < allFectorData.length; i++) {
+      if (allFectorData[i].id === columnValue.rowData[0]) {
         data = allFectorData[i]
-       }
-     }
+      }
+    }
     setFactorIdData(data)
     setDeleteQ(true);
   };
   const handleClose = () => {
-      setOpen(false);
+    setOpen(false);
   };
   const handleCloseDeleteAlert = () => {
     setDeleteQ(false);
-};
-  
+  };
+
   //   Data for the table view
   const columns = [
     {
       name: 'Factor ID',
       options: {
-          filter: true
-      }},
-    {
-    name: 'Factor type',
-    options: {
         filter: true
-    }
+      }
     },
     {
-    name: 'Factor name',
-    options: {
+      name: 'Factor type',
+      options: {
         filter: true
-    }
+      }
     },
     {
-    name: 'Factor constant',
-    options: {
+      name: 'Factor name',
+      options: {
+        filter: true
+      }
+    },
+    {
+      name: 'Factor constant',
+      options: {
         filter: true,
-    }
+      }
     },
     {
-    name: 'Status',
-    options: {
+      name: 'Status',
+      options: {
         filter: false,
         // customBodyRender: (value) => (
         //     <>
@@ -228,29 +229,29 @@ function PerformanceFactorList() {
         //         </span>
         //     </>
         // )
-    }
+      }
     },
     {
-    name: 'Action',
-    options: {
+      name: 'Action',
+      options: {
         filter: false,
-        customBodyRender: (value , tableMeta) => (
+        customBodyRender: (value, tableMeta) => (
           <>
-            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handlePerformanceFactorEditPush(e,tableMeta)}>
+            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handlePerformanceFactorEditPush(e, tableMeta)}>
               <EditIcon />
             </IconButton>
             {/* <IconButton size="small" color="primary" className='tableActionIcons' onClick={handleClickOpen}>
                 <MoreVertIcon />
             </IconButton> */}
-            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handleClickDeleteAlert(e,tableMeta)}>
+            <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handleClickDeleteAlert(e, tableMeta)}>
               <DeleteIcon />
             </IconButton>
           </>
         )
-    }
+      }
     },
 
-];
+  ];
 
   const data = [
     ['Criticality', 'High', '2', 'Active'],
@@ -275,7 +276,7 @@ function PerformanceFactorList() {
     rowsPerPage: 10,
     page: 0,
     import: true,
-    pagination : false
+    pagination: false
   };
 
   const history = useHistory();
@@ -286,39 +287,39 @@ function PerformanceFactorList() {
     );
   };
 
-//   const handleBulkUploadPush = async () => {
-//     history.push(
-//       '/app/compliance-config/bulk-upload'
-//     );
-//   };
+  //   const handleBulkUploadPush = async () => {
+  //     history.push(
+  //       '/app/compliance-config/bulk-upload'
+  //     );
+  //   };
 
-  const handlePerformanceFactorEditPush = async (e , columnValue) => {
-    const columnData = { id : columnValue.rowData[0], factorType : columnValue.rowData[1] , factorName : columnValue.rowData[2] ,factorConstant : columnValue.rowData[3] , status : columnValue.rowData[4]}
-     console.log(columnValue.rowData)
+  const handlePerformanceFactorEditPush = async (e, columnValue) => {
+    const columnData = { id: columnValue.rowData[0], factorType: columnValue.rowData[1], factorName: columnValue.rowData[2], factorConstant: columnValue.rowData[3], status: columnValue.rowData[4] }
+    console.log(columnValue.rowData)
     let data = {}
-     for(let i = 0; i < allFectorData.length; i++){
-       if(allFectorData[i].id === columnValue.rowData[0]){
+    for (let i = 0; i < allFectorData.length; i++) {
+      if (allFectorData[i].id === columnValue.rowData[0]) {
         data = allFectorData[i]
-       }
-     }
-    history.push({pathname : `/app/compliance-config/performance-factor/edit/` , state : data}
+      }
+    }
+    history.push({ pathname: `/app/compliance-config/performance-factor/edit/`, state: data }
     );
   };
 
   const fkCompanyId =
-  JSON.parse(localStorage.getItem("company")) !== null
-    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-    : null;
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
-const project =
-  JSON.parse(localStorage.getItem("projectName")) !== null
-    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-    : null;
+  const project =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
 
-  const [fectorData , setFectorData] = React.useState([])
-  const [allFectorData ,setAllFectorData] = React.useState([])
+  const [fectorData, setFectorData] = React.useState([])
+  const [allFectorData, setAllFectorData] = React.useState([])
 
-  const fetchFectorData = async () =>{
+  const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     await setTotalData(res.data.data.metadata.count)
@@ -327,7 +328,7 @@ const project =
     await setPageCount(pageCount)
     setAllFectorData(result)
     let temp = []
-    for(let i = 0; i < result.length; i++) {
+    for (let i = 0; i < result.length; i++) {
       temp.push([
         result[i].id,
         result[i].factorType,
@@ -342,32 +343,32 @@ const project =
   }
 
   const handleDelete = async () => {
-    let res = await api.delete(`/api/v1/configaudits/factors/${factorIdData.id}/?company=${factorIdData.fkCompanyId}&project=${factorIdData.fkProjectId}`).then(res => {fetchFectorData() , setDeleteQ(false)}).catch(error => console.log(error))
+    let res = await api.delete(`/api/v1/configaudits/factors/${factorIdData.id}/?company=${factorIdData.fkCompanyId}&project=${factorIdData.fkProjectId}`).then(res => { fetchFectorData(), setDeleteQ(false) }).catch(error => console.log(error))
   }
 
-  const handleChange = async(event, value) => {
+  const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;
-   const selectBreakdown = props.projectName.breakDown.length>0? props.projectName.breakDown
-    :JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-      ? JSON.parse(localStorage.getItem("selectBreakDown"))
-      : null;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
     const createdBy = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-  let struct = "";
-  
-  for (const i in selectBreakdown) {
-    struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
-  }
-  const fkProjectStructureIds = struct.slice(0, -1);
-  const res = await api.get(
-    `/api/v1/configaudits/factor/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=${fkProjectStructureIds}&&page=${value}`
-  );
-  const result = res.data.data.results;
-  setAllFectorData(result)
-  let temp = [];
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+    let struct = "";
+
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
+    const res = await api.get(
+      `/api/v1/configaudits/factor/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=${fkProjectStructureIds}&&page=${value}`
+    );
+    const result = res.data.data.results;
+    setAllFectorData(result)
+    let temp = [];
     for (let i = 0; i < result.length; i++) {
       temp.push([
         result[i].id,
@@ -383,7 +384,9 @@ const project =
 
   useEffect(() => {
     fetchFectorData();
-  },[])
+  }, [])
+
+  console.log(fectorData, "111")
 
 
   return (
@@ -391,34 +394,34 @@ const project =
       <Grid container spacing={3}>
         <Grid item md={12} sm={12} xs={12} align='right' className="paddBRemove">
           <Tooltip title="New">
-              <Button size="medium" variant="contained" color="primary" onClick={(e) => handleNewPerformanceFactorAddPush(e)}>
+            <Button size="medium" variant="contained" color="primary" onClick={(e) => handleNewPerformanceFactorAddPush(e)}>
               <AddIcon className="marginR5" /> New
-              </Button>
+            </Button>
           </Tooltip>
           {/* <Tooltip title="Bulk upload">
               <Button size="medium" variant="contained"  color="primary" onClick={(e) => handleBulkUploadPush(e)}>
                 <CloudUploadIcon className="marginR5" /> Upload
               </Button>
           </Tooltip> */}
-          </Grid>
-          <Grid item md={12} sm={12} xs={12}>
+        </Grid>
+        <Grid item md={12} sm={12} xs={12}>
           {isLoading ? <>
-          <TableContainer component={Paper}>
+            <TableContainer component={Paper}>
               <Grid component={Paper}>
-              <MUIDataTable
+                <MUIDataTable
                   //title="Actions List"
                   className="dataTableSectionDesign performanceFactorTable"
                   data={fectorData}
                   columns={columns}
                   options={options}
-                  //className="classes.dataTableNew"
-              />
+                //className="classes.dataTableNew"
+                />
               </Grid>
-          </TableContainer>
-          <div className={classes.pagination}>
-      {totalData != 0 ?  Number.isInteger(pageData) !== true ? totalData < 25*page ? `${page*25 -24} - ${totalData} of ${totalData}` : `${page*25 -24} - ${25*page} of ${totalData}`  : `${page*25 -24} - ${25*page} of ${totalData}` : null}
-            <Pagination count={pageCount} page={page} onChange={handleChange} />
-          </div></> : <Loader />}
+            </TableContainer>
+            <div className={classes.pagination}>
+              {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+              <Pagination count={pageCount} page={page} onChange={handleChange} />
+            </div></> : <Loader />}
         </Grid>
       </Grid>
 
@@ -463,13 +466,13 @@ const project =
                 </FormControl>
               </Grid>
               <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
-                  <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
-                    Yes
-                  </Button>
-                  <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => setDeleteQ(false)}>
-                    No
-                  </Button>
-              </Grid>  
+                <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                  Yes
+                </Button>
+                <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => setDeleteQ(false)}>
+                  No
+                </Button>
+              </Grid>
             </Grid>
           </DialogContentText>
         </DialogContent>

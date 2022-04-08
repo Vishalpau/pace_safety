@@ -173,7 +173,7 @@ function Picklists(props) {
     listSelectType: 'single',
     hasGroup: 'No',
     status: 'Active',
-    isSystem: 'No',
+    isSystem: 'Yes',
     createdBy: JSON.parse(localStorage.getItem('userDetails')).id
   });
 
@@ -422,7 +422,7 @@ function Picklists(props) {
               {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
             </td>
             <td>
-              {listItem.isSystem == 0 ? 'Yes' : 'No'}
+              {listItem.isSystem == 0 ? 'No' : 'Yes'}
             </td>
             <td>
               <Link

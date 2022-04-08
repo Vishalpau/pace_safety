@@ -171,6 +171,7 @@ const QuestionsGroup = (props) => {
   const [levelLenght, setLevelLenght] = useState(0);
   const [workArea, setWorkArea] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [groupError, setGroupError] = useState(false);
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -254,6 +255,7 @@ const QuestionsGroup = (props) => {
   //   );
   // });
 
+
   const handleNewPickListPush = async () => {
     history.push("/app/pages/checklist/");
   };
@@ -280,15 +282,19 @@ const QuestionsGroup = (props) => {
     if (!isValid) {
       return "data not valid";
     }
-    localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
-    history.push({
-      pathname: "/app/compliance-config/question",
-      state: {
-        fkProjectStructureIds: structureId,
-        CompanyId: fkCompanyId,
-        projectId: project.projectId,
-      },
-    });
+    if (checkData.length > 0 && subGroupId.length > 0) {
+      localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
+      history.push({
+        pathname: "/app/compliance-config/question",
+        state: {
+          fkProjectStructureIds: structureId,
+          CompanyId: fkCompanyId,
+          projectId: project.projectId,
+        },
+      });
+    } else {
+      setGroupError(true)
+    }
   };
 
 
@@ -339,7 +345,7 @@ const QuestionsGroup = (props) => {
     }
   };
 
-  const handleSelectStructure = (fkProjectStructureIds,newArr) => {
+  const handleSelectStructure = (fkProjectStructureIds, newArr) => {
     setStructureId(fkProjectStructureIds);
     setSelectDepthAndId(newArr);
   }
@@ -497,7 +503,7 @@ const QuestionsGroup = (props) => {
                       )}
                     </Grid>
                   </Paper>
-                </Grid> */} 
+                </Grid> */}
 
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
@@ -689,6 +695,7 @@ const QuestionsGroup = (props) => {
                         </Grid>
                       </Grid>
                     </Grid>
+                    {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group*</p>)}
                   </Paper>
                 </Grid>
 
