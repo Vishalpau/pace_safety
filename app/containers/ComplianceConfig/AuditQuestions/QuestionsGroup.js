@@ -171,6 +171,7 @@ const QuestionsGroup = (props) => {
   const [levelLenght, setLevelLenght] = useState(0);
   const [workArea, setWorkArea] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [groupError, setGroupError] = useState(false);
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -281,27 +282,30 @@ console.log(result,'result')
     const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
-    if (!isValid) {
-      return "data not valid";
+    if (checkData.length > 0 && subGroupId.length > 0) {
+      localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
+      history.push({
+        pathname: "/app/compliance-config/question",
+        state: {
+          fkProjectStructureIds: structureId,
+          CompanyId: fkCompanyId,
+          projectId: project.projectId,
+        },
+      });
+    } else {
+      setGroupError(true)
     }
-    localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
-    history.push({
-      pathname: "/app/compliance-config/question",
-      state: {
-        fkProjectStructureIds: fkpsId,
-        CompanyId: fkCompanyId,
-        projectId: project.projectId,
-      },
-    });
   };
 
 
+
   const handlePhysicalHazards = async (e, value, index) => {
+    console.log(value)
     let temp = [...checkData];
     let tempsub = [...subGroupId];
     if (e.target.checked == false) {
       temp.map((data, key) => {
-        if (data["checklistId"] == value["checklistId"]) {
+        if (data["checklistgroupId"] == value["checklistgroupId"]) {
           temp.splice(key, 1);
         }
       });
@@ -318,6 +322,7 @@ console.log(result,'result')
   };
 
   const handleGroups = async (e, value, index, gName, sGName) => {
+    console.log(gName,sGName )
     let temp = [...subGroupId];
     if (e.target.checked == false) {
       temp.map((data, key) => {
@@ -716,6 +721,8 @@ console.log(result,'result')
                         </Grid>
                       </Grid>
                     </Grid>
+                    {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group</p>)}
+
                   </Paper>
                 </Grid>
 
