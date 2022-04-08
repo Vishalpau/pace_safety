@@ -218,6 +218,10 @@ console.log(result,'result')
     setOpen(false);
   };
 
+  useEffect(() => {
+    console.log(selectDepthAndId);
+  },[selectDepthAndId])
+
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
@@ -266,15 +270,15 @@ console.log(result,'result')
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
-    const userId =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails")).id
-        : null;
+    // const userId =
+    //   JSON.parse(localStorage.getItem("userDetails")) !== null
+    //     ? JSON.parse(localStorage.getItem("userDetails")).id
+    //     : null;
     const project =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName
         : null;
-    // const fkpsId = selectDepthAndId.join(":");
+    const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
     if (!isValid) {
@@ -284,7 +288,7 @@ console.log(result,'result')
     history.push({
       pathname: "/app/compliance-config/question",
       state: {
-        fkProjectStructureIds: structureId,
+        fkProjectStructureIds: fkpsId,
         CompanyId: fkCompanyId,
         projectId: project.projectId,
       },
@@ -339,10 +343,10 @@ console.log(result,'result')
     }
   };
 
-  const handleSelectStructure = (fkProjectStructureIds,newArr) => {
-    setStructureId(fkProjectStructureIds);
-    setSelectDepthAndId(newArr);
-  }
+  // const handleSelectStructure = (fkProjectStructureIds,newArr) => {
+  //   setStructureId(fkProjectStructureIds);
+  //   setSelectDepthAndId(newArr);
+  // }
 
   // useEffect(() => {
   //   console.log(levelLenght,'hhiiii');
@@ -388,10 +392,30 @@ console.log(result,'result')
   //   }
   // };
 
+  const setId = (id) => {
+    // console.log(id);
+//     let temp = [...selectDepthAndId];
+//     temp.push(id);
+//     console.log("temp:",temp,"id:",id,"selectDepthAndId",selectDepthAndId)
+//     // console.log(id, 'sssssssss', selectDepthAndId);
+//     if(id){
+// console.log("setting selectdepthandid:",id, temp)
+// setSelectDepthAndId(temp);
+      // setSelectDepthAndId(
+      //   temp
+      //   )
+      // }
+      setSelectDepthAndId(id);
+  } 
+
   useEffect(() => {
     // fetchCallBack();
     fetchChecklist();
   }, []);
+
+  // useEffect(() => {
+  //   console.log(selectDepthAndId);
+  // },[selectDepthAndId])
 
   const classes = useStyles();
   return (
@@ -517,7 +541,8 @@ console.log(result,'result')
                         setLevelLenght={setLevelLenght}
                         error={error}
                         setWorkArea={setWorkArea}
-                        setSelectDepthAndId={setSelectDepthAndId}
+                        // setSelectDepthAndId={setSelectDepthAndId}
+                        setId = {(id) => setId(id)}
                         className="formControl"
                       />
                     </Grid>
