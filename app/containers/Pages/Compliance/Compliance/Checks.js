@@ -466,7 +466,8 @@ const Checks = (props) => {
   const fetchCheklistData = async () => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project}/`
+      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);

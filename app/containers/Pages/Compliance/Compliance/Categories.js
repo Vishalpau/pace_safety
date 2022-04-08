@@ -183,7 +183,9 @@ const Categories = () => {
     { title: "Production" },
   ];
 
+
   const handelSubmit = async () => {
+    console.log(groupId,subGroupId,'subGroupId')
     form["groupIds"] = groupId.toString();
     form["subGroupIds"] = subGroupId.toString();
     form["updatedBy"] = userId;
@@ -204,7 +206,7 @@ const Categories = () => {
   const fetchCheklist = async () => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project}/`
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
@@ -242,18 +244,19 @@ const Categories = () => {
     let tempGroupId = [...groupId];
     let temp = [...checkData];
     if (e.target.checked == false) {
-      temp.map((data, key) => {
-        if (data["checklistId"] == value["checklistId"]) {
+      temp.map((data, key) =>
+       {console.log(data["checklistgroupId"],'ooo')
+        if (data["checklistgroupId"] == value["checklistgroupId"]) {
           temp.splice(key, 1);
         }
       });
       tempGroupId.map((data, key) => {
-        if (data == value["checklistId"]) {
+        if (data == value["checklistgroupId"]) {
           tempGroupId.splice(key, 1);
         }
       });
     } else {
-      tempGroupId.push(value.checklistId);
+      tempGroupId.push(value.checkListValues.map(gpId => gpId.id));
       temp.push(value);
     }
     await setGroupId(tempGroupId);
@@ -263,7 +266,8 @@ const Categories = () => {
   const handleGroups = async (e, value, index) => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
-      temp.map((data, index) => {
+      temp.map((data, index) => { 
+        console.log(data,'sub')
         if (data == value) {
           temp.splice(index, 1);
         }
@@ -339,7 +343,7 @@ const Categories = () => {
                             </FormLabel>
                             {/* <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel> */}
                             <FormGroup className={classes.customCheckBoxList}>
-                              {checkGroups.map((value, index) => (
+                              {checkGroups[0].checklistGroups.map((value, index) => (
                                 <FormControlLabel
                                   control={
                                     <Checkbox
@@ -353,7 +357,7 @@ const Categories = () => {
                                     />
                                   }
                                   className="selectLabel"
-                                  label={value.checkListLabel}
+                                  label={value.checkListGroupName}
                                   checked={handelSelectOption(value)}
                                   onChange={async (e) =>
                                     handlePhysicalHazards(e, value, index)
@@ -376,10 +380,10 @@ const Categories = () => {
                                       className="checkRadioLabel"
                                       component="legend"
                                     >
-                                      {value["checkListLabel"]}
+                                      {value["checkListGroupName"]}
                                     </FormLabel>
                                     <FormGroup>
-                                      {value["checklistValues"].map(
+                                      {value["checkListValues"].map(
                                         (option, index) => (
                                           <FormControlLabel
                                             control={

@@ -149,6 +149,7 @@ function Option() {
                                     Group name
                                 </TableCell>
                                 : null}
+                               
                             <TableCell className={classes.tabelBorder}>
                                 Status
                             </TableCell>
@@ -194,7 +195,7 @@ function Option() {
                                         id="filled-basic"
                                         label="Option value"
                                         variant="outlined"
-                                        disabled
+                                        
                                     />
                                 </TableCell>
 
@@ -224,6 +225,9 @@ function Option() {
                                         </FormControl>
                                     </TableCell>
                                     : null}
+
+
+
 
                                 <TableCell className={classes.tabelBorder}>
                                     <Switch

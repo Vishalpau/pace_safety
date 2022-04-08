@@ -188,18 +188,18 @@ const QuestionsGroup = (props) => {
   const fetchChecklist = async () => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
-      }/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project.projectId
+      }/`
     );
     const result = res.data.data.results;
-
+console.log(result,'result')
     let data = JSON.parse(localStorage.getItem("auditChecks"));
     if (data !== null) {
       await setSubGroupId(data);
       let temp = [];
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < result.length; j++) {
-          if (result[j].checkListLabel === data[i].groupName) {
+          if (result[j].checkListGroupName === data[i].groupName) {
             temp.push(result[j]);
           }
         }
@@ -303,7 +303,7 @@ const QuestionsGroup = (props) => {
       });
 
       let abc = tempsub.filter(
-        (data) => data["groupName"] != value["checkListLabel"]
+        (data) => data["groupName"] != value["checkListGroupName"]
       );
       tempsub = abc;
     } else {
@@ -621,7 +621,9 @@ const QuestionsGroup = (props) => {
                           Group name
                         </FormLabel>
                         <FormGroup className={classes.customCheckBoxList}>
-                          {checkGroups.map((value, index) => (
+
+                          {checkGroups[0].checklistGroups.map((value, index) => 
+                           (
                             <FormControlLabel
                               control={
                                 <Checkbox
@@ -631,8 +633,8 @@ const QuestionsGroup = (props) => {
                                 />
                               }
                               className="selectLabel"
-                              label={value.checkListLabel}
-                              checked={handelSelectOption(value.checkListLabel)}
+                              label={value.checkListGroupName}
+                              checked={handelSelectOption(value.checkListGroupName)}
                               onChange={async (e) =>
                                 handlePhysicalHazards(e, value, index)
                               }
@@ -650,10 +652,10 @@ const QuestionsGroup = (props) => {
                                   className="checkRadioLabel"
                                   component="legend"
                                 >
-                                  {value["checkListLabel"]}
+                                  {value["checkListGroupName"]}
                                 </FormLabel>
                                 <FormGroup>
-                                  {value["checklistValues"].map((option, index) => (
+                                  {value["checkListValues"].map((option, index) => (
                                     <FormControlLabel
                                       className="selectLabel"
                                       control={

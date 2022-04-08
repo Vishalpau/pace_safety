@@ -15,7 +15,7 @@ import Chip from "@material-ui/core/Chip";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import styles from "./sidebar-jss";
-import { adminUser_Dev, adminUser_Prod, APPCODE } from "../../utils/constants";
+import { adminUser_Dev, adminUser_Prod, APPCODE, SSO_URL } from "../../utils/constants";
 
 const LinkBtn = React.forwardRef(function LinkBtn(props, ref) {
   // eslint-disable-line
@@ -26,9 +26,12 @@ const LinkBtn = React.forwardRef(function LinkBtn(props, ref) {
 function MainMenu(props) {
   const [selectedMenuItem, setSelectedMenuItem] = useState("")
   const [dataMenuInner, setDataMenuInner] = useState({})
+  const [compId, setCompId] = useState(0)
+  const [projectId, setProjectId] = useState(0)
+  const [projectStructId, setProjectStructId] = useState('')
+
   const handleClick = () => {
     const { toggleDrawerOpen, loadTransition } = props;
-
     toggleDrawerOpen();
     loadTransition(false);
   };
@@ -139,34 +142,64 @@ function MainMenu(props) {
   });
 
   const load = () => {
-    if(dataMenuInner.length == undefined && localStorage.getItem('userDetails') != undefined && localStorage.getItem('company') != undefined) {
+    if (dataMenuInner.length == undefined && localStorage.getItem('userDetails') != undefined && localStorage.getItem('company') != undefined) {
       let ud = JSON.parse(localStorage.getItem('userDetails')).companies
-                                                              .filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)[0]
-                                                              .subscriptions
-                                                              .filter(subscription => subscription.appCode == APPCODE)[0]
-                                                              .modules
-                                                              .filter(module => module.subscriptionStatus == 'active')
-                                                              .map(module => module.moduleCode)
+        .filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)[0]
+        .subscriptions
+        .filter(subscription => subscription.appCode == APPCODE)[0]
+        .modules
+        .filter(module => module.subscriptionStatus == 'active')
+        .map(module => module.moduleCode)
       let userRole = JSON.parse(localStorage.getItem('userDetails')).companies
-                                                                    .filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)[0]
-                                                                    .subscriptions
-                                                                    .filter(subscription => subscription.appCode == APPCODE)[0].roles[0].name
-      
-      ud.push('home')
+        .filter(company => company.companyId == JSON.parse(localStorage.getItem('company')).fkCompanyId)[0]
+        .subscriptions
+        .filter(subscription => subscription.appCode == APPCODE)[0].roles[0].name
+
+      // ud.push('home')
       if (userRole == adminUser_Dev || userRole == adminUser_Prod) {
         ud.push('administration')
       }
       setDataMenuInner(dataMenu.filter(data => ud.includes(data.acl)))
-    } else if (dataMenuInner.length == undefined){
+      setCompId(JSON.parse(localStorage.getItem('company')).fkCompanyId)
+      setProjectId(JSON.parse(localStorage.getItem('projectName')).projectName.projectId)
+      if (localStorage.getItem('selectBreakDown') !== undefined) {
+        setProjectStructId(localStorage.getItem('selectBreakDown'))
+      }
+    } else if (dataMenuInner.length == undefined) {
       setTimeout(() => load(), 1000)
     }
-    }
+  }
 
   useEffect(() => {
-      load()    
+    load()
   }, [])
 
-  return <div>{dataMenuInner.length == undefined ? <></> : getMenus(dataMenuInner)}</div>;
+  return (<div>{dataMenuInner.length == undefined ? <></> : (
+    <>
+      <div key="Home_menu">
+        <ListItem
+          button
+          component="a"
+          href={SSO_URL + "/dashboard?companyId=" + compId + "&projectId=" + projectId + "&projectStructure=" + projectStructId}
+          className={classNames(
+            classes.head
+          ) + ' homeMenu'}
+        >
+
+          <ListItemIcon className={classes.icon + " MuiListItemIcon-root"}>
+            <span className="leftCustomImg"> </span>
+          </ListItemIcon>
+
+          <ListItemText
+            classes={{ primary: classes.primary }}
+            variant="inset"
+            primary="Home"
+          />
+        </ListItem>
+      </div>
+      {getMenus(dataMenuInner)}
+    </>
+  )}</div>);
 }
 
 

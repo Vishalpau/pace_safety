@@ -478,16 +478,26 @@ function ComplianceSummary(props) {
     setQueData(result)
   };
 
+  // const handelActionTracker = async () => {
+  //   let jhaId = localStorage.getItem("fkComplianceId");
+  //   let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+  //     "qustionsIds"
+  //   ];
+  //   let allAction = await handelActionData(jhaId, apiData);
+  //   setActionData(allAction);
+  // };
+
   const handelActionTracker = async () => {
+    if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined )
+    {
     let jhaId = localStorage.getItem("fkComplianceId");
     let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
       "qustionsIds"
     ];
     let allAction = await handelActionData(jhaId, apiData);
     setActionData(allAction);
-  };
-
-
+  } setTimeout(()=> handelActionTracker(),1000)
+};
 
   useEffect(() => {
     if (id) {

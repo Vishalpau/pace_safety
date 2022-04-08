@@ -33,6 +33,8 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
         let editForm = {}
         editForm["status"] = e.target.checked == true ? "Active" : "Inactive"
         editForm["fkCheckListId"] = checkListId
+        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+
         editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
         const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editForm)
         if (res.status == 200) {
@@ -41,6 +43,7 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
     }
 
     const handelDelete = async (checkListId, checkListGroupId) => {
+        console.log(checkListId, checkListGroupId,'ooo')
         const res = await api.delete(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`)
         setViewUpdate(!viewUpdate)
     }
