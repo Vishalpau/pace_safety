@@ -185,7 +185,7 @@ const Categories = () => {
 
 
   const handelSubmit = async () => {
-    console.log(groupId,subGroupId,'subGroupId')
+    console.log(groupId, subGroupId, 'subGroupId')
     form["groupIds"] = groupId.toString();
     form["subGroupIds"] = subGroupId.toString();
     form["updatedBy"] = userId;
@@ -229,7 +229,7 @@ const Categories = () => {
         let tempSubGroup = [];
         for (let i = 0; i < groupIds.length; i++) {
           for (let j = 0; j < data.length; j++) {
-            if (data[j]["checklistId"] == groupIds[i]) {
+            if (data[j]["checklistgroupId"] == groupIds[i]) {
               tempGroup.push(data[j]);
             }
           }
@@ -244,8 +244,8 @@ const Categories = () => {
     let tempGroupId = [...groupId];
     let temp = [...checkData];
     if (e.target.checked == false) {
-      temp.map((data, key) =>
-       {console.log(data["checklistgroupId"],'ooo')
+      temp.map((data, key) => {
+        console.log(data["checklistgroupId"], 'grp')
         if (data["checklistgroupId"] == value["checklistgroupId"]) {
           temp.splice(key, 1);
         }
@@ -266,8 +266,8 @@ const Categories = () => {
   const handleGroups = async (e, value, index) => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
-      temp.map((data, index) => { 
-        console.log(data,'sub')
+      temp.map((data, index) => {
+        console.log(data, 'sub')
         if (data == value) {
           temp.splice(index, 1);
         }
