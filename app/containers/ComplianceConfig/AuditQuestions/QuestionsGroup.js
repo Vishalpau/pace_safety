@@ -165,6 +165,7 @@ const QuestionsGroup = (props) => {
   const [open, setOpen] = React.useState(false);
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
+  const [groupId, setGroupId] = useState([]);
   const [subGroupId, setSubGroupId] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
@@ -295,35 +296,71 @@ console.log(result,'result')
     } else {
       setGroupError(true)
     }
+
+    localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
+    localStorage.setItem("auditGroups", JSON.stringify(groupId));
+
+    history.push({
+      pathname: "/app/compliance-config/question",
+      state: {
+        fkProjectStructureIds: fkpsId,
+        CompanyId: fkCompanyId,
+        projectId: project.projectId,
+      },
+    });
   };
 
 
 
   const handlePhysicalHazards = async (e, value, index) => {
-    console.log(value)
+    let tempGroupId = [...groupId];
     let temp = [...checkData];
-    let tempsub = [...subGroupId];
+
     if (e.target.checked == false) {
       temp.map((data, key) => {
-        if (data["checklistgroupId"] == value["checklistgroupId"]) {
+        if (data["checkListGroupName"] == value["checkListGroupName"]) {
           temp.splice(key, 1);
         }
       });
-
-      let abc = tempsub.filter(
-        (data) => data["groupName"] != value["checkListGroupName"]
-      );
-      tempsub = abc;
+      tempGroupId.map((data, key) => {
+        if (data == value["checkListGroupName"]) {
+          tempGroupId.splice(key, 1);
+        }
+      });
     } else {
+
+      tempGroupId.push(value.checkListGroupName);
       temp.push(value);
     }
+    await setGroupId(tempGroupId);
     await setCheckData(temp);
-    await setSubGroupId(tempsub);
   };
+
+  // const handlePhysicalHazards = async (e, value, index) => {
+  //   let temp = [...checkData];
+  //   let tempsub = [...subGroupId];
+  //   if (e.target.checked == false) {
+  //     temp.map((data, key) => {
+  //       if (data["checklistId"] == value["checklistId"]) {
+  //         temp.splice(key, 1);
+  //       }
+  //     });
+
+  //     let abc = tempsub.filter(
+  //       (data) => data["groupName"] != value["checkListGroupName"]
+  //     );
+  //     tempsub = abc;
+  //   } else {
+  //     temp.push(value);
+  //   }
+  //   await setCheckData(temp);
+  //   await setGroupId(tempsub);
+  // };
 
   const handleGroups = async (e, value, index, gName, sGName) => {
     console.log(gName,sGName )
     let temp = [...subGroupId];
+    console.log(gName)
     if (e.target.checked == false) {
       temp.map((data, key) => {
         if (data.subGroupName === sGName) {
@@ -708,7 +745,7 @@ console.log(result,'result')
                                           e,
                                           option.id,
                                           index,
-                                          value.checkListLabel,
+                                          value.checkListGroupName,
                                           option.inputLabel
                                         )
                                       }
