@@ -149,11 +149,8 @@ const complianceSt = (props) => {
 
         temp[index][`selectValue`] = value;
         if (index === labelList.length -1) {
-            console.log('i think this is working');
             setLabelList(temp);
         }
-
-        // let tempdeptid = [...props.selectDepthAndId];
         if (selectBreakDown.filter(filterItem => filterItem.depth === `${index + 1}L`).length > 0) {
             for (var i in temp) {
                 if (i > index) {
@@ -161,8 +158,6 @@ const complianceSt = (props) => {
                 }
             }
             let removeSelectBreakDown = selectBreakDown.slice(0, index)
-            // console.log(removeSelectBreakDown);
-
             temp[index].breakdownValue.map(
                 async (item) => {
                     if (item.id === value) {
@@ -177,8 +172,6 @@ const complianceSt = (props) => {
             );
         }
         else {
-            // temp[key].selectValue= e.target.value;
-            // console.log('3rf')
             temp[index].breakdownValue.map(
                 async (item) => {
                     if (item.id === value) {
@@ -195,9 +188,6 @@ const complianceSt = (props) => {
         }
 
         if (projectData.projectName.breakdown.length !== index + 1) {
-            //     console.log(projectData.projectName.breakdown.length);
-            //     console.log('4th')
-            // console.log(index);
             for (var key in projectData.projectName.breakdown) {
                 if (key == index + 1) {
                     var config = {
@@ -233,7 +223,6 @@ const complianceSt = (props) => {
     };
 
     useEffect(() => {
-        console.log(labelList, 'labelllllllll');
         // let tempdeptid = [...props.selectDepthAndId];
         labelList.forEach((a, i) => {
             if (a.selectValue !== '') {

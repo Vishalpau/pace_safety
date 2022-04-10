@@ -364,12 +364,23 @@ const Checks = (props) => {
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      <img src={icoExcel} alt="excel-icon" /> {file.path} -{file.size} bytes{" "}
-      <DeleteIcon />
-    </li>
-  ));
+  // const files = acceptedFiles.map((file) => {
+  //   console.log(file);
+  //   let temp = [...checkData];
+  // console.log(temp);
+  // for (let i = 0; i < temp.length; i++) {
+  // if (temp[i]["attachment"] === id) {
+  //   temp[i][field] = value;
+  // }
+  // }
+  // setCheckData(temp);
+  // return (
+  //   <li key={file.path}>
+  //     <img src={icoExcel} alt="excel-icon" /> {file.path} -{file.size} bytes{" "}
+  //     <DeleteIcon />
+  //   </li>
+  // )
+  // });
 
   // const Criticality = [
   //   {
@@ -419,15 +430,6 @@ const Checks = (props) => {
   // const [selectId, setSelectId] = useState('');
 
   const [statusData, setStatusData] = useState([])
-  const handleActionDateChange = (date) => {
-    setSelectedActionDate(date);
-  };
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
 
   const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -473,7 +475,9 @@ const Checks = (props) => {
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
+        // console.log(response.data.data.results);
         let result = response.data.data.results;
+        console.log(result)
         setComplianceData(result)
         let groupIds = result.groupIds.split(",");
         let subGroupIds = result.subGroupIds.split(",");
@@ -693,13 +697,8 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
-    // console.log(value, field, index, id);
     setCriticalityId(id)
-
-    // console.log(id);
-    // setSelectId(id);
     let temp = [...checkData];
-    // console.log(temp);
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] === id) {
         temp[i][field] = value;
@@ -707,10 +706,6 @@ const Checks = (props) => {
     }
     setCheckData(temp);
   };
-
-  useEffect(() => {
-    console.log(criticalityId, 'criticality');
-  }, [criticalityId])
 
   const fetchData = async () => {
     const res = await api.get(
@@ -742,7 +737,6 @@ const Checks = (props) => {
     setActionData(allAction);
   };
 
-
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -755,6 +749,27 @@ const Checks = (props) => {
     )
     setStatusData(factorStatus)
   }
+
+  const handleFileUpload = (event, questionId) => {
+    let temp = [...checkData];
+    const file = event.target.files[0]
+
+    temp.map((a, i) => {
+      if (a.questionId === questionId) {
+        a.attachment = {
+          name: file.name,
+          lastModified: file.lastModified,
+          lastModifiedDate: file.lastModifiedDate,
+          size: file.size,
+          type: file.type,
+          webkitRelativePath: file.webkitRelativePath,
+        }
+      }
+      return a
+    })
+
+    setCheckData(tempData);
+  };
 
   useEffect(() => {
     // console.log('formssssss')
@@ -791,8 +806,6 @@ const Checks = (props) => {
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
   };
-
-
 
   useEffect(() => {
     fetchFectorData();
@@ -903,7 +916,7 @@ const Checks = (props) => {
                   </Grid>
                   <Grid item xs={12}>
                     {Object.entries(categories).map(([key, value]) => {
-                      // console.log(key,value);
+                      console.log(value);
                       return (
                         <>
                           <FormLabel className="checkRadioLabel" component="legend">
@@ -926,7 +939,7 @@ const Checks = (props) => {
                           </ListItem>
                         </span> */}
                           {value.map((value, index) => {
-                            // console.log(value);
+                            console.log(value);
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -1196,10 +1209,11 @@ const Checks = (props) => {
                                                         </g>
                                                       </svg>
                                                     </span>
-                                                    <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
+                                                    {<p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>}
                                                   </div>
+
                                                   <aside>
-                                                    {/* <h4>Files</h4> */}
+                                                    <h4>Files</h4>
                                                     {/* <ul>{files}</ul> */}
                                                     <ul className="attachfileListBox">
                                                       <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
@@ -1295,18 +1309,19 @@ const Checks = (props) => {
                                                 >
                                                   {statusData.map((option) => {
                                                     // console.log(option);
-                                                    return(
-                                                    <MenuItem
-                                                      key={option.id}
-                                                      value={option.factorName || ""}
-                                                      id={option.id}
-                                                      onClick={(e) => {
-                                                        handleCriticality(option, "statusItem");
-                                                      }}
-                                                    >
-                                                      {option.factorName}
-                                                    </MenuItem>
-                                                  )})}
+                                                    return (
+                                                      <MenuItem
+                                                        key={option.id}
+                                                        value={option.factorName || ""}
+                                                        id={option.id}
+                                                        onClick={(e) => {
+                                                          handleCriticality(option, "statusItem");
+                                                        }}
+                                                      >
+                                                        {option.factorName}
+                                                      </MenuItem>
+                                                    )
+                                                  })}
                                                 </TextField>
                                               </Grid>
                                               <Grid item md={4} xs={12}>
@@ -1594,7 +1609,7 @@ const Checks = (props) => {
                                               <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  <div {...getRootProps({ className: 'dropzone' })}>
+                                                  {/* <div {...getRootProps({ className: 'dropzone' })}>
                                                     <input {...getInputProps()} />
                                                     <span align="center">
                                                       <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
@@ -1613,18 +1628,28 @@ const Checks = (props) => {
                                                       </svg>
                                                     </span>
                                                     <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
-                                                  </div>
-                                                  <aside>
-                                                    {/* <h4>Files</h4> */}
-                                                    {/* <ul>{files}</ul> */}
-                                                    <ul className="attachfileListBox">
+                                                  </div> */}
+                                                  {(value.attachment === "Yes" || value.evidenceType === "Yes") &&
+                                                    <input
+                                                      type="file"
+                                                      id="attachment"
+                                                      accept={`${value.attachment === "Yes" && ".png, .jpg .mp4, .mov, .flv, .avi, .mkv"} ${value.evidenceType === "Yes" && '.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf'}`}
+                                                      onChange={(e) => {
+                                                        handleFileUpload(e, value.id);
+                                                      }}
+                                                    />
+                                                  }
+                                                  {/* <aside> */}
+                                                  {/* <h4>Files</h4> */}
+                                                  {/* <ul>{files}</ul> */}
+                                                  {/* <ul className="attachfileListBox">
                                                       <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoPng} alt="image-icon" /> ImageFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoAudio} alt="audio-icon" /> AudioFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoVideo} alt="video-icon" /> VideoFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
-                                                    </ul>
-                                                  </aside>
+                                                    </ul> */}
+                                                  {/* </aside> */}
                                                 </Typography>
                                               </Grid>
                                             </Grid>
