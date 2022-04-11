@@ -85,8 +85,6 @@ const ProjectStructure = (props) => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
-  console.log(fkProjectStructureIds);
-
   // fetch breakdown Data
   const fetchCallBack = async (select, projectData) => {
 
@@ -272,6 +270,14 @@ const ProjectStructure = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    console.log(labelList);
+  },[labelList])
+
+  useEffect(() => {
+    console.log(selectBreakDown)
+  },[selectBreakDown])
 
   const setStateBreakDown = async (select, projectData) => {
 

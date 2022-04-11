@@ -42,6 +42,7 @@ const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewU
 
     const handelUpdate = async (e, checkListId, checkListOptionId) => {
         editForm["fkCheckListId"] = checkListId
+        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
         editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
         const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editForm)
         if (res.status == 200) {

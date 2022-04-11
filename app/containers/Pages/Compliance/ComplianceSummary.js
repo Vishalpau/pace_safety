@@ -309,7 +309,8 @@ function ComplianceSummary(props) {
 
   const fetchCheklistData = async () => {
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${projectId}/`
+      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
@@ -320,6 +321,7 @@ function ComplianceSummary(props) {
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
+<<<<<<< HEAD
         const result = response.data.data.results;
         const groupIds = result.groupIds.split(',');
         const subGroupIds = result.subGroupIds.split(',');
@@ -329,6 +331,18 @@ function ComplianceSummary(props) {
         for (let i = 0; i < groupIds.length; i++) {
           for (let j = 0; j < data.length; j++) {
             if (data[j].checklistId == groupIds[i]) {
+=======
+        let result = response.data.data.results;
+        console.log(result,'result')
+        let groupIds = result.groupIds.split(",");
+        let subGroupIds = result.subGroupIds.split(",");
+        let tempGroup = [];
+        let temp = {};
+        let tempSubGroup = [];
+        for (let i = 0; i < groupIds.length; i++) {
+          for (let j = 0; j < data.length; j++) {
+            if (data[j]["checklistgroupId"] == groupIds[i]) {
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
               tempGroup.push(data[j]);
               temp[data[j].checkListName] = [];
             }
@@ -336,11 +350,19 @@ function ComplianceSummary(props) {
         }
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
+<<<<<<< HEAD
             for (let k = 0; k < tempGroup[j].checklistValues.length; k++) {
               if (tempGroup[j].checklistValues[k].id == subGroupIds[i]) {
                 tempSubGroup.push(tempGroup[j].checklistValues[k]);
                 temp[tempGroup[j].checkListName].push(
                   tempGroup[j].checklistValues[k]
+=======
+            for (let k = 0; k < tempGroup[j]["checkListValues"].length; k++) {
+              if (tempGroup[j]["checkListValues"][k]["id"] == subGroupIds[i]) {
+                tempSubGroup.push(tempGroup[j]["checkListValues"][k]);
+                temp[tempGroup[j]["checkListName"]].push(
+                  tempGroup[j]["checkListValues"][k]
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                 );
               }
             }
@@ -486,13 +508,35 @@ function ComplianceSummary(props) {
     setQueData(result);
   };
 
+  // const handelActionTracker = async () => {
+  //   let jhaId = localStorage.getItem("fkComplianceId");
+  //   let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+  //     "qustionsIds"
+  //   ];
+  //   let allAction = await handelActionData(jhaId, apiData);
+  //   setActionData(allAction);
+  // };
+
   const handelActionTracker = async () => {
+<<<<<<< HEAD
     const jhaId = localStorage.getItem('fkComplianceId');
     const apiData = JSON.parse(localStorage.getItem('commonObject')).audit.qustionsIds;
     const allAction = await handelActionData(jhaId, apiData);
     setActionData(allAction);
   };
 
+=======
+    if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined )
+    {
+    let jhaId = localStorage.getItem("fkComplianceId");
+    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+      "qustionsIds"
+    ];
+    let allAction = await handelActionData(jhaId, apiData);
+    setActionData(allAction);
+  } setTimeout(()=> handelActionTracker(),1000)
+};
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
 
   useEffect(() => {
     if (id) {

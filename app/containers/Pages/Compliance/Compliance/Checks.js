@@ -312,13 +312,18 @@ const Checks = (props) => {
   const [checkData, setCheckData] = useState([]);
   const [updatePage, setUpdatePage] = useState(false);
   const [actionData, setActionData] = useState([]);
-  const [ratingData, setRatingData] = useState([]);
+  const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
   const [hover, setHover] = useState(-1);
+  // const [errorMessage, setErrorMessage] = useState('');
 
   const [showCheckData, setShowCheckData] = useState({});
+<<<<<<< HEAD
   const [ratingColor, setRatingColor] = useState('');
   const [ratingColorQuestionId, setRatingColorQuestionId] = useState(null);
+=======
+  const [ratingColor, setRatingColor] = useState({});
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
   //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
@@ -326,6 +331,44 @@ const Checks = (props) => {
     "panel4"
   );
 
+<<<<<<< HEAD
+=======
+
+  const calculate_rating = (index, v, id) => {
+
+    if (form.menuValue >= 0 && v >= 0) {
+
+      let ratingValue = (form.menuValue * v) / 5 * 100;
+      for (var i = 0; i < colordata.length; i++) {
+        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+          let clr_op = { ...ratingColor }
+          clr_op[index] = colordata[i].matrixConstantColor
+          setRatingColor(clr_op)
+          // console.log(ratingValue, 'ratingValue')
+          // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
+          break; // stop the loop
+        }
+        else {
+          setRatingColor("#FFFFFF")
+        }
+      }
+      let arr_op = { ...ratingData };
+      arr_op[index] = ratingValue
+      setRatingData(arr_op)
+      let temp = [...checkData];
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i]["questionId"] == id) {
+          temp[i]["performance"] = ratingValue;
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    // 1
+  }, [ratingColor])
+
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -446,46 +489,53 @@ const Checks = (props) => {
   const fetchCheklistData = async () => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project}/`
+      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
     const result = res.data.data.results;
     await fetchComplianceData(result);
   };
 
   useEffect(() => {
+    //2
     console.log(categories);
   }, [categories])
 
   const fetchComplianceData = async (data) => {
+    console.log(data, 'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
+        console.log(result, 'result_result')
         setComplianceData(result)
-        let groupIds = result.groupIds.split(",");
-        let subGroupIds = result.subGroupIds.split(",");
+        let groupIds = result.groupIds.split(",").map(i => i * 1);
+        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
         let tempSubGroup = [];
-        for (let i = 0; i < groupIds.length; i++) {
-          for (let j = 0; j < data.length; j++) {
-            if (data[j]["checklistId"] == groupIds[i]) {
-              tempGroup.push(data[j]);
+
+        for (let j = 0; j < data.length; j++) {
+          for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
+            if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
+              tempGroup.push(data[j]['checklistGroups'][i]);
             }
           }
         }
+
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
-            tempGroup[j]["checklistValues"].map((value) => {
+            tempGroup[j]["checkListValues"].map((value) => {
               if (value.id == subGroupIds[i]) {
                 tempSubGroup.push({
-                  groupName: tempGroup[j]["checkListLabel"],
+                  groupName: tempGroup[j]["checkListGroupName"],
                   subGroupName: value["inputLabel"],
                 });
               }
             });
           }
         }
+
         setForm(result);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups);
       })
@@ -518,6 +568,10 @@ const Checks = (props) => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
+<<<<<<< HEAD
+=======
+
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -562,6 +616,7 @@ const Checks = (props) => {
         });
       }
     });
+
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
         if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
@@ -596,6 +651,7 @@ const Checks = (props) => {
     let errorFlag = false;
 
     checkData.map((data) => {
+      console.log(data)
       if (data.id) {
         if (data.criticality) {
           if (!data.auditStatus || !data.findings)
@@ -657,7 +713,15 @@ const Checks = (props) => {
         }
         const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
       }
+<<<<<<< HEAD
       if (tempUpdatedQuestion.length > 0) {
+=======
+
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
+      ;
+    }
+    if (tempUpdatedQuestion.length > 0) {
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
 
         let dataCheck = [];
         for (var i = 0; i < tempUpdatedQuestion.length; i++) {
@@ -697,11 +761,18 @@ const Checks = (props) => {
         }
         apiCall(dataCheck)
       }
+<<<<<<< HEAD
 
       history.push("/app/pages/compliance/performance-summary");
     } else {
       setError(true)
     }
+=======
+      apiCall(dataCheck)
+    }
+    console.log(dataCheck)
+    history.push("/app/pages/compliance/performance-summary");
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
 
   };
   const classes = useStyles();
@@ -713,6 +784,11 @@ const Checks = (props) => {
         temp[i][field] = value;
       }
     }
+
+    if (field == 'criticality' || field == 'auditStatus') {
+      // setTimeout(()=>calculate_rating(index), 5000)
+    }
+
     setCheckData(temp);
   };
 
@@ -763,6 +839,7 @@ const Checks = (props) => {
   }
 
 
+<<<<<<< HEAD
   const handleCriticality = (option, selectType, questionId) => {
     const criticalQuestionsData = criticalQuestions;
     criticalQuestionsData.forEach((question, index) => {
@@ -789,17 +866,27 @@ const Checks = (props) => {
     });
 
     setCriticalQuestions(criticalQuestionsData);
+=======
+  const handleCriticality = (option, selectType, index, id) => {
+
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
+      // calculate_rating(index, option.factorConstant)
       return;
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
+    calculate_rating(index, option.factorConstant, id)
   };
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
   useEffect(() => {
+    //3
     fetchFectorData();
     fetchData();
     fetchCheklistData();
@@ -909,7 +996,7 @@ const Checks = (props) => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    {Object.entries(categories).map(([key, value]) => {
+                    {Object.entries(categories).map(([key, value], catI) => {
                       return (
                         <>
                           <FormLabel className="checkRadioLabel" component="legend">
@@ -1154,7 +1241,7 @@ const Checks = (props) => {
                                                 </Grid>
                                               </Grid>
 
-                                              {/* <Grid
+                                              <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
@@ -1181,9 +1268,9 @@ const Checks = (props) => {
                                                   />
 
                                                 </Typography>
-                                              </Grid> */}
+                                              </Grid>
 
-                                              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                                              {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">
                                                   <div {...getRootProps({ className: 'dropzone' })}>
@@ -1207,8 +1294,8 @@ const Checks = (props) => {
                                                     <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
                                                   </div>
                                                   <aside>
-                                                    {/* <h4>Files</h4> */}
-                                                    {/* <ul>{files}</ul> */}
+                                                    <h4>Files</h4>
+                                                    <ul>{files}</ul>
                                                     <ul className="attachfileListBox">
                                                       <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
@@ -1218,7 +1305,7 @@ const Checks = (props) => {
                                                     </ul>
                                                   </aside>
                                                 </Typography>
-                                              </Grid>
+                                              </Grid> */}
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
@@ -1264,7 +1351,7 @@ const Checks = (props) => {
                                                     handleChangeData(
                                                       e.target.value,
                                                       "criticality",
-                                                      index,
+                                                      catI + '-' + index,
                                                       value.id
                                                     )
                                                   }
@@ -1276,7 +1363,11 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
+<<<<<<< HEAD
                                                         handleCriticality(option, "menuItem", value.id);
+=======
+                                                        handleCriticality(option, "menuItem", catI + '-' + index, value.id);
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1300,7 +1391,7 @@ const Checks = (props) => {
                                                     handleChangeData(
                                                       e.target.value,
                                                       "auditStatus",
-                                                      index,
+                                                      catI + '-' + index,
                                                       value.id
                                                     )
                                                   }
@@ -1311,7 +1402,11 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
+<<<<<<< HEAD
                                                         handleCriticality(option, "statusItem", value.id);
+=======
+                                                        handleCriticality(option, "statusItem", catI + '-' + index, value.id);
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1320,18 +1415,24 @@ const Checks = (props) => {
                                                 </TextField>
                                               </Grid>
                                               <Grid item md={4} xs={12}>
+
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
+<<<<<<< HEAD
                                                   value={criticalQuestions.length ? (criticalQuestions.filter(question => question.questionId === value.id)[0].performance || "") : ""}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{ backgroundColor: criticalQuestions.length ? criticalQuestions.filter(question => question.questionId === value.id)[0].ratingColor : "" }}
+=======
+                                                  value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
+                                                  // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
+                                                  style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
+>>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
-
                                                 />
                                               </Grid>
 
@@ -1370,15 +1471,16 @@ const Checks = (props) => {
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
                                                     name="simple-controlled"
-                                                    value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                    onChange={(e, newValue) =>
+                                                    defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    onChange={(event, newValue) => {
                                                       handleChangeData(
                                                         newValue,
                                                         "score",
                                                         index,
                                                         value.id
                                                       )
-                                                    }
+                                                      setValueStar(newValue);
+                                                    }}
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1570,7 +1672,7 @@ const Checks = (props) => {
                                                   </TableBody>
                                                 </Table>
                                               </Grid>
-                                              {/* <Grid
+                                              <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
@@ -1597,8 +1699,8 @@ const Checks = (props) => {
                                                   />
 
                                                 </Typography>
-                                              </Grid> */}
-                                              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                                              </Grid>
+                                              {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">
                                                   <div {...getRootProps({ className: 'dropzone' })}>
@@ -1622,8 +1724,8 @@ const Checks = (props) => {
                                                     <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
                                                   </div>
                                                   <aside>
-                                                    {/* <h4>Files</h4> */}
-                                                    {/* <ul>{files}</ul> */}
+                                                    <h4>Files</h4>
+                                                    <ul>{files}</ul>
                                                     <ul className="attachfileListBox">
                                                       <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
@@ -1633,7 +1735,7 @@ const Checks = (props) => {
                                                     </ul>
                                                   </aside>
                                                 </Typography>
-                                              </Grid>
+                                              </Grid> */}
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>

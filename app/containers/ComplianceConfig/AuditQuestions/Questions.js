@@ -360,6 +360,7 @@ const Questions = () => {
 
   const fetchChecks = () => {
     let data = JSON.parse(localStorage.getItem("auditChecks"));
+    console.log(data, 'data')
     let temp = [...data];
     for (let i = 0; i < temp.length; i++) {
       temp[i]["question"] = [
@@ -397,6 +398,7 @@ const Questions = () => {
       return "data not valid";
     }
     let data = [];
+    
     error.map((value, index) =>
       value.question.map((item, key) => data.push(item))
     );
@@ -454,7 +456,9 @@ const Questions = () => {
         `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
-      structName.push(workArea.data.data.results[0]["structureName"]);
+      if (workArea.data.data) {
+        structName.push(workArea.data.data.results[0]["structureName"]);
+      }
     }
     setProjectStructName(structName);
   };
