@@ -315,6 +315,7 @@ const Checks = (props) => {
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
   const [hover, setHover] = useState(-1);
+  // const [errorMessage, setErrorMessage] = useState('');
 
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
@@ -327,13 +328,13 @@ const Checks = (props) => {
 
 
   const calculate_rating = (index, v, id) => {
-    
+
     if (form.menuValue >= 0 && v >= 0) {
-      
+
       let ratingValue = (form.menuValue * v) / 5 * 100;
       for (var i = 0; i < colordata.length; i++) {
         if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
-          let clr_op = {...ratingColor}
+          let clr_op = { ...ratingColor }
           clr_op[index] = colordata[i].matrixConstantColor
           setRatingColor(clr_op)
           // console.log(ratingValue, 'ratingValue')
@@ -344,7 +345,7 @@ const Checks = (props) => {
           setRatingColor("#FFFFFF")
         }
       }
-      let arr_op = {...ratingData};
+      let arr_op = { ...ratingData };
       arr_op[index] = ratingValue
       setRatingData(arr_op)
       let temp = [...checkData];
@@ -491,7 +492,7 @@ const Checks = (props) => {
   }, [categories])
 
   const fetchComplianceData = async (data) => {
-    console.log(data,'data')
+    console.log(data, 'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
@@ -505,13 +506,13 @@ const Checks = (props) => {
         let tempSubGroup = [];
 
         for (let j = 0; j < data.length; j++) {
-          for(let i = 0; i < data[j]['checklistGroups'].length; i++) {
+          for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
               tempGroup.push(data[j]['checklistGroups'][i]);
             }
           }
         }
-        
+
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
             tempGroup[j]["checkListValues"].map((value) => {
@@ -524,7 +525,7 @@ const Checks = (props) => {
             });
           }
         }
-        
+
         setForm(result);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups);
       })
@@ -668,7 +669,9 @@ const Checks = (props) => {
         dataCheck[i] = data
         console.log(dataCheck)
       }
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
+
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
+      ;
     }
     if (tempUpdatedQuestion.length > 0) {
 
@@ -716,18 +719,18 @@ const Checks = (props) => {
   };
   const classes = useStyles();
 
-  const handleChangeData = (value, field, index, id) => { 
+  const handleChangeData = (value, field, index, id) => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
         temp[i][field] = value;
       }
     }
-    
-    if(field == 'criticality' || field == 'auditStatus') {
+
+    if (field == 'criticality' || field == 'auditStatus') {
       // setTimeout(()=>calculate_rating(index), 5000)
     }
-    
+
     setCheckData(temp);
   };
 
@@ -752,16 +755,15 @@ const Checks = (props) => {
     setCheckData(temp);
   };
   const handelActionTracker = async () => {
-    if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined )
-    {
-    let jhaId = localStorage.getItem("fkComplianceId");
-    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-      "qustionsIds"
-    ];
-    let allAction = await handelActionData(jhaId, apiData);
-    setActionData(allAction);
-  } setTimeout(()=> handelActionTracker(),1000)
-};
+    if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
+      let jhaId = localStorage.getItem("fkComplianceId");
+      let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+        "qustionsIds"
+      ];
+      let allAction = await handelActionData(jhaId, apiData);
+      setActionData(allAction);
+    } setTimeout(() => handelActionTracker(), 1000)
+  };
 
 
 
@@ -780,7 +782,7 @@ const Checks = (props) => {
 
 
   const handleCriticality = (option, selectType, index, id) => {
-    
+
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
@@ -789,8 +791,6 @@ const Checks = (props) => {
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
   };
-
-
 
   useEffect(() => {
     //3
@@ -1143,7 +1143,7 @@ const Checks = (props) => {
                                                 </Grid>
                                               </Grid>
 
-                                              {/* <Grid
+                                              <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
@@ -1170,9 +1170,9 @@ const Checks = (props) => {
                                                   />
 
                                                 </Typography>
-                                              </Grid> */}
+                                              </Grid>
 
-                                              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                                              {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">
                                                   <div {...getRootProps({ className: 'dropzone' })}>
@@ -1196,8 +1196,8 @@ const Checks = (props) => {
                                                     <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
                                                   </div>
                                                   <aside>
-                                                    {/* <h4>Files</h4> */}
-                                                    {/* <ul>{files}</ul> */}
+                                                    <h4>Files</h4>
+                                                    <ul>{files}</ul>
                                                     <ul className="attachfileListBox">
                                                       <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
@@ -1207,7 +1207,7 @@ const Checks = (props) => {
                                                     </ul>
                                                   </aside>
                                                 </Typography>
-                                              </Grid>
+                                              </Grid> */}
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
@@ -1305,7 +1305,7 @@ const Checks = (props) => {
                                                 </TextField>
                                               </Grid>
                                               <Grid item md={4} xs={12}>
-                                              
+
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
@@ -1313,7 +1313,7 @@ const Checks = (props) => {
                                                   id="performancerating"
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '')} }
+                                                  style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
@@ -1353,15 +1353,16 @@ const Checks = (props) => {
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
                                                     name="simple-controlled"
-                                                    value={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                    onChange={(e, newValue) =>
+                                                    defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    onChange={(event, newValue) => {
                                                       handleChangeData(
                                                         newValue,
                                                         "score",
                                                         index,
                                                         value.id
                                                       )
-                                                    }
+                                                      setValueStar(newValue);
+                                                    }}
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1553,7 +1554,7 @@ const Checks = (props) => {
                                                   </TableBody>
                                                 </Table>
                                               </Grid>
-                                              {/* <Grid
+                                              <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
@@ -1580,8 +1581,8 @@ const Checks = (props) => {
                                                   />
 
                                                 </Typography>
-                                              </Grid> */}
-                                              <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
+                                              </Grid>
+                                              {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">
                                                   <div {...getRootProps({ className: 'dropzone' })}>
@@ -1605,8 +1606,8 @@ const Checks = (props) => {
                                                     <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
                                                   </div>
                                                   <aside>
-                                                    {/* <h4>Files</h4> */}
-                                                    {/* <ul>{files}</ul> */}
+                                                    <h4>Files</h4>
+                                                    <ul>{files}</ul>
                                                     <ul className="attachfileListBox">
                                                       <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
                                                       <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
@@ -1616,7 +1617,7 @@ const Checks = (props) => {
                                                     </ul>
                                                   </aside>
                                                 </Typography>
-                                              </Grid>
+                                              </Grid> */}
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
