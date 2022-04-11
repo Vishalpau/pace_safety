@@ -318,12 +318,7 @@ const Checks = (props) => {
   // const [errorMessage, setErrorMessage] = useState('');
 
   const [showCheckData, setShowCheckData] = useState({});
-<<<<<<< HEAD
-  const [ratingColor, setRatingColor] = useState('');
-  const [ratingColorQuestionId, setRatingColorQuestionId] = useState(null);
-=======
   const [ratingColor, setRatingColor] = useState({});
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
   //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
@@ -331,8 +326,6 @@ const Checks = (props) => {
     "panel4"
   );
 
-<<<<<<< HEAD
-=======
 
   const calculate_rating = (index, v, id) => {
 
@@ -368,7 +361,6 @@ const Checks = (props) => {
     // 1
   }, [ratingColor])
 
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -453,7 +445,6 @@ const Checks = (props) => {
   const [criticalityData, setCriticalityData] = useState([]);
   const [criticalQuestions, setCriticalQuestions] = useState([]);
   const [statusData, setStatusData] = useState([])
-  const [error, setError] = useState(false)
   const handleActionDateChange = (date) => {
     setSelectedActionDate(date);
   };
@@ -568,10 +559,6 @@ const Checks = (props) => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
-<<<<<<< HEAD
-=======
-
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
       const result2 = res.data.data.results;
       temp.push(result2);
     }
@@ -712,16 +699,9 @@ const Checks = (props) => {
           dataCheck.push(data)
         }
         const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
-      }
-<<<<<<< HEAD
-      if (tempUpdatedQuestion.length > 0) {
-=======
 
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
-      ;
-    }
-    if (tempUpdatedQuestion.length > 0) {
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
+      }
+      if (tempUpdatedQuestion.length > 0) {
 
         let dataCheck = [];
         for (var i = 0; i < tempUpdatedQuestion.length; i++) {
@@ -761,19 +741,11 @@ const Checks = (props) => {
         }
         apiCall(dataCheck)
       }
-<<<<<<< HEAD
 
       history.push("/app/pages/compliance/performance-summary");
     } else {
       setError(true)
     }
-=======
-      apiCall(dataCheck)
-    }
-    console.log(dataCheck)
-    history.push("/app/pages/compliance/performance-summary");
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
-
   };
   const classes = useStyles();
 
@@ -839,37 +811,8 @@ const Checks = (props) => {
   }
 
 
-<<<<<<< HEAD
-  const handleCriticality = (option, selectType, questionId) => {
-    const criticalQuestionsData = criticalQuestions;
-    criticalQuestionsData.forEach((question, index) => {
-      if (questionId === question.questionId) {
-        if (selectType === "menuItem") {
-          criticalQuestionsData[index].menuValue = option.factorConstant;
-        }
-        if (selectType === "statusItem") {
-          criticalQuestionsData[index].statusValue = option.factorConstant;
-        }
-
-        let ratingValue = (question.menuValue * question.statusValue) / 5 * 100;
-        for (var i = 0; i < colordata.length; i++) {
-          if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
-            criticalQuestionsData[index].ratingColor = colordata[i].matrixConstantColor;
-            break; // stop the loop
-          }
-          else {
-            criticalQuestionsData[index].ratingColor = "#FFFFFF"
-          }
-        }
-        criticalQuestionsData[index].performance = ratingValue;
-      }
-    });
-
-    setCriticalQuestions(criticalQuestionsData);
-=======
   const handleCriticality = (option, selectType, index, id) => {
 
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
@@ -879,12 +822,6 @@ const Checks = (props) => {
     calculate_rating(index, option.factorConstant, id)
   };
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
   useEffect(() => {
     //3
     fetchFectorData();
@@ -1363,11 +1300,7 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
-<<<<<<< HEAD
-                                                        handleCriticality(option, "menuItem", value.id);
-=======
                                                         handleCriticality(option, "menuItem", catI + '-' + index, value.id);
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1402,11 +1335,7 @@ const Checks = (props) => {
                                                       value={option.factorName || ""}
                                                       id={option.id}
                                                       onClick={(e) => {
-<<<<<<< HEAD
-                                                        handleCriticality(option, "statusItem", value.id);
-=======
                                                         handleCriticality(option, "statusItem", catI + '-' + index, value.id);
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                                                       }}
                                                     >
                                                       {option.factorName}
@@ -1421,15 +1350,9 @@ const Checks = (props) => {
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
-<<<<<<< HEAD
-                                                  value={criticalQuestions.length ? (criticalQuestions.filter(question => question.questionId === value.id)[0].performance || "") : ""}
-                                                  // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  style={{ backgroundColor: criticalQuestions.length ? criticalQuestions.filter(question => question.questionId === value.id)[0].ratingColor : "" }}
-=======
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"

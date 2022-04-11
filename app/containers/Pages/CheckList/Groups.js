@@ -180,15 +180,9 @@ function Group() {
   return (
 
     <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
-<<<<<<< HEAD
       <Button onClick={(e) => setShowNew(true)} variant="contained" color="secondary" style={{ float: 'right' }}>
         <AddIcon />
         New
-=======
-      <Button variant="contained" color="secondary" onClick={(e) => setShowNew(true)} style={{ float: 'right' }}>
-        <AddIcon  />
-                New
->>>>>>> a062d2820fc81e491787943dc89de591f5a7c493
       </Button>
 
       <Grid container spacing={12}>
