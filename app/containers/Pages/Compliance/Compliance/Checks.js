@@ -315,7 +315,7 @@ const Checks = (props) => {
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
   const [hover, setHover] = useState(-1);
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
 
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
@@ -671,7 +671,6 @@ const Checks = (props) => {
       }
 
       const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
-      setErrorMessage('Example error message!');
       ;
     }
     if (tempUpdatedQuestion.length > 0) {
@@ -792,11 +791,6 @@ const Checks = (props) => {
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
   };
-
-  useEffect(() => {
-    console.log(errorMessage, 'msg')
-
-  }, [errorMessage])
 
   useEffect(() => {
     //3
@@ -1629,8 +1623,6 @@ const Checks = (props) => {
                                         </Accordion>
                                       )}
                                     </div>
-                                    <div style={{ color: "red" }}>{errorMessage}</div>
-
                                   </Grid>
                                 </Grid>
                               </>
