@@ -277,14 +277,14 @@ function ComplianceSummary(props) {
   const [myVideoOpen, setMyVideoOpen] = React.useState(false);
 
   const fkCompanyId =
-      JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
-    const projectId =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-        : null;
+  const projectId =
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+      : null;
 
 
   const handleMyVideoClickOpen = () => {
@@ -315,40 +315,41 @@ function ComplianceSummary(props) {
   };
 
   const fetchComplianceData = async (data) => {
+    console.log(data,'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result,'result')
-        let groupIds = result.groupIds.split(",");
-        let subGroupIds = result.subGroupIds.split(",");
+        console.log(result, 'result')
+        let groupIds = result.groupIds.split(",").map(i => i * 1);
+        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
-        let temp = {};
         let tempSubGroup = [];
-        for (let i = 0; i < groupIds.length; i++) {
-          for (let j = 0; j < data.length; j++) {
-            if (data[j]["checklistgroupId"] == groupIds[i]) {
-              tempGroup.push(data[j]);
-              temp[data[j].checkListName] = [];
-            }
-          }
-        }
-        for (let i = 0; i < subGroupIds.length; i++) {
-          for (let j = 0; j < tempGroup.length; j++) {
-            for (let k = 0; k < tempGroup[j]["checkListValues"].length; k++) {
-              if (tempGroup[j]["checkListValues"][k]["id"] == subGroupIds[i]) {
-                tempSubGroup.push(tempGroup[j]["checkListValues"][k]);
-                temp[tempGroup[j]["checkListName"]].push(
-                  tempGroup[j]["checkListValues"][k]
-                );
-              }
+
+        for (let j = 0; j < data.length; j++) {
+          for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
+            if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
+              tempGroup.push(data[j]['checklistGroups'][i]);
             }
           }
         }
 
+        for (let i = 0; i < subGroupIds.length; i++) {
+          for (let j = 0; j < tempGroup.length; j++) {
+            tempGroup[j]["checkListValues"].map((value) => {
+              if (value.id == subGroupIds[i]) {
+                tempSubGroup.push({
+                  groupName: tempGroup[j]["checkListGroupName"],
+                  subGroupName: value["inputLabel"],
+                });
+              }
+            });
+          }
+        }
+
         setGroupData(tempGroup);
-        setSubGroupData(temp);
+        setSubGroupData(tempGroup);
         setComplianceData(result);
         handelWorkArea(result);
         handleTeamName(result.inspectionTeam);
@@ -477,36 +478,27 @@ function ComplianceSummary(props) {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
     );
     const result = res.data.data.results;
+    console.log(result,'kkkk')
     setQueData(result)
   };
 
-  // const handelActionTracker = async () => {
-  //   let jhaId = localStorage.getItem("fkComplianceId");
-  //   let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-  //     "qustionsIds"
-  //   ];
-  //   let allAction = await handelActionData(jhaId, apiData);
-  //   setActionData(allAction);
-  // };
+ 
 
   const handelActionTracker = async () => {
-    if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined )
-    {
-    let jhaId = localStorage.getItem("fkComplianceId");
-    let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
-      "qustionsIds"
-    ];
-    let allAction = await handelActionData(jhaId, apiData);
-    setActionData(allAction);
-  } setTimeout(()=> handelActionTracker(),1000)
-};
+    if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
+      let jhaId = localStorage.getItem("fkComplianceId");
+      let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
+        "qustionsIds"
+      ];
+      let allAction = await handelActionData(jhaId, apiData);
+      setActionData(allAction);
+    } setTimeout(() => handelActionTracker(), 1000)
+  };
 
   useEffect(() => {
     if (id) {
       auditQueData()
-      // fetchCheklist()
       fetchCheklistData();
-      // handelActionData()
       handelActionTracker()
     }
   }, []);
@@ -1129,7 +1121,6 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
-                                        {console.log(groupData,'groupData')}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
@@ -1148,12 +1139,12 @@ function ComplianceSummary(props) {
                                                   }}
                                                 />
                                               }
-                                              label={value.checkListLabel}
+                                              label={value.checkListGroupName}
                                             />
                                           ))}
                                         </FormGroup>
                                       </Grid>
-
+                                      
                                       <Grid item md={6} xs={12}>
                                         <Grid container spacing={3}>
                                           {Object.entries(subGroupData).map(
@@ -1168,10 +1159,9 @@ function ComplianceSummary(props) {
                                                   className="checkRadioLabel"
                                                   component="legend"
                                                 >
-                                                  {key}
                                                 </FormLabel>
                                                 <FormGroup>
-                                                  {value.map((value, i) => (
+                                                  {value['checkListValues'].map((value, i) => (
                                                     <FormControlLabel
                                                       //className={classes.labelValue}
                                                       className="checkedUnclick"
@@ -1298,13 +1288,14 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {groupData.map((value, index) =>
+                                      {/* {console.log(groupData[0].checkListValues.map(val=>(val.inputLabel)),'groupData')} */}
+                                      {groupData[0].checkListValues.map((value, index) =>
                                         <FormLabel
                                           className="checkRadioLabel"
                                           component="legend"
                                         >
 
-                                          {value.checkListName}
+                                          {value.inputLabel}
                                         </FormLabel>
                                       )}
                                       {/* <span
@@ -1335,8 +1326,8 @@ function ComplianceSummary(props) {
                                             />
                                           </ListItem>
                                         </span> */}
-                                      {console.log(quesData,'quesData')}
                                       {quesData.map((value, index) =>
+
                                         <Accordion
                                           expanded={
                                             expandedTableDetail === "panel3"
@@ -1344,7 +1335,9 @@ function ComplianceSummary(props) {
                                           onChange={handleTDChange("panel3")}
                                           defaultExpanded
                                           className="backPaperAccordian"
+
                                         >
+
                                           <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
                                             aria-controls="panel1bh-content"
@@ -1400,7 +1393,7 @@ function ComplianceSummary(props) {
                                                     Is this control applicable ?
                                                   </FormLabel>
                                                   <Typography className="viewLabelValue">
-                                                    {(value.defaultResponse ? value.defaultResponse : '-')}
+                                                    {value.defaultResponse ? value.defaultResponse : '-'}
                                                   </Typography>
                                                 </Grid>
                                               }
@@ -1417,7 +1410,7 @@ function ComplianceSummary(props) {
                                                   Findings
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  {(value.findings ? value.findings : '-')}
+                                                  {value.findings ? value.findings : '-'}
                                                 </Typography>
                                               </Grid>
                                               <Grid
@@ -1445,7 +1438,7 @@ function ComplianceSummary(props) {
                                                     Percentage
                                                   </FormLabel>
                                                   <Typography className="viewLabelValue">
-                                                    {(value.score ? value.score : '-')}
+                                                    {value.score ? value.score : '-'}
 
                                                   </Typography>
                                                 </Grid>

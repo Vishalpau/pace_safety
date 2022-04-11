@@ -194,7 +194,6 @@ const QuestionsGroup = (props) => {
       }/`
     );
     const result = res.data.data.results;
-console.log(result,'result')
     let data = JSON.parse(localStorage.getItem("auditChecks"));
     if (data !== null) {
       await setSubGroupId(data);
@@ -285,6 +284,7 @@ console.log(result,'result')
     setError(error);
     if (checkData.length > 0 && subGroupId.length > 0) {
       localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
+      localStorage.setItem("auditGroups", JSON.stringify(groupId));
       history.push({
         pathname: "/app/compliance-config/question",
         state: {
@@ -296,18 +296,6 @@ console.log(result,'result')
     } else {
       setGroupError(true)
     }
-
-    localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
-    localStorage.setItem("auditGroups", JSON.stringify(groupId));
-
-    history.push({
-      pathname: "/app/compliance-config/question",
-      state: {
-        fkProjectStructureIds: fkpsId,
-        CompanyId: fkCompanyId,
-        projectId: project.projectId,
-      },
-    });
   };
 
 
@@ -495,87 +483,11 @@ console.log(result,'result')
                     Work area information
                   </Typography>
                 </Grid>
-                {/* <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-                  <Paper elevation={1} className="paperSection">
-                    <Grid container spacing={3}>
-                      <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
-                        <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
-                      </Grid>
-
-                      {id ? (
-                        fetchSelectBreakDownList.map((data, key) => (
-                          <Grid item xs={3} md={3} key={key}>
-                            <FormControl
-                              error={error && error[`projectStructure${[key]}`]}
-                              variant="outlined"
-                              required
-                              className={classes.formControl}
-                            >
-                              <InputLabel id="demo-simple-select-label">
-                                {data.breakDownLabel}
-                              </InputLabel>
-                              <Select
-                                labelId="incident-type-label"
-                                id="incident-type"
-                                label={data.breakDownLabel}￼
-
-                                value={data.selectValue.id || ""}
-                                disabled={data.breakDownData.length === 0}
-                                onChange={(e) => {
-                                  handleBreakdown(
-                                    e,
-                                    key,
-                                    data.breakDownLabel,
-                                    data.selectValue
-                                  );
-                                }}
-                              >
-                                {data.breakDownData.length !== 0
-                                  ? data.breakDownData.map(
-                                    (selectvalues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectvalues.id}
-                                      >
-                                        {selectvalues.structureName}
-                                      </MenuItem>
-                                    )
-                                  )
-                                  : null}
-                              </Select>
-                              {error && error[`projectStructure${[key]}`] && (
-                                <FormHelperText>
-                                  {error[`projectStructure${[key]}`]}
-                                </FormHelperText>
-                              )}
-                            </FormControl>
-                          </Grid>
-                        ))
-                      ) : (
-                        <ProjectStructureInit
-                          selectDepthAndId={selectDepthAndId}
-                          setLevelLenght={setLevelLenght}
-                          error={error}
-                          setWorkArea={setWorkArea}
-                          setSelectDepthAndId={setSelectDepthAndId}
-                          isCompliance={true}
-                        />
-                      )}
-                    </Grid>
-                  </Paper>
-                </Grid> */} 
-
                 <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
-                        {/* <Typography
-                            variant="label"
-                            gutterBottom
-                            className="viewLabel"
-                        >
-                            (If selected all  compliance questions will be available across the projects)
-                        </Typography> */}
+              
                         <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
                       </Grid>
                       <ComplianceProjectStInit
@@ -758,7 +670,7 @@ console.log(result,'result')
                         </Grid>
                       </Grid>
                     </Grid>
-                    {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group</p>)}
+                    {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group*</p>)}
 
                   </Paper>
                 </Grid>

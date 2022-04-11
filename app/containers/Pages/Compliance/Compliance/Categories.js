@@ -149,6 +149,7 @@ const Categories = () => {
   const [groupId, setGroupId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [complianceData, setComplianceData] = useState({});
+  const [groupError, setGroupError] = useState(false);
 
   const [subGroupId, setSubGroupId] = useState([]);
   const userId =
@@ -183,9 +184,9 @@ const Categories = () => {
     { title: "Production" },
   ];
 
-
+// console.log(checkData,'checkData')
   const handelSubmit = async () => {
-    console.log(groupId, subGroupId, 'subGroupId')
+    if (checkData.length > 0 && subGroupId.length > 0) {
     form["groupIds"] = groupId.join(',');
     form["subGroupIds"] = subGroupId.join(',');
     form["updatedBy"] = userId;
@@ -200,6 +201,9 @@ const Categories = () => {
         console.log(error);
         setLoading(false);
       });
+    } else {
+      setGroupError(true)
+    }
   };
 
   const classes = useStyles();
@@ -220,8 +224,8 @@ const Categories = () => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        let groupIds = result.groupIds.split(",").map(i => i * 1);
-        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
+        let groupIds = result.groupIds.split(",").map(i => i * 1).filter(i => i!=0);
+        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1).filter(i => i!=0);
         setGroupId(groupIds);
         setSubGroupId(subGroupIds);
         setComplianceData(result)
@@ -283,7 +287,6 @@ const Categories = () => {
   };
 
   const handelSelectOption = (key) => {
-    console.log(key)
     for (let i = 0; i <= groupId.length; i++) {
       if (groupId[i] != undefined && groupId[i] == key["checklistgroupId"]) {
         return true;
@@ -373,7 +376,6 @@ const Categories = () => {
                           </FormControl>
                           <Grid item md={6} xs={12}>
                             <Grid container spacing={3}>
-                              {console.log(checkData)}
                               {checkData.map((value, index) => (
                                 <Grid
                                   item
@@ -414,6 +416,7 @@ const Categories = () => {
                             </Grid>
                           </Grid>
                         </Grid>
+                        {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group*</p>)}
                       </Paper>
                     </Grid>
                   </Grid>

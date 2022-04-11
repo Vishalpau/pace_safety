@@ -713,7 +713,6 @@ const Checks = (props) => {
       }
       apiCall(dataCheck)
     }
-    console.log(dataCheck)
     history.push("/app/pages/compliance/performance-summary");
 
   };

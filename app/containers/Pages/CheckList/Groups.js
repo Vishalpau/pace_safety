@@ -32,11 +32,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const fkCompanyId =
+JSON.parse(localStorage.getItem("company")) !== null
+  ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+  : null;
+
+const project =
+JSON.parse(localStorage.getItem("projectName")) !== null
+  ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+  : null;
+
 function Group() {
   const [form, setForm] = useState(
     {
-      fkCompanyId: '0',
-      fkProjectId: '',
+      fkCompanyId: fkCompanyId,
+      fkProjectId: project,
       fkCheckListId: '',
       checkListGroupName: '',
       parentGroup: '',
@@ -82,7 +92,7 @@ function Group() {
   const handelNext = async () => {
     const { projectId } = JSON.parse(localStorage.getItem('projectName'));
     form.parentGroup = form.parentGroup == '' ? 0 : form.parentGroup;
-    form.fkProjectId = projectId;
+    form.fkProjectId = project;
     const res = await api.post(`api/v1/core/checklists/${checkListId}/groups/`, form);
     if (res.status == 201) {
       setForm({
