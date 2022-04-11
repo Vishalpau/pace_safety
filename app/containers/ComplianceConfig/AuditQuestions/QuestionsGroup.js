@@ -165,12 +165,14 @@ const QuestionsGroup = (props) => {
   const [open, setOpen] = React.useState(false);
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
+  const [groupId, setGroupId] = useState([]);
   const [subGroupId, setSubGroupId] = useState([]);
   const [fetchSelectBreakDownList, setFetchSelectBreakDownList] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
   const [levelLenght, setLevelLenght] = useState(0);
   const [workArea, setWorkArea] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [groupError, setGroupError] = useState(false);
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -188,18 +190,18 @@ const QuestionsGroup = (props) => {
   const fetchChecklist = async () => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
-      }/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project.projectId
+      }/`
     );
     const result = res.data.data.results;
-
+console.log(result,'result')
     let data = JSON.parse(localStorage.getItem("auditChecks"));
     if (data !== null) {
       await setSubGroupId(data);
       let temp = [];
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < result.length; j++) {
-          if (result[j].checkListLabel === data[i].groupName) {
+          if (result[j].checkListGroupName === data[i].groupName) {
             temp.push(result[j]);
           }
         }
@@ -281,10 +283,23 @@ const QuestionsGroup = (props) => {
     const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
-    if (!isValid) {
-      return "data not valid";
+    if (checkData.length > 0 && subGroupId.length > 0) {
+      localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
+      history.push({
+        pathname: "/app/compliance-config/question",
+        state: {
+          fkProjectStructureIds: structureId,
+          CompanyId: fkCompanyId,
+          projectId: project.projectId,
+        },
+      });
+    } else {
+      setGroupError(true)
     }
+
     localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
+    localStorage.setItem("auditGroups", JSON.stringify(groupId));
+
     history.push({
       pathname: "/app/compliance-config/question",
       state: {
@@ -295,29 +310,57 @@ const QuestionsGroup = (props) => {
     });
   };
 
+
+
   const handlePhysicalHazards = async (e, value, index) => {
+    let tempGroupId = [...groupId];
     let temp = [...checkData];
-    let tempsub = [...subGroupId];
+
     if (e.target.checked == false) {
       temp.map((data, key) => {
-        if (data["checklistId"] == value["checklistId"]) {
+        if (data["checkListGroupName"] == value["checkListGroupName"]) {
           temp.splice(key, 1);
         }
       });
-
-      let abc = tempsub.filter(
-        (data) => data["groupName"] != value["checkListLabel"]
-      );
-      tempsub = abc;
+      tempGroupId.map((data, key) => {
+        if (data == value["checkListGroupName"]) {
+          tempGroupId.splice(key, 1);
+        }
+      });
     } else {
+
+      tempGroupId.push(value.checkListGroupName);
       temp.push(value);
     }
+    await setGroupId(tempGroupId);
     await setCheckData(temp);
-    await setSubGroupId(tempsub);
   };
 
+  // const handlePhysicalHazards = async (e, value, index) => {
+  //   let temp = [...checkData];
+  //   let tempsub = [...subGroupId];
+  //   if (e.target.checked == false) {
+  //     temp.map((data, key) => {
+  //       if (data["checklistId"] == value["checklistId"]) {
+  //         temp.splice(key, 1);
+  //       }
+  //     });
+
+  //     let abc = tempsub.filter(
+  //       (data) => data["groupName"] != value["checkListGroupName"]
+  //     );
+  //     tempsub = abc;
+  //   } else {
+  //     temp.push(value);
+  //   }
+  //   await setCheckData(temp);
+  //   await setGroupId(tempsub);
+  // };
+
   const handleGroups = async (e, value, index, gName, sGName) => {
+    console.log(gName,sGName )
     let temp = [...subGroupId];
+    console.log(gName)
     if (e.target.checked == false) {
       temp.map((data, key) => {
         if (data.subGroupName === sGName) {
@@ -645,7 +688,9 @@ const QuestionsGroup = (props) => {
                           Group name
                         </FormLabel>
                         <FormGroup className={classes.customCheckBoxList}>
-                          {checkGroups.map((value, index) => (
+
+                          {checkGroups[0].checklistGroups.map((value, index) => 
+                           (
                             <FormControlLabel
                               control={
                                 <Checkbox
@@ -655,8 +700,8 @@ const QuestionsGroup = (props) => {
                                 />
                               }
                               className="selectLabel"
-                              label={value.checkListLabel}
-                              checked={handelSelectOption(value.checkListLabel)}
+                              label={value.checkListGroupName}
+                              checked={handelSelectOption(value.checkListGroupName)}
                               onChange={async (e) =>
                                 handlePhysicalHazards(e, value, index)
                               }
@@ -674,10 +719,10 @@ const QuestionsGroup = (props) => {
                                   className="checkRadioLabel"
                                   component="legend"
                                 >
-                                  {value["checkListLabel"]}
+                                  {value["checkListGroupName"]}
                                 </FormLabel>
                                 <FormGroup>
-                                  {value["checklistValues"].map((option, index) => (
+                                  {value["checkListValues"].map((option, index) => (
                                     <FormControlLabel
                                       className="selectLabel"
                                       control={
@@ -700,7 +745,7 @@ const QuestionsGroup = (props) => {
                                           e,
                                           option.id,
                                           index,
-                                          value.checkListLabel,
+                                          value.checkListGroupName,
                                           option.inputLabel
                                         )
                                       }
@@ -713,6 +758,8 @@ const QuestionsGroup = (props) => {
                         </Grid>
                       </Grid>
                     </Grid>
+                    {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group</p>)}
+
                   </Paper>
                 </Grid>
 

@@ -243,6 +243,9 @@ function PersonalDashboard(props) {
       localStorage.removeItem('lastState')
       history.push(laststate)
     }
+    if(localStorage.getItem('projectName') != null) {
+      setTimeout(() => history.push('app/icare'), 1000)
+    }
   }
 
   const getModules = async (apps) => {
@@ -393,7 +396,7 @@ function PersonalDashboard(props) {
     };
     await axios(config)
       .then(function (response) {
-        setIsLoading(true)
+        // setIsLoading(true)
         if (response.status === 200) {
           if (comId != 0) {
             response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
@@ -505,8 +508,8 @@ function PersonalDashboard(props) {
                 // fetchPermissionData(); 
                 if (res.status === 200) {
                   getSubscriptions()
-                  history.push('/app/' + targetPage + tarId)
                   localStorage.removeItem("direct_loading")
+                  history.push('/app/' + targetPage + tarId)
                 }
               })
             }
@@ -543,13 +546,13 @@ function PersonalDashboard(props) {
 
   return (
     <>
-      {isLoading ? <>
+       <>
         {/* <PapperBlock title="Home" icon="ion-md-list-box"> */}
         <CustomPapperBlock title="Home" icon ='customDropdownPageIcon homePageIcon' whiteBg>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Paper elevation={1} className="paperSection">
-
+              {isLoading ?
                 <div className="seven_hexagon_row">
                   <div className="honeycomb">
                     <div className="ibws-fix hexagon_row1">
@@ -706,7 +709,9 @@ function PersonalDashboard(props) {
                     </div>
                   </div>
                 </div>
-
+ :
+ <Loading />
+}
                 <Dialog
                   className={classes.projectDialog}
                   open={open}
@@ -847,9 +852,7 @@ function PersonalDashboard(props) {
           </Grid>
         </CustomPapperBlock>
       </>
-        :
-        <Loading />
-      }
+       
     </>
   );
 }
