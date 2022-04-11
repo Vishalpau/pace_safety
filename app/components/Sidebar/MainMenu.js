@@ -174,13 +174,21 @@ function MainMenu(props) {
     load()
   }, [])
 
+  const openSSO = () => {
+    let constprojectStructId = (localStorage.getItem('selectBreakDown') === undefined) ? '' : localStorage.getItem('selectBreakDown')
+    let href = SSO_URL + "/dashboard?companyId=" + JSON.parse(localStorage.getItem('company')).fkCompanyId 
+                                   + "&projectId=" + JSON.parse(localStorage.getItem('projectName')).projectName.projectId 
+                                   + "&projectStructure=" + constprojectStructId
+    window.location.href = href
+  }
+
   return (<div>{dataMenuInner.length == undefined ? <></> : (
     <>
       <div key="Home_menu">
         <ListItem
           button
           component="a"
-          href={SSO_URL + "/dashboard?companyId=" + compId + "&projectId=" + projectId + "&projectStructure=" + projectStructId}
+          onClick={openSSO}
           className={classNames(
             classes.head
           ) + ' homeMenu'}
