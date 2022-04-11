@@ -747,7 +747,7 @@ const Checks = (props) => {
       setError(true)
     }
   };
-  const classes = useStyles();
+  const classes = useStyles()
 
   const handleChangeData = (value, field, index, id) => {
     let temp = [...checkData];
