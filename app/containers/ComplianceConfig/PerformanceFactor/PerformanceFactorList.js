@@ -35,6 +35,9 @@ import ViewWeekOutlinedIcon from '@material-ui/icons/ViewWeekOutlined';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import InputLabel from '@material-ui/core/InputLabel';
+import { Select } from "@material-ui/core";
+import MenuItem from '@material-ui/core/MenuItem';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
@@ -171,6 +174,7 @@ function PerformanceFactorList() {
   const [totalData, setTotalData] = useState(0);
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
+  const [filter, setFilter] = useState("");
 
   // const handleClickOpen = () => {
   //   setOpen(true);
@@ -386,13 +390,38 @@ function PerformanceFactorList() {
     fetchFectorData();
   }, [])
 
-  console.log(fectorData, "111")
+  const handleFilter = (value) => {
+    setFilter(value);
+    let temp = []
+    for (let i = 0; i < allFectorData.length; i++) {
+      if (value) {
+        if (allFectorData[i].status === value) {
+          temp.push([
+            allFectorData[i].id,
+            allFectorData[i].factorType,
+            allFectorData[i].factorName,
+            allFectorData[i].factorConstant,
+            allFectorData[i].status,
+          ])
+        }
+      } else {
+        temp.push([
+          allFectorData[i].id,
+          allFectorData[i].factorType,
+          allFectorData[i].factorName,
+          allFectorData[i].factorConstant,
+          allFectorData[i].status,
+        ])
+      }
+    }
+    setFectorData(temp)
+  }
 
 
   return (
     <>
       <Grid container spacing={3}>
-        <Grid item md={12} sm={12} xs={12} align='right' className="paddBRemove">
+        <Grid item md={6} sm={6} xs={6} align='left' className="paddBRemove">
           <Tooltip title="New">
             <Button size="medium" variant="contained" color="primary" onClick={(e) => handleNewPerformanceFactorAddPush(e)}>
               <AddIcon className="marginR5" /> New
@@ -403,6 +432,24 @@ function PerformanceFactorList() {
                 <CloudUploadIcon className="marginR5" /> Upload
               </Button>
           </Tooltip> */}
+        </Grid>
+        <Grid item md={6} sm={6} xs={6} align='right' className="paddBRemove">
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel style={{ marginLeft: '20px', marginTop: '-5px' }} id="checklistSearchFilter">Filter</InputLabel>
+            <Select
+              style={{ minWidth: '120px' }}
+              labelId="checklistSearchFilte"
+              id="demo-simple-select-helper"
+              onChange={(e) => handleFilter(e.target.value)}
+              value={filter}
+              variant="outlined"
+              label="Filter"
+            >
+              <MenuItem value="">None</MenuItem>
+              <MenuItem value={"Active"}>Status - active</MenuItem>
+              <MenuItem value={"Inactive"}>Status - inactive</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item md={12} sm={12} xs={12}>
           {isLoading ? <>
