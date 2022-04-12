@@ -908,7 +908,7 @@ function ComplianceListNew(props) {
                                         <span
                                           className={classes.listingLabelValue}
                                         >
-                                          {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListLabel).join(', ') :"-"}
+                                          {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListGroupName).join(', ') :"-"}
                                         </span>
                                       </Typography>
                                       {/* <span

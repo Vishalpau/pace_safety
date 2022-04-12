@@ -443,7 +443,6 @@ const Checks = (props) => {
   const [selectedActionDate, setSelectedActionDate] = useState(new Date());
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [criticalityData, setCriticalityData] = useState([]);
-  const [criticalQuestions, setCriticalQuestions] = useState([]);
   const [statusData, setStatusData] = useState([])
   const handleActionDateChange = (date) => {
     setSelectedActionDate(date);
@@ -559,27 +558,17 @@ const Checks = (props) => {
       const res = await api.get(
         `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
       );
+
       const result2 = res.data.data.results;
       temp.push(result2);
     }
     let tempQuestionId = [];
-    let fd = await fetchData();
+    let fd = await fetchData()
     temp.map((tempvalue, i) => {
       if (tempvalue['message'] === undefined) {
         tempvalue.map((value, index) => {
-          console.log(value, "fff")
           tempQuestionId.push({ id: value.id });
-          if (value.responseType === 'Criticality') {
-            setCriticalQuestions(data => ([
-              ...data, {
-                questionId: value.id,
-                performance: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].performance : '',
-                ratingColor: "",
-                menuValue: "",
-                statusValue: ""
-              }
-            ]));
-          }
+          console.log(index, 'value')
           tempCheckData.push({
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
@@ -635,119 +624,99 @@ const Checks = (props) => {
         : null;
     let tempUpdatedQuestion = []
     let tempNewQuestion = []
-    let errorFlag = false;
 
     checkData.map((data) => {
       console.log(data)
       if (data.id) {
-        if (data.criticality) {
-          if (!data.auditStatus || !data.findings)
-            errorFlag = true;
-        } else {
-          if (!data.defaultResponse || !data.findings) {
-            errorFlag = true;
-          }
-        }
         tempUpdatedQuestion.push(data)
       } else {
-        if (data.criticality) {
-          if (!data.auditStatus || !data.findings)
-            errorFlag = true;
-        } else {
-          if (!data.defaultResponse || !data.findings) {
-            errorFlag = true;
-          }
-        }
         tempNewQuestion.push(data)
       }
     })
-    if (!errorFlag) {
-      setError(false);
-      if (tempNewQuestion.length > 0) {
-        let dataCheck = [];
-        for (var i = 0; i < tempNewQuestion.length; i++) {
-          let data = {};
-          data["questionId"] = tempNewQuestion[i].questionId
-          data["question"] = tempNewQuestion[i].question
-          data["criticality"] = tempNewQuestion[i].criticality
-          data["performance"] = criticalQuestions.filter(question => question.questionId === tempNewQuestion[i].questionId).length ? criticalQuestions.filter(question => question.questionId === tempNewQuestion[i].questionId)[0].performance : tempNewQuestion[i].performance;
-          data["groupId"] = tempNewQuestion[i].groupId
-          data["groupName"] = tempNewQuestion[i].groupName
-          data["subGroupId"] = tempNewQuestion[i].subGroupId
-          data["subGroupName"] = tempNewQuestion[i].subGroupName
-          data["defaultResponse"] = tempNewQuestion[i].defaultResponse
-          // data["score"] = tempNewQuestion[i].score
-          data["findings"] = tempNewQuestion[i].findings
-          data["score"] = tempNewQuestion[i].score
-          data["auditStatus"] = tempNewQuestion[i].auditStatus
-          if (typeof tempNewQuestion[i].attachment !== "string") {
-            if (tempNewQuestion[i].attachment !== null) {
-              data["attachment"] = {
-                name: tempNewQuestion[i].attachment.name,
-                lastModified: tempNewQuestion[i].attachment.lastModified,
-                lastModifiedDate: tempNewQuestion[i].attachment.lastModifiedDate,
-                size: tempNewQuestion[i].attachment.size,
-                type: tempNewQuestion[i].attachment.type,
-                webkitRelativePath: tempNewQuestion[i].attachment.webkitRelativePath,
-              }
+    if (tempNewQuestion.length > 0) {
+      let dataCheck = [];
+      for (var i = 0; i < tempNewQuestion.length; i++) {
+        let data = {};
+        data["questionId"] = tempNewQuestion[i].questionId
+        data["question"] = tempNewQuestion[i].question
+        data["criticality"] = tempNewQuestion[i].criticality
+        data["performance"] = tempNewQuestion[i].performance
+        data["groupId"] = tempNewQuestion[i].groupId
+        data["groupName"] = tempNewQuestion[i].groupName
+        data["subGroupId"] = tempNewQuestion[i].subGroupId
+        data["subGroupName"] = tempNewQuestion[i].subGroupName
+        data["defaultResponse"] = tempNewQuestion[i].defaultResponse
+        // data["score"] = tempNewQuestion[i].score
+        data["findings"] = tempNewQuestion[i].findings
+        data["score"] = tempNewQuestion[i].score
+        data["auditStatus"] = tempNewQuestion[i].auditStatus
+        if (typeof tempNewQuestion[i].attachment !== "string") {
+          if (tempNewQuestion[i].attachment !== null) {
+            data["attachment"] = {
+              name: tempNewQuestion[i].attachment.name,
+              lastModified: tempNewQuestion[i].attachment.lastModified,
+              lastModifiedDate: tempNewQuestion[i].attachment.lastModifiedDate,
+              size: tempNewQuestion[i].attachment.size,
+              type: tempNewQuestion[i].attachment.type,
+              webkitRelativePath: tempNewQuestion[i].attachment.webkitRelativePath,
             }
           }
-          data["status", "Active"]
-          data["fkAuditId"] = tempNewQuestion[i].fkAuditId
-          data["createdAt"] = new Date().toISOString()
-          data["createdBy"] = tempNewQuestion[i].createdBy
-          dataCheck.push(data)
         }
-        const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck);
-
-      }
-      if (tempUpdatedQuestion.length > 0) {
-
-        let dataCheck = [];
-        for (var i = 0; i < tempUpdatedQuestion.length; i++) {
-          let data = {};
-          data["id"] = tempUpdatedQuestion[i].id
-          data["questionId"] = tempUpdatedQuestion[i].questionId
-          data["question"] = tempUpdatedQuestion[i].question
-          data["criticality"] = tempUpdatedQuestion[i].criticality
-          data["performance"] = criticalQuestions.filter(question => question.questionId === tempUpdatedQuestion[i].questionId).length ? criticalQuestions.filter(question => question.questionId === tempUpdatedQuestion[i].questionId)[0].performance : tempUpdatedQuestion[i].performance;
-          data["groupId"] = tempUpdatedQuestion[i].groupId
-          data["groupName"] = tempUpdatedQuestion[i].groupName
-          data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
-          data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
-          data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
-          // data["score"] = tempUpdatedQuestion[i].score
-          data["findings"] = tempUpdatedQuestion[i].findings
-          data["score"] = tempUpdatedQuestion[i].score
-          data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
-          if (typeof tempUpdatedQuestion[i].attachment !== "string") {
-            if (tempUpdatedQuestion[i].attachment !== null) {
-              console.log('attachment', tempUpdatedQuestion[i].attachment)
-              data["attachment"] = {
-                name: tempUpdatedQuestion[i].attachment.name,
-                lastModified: tempUpdatedQuestion[i].attachment.lastModified,
-                lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
-                size: tempUpdatedQuestion[i].attachment.size,
-                type: tempUpdatedQuestion[i].attachment.type,
-                webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-              }
-            }
-          }
-          data["status", "Active"]
-          data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
-          data["createdAt"] = new Date().toISOString()
-          data["createdBy"] = tempUpdatedQuestion[i].createdBy
-          dataCheck[i] = data
-        }
-        apiCall(dataCheck)
+        data["status", "Active"]
+        data["fkAuditId"] = tempNewQuestion[i].fkAuditId
+        data["createdAt"] = new Date().toISOString()
+        data["createdBy"] = tempNewQuestion[i].createdBy
+        dataCheck[i] = data
+        console.log(dataCheck)
       }
 
-      history.push("/app/pages/compliance/performance-summary");
-    } else {
-      setError(true)
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
+        ;
     }
+    if (tempUpdatedQuestion.length > 0) {
+
+      let dataCheck = [];
+      for (var i = 0; i < tempUpdatedQuestion.length; i++) {
+        let data = {};
+        data["id"] = tempUpdatedQuestion[i].id
+        data["questionId"] = tempUpdatedQuestion[i].questionId
+        data["question"] = tempUpdatedQuestion[i].question
+        data["criticality"] = tempUpdatedQuestion[i].criticality
+        data["performance"] = tempUpdatedQuestion[i].performance
+        data["groupId"] = tempUpdatedQuestion[i].groupId
+        data["groupName"] = tempUpdatedQuestion[i].groupName
+        data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
+        data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
+        data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
+        // data["score"] = tempUpdatedQuestion[i].score
+        data["findings"] = tempUpdatedQuestion[i].findings
+        data["score"] = tempUpdatedQuestion[i].score
+        data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
+        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+          if (tempUpdatedQuestion[i].attachment !== null) {
+            console.log('attachment', tempUpdatedQuestion[i].attachment)
+            data["attachment"] = {
+              name: tempUpdatedQuestion[i].attachment.name,
+              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
+              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
+              size: tempUpdatedQuestion[i].attachment.size,
+              type: tempUpdatedQuestion[i].attachment.type,
+              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+            }
+          }
+        }
+        data["status", "Active"]
+        data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
+        data["createdAt"] = new Date().toISOString()
+        data["createdBy"] = tempUpdatedQuestion[i].createdBy
+        dataCheck[i] = data
+      }
+      apiCall(dataCheck)
+    }
+    history.push("/app/pages/compliance/performance-summary");
+
   };
-  const classes = useStyles()
+  const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
     let temp = [...checkData];
@@ -830,8 +799,6 @@ const Checks = (props) => {
     fetchMatrixData();
 
   }, []);
-
-  console.log(checkData, 'abcd')
 
   return (
     <CustomPapperBlock
@@ -1014,7 +981,6 @@ const Checks = (props) => {
                                                       />
                                                     ))}
                                                   </RadioGroup>
-                                                  {((error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].defaultResponse ? false : true) : false)) ? true : false) && (<p style={{ color: "#f44336", fontSize: '12px', fontFamily: 'Open Sans,sans-serif', fontWeight: '400' }}>pLease select a response</p>)}
                                                 </FormControl>
                                               </Grid>
                                               <Grid item md={12} xs={12}>
@@ -1032,8 +998,6 @@ const Checks = (props) => {
                                                   }
                                                   multiline
                                                   rows={4}
-                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
                                                   defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
                                                   fullWidth
                                                   variant="outlined"
@@ -1280,9 +1244,7 @@ const Checks = (props) => {
                                                   select
                                                   fullWidth
                                                   variant="outlined"
-                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].criticality ? false : true) : false)) ? "please enter criticality" : ""}
-                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : '')}
+                                                  defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : "")}
                                                   className="formControl"
                                                   onChange={(e) =>
                                                     handleChangeData(
@@ -1313,8 +1275,6 @@ const Checks = (props) => {
                                                   label="Status*"
                                                   name="status"
                                                   id="status"
-                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].auditStatus ? false : true) : false)) ? "please enter status" : ""}
                                                   defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].auditStatus : ""}
                                                   select
                                                   fullWidth
@@ -1366,8 +1326,6 @@ const Checks = (props) => {
                                                   id="findings"
                                                   multiline
                                                   rows={4}
-                                                  error={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? true : false}
-                                                  helperText={(error && (checkData.filter(cd => cd.question === value.question).length ? (checkData.filter(cd => cd.question === value.question)[0].findings ? false : true) : false)) ? "please enter findings" : ""}
                                                   defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].findings : ""}
                                                   fullWidth
                                                   variant="outlined"

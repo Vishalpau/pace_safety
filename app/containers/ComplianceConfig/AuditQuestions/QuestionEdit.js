@@ -294,6 +294,7 @@ const QuestionEdit = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
+    console.log(projectBreakdown, 'projectBreakdown')
     if (projectBreakdown) {
       const projectData = JSON.parse(localStorage.getItem("projectName"));
       let breakdownLength = projectData.projectName.breakdown.length;
@@ -338,43 +339,50 @@ const QuestionEdit = (props) => {
               setIsNext(true);
             });
         } else {
-          var config = {
-            method: "get",
-            url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
-              }${breakDown[key - 1].substring(2)}`,
-            headers: HEADER_AUTH,
-          };
 
-          await api(config)
-            .then(async (response) => {
-              const result = response.data.data.results;
+          console.log(breakDown.some(breakDown => ((breakDown == 'All'))))
+          if (!breakDown.some(breakDown => ((breakDown == 'All')))) {
+            var config = {
+              method: "get",
+              url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
+                }${breakDown[key - 1].substring(2)}`,
+              headers: HEADER_AUTH,
+            };
 
-              const res = result.map((item, index) => {
-                if (parseInt(breakDown[key].slice(2)) == item.id) {
-                  selectBreakDown = [
-                    ...selectBreakDown,
-                    {
-                      breakDownLabel:
-                        projectData.projectName.breakdown[key].structure[0].name,
-                      selectValue: {
-                        depth: item.depth,
-                        id: item.id,
-                        name: item.name,
-                        label:
-                          projectData.projectName.breakdown[key].structure[0]
-                            .name,
+            await api(config)
+              .then(async (response) => {
+                const result = response.data.data.results;
+
+                const res = result.map((item, index) => {
+                  if (parseInt(breakDown[key].slice(2)) == item.id) {
+                    selectBreakDown = [
+                      ...selectBreakDown,
+                      {
+                        breakDownLabel:
+                          projectData.projectName.breakdown[key].structure[0].name,
+                        selectValue: {
+                          depth: item.depth,
+                          id: item.id,
+                          name: item.name,
+                          label:
+                            projectData.projectName.breakdown[key].structure[0]
+                              .name,
+                        },
+                        breakDownData: result,
                       },
-                      breakDownData: result,
-                    },
-                  ];
-                }
+                    ];
+                  }
+                });
+                console.log(selectBreakDown, 'selectBreakDown')
+                setFetchSelectBreakDownList(selectBreakDown);
+              })
+              .catch((error) => {
+                console.log(error);
+                setIsNext(true);
               });
-              setFetchSelectBreakDownList(selectBreakDown);
-            })
-            .catch((error) => {
-              console.log(error);
-              setIsNext(true);
-            });
+          } else {
+            // setFetchSelectBreakDownList(breakDown)
+          }
         }
       }
     }
@@ -659,6 +667,7 @@ const QuestionEdit = (props) => {
                           </FormControl>
                         </Grid>
                       </Grid>
+                      {error.groupError && (<p style={{ fontSize: '13px', color: "#FF0000" }}>{error.groupError}</p>)}
                     </Paper>
                   </Grid>
 
