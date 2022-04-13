@@ -340,8 +340,8 @@ const QuestionEdit = (props) => {
             });
         } else {
 
-          console.log(breakDown.some(breakDown => ((breakDown == 'All'))))
-          if (!breakDown.some(breakDown => ((breakDown == 'All')))){
+          // console.log(breakDown.some(breakDown => ((breakDown == 'All'))))
+          // if (!breakDown.some(breakDown => ((breakDown == 'All')))){
           var config = {
             method: "get",
             url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -380,9 +380,9 @@ const QuestionEdit = (props) => {
               console.log(error);
               setIsNext(true);
             });
-        }else{
-          // setFetchSelectBreakDownList(breakDown)
-        }
+        // }else{
+        //   setFetchSelectBreakDownList(breakDown)
+        // }
       }
       }
     }
