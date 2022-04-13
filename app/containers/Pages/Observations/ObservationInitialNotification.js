@@ -246,6 +246,8 @@ const ObservationInitialNotification = (props) => {
   const [companyUser, setCompanyUser] = useState([]);
   const [notifyToOther, setNotifyToOther] = useState('');
   const [companyUserDetails, setCompanyUserDetails] = useState([]);
+  const [prevStrIds, setPrevStrIds] = useState('');
+
 
 
   const radioType = ['Risk', 'Comments', 'Positive behavior'];
@@ -630,21 +632,31 @@ const ObservationInitialNotification = (props) => {
     }
   };
 
-  const fetchNotificationSent = async () => {
+  const fetchNotificationSent = async () => { 
     const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
     const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
-    try {
-      const config = {
-        method: 'get',
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom`,
-        headers: HEADER_AUTH,
-      };
-      const res = await api(config);
-      if (res.status === 200) {
-        const result = res.data.data.results;
-        setNotificationSentValue(result);
-      }
-    } catch (error) { }
+    const uniqueProjectStructure = [...new Set(selectDepthAndId)];
+    const fkProjectStructureId = uniqueProjectStructure
+      .map((depth) => depth)
+      .join(':');
+    let fkProjectStructureIds = fkProjectStructureId;
+    if(fkProjectStructureIds != prevStrIds) {
+      console.log(fkProjectStructureIds, 'fkProjectStructureIds')
+      setPrevStrIds(fkProjectStructureIds)
+      try {      
+        const config = {
+          method: 'get',
+          url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/observations/?subentity=observations&roleType=custom&projectStructure=${fkProjectStructureIds}`,
+          headers: HEADER_AUTH,
+        };
+        const res = await api(config);
+        if (res.status === 200) {
+          const result = res.data.data.results;
+          setNotificationSentValue(result);
+        }
+      } catch (error) { }
+    }
+    
   };
 
   const fetchTags = async () => {
@@ -697,6 +709,7 @@ const ObservationInitialNotification = (props) => {
     const sliceData = dataDepthAndId.slice(0, index);
     const newdataDepthAndId = [...sliceData, `${index + 1}L${value}`];
     setSelectDepthAndId(newdataDepthAndId);
+    fetchNotificationSent()
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
@@ -744,6 +757,7 @@ const ObservationInitialNotification = (props) => {
   };
 
   useEffect(() => {
+    
     handleIndiv();
     fetchTags();
     fetchDepartment();
@@ -792,6 +806,7 @@ Project information
                         setWorkArea={setWorkArea}
                         setSelectDepthAndId={setSelectDepthAndId}
                         className="formControl"
+                        onChange={fetchNotificationSent()}
                       />
 
                     </Grid>
@@ -1724,7 +1739,6 @@ Attachment
                       <img className={classes.observationFormBox} variant="rounded" alt="Observation form banner" src={attachment} />
                     </Grid>
                   )
-
                   : null}
 
                 {Object.values(error).length > 0

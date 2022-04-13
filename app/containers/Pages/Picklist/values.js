@@ -175,6 +175,14 @@ function Pickvalues(props) {
     { label: 'No', value: '0' }
   ];
 
+  const isvalidate = (text, column, id) => {
+    const val = pickValues.filter(value => value[column] == text);
+    if (val.length && column == 'name') {
+      return false;
+    }
+    return true;
+  };
+
   const _pickvalues = list => list.map(listItem => (
     <tr>
       <td>
@@ -184,6 +192,7 @@ function Pickvalues(props) {
           value={listItem.inputLabel}
           column="label"
           save={save}
+          isvalidate={isvalidate}
         />
       </td>
       <td>
@@ -193,6 +202,7 @@ function Pickvalues(props) {
           value={listItem.inputValue}
           column="value"
           save={save}
+          isvalidate={isvalidate}
         />
       </td>
       <td>
@@ -233,7 +243,7 @@ function Pickvalues(props) {
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
             <Toolbar>
-              <div className="leftSide" className={classes.leftSide}>
+              <div className={classes.leftSide}>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -259,7 +269,7 @@ function Pickvalues(props) {
             <thead>
               <tr>
                 <th>Input Label</th>
-                <th>Input Value</th>
+                <th>Database Value</th>
                 <th>Is Selected</th>
                 <th>Parent</th>
                 <th>Group</th>
@@ -292,7 +302,7 @@ function Pickvalues(props) {
                     variant="outlined"
                     rows="1"
                     id="add_inputValue"
-                    label="Input Value"
+                    label="Database Value"
                     className={classes.fullWidth}
                     onChange={(e) => {
                       setForm({
