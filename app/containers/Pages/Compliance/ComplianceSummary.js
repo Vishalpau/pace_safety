@@ -1288,16 +1288,256 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {/* {console.log(groupData[0].checkListValues.map(val=>(val.inputLabel)),'groupData')} */}
-                                      {groupData[0].checkListValues.map((value, index) =>
-                                        <FormLabel
-                                          className="checkRadioLabel"
-                                          component="legend"
-                                        >
+                                      {groupData.map(val => val.checkListValues.map((subGrpData, index) => {
+                                        return (
+                                          <>
+                                            <FormLabel
+                                              className="checkRadioLabel"
+                                              component="legend"
+                                            >
+                                              {subGrpData.inputLabel}
+                                            </FormLabel>
 
-                                          {value.inputLabel}
-                                        </FormLabel>
-                                      )}
+                                            {quesData.map((value, index) => {
+                                              console.log(subGrpData.id == value.subGroupId, 'mmmmm')
+                                              return subGrpData.id == value.subGroupId ? <Accordion
+                                                expanded={
+                                                  expandedTableDetail === "panel3"
+                                                }
+                                                onChange={handleTDChange("panel3")}
+                                                defaultExpanded
+                                                className="backPaperAccordian"
+
+                                              >
+
+                                                <AccordionSummary
+                                                  expandIcon={<ExpandMoreIcon />}
+                                                  aria-controls="panel1bh-content"
+                                                  id="panel1bh-header"
+                                                  className="accordionHeaderSection"
+                                                >
+                                                  <List className={classes.heading}>
+                                                    <ListItem
+                                                      className={
+                                                        classes.accordingHeaderContentLeft
+                                                      }
+                                                    >
+                                                      <ListItemText primary={value.question} />
+                                                    </ListItem>
+                                                  </List>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                  <Grid container spacing={2}>
+                                                    {value.criticality ?
+                                                      <>
+                                                        <Grid item md={4} sm={4} xs={12}>
+                                                          <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
+                                                          <Typography className="viewLabelValue">
+                                                            {value.criticality ? value.criticality : '-'}
+                                                          </Typography>
+                                                        </Grid>
+
+                                                        <Grid item md={4} sm={4} xs={12}>
+                                                          <FormLabel component="legend" className="viewLabel">Status</FormLabel>
+                                                          <Typography className="viewLabelValue">
+                                                            {value.auditStatus ? value.auditStatus : '-'}
+                                                          </Typography>
+                                                        </Grid>
+
+                                                        <Grid item md={4} sm={4} xs={12}>
+                                                          <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
+                                                          <Typography className="viewLabelValue">
+                                                            {value.performance ? value.performance : '-'}
+                                                          </Typography>
+                                                        </Grid>
+                                                      </>
+                                                      :
+                                                      <Grid
+                                                        item
+                                                        md={12}
+                                                        sm={12}
+                                                        xs={12}
+                                                      >
+                                                        <FormLabel
+                                                          component="legend"
+                                                          className="viewLabel"
+                                                        >
+                                                          Is this control applicable ?
+                                                        </FormLabel>
+                                                        <Typography className="viewLabelValue">
+                                                          {value.defaultResponse ? value.defaultResponse : '-'}
+                                                        </Typography>
+                                                      </Grid>
+                                                    }
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                    >
+                                                      <FormLabel
+                                                        component="legend"
+                                                        className="viewLabel"
+                                                      >
+                                                        Findings
+                                                      </FormLabel>
+                                                      <Typography className="viewLabelValue">
+                                                        {value.findings ? value.findings : '-'}
+                                                      </Typography>
+                                                    </Grid>
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                    >
+                                                      <FormLabel
+                                                        component="legend"
+                                                        className="checkRadioLabel"
+                                                      >
+                                                        Score
+                                                      </FormLabel>
+                                                      <Grid
+                                                        item
+                                                        md={12}
+                                                        sm={12}
+                                                        xs={12}
+                                                      >
+                                                        <FormLabel
+                                                          component="legend"
+                                                          className="viewLabel"
+                                                        >
+                                                          Percentage
+                                                        </FormLabel>
+                                                        <Typography className="viewLabelValue">
+                                                          {value.score ? value.score : '-'}
+
+                                                        </Typography>
+                                                      </Grid>
+                                                    </Grid>
+
+
+
+                                                    {actionData.map((val) => (
+
+                                                      <>
+                                                        {val.id == value.questionId ? (
+
+                                                          <>
+                                                            {val.action.length > 0 &&
+                                                              <Grid item md={12} xs={12}>
+                                                                <Table
+                                                                  component={Paper}
+                                                                  className="simpleTableSection"
+                                                                >
+                                                                  <TableHead>
+                                                                    <TableRow>
+                                                                      <TableCell className="tableHeadCellFirst">
+                                                                        Action number
+                                                                      </TableCell>
+                                                                      <TableCell className="tableHeadCellSecond">
+                                                                        Action title
+                                                                      </TableCell>
+                                                                    </TableRow>
+                                                                  </TableHead>
+                                                                  <TableBody>
+                                                                    {actionData.map((val) => (
+                                                                      <>
+                                                                        {val.id == value.questionId ? (
+                                                                          <>
+                                                                            {val.action.length > 0 &&
+
+                                                                              val.action.map(
+
+                                                                                (valueAction) => (
+                                                                                  <TableRow>
+                                                                                    <TableCell align="left">
+                                                                                      <Link
+                                                                                        className={
+                                                                                          classes.actionLinkAudit
+                                                                                        }
+                                                                                        display="block"
+                                                                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                                          localStorage.getItem(
+                                                                                            "BaseUrl"
+                                                                                          )
+                                                                                        )[
+                                                                                          "actionClientID"
+                                                                                        ]
+                                                                                          }&response_type=code&companyId=${JSON.parse(
+                                                                                            localStorage.getItem(
+                                                                                              "company"
+                                                                                            )
+                                                                                          )
+                                                                                            .fkCompanyId
+                                                                                          }&projectId=${JSON.parse(
+                                                                                            localStorage.getItem(
+                                                                                              "projectName"
+                                                                                            )
+                                                                                          )
+                                                                                            .projectName
+                                                                                            .projectId
+                                                                                          }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                          }`}
+                                                                                        target="_blank"
+                                                                                      >
+                                                                                        {
+                                                                                          valueAction.number
+                                                                                        }
+                                                                                      </Link>
+                                                                                    </TableCell>
+                                                                                    <TableCell>
+                                                                                      {
+                                                                                        valueAction.title
+                                                                                      }
+                                                                                    </TableCell>
+                                                                                  </TableRow>
+                                                                                )
+                                                                              )}
+                                                                          </>
+                                                                        ) : null}
+                                                                      </>
+                                                                    ))}
+                                                                  </TableBody>
+                                                                </Table>
+                                                              </Grid>
+                                                            }</>) : null}
+                                                      </>
+                                                    ))}
+
+                                                    <Grid
+                                                      item
+                                                      md={12}
+                                                      sm={12}
+                                                      xs={12}
+                                                    >
+                                                      <FormLabel
+                                                        component="legend"
+                                                        className="checkRadioLabel"
+                                                      >
+                                                        Attachments
+                                                      </FormLabel>
+                                                      {value.attachment ? value.attachmen.map(att =>
+                                                        <div className="attachFileThumb">
+                                                          <img
+                                                            src={att.attachment}
+                                                            className="attachFileStyle"
+                                                            alt="attachment"
+                                                          />
+                                                          <div className="attachContent">
+                                                            <p>construction.jpg</p>
+                                                            <p>125kb</p>
+                                                          </div>
+                                                        </div>) : "-"}
+                                                    </Grid>
+                                                  </Grid>
+                                                </AccordionDetails>
+                                              </Accordion>
+                                                : ''
+                                            })}
+                                          </>
+                                        )
+                                      }))}
                                       {/* <span
                                           className={
                                             classes.accordingHeaderContentleft
@@ -1326,681 +1566,8 @@ function ComplianceSummary(props) {
                                             />
                                           </ListItem>
                                         </span> */}
-                                      {quesData.map((value, index) =>
+                                      {console.log(quesData, 'quesData')}
 
-                                        <Accordion
-                                          expanded={
-                                            expandedTableDetail === "panel3"
-                                          }
-                                          onChange={handleTDChange("panel3")}
-                                          defaultExpanded
-                                          className="backPaperAccordian"
-
-                                        >
-
-                                          <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1bh-content"
-                                            id="panel1bh-header"
-                                            className="accordionHeaderSection"
-                                          >
-                                            <List className={classes.heading}>
-                                              <ListItem
-                                                className={
-                                                  classes.accordingHeaderContentLeft
-                                                }
-                                              >
-                                                <ListItemText primary={value.question} />
-                                              </ListItem>
-                                            </List>
-                                          </AccordionSummary>
-                                          <AccordionDetails>
-                                            <Grid container spacing={2}>
-                                              {value.criticality ?
-                                                <>
-                                                  <Grid item md={4} sm={4} xs={12}>
-                                                    <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
-                                                    <Typography className="viewLabelValue">
-                                                      {value.criticality ? value.criticality : '-'}
-                                                    </Typography>
-                                                  </Grid>
-
-                                                  <Grid item md={4} sm={4} xs={12}>
-                                                    <FormLabel component="legend" className="viewLabel">Status</FormLabel>
-                                                    <Typography className="viewLabelValue">
-                                                      {value.auditStatus ? value.auditStatus : '-'}
-                                                    </Typography>
-                                                  </Grid>
-
-                                                  <Grid item md={4} sm={4} xs={12}>
-                                                    <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
-                                                    <Typography className="viewLabelValue">
-                                                      {value.performance ? value.performance : '-'}
-                                                    </Typography>
-                                                  </Grid>
-                                                </>
-                                                :
-                                                <Grid
-                                                  item
-                                                  md={12}
-                                                  sm={12}
-                                                  xs={12}
-                                                >
-                                                  <FormLabel
-                                                    component="legend"
-                                                    className="viewLabel"
-                                                  >
-                                                    Is this control applicable ?
-                                                  </FormLabel>
-                                                  <Typography className="viewLabelValue">
-                                                    {value.defaultResponse ? value.defaultResponse : '-'}
-                                                  </Typography>
-                                                </Grid>
-                                              }
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Findings
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  {value.findings ? value.findings : '-'}
-                                                </Typography>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Score
-                                                </FormLabel>
-                                                <Grid
-                                                  item
-                                                  md={12}
-                                                  sm={12}
-                                                  xs={12}
-                                                >
-                                                  <FormLabel
-                                                    component="legend"
-                                                    className="viewLabel"
-                                                  >
-                                                    Percentage
-                                                  </FormLabel>
-                                                  <Typography className="viewLabelValue">
-                                                    {value.score ? value.score : '-'}
-
-                                                  </Typography>
-                                                </Grid>
-                                              </Grid>
-
-                                              {/* <Grid item md={12} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Corrective Actions
-                                                </FormLabel>
-                                                <Table component={Paper}>
-                                                  <TableHead>
-                                                    <TableRow>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Action number
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Action title
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Assignee
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Status
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 1
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 2
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableBody>
-                                                </Table>
-                                              </Grid> */}
-
-
-                                              {actionData.map((val) => (
-
-                                                <>
-                                                  {val.id == value.questionId ? (
-
-                                                    <>
-                                                      {val.action.length > 0 &&
-                                                        <Grid item md={12} xs={12}>
-                                                          <Table
-                                                            component={Paper}
-                                                            className="simpleTableSection"
-                                                          >
-                                                            <TableHead>
-                                                              <TableRow>
-                                                                <TableCell className="tableHeadCellFirst">
-                                                                  Action number
-                                                                </TableCell>
-                                                                <TableCell className="tableHeadCellSecond">
-                                                                  Action title
-                                                                </TableCell>
-                                                              </TableRow>
-                                                            </TableHead>
-                                                            <TableBody>
-                                                              {actionData.map((val) => (
-                                                                <>
-                                                                  {val.id == value.questionId ? (
-                                                                    <>
-                                                                      {val.action.length > 0 &&
-
-                                                                        val.action.map(
-
-                                                                          (valueAction) => (
-                                                                            <TableRow>
-                                                                              <TableCell align="left">
-                                                                                <Link
-                                                                                  className={
-                                                                                    classes.actionLinkAudit
-                                                                                  }
-                                                                                  display="block"
-                                                                                  href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                                    localStorage.getItem(
-                                                                                      "BaseUrl"
-                                                                                    )
-                                                                                  )[
-                                                                                    "actionClientID"
-                                                                                  ]
-                                                                                    }&response_type=code&companyId=${JSON.parse(
-                                                                                      localStorage.getItem(
-                                                                                        "company"
-                                                                                      )
-                                                                                    )
-                                                                                      .fkCompanyId
-                                                                                    }&projectId=${JSON.parse(
-                                                                                      localStorage.getItem(
-                                                                                        "projectName"
-                                                                                      )
-                                                                                    )
-                                                                                      .projectName
-                                                                                      .projectId
-                                                                                    }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                                    }`}
-                                                                                  target="_blank"
-                                                                                >
-                                                                                  {
-                                                                                    valueAction.number
-                                                                                  }
-                                                                                </Link>
-                                                                              </TableCell>
-                                                                              <TableCell>
-                                                                                {
-                                                                                  valueAction.title
-                                                                                }
-                                                                              </TableCell>
-                                                                            </TableRow>
-                                                                          )
-                                                                        )}
-                                                                    </>
-                                                                  ) : null}
-                                                                </>
-                                                              ))}
-                                                            </TableBody>
-                                                          </Table>
-                                                        </Grid>
-                                                      }</>) : null}
-                                                </>
-                                              ))}
-
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Attachments
-                                                </FormLabel>
-                                                {value.attachment ? value.attachmen.map(att =>
-                                                  <div className="attachFileThumb">
-                                                    <img
-                                                      src={att.attachment}
-                                                      className="attachFileStyle"
-                                                      alt="attachment"
-                                                    />
-                                                    <div className="attachContent">
-                                                      <p>construction.jpg</p>
-                                                      <p>125kb</p>
-                                                    </div>
-                                                  </div>) : "-"}
-
-                                                {/* <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-
-                                                <div className="attachFileThumb">
-                                                  <IconButton
-                                                    aria-label="video"
-                                                    onClick={(e) =>
-                                                      handleMyVideoClickOpen(e)
-                                                    }
-                                                  >
-                                                    <svg
-                                                      xmlns="http://www.w3.org/2000/svg"
-                                                      width="100"
-                                                      height="100"
-                                                      viewBox="0 0 48 48"
-                                                    >
-                                                      <g
-                                                        id="Group_5810"
-                                                        data-name="Group 5810"
-                                                        transform="translate(16208 11679)"
-                                                      >
-                                                        <g
-                                                          id="Rectangle_1887"
-                                                          data-name="Rectangle 1887"
-                                                          transform="translate(-16208 -11679)"
-                                                          fill="#7890a4"
-                                                          stroke="#f3f3f3"
-                                                          stroke-width="1"
-                                                        >
-                                                          <rect
-                                                            width="48"
-                                                            height="48"
-                                                            rx="10"
-                                                            stroke="none"
-                                                          />
-                                                          <rect
-                                                            x="0.5"
-                                                            y="0.5"
-                                                            width="47"
-                                                            height="47"
-                                                            rx="9.5"
-                                                            fill="none"
-                                                          />
-                                                        </g>
-                                                        <path
-                                                          id="Polygon_1"
-                                                          data-name="Polygon 1"
-                                                          d="M8,0l8,14H0Z"
-                                                          transform="translate(-16174 -11663) rotate(90)"
-                                                          fill="#e7e7e7"
-                                                        />
-                                                      </g>
-                                                    </svg>
-                                                  </IconButton>
-                                                  <div className="attachContent">
-                                                    <p>VideoFile.mp4</p>
-                                                    <p>234 bytes</p>
-                                                  </div>
-                                                </div>
-                                                <div className="attachFileThumb">
-                                                  <IconButton
-                                                    aria-label="video"
-                                                    onClick={(e) =>
-                                                      handleMyAudioClickOpen(e)
-                                                    }
-                                                  >
-                                                    <svg
-                                                      xmlns="http://www.w3.org/2000/svg"
-                                                      width="100"
-                                                      height="100"
-                                                      viewBox="0 0 48 48"
-                                                    >
-                                                      <g
-                                                        id="Group_5809"
-                                                        data-name="Group 5809"
-                                                        transform="translate(16208 11747)"
-                                                      >
-                                                        <g
-                                                          id="Rectangle_1886"
-                                                          data-name="Rectangle 1886"
-                                                          transform="translate(-16208 -11747)"
-                                                          fill="#7890a4"
-                                                          stroke="#f3f3f3"
-                                                          stroke-width="1"
-                                                        >
-                                                          <rect
-                                                            width="48"
-                                                            height="48"
-                                                            rx="10"
-                                                            stroke="none"
-                                                          />
-                                                          <rect
-                                                            x="0.5"
-                                                            y="0.5"
-                                                            width="47"
-                                                            height="47"
-                                                            rx="9.5"
-                                                            fill="none"
-                                                          />
-                                                        </g>
-                                                        <path
-                                                          id="Path_6428"
-                                                          data-name="Path 6428"
-                                                          d="M18.1,6V16.422a3.816,3.816,0,1,0,2.548,3.593V8.548h3.822V6Z"
-                                                          transform="translate(-16203 -11738)"
-                                                          fill="#e7e7e7"
-                                                        />
-                                                      </g>
-                                                    </svg>
-                                                  </IconButton>
-                                                  <div className="attachContent">
-                                                    <p>AudioFile.mp3</p>
-                                                    <p>234 bytes</p>
-                                                  </div>
-                                                </div>
-
-                                                <div className="attachFileThumb">
-                                                  <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="100"
-                                                    height="100"
-                                                    viewBox="0 0 48 48"
-                                                  >
-                                                    <g
-                                                      id="Group_5866"
-                                                      data-name="Group 5866"
-                                                      transform="translate(16232 11674)"
-                                                    >
-                                                      <g
-                                                        id="Group_5865"
-                                                        data-name="Group 5865"
-                                                      >
-                                                        <g
-                                                          id="Rectangle_1896"
-                                                          data-name="Rectangle 1896"
-                                                          transform="translate(-16232 -11674)"
-                                                          fill="#419a69"
-                                                          stroke="#f3f3f3"
-                                                          stroke-width="1"
-                                                        >
-                                                          <rect
-                                                            width="48"
-                                                            height="48"
-                                                            rx="10"
-                                                            stroke="none"
-                                                          />
-                                                          <rect
-                                                            x="0.5"
-                                                            y="0.5"
-                                                            width="47"
-                                                            height="47"
-                                                            rx="9.5"
-                                                            fill="none"
-                                                          />
-                                                        </g>
-                                                      </g>
-                                                      <g
-                                                        id="_48"
-                                                        transform="translate(-16225 -11667.055)"
-                                                      >
-                                                        <rect
-                                                          id="Rectangle_1897"
-                                                          data-name="Rectangle 1897"
-                                                          width="15.431"
-                                                          height="23.551"
-                                                          transform="translate(17.054 4.872)"
-                                                          fill="#fff"
-                                                        />
-                                                        <path
-                                                          id="Path_6435"
-                                                          data-name="Path 6435"
-                                                          d="M958.054,199.723v23.551H942.623V199.723h15.431m0-1.623H942.623A1.623,1.623,0,0,0,941,199.723v23.551a1.623,1.623,0,0,0,1.623,1.623h15.431a1.623,1.623,0,0,0,1.623-1.623V199.723A1.623,1.623,0,0,0,958.054,198.1Z"
-                                                          transform="translate(-925.569 -194.852)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1898"
-                                                          data-name="Rectangle 1898"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(24.363 7.309)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1899"
-                                                          data-name="Rectangle 1899"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(24.363 11.369)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1900"
-                                                          data-name="Rectangle 1900"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(24.363 15.431)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1901"
-                                                          data-name="Rectangle 1901"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(24.363 19.491)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1902"
-                                                          data-name="Rectangle 1902"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(24.363 23.551)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1903"
-                                                          data-name="Rectangle 1903"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(17.054 7.309)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1904"
-                                                          data-name="Rectangle 1904"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(17.054 11.369)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1905"
-                                                          data-name="Rectangle 1905"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(17.054 15.431)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1906"
-                                                          data-name="Rectangle 1906"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(17.054 19.491)"
-                                                          fill="#217346"
-                                                        />
-                                                        <rect
-                                                          id="Rectangle_1907"
-                                                          data-name="Rectangle 1907"
-                                                          width="5.685"
-                                                          height="2.437"
-                                                          transform="translate(17.054 23.551)"
-                                                          fill="#217346"
-                                                        />
-                                                        <path
-                                                          id="Path_6436"
-                                                          data-name="Path 6436"
-                                                          d="M20.3,0,0,3.557V30.552l20.3,3.557Z"
-                                                          fill="#217346"
-                                                          fill-rule="evenodd"
-                                                        />
-                                                        <path
-                                                          id="Path_6437"
-                                                          data-name="Path 6437"
-                                                          d="M300.437,594.3l-2.834.171-1.73,4.06-.113.366-.082.276-.074.267-.057.22h0a.672.672,0,0,0-.074-.308l-.074-.284-.082-.267-.089-.244-1.486-3.857-2.735.171,2.916,6.318-3.224,6.318,2.671.162,1.794-4.142.082-.284.066-.253.057-.212v-.17h0l.057.3.057.253.049.2.049.138,1.868,4.418,3.1.2-3.493-6.96,3.376-6.846"
-                                                          transform="translate(-285.933 -584.555)"
-                                                          fill="#fff"
-                                                        />
-                                                      </g>
-                                                    </g>
-                                                  </svg>
-                                                  <div className="attachContent">
-                                                    <p>xcel.xl</p>
-                                                    <p>125 bytes</p>
-                                                  </div>
-                                                </div>
-
-                                                <div className="attachFileThumb">
-                                                  <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="100"
-                                                    height="100"
-                                                    viewBox="0 0 48 48"
-                                                  >
-                                                    <g
-                                                      id="Group_5867"
-                                                      data-name="Group 5867"
-                                                      transform="translate(16232 11742)"
-                                                    >
-                                                      <g
-                                                        id="Rectangle_1895"
-                                                        data-name="Rectangle 1895"
-                                                        transform="translate(-16232 -11742)"
-                                                        fill="#ff2116"
-                                                        stroke="#f3f3f3"
-                                                        stroke-width="1"
-                                                      >
-                                                        <rect
-                                                          width="48"
-                                                          height="48"
-                                                          rx="10"
-                                                          stroke="none"
-                                                        />
-                                                        <rect
-                                                          x="0.5"
-                                                          y="0.5"
-                                                          width="47"
-                                                          height="47"
-                                                          rx="9.5"
-                                                          fill="none"
-                                                        />
-                                                      </g>
-                                                      <g
-                                                        id="layer1"
-                                                        transform="translate(-16188.924 -11832.732)"
-                                                      >
-                                                        <g
-                                                          id="g899"
-                                                          transform="translate(-36.076 93.732)"
-                                                        >
-                                                          <g id="g876">
-                                                            <path
-                                                              id="path890"
-                                                              d="M-49.217,183.976a4.338,4.338,0,0,0-4.331,4.332v33.271a4.338,4.338,0,0,0,4.331,4.332h25.441a4.338,4.338,0,0,0,4.331-4.332V194.221a3.586,3.586,0,0,0-.28-1.581,4.38,4.38,0,0,0-.857-1.239l0-.005L-26.9,185.2l-.01-.01a4.994,4.994,0,0,0-1.338-.856,4.889,4.889,0,0,0-1.91-.361H-49.217Z"
-                                                              transform="translate(53.548 -183.976)"
-                                                              fill="#ff2116"
-                                                            />
-                                                            <path
-                                                              id="rect2684"
-                                                              d="M-47.5,187.118h19.09a4.065,4.065,0,0,1,1.321.247,3.619,3.619,0,0,1,.92.582l0,0,6.3,6.177a3.474,3.474,0,0,1,.563.813,3.085,3.085,0,0,1,.158.941q0,.015,0,.03V223.3a2.886,2.886,0,0,1-2.908,2.909H-47.5a2.886,2.886,0,0,1-2.908-2.909V190.027a2.886,2.886,0,0,1,2.908-2.909Z"
-                                                              transform="translate(51.829 -185.695)"
-                                                              fill="#f5f5f5"
-                                                            />
-                                                            <path
-                                                              id="path2697"
-                                                              d="M-35.174,218.7c-.979-.979.08-2.325,2.955-3.753l1.809-.9.7-1.542c.388-.848.966-2.232,1.286-3.075l.581-1.533-.4-1.135a8.106,8.106,0,0,1-.355-4.245c.423-1.021,1.808-.916,2.357.178.428.855.385,2.4-.123,4.355l-.416,1.6.367.622a21.608,21.608,0,0,0,1.309,1.806l.974,1.212,1.212-.158c3.851-.5,5.17.352,5.17,1.576,0,1.545-3.024,1.673-5.563-.11a7.709,7.709,0,0,1-.964-.8s-1.591.324-2.374.535c-.808.218-1.212.354-2.4.754,0,0-.415.6-.686,1.042a11.222,11.222,0,0,1-3.023,3.477A2.061,2.061,0,0,1-35.174,218.7Zm1.537-.549a11.586,11.586,0,0,0,2.436-2.881l.312-.5-1.422.715c-2.2,1.1-3.2,2.144-2.678,2.774.293.354.644.324,1.352-.113Zm14.262-4a.826.826,0,0,0-.148-1.443,4,4,0,0,0-2.086-.269c-.756.052-1.972.2-2.178.25,0,0,.668.462.964.631a12.819,12.819,0,0,0,2.054.858c.691.211,1.091.189,1.393-.028Zm-5.735-2.383a14.071,14.071,0,0,1-1.231-1.588,8.852,8.852,0,0,1-.69-1.028s-.336,1.08-.611,1.73l-.86,2.125-.249.482s1.325-.434,2-.61c.714-.186,2.163-.471,2.163-.471Zm-1.848-7.411a3.113,3.113,0,0,0-.106-1.745c-.621-.679-1.372-.113-1.245,1.5a11.018,11.018,0,0,0,.358,2.045l.328,1.041.231-.784A20.575,20.575,0,0,0-26.958,204.358Z"
-                                                              transform="translate(43.69 -193.736)"
-                                                              fill="#ff2116"
-                                                            />
-                                                            <g
-                                                              id="g858"
-                                                              transform="translate(10.18 29.503)"
-                                                            >
-                                                              <path
-                                                                id="path845"
-                                                                d="M-31.067,249.125h1.59a4.321,4.321,0,0,1,1.237.146,1.452,1.452,0,0,1,.8.635,2.087,2.087,0,0,1,.325,1.181,2.146,2.146,0,0,1-.263,1.091,1.546,1.546,0,0,1-.71.658,3.46,3.46,0,0,1-1.364.2H-30v2.507h-1.063Zm1.063.823v2.239h.527a1.387,1.387,0,0,0,.974-.263,1.149,1.149,0,0,0,.273-.856,1.285,1.285,0,0,0-.179-.715.733.733,0,0,0-.4-.339,2.472,2.472,0,0,0-.673-.066Z"
-                                                                transform="translate(31.067 -249.125)"
-                                                                fill="#2c2c2c"
-                                                              />
-                                                              <path
-                                                                id="path847"
-                                                                d="M-20.547,249.125H-19.1a3.264,3.264,0,0,1,1.674.372,2.31,2.31,0,0,1,.95,1.105,3.979,3.979,0,0,1,.325,1.627,4.543,4.543,0,0,1-.292,1.679,2.67,2.67,0,0,1-.884,1.185,2.749,2.749,0,0,1-1.693.451h-1.524Zm1.063.851v4.717h.442a1.489,1.489,0,0,0,1.345-.64,3.112,3.112,0,0,0,.419-1.717q0-2.361-1.764-2.361Z"
-                                                                transform="translate(25.311 -249.125)"
-                                                                fill="#2c2c2c"
-                                                              />
-                                                              <path
-                                                                id="path849"
-                                                                d="M-8.593,249.125h3.565v.851h-2.5V251.9h2v.851h-2v2.8H-8.593Z"
-                                                                transform="translate(18.77 -249.125)"
-                                                                fill="#2c2c2c"
-                                                              />
-                                                            </g>
-                                                          </g>
-                                                        </g>
-                                                      </g>
-                                                    </g>
-                                                  </svg>
-                                                  <div className="attachContent">
-                                                    <p>PDFfile.pdf</p>
-                                                    <p>125 bytes</p>
-                                                  </div>
-                                                </div> */}
-                                              </Grid>
-                                            </Grid>
-                                          </AccordionDetails>
-                                        </Accordion>
-                                      )}
                                     </Grid>
 
                                     <div>
@@ -2071,179 +1638,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddTBRemove"
                                     >
-                                      {/* <Accordion
-                                          expanded={
-                                            expandedTableDetail === "panel11"
-                                          }
-                                          onChange={handleTDChange("panel11")}
-                                          defaultExpanded
-                                          className="backPaperAccordian"
-                                        >
-                                          <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1bh-content"
-                                            id="panel1bh-header"
-                                            className="accordionHeaderSection"
-                                          >
-                                            <List className={classes.heading}>
-                                              <ListItem
-                                                className={
-                                                  classes.accordingHeaderContentLeft
-                                                }
-                                              >
-                                                <ListItemText primary="Welding machines used are tested and properly connected" />
-                                              </ListItem>
-                                            
-                                            </List>
-                                          </AccordionSummary>
-                                          <AccordionDetails>
-                                            <Grid container spacing={2}>
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Criticality
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
 
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Status
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Performance rating
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Findings
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-                                              <Grid item md={12} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Corrective Actions
-                                                </FormLabel>
-                                                <Table component={Paper}>
-                                                  <TableHead>
-                                                    <TableRow>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Action number
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Action title
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Assignee
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Status
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 1
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 2
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableBody>
-                                                </Table>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Attachments
-                                                </FormLabel>
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-                                              </Grid>
-                                            </Grid>
-                                          </AccordionDetails>
-                                        </Accordion> */}
                                     </Grid>
 
                                     <Grid
@@ -2252,225 +1647,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddTBRemove"
                                     >
-                                      {/* <Typography variant="label" gutterBottom className={classNames(classes.firstLabelTitle, Fonts.labelName)}>
-                                        Group - Category#2
-                                    </Typography>
-                                    <span className={classes.accordingHeaderContentleft}>
-                                        <ListItem className={classes.accordingHeaderText}>
-                                            <ListItemText primary="Total score: " secondary="<as per input>" />
-                                        </ListItem>
-                                        <ListItem className={classes.accordingHeaderText}>
-                                            <ListItemText primary="Acceptable score: " secondary="<as per admin config>" />
-                                        </ListItem>
-                                    </span> */}
 
-                                      {/* <FormLabel
-                                          className="checkRadioLabel"
-                                          component="legend"
-                                        >
-                                          Housekeeping
-                                        </FormLabel>
-                                        <span
-                                          className={
-                                            classes.accordingHeaderContentleft
-                                          }
-                                        >
-                                          <ListItem
-                                            className={
-                                              classes.accordingHeaderText
-                                            }
-                                          >
-                                            <ListItemText
-                                              className="viewLabelValueListTag"
-                                              primary="Total score: "
-                                              secondary="25"
-                                            />
-                                          </ListItem>
-                                          <ListItem
-                                            className={
-                                              classes.accordingHeaderText
-                                            }
-                                          >
-                                            <ListItemText
-                                              className="viewLabelValueListTag"
-                                              primary="Acceptable score: "
-                                              secondary="<as per admin config>"
-                                            />
-                                          </ListItem>
-                                        </span> */}
-
-                                      {/* <Accordion
-                                          expanded={
-                                            expandedTableDetail === "panel9"
-                                          }
-                                          onChange={handleTDChange("panel9")}
-                                          defaultExpanded
-                                          className="backPaperAccordian"
-                                        >
-                                          <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1bh-content"
-                                            id="panel1bh-header"
-                                            className="accordionHeaderSection"
-                                          >
-                                            <List className={classes.heading}>
-                                              <ListItem
-                                                className={
-                                                  classes.accordingHeaderContentLeft
-                                                }
-                                              >
-                                                <ListItemText primary="Welding machines used are tested and properly connected" />
-                                              </ListItem>
-                                            </List>
-                                          </AccordionSummary>
-                                          <AccordionDetails>
-                                            <Grid container spacing={2}>
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Criticality
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Status
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Performance rating
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Findings
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-                                              <Grid item md={12} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Corrective Actions
-                                                </FormLabel>
-                                                <Table component={Paper}>
-                                                  <TableHead>
-                                                    <TableRow>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Action number
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Action title
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Assignee
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Status
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 1
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 2
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableBody>
-                                                </Table>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Attachments
-                                                </FormLabel>
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-                                              </Grid>
-                                            </Grid>
-                                          </AccordionDetails>
-                                        </Accordion> */}
                                     </Grid>
 
                                     <Grid
@@ -2479,178 +1656,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddTBRemove"
                                     >
-                                      {/* <Accordion
-                                          expanded={
-                                            expandedTableDetail === "panel10"
-                                          }
-                                          onChange={handleTDChange("panel10")}
-                                          defaultExpanded
-                                          className="backPaperAccordian"
-                                        >
-                                          <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1bh-content"
-                                            id="panel1bh-header"
-                                            className="accordionHeaderSection"
-                                          >
-                                            <List className={classes.heading}>
-                                              <ListItem
-                                                className={
-                                                  classes.accordingHeaderContentLeft
-                                                }
-                                              >
-                                                <ListItemText primary="Welding machines used are tested and properly connected" />
-                                              </ListItem>
-                                            </List>
-                                          </AccordionSummary>
-                                          <AccordionDetails>
-                                            <Grid container spacing={2}>
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Criticality
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
 
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Status
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-
-                                              <Grid item md={4} sm={4} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Performance rating
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="viewLabel"
-                                                >
-                                                  Findings
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  NA
-                                                </Typography>
-                                              </Grid>
-                                              <Grid item md={12} xs={12}>
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Corrective Actions
-                                                </FormLabel>
-                                                <Table component={Paper}>
-                                                  <TableHead>
-                                                    <TableRow>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Action number
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Action title
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Assignee
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Status
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableHead>
-                                                  <TableBody>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 1
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                    <TableRow>
-                                                      <TableCell align="left">
-                                                        AT-211004-012
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Action 2
-                                                      </TableCell>
-                                                      <TableCell align="left">
-                                                        Ajay Chauhan
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        Assigned
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableBody>
-                                                </Table>
-                                              </Grid>
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                              >
-                                                <FormLabel
-                                                  component="legend"
-                                                  className="checkRadioLabel"
-                                                >
-                                                  Attachments
-                                                </FormLabel>
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-
-                                                <div className="attachFileThumb">
-                                                  <img
-                                                    src={projectpj}
-                                                    className="attachFileStyle"
-                                                    alt="attachment"
-                                                  />
-                                                  <div className="attachContent">
-                                                    <p>construction.jpg</p>
-                                                    <p>125kb</p>
-                                                  </div>
-                                                </div>
-                                              </Grid>
-                                            </Grid>
-                                          </AccordionDetails>
-                                        </Accordion> */}
                                     </Grid>
                                   </Grid>
                                 </Paper>
@@ -2747,48 +1753,6 @@ function ComplianceSummary(props) {
                                 </Grid>
                               </Paper>
                             </Grid>
-
-                            {/* <Grid item xs={12}>
-                              <Accordion
-                                expanded={expanded === "panel4"}
-                                onChange={handleExpand("panel4")}
-                              >
-                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                  <Typography className={classes.heading}>
-                                    Performance summary
-                                  </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <Grid container item xs={12} spacing={3}>
-                                    <>
-                                      <Grid item xs={12} md={6}> 
-                                        <Typography
-                                          variant="label"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Describe here
-                                        </Typography>
-                                        <Typography variant="body" className={Fonts.labelValue}>
-                                          NA
-                                        </Typography>
-                                      </Grid>
-                                      <Grid item xs={12} md={12}>
-                                        <Typography
-                                          variant="label"
-                                          gutterBottom
-                                          className={Fonts.labelName}
-                                        >
-                                          Notifications sent to
-                                        </Typography>
-                                        <Typography variant="body" display="block" className={Fonts.labelValue}>Role 1</Typography>
-                                        <Typography variant="body" display="block" className={Fonts.labelValue}>Role 2</Typography>
-                                      </Grid>
-                                    </>
-                                  </Grid>
-                                </AccordionDetails>
-                              </Accordion>
-                            </Grid> */}
                           </>
                         );
                       }
@@ -2826,72 +1790,7 @@ function ComplianceSummary(props) {
                       />
                     </Link>
                   </ListItem>
-
-                  {/* <ListItem button >
-                  <ListItemIcon>
-                    <Comment />
-                  </ListItemIcon>
-                  <Link
-                    onClick={(e) => handleComplianceCommentPush(e)}
-                    to="#"
-                    variant="subtitle"
-                  >
-                    <ListItemText primary="Comments" />
-                  </Link>
-                </ListItem>
-
-                <ListItem button >
-                  <ListItemIcon>
-                    <History />
-                  </ListItemIcon>
-                  <Link
-                    onClick={(e) => handleComplianceActivityPush(e)}
-                    to="#"
-                    variant="subtitle"
-                  >
-                    <ListItemText primary="Activity history" />
-                  </Link>
-                </ListItem>
-
-                <ListItem button >
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  <Link
-                    to="#"
-                    variant="subtitle"
-                  >
-                    <ListItemText primary="Print" />
-                  </Link>
-                </ListItem> */}
                 </List>
-
-                {/* </List>
-                <Divider />
-                <List dense>
-                <ListItem button onClick={(e) => handleCommentsPush(e)}>
-                  <ListItemIcon>
-                    <Comment />
-                  </ListItemIcon>
-                  <ListItemText primary="Comments" />
-                </ListItem>
-
-                <ListItem button onClick={(e) => handleActivityPush(e)}>
-                  <ListItemIcon>
-                    <History />
-                  </ListItemIcon>
-                  <ListItemText primary="Activity History" />
-                </ListItem>
-              </List>
-              <Divider />
-              <List dense>
-                <ListItem button>
-                  <ListItemIcon>
-                    <Print />
-                  </ListItemIcon>
-                  <ListItemText primary="Print" />
-                </ListItem>
-              </List> */}
               </div>
             </Grid>
           </Grid>
