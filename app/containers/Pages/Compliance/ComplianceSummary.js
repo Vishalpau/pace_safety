@@ -222,6 +222,8 @@ function ComplianceSummary(props) {
   const { id } = useParams();
   const [notificationSentValue, setNotificationSentValue] = useState([]);
   const [actionData, setActionData] = useState([]);
+  const [colordata, setColorData] = useState([]);
+  const [ratingData, setRatingData] = useState({});
 
   const [expanded, setExpanded] = React.useState("panel1");
   const handleExpand = (panel) => (event, isExpanded) => {
@@ -321,7 +323,7 @@ function ComplianceSummary(props) {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result, 'result')
+        console.log(result, 'resultsssssssss')
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
@@ -473,13 +475,12 @@ function ComplianceSummary(props) {
     } catch (error) { }
   };
 
-  const auditQueData = async () => {
+  const auditQueData = async (id) => {
     const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+      `/api/v1/audits/${id}/auditresponse/`
     );
     const result = res.data.data.results;
-    console.log(result, 'kkkk')
-    setQueData([result])
+    setQueData(result)
   };
 
 
@@ -495,11 +496,50 @@ function ComplianceSummary(props) {
     } setTimeout(() => handelActionTracker(), 1000)
   };
 
+  const calculate_rating = (index, v, id) => {
+
+    if (form.menuValue >= 0 && v >= 0) {
+
+      let ratingValue = (form.menuValue * v) / 5 * 100;
+      for (var i = 0; i < colordata.length; i++) {
+        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+          let clr_op = { ...ratingColor }
+          clr_op[index] = colordata[i].matrixConstantColor
+          setRatingColor(clr_op)
+          // console.log(ratingValue, 'ratingValue')
+          // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
+          break; // stop the loop
+        }
+        else {
+          setRatingColor("#FFFFFF")
+        }
+      }
+      let arr_op = { ...ratingData };
+      arr_op[index] = ratingValue
+      setRatingData(arr_op)
+      let temp = [...checkData];
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i]["questionId"] == id) {
+          temp[i]["performance"] = ratingValue;
+        }
+      }
+    }
+  };
+
+  const fetchMatrixData = async () => {
+    const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`)
+    const result = res.data.data.results
+    console.log(result,'color')
+    setColorData(result)
+  }
+
+
   useEffect(() => {
     if (id) {
-      auditQueData()
+      auditQueData(id)
       fetchCheklistData();
       handelActionTracker()
+      fetchMatrixData()
     }
   }, []);
 
@@ -1297,10 +1337,8 @@ function ComplianceSummary(props) {
                                             >
                                               {subGrpData.inputLabel}
                                             </FormLabel>
-
+                                            {console.log(quesData,'quesData')}
                                             {quesData.map((value, index) => {
-                                              console.log(value);
-                                              console.log(subGrpData.id == value.subGroupId, 'mmmmm')
                                               return subGrpData.id == value.subGroupId ? <Accordion
                                                 expanded={
                                                   expandedTableDetail === "panel3"
@@ -1346,9 +1384,11 @@ function ComplianceSummary(props) {
                                                         </Grid>
 
                                                         <Grid item md={4} sm={4} xs={12}>
+                                                          
                                                           <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
-                                                          <Typography className="viewLabelValue">
+                                                          <Typography style={{ backgroundColor: value.performance ? colordata.filter(i=> i.matrixConstant ==value.performance*5/100 )[0].matrixConstantColor : '#fff' }} className="viewLabelValue">
                                                             {value.performance ? value.performance : '-'}
+                                          
                                                           </Typography>
                                                         </Grid>
                                                       </>
@@ -1526,8 +1566,8 @@ function ComplianceSummary(props) {
                                                             alt="attachment"
                                                           />
                                                           <div className="attachContent">
-                                                            <p>construction.jpg</p>
-                                                            <p>125kb</p>
+                                                            {/* <p>construction.jpg</p>
+                                                            <p>125kb</p> */}
                                                           </div>
                                                         </div>) : "-"}
                                                     </Grid>
@@ -1567,7 +1607,6 @@ function ComplianceSummary(props) {
                                             />
                                           </ListItem>
                                         </span> */}
-                                      {console.log(quesData, 'quesData')}
 
                                     </Grid>
 

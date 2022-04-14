@@ -835,7 +835,6 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
-    console.log(value, field, index, id, 'llllllll')
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -876,8 +875,8 @@ const Checks = (props) => {
       let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
         "qustionsIds"
       ];
-      // let allAction = await handelActionData(jhaId, apiData);
-      // setActionData(allAction);
+      let allAction = await handelActionData(jhaId, apiData);
+      setActionData(allAction);
     }
   };
 
@@ -895,6 +894,7 @@ const Checks = (props) => {
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
+    console.log(result,'result')
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
