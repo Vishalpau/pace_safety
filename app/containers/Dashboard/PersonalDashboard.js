@@ -542,6 +542,9 @@ function PersonalDashboard(props) {
   useEffect(() => {
     handelCallBack()
     // redirectionAccount()
+    if(localStorage.getItem('projectName') != null) {
+      setTimeout(() => history.push('app/icare'), 1000)
+    }
   }, [props.initialValues.companyListData]);
 
   return (
