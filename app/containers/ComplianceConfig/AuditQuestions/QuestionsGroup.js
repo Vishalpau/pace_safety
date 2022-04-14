@@ -312,6 +312,7 @@ const QuestionsGroup = (props) => {
         }
       });
       tempGroupId.map((data, key) => {
+        
         if (data == value["checkListGroupName"]) {
           tempGroupId.splice(key, 1);
         }

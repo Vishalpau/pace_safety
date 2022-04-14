@@ -155,6 +155,9 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
+  borderColorClass: {
+    borderColor: 'red'
+  },
   // customCheckBoxList: {
   //   display: 'block',
   //   '& .MuiFormControlLabel-root': {
@@ -315,7 +318,11 @@ const Checks = (props) => {
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
   const [hover, setHover] = useState(-1);
+  const [questionId, setQuestionId] = useState()
+
   // const [errorMessage, setErrorMessage] = useState('');
+
+  const [stateToggle, setStateToggle] = useState("")
 
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
@@ -337,8 +344,6 @@ const Checks = (props) => {
           let clr_op = { ...ratingColor }
           clr_op[index] = colordata[i].matrixConstantColor
           setRatingColor(clr_op)
-          // console.log(ratingValue, 'ratingValue')
-          // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
           break; // stop the loop
         }
         else {
@@ -372,9 +377,77 @@ const Checks = (props) => {
   // const handleExpand = (panel) => (event, isExpanded) => {
   //     setExpanded(isExpanded ? panel : false);
   // };
-  const handleTDChange = (panel) => (event, isExpanded) => {
+  const handleTDChange = (panel, valueId) => (event, isExpanded) => {
+    // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+    // console.log(isExpanded);
+    if (isExpanded) {
+      setStateToggle(true);
+    }
+    if (!isExpanded) {
+      setQuestionId(valueId);
+      setStateToggle(false);
+    }
+    // if (!stateToggle) {
+    //   setStateToggle(true)
+    // }
+    // if (stateToggle === true) {
+    //   setStateToggle(false);
+    // }
+    // if (stateToggle === false) {
+    //   setStateToggle(true)
+    // }
     setExpandedTableDetail(isExpanded ? panel : false);
   };
+
+  useEffect(() => {
+    console.log(stateToggle);
+    // if (!stateToggle) {
+
+    const filteredObj = checkData.filter((a, index) => {
+      if (a.questionId === questionId) {
+        return a
+      }
+    })
+
+    const temp = [...checkData]
+    console.log(filteredObj);
+    console.log(filteredObj.length)
+
+    if (filteredObj.length > 0) {
+      // if (filteredObj[0].defaultResponse !== '' && filteredObj[0].findings !== "" && filteredObj[0].score !== 0) {
+      if (filteredObj[0].findings !== "") {
+        const formData = new FormData;
+        Object.keys(filteredObj[0]).forEach(key => {
+          console.log(key, filteredObj[0].key);
+          if (key === "fkAuditId") {
+            formData.append(key, filteredObj[0][key]);
+          }
+          else if (key !== 'check' && key !== 'id') {
+            formData.append(key, filteredObj[0][key]);
+          }
+        })
+
+        if (filteredObj[0].id) {
+          api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData)
+        }
+
+        else {
+          api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
+        }
+
+        temp.forEach(a => {
+          if (a.findings === '') {
+            a.check = false;
+          }
+          else {
+            a.check = true;
+          }
+        })
+        setCheckData(temp)
+      }
+    }
+  }, [stateToggle])
+
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -386,73 +459,9 @@ const Checks = (props) => {
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      <img src={icoExcel} alt="excel-icon" /> {file.path} -{file.size} bytes{" "}
-      <DeleteIcon />
-    </li>
-  ));
-
-  // const Criticality = [
-  //   {
-  //     value: "High",
-  //     label: "High",
-  //   },
-  //   {
-  //     value: "Medium",
-  //     label: "Medium",
-  //   },
-  //   {
-  //     value: "Low",
-  //     label: "Low",
-  //   },
-  // ];
-  // const Status = [
-  //   {
-  //     value: "Not in compliance -stop work",
-  //     label: "Not in compliance -stop work",
-  //   },
-  //   {
-  //     value: "Not in compliance - Action required",
-  //     label: "Not in compliance - Action required",
-  //   },
-  //   {
-  //     value: "Partial compliance",
-  //     label: "Partial compliance",
-  //   },
-  //   {
-  //     value: "Compliant- Needs improvement",
-  //     label: "Compliant- Needs improvement",
-  //   },
-  //   {
-  //     value: "Fully compliant",
-  //     label: "Fully compliant",
-  //   },
-  //   {
-  //     value: "Fully compliant & excellent",
-  //     label: "Fully compliant & excellent",
-  //   },
-  // ];
-
-  const [selectedActionDate, setSelectedActionDate] = useState(new Date());
-  const [myUserPOpen, setMyUserPOpen] = React.useState(false);
   const [criticalityData, setCriticalityData] = useState([]);
   const [statusData, setStatusData] = useState([])
-  const handleActionDateChange = (date) => {
-    setSelectedActionDate(date);
-  };
-  const handleMyUserPClickOpen = () => {
-    setMyUserPOpen(true);
-  };
-  const handleMyUserPClose = () => {
-    setMyUserPOpen(false);
-  };
+  const [errorBoundary, setErrorBoundary] = useState("");
 
   const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -487,12 +496,11 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
-    //2
     console.log(categories);
   }, [categories])
 
   const fetchComplianceData = async (data) => {
-    console.log(data, 'data')
+    // console.log(data, 'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
@@ -527,12 +535,21 @@ const Checks = (props) => {
         }
 
         setForm(result);
+        console.log(tempSubGroup, result.groups, result.subGroups);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups);
       })
       .catch((error) => console.log(error));
   };
 
+  useEffect(() => {
+    console.log(complianceData, 'line 535');
+  }, [complianceData])
+
   const fetchCheklist = async (data, groups, subGroups) => {
+
+    console.log(groups);
+    console.log(subGroups);
+
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -542,9 +559,11 @@ const Checks = (props) => {
         ? JSON.parse(localStorage.getItem("selectBreakDown"))
         : null;
     let struct = "";
+
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
+
     const fkProjectStructureIds = struct.slice(0, -1);
     let temp = [];
     let tempCheckData = [];
@@ -552,7 +571,9 @@ const Checks = (props) => {
 
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
+      // console.log(groupName, 'groupName');
       let subGroupName = data[i].subGroupName;
+      // console.log(subGroupName, 'subgroupName');
       categoriesData[groupName] = [];
 
       const res = await api.get(
@@ -563,12 +584,18 @@ const Checks = (props) => {
       temp.push(result2);
     }
     let tempQuestionId = [];
+
     let fd = await fetchData()
+    console.log(fd);
     temp.map((tempvalue, i) => {
+
+      // console.log(tempvalue);
       if (tempvalue['message'] === undefined) {
+
         tempvalue.map((value, index) => {
+
           tempQuestionId.push({ id: value.id });
-          console.log(index, 'value')
+
           tempCheckData.push({
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
@@ -584,6 +611,7 @@ const Checks = (props) => {
             score: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].score : '',
             findings: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].findings : '',
             attachment: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].attachment : null,
+            mediaAttachment: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].mediaAttachment : null,
             status: "Active",
             createdBy: parseInt(userId),
             fkAuditId: localStorage.getItem("fkComplianceId"),
@@ -592,13 +620,23 @@ const Checks = (props) => {
         });
       }
     });
+
+    console.log(groups);
+
     for (let i = 0; i < tempCheckData.length; i++) {
+      console.log(i, 'iiiiiiiiiiiiiiii')
+
       for (let j = 0; j < groups.length; j++) {
+        console.log(j, 'jjjjjjjjjjjjjjjjj');
         if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
+        // console.log(tempCheckData[i], 'mohit');
+        // console.log(groups[j]['id'], 'kalasagar')
       }
     }
+
+
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < subGroups.length; j++) {
         if (subGroups[j]['inputLabel'] == tempCheckData[i]['subGroupName']) {
@@ -612,125 +650,212 @@ const Checks = (props) => {
     await setCategories(categoriesData);
     await handelActionTracker();
   };
-  const apiCall = async (dataChecks) => {
-    const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, [...dataChecks]);
-    history.push("/app/pages/compliance/performance-summary");
-  }
+
+  const handleFileUpload = (event, questionId) => {
+    let temp = [...checkData];
+    const name = event.target.name;
+    const file = event.target.files[0];
+    console.log(name);
+    console.log(file);
+
+    temp.map((a, i) => {
+      if (a.questionId === questionId) {
+        if (name === 'attachment') {
+          a.attachment = file
+        }
+        if (name === 'evidence') {
+          a.mediaAttachment = file
+        }
+      }
+      return a
+      // })
+    });
+    setCheckData(temp);
+  };
+
+
+  // const apiCall = async (dataChecks) => {
+  //   const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, [...dataChecks]);
+  //   history.push("/app/pages/compliance/performance-summary");
+  // }
   const handelSubmit = async () => {
-    const userId =
-      JSON.parse(localStorage.getItem("userDetails")) !== null
-        ? JSON.parse(localStorage.getItem("userDetails")).id
-        : null;
-    let tempUpdatedQuestion = []
-    let tempNewQuestion = []
 
-    checkData.map((data) => {
-      if (data.id) {
-        tempUpdatedQuestion.push(data)
-      } else {
-        tempNewQuestion.push(data)
-      }
-    })
-    if (tempNewQuestion.length > 0) {
-      let dataCheck = [];
-      for (var i = 0; i < tempNewQuestion.length; i++) {
-        let data = {};
-        data["questionId"] = tempNewQuestion[i].questionId
-        data["question"] = tempNewQuestion[i].question
-        data["criticality"] = tempNewQuestion[i].criticality
-        data["performance"] = tempNewQuestion[i].performance
-        data["groupId"] = tempNewQuestion[i].groupId
-        data["groupName"] = tempNewQuestion[i].groupName
-        data["subGroupId"] = tempNewQuestion[i].subGroupId
-        data["subGroupName"] = tempNewQuestion[i].subGroupName
-        data["defaultResponse"] = tempNewQuestion[i].defaultResponse
-        // data["score"] = tempNewQuestion[i].score
-        data["findings"] = tempNewQuestion[i].findings
-        data["score"] = tempNewQuestion[i].score
-        data["auditStatus"] = tempNewQuestion[i].auditStatus
-        if (typeof tempNewQuestion[i].attachment !== "string") {
-          if (tempNewQuestion[i].attachment !== null) {
-            data["attachment"] = {
-              name: tempNewQuestion[i].attachment.name,
-              lastModified: tempNewQuestion[i].attachment.lastModified,
-              lastModifiedDate: tempNewQuestion[i].attachment.lastModifiedDate,
-              size: tempNewQuestion[i].attachment.size,
-              type: tempNewQuestion[i].attachment.type,
-              webkitRelativePath: tempNewQuestion[i].attachment.webkitRelativePath,
-            }
-          }
-        }
-        data["status", "Active"]
-        data["fkAuditId"] = tempNewQuestion[i].fkAuditId
-        data["createdAt"] = new Date().toISOString()
-        data["createdBy"] = tempNewQuestion[i].createdBy
-        dataCheck[i] = data
-        console.log(dataCheck)
-      }
+    const isValid = checkData.every((a) => a.check === true)
 
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, dataCheck)
-        ;
+    if (isValid) {
+      history.push("/app/pages/compliance/performance-summary");
     }
-    if (tempUpdatedQuestion.length > 0) {
-
-      let dataCheck = [];
-      for (var i = 0; i < tempUpdatedQuestion.length; i++) {
-        let data = {};
-        data["id"] = tempUpdatedQuestion[i].id
-        data["questionId"] = tempUpdatedQuestion[i].questionId
-        data["question"] = tempUpdatedQuestion[i].question
-        data["criticality"] = tempUpdatedQuestion[i].criticality
-        data["performance"] = tempUpdatedQuestion[i].performance
-        data["groupId"] = tempUpdatedQuestion[i].groupId
-        data["groupName"] = tempUpdatedQuestion[i].groupName
-        data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
-        data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
-        data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
-        // data["score"] = tempUpdatedQuestion[i].score
-        data["findings"] = tempUpdatedQuestion[i].findings
-        data["score"] = tempUpdatedQuestion[i].score
-        data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
-        if (typeof tempUpdatedQuestion[i].attachment !== "string") {
-          if (tempUpdatedQuestion[i].attachment !== null) {
-            console.log('attachment', tempUpdatedQuestion[i].attachment)
-            data["attachment"] = {
-              name: tempUpdatedQuestion[i].attachment.name,
-              lastModified: tempUpdatedQuestion[i].attachment.lastModified,
-              lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
-              size: tempUpdatedQuestion[i].attachment.size,
-              type: tempUpdatedQuestion[i].attachment.type,
-              webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-            }
-          }
-        }
-        data["status", "Active"]
-        data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
-        data["createdAt"] = new Date().toISOString()
-        data["createdBy"] = tempUpdatedQuestion[i].createdBy
-        dataCheck[i] = data
-      }
-      apiCall(dataCheck)
+    else {
+      setErrorBoundary("please fill all fields");
     }
-    history.push("/app/pages/compliance/performance-summary");
+
+
+    // const userId =
+    //   JSON.parse(localStorage.getItem("userDetails")) !== null
+    //     ? JSON.parse(localStorage.getItem("userDetails")).id
+    //     : null;
+    // let tempUpdatedQuestion = []
+    // let tempNewQuestion = []
+
+    // checkData.map((data) => {
+    //   console.log(data)
+    //   if (data.id) {
+    //     tempUpdatedQuestion.push(data)
+    //   } else {
+    //     tempNewQuestion.push(data)
+    //   }
+    // })
+    // if (tempNewQuestion.length > 0) {
+    //   let dataCheck = [];
+    //   for (var i = 0; i < tempNewQuestion.length; i++) {
+    // var formData = new FormData();
+    // let data = {};
+
+    // Object.keys(tempNewQuestion[i]).forEach(key => {
+    //   console.log(key);
+    //   if (key === "mediaAttachment") {
+    //     formData.append("mediaAttachment", new Blob([tempNewQuestion[i]['mediaAttachment']], { type: "application/octet-stream" }));
+    //   }
+    //   else if (key === 'createdAt') {
+    //     formData.append('createdAt', new Date().toISOString())
+    //   }
+    //   else {
+    //     formData.append(`${key}`, tempNewQuestion[i][key])
+    //   }
+    // })
+    // console.log(dataCheck)
+
+    // data["questionId"] = tempNewQuestion[i].questionId
+    // data["question"] = tempNewQuestion[i].question
+    // data["criticality"] = tempNewQuestion[i].criticality
+    // data["performance"] = tempNewQuestion[i].performance
+    // data["groupId"] = tempNewQuestion[i].groupId
+    // data["groupName"] = tempNewQuestion[i].groupName
+    // data["subGroupId"] = tempNewQuestion[i].subGroupId
+    // data["subGroupName"] = tempNewQuestion[i].subGroupName
+    // data["defaultResponse"] = tempNewQuestion[i].defaultResponse
+    // data["score"] = tempNewQuestion[i].score
+    // data["findings"] = tempNewQuestion[i].findings
+    // // data["score"] = tempNewQuestion[i].score
+    // data["auditStatus"] = tempNewQuestion[i].auditStatus
+    // // if (typeof tempNewQuestion[i].attachment !== "string") {
+    //   if (tempNewQuestion[i].attachment !== null) {
+    //     data["attachment"] = {
+    //       name: tempNewQuestion[i].attachment.name,
+    //       lastModified: tempNewQuestion[i].attachment.lastModified,
+    //       lastModifiedDate: tempNewQuestion[i].attachment.lastModifiedDate,
+    //       size: tempNewQuestion[i].attachment.size,
+    //       type: tempNewQuestion[i].attachment.type,
+    //       webkitRelativePath: tempNewQuestion[i].attachment.webkitRelativePath,
+    //     }
+    //   }
+    //   if (tempNewQuestion[i].mediaAttachment !== null) {
+    //     data["mediaAttachment"] = {
+    //       name: tempNewQuestion[i].mediaAttachment.name,
+    //       lastModified: tempNewQuestion[i].mediaAttachment.lastModified,
+    //       lastModifiedDate: tempNewQuestion[i].mediaAttachment.lastModifiedDate,
+    //       size: tempNewQuestion[i].mediaAttachment.size,
+    //       type: tempNewQuestion[i].mediaAttachment.type,
+    //       webkitRelativePath: tempNewQuestion[i].mediaAttachment.webkitRelativePath,
+    //     }
+    //   }
+    // // }
+    // // data["attachment"] = tempNewQuestion[i].attachment
+    // // data["mediaAttachment"] = tempNewQuestion[i].mediaAttachment
+    // data["status", "Active"]
+    // data["fkAuditId"] = tempNewQuestion[i].fkAuditId
+    // data["createdAt"] = new Date().toISOString()
+    // data["createdBy"] = tempNewQuestion[i].createdBy
+    // dataCheck[i] = data
+    //   const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, formData);
+    // }
+
+
+    // }
+    // var formData = new FormData();
+    // if (tempUpdatedQuestion.length > 0) {
+    //   let dataCheck = [];
+    //   for (var i = 0; i < tempUpdatedQuestion.length; i++) {
+    //     let data = {};
+    //     Object.keys(tempUpdatedQuestion[i]).forEach(key => {
+    //       if (key === 'fkAuditId') {
+    //         formData.append('fkAuditId', tempUpdatedQuestion[i].fkAuditId * 1)
+    //       }
+    //       else {
+    //         formData.append(`${key}`, tempUpdatedQuestion[i][key])
+    //       }
+    //     })
+
+    //     formData.append('createdAt', new Date().toISOString());
+
+    //     dataCheck.push(formData)
+    //     console.log(dataCheck)
+
+    // data["id"] = tempUpdatedQuestion[i].id
+    // data["questionId"] = tempUpdatedQuestion[i].questionId
+    // data["question"] = tempUpdatedQuestion[i].question
+    // data["criticality"] = tempUpdatedQuestion[i].criticality
+    // data["performance"] = tempUpdatedQuestion[i].performance
+    // data["groupId"] = tempUpdatedQuestion[i].groupId
+    // data["groupName"] = tempUpdatedQuestion[i].groupName
+    // data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
+    // data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
+    // data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
+    // data["score"] = tempUpdatedQuestion[i].score
+    // data["findings"] = tempUpdatedQuestion[i].findings
+    // // data["score"] = tempUpdatedQuestion[i].score
+    // data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
+    // // if (typeof tempUpdatedQuestion[i].attachment !== "string") {
+    // //   if (tempUpdatedQuestion[i].attachment !== null) {
+    // //     data["attachment"] = {
+    // //       name: tempUpdatedQuestion[i].attachment.name,
+    // //       lastModified: tempUpdatedQuestion[i].attachment.lastModified,
+    // //       lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
+    // //       size: tempUpdatedQuestion[i].attachment.size,
+    // //       type: tempUpdatedQuestion[i].attachment.type,
+    // //       webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
+    // //     }
+    // //   }
+    // // }
+    // data["attachment"] = tempUpdatedQuestion[i].attachment
+    // data["mediaAttachment"] = tempUpdatedQuestion[i].mediaAttachment
+    // data["status", "Active"]
+    // data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
+    // data["createdAt"] = new Date().toISOString()
+    // data["createdBy"] = tempUpdatedQuestion[i].createdBy
+    // dataCheck[i] = data
+    // apiCall(formData)
+    // }
+    // history.push("/app/pages/compliance/performance-summary");
+    // }
 
   };
   const classes = useStyles();
 
-  const handleChangeData = (value, field, index, id, type ='') => {
+  const handleChangeData = (value, field, index, id, type = '') => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
-        if (field == 'score'){
-          if ( type == 'Stars'){
+        if (field === 'score') {
+          if (type === 'Stars') {
             let starvar = ''
-            for ( let j=0; j < value; j++)
-            starvar += "*"
+            for (let j = 0; j < value; j++)
+              starvar += "*"
             value = starvar
           }
+          else if (type === '%') {
+            value = value + "%"
+            console.log(value,'%%%')
+          }
+          else if (type === '1-10') {
+            value = value
+            console.log(value,'counts')
+          }
+
         }
         temp[i][field] = value;
       }
-      
+
     }
 
     if (field == 'criticality' || field == 'auditStatus') {
@@ -750,16 +875,16 @@ const Checks = (props) => {
     return result
   };
 
-  const handleFile = (value, field, index, id) => {
-    let temp = [...checkData];
-    for (let i = 0; i < temp.length; i++) {
-      if (temp[i]["question"] === id) {
+  // const handleFile = (value, field, index, id) => {
+  //   let temp = [...checkData];
+  //   for (let i = 0; i < temp.length; i++) {
+  //     if (temp[i]["question"] === id) {
 
-        temp[i][field] = value;
-      }
-    }
-    setCheckData(temp);
-  };
+  //       temp[i][field] = value;
+  //     }
+  //   }
+  //   setCheckData(temp);
+  // };
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
@@ -771,12 +896,20 @@ const Checks = (props) => {
     }
   };
 
+  // function create_blob(file, callback) {
+  //   var reader = new FileReader();
+  //   reader.onload = function () { callback(reader.result) };
+  //   reader.readAsBinaryString(file);
+  // }
+
+  useEffect(() => {
+    console.log(checkData, 'checkData');
+  }, [checkData])
 
 
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
-    console.log(result, 'result')
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
@@ -941,8 +1074,10 @@ const Checks = (props) => {
                                           expanded={
                                             expandedTableDetail === `panel6 ${index}`
                                           }
-                                          onChange={handleTDChange(`panel6 ${index}`)}
+                                          onChange={handleTDChange(`panel6 ${index}`, value.id)}
                                           className="backPaperAccordian"
+                                          style={{ border: checkData.find(a => value.id === a.questionId).check === false ? '3px solid red' : checkData.find(a => value.id === a.questionId).check === true && '3px solid green' }}
+
                                         >
                                           <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
@@ -1022,7 +1157,6 @@ const Checks = (props) => {
                                               </Grid>
                                               {value.scoreType === "Stars" &&
                                                 <Grid item md={4} sm={4} xs={12}>
-                                                  {console.log(valueStar, 'valueStar')}
                                                   <Rating
                                                     name="simple-controlled"
                                                     defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
@@ -1247,65 +1381,64 @@ const Checks = (props) => {
                                                   Attachment{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  <input
-                                                    type="file"
-                                                    onChange={(e) =>
-                                                      handleFile(
-                                                        e.target.files[0],
-                                                        "attachment",
-                                                        index,
-                                                        value.question
-                                                      )
-                                                    }
-                                                  />
-
+                                                  {(value.attachment === "Yes") &&
+                                                    <input
+                                                      type="file"
+                                                      id="attachment"
+                                                      name="attachment"
+                                                      accept={`.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf`}
+                                                      onChange={(e) => {
+                                                        handleFileUpload(e, value.id);
+                                                      }}
+                                                    />
+                                                  }
                                                 </Typography>
                                               </Grid>
 
-                                              {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
-                                                <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
+                                              <Grid
+                                                item
+                                                md={12}
+                                                sm={12}
+                                                xs={12}
+                                                className={classes.formBox}
+                                              >
+                                                <FormLabel
+                                                  className="checkRadioLabel"
+                                                  component="legend"
+                                                >
+                                                  Evidence{" "}
+                                                </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  <div {...getRootProps({ className: 'dropzone' })}>
-                                                    <input {...getInputProps()} />
-                                                    <span align="center">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
-                                                        <g id="upload-outbox-svgrepo-com" transform="translate(0 0)">
-                                                          <g id="Group_4970" data-name="Group 4970" transform="translate(13.004)">
-                                                            <g id="Group_4969" data-name="Group 4969">
-                                                              <path id="Path_3322" data-name="Path 3322" d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z" transform="translate(-166.342 -68.504)" fill="#7890a4" />
-                                                            </g>
-                                                          </g>
-                                                          <g id="Group_4972" data-name="Group 4972" transform="translate(0 12.502)">
-                                                            <g id="Group_4971" data-name="Group 4971">
-                                                              <path id="Path_3323" data-name="Path 3323" d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z" transform="translate(0 -228.424)" fill="#7890a4" />
-                                                            </g>
-                                                          </g>
-                                                        </g>
-                                                      </svg>
-                                                    </span>
-                                                    <p className="chooseFileDesign">Drag and drop here or <span>Choose file</span></p>
-                                                  </div>
-                                                  <aside>
-                                                    <h4>Files</h4>
-                                                    <ul>{files}</ul>
-                                                    <ul className="attachfileListBox">
-                                                      <li><img src={icoExcel} alt="excel-icon" /> DocExcel - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
-                                                      <li><img src={icoPDF} alt="pdf-icon" /> DocPDF - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
-                                                      <li><img src={icoPng} alt="image-icon" /> ImageFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
-                                                      <li><img src={icoAudio} alt="audio-icon" /> AudioFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
-                                                      <li><img src={icoVideo} alt="video-icon" /> VideoFile - 234bytes <IconButton aria-label="delete" ><DeleteIcon /></IconButton></li>
-                                                    </ul>
-                                                  </aside>
+                                                  {(value.evidenceType === "Yes") &&
+                                                    <input
+                                                      type="file"
+                                                      id="evidence"
+                                                      name="evidence"
+                                                      accept={`.png, .jpg .mp4, .mov, .flv, .avi, .mkv`}
+                                                      onChange={(e) => {
+                                                        handleFileUpload(e, value.id);
+                                                      }}
+                                                    />
+                                                  }
                                                 </Typography>
-                                              </Grid> */}
+                                              </Grid>
+
+
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
                                       ) : (
                                         <Accordion
                                           key={index}
-                                          expanded={expandedTableDetail === "panel4"}
-                                          onChange={handleTDChange("panel4")}
+                                          // expanded={expandedTableDetail === "panel4"}
+                                          // onChange={handleTDChange("panel4")}
+
+                                          expanded={
+                                            expandedTableDetail === `panel6 ${index}`
+                                          }
+                                          onChange={handleTDChange(`panel6 ${index}`, value.id)}
+
+                                          style={{ border: checkData.find(a => value.id === a.questionId).check === false ? '3px solid red' : checkData.find(a => value.id === a.questionId).check === true && '3px solid green' }}
                                           defaultExpanded
                                           className="backPaperAccordian"
                                         >
@@ -1403,7 +1536,7 @@ const Checks = (props) => {
                                                   id="performancerating"
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
+                                                  // style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
@@ -1450,7 +1583,8 @@ const Checks = (props) => {
                                                           newValue,
                                                           "score",
                                                           index,
-                                                          value.id
+                                                          value.id,
+                                                          value.scoreType
                                                         )
                                                         setValueStar(newValue);
                                                       }
@@ -1663,18 +1797,45 @@ const Checks = (props) => {
                                                   Attachment{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  <input
-                                                    type="file"
-                                                    onChange={(e) =>
-                                                      handleFile(
-                                                        e.target.files[0],
-                                                        "attachment",
-                                                        index,
-                                                        value.question
-                                                      )
-                                                    }
-                                                  />
+                                                  {(value.attachment === "Yes") &&
+                                                    <input
+                                                      type="file"
+                                                      name="attachment"
+                                                      id="evidence"
+                                                      accept={`.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf`}
+                                                      onChange={(e) => {
+                                                        handleFileUpload(e, value.id);
+                                                      }}
+                                                    />
+                                                  }
+                                                </Typography>
+                                              </Grid>
 
+                                              <Grid
+                                                item
+                                                md={12}
+                                                sm={12}
+                                                xs={12}
+                                                className={classes.formBox}
+                                              >
+                                                <FormLabel
+                                                  className="checkRadioLabel"
+                                                  component="legend"
+                                                >
+                                                  Evidence{" "}
+                                                </FormLabel>
+                                                <Typography className="viewLabelValue">
+                                                  {(value.evidenceType === "Yes") &&
+                                                    <input
+                                                      name="evidence"
+                                                      type="file"
+                                                      id="attachment"
+                                                      accept={`.png, .jpg .mp4, .mov, .flv, .avi, .mkv`}
+                                                      onChange={(e) => {
+                                                        handleFileUpload(e, value.id);
+                                                      }}
+                                                    />
+                                                  }
                                                 </Typography>
                                               </Grid>
                                               {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
@@ -1729,6 +1890,10 @@ const Checks = (props) => {
                     }
                   </Grid>
                 </Grid>
+                {errorBoundary ?
+                  <p style={{ color: 'red' }}>{errorBoundary}</p> :
+                  ""
+                }
               </Paper>
             </Grid>
 
@@ -1757,6 +1922,7 @@ const Checks = (props) => {
               </Button>
             </Grid>
           </Grid>
+
           <Grid item xs={12} md={3}>
             <FormSideBar
               deleteForm={[1, 2, 3]}
@@ -1764,6 +1930,7 @@ const Checks = (props) => {
               selectedItem="Checks"
             />
           </Grid>
+
         </Grid>
       </>
     </CustomPapperBlock>
