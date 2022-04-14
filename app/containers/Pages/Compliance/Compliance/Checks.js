@@ -378,6 +378,7 @@ const Checks = (props) => {
   //     setExpanded(isExpanded ? panel : false);
   // };
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
+    console.log(panel);
     // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
     // console.log(isExpanded);
     if (isExpanded) {
@@ -396,6 +397,7 @@ const Checks = (props) => {
     // if (stateToggle === false) {
     //   setStateToggle(true)
     // }
+    
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
@@ -686,7 +688,7 @@ const Checks = (props) => {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
-      setErrorBoundary("please fill all fields");
+      setErrorBoundary("Please answer all the questions");
     }
 
 
@@ -1536,7 +1538,13 @@ const Checks = (props) => {
                                                   id="performancerating"
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  // style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
+                                                  style={{
+                                                    backgroundColor: ratingColor[catI + '-' + index] ?
+                                                      ratingColor[catI + '-' + index] :
+                                                      (showCheckData.filter(cd => cd.question == value.question).length > 0
+                                                        ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor
+                                                        : '')
+                                                  }}
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"

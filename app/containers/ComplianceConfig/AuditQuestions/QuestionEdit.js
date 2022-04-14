@@ -388,6 +388,10 @@ const QuestionEdit = (props) => {
     }
   };
 
+  useEffect(() => {
+    console.log(fetchSelectBreakDownList, 'lenfkhfdkhdsak');
+  }, [fetchSelectBreakDownList])
+
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
 
@@ -473,59 +477,62 @@ const QuestionEdit = (props) => {
 
                   <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
 
-                    <Paper elevation={1} className="paperSection">
-                      <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
-
-                      <Grid container spacing={3}>
-                        {fetchSelectBreakDownList.map((data, key) => (
-                          <Grid item xs={3} md={3} key={key}>
-                            <FormControl
-                              error={error && error[`projectStructure${[key]}`]}
-                              variant="outlined"
-                              required
-                              className={classes.formControl}
-                            >
-                              <InputLabel id="demo-simple-select-label">
-                                {data.breakDownLabel}
-                              </InputLabel>
-                              <Select
-                                labelId="incident-type-label"
-                                id="incident-type"
-                                label={data.breakDownLabel}
-                                value={data.selectValue.id || ""}
-                                disabled={data.breakDownData.length === 0}
-                                onChange={(e) => {
-                                  handleBreakdown(
-                                    e,
-                                    key,
-                                    data.breakDownLabel,
-                                    data.selectValue
-                                  );
-                                }}
+                    {fetchSelectBreakDownList.length > 0 &&
+                      <Paper elevation={1} className="paperSection">
+                        <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
+                        <Grid container spacing={3}>
+                          {fetchSelectBreakDownList.map((data, key) => (
+                            <Grid item xs={3} md={3} key={key}>
+                              <FormControl
+                                error={error && error[`projectStructure${[key]}`]}
+                                variant="outlined"
+                                required
+                                className={classes.formControl}
                               >
-                                {data.breakDownData.length !== 0
-                                  ? data.breakDownData.map(
-                                    (selectvalues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectvalues.id}
-                                      >
-                                        {selectvalues.structureName}
-                                      </MenuItem>
+                                <InputLabel id="demo-simple-select-label">
+                                  {data.breakDownLabel}
+                                </InputLabel>
+                                <Select
+                                  labelId="incident-type-label"
+                                  id="incident-type"
+                                  label={data.breakDownLabel}
+                                  value={data.selectValue.id || ""}
+                                  disabled={true}
+                                  onChange={(e) => {
+                                    handleBreakdown(
+                                      e,
+                                      key,
+                                      data.breakDownLabel,
+                                      data.selectValue
+                                    );
+                                  }}
+                                >
+                                  {data.breakDownData.length !== 0
+                                    ? data.breakDownData.map(
+                                      (selectvalues, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          value={selectvalues.id}
+                                        >
+                                          {selectvalues.structureName}
+                                        </MenuItem>
+                                      )
                                     )
-                                  )
-                                  : null}
-                              </Select>
-                              {error && error[`projectStructure${[key]}`] && (
-                                <FormHelperText>
-                                  {error[`projectStructure${[key]}`]}
-                                </FormHelperText>
-                              )}
-                            </FormControl>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Paper>
+                                    : null}
+                                </Select>
+                                {error && error[`projectStructure${[key]}`] && (
+                                  <FormHelperText>
+                                    {error[`projectStructure${[key]}`]}
+                                  </FormHelperText>
+                                )}
+                              </FormControl>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </Paper>
+                    }
+
+
                   </Grid>
 
                   <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
