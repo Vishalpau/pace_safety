@@ -323,7 +323,7 @@ function ComplianceSummary(props) {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result.id, 'result')
+        console.log(result, 'resultsssssssss')
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
@@ -1337,6 +1337,7 @@ function ComplianceSummary(props) {
                                             >
                                               {subGrpData.inputLabel}
                                             </FormLabel>
+                                            {console.log(quesData,'quesData')}
                                             {quesData.map((value, index) => {
                                               return subGrpData.id == value.subGroupId ? <Accordion
                                                 expanded={
@@ -1557,7 +1558,7 @@ function ComplianceSummary(props) {
                                                       >
                                                         Attachments
                                                       </FormLabel>
-                                                      {value.attachment ? value.attachmen.map(att =>
+                                                      {value.attachment ? value.attachment.map(att =>
                                                         <div className="attachFileThumb">
                                                           <img
                                                             src={att.attachment}
@@ -1565,8 +1566,8 @@ function ComplianceSummary(props) {
                                                             alt="attachment"
                                                           />
                                                           <div className="attachContent">
-                                                            <p>construction.jpg</p>
-                                                            <p>125kb</p>
+                                                            {/* <p>construction.jpg</p>
+                                                            <p>125kb</p> */}
                                                           </div>
                                                         </div>) : "-"}
                                                     </Grid>
