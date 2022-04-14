@@ -299,26 +299,28 @@ function UserMenu(props) {
   const isDesktop = useMediaQuery("(min-width:992px)");
 
   const handleCompanyDialog = () => {
-    const companiesData = [];
-    JSON.parse(localStorage.getItem('userDetails')).companies.forEach(company => {
-      companiesData.push({
-        fkCompanyId: company.companyId,
-        fkCompanyName: company.companyName
-      })
-    })
-    setCompanyList([...companiesData])
-    setOpenCompanyList(!openCompanyList)
+    localStorage.clear();
+    window.location.href = "/";
+    // const companiesData = [];
+    // JSON.parse(localStorage.getItem('userDetails')).companies.forEach(company => {
+    //   companiesData.push({
+    //     fkCompanyId: company.companyId,
+    //     fkCompanyName: company.companyName
+    //   })
+    // })
+    // setCompanyList([...companiesData])
+    // setOpenCompanyList(!openCompanyList)
   }
 
-  const handleCompany = (index) => {
-    localStorage.setItem('company', JSON.stringify(companyList[index]));
-    window.location.href = "/";
-    console.log('hit bro')
-  }
+  // const handleCompany = (index) => {
+  //   localStorage.clear();
+  //   localStorage.setItem('company', JSON.stringify(companyList[index]));
+  //   window.location.href = "/";
+  // }
 
   return (
     <>
-      {openCompanyList && (
+      {/* {openCompanyList && (
         <Dialog
           className={classes.projectDialog}
           open
@@ -368,7 +370,7 @@ function UserMenu(props) {
 
         </Dialog>
 
-      )}
+      )} */}
       <div>
         <Tooltip title="Apps" placement="bottom">
           <IconButton
