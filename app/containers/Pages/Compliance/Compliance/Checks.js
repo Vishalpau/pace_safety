@@ -716,12 +716,21 @@ const Checks = (props) => {
   };
   const classes = useStyles();
 
-  const handleChangeData = (value, field, index, id) => {
+  const handleChangeData = (value, field, index, id, type ='') => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
+        if (field == 'score'){
+          if ( type == 'Stars'){
+            let starvar = ''
+            for ( let j=0; j < value; j++)
+            starvar += "*"
+            value = starvar
+          }
+        }
         temp[i][field] = value;
       }
+      
     }
 
     if (field == 'criticality' || field == 'auditStatus') {
@@ -767,7 +776,7 @@ const Checks = (props) => {
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
-    console.log(result,'result')
+    console.log(result, 'result')
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
@@ -1023,7 +1032,8 @@ const Checks = (props) => {
                                                           newValue,
                                                           "score",
                                                           index,
-                                                          value.id
+                                                          value.id,
+                                                          value.scoreType
                                                         )
                                                         setValueStar(newValue);
                                                       }
@@ -1052,7 +1062,8 @@ const Checks = (props) => {
                                                           e.target.value,
                                                           "score",
                                                           index,
-                                                          value.id
+                                                          value.id,
+                                                          value.scoreType
                                                         )
                                                       }
                                                     >
@@ -1085,7 +1096,8 @@ const Checks = (props) => {
                                                         e.target.value,
                                                         "score",
                                                         index,
-                                                        value.id
+                                                        value.id,
+                                                        value.scoreType
                                                       )
                                                     }
                                                   />
@@ -1143,7 +1155,84 @@ const Checks = (props) => {
                                                   />
                                                 </Grid>
                                               </Grid>
+                                              <Grid item md={12} xs={12}>
+                                                <Table
+                                                  component={Paper}
+                                                  className="simpleTableSection"
+                                                >
+                                                  {/* {actionData.filter(val => val.id==value.id).length} */}
+                                                  {actionData.filter(val => val.id == value.id)[0] && actionData.filter(val => val.id == value.id)[0].action.length ?
+                                                    <TableHead>
+                                                      <TableRow>
+                                                        <TableCell className="tableHeadCellFirst">
+                                                          Action number
+                                                        </TableCell>
+                                                        <TableCell className="tableHeadCellSecond">
+                                                          Action title
+                                                        </TableCell>
+                                                      </TableRow>
+                                                    </TableHead>
+                                                    : ''}
+                                                  <TableBody>
+                                                    {actionData.map((val) => (
+                                                      <>
 
+                                                        {val.id == value.id ? (
+                                                          <>
+                                                            {val.action.length > 0 &&
+                                                              val.action.map(
+                                                                (valueAction) => (
+                                                                  <TableRow>
+                                                                    <TableCell align="left">
+                                                                      <Link
+                                                                        className={
+                                                                          classes.actionLinkAudit
+                                                                        }
+                                                                        display="block"
+                                                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                          localStorage.getItem(
+                                                                            "BaseUrl"
+                                                                          )
+                                                                        )[
+                                                                          "actionClientID"
+                                                                        ]
+                                                                          }&response_type=code&companyId=${JSON.parse(
+                                                                            localStorage.getItem(
+                                                                              "company"
+                                                                            )
+                                                                          )
+                                                                            .fkCompanyId
+                                                                          }&projectId=${JSON.parse(
+                                                                            localStorage.getItem(
+                                                                              "projectName"
+                                                                            )
+                                                                          )
+                                                                            .projectName
+                                                                            .projectId
+                                                                          }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                          }`}
+                                                                        target="_blank"
+                                                                      >
+                                                                        {
+                                                                          valueAction.number
+                                                                        }
+                                                                      </Link>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                      {
+                                                                        valueAction.title
+                                                                      }
+                                                                    </TableCell>
+                                                                  </TableRow>
+                                                                )
+                                                              )}
+                                                          </>
+                                                        ) : null}
+                                                      </>
+                                                    ))}
+                                                  </TableBody>
+                                                </Table>
+                                              </Grid>
                                               <Grid
                                                 item
                                                 md={12}
@@ -1487,16 +1576,19 @@ const Checks = (props) => {
                                                   component={Paper}
                                                   className="simpleTableSection"
                                                 >
-                                                  <TableHead>
-                                                    <TableRow>
-                                                      <TableCell className="tableHeadCellFirst">
-                                                        Action number
-                                                      </TableCell>
-                                                      <TableCell className="tableHeadCellSecond">
-                                                        Action title
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  </TableHead>
+                                                  {actionData.filter(val => val.id == value.id)[0] && actionData.filter(val => val.id == value.id)[0].action.length ?
+
+                                                    <TableHead>
+                                                      <TableRow>
+                                                        <TableCell className="tableHeadCellFirst">
+                                                          Action number1
+                                                        </TableCell>
+                                                        <TableCell className="tableHeadCellSecond">
+                                                          Action title
+                                                        </TableCell>
+                                                      </TableRow>
+                                                    </TableHead>
+                                                    : ''}
                                                   <TableBody>
                                                     {actionData.map((val) => (
                                                       <>
