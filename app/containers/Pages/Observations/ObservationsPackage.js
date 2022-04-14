@@ -985,7 +985,7 @@ function Actions(props) {
                                 </Typography> */}
                               </Grid>
 
-                              <Grid item xs={12} md={7} md={7} sm={12} className={classes.textRight}>
+                              <Grid item xs={12} md={7} sm={12} className={classes.textRight}>
                                 <div className={classes.floatR}>
                                   {/* <Typography variant="body1" display="inline">
                       <WifiTetheringIcon className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Network View</Link>

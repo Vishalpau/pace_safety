@@ -299,6 +299,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Questions = () => {
   const history = useHistory();
+  console.log(history,'history')
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel1"
   );
@@ -329,6 +330,8 @@ const Questions = () => {
   const [que, setQue] = useState([]);
   const [sub, setSub] = useState([]);
   const [projectStructName, setProjectStructName] = useState([]);
+  const [selectDepthAndId, setSelectDepthAndId] = useState([]);
+
   const handleMoreQuestionCatgry = (index, groupName, subGroupName) => {
     let temp = [...checkData];
     temp[index]["question"].push({
@@ -392,15 +395,16 @@ const Questions = () => {
   };
 
   const handleSave = async () => {
+
     const { error, isValid } = QuestionValidation(checkData);
     setCheckData(error);
     if (!isValid) {
       return "data not valid";
     }
     let data = [];
-    
+    console.log(error,'eoorr')
     error.map((value, index) =>
-      value.question.map((item, key) => data.push(item))
+      value.question.map((item, key) => data.push({...item, fkProjectStructureIds:history.location.state.fkProjectStructureIds}))
     );
 
     const res = await api.post(
@@ -443,6 +447,7 @@ const Questions = () => {
     let projectStructId = history.location.state.fkProjectStructureIds.split(
       ":"
     );
+    console.log(projectStructId,'projectStructId')
     for (let key in projectStructId) {
       let workAreaId = [
         projectStructId[key].substring(0, 2),

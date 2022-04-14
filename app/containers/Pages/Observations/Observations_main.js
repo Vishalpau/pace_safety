@@ -223,7 +223,7 @@ export default function Observations() {
 
   const handleBulkUploadfilePush = async () => {
     history.push(
-      '/app/icare-bulkuploadfile'
+      '/app/icare-bulkupload'
     );
   }
 

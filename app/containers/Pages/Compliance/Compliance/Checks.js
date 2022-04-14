@@ -592,10 +592,9 @@ const Checks = (props) => {
         });
       }
     });
-
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
-        if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
+        if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
       }
@@ -626,7 +625,6 @@ const Checks = (props) => {
     let tempNewQuestion = []
 
     checkData.map((data) => {
-      console.log(data)
       if (data.id) {
         tempUpdatedQuestion.push(data)
       } else {
@@ -670,7 +668,7 @@ const Checks = (props) => {
         console.log(dataCheck)
       }
 
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, dataCheck)
         ;
     }
     if (tempUpdatedQuestion.length > 0) {
@@ -719,7 +717,6 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id) => {
-    console.log(value, field, index, id, 'llllllll')
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -760,8 +757,8 @@ const Checks = (props) => {
       let apiData = JSON.parse(localStorage.getItem("commonObject"))["audit"][
         "qustionsIds"
       ];
-      // let allAction = await handelActionData(jhaId, apiData);
-      // setActionData(allAction);
+      let allAction = await handelActionData(jhaId, apiData);
+      setActionData(allAction);
     }
   };
 
@@ -770,6 +767,7 @@ const Checks = (props) => {
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
+    console.log(result,'result')
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
