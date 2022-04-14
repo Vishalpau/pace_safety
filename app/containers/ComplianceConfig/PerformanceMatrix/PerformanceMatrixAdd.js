@@ -72,7 +72,7 @@ const PerformanceMatrixAdd = () => {
         const { error, isValid } = MatrixValidation(matrixForm)
         setError(error)
         if (isValid) {
-            await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => { localStorage.setItem("configTab", 2), history.goBack() }).catch(err => console.log(error))
+            await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => { localStorage.setItem("configTab", 2), history.goBack() }).catch(err => console.log(err))
         }
     }
     return (

@@ -10,9 +10,14 @@ import Info from "@material-ui/icons/Info";
 import Warning from "@material-ui/icons/Warning";
 import Check from "@material-ui/icons/CheckCircle";
 import Error from "@material-ui/icons/RemoveCircle";
+import ImageIcon from "@material-ui/icons/Image";
 import ExitToApp from "@material-ui/icons/ExitToApp";
 import Badge from "@material-ui/core/Badge";
 import Divider from "@material-ui/core/Divider";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -152,6 +157,8 @@ function UserMenu(props) {
   const [companyName, setCompanyName] = useState('')
   const anchorRef = React.useRef(null);
   const [openA, setOpena] = useState(false);
+  const [companyList, setCompanyList] = useState([]);
+  const [openCompanyList, setOpenCompanyList] = useState(false);
 
   const [project, setProject] = ([])
   const dispatch = useDispatch()
@@ -242,8 +249,7 @@ function UserMenu(props) {
         });
       const modules = data.map(subscription => subscription.modules)
       var temp = []
-      modules.map((module) =>
-      {
+      modules.map((module) => {
         temp = [...temp]
         if (module.length > 0) {
           (module.map((mod) => {
@@ -292,23 +298,93 @@ function UserMenu(props) {
   const classnames = useStyles();
   const isDesktop = useMediaQuery("(min-width:992px)");
 
+  const handleCompanyDialog = () => {
+    const companiesData = [];
+    JSON.parse(localStorage.getItem('userDetails')).companies.forEach(company => {
+      companiesData.push({
+        fkCompanyId: company.companyId,
+        fkCompanyName: company.companyName
+      })
+    })
+    setCompanyList([...companiesData])
+    setOpenCompanyList(!openCompanyList)
+  }
+
+  const handleCompany = (index) => {
+    localStorage.setItem('company', JSON.stringify(companyList[index]));
+    window.location.href = "/";
+    console.log('hit bro')
+  }
+
   return (
-    <div>
-      <Tooltip title="Apps" placement="bottom">
-        <IconButton
-          aria-controls={openA ? "apps-menu" : undefined}
-          aria-haspopup="true"
-          onClick={handleAppsClick}
-          className={classNames(
-            classes.appIcon,
-            dark ? classes.dark : classes.light
-          )}
+    <>
+      {openCompanyList && (
+        <Dialog
+          className={classes.projectDialog}
+          open
+          onClose={(event, reason) => {
+            if (reason !== 'backdropClick') {
+              handleCompanyDialog();
+            }
+          }}
+          PaperProps={{
+            style: {
+              width: 400,
+            },
+          }}
         >
-          <i className="ion-ios-apps" />
-        </IconButton>
-      </Tooltip>
-      {/* <Topbar/> */}
-      {/* <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
+          <DialogTitle onClose={handleCompanyDialog}>
+            Select Company
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <List>
+                    {companyList.length > 0
+                      ? companyList.map((selectValues, key) => (
+                        <ListItem
+                          button
+                          key={key}
+                          onClick={() => handleCompany(key)}
+                        >
+                          <ListItemAvatar>
+                            <Avatar variant="rounded">
+                              <ImageIcon />
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            className={classes.companyNameList}
+                            primary={selectValues.fkCompanyName}
+                          />
+                        </ListItem>
+                      ))
+                      : null}
+                  </List>
+                </Grid>
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+
+        </Dialog>
+
+      )}
+      <div>
+        <Tooltip title="Apps" placement="bottom">
+          <IconButton
+            aria-controls={openA ? "apps-menu" : undefined}
+            aria-haspopup="true"
+            onClick={handleAppsClick}
+            className={classNames(
+              classes.appIcon,
+              dark ? classes.dark : classes.light
+            )}
+          >
+            <i className="ion-ios-apps" />
+          </IconButton>
+        </Tooltip>
+        {/* <Topbar/> */}
+        {/* <Drawer anchor="right" open={appsOpen} onClose={handleAppsClose}>
         {isLoading ?
           <div elevation={3} className={classnames.list}>
             <List component="nav">
@@ -339,183 +415,183 @@ function UserMenu(props) {
           </div> : null}
       </Drawer> */}
 
-      <Drawer anchor="right" className={classes.appDrawerSection} open={openA} role={undefined} transition disablePortal>
-        <div elevation={3} className={classnames.list}>
-          <ClickAwayListener onClickAway={handleClosea}>
-            <List component="nav">
-              {subscriptions.map((subscription) => (
-                (subscription.modules.length > 0) ?
-                  <div>
-                    <ListItemText
-                      className={classnames.appDrawerLable}
-                      primary={subscription.appName}
-                    />
-                    <Divider />
-                    <List>
-                      {subscription.modules.map((module) => (
-                        <div>
-                          <ListItemLink disabled={!apps.includes(module.moduleCode)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
-                            {Boolean(module.moduleIcon) ?
-                              <img className={classnames.appDrawerImage} src={module.moduleIcon} />
-                              : <AssignmentIcon />
-                            }
-                            <ListItemText primary={module.moduleWebName} />
-                          </ListItemLink>
-                        </div>
-                      ))}
-                    </List>
-                  </div>
-                  : ""
-              ))}
-              <Divider />
-            </List>
-          </ClickAwayListener>
-        </div>
-      </Drawer>
+        <Drawer anchor="right" className={classes.appDrawerSection} open={openA} role={undefined} transition disablePortal>
+          <div elevation={3} className={classnames.list}>
+            <ClickAwayListener onClickAway={handleClosea}>
+              <List component="nav">
+                {subscriptions.map((subscription) => (
+                  (subscription.modules.length > 0) ?
+                    <div>
+                      <ListItemText
+                        className={classnames.appDrawerLable}
+                        primary={subscription.appName}
+                      />
+                      <Divider />
+                      <List>
+                        {subscription.modules.map((module) => (
+                          <div>
+                            <ListItemLink disabled={!apps.includes(module.moduleCode)} onClick={() => handleClick(subscription.hostings[0].clientId != undefined ? ((subscription.hostings[0].clientId != undefined ? subscription.hostings.filter(hosting => hosting.fkCompanyId === JSON.parse(localStorage.getItem("company")).fkCompanyId)[0].clientId : "")) : "", module.targetPage,)} className={classnames.appDrawerLink}>
+                              {Boolean(module.moduleIcon) ?
+                                <img className={classnames.appDrawerImage} src={module.moduleIcon} />
+                                : <AssignmentIcon />
+                              }
+                              <ListItemText primary={module.moduleWebName} />
+                            </ListItemLink>
+                          </div>
+                        ))}
+                      </List>
+                    </div>
+                    : ""
+                ))}
+                <Divider />
+              </List>
+            </ClickAwayListener>
+          </div>
+        </Drawer>
 
-      <Button
-        // className={classes.userControls}        
-        className="textCenter"
-        onClick={handleMenu("user-setting")}
-      >
-        {isDesktop && companyLogoLink ?
-          <img className={classes.userLogo} src={companyLogoLink} />
-          : <MenuItem style={{ color: "white" }} color="white">{companyName}</MenuItem>}
-        <Avatar
-          alt={dummy.user.name}
-          variant="circle"
-          src={userImageLink ? userImageLink : dummy.user.avatar}
-        />
-      </Button>
+        <Button
+          // className={classes.userControls}        
+          className="textCenter"
+          onClick={handleMenu("user-setting")}
+        >
+          {isDesktop && companyLogoLink ?
+            <img className={classes.userLogo} src={companyLogoLink} />
+            : <MenuItem style={{ color: "white" }} color="white">{companyName}</MenuItem>}
+          <Avatar
+            alt={dummy.user.name}
+            variant="circle"
+            src={userImageLink ? userImageLink : dummy.user.avatar}
+          />
+        </Button>
 
-      <Menu
-        id="menu-appbar"
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        PaperProps={{
-          style: {
-            width: 350,
-          },
-        }}
-        open={openMenu === "user-setting"}
-        onClose={handleClose}
-      >
-        <Grid container spacing={3} className="textCenter">
-          <Grid item md={12} sm={12} xs={12} className="userPrigileGrid">
-            <Avatar
-              alt={dummy.user.name}
-              variant="circle"
-              src={userImageLink ? userImageLink : dummy.user.avatar}
-              className="avtarCenter"
-            />
-          </Grid>
-          <Grid item md={12} sm={12} xs={12} className="pTopFour">
-            <Typography className="userDropDownHeading">
-              {/* {JSON.parse(localStorage.getItem('userDetails')).name} */}
-              {JSON.parse(localStorage.getItem("userDetails")) !== null
-                ? JSON.parse(localStorage.getItem("userDetails")).name
-                : null}
-            </Typography>
-            {/* <Typography className="userDropDown">
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          PaperProps={{
+            style: {
+              width: 350,
+            },
+          }}
+          open={openMenu === "user-setting"}
+          onClose={handleClose}
+        >
+          <Grid container spacing={3} className="textCenter">
+            <Grid item md={12} sm={12} xs={12} className="userPrigileGrid">
+              <Avatar
+                alt={dummy.user.name}
+                variant="circle"
+                src={userImageLink ? userImageLink : dummy.user.avatar}
+                className="avtarCenter"
+              />
+            </Grid>
+            <Grid item md={12} sm={12} xs={12} className="pTopFour">
+              <Typography className="userDropDownHeading">
+                {/* {JSON.parse(localStorage.getItem('userDetails')).name} */}
+                {JSON.parse(localStorage.getItem("userDetails")) !== null
+                  ? JSON.parse(localStorage.getItem("userDetails")).name
+                  : null}
+              </Typography>
+              {/* <Typography className="userDropDown">
               Safety Department
             </Typography> */}
-            <Typography className="userDropDownLast">
-              {/* {JSON.parse(localStorage.getItem('projectName')).projectName.projectName} */}
-              {JSON.parse(localStorage.getItem("projectName")) !== null
-                ? JSON.parse(localStorage.getItem("projectName")).projectName.projectName
-                : null}
-            </Typography>
+              <Typography className="userDropDownLast">
+                {/* {JSON.parse(localStorage.getItem('projectName')).projectName.projectName} */}
+                {JSON.parse(localStorage.getItem("projectName")) !== null
+                  ? JSON.parse(localStorage.getItem("projectName")).projectName.projectName
+                  : null}
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-        <MenuItem
-          component={Link}
-          className="userText"
-          onClick={() =>
-            window.location.href = `${SSO_URL}/UserProfile/?companyId=${companyId}`}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g id="Profile-24" transform="translate(-2 -2)">
-              <g id="Group_29" data-name="Group 29" transform="translate(2 2)">
-                <path id="Path_2265" data-name="Path 2265" d="M14,2A12,12,0,1,0,26,14,12,12,0,0,0,14,2ZM8.084,21.536C8.6,20.456,11.744,19.4,14,19.4s5.412,1.056,5.916,2.136a9.51,9.51,0,0,1-11.832,0ZM21.632,19.8C19.916,17.708,15.752,17,14,17s-5.916.708-7.632,2.8a9.6,9.6,0,1,1,15.264,0Z" transform="translate(-2 -2)" fill="#06425c" />
-                <path id="Path_2266" data-name="Path 2266" d="M12,6a3.5,3.5,0,1,0,3.5,3.5A3.491,3.491,0,0,0,12,6Zm0,5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,12,11Z" transform="translate(0 -0.769)" fill="#06425c" />
+          <MenuItem
+            component={Link}
+            className="userText"
+            onClick={() =>
+              window.location.href = `${SSO_URL}/UserProfile/?companyId=${companyId}`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <g id="Profile-24" transform="translate(-2 -2)">
+                <g id="Group_29" data-name="Group 29" transform="translate(2 2)">
+                  <path id="Path_2265" data-name="Path 2265" d="M14,2A12,12,0,1,0,26,14,12,12,0,0,0,14,2ZM8.084,21.536C8.6,20.456,11.744,19.4,14,19.4s5.412,1.056,5.916,2.136a9.51,9.51,0,0,1-11.832,0ZM21.632,19.8C19.916,17.708,15.752,17,14,17s-5.916.708-7.632,2.8a9.6,9.6,0,1,1,15.264,0Z" transform="translate(-2 -2)" fill="#06425c" />
+                  <path id="Path_2266" data-name="Path 2266" d="M12,6a3.5,3.5,0,1,0,3.5,3.5A3.491,3.491,0,0,0,12,6Zm0,5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,12,11Z" transform="translate(0 -0.769)" fill="#06425c" />
+                </g>
               </g>
-            </g>
-          </svg>
-          Profile
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          component={Link}
-          className="userText"
-          disabled={true}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g id="setting-24" transform="translate(-1041 -51)">
-              <g id="Group_5797" data-name="Group 5797" transform="translate(1041 51)">
-                <g id="Group_5785" data-name="Group 5785" transform="translate(0)">
-                  <g id="Group_5770" data-name="Group 5770">
-                    <g id="Group_5756" data-name="Group 5756">
-                      <g id="Group_5753" data-name="Group 5753">
-                        <g id="Group_5746" data-name="Group 5746">
-                          <g id="Group_5744" data-name="Group 5744">
-                            <g id="Group_5742" data-name="Group 5742">
-                              <rect id="Rectangle_1883" data-name="Rectangle 1883" width="23" height="23" fill="none" />
+            </svg>
+            Profile
+          </MenuItem>
+          <Divider />
+          <MenuItem
+            component={Link}
+            className="userText"
+            disabled={true}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <g id="setting-24" transform="translate(-1041 -51)">
+                <g id="Group_5797" data-name="Group 5797" transform="translate(1041 51)">
+                  <g id="Group_5785" data-name="Group 5785" transform="translate(0)">
+                    <g id="Group_5770" data-name="Group 5770">
+                      <g id="Group_5756" data-name="Group 5756">
+                        <g id="Group_5753" data-name="Group 5753">
+                          <g id="Group_5746" data-name="Group 5746">
+                            <g id="Group_5744" data-name="Group 5744">
+                              <g id="Group_5742" data-name="Group 5742">
+                                <rect id="Rectangle_1883" data-name="Rectangle 1883" width="23" height="23" fill="none" />
+                              </g>
                             </g>
                           </g>
                         </g>
                       </g>
                     </g>
                   </g>
-                </g>
-                <g id="noun_setting_4423294" transform="translate(1 1)">
-                  <g id="Group_5759" data-name="Group 5759">
-                    <g id="Group_5757" data-name="Group 5757">
-                      <path id="Path_6426" data-name="Path 6426" d="M80.654,235.332a1.176,1.176,0,0,0-.968-.992,12.727,12.727,0,0,0-4.653,0,1.176,1.176,0,0,0-.968.992l-.257,2.045a9.514,9.514,0,0,0-2.18,1.2l-1.991-.811a1.248,1.248,0,0,0-1.385.3,11.379,11.379,0,0,0-2.328,3.835,1.117,1.117,0,0,0,.42,1.292l1.734,1.236a8.412,8.412,0,0,0,0,2.395s-1.734,1.234-1.734,1.234a1.117,1.117,0,0,0-.42,1.292,11.379,11.379,0,0,0,2.328,3.835,1.248,1.248,0,0,0,1.385.3l1.991-.811a9.514,9.514,0,0,0,2.18,1.2l.257,2.045a1.176,1.176,0,0,0,.968.992,12.727,12.727,0,0,0,4.653,0,1.176,1.176,0,0,0,.968-.992l.257-2.045a9.514,9.514,0,0,0,2.179-1.2l1.991.811a1.248,1.248,0,0,0,1.385-.3,11.379,11.379,0,0,0,2.328-3.835,1.117,1.117,0,0,0-.42-1.292l-1.734-1.236a8.41,8.41,0,0,0,0-2.395s1.734-1.234,1.734-1.234a1.117,1.117,0,0,0,.42-1.292,11.379,11.379,0,0,0-2.328-3.835,1.248,1.248,0,0,0-1.385-.3l-1.991.811a9.514,9.514,0,0,0-2.179-1.2Zm-2.291,1.142.237,1.88a1.167,1.167,0,0,0,.838.961,7.034,7.034,0,0,1,2.627,1.443,1.256,1.256,0,0,0,1.293.211l1.829-.745a9.039,9.039,0,0,1,1,1.653L84.6,243.012a1.122,1.122,0,0,0-.455,1.171,6.305,6.305,0,0,1,0,2.885,1.122,1.122,0,0,0,.455,1.171l1.592,1.135a9.039,9.039,0,0,1-1,1.653l-1.829-.745a1.256,1.256,0,0,0-1.293.211,7.034,7.034,0,0,1-2.627,1.443,1.167,1.167,0,0,0-.838.961l-.237,1.88a10.2,10.2,0,0,1-2.007,0l-.237-1.88a1.167,1.167,0,0,0-.838-.961,7.035,7.035,0,0,1-2.627-1.443,1.256,1.256,0,0,0-1.293-.211l-1.829.745a9.038,9.038,0,0,1-1-1.653l1.592-1.135a1.122,1.122,0,0,0,.455-1.171,6.305,6.305,0,0,1,0-2.885,1.122,1.122,0,0,0-.455-1.171l-1.592-1.135a9.038,9.038,0,0,1,1-1.653l1.829.745a1.256,1.256,0,0,0,1.293-.211,7.034,7.034,0,0,1,2.627-1.443,1.167,1.167,0,0,0,.838-.961l.237-1.88a10.193,10.193,0,0,1,2.007,0Z" transform="translate(-65.86 -234.125)" fill="#06425c" fill-rule="evenodd" />
-                    </g>
-                    <g id="Group_5758" data-name="Group 5758" transform="translate(7.659 7.659)">
-                      <path id="Path_6427" data-name="Path 6427" d="M138.675,46.5a3.841,3.841,0,1,0,3.841,3.841A3.843,3.843,0,0,0,138.675,46.5Zm0,2.2a1.646,1.646,0,1,1-1.646,1.646A1.648,1.648,0,0,1,138.675,48.7Z" transform="translate(-134.834 -46.5)" fill="#06425c" fill-rule="evenodd" />
+                  <g id="noun_setting_4423294" transform="translate(1 1)">
+                    <g id="Group_5759" data-name="Group 5759">
+                      <g id="Group_5757" data-name="Group 5757">
+                        <path id="Path_6426" data-name="Path 6426" d="M80.654,235.332a1.176,1.176,0,0,0-.968-.992,12.727,12.727,0,0,0-4.653,0,1.176,1.176,0,0,0-.968.992l-.257,2.045a9.514,9.514,0,0,0-2.18,1.2l-1.991-.811a1.248,1.248,0,0,0-1.385.3,11.379,11.379,0,0,0-2.328,3.835,1.117,1.117,0,0,0,.42,1.292l1.734,1.236a8.412,8.412,0,0,0,0,2.395s-1.734,1.234-1.734,1.234a1.117,1.117,0,0,0-.42,1.292,11.379,11.379,0,0,0,2.328,3.835,1.248,1.248,0,0,0,1.385.3l1.991-.811a9.514,9.514,0,0,0,2.18,1.2l.257,2.045a1.176,1.176,0,0,0,.968.992,12.727,12.727,0,0,0,4.653,0,1.176,1.176,0,0,0,.968-.992l.257-2.045a9.514,9.514,0,0,0,2.179-1.2l1.991.811a1.248,1.248,0,0,0,1.385-.3,11.379,11.379,0,0,0,2.328-3.835,1.117,1.117,0,0,0-.42-1.292l-1.734-1.236a8.41,8.41,0,0,0,0-2.395s1.734-1.234,1.734-1.234a1.117,1.117,0,0,0,.42-1.292,11.379,11.379,0,0,0-2.328-3.835,1.248,1.248,0,0,0-1.385-.3l-1.991.811a9.514,9.514,0,0,0-2.179-1.2Zm-2.291,1.142.237,1.88a1.167,1.167,0,0,0,.838.961,7.034,7.034,0,0,1,2.627,1.443,1.256,1.256,0,0,0,1.293.211l1.829-.745a9.039,9.039,0,0,1,1,1.653L84.6,243.012a1.122,1.122,0,0,0-.455,1.171,6.305,6.305,0,0,1,0,2.885,1.122,1.122,0,0,0,.455,1.171l1.592,1.135a9.039,9.039,0,0,1-1,1.653l-1.829-.745a1.256,1.256,0,0,0-1.293.211,7.034,7.034,0,0,1-2.627,1.443,1.167,1.167,0,0,0-.838.961l-.237,1.88a10.2,10.2,0,0,1-2.007,0l-.237-1.88a1.167,1.167,0,0,0-.838-.961,7.035,7.035,0,0,1-2.627-1.443,1.256,1.256,0,0,0-1.293-.211l-1.829.745a9.038,9.038,0,0,1-1-1.653l1.592-1.135a1.122,1.122,0,0,0,.455-1.171,6.305,6.305,0,0,1,0-2.885,1.122,1.122,0,0,0-.455-1.171l-1.592-1.135a9.038,9.038,0,0,1,1-1.653l1.829.745a1.256,1.256,0,0,0,1.293-.211,7.034,7.034,0,0,1,2.627-1.443,1.167,1.167,0,0,0,.838-.961l.237-1.88a10.193,10.193,0,0,1,2.007,0Z" transform="translate(-65.86 -234.125)" fill="#06425c" fill-rule="evenodd" />
+                      </g>
+                      <g id="Group_5758" data-name="Group 5758" transform="translate(7.659 7.659)">
+                        <path id="Path_6427" data-name="Path 6427" d="M138.675,46.5a3.841,3.841,0,1,0,3.841,3.841A3.843,3.843,0,0,0,138.675,46.5Zm0,2.2a1.646,1.646,0,1,1-1.646,1.646A1.648,1.648,0,0,1,138.675,48.7Z" transform="translate(-134.834 -46.5)" fill="#06425c" fill-rule="evenodd" />
+                      </g>
                     </g>
                   </g>
                 </g>
               </g>
-            </g>
-          </svg>
+            </svg>
 
-          Settings
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          component={Link}
-          className="userText"
-          disabled={true}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g id="switch-compnay-24" transform="translate(-96.011 -108.003)">
-              <path id="Path_6532" data-name="Path 6532" d="M119.694,519.1a1.088,1.088,0,0,0-.8-.294h-6.416l2.783-2.81h-3.35l-3.945,3.933,3.945,3.933h3.35l-2.783-2.809h5.246v6.181H98.3v-7.351a1.143,1.143,0,1,0-2.286,0v8.391a1.261,1.261,0,0,0,.384.841,1.318,1.318,0,0,0,.866.367h21.634a1.156,1.156,0,0,0,.8-.367,1.193,1.193,0,0,0,.317-.841V519.87a1.027,1.027,0,0,0-.317-.768Z" transform="translate(0 -397.48)" fill="#06425c" />
-              <path id="Path_6533" data-name="Path 6533" d="M119.719,108.324a1.1,1.1,0,0,0-.794-.321H97.291a1.285,1.285,0,0,0-.87.321,1.162,1.162,0,0,0-.388.8v8.406a1.2,1.2,0,0,0,.388.814,1.3,1.3,0,0,0,.87.339h6.416l-2.783,2.809h3.35l3.945-3.933-3.945-3.933h-3.35l2.783,2.809H98.318v-6.181h19.428v7.26a1.143,1.143,0,1,0,2.286,0v-8.391a1.083,1.083,0,0,0-.313-.8Z" transform="translate(-0.021 0)" fill="#06425c" />
-            </g>
-          </svg>
-          Switch Company
-        </MenuItem>
-        <MenuItem
-          onClick={(e) => {
-            handleClose();
-            handleLogout(e);
-          }}
-          className="textCenterButton"
-        >
-          <Button size="medium" variant="contained" color="primary" className="buttonStyleDropdown">
-            Logout
-          </Button>
-        </MenuItem>
-        {/* <MenuItem
+            Settings
+          </MenuItem>
+          <Divider />
+          <MenuItem
+            component={Link}
+            className="userText"
+            onClick={handleCompanyDialog}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <g id="switch-compnay-24" transform="translate(-96.011 -108.003)">
+                <path id="Path_6532" data-name="Path 6532" d="M119.694,519.1a1.088,1.088,0,0,0-.8-.294h-6.416l2.783-2.81h-3.35l-3.945,3.933,3.945,3.933h3.35l-2.783-2.809h5.246v6.181H98.3v-7.351a1.143,1.143,0,1,0-2.286,0v8.391a1.261,1.261,0,0,0,.384.841,1.318,1.318,0,0,0,.866.367h21.634a1.156,1.156,0,0,0,.8-.367,1.193,1.193,0,0,0,.317-.841V519.87a1.027,1.027,0,0,0-.317-.768Z" transform="translate(0 -397.48)" fill="#06425c" />
+                <path id="Path_6533" data-name="Path 6533" d="M119.719,108.324a1.1,1.1,0,0,0-.794-.321H97.291a1.285,1.285,0,0,0-.87.321,1.162,1.162,0,0,0-.388.8v8.406a1.2,1.2,0,0,0,.388.814,1.3,1.3,0,0,0,.87.339h6.416l-2.783,2.809h3.35l3.945-3.933-3.945-3.933h-3.35l2.783,2.809H98.318v-6.181h19.428v7.26a1.143,1.143,0,1,0,2.286,0v-8.391a1.083,1.083,0,0,0-.313-.8Z" transform="translate(-0.021 0)" fill="#06425c" />
+              </g>
+            </svg>
+            Switch Company
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              handleClose();
+              handleLogout(e);
+            }}
+            className="textCenterButton"
+          >
+            <Button size="medium" variant="contained" color="primary" className="buttonStyleDropdown">
+              Logout
+            </Button>
+          </MenuItem>
+          {/* <MenuItem
           onClick={() =>
             window.location.href = `${SSO_URL}/UserProfile`}
         >
@@ -533,8 +609,9 @@ function UserMenu(props) {
           </ListItemIcon>
           Log Out
         </MenuItem> */}
-      </Menu>
-    </div>
+        </Menu>
+      </div>
+    </>
   );
 }
 UserMenu.propTypes = {
