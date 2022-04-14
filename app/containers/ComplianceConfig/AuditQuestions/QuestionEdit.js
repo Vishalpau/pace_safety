@@ -294,7 +294,7 @@ const QuestionEdit = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    console.log(projectBreakdown,'projectBreakdown')
+    console.log(projectBreakdown, 'projectBreakdown')
     if (projectBreakdown) {
       const projectData = JSON.parse(localStorage.getItem("projectName"));
       let breakdownLength = projectData.projectName.breakdown.length;
@@ -373,17 +373,17 @@ const QuestionEdit = (props) => {
                   ];
                 }
               });
-              console.log(selectBreakDown,'selectBreakDown')
+              console.log(selectBreakDown, 'selectBreakDown')
               setFetchSelectBreakDownList(selectBreakDown);
             })
             .catch((error) => {
               console.log(error);
               setIsNext(true);
             });
+        }
         // }else{
         //   setFetchSelectBreakDownList(breakDown)
         // }
-      }
       }
     }
   };
@@ -667,6 +667,7 @@ const QuestionEdit = (props) => {
                           </FormControl>
                         </Grid>
                       </Grid>
+                      {error.groupError && (<p style={{ fontSize: '13px', color: "#FF0000" }}>{error.groupError}</p>)}
                     </Paper>
                   </Grid>
 

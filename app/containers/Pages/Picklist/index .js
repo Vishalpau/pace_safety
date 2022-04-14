@@ -3,6 +3,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +13,8 @@ import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
 import Editor from '../../../components/Editor';
 import api from "../../../utils/axios";
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import { apiUrl } from '../../../utils/helper';
 
 
@@ -74,6 +77,10 @@ const useStyles = makeStyles((theme) => ({
 function Picklists(props) {
   const [picklists, setPicklists] = useState([]);
   const [listToggle, setListToggle] = useState(false);
+  const [searchFilter, setSearchFilter] = useState({
+    search: "",
+    filter: ""
+  })
 
   const handelView = (e) => {
     setListToggle(!listToggle);
@@ -120,19 +127,36 @@ function Picklists(props) {
 
   const save = (text, column, id) => {
     // Update
-    const val = {};
+    const value = {};
+    picklists.forEach(picklist => {
+      if (picklist.id === id) {
+        value.listName = picklist.listName,
+          value.listLabel = picklist.listLabel,
+          value.fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId,
+          value.listSelectType = picklist.listSelectType,
+          value.status = picklist.status,
+          value.listType = picklist.listType
 
-    if (column == 'name') {
-      val.listName = text;
-    }
-    if (column == 'label') { val.listLabel = text; }
-    if (column == 'type') { val.listType = text; }
-    value["fkCompanyId"] = JSON.parse(localStorage.getItem("company")).fkCompanyId,
-      value["listName"] = 0
-    value["listSelectType"] = 'single'
-    value["listType"] = val.listType
-    value["status"] = 'Active'
-    api.put('api/v1/lists/' + id, val);
+        if (column == "name")
+          value.listName = text;
+        if (column == 'label') {
+          value.listLabel = text;
+        }
+      }
+    });
+    // const val = {};
+
+    // if (column == 'name') {
+    //   val.listName = text;
+    // }
+    // if (column == 'label') { val.listLabel = text; }
+    // if (column == 'type') { val.listType = text; }
+    // value["fkCompanyId"] = JSON.parse(localStorage.getItem("company")).fkCompanyId,
+    //   value["listName"] = 0
+    // value["listSelectType"] = 'single'
+    // value["listType"] = val.listType
+    // value["status"] = 'Active'
+    api.put('api/v1/lists/' + id, value);
   };
 
   const redirectto = e => {
@@ -149,7 +173,7 @@ function Picklists(props) {
     listSelectType: 'single',
     hasGroup: 'No',
     status: 'Active',
-    isSystem: 'No',
+    isSystem: 'Yes',
     createdBy: JSON.parse(localStorage.getItem('userDetails')).id
   });
 
@@ -167,66 +191,252 @@ function Picklists(props) {
   ];
 
   const isvalidate = (text, column, id) => {
-    const val = picklists.filter(value => value.listName == text);
+    const val = picklists.filter(value => value == text);
     if (val.length && column == 'name') {
       return false;
     }
     return true;
   };
 
-  const _picklists = list => list.map(listItem => (
-    <tr>
-      <td>
-        <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.listName}
-          column="name"
-          save={save}
-          isvalidate={isvalidate}
-          edit={listItem.isSystem == 0}
-        />
-      </td>
-      <td>
-        <Editor
-          type="text"
-          id={listItem.id}
-          value={listItem.listLabel}
-          column="label"
-          save={save}
-          isvalidate={isvalidate}
-          edit={listItem.isSystem == 0}
-        />
-      </td>
+  const _picklists = list => list.map(listItem => {
+    if (searchFilter.search) {
+      if (searchFilter.filter) {
+        if (listItem.listLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && listItem.listType === searchFilter.filter) {
+          return (
+            <tr>
+              <td>
+                <Editor
+                  type="text"
+                  id={listItem.id}
+                  value={listItem.listName}
+                  column="name"
+                  save={save}
+                  isvalidate={isvalidate}
+                  edit={listItem.isSystem == 0}
+                />
+              </td>
+              <td>
+                <Editor
+                  type="text"
+                  id={listItem.id}
+                  value={listItem.listLabel}
+                  column="label"
+                  save={save}
+                  isvalidate={isvalidate}
+                  edit={listItem.isSystem == 0}
+                />
+              </td>
 
-      <td>
-        <Editor
-          type="select"
-          options={select_type_options}
-          id={listItem.id}
-          value={listItem.listType}
-          column="type"
-          save={save}
-          edit={listItem.isSystem == 0}
-          isvalidate={isvalidate}
-        />
-      </td>
-      <td>
-        {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
-      </td>
-      <td>
-        {listItem.isSystem == 0 ? 'No' : 'Yes'}
-      </td>
-      <td>
-        <Link
-          to={'/app/pages/picklist/value/' + listItem.id}
-          onClick={redirectto}
-        >
-          Values
-        </Link>
-      </td>
-    </tr>
-  ));
+              <td>
+                {listItem.listType}
+                {/* <Editor
+                  type="select"
+                  options={select_type_options}
+                  id={listItem.id}
+                  value={listItem.listType}
+                  column="type"
+                  save={save}
+                  edit={listItem.isSystem == 0}
+                  isvalidate={isvalidate}
+                /> */}
+              </td>
+              <td>
+                {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
+              </td>
+              <td>
+                {listItem.isSystem == 0 ? 'Yes' : 'No'}
+              </td>
+              <td>
+                <Link
+                  to={'/app/pages/picklist/value/' + listItem.id}
+                  onClick={redirectto}
+                >
+                  Update values
+                </Link>
+              </td>
+            </tr>
+          )
+        } else {
+          return <></>
+        }
+      } else {
+        if (listItem.listLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+          return (
+            <tr>
+              <td>
+                <Editor
+                  type="text"
+                  id={listItem.id}
+                  value={listItem.listName}
+                  column="name"
+                  save={save}
+                  isvalidate={isvalidate}
+                  edit={listItem.isSystem == 0}
+                />
+              </td>
+              <td>
+                <Editor
+                  type="text"
+                  id={listItem.id}
+                  value={listItem.listLabel}
+                  column="label"
+                  save={save}
+                  isvalidate={isvalidate}
+                  edit={listItem.isSystem == 0}
+                />
+              </td>
+
+              <td>
+                {listItem.listType}
+                {/* <Editor
+                  type="select"
+                  options={select_type_options}
+                  id={listItem.id}
+                  value={listItem.listType}
+                  column="type"
+                  save={save}
+                  edit={listItem.isSystem == 0}
+                  isvalidate={isvalidate}
+                /> */}
+              </td>
+              <td>
+                {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
+              </td>
+              <td>
+                {listItem.isSystem == 0 ? 'Yes' : 'No'}
+              </td>
+              <td>
+                <Link
+                  to={'/app/pages/picklist/value/' + listItem.id}
+                  onClick={redirectto}
+                >
+                  Update values
+                </Link>
+              </td>
+            </tr>
+          )
+        } else {
+          return <></>
+        }
+      }
+    } else {
+      if (searchFilter.filter) {
+        if (searchFilter.filter === listItem.listType) {
+          return (
+            <tr>
+              <td>
+                <Editor
+                  type="text"
+                  id={listItem.id}
+                  value={listItem.listName}
+                  column="name"
+                  save={save}
+                  isvalidate={isvalidate}
+                  edit={listItem.isSystem == 0}
+                />
+              </td>
+              <td>
+                <Editor
+                  type="text"
+                  id={listItem.id}
+                  value={listItem.listLabel}
+                  column="label"
+                  save={save}
+                  isvalidate={isvalidate}
+                  edit={listItem.isSystem == 0}
+                />
+              </td>
+
+              <td>
+                {listItem.listType}
+                {/* <Editor
+                  type="select"
+                  options={select_type_options}
+                  id={listItem.id}
+                  value={listItem.listType}
+                  column="type"
+                  save={save}
+                  edit={listItem.isSystem == 0}
+                  isvalidate={isvalidate}
+                /> */}
+              </td>
+              <td>
+                {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
+              </td>
+              <td>
+                {listItem.isSystem == 0 ? 'Yes' : 'No'}
+              </td>
+              <td>
+                <Link
+                  to={'/app/pages/picklist/value/' + listItem.id}
+                  onClick={redirectto}
+                >
+                  Update values
+                </Link>
+              </td>
+            </tr>
+          )
+        } else {
+          return <></>
+        }
+      } else {
+        return (
+          <tr>
+            <td>
+              <Editor
+                type="text"
+                id={listItem.id}
+                value={listItem.listName}
+                column="name"
+                save={save}
+                isvalidate={isvalidate}
+                edit={listItem.isSystem == 0}
+              />
+            </td>
+            <td>
+              <Editor
+                type="text"
+                id={listItem.id}
+                value={listItem.listLabel}
+                column="label"
+                save={save}
+                isvalidate={isvalidate}
+                edit={listItem.isSystem == 0}
+              />
+            </td>
+
+            <td>
+              {listItem.listType}
+              {/* <Editor
+                type="select"
+                options={select_type_options}
+                id={listItem.id}
+                value={listItem.listType}
+                column="type"
+                save={save}
+                edit={listItem.isSystem == 0}
+                isvalidate={isvalidate}
+              /> */}
+            </td>
+            <td>
+              {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
+            </td>
+            <td>
+              {listItem.isSystem == 0 ? 'No' : 'Yes'}
+            </td>
+            <td>
+              <Link
+                to={'/app/pages/picklist/value/' + listItem.id}
+                onClick={redirectto}
+              >
+                Update values
+              </Link>
+            </td>
+          </tr>
+        )
+      }
+    }
+  });
 
   const validate = () => {
     const { listName, listLabel, listType } = form;
@@ -258,14 +468,20 @@ function Picklists(props) {
     handelPickListGet()
   }, []);
 
+  const handleSearchFilterChange = (value, key) => {
+    setSearchFilter(data => ({
+      ...data,
+      [key]: value
+    }))
+  }
+
   return (
     <PapperBlock title="Picklists" icon="ion-md-list-box" desc="">
-
       <Box>
         <div className={classes.root}>
           <AppBar position="static" color="transparent">
             <Toolbar>
-              <div className="leftSide" className={classes.leftSide}>
+              <div className={classes.leftSide}>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -284,12 +500,37 @@ function Picklists(props) {
             </Toolbar>
           </AppBar>
         </div>
+        <div>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField id="outlined-basic" label="Search Picklist" onChange={(e) => handleSearchFilterChange(e.target.value, 'search')} variant="outlined" style={{ width: '100%' }} />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel style={{ marginLeft: '20px', marginTop: '-5px' }} id="checklistSearchFilter">Filter</InputLabel>
+                <Select
+                  style={{ minWidth: '120px' }}
+                  labelId="checklistSearchFilte"
+                  id="demo-simple-select-helper"
+                  onChange={(e) => handleSearchFilterChange(e.target.value, 'filter')}
+                  value={searchFilter.filter}
+                  variant="outlined"
+                  label="Filter"
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value={"dropdown"}>Type - dropdown</MenuItem>
+                  <MenuItem value={"radiogroup"}>Type - radiogroup</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </div>
 
         <div className="listView">
           <table id="picklistmanage_table" className="table table-striped table-bordered datatable_section width100">
             <thead>
               <tr>
-                <th>List Name</th>
+                <th>List Key</th>
                 <th>List Label</th>
                 <th>Type</th>
                 <th>Parent</th>
@@ -362,7 +603,7 @@ function Picklists(props) {
                   </Select>
                 </td>
                 <td>Parent</td>
-                <td>No</td>
+                <td>Yes</td>
                 <td>
                   <Button
                     variant="contained"

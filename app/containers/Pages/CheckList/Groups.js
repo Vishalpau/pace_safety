@@ -190,16 +190,16 @@ function Group() {
   return (
 
     <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
-      <Button variant="contained" color="secondary" onClick={(e) => setShowNew(true)} style={{ float: 'right' }}>
-        <AddIcon  />
-                New
+      <Button onClick={(e) => setShowNew(true)} variant="contained" color="secondary" style={{ float: 'right' }}>
+        <AddIcon />
+        New
       </Button>
 
       <Grid container spacing={12}>
         <Table className={classes.table}>
           <TableBody>
             <TableRow>
-              <TableCell className={classes.tabelBorder}>Group Name</TableCell>
+              <TableCell className={classes.tabelBorder}>Sub-group Name</TableCell>
               <TableCell className={classes.tabelBorder}>Parent Group</TableCell>
               <TableCell className={classes.tabelBorder}>Status</TableCell>
               <TableCell className={classes.tabelBorder}>Action</TableCell>
@@ -229,64 +229,62 @@ function Group() {
 
               </>
             ))}
-            {showNew
-              ? (
-                <TableRow>
-                  <TableCell className={classes.tabelBorder}>
-                    <TextField
-                      id="filled-basic"
-                      label="group name"
-                      variant="outlined"
-                      onChange={async (e) => handelCheckList(e)}
-                    />
-                  </TableCell>
+            {showNew && (
+              <TableRow>
+                <TableCell className={classes.tabelBorder}>
+                  <TextField
+                    id="filled-basic"
+                    label="group name"
+                    variant="outlined"
+                    onChange={async (e) => handelCheckList(e)}
+                  />
+                </TableCell>
 
-                  <TableCell className={classes.tabelBorder}>
-                    <FormControl
-                      variant="outlined"
-                      className={classes.formControl}
-                      label="Group name"
+                <TableCell className={classes.tabelBorder}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                    label="Group name"
+                  >
+                    <Select
+                      id="Group-name"
+                      className="inputCell"
+                      labelId="Group name"
+                      defaultValue="Top"
                     >
-                      <Select
-                        id="Group-name"
-                        className="inputCell"
-                        labelId="Group name"
-                        defaultValue="Top"
-                      >
-                        {allGroupName.map((selectValues) => (
-                          <MenuItem
-                            value={selectValues}
-                            onClick={(e) => handelParentValue(selectValues)}
-                          >
-                            {selectValues}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                      {allGroupName.map((selectValues) => (
+                        <MenuItem
+                          value={selectValues}
+                          onClick={(e) => handelParentValue(selectValues)}
+                        >
+                          {selectValues}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-                  </TableCell>
-                  <TableCell className={classes.tabelBorder}>
-                    <Switch
-                      checked
-                      // onChange={handleChange}
-                      name="checkedA"
-                      inputProps={{ 'aria-label': 'secondary checkbox' }}
-                    />
-                  </TableCell>
+                </TableCell>
+                <TableCell className={classes.tabelBorder}>
+                  <Switch
+                    checked
+                    // onChange={handleChange}
+                    name="checkedA"
+                    inputProps={{ 'aria-label': 'secondary checkbox' }}
+                  />
+                </TableCell>
 
-                  <TableCell>
-                    <DoneIcon
-                      onClick={(e) => handelNext(e)}
-                    />
-                    <span style={{ marginLeft: '20px' }}>
-                      <DeleteIcon />
-                    </span>
+                <TableCell>
+                  <DoneIcon
+                    onClick={(e) => handelNext(e)}
+                  />
+                  <span style={{ marginLeft: '20px' }}>
+                    <DeleteIcon />
+                  </span>
 
-                  </TableCell>
+                </TableCell>
 
-                </TableRow>
-              )
-              : null}
+              </TableRow>
+            )}
 
 
           </TableBody>

@@ -74,6 +74,7 @@ const PerformanceFactorAdd = () => {
         if (!isValid) {
             return "data not valid"
         }
+        console.log(fectorForm, '111')
         const res = await api.post(`/api/v1/configaudits/factors/`, fectorForm).then(res => { localStorage.setItem("configTab", 1), history.goBack() }).catch(err => console.log(error))
         setPerformError('The combination of factor type is already exist in database.')
     }
@@ -174,7 +175,7 @@ const PerformanceFactorAdd = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorForm.factorName ? fectorForm.factorName : ""}
-                                                        onChange={(e) => {setPerformError(''), setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
+                                                        onChange={(e) => { setPerformError(''), setFectorForm({ ...fectorForm, factorName: e.target.value }), setError({ ...error, factorName: "" }) }}
                                                     >
                                                         <MenuItem value="High">High</MenuItem>
                                                         <MenuItem value="Medium">Medium</MenuItem>
@@ -231,7 +232,7 @@ const PerformanceFactorAdd = () => {
                                                     label="Factor constant *"
                                                     required
                                                     value={fectorForm.factorConstant ? fectorForm.factorConstant : ""}
-                                                    onChange={(e) => {setPerformError(''), setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
+                                                    onChange={(e) => { setPerformError(''), setFectorForm({ ...fectorForm, factorConstant: e.target.value }), setError({ ...error, factorConstant: "" }) }}
                                                 >
                                                     <MenuItem value="1" selected={fectorForm.factorConstant == 1}>1</MenuItem>
                                                     <MenuItem value="0.3" selected={fectorForm.factorConstant == 0.3}>0.3</MenuItem>

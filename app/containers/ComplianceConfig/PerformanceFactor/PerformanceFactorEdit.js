@@ -48,7 +48,7 @@ const PerformanceFactorEdit = () => {
     }
 
     const handleUpdate = async () => {
-        const res = await api.put(`/api/v1/configaudits/factors/${fectorData.id}/?company=${fectorData.fkCompanyId}&project=${fectorData.fkProjectId}&projectStructure=`, fectorData).then(res => { localStorage.setItem("configTab", 1), history.goBack() }).catch(err => console.log(error))
+        const res = await api.put(`/api/v1/configaudits/factors/${fectorData.id}/?company=${fectorData.fkCompanyId}&project=${fectorData.fkProjectId}&projectStructure=`, fectorData).then(res => { localStorage.setItem("configTab", 1), history.goBack() }).catch(err => console.log(err))
     }
 
     return (
@@ -111,7 +111,7 @@ const PerformanceFactorEdit = () => {
                                                         value={fectorData.factorName ? fectorData.factorName : ""}
                                                         onChange={(e) => { console.log(e, 'factorName'); setFectorData({ ...fectorData, factorName: e.target.value }) }}
                                                     >
-                                                         <MenuItem value="Not in Compliance - Unsafe, Stop Work">Not in Compliance - Unsafe, Stop Work</MenuItem>
+                                                        <MenuItem value="Not in Compliance - Unsafe, Stop Work">Not in Compliance - Unsafe, Stop Work</MenuItem>
                                                         <MenuItem value="Not in Compliance  - Action required">Not in Compliance  - Action required</MenuItem>
                                                         <MenuItem value="Partial Compliance - Not satisfactory">Partial Compliance - Not satisfactory</MenuItem>
                                                         <MenuItem value="Compliant - Needs Improvement">Compliant - Needs Improvement</MenuItem>
@@ -132,7 +132,7 @@ const PerformanceFactorEdit = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor name *"
                                                         value={fectorData.factorName ? fectorData.factorName : ""}
-                                                        onChange={(e) => {setFectorData({ ...fectorData, factorName: e.target.value }) }}
+                                                        onChange={(e) => { setFectorData({ ...fectorData, factorName: e.target.value }) }}
                                                     >
                                                         <MenuItem value="High">High</MenuItem>
                                                         <MenuItem value="Medium">Medium</MenuItem>
@@ -153,7 +153,7 @@ const PerformanceFactorEdit = () => {
                                                         labelId="project-unit-label"
                                                         label="Factor constant *"
                                                         value={fectorData.factorConstant ? fectorData.factorConstant : ""}
-                                                        onChange={(e) => {setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
+                                                        onChange={(e) => { setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
                                                     >
                                                         <MenuItem value="0">0</MenuItem>
                                                         <MenuItem value="1">1</MenuItem>
@@ -178,9 +178,9 @@ const PerformanceFactorEdit = () => {
                                                         value={fectorData.factorConstant ? fectorData.factorConstant : ""}
                                                         onChange={(e) => { console.log(e, 'factorConstant'); setFectorData({ ...fectorData, factorConstant: e.target.value }) }}
                                                     >
-                                                        <MenuItem value="1" selected={fectorData.factorConstant==1}>1</MenuItem>
-                                                        <MenuItem value="0.3"  selected={fectorData.factorConstant==0.3}>0.3</MenuItem>
-                                                        <MenuItem value="0.6"  selected={fectorData.factorConstant==.60}>0.6</MenuItem>
+                                                        <MenuItem value="1" selected={fectorData.factorConstant == 1}>1</MenuItem>
+                                                        <MenuItem value="0.3" selected={fectorData.factorConstant == 0.3}>0.3</MenuItem>
+                                                        <MenuItem value="0.6" selected={fectorData.factorConstant == .60}>0.6</MenuItem>
                                                     </Select>
                                                 </FormControl>)}
                                         </Grid>

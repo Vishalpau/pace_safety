@@ -1677,7 +1677,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddTBRemove"
                                     >
-                                      
+
                                     </Grid>
 
                                     <Grid
@@ -1686,7 +1686,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddTBRemove"
                                     >
-                                     
+
                                     </Grid>
 
                                     <Grid
@@ -1695,7 +1695,7 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddTBRemove"
                                     >
-                                     
+
                                     </Grid>
                                   </Grid>
                                 </Paper>
