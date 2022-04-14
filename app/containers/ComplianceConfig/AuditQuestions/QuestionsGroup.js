@@ -283,7 +283,7 @@ const QuestionsGroup = (props) => {
     const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
-    if (checkData.length > 0 && subGroupId.length > 0) {
+    if (checkData.length > 0 && subGroupId.length > 0 && Object.keys(error).length === 0) {
       localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
       localStorage.setItem("auditGroups", JSON.stringify(groupId));
       history.push({
