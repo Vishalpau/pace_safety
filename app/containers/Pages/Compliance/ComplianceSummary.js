@@ -479,7 +479,7 @@ function ComplianceSummary(props) {
     );
     const result = res.data.data.results;
     console.log(result, 'kkkk')
-    setQueData(result)
+    setQueData([result])
   };
 
 
@@ -1299,6 +1299,7 @@ function ComplianceSummary(props) {
                                             </FormLabel>
 
                                             {quesData.map((value, index) => {
+                                              console.log(value);
                                               console.log(subGrpData.id == value.subGroupId, 'mmmmm')
                                               return subGrpData.id == value.subGroupId ? <Accordion
                                                 expanded={
@@ -1517,7 +1518,7 @@ function ComplianceSummary(props) {
                                                       >
                                                         Attachments
                                                       </FormLabel>
-                                                      {value.attachment ? value.attachmen.map(att =>
+                                                      {value.attachment ? value.attachment.map(att =>
                                                         <div className="attachFileThumb">
                                                           <img
                                                             src={att.attachment}

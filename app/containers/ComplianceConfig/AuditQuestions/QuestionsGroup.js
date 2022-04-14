@@ -289,7 +289,7 @@ const QuestionsGroup = (props) => {
       history.push({
         pathname: "/app/compliance-config/question",
         state: {
-          fkProjectStructureIds: structureId,
+          fkProjectStructureIds: fkpsId,
           CompanyId: fkCompanyId,
           projectId: project.projectId,
         },
@@ -312,6 +312,7 @@ const QuestionsGroup = (props) => {
         }
       });
       tempGroupId.map((data, key) => {
+        
         if (data == value["checkListGroupName"]) {
           tempGroupId.splice(key, 1);
         }

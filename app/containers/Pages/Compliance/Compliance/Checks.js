@@ -429,11 +429,13 @@ const Checks = (props) => {
           }
         })
 
-        // if (filteredObj[0].id) {
-        //   api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/${response}`)
-        // }
+        if (filteredObj[0].id) {
+          api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData)
+        }
 
-        api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
+        else {
+          api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
+        }
 
         temp.forEach(a => {
           if (a.findings === '') {
@@ -621,11 +623,14 @@ const Checks = (props) => {
       }
     });
 
+    console.log(groups);
+
     for (let i = 0; i < tempCheckData.length; i++) {
       console.log(i, 'iiiiiiiiiiiiiiii')
+
       for (let j = 0; j < groups.length; j++) {
         console.log(j, 'jjjjjjjjjjjjjjjjj');
-        if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
+        if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
         // console.log(tempCheckData[i], 'mohit');
@@ -636,7 +641,6 @@ const Checks = (props) => {
 
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < subGroups.length; j++) {
-        console.log(subGroups[j]['inputLabel']);
         if (subGroups[j]['inputLabel'] == tempCheckData[i]['subGroupName']) {
           tempCheckData[i]['subGroupId'] = subGroups[j]['id']
         }
@@ -656,14 +660,6 @@ const Checks = (props) => {
     console.log(name);
     console.log(file);
 
-    // var formData = new FormData();
-    // formData.append("mediaAttachment", new Blob([file], { type: "application/octet-stream" }));
-    // console.log(formData);
-    // const fileData = new FileReader();
-    // console.log(fileData);
-
-
-    // create_blob(file, function (file) {
     temp.map((a, i) => {
       if (a.questionId === questionId) {
         if (name === 'attachment') {
@@ -1482,7 +1478,7 @@ const Checks = (props) => {
                                                   id="performancerating"
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
-                                                  style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
+                                                  // style={{ backgroundColor: ratingColor[catI + '-' + index] ? ratingColor[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor : '') }}
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
