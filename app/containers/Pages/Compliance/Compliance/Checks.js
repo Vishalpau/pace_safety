@@ -344,8 +344,6 @@ const Checks = (props) => {
           let clr_op = { ...ratingColor }
           clr_op[index] = colordata[i].matrixConstantColor
           setRatingColor(clr_op)
-          // console.log(ratingValue, 'ratingValue')
-          // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
           break; // stop the loop
         }
         else {
@@ -894,7 +892,6 @@ const Checks = (props) => {
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
-    console.log(result,'result')
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
@@ -1049,7 +1046,6 @@ const Checks = (props) => {
                           </ListItem>
                         </span> */}
                           {value.map((value, index) => {
-                            // console.log(value);
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -1143,7 +1139,6 @@ const Checks = (props) => {
                                               </Grid>
                                               {value.scoreType === "Stars" &&
                                                 <Grid item md={4} sm={4} xs={12}>
-                                                  {console.log(valueStar, 'valueStar')}
                                                   <Rating
                                                     name="simple-controlled"
                                                     defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
