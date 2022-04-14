@@ -71,7 +71,9 @@ const PerformanceMatrixAdd = () => {
     const handleSave = async () => {
         const { error, isValid } = MatrixValidation(matrixForm)
         setError(error)
-        const res = await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => { localStorage.setItem("configTab", 2), history.goBack() }).catch(err => console.log(error))
+        if (isValid) {
+            await api.post(`/api/v1/configaudits/matrix/`, matrixForm).then(res => { localStorage.setItem("configTab", 2), history.goBack() }).catch(err => console.log(err))
+        }
     }
     return (
         <>
@@ -102,24 +104,24 @@ const PerformanceMatrixAdd = () => {
                                 <Paper elevation={1} className="paperSection">
                                     <Grid container spacing={3}>
                                         <Grid item md={4} sm={6} xs={12}>
-                                        <TextField
-                                            label="Matrix constant *"
-                                            name="matrixconstant"
-                                            id="matrixconstant"
-                                            type="number"
-                                            error={error.matrixConstant}
-                                            helperText={error.matrixConstant ? error.matrixConstant : ""}
-                                            value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
-                                            onChange={(e) => {setMatrixForm({...matrixForm,matrixConstant: (e.target.value)})}}
-                                            fullWidth
-                                            variant="outlined"
-                                            className="formControl"
-                                            inputProps={{
-                                                min: 0,
-                                                max: 5,
-                                                inputMode: 'numeric',
-                                                pattern: '[0-5]*'
-                                            }}
+                                            <TextField
+                                                label="Matrix constant *"
+                                                name="matrixconstant"
+                                                id="matrixconstant"
+                                                type="number"
+                                                error={error.matrixConstant}
+                                                helperText={error.matrixConstant ? error.matrixConstant : ""}
+                                                value={matrixForm.matrixConstant ? matrixForm.matrixConstant : ""}
+                                                onChange={(e) => { setMatrixForm({ ...matrixForm, matrixConstant: (e.target.value) }) }}
+                                                fullWidth
+                                                variant="outlined"
+                                                className="formControl"
+                                                inputProps={{
+                                                    min: 0,
+                                                    max: 5,
+                                                    inputMode: 'numeric',
+                                                    pattern: '[0-5]*'
+                                                }}
                                             // inputProps={{
                                             //     min: 0,
                                             //     max: 5,
@@ -129,7 +131,7 @@ const PerformanceMatrixAdd = () => {
                                             //     },
                                             // }}                                        
                                             />
-                                          
+
                                         </Grid>
 
                                         <Grid item md={4} sm={6} xs={12}>

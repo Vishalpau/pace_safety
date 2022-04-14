@@ -592,10 +592,9 @@ const Checks = (props) => {
         });
       }
     });
-
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < groups.length; j++) {
-        if (groups[j]['checkListLabel'] == tempCheckData[i]['groupName']) {
+        if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
       }
@@ -626,7 +625,6 @@ const Checks = (props) => {
     let tempNewQuestion = []
 
     checkData.map((data) => {
-      console.log(data)
       if (data.id) {
         tempUpdatedQuestion.push(data)
       } else {
@@ -670,8 +668,8 @@ const Checks = (props) => {
         console.log(dataCheck)
       }
 
-      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, dataCheck)
-      ;
+      const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, dataCheck)
+        ;
     }
     if (tempUpdatedQuestion.length > 0) {
 
@@ -761,7 +759,7 @@ const Checks = (props) => {
       ];
       let allAction = await handelActionData(jhaId, apiData);
       setActionData(allAction);
-    } setTimeout(() => handelActionTracker(), 1000)
+    }
   };
 
 
@@ -769,6 +767,7 @@ const Checks = (props) => {
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
+    console.log(result,'result')
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
@@ -1014,17 +1013,20 @@ const Checks = (props) => {
                                               </Grid>
                                               {value.scoreType === "Stars" &&
                                                 <Grid item md={4} sm={4} xs={12}>
+                                                  {console.log(valueStar, 'valueStar')}
                                                   <Rating
                                                     name="simple-controlled"
                                                     defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     onChange={(event, newValue) => {
-                                                      handleChangeData(
-                                                        newValue,
-                                                        "score",
-                                                        index,
-                                                        value.id
-                                                      )
-                                                      setValueStar(newValue);
+                                                      if (newValue != null) {
+                                                        handleChangeData(
+                                                          newValue,
+                                                          "score",
+                                                          index,
+                                                          value.id
+                                                        )
+                                                        setValueStar(newValue);
+                                                      }
                                                     }}
                                                   />
                                                 </Grid>}
@@ -1354,13 +1356,15 @@ const Checks = (props) => {
                                                     name="simple-controlled"
                                                     defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     onChange={(event, newValue) => {
-                                                      handleChangeData(
-                                                        newValue,
-                                                        "score",
-                                                        index,
-                                                        value.id
-                                                      )
-                                                      setValueStar(newValue);
+                                                      if (newValue != null) {
+                                                        handleChangeData(
+                                                          newValue,
+                                                          "score",
+                                                          index,
+                                                          value.id
+                                                        )
+                                                        setValueStar(newValue);
+                                                      }
                                                     }}
                                                   />
                                                 </Grid>}

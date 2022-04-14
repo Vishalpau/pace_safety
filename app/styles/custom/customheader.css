@@ -360,6 +360,9 @@ html .custmCancelBtn {
   color: #7692A4 !important;
   line-height: 18px;
 }
+.attachmentCenter, .attachmentCenter input {
+  margin-bottom: 0px;
+}
 .buttonActionArea {
   margin-top: 28px !important;
 }
@@ -584,6 +587,12 @@ ul.MuiMenu-list a ul li.userName {
 }
 .simpleTableDesign tbody tr td.MuiTableCell-root, .simpleTableDesign thead tr th.MuiTableCell-root {
   text-align: center;
+}
+.simpleTableDesign tbody tr td.MuiTableCell-root button {
+  padding: 0px;
+}
+.simpleTableDesign tbody tr td.MuiTableCell-root {
+  padding: 6px;
 }
 
 /*Kanban css*/

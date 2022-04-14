@@ -87,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 function ObservationBulkupload() {
   const [listToggle, setListToggle] = useState(false);
   const [loading, setLoading] = useState(false)
+  const [msg, setMsg] = useState([])
 
   const history = useHistory();
   const classes = useStyles();
@@ -111,7 +112,7 @@ function ObservationBulkupload() {
   const handleUpload = (e) => {
     let fileNameExt = e.currentTarget.files[0].name.split(".").pop();
     if (fileNameExt == "pdf") {
-      let temp = {...uploadFrom}
+      let temp = { ...uploadFrom }
       temp.filename = e.currentTarget.files[0];
       setUploadForm(temp)
       setFileError("")
@@ -122,17 +123,33 @@ function ObservationBulkupload() {
     }
   }
 
-  const handlsubmit = () => {
-    setMessageShow('We are processing file please wait until is loading...')
+  const handlsubmit = async () => {
+    setMessageShow('Please wait while we import your data.')
     let data = new FormData();
     data.append("fkProjectId", uploadFrom.fkProjectId),
-    data.append("entityContext", uploadFrom.entityContext),
-    data.append("processer", uploadFrom.processer)
+      data.append("entityContext", uploadFrom.entityContext),
+      data.append("processer", uploadFrom.processer)
     data.append("filename", uploadFrom.filename)
     setLoading(true)
-    const res = appapi.post(`/api/v1/core/uploadmultipleocrform/?fkCompanyId=${fkCompanyId}`, data).then((res) =>
-      history.push('/app/icare-bulkupload')
-    ).catch((error) => console.log(error))
+    let res = await appapi.post(`/api/v1/core/uploadmultipleocrform/?fkCompanyId=${fkCompanyId}`, data)
+      .then(function (res) {
+        setLoading(false)
+        // return res
+        if (res.data.data.results.includes("uploaded already")) {
+          setMsg(" File is already exist. Try with new file")
+          setMessageShow('')
+        } else {
+           history.push('/app/icare-bulkupload')
+        }
+
+      }
+      )
+      .catch(function (error) { console.log(error) })
+    //   if( res.data.data.results.includes("uploaded already")  ){
+    //   setMsg(" File is already present in database")
+    // }else {
+      // history.push('/app/icare-bulkupload')
+    // }
   }
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -157,7 +174,7 @@ function ObservationBulkupload() {
   }, []);
 
   return (
-    <CustomPapperBlock title="iCare Upload" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
+    <CustomPapperBlock title="iCare Uploads" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
       <Grid container spacing={3}>
         <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
           <Typography variant="h6" className="sectionHeading">
@@ -172,26 +189,61 @@ function ObservationBulkupload() {
             <Grid container spacing={3}>
               <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                 <Typography className="viewLabelValue">
-                  <input
+                  {/* <input
                     type="file"
                     id="attachment"
                     accept=".pdf"
                     onChange={(e) => {
                       handleUpload(e);
-                    }} />
-                </Typography>
-                {messageShow}
-              </Grid>
-              <div style={{ color: "red" }}>{fileError}</div>
+                    }} /> */}
+                  <div {...getRootProps({ className: 'dropzone' })}>
 
+                    {/* <span align="center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="39.4" height="28.69" viewBox="0 0 39.4 28.69">
+                              <g id="upload-outbox-svgrepo-com" transform="translate(0 0)">
+                                <g id="Group_4970" data-name="Group 4970" transform="translate(13.004)">
+                                  <g id="Group_4969" data-name="Group 4969">
+                                    <path id="Path_3322" data-name="Path 3322" d="M180.343,76.859l-6.73-8.242a.307.307,0,0,0-.236-.113.3.3,0,0,0-.237.111l-6.73,8.244a.293.293,0,0,0,.237.482h2.268V84.35c0,.169.307.321.476.321h7.934c.169,0,.143-.152.143-.321V77.341h2.64a.293.293,0,0,0,.237-.482Z" transform="translate(-166.342 -68.504)" fill="#7890a4"/>
+                                  </g>
+                                </g>
+                                <g id="Group_4972" data-name="Group 4972" transform="translate(0 12.502)">
+                                  <g id="Group_4971" data-name="Group 4971">
+                                    <path id="Path_3323" data-name="Path 3323" d="M38.893,234.386h.038l-5.083-4.954a3.307,3.307,0,0,0-2.263-1.008H26.115a.611.611,0,0,0,0,1.222h5.471a2.253,2.253,0,0,1,1.434.68l3.7,3.6H25.2a.6.6,0,0,0-.611.594,4.579,4.579,0,0,1-9.158,0,.6.6,0,0,0-.611-.6H3.008L6.7,230.33a2.261,2.261,0,0,1,1.439-.684H13.9a.611.611,0,1,0,0-1.222H8.138a3.357,3.357,0,0,0-2.287,1.012L.765,234.31A1.879,1.879,0,0,0,0,235.725v7.025a2,2,0,0,0,1.989,1.862H37.725A1.732,1.732,0,0,0,39.4,242.75v-7.025A1.76,1.76,0,0,0,38.893,234.386Z" transform="translate(0 -228.424)" fill="#7890a4"/>
+                                  </g>
+                                </g>
+                              </g>
+                            </svg>
+                          </span> */}
+                    <p className="attachmentCenter">
+                      <span>
+                        <input
+                          type="file"
+                          id="attachment"
+                          accept=".pdf"
+                          onChange={(e) => {
+                            handleUpload(e);
+                          }} />
+                      </span>
+                    </p>
+                  </div>
+                  <p className='marginT10'>{messageShow}</p>
+                  <aside>
+                    {/* <h4>Files</h4> */}
+                    <ul>{files}</ul>
+                  </aside>
+                </Typography>
+              </Grid>
+
+              <div style={{ color: "red" }}>{fileError}</div>
             </Grid>
+
           </Paper>
         </Grid>
 
         <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
           <div className={classes.loadingWrapper}>
-            <Button size="medium"  onClick={(e) => handlsubmit(e)} variant="contained" color="primary" className="buttonStyle" disabled={loading || !uploadBtn}>
-              Upload
+            <Button size="medium" onClick={(e) => handlsubmit(e)} variant="contained" color="primary" className="buttonStyle" disabled={loading || !uploadBtn}>
+              Uploads
             </Button>
             {loading && (
               <CircularProgress
@@ -201,6 +253,7 @@ function ObservationBulkupload() {
             )}
           </div>
 
+          <div style={{ color: "red" }}>{msg}</div>
         </Grid>
 
         {/* <Card className={classes.msgUploadSection}>

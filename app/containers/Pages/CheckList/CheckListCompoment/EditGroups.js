@@ -70,7 +70,7 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
             <TableCell className={classes.tabelBorder}>
                 <TextField
                     id="filled-basic"
-                    label="group name"
+                    label="Sub-group Name"
                     variant="outlined"
                     defaultValue={value.checkListGroupName}
                     onChange={async (e) => setEditForm({

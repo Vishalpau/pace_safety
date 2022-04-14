@@ -221,7 +221,7 @@ const QuestionsGroup = (props) => {
 
   useEffect(() => {
     console.log(selectDepthAndId);
-  },[selectDepthAndId])
+  }, [selectDepthAndId])
 
   const [state, setState] = React.useState({
     checkedA: true,
@@ -259,6 +259,7 @@ const QuestionsGroup = (props) => {
   //   );
   // });
 
+
   const handleNewPickListPush = async () => {
     history.push("/app/pages/checklist/");
   };
@@ -288,7 +289,7 @@ const QuestionsGroup = (props) => {
       history.push({
         pathname: "/app/compliance-config/question",
         state: {
-          fkProjectStructureIds: structureId,
+          fkProjectStructureIds: fkpsId,
           CompanyId: fkCompanyId,
           projectId: project.projectId,
         },
@@ -346,7 +347,7 @@ const QuestionsGroup = (props) => {
   // };
 
   const handleGroups = async (e, value, index, gName, sGName) => {
-    console.log(gName,sGName )
+    console.log(gName, sGName)
     let temp = [...subGroupId];
     console.log(gName)
     if (e.target.checked == false) {
@@ -373,10 +374,10 @@ const QuestionsGroup = (props) => {
     }
   };
 
-  // const handleSelectStructure = (fkProjectStructureIds,newArr) => {
-  //   setStructureId(fkProjectStructureIds);
-  //   setSelectDepthAndId(newArr);
-  // }
+  const handleSelectStructure = (fkProjectStructureIds, newArr) => {
+    setStructureId(fkProjectStructureIds);
+    setSelectDepthAndId(newArr);
+  }
 
   // useEffect(() => {
   //   console.log(levelLenght,'hhiiii');
@@ -424,19 +425,19 @@ const QuestionsGroup = (props) => {
 
   const setId = (id) => {
     // console.log(id);
-//     let temp = [...selectDepthAndId];
-//     temp.push(id);
-//     console.log("temp:",temp,"id:",id,"selectDepthAndId",selectDepthAndId)
-//     // console.log(id, 'sssssssss', selectDepthAndId);
-//     if(id){
-// console.log("setting selectdepthandid:",id, temp)
-// setSelectDepthAndId(temp);
-      // setSelectDepthAndId(
-      //   temp
-      //   )
-      // }
-      setSelectDepthAndId(id);
-  } 
+    //     let temp = [...selectDepthAndId];
+    //     temp.push(id);
+    //     console.log("temp:",temp,"id:",id,"selectDepthAndId",selectDepthAndId)
+    //     // console.log(id, 'sssssssss', selectDepthAndId);
+    //     if(id){
+    // console.log("setting selectdepthandid:",id, temp)
+    // setSelectDepthAndId(temp);
+    // setSelectDepthAndId(
+    //   temp
+    //   )
+    // }
+    setSelectDepthAndId(id);
+  }
 
   useEffect(() => {
     // fetchCallBack();
@@ -487,7 +488,7 @@ const QuestionsGroup = (props) => {
                   <Paper elevation={1} className="paperSection">
                     <Grid container spacing={3}>
                       <Grid item md={12} sm={12} xs={12} className='paddBRemove'>
-              
+
                         <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
                       </Grid>
                       <ComplianceProjectStInit
@@ -496,7 +497,7 @@ const QuestionsGroup = (props) => {
                         error={error}
                         setWorkArea={setWorkArea}
                         // setSelectDepthAndId={setSelectDepthAndId}
-                        setId = {(id) => setId(id)}
+                        setId={(id) => setId(id)}
                         className="formControl"
                       />
                     </Grid>
@@ -601,8 +602,8 @@ const QuestionsGroup = (props) => {
                         </FormLabel>
                         <FormGroup className={classes.customCheckBoxList}>
 
-                          {checkGroups[0].checklistGroups.map((value, index) => 
-                           (
+                          {checkGroups[0].checklistGroups.map((value, index) =>
+                          (
                             <FormControlLabel
                               control={
                                 <Checkbox
@@ -671,7 +672,6 @@ const QuestionsGroup = (props) => {
                       </Grid>
                     </Grid>
                     {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group*</p>)}
-
                   </Paper>
                 </Grid>
 

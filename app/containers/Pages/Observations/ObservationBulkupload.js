@@ -289,7 +289,7 @@ function ObservationBulkupload() {
   }, []);
 
   return (
-    <CustomPapperBlock title="iCare Upload" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
+    <CustomPapperBlock title="iCare Uploads" icon='customDropdownPageIcon iCarePageIcon' whiteBg>
       {isLoading == false ?
         <Grid container spacing={3}>
           <Grid item md={12} xs={12}>
@@ -305,7 +305,7 @@ function ObservationBulkupload() {
                     style={{ marginLeft: '0.625rem' }}
                     onClick={() => handleBulkUploadfilePush()}
                   >
-                    Upload
+                   New upload
                   </Button>
                 </Grid>
               </Grid>
