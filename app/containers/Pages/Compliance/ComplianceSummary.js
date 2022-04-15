@@ -322,6 +322,7 @@ function ComplianceSummary(props) {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
+        console.log(result,'mmmmmmmmmmmmmmmmmmmmmmmmmmm')
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
@@ -359,37 +360,11 @@ function ComplianceSummary(props) {
       .catch((error) => console.log(error));
   };
 
+  console.log(complianceData.fkProjectStructureIds, 'groupData')
 
   useEffect(() => {
-    console.log(groupData, 'groupData')
     console.log(Array.isArray(groupData));
   }, [groupData])
-
-  // const fetchComplianceData = async (data) => {
-  //   let complianceId = localStorage.getItem("fkComplianceId");
-  //   const res = await api
-  //     .get(`/api/v1/audits/${complianceId}/`)
-  //     .then((response) => {
-  //       let result = response.data.data.results
-  //       let groupIds = result.groupIds.split(',')
-  //       let subGroupIds = result.subGroupIds.split(',')
-  //       setGroupId(groupIds)
-  //       setSubGroupId(subGroupIds)
-  //       let tempGroup = []
-  //       let tempSubGroup = []
-  //       for (let i = 0; i < groupIds.length; i++){
-
-  //         for (let j = 0; j < data.length; j++){
-  //           if(data[j]['checklistId'] == groupIds[i]){
-  //             tempGroup.push(data[j])
-  //           }
-  //         }
-  //       }
-  //       setCheckData(tempGroup)
-  //       setForm(result);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
 
   const handelWorkArea = async (complianceData) => {
     let structName = [];
@@ -446,6 +421,7 @@ function ComplianceSummary(props) {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
+      let projectStr = JSON.parse(localStorage.getItem("commonObject")).audit.projectStruct;
 
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
@@ -459,7 +435,7 @@ function ComplianceSummary(props) {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${complianceData.fkProjectStructureIds}`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${projectStr}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -484,11 +460,8 @@ function ComplianceSummary(props) {
       `/api/v1/audits/${id}/auditresponse/`
     );
     const result = res.data.data.results;
-    console.log(result, 'ressssssssuuuuuuulllllllttttttt');
     setQueData(result)
   };
-
-
 
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {

@@ -949,7 +949,7 @@ function Header(props) {
                                           </svg>
                                         </IconButton>
                                       </Tooltip>
-                                      <Tooltip title="Geo location" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
+                                      {/* <Tooltip title="Geo location" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                         <IconButton aria-label="delete" className={classesm.marginR}>
                                           <svg id="GIS-Map-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                             <rect id="Rectangle_2080" data-name="Rectangle 2080" width="32" height="32" fill="none" />
@@ -975,7 +975,7 @@ function Header(props) {
                                             </g>
                                           </svg>
                                         </IconButton>
-                                      </Tooltip>
+                                      </Tooltip> */}
                                     </span>
                                   </Typography>
                                 </span>

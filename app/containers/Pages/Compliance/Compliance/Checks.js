@@ -317,16 +317,12 @@ const Checks = (props) => {
   const [actionData, setActionData] = useState([]);
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
-  const [hover, setHover] = useState(-1);
   const [questionId, setQuestionId] = useState()
-
-  // const [errorMessage, setErrorMessage] = useState('');
 
   const [stateToggle, setStateToggle] = useState("")
 
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
-  //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
@@ -362,10 +358,6 @@ const Checks = (props) => {
     }
   };
 
-  useEffect(() => {
-    // 1
-  }, [ratingColor])
-
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -374,13 +366,8 @@ const Checks = (props) => {
 
 
   const radioDecide = ["Yes", "No", "NA"];
-  // const handleExpand = (panel) => (event, isExpanded) => {
-  //     setExpanded(isExpanded ? panel : false);
-  // };
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
     console.log(panel);
-    // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
-    // console.log(isExpanded);
     if (isExpanded) {
       setStateToggle(true);
     }
@@ -404,23 +391,36 @@ const Checks = (props) => {
   useEffect(() => {
     console.log(stateToggle);
     if (!stateToggle) {
-
-    const filteredObj = checkData.filter((a, index) => {
+      const fieldCheck= []
+    const filteredObj = checkData.filter(a => {
       if (a.questionId === questionId) {
         return a
       }
     })
 
+    console.log(filteredObj, 'filteredObj');
+
     const temp = [...checkData]
-    console.log(filteredObj);
-    console.log(filteredObj.length)
 
     if (filteredObj.length > 0) {
+      Object.entries(categories).forEach(([key, value]) => {
+        value.filter(a => {
+          if (a.id === filteredObj[0].questionId) {
+            fieldCheck.push(a);
+          }
+        })
+      })
+      const { responseType, scoreType } = fieldCheck[0];
+      const { criticality, auditStatus, defaultResponse, id } = filteredObj[0];
+      console.log(responseType, 'response Type');
+      console.log(criticality, 'criticality');
+      console.log(auditStatus, 'audit status');
+
       // if (filteredObj[0].defaultResponse !== '' && filteredObj[0].findings !== "" && filteredObj[0].score !== 0) {
-      if (filteredObj[0].findings !== "") {
+      if (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== "")) {
+        console.log(filteredObj)
         const formData = new FormData;
         Object.keys(filteredObj[0]).forEach(key => {
-          console.log(key, filteredObj[0].key);
           if (key === "fkAuditId") {
             formData.append(key, filteredObj[0][key]);
           }
@@ -432,17 +432,16 @@ const Checks = (props) => {
         if (filteredObj[0].id) {
           api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData)
         }
-
         else {
           api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
         }
 
         temp.forEach(a => {
-          if (a.findings === '') {
-            a.check = false;
+          if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+            a.check = true;
           }
           else {
-            a.check = true;
+            a.check = false;
           }
         })
         setCheckData(temp)
@@ -502,7 +501,6 @@ const Checks = (props) => {
   }, [categories])
 
   const fetchComplianceData = async (data) => {
-    // console.log(data, 'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
@@ -552,9 +550,6 @@ const Checks = (props) => {
 
   const fetchCheklist = async (data, groups, subGroups, strId) => {
 
-    console.log(groups);
-    console.log(subGroups);
-
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -576,9 +571,7 @@ const Checks = (props) => {
 
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
-      // console.log(groupName, 'groupName');
       let subGroupName = data[i].subGroupName;
-      // console.log(subGroupName, 'subgroupName');
       categoriesData[groupName] = [];
 
       const res = await api.get(
@@ -591,10 +584,7 @@ const Checks = (props) => {
     let tempQuestionId = [];
 
     let fd = await fetchData()
-    console.log(fd);
     temp.map((tempvalue, i) => {
-
-      // console.log(tempvalue);
       if (tempvalue['message'] === undefined) {
 
         tempvalue.map((value, index) => {
@@ -635,7 +625,6 @@ const Checks = (props) => {
       }
     }
 
-
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < subGroups.length; j++) {
         if (subGroups[j]['inputLabel'] == tempCheckData[i]['subGroupName']) {
@@ -654,8 +643,6 @@ const Checks = (props) => {
     let temp = [...checkData];
     const name = event.target.name;
     const file = event.target.files[0];
-    console.log(name);
-    console.log(file);
 
     temp.map((a, i) => {
       if (a.questionId === questionId) {
@@ -667,7 +654,6 @@ const Checks = (props) => {
         }
       }
       return a
-      // })
     });
     setCheckData(temp);
   };
@@ -708,17 +694,13 @@ const Checks = (props) => {
             value = value
             console.log(value, 'counts')
           }
-
         }
         temp[i][field] = value;
       }
-
     }
-
     if (field == 'criticality' || field == 'auditStatus') {
       // setTimeout(()=>calculate_rating(index), 5000)
     }
-
     setCheckData(temp);
   };
 
@@ -744,7 +726,6 @@ const Checks = (props) => {
     }
   };
 
-
   useEffect(() => {
   }, [checkData])
 
@@ -762,9 +743,11 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
+  useEffect(() => {
+    console.log(statusData, 'statusData');
+  }, [statusData])
 
   const handleCriticality = (option, selectType, index, id) => {
-
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
@@ -775,12 +758,10 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
-    //3
     fetchFectorData();
     fetchData();
     fetchCheklistData();
     fetchMatrixData();
-
   }, []);
 
   return (
@@ -1321,7 +1302,6 @@ const Checks = (props) => {
                                                       value.id
                                                     )
                                                   }
-
                                                 >
                                                   {criticalityData.map((option) => (
                                                     <MenuItem
