@@ -169,6 +169,7 @@ const PerformanceSummary = (props) => {
         console.log(error), setLoading(false);
       });
   };
+
   const fetchNotificationSent = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
@@ -294,7 +295,8 @@ const PerformanceSummary = (props) => {
                         Notification
                       </FormLabel>
                       <FormGroup>
-                        {notificationSentValue.map((value) => (
+                        {console.log(notificationSentValue,'notificationSentValue')}
+                        {notificationSentValue[0].map((value) => (
                           <FormControlLabel
                             className="selectLabel"
                             control={
