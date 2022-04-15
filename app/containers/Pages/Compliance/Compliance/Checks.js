@@ -538,7 +538,7 @@ const Checks = (props) => {
 
         setForm(result);
         console.log(tempSubGroup, result.groups, result.subGroups);
-        fetchCheklist(tempSubGroup, result.groups, result.subGroups);
+        fetchCheklist(tempSubGroup, result.groups, result.subGroups, result.fkProjectStructureIds);
       })
       .catch((error) => console.log(error));
   };
@@ -547,7 +547,10 @@ const Checks = (props) => {
     console.log(complianceData, 'line 535');
   }, [complianceData])
 
-  const fetchCheklist = async (data, groups, subGroups) => {
+  console.log(complianceData.fkProjectStructureIds,'complianceData')
+
+
+  const fetchCheklist = async (data, groups, subGroups, strId) => {
 
     console.log(groups);
     console.log(subGroups);
@@ -579,7 +582,7 @@ const Checks = (props) => {
       categoriesData[groupName] = [];
 
       const res = await api.get(
-        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
+        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${strId}`
       );
 
       const result2 = res.data.data.results;
@@ -872,6 +875,7 @@ const Checks = (props) => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
     );
     const result = res.data.data.results;
+    console.log(result,'result')
     await setShowCheckData(result)
     await setCheckData(result);
     return result

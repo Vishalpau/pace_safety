@@ -1245,7 +1245,7 @@ function ComplianceSummary(props) {
                                                           <Grid item md={4} sm={4} xs={12}>
 
                                                             <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
-                                                            <Typography style={{ backgroundColor: value.performance ? colordata.filter(i => i.matrixConstant == value.performance * 5 / 100)[0].matrixConstantColor : '#fff', border: '1px', width: '50%', height: '80%', textAlign: 'center' }} className="viewLabelValue">
+                                                            <Typography style={{ backgroundColor: value.performance && colordata.filter(i => i.matrixConstant == value.performance * 5 / 100).length  ? colordata.filter(i => i.matrixConstant == value.performance * 5 / 100)[0].matrixConstantColor : '#fff', border: '1px', width: '50%', height: '80%', textAlign: 'center' }} className="viewLabelValue">
                                                               {value.performance ? value.performance : '-'}
 
                                                             </Typography>
@@ -1381,13 +1381,13 @@ function ComplianceSummary(props) {
                                                                                   )
                                                                                 )}
                                                                             </>
-                                                                          ) : "-"}
+                                                                          ) : ""}
                                                                         </>
                                                                       ))}
                                                                     </TableBody>
                                                                   </Table>
                                                                 </Grid>
-                                                              }</>) : '-'}
+                                                              }</>) : ''}
                                                         </>
                                                       ))}
 

@@ -295,7 +295,6 @@ const PerformanceSummary = (props) => {
                         Notification
                       </FormLabel>
                       <FormGroup>
-                        {console.log(notificationSentValue,'notificationSentValue')}
                         {notificationSentValue.length != 0   ? notificationSentValue[0].map((value) => (
                           <FormControlLabel
                             className="selectLabel"
