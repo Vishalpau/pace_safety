@@ -296,7 +296,7 @@ const PerformanceSummary = (props) => {
                       </FormLabel>
                       <FormGroup>
                         {console.log(notificationSentValue,'notificationSentValue')}
-                        {notificationSentValue[0].map((value) => (
+                        {notificationSentValue.length != 0   ? notificationSentValue[0].map((value) => (
                           <FormControlLabel
                             className="selectLabel"
                             control={
@@ -316,7 +316,7 @@ const PerformanceSummary = (props) => {
                             }
                             label={value.roleName}
                           />
-                        ))}
+                        )): null}
                       </FormGroup>
                     </Grid>
                   </Grid>
