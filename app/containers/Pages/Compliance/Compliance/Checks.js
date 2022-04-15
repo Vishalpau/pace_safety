@@ -375,15 +375,15 @@ const Checks = (props) => {
       setQuestionId(valueId);
       setStateToggle(false);
     }
-    
+
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   useEffect(() => {
     // if (!stateToggle) {
-      const fieldCheck = [];
+    const fieldCheck = [];
 
-    const filteredObj = checkData.filter((a, index) => {
+    const filteredObj = checkData.filter(a => {
       if (a.questionId === questionId) {
         return a
       }
@@ -395,23 +395,21 @@ const Checks = (props) => {
 
     if (filteredObj.length > 0) {
       Object.entries(categories).forEach(([key, value]) => {
-          value.filter(a => {
+        value.filter(a => {
           if (a.id === filteredObj[0].questionId) {
             fieldCheck.push(a);
           }
         })
       })
-      const {responseType, scoreType} = fieldCheck[0];
-      const {criticality, auditStatus, defaultResponse, score} = filteredObj[0];
+      const { responseType, scoreType } = fieldCheck[0];
+      const { criticality, auditStatus, defaultResponse, id } = filteredObj[0];
       console.log(responseType, 'response Type');
       console.log(criticality, 'criticality');
       console.log(auditStatus, 'audit status');
-      
-      // console.log(scoreType, score, 'score')
-      // console.log(defaultResponse, 'sfdsjfl');
 
       // if (filteredObj[0].defaultResponse !== '' && filteredObj[0].findings !== "" && filteredObj[0].score !== 0) {
-      if (/*(scoreType !== "" && score !== "") && */ (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== ""))) {
+      if (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== "")) {
+        console.log(filteredObj)
         const formData = new FormData;
         Object.keys(filteredObj[0]).forEach(key => {
           if (key === "fkAuditId") {
@@ -429,7 +427,7 @@ const Checks = (props) => {
           api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
         }
 
-        temp.forEach(a => {
+        temp.filter(a => {
           if (a.findings === '') {
             a.check = false;
           }
@@ -437,6 +435,14 @@ const Checks = (props) => {
             a.check = true;
           }
         })
+
+        // temp.map(a => {
+        //   if (a.id === id) {
+        //     console.log(a.id, id, 'iiiiiiiiiiiiiddddddddddd');
+        //     a.check = true;
+        //   }
+        //   return a
+        // })
         setCheckData(temp)
       }
     }
@@ -809,11 +815,11 @@ const Checks = (props) => {
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value,'%%%')
+            console.log(value, '%%%')
           }
           else if (type === '1-10') {
             value = value
-            console.log(value,'counts')
+            console.log(value, 'counts')
           }
         }
         temp[i][field] = value;
@@ -866,7 +872,7 @@ const Checks = (props) => {
 
   useEffect(() => {
     console.log(statusData, 'statusData');
-  },[statusData])
+  }, [statusData])
 
   const handleCriticality = (option, selectType, index, id) => {
     if (selectType === "menuItem") {
