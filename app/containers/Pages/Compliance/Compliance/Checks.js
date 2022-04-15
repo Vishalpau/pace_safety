@@ -435,14 +435,6 @@ const Checks = (props) => {
             a.check = false;
           }
         })
-
-        // temp.map(a => {
-        //   if (a.questionId === questionId) {
-        //     console.log(a.id, id, 'iiiiiiiiiiiiiddddddddddd');
-        //     a.check = true;
-        //   } 
-        //   return a
-        // })
         setCheckData(temp)
       }
     }
