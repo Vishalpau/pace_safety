@@ -317,16 +317,12 @@ const Checks = (props) => {
   const [actionData, setActionData] = useState([]);
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
-  const [hover, setHover] = useState(-1);
   const [questionId, setQuestionId] = useState()
-
-  // const [errorMessage, setErrorMessage] = useState('');
 
   const [stateToggle, setStateToggle] = useState("")
 
   const [showCheckData, setShowCheckData] = useState({});
   const [ratingColor, setRatingColor] = useState({});
-  //const [expanded, setExpanded] = React.useState('panel1');
   const [complianceData, setComplianceData] = useState({});
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
@@ -362,10 +358,6 @@ const Checks = (props) => {
     }
   };
 
-  useEffect(() => {
-    // 1
-  }, [ratingColor])
-
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -374,13 +366,8 @@ const Checks = (props) => {
 
 
   const radioDecide = ["Yes", "No", "NA"];
-  // const handleExpand = (panel) => (event, isExpanded) => {
-  //     setExpanded(isExpanded ? panel : false);
-  // };
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
     console.log(panel);
-    // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
-    // console.log(isExpanded);
     if (isExpanded) {
       setStateToggle(true);
     }
@@ -388,22 +375,13 @@ const Checks = (props) => {
       setQuestionId(valueId);
       setStateToggle(false);
     }
-    // if (!stateToggle) {
-    //   setStateToggle(true)
-    // }
-    // if (stateToggle === true) {
-    //   setStateToggle(false);
-    // }
-    // if (stateToggle === false) {
-    //   setStateToggle(true)
-    // }
     
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   useEffect(() => {
-    console.log(stateToggle);
     // if (!stateToggle) {
+      const fieldCheck = [];
 
     const filteredObj = checkData.filter((a, index) => {
       if (a.questionId === questionId) {
@@ -411,16 +389,31 @@ const Checks = (props) => {
       }
     })
 
+    console.log(filteredObj, 'filteredObj');
+
     const temp = [...checkData]
-    console.log(filteredObj);
-    console.log(filteredObj.length)
 
     if (filteredObj.length > 0) {
+      Object.entries(categories).forEach(([key, value]) => {
+          value.filter(a => {
+          if (a.id === filteredObj[0].questionId) {
+            fieldCheck.push(a);
+          }
+        })
+      })
+      const {responseType, scoreType} = fieldCheck[0];
+      const {criticality, auditStatus, defaultResponse, score} = filteredObj[0];
+      console.log(responseType, 'response Type');
+      console.log(criticality, 'criticality');
+      console.log(auditStatus, 'audit status');
+      
+      // console.log(scoreType, score, 'score')
+      // console.log(defaultResponse, 'sfdsjfl');
+
       // if (filteredObj[0].defaultResponse !== '' && filteredObj[0].findings !== "" && filteredObj[0].score !== 0) {
-      if (filteredObj[0].findings !== "") {
+      if (/*(scoreType !== "" && score !== "") && */ (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== ""))) {
         const formData = new FormData;
         Object.keys(filteredObj[0]).forEach(key => {
-          console.log(key, filteredObj[0].key);
           if (key === "fkAuditId") {
             formData.append(key, filteredObj[0][key]);
           }
@@ -432,7 +425,6 @@ const Checks = (props) => {
         if (filteredObj[0].id) {
           api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData)
         }
-
         else {
           api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
         }
@@ -502,7 +494,6 @@ const Checks = (props) => {
   }, [categories])
 
   const fetchComplianceData = async (data) => {
-    // console.log(data, 'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
@@ -537,20 +528,12 @@ const Checks = (props) => {
         }
 
         setForm(result);
-        console.log(tempSubGroup, result.groups, result.subGroups);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups);
       })
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    console.log(complianceData, 'line 535');
-  }, [complianceData])
-
   const fetchCheklist = async (data, groups, subGroups) => {
-
-    console.log(groups);
-    console.log(subGroups);
 
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -573,9 +556,7 @@ const Checks = (props) => {
 
     for (let i = 0; i < data.length; i++) {
       let groupName = data[i].groupName;
-      // console.log(groupName, 'groupName');
       let subGroupName = data[i].subGroupName;
-      // console.log(subGroupName, 'subgroupName');
       categoriesData[groupName] = [];
 
       const res = await api.get(
@@ -588,10 +569,7 @@ const Checks = (props) => {
     let tempQuestionId = [];
 
     let fd = await fetchData()
-    console.log(fd);
     temp.map((tempvalue, i) => {
-
-      // console.log(tempvalue);
       if (tempvalue['message'] === undefined) {
 
         tempvalue.map((value, index) => {
@@ -623,21 +601,13 @@ const Checks = (props) => {
       }
     });
 
-    console.log(groups);
-
     for (let i = 0; i < tempCheckData.length; i++) {
-      console.log(i, 'iiiiiiiiiiiiiiii')
-
       for (let j = 0; j < groups.length; j++) {
-        console.log(j, 'jjjjjjjjjjjjjjjjj');
         if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
-        // console.log(tempCheckData[i], 'mohit');
-        // console.log(groups[j]['id'], 'kalasagar')
       }
     }
-
 
     for (let i = 0; i < tempCheckData.length; i++) {
       for (let j = 0; j < subGroups.length; j++) {
@@ -657,8 +627,6 @@ const Checks = (props) => {
     let temp = [...checkData];
     const name = event.target.name;
     const file = event.target.files[0];
-    console.log(name);
-    console.log(file);
 
     temp.map((a, i) => {
       if (a.questionId === questionId) {
@@ -670,16 +638,10 @@ const Checks = (props) => {
         }
       }
       return a
-      // })
     });
     setCheckData(temp);
   };
 
-
-  // const apiCall = async (dataChecks) => {
-  //   const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, [...dataChecks]);
-  //   history.push("/app/pages/compliance/performance-summary");
-  // }
   const handelSubmit = async () => {
 
     const isValid = checkData.every((a) => a.check === true)
@@ -853,17 +815,13 @@ const Checks = (props) => {
             value = value
             console.log(value,'counts')
           }
-
         }
         temp[i][field] = value;
       }
-
     }
-
     if (field == 'criticality' || field == 'auditStatus') {
       // setTimeout(()=>calculate_rating(index), 5000)
     }
-
     setCheckData(temp);
   };
 
@@ -877,16 +835,6 @@ const Checks = (props) => {
     return result
   };
 
-  // const handleFile = (value, field, index, id) => {
-  //   let temp = [...checkData];
-  //   for (let i = 0; i < temp.length; i++) {
-  //     if (temp[i]["question"] === id) {
-
-  //       temp[i][field] = value;
-  //     }
-  //   }
-  //   setCheckData(temp);
-  // };
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
@@ -897,12 +845,6 @@ const Checks = (props) => {
       setActionData(allAction);
     }
   };
-
-  // function create_blob(file, callback) {
-  //   var reader = new FileReader();
-  //   reader.onload = function () { callback(reader.result) };
-  //   reader.readAsBinaryString(file);
-  // }
 
   useEffect(() => {
     console.log(checkData, 'checkData');
@@ -922,9 +864,11 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
+  useEffect(() => {
+    console.log(statusData, 'statusData');
+  },[statusData])
 
   const handleCriticality = (option, selectType, index, id) => {
-
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
@@ -935,12 +879,10 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
-    //3
     fetchFectorData();
     fetchData();
     fetchCheklistData();
     fetchMatrixData();
-
   }, []);
 
   return (
@@ -1480,7 +1422,6 @@ const Checks = (props) => {
                                                       value.id
                                                     )
                                                   }
-
                                                 >
                                                   {criticalityData.map((option) => (
                                                     <MenuItem
