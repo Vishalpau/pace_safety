@@ -427,20 +427,20 @@ const Checks = (props) => {
           api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
         }
 
-        temp.filter(a => {
-          if (a.findings === '') {
-            a.check = false;
+        temp.forEach(a => {
+          if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+            a.check = true;
           }
           else {
-            a.check = true;
+            a.check = false;
           }
         })
 
         // temp.map(a => {
-        //   if (a.id === id) {
+        //   if (a.questionId === questionId) {
         //     console.log(a.id, id, 'iiiiiiiiiiiiiddddddddddd');
         //     a.check = true;
-        //   }
+        //   } 
         //   return a
         // })
         setCheckData(temp)
@@ -534,12 +534,20 @@ const Checks = (props) => {
         }
 
         setForm(result);
-        fetchCheklist(tempSubGroup, result.groups, result.subGroups);
+        console.log(tempSubGroup, result.groups, result.subGroups);
+        fetchCheklist(tempSubGroup, result.groups, result.subGroups, result.fkProjectStructureIds);
       })
       .catch((error) => console.log(error));
   };
 
-  const fetchCheklist = async (data, groups, subGroups) => {
+  useEffect(() => {
+    console.log(complianceData, 'line 535');
+  }, [complianceData])
+
+  console.log(complianceData.fkProjectStructureIds,'complianceData')
+
+
+  const fetchCheklist = async (data, groups, subGroups, strId) => {
 
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -566,7 +574,7 @@ const Checks = (props) => {
       categoriesData[groupName] = [];
 
       const res = await api.get(
-        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${fkProjectStructureIds}`
+        `/api/v1/configaudits/auditquestions/detail/?groupName=${groupName}&subGroupName=${subGroupName}&company=${fkCompanyId}&project=${project}&projectStructure=${strId}`
       );
 
       const result2 = res.data.data.results;
@@ -836,6 +844,7 @@ const Checks = (props) => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
     );
     const result = res.data.data.results;
+    console.log(result,'result')
     await setShowCheckData(result)
     await setCheckData(result);
     return result

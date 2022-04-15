@@ -19,8 +19,8 @@ const styles = (theme) => ({
         theme.palette.type === "dark"
           ? theme.palette.primary.contrastText
           : theme.palette.primary.contrastText,
-          backgroundColor: "transparent",
-            boxShadow: "none",
+      backgroundColor: "transparent",
+      boxShadow: "none",
       zIndex: 10,
       left: 10,
     },
@@ -572,6 +572,26 @@ const styles = (theme) => ({
     gap: "8px",
     marginLeft: theme.spacing(4),
   },
+  projecDialogHeadTitle: {
+    marginBottom: '0px',
+    '& h6': {
+      color: '#fff',
+      padding: '15px 15px 12px 15px',
+      backgroundColor: '#06425C',
+      borderRadius: '10px',
+      fontFamily: 'Montserrat-Medium !important',
+      fontWeight: 'normal',
+      fontSize: '18px !important',
+      '& svg': {
+        marginRight: '10px',
+      },
+    },
+    '& button': {
+      top: '28px',
+      color: '#ffffff',
+      right: '24px',
+    },
+  },
   projectSelect: {
     minWidth: 150,
   },
@@ -610,7 +630,21 @@ const styles = (theme) => ({
   },
   projectDialog: {
     minWidth: 600,
-  }
+  },
+  companyNamePsl: {
+    paddingTop: '0px !important',
+    paddingBottom: '0px !important',
+    '& li': {
+      padding: '0px',
+      '& .MuiListItemText-primary': {
+        color: '#06425C',
+        fontSize: '20px',
+        fontFamily: 'Xolonium-Regular !important',
+        lineHeight: '22px',
+        paddingLeft: '10px',
+      },
+    },
+  },
 });
 
 export default styles;

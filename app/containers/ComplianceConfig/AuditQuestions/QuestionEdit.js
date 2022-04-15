@@ -341,7 +341,7 @@ const QuestionEdit = (props) => {
         } else {
 
           // console.log(breakDown.some(breakDown => ((breakDown == 'All'))))
-          // if (!breakDown.some(breakDown => ((breakDown == 'All')))){
+          if (!breakDown.some(breakDown => ((breakDown == 'All')))){
           var config = {
             method: "get",
             url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -381,9 +381,14 @@ const QuestionEdit = (props) => {
               setIsNext(true);
             });
         }
-        // }else{
-        //   setFetchSelectBreakDownList(breakDown)
-        // }
+        else{
+          // setFetchSelectBreakDownList
+          
+          let selectValue = {}
+          selectValue.id = 0
+          let breakDownData = []
+          setFetchSelectBreakDownList(breakDown.map((d) => {return{breakDownLabel:d, selectValue,breakDownData}}))
+        }}
       }
     }
   };
@@ -656,10 +661,12 @@ const QuestionEdit = (props) => {
                               SubGroup name
                             </FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
-                              {checkData.map((option) => (
+                            {console.log(checkData,auditData.subGroupName,'oooooo')}
+                              {checkData.map((option) =>  (
+                                
                                 <FormControlLabel
                                   value={option.inputLabel}
-                                  checked={
+                                  checked= {
                                     option.inputLabel === auditData.subGroupName
                                   }
                                   className="selectLabel"

@@ -317,19 +317,15 @@ function ComplianceSummary(props) {
   };
 
   const fetchComplianceData = async (data) => {
-    console.log(data, 'data')
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        // console.log(result, 'resultsssssssss')
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
         let tempSubGroup = [];
-
-        console.log(data.length, 'length');
 
         for (let j = 0; j < data.length; j++) {
           for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
@@ -338,8 +334,6 @@ function ComplianceSummary(props) {
             }
           }
         }
-
-        console.log(tempGroup, 'tempGroup');
 
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
@@ -465,7 +459,7 @@ function ComplianceSummary(props) {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${fkProjectStructureIds}`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${complianceData.fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -540,7 +534,6 @@ function ComplianceSummary(props) {
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`)
     const result = res.data.data.results
-    console.log(result, 'color')
     setColorData(result)
   }
 
@@ -1192,7 +1185,6 @@ function ComplianceSummary(props) {
                                       className="paddBRemove"
                                     >
                                       {groupData.map(val => val.checkListValues.map((subGrpData, index) => {
-                                        console.log(subGrpData, 'subGrpData');
                                         // console.log(val);
                                         return (
                                           <>
@@ -1204,9 +1196,7 @@ function ComplianceSummary(props) {
                                             </FormLabel>
                                             {/* {console.log(quesData,'quesData')} */}
                                             {quesData.map((value, index) => {
-                                              console.log(subGrpData.id);
-                                              console.log(value, 'quesValue');
-                                              console.log(value.subGroupId);
+                                              
                                               return subGrpData.id === value.subGroupId ?
                                                 <Accordion
                                                   expanded={
@@ -1255,7 +1245,7 @@ function ComplianceSummary(props) {
                                                           <Grid item md={4} sm={4} xs={12}>
 
                                                             <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
-                                                            <Typography style={{ backgroundColor: value.performance ? colordata.filter(i => i.matrixConstant == value.performance * 5 / 100)[0].matrixConstantColor : '#fff', border: '1px', width: '50%', height: '80%', textAlign: 'center' }} className="viewLabelValue">
+                                                            <Typography style={{ backgroundColor: value.performance && colordata.filter(i => i.matrixConstant == value.performance * 5 / 100).length  ? colordata.filter(i => i.matrixConstant == value.performance * 5 / 100)[0].matrixConstantColor : '#fff', border: '1px', width: '50%', height: '80%', textAlign: 'center' }} className="viewLabelValue">
                                                               {value.performance ? value.performance : '-'}
 
                                                             </Typography>
@@ -1391,13 +1381,13 @@ function ComplianceSummary(props) {
                                                                                   )
                                                                                 )}
                                                                             </>
-                                                                          ) : "-"}
+                                                                          ) : ""}
                                                                         </>
                                                                       ))}
                                                                     </TableBody>
                                                                   </Table>
                                                                 </Grid>
-                                                              }</>) : '-'}
+                                                              }</>) : ''}
                                                         </>
                                                       ))}
 
