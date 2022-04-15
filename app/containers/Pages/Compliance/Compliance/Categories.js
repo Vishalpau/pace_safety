@@ -184,23 +184,23 @@ const Categories = () => {
     { title: "Production" },
   ];
 
-// console.log(checkData,'checkData')
+  // console.log(checkData,'checkData')
   const handelSubmit = async () => {
     if (checkData.length > 0 && subGroupId.length > 0) {
-    form["groupIds"] = groupId.join(',');
-    form["subGroupIds"] = subGroupId.join(',');
-    form["updatedBy"] = userId;
-    setLoading(true);
-    const res = await api
-      .put(`/api/v1/audits/${form.id}/`, form)
-      .then((response) => {
-        // history.push("/app/pages/compliance/performance-summary");
-        history.push("/app/pages/compliance/checks");
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
+      form["groupIds"] = groupId.join(',');
+      form["subGroupIds"] = subGroupId.join(',');
+      form["updatedBy"] = userId;
+      setLoading(true);
+      const res = await api
+        .put(`/api/v1/audits/${form.id}/`, form)
+        .then((response) => {
+          // history.push("/app/pages/compliance/performance-summary");
+          history.push("/app/pages/compliance/checks");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+        });
     } else {
       setGroupError(true)
     }
@@ -224,8 +224,8 @@ const Categories = () => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        let groupIds = result.groupIds.split(",").map(i => i * 1).filter(i => i!=0);
-        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1).filter(i => i!=0);
+        let groupIds = result.groupIds.split(",").map(i => i * 1).filter(i => i != 0);
+        let subGroupIds = result.subGroupIds.split(",").map(i => i * 1).filter(i => i != 0);
         setGroupId(groupIds);
         setSubGroupId(subGroupIds);
         setComplianceData(result)
@@ -233,15 +233,15 @@ const Categories = () => {
         let tempSubGroup = [];
         // console.log(data, 'd')
         // console.log(groupIds, 'gids')
-        
-          for (let j = 0; j < data.length; j++) {
-            for(let i = 0; i < data[j]['checklistGroups'].length; i++) {
-              if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
-                tempGroup.push(data[j]['checklistGroups'][i]);
-              }
+
+        for (let j = 0; j < data.length; j++) {
+          for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
+            if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
+              tempGroup.push(data[j]['checklistGroups'][i]);
             }
           }
-        
+        }
+
         setCheckData(tempGroup);
         setForm(result);
       })
@@ -342,44 +342,46 @@ const Categories = () => {
                     <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                       <Paper elevation={1} className="paperSection">
                         <Grid container spacing={3}>
-                          <FormControl component="fieldset">
-                            <FormLabel
-                              className="checkRadioLabel"
-                              component="legend"
-                            >
-                              Group name
-                            </FormLabel>
-                            {/* <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel> */}
-                            <FormGroup className={classes.customCheckBoxList}>
-                              {checkGroups[0].checklistGroups.map((value, index) => (
-                                <FormControlLabel
-                                  control={
-                                    <Checkbox
-                                      name={index}
-                                      icon={
-                                        <CheckBoxOutlineBlankIcon fontSize="small" />
-                                      }
-                                      checkedIcon={
-                                        <CheckBoxIcon fontSize="small" />
-                                      }
-                                    />
-                                  }
-                                  className="selectLabel"
-                                  label={value.checkListGroupName}
-                                  checked={handelSelectOption(value)}
-                                  onChange={async (e) =>
-                                    handlePhysicalHazards(e, value, index)
-                                  }
-                                />
-                              ))}
-                            </FormGroup>
-                          </FormControl>
+                          <Grid item md={6} sm={6} xs={12}>
+                            <FormControl component="fieldset">
+                              <FormLabel
+                                className="checkRadioLabel"
+                                component="legend"
+                              >
+                                Group name
+                              </FormLabel>
+                              {/* <FormLabel className="checkRadioLabel" component="legend">{key}</FormLabel> */}
+                              <FormGroup className={classes.customCheckBoxList}>
+                                {checkGroups[0].checklistGroups.map((value, index) => (
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        name={index}
+                                        icon={
+                                          <CheckBoxOutlineBlankIcon fontSize="small" />
+                                        }
+                                        checkedIcon={
+                                          <CheckBoxIcon fontSize="small" />
+                                        }
+                                      />
+                                    }
+                                    className="selectLabel"
+                                    label={value.checkListGroupName}
+                                    checked={handelSelectOption(value)}
+                                    onChange={async (e) =>
+                                      handlePhysicalHazards(e, value, index)
+                                    }
+                                  />
+                                ))}
+                              </FormGroup>
+                            </FormControl>
+                          </Grid>
                           <Grid item md={6} xs={12}>
                             <Grid container spacing={3}>
                               {checkData.map((value, index) => (
                                 <Grid
                                   item
-                                  md={6}
+                                  md={12}
                                   xs={12}
                                   className={classes.formBox}
                                 >
@@ -415,6 +417,7 @@ const Categories = () => {
                               ))}
                             </Grid>
                           </Grid>
+
                         </Grid>
                         {(groupError && (checkData.length < 1 || subGroupId.length < 1)) && (<p style={{ color: "#FF0000", fontSize: "13px" }}>Please select atleast one group and one sub group*</p>)}
                       </Paper>

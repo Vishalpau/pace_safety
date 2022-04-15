@@ -235,14 +235,16 @@ const QuestionEdit = (props) => {
   const fetchChecklist = async (groupName) => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
-      }/compliance/`
+      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
+      // }/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project.projectId
+      }/`
     );
     const result = res.data.data.results;
     // await fetchComplianceData(result);
     result.map((option, index) => {
-      if (option.checkListLabel === groupName) {
-        setCheckData(option.checklistValues);
+      if (option.checklistGroups === groupName) {
+        setCheckData(option.checklistGroups);
       }
     });
     await setCheckListGroups(result);
@@ -294,7 +296,6 @@ const QuestionEdit = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    console.log(projectBreakdown, 'projectBreakdown')
     if (projectBreakdown) {
       const projectData = JSON.parse(localStorage.getItem("projectName"));
       let breakdownLength = projectData.projectName.breakdown.length;
@@ -373,7 +374,6 @@ const QuestionEdit = (props) => {
                   ];
                 }
               });
-              console.log(selectBreakDown, 'selectBreakDown')
               setFetchSelectBreakDownList(selectBreakDown);
             })
             .catch((error) => {
@@ -394,7 +394,6 @@ const QuestionEdit = (props) => {
   };
 
   useEffect(() => {
-    console.log(fetchSelectBreakDownList, 'lenfkhfdkhdsak');
   }, [fetchSelectBreakDownList])
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
@@ -631,21 +630,21 @@ const QuestionEdit = (props) => {
                               Group name
                             </FormLabel>
                             <RadioGroup aria-label="select-typeof-compliance" name="select-typeof-compliance">
-                              {checkGroups.map((option) => (
+                              {checkGroups[0].checklistGroups.map((option) => (
                                 <FormControlLabel
-                                  value={option.checkListLabel}
+                                  value={option.checkListGroupName}
                                   checked={
-                                    option.checkListLabel === auditData.groupName
+                                    option.checkListGroupName === auditData.groupName
                                   }
                                   className="selectLabel"
                                   control={<Radio />}
                                   onChange={(e) =>
                                     handleGroup(
                                       option.checklistValues,
-                                      option.checkListLabel
+                                      option.checkListGroupName
                                     )
                                   }
-                                  label={option.checkListLabel}
+                                  label={option.checkListGroupName}
                                 />
                               ))}
                             </RadioGroup>
@@ -661,7 +660,7 @@ const QuestionEdit = (props) => {
                               SubGroup name
                             </FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
-                            {console.log(checkData,auditData.subGroupName,'oooooo')}
+                            {console.log(checkData,'oooooo')}
                               {checkData.map((option) =>  (
                                 
                                 <FormControlLabel

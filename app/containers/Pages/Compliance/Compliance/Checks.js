@@ -397,13 +397,13 @@ const Checks = (props) => {
     // if (stateToggle === false) {
     //   setStateToggle(true)
     // }
-    
+
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   useEffect(() => {
     console.log(stateToggle);
-    // if (!stateToggle) {
+    if (!stateToggle) {
 
     const filteredObj = checkData.filter((a, index) => {
       if (a.questionId === questionId) {
@@ -448,7 +448,7 @@ const Checks = (props) => {
         setCheckData(temp)
       }
     }
-  }, [stateToggle])
+  }}, [stateToggle])
 
 
   const fkCompanyId =
@@ -547,7 +547,7 @@ const Checks = (props) => {
     console.log(complianceData, 'line 535');
   }, [complianceData])
 
-  console.log(complianceData.fkProjectStructureIds,'complianceData')
+  console.log(complianceData.fkProjectStructureIds, 'complianceData')
 
 
   const fetchCheklist = async (data, groups, subGroups, strId) => {
@@ -626,18 +626,12 @@ const Checks = (props) => {
       }
     });
 
-    console.log(groups);
-
     for (let i = 0; i < tempCheckData.length; i++) {
-      console.log(i, 'iiiiiiiiiiiiiiii')
-
       for (let j = 0; j < groups.length; j++) {
-        console.log(j, 'jjjjjjjjjjjjjjjjj');
         if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
-        // console.log(tempCheckData[i], 'mohit');
-        // console.log(groups[j]['id'], 'kalasagar')
+  
       }
     }
 
@@ -678,11 +672,6 @@ const Checks = (props) => {
     setCheckData(temp);
   };
 
-
-  // const apiCall = async (dataChecks) => {
-  //   const resUpdate = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, [...dataChecks]);
-  //   history.push("/app/pages/compliance/performance-summary");
-  // }
   const handelSubmit = async () => {
 
     const isValid = checkData.every((a) => a.check === true)
@@ -694,167 +683,30 @@ const Checks = (props) => {
       setErrorBoundary("Please answer all the questions");
     }
 
-
-    // const userId =
-    //   JSON.parse(localStorage.getItem("userDetails")) !== null
-    //     ? JSON.parse(localStorage.getItem("userDetails")).id
-    //     : null;
-    // let tempUpdatedQuestion = []
-    // let tempNewQuestion = []
-
-    // checkData.map((data) => {
-    //   console.log(data)
-    //   if (data.id) {
-    //     tempUpdatedQuestion.push(data)
-    //   } else {
-    //     tempNewQuestion.push(data)
-    //   }
-    // })
-    // if (tempNewQuestion.length > 0) {
-    //   let dataCheck = [];
-    //   for (var i = 0; i < tempNewQuestion.length; i++) {
-    // var formData = new FormData();
-    // let data = {};
-
-    // Object.keys(tempNewQuestion[i]).forEach(key => {
-    //   console.log(key);
-    //   if (key === "mediaAttachment") {
-    //     formData.append("mediaAttachment", new Blob([tempNewQuestion[i]['mediaAttachment']], { type: "application/octet-stream" }));
-    //   }
-    //   else if (key === 'createdAt') {
-    //     formData.append('createdAt', new Date().toISOString())
-    //   }
-    //   else {
-    //     formData.append(`${key}`, tempNewQuestion[i][key])
-    //   }
-    // })
-    // console.log(dataCheck)
-
-    // data["questionId"] = tempNewQuestion[i].questionId
-    // data["question"] = tempNewQuestion[i].question
-    // data["criticality"] = tempNewQuestion[i].criticality
-    // data["performance"] = tempNewQuestion[i].performance
-    // data["groupId"] = tempNewQuestion[i].groupId
-    // data["groupName"] = tempNewQuestion[i].groupName
-    // data["subGroupId"] = tempNewQuestion[i].subGroupId
-    // data["subGroupName"] = tempNewQuestion[i].subGroupName
-    // data["defaultResponse"] = tempNewQuestion[i].defaultResponse
-    // data["score"] = tempNewQuestion[i].score
-    // data["findings"] = tempNewQuestion[i].findings
-    // // data["score"] = tempNewQuestion[i].score
-    // data["auditStatus"] = tempNewQuestion[i].auditStatus
-    // // if (typeof tempNewQuestion[i].attachment !== "string") {
-    //   if (tempNewQuestion[i].attachment !== null) {
-    //     data["attachment"] = {
-    //       name: tempNewQuestion[i].attachment.name,
-    //       lastModified: tempNewQuestion[i].attachment.lastModified,
-    //       lastModifiedDate: tempNewQuestion[i].attachment.lastModifiedDate,
-    //       size: tempNewQuestion[i].attachment.size,
-    //       type: tempNewQuestion[i].attachment.type,
-    //       webkitRelativePath: tempNewQuestion[i].attachment.webkitRelativePath,
-    //     }
-    //   }
-    //   if (tempNewQuestion[i].mediaAttachment !== null) {
-    //     data["mediaAttachment"] = {
-    //       name: tempNewQuestion[i].mediaAttachment.name,
-    //       lastModified: tempNewQuestion[i].mediaAttachment.lastModified,
-    //       lastModifiedDate: tempNewQuestion[i].mediaAttachment.lastModifiedDate,
-    //       size: tempNewQuestion[i].mediaAttachment.size,
-    //       type: tempNewQuestion[i].mediaAttachment.type,
-    //       webkitRelativePath: tempNewQuestion[i].mediaAttachment.webkitRelativePath,
-    //     }
-    //   }
-    // // }
-    // // data["attachment"] = tempNewQuestion[i].attachment
-    // // data["mediaAttachment"] = tempNewQuestion[i].mediaAttachment
-    // data["status", "Active"]
-    // data["fkAuditId"] = tempNewQuestion[i].fkAuditId
-    // data["createdAt"] = new Date().toISOString()
-    // data["createdBy"] = tempNewQuestion[i].createdBy
-    // dataCheck[i] = data
-    //   const resNew = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`, formData);
-    // }
-
-
-    // }
-    // var formData = new FormData();
-    // if (tempUpdatedQuestion.length > 0) {
-    //   let dataCheck = [];
-    //   for (var i = 0; i < tempUpdatedQuestion.length; i++) {
-    //     let data = {};
-    //     Object.keys(tempUpdatedQuestion[i]).forEach(key => {
-    //       if (key === 'fkAuditId') {
-    //         formData.append('fkAuditId', tempUpdatedQuestion[i].fkAuditId * 1)
-    //       }
-    //       else {
-    //         formData.append(`${key}`, tempUpdatedQuestion[i][key])
-    //       }
-    //     })
-
-    //     formData.append('createdAt', new Date().toISOString());
-
-    //     dataCheck.push(formData)
-    //     console.log(dataCheck)
-
-    // data["id"] = tempUpdatedQuestion[i].id
-    // data["questionId"] = tempUpdatedQuestion[i].questionId
-    // data["question"] = tempUpdatedQuestion[i].question
-    // data["criticality"] = tempUpdatedQuestion[i].criticality
-    // data["performance"] = tempUpdatedQuestion[i].performance
-    // data["groupId"] = tempUpdatedQuestion[i].groupId
-    // data["groupName"] = tempUpdatedQuestion[i].groupName
-    // data["subGroupId"] = tempUpdatedQuestion[i].subGroupId
-    // data["subGroupName"] = tempUpdatedQuestion[i].subGroupName
-    // data["defaultResponse"] = tempUpdatedQuestion[i].defaultResponse
-    // data["score"] = tempUpdatedQuestion[i].score
-    // data["findings"] = tempUpdatedQuestion[i].findings
-    // // data["score"] = tempUpdatedQuestion[i].score
-    // data["auditStatus"] = tempUpdatedQuestion[i].auditStatus
-    // // if (typeof tempUpdatedQuestion[i].attachment !== "string") {
-    // //   if (tempUpdatedQuestion[i].attachment !== null) {
-    // //     data["attachment"] = {
-    // //       name: tempUpdatedQuestion[i].attachment.name,
-    // //       lastModified: tempUpdatedQuestion[i].attachment.lastModified,
-    // //       lastModifiedDate: tempUpdatedQuestion[i].attachment.lastModifiedDate,
-    // //       size: tempUpdatedQuestion[i].attachment.size,
-    // //       type: tempUpdatedQuestion[i].attachment.type,
-    // //       webkitRelativePath: tempUpdatedQuestion[i].attachment.webkitRelativePath,
-    // //     }
-    // //   }
-    // // }
-    // data["attachment"] = tempUpdatedQuestion[i].attachment
-    // data["mediaAttachment"] = tempUpdatedQuestion[i].mediaAttachment
-    // data["status", "Active"]
-    // data["fkAuditId"] = tempUpdatedQuestion[i].fkAuditId * 1
-    // data["createdAt"] = new Date().toISOString()
-    // data["createdBy"] = tempUpdatedQuestion[i].createdBy
-    // dataCheck[i] = data
-    // apiCall(formData)
-    // }
-    // history.push("/app/pages/compliance/performance-summary");
-    // }
-
   };
+
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id, type = '') => {
+    console.log(id, 'indeex')
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
         if (field === 'score') {
           if (type === 'Stars') {
             let starvar = ''
-            for (let j = 0; j < value; j++)
+            for (let j = 0; j < value; j++) 
               starvar += "*"
-            value = starvar
+              value = starvar
+              console.log(value, 'Star')
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value,'%%%')
+            console.log(value, '%%%')
           }
           else if (type === '1-10') {
             value = value
-            console.log(value,'counts')
+            console.log(value, 'counts')
           }
 
         }
@@ -875,22 +727,12 @@ const Checks = (props) => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
     );
     const result = res.data.data.results;
-    console.log(result,'result')
+    console.log(result, 'result')
     await setShowCheckData(result)
     await setCheckData(result);
     return result
   };
 
-  // const handleFile = (value, field, index, id) => {
-  //   let temp = [...checkData];
-  //   for (let i = 0; i < temp.length; i++) {
-  //     if (temp[i]["question"] === id) {
-
-  //       temp[i][field] = value;
-  //     }
-  //   }
-  //   setCheckData(temp);
-  // };
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
@@ -902,14 +744,8 @@ const Checks = (props) => {
     }
   };
 
-  // function create_blob(file, callback) {
-  //   var reader = new FileReader();
-  //   reader.onload = function () { callback(reader.result) };
-  //   reader.readAsBinaryString(file);
-  // }
 
   useEffect(() => {
-    console.log(checkData, 'checkData');
   }, [checkData])
 
 
@@ -1047,7 +883,7 @@ const Checks = (props) => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    {Object.entries(categories).map(([key, value], catI) => {
+                    {Object.entries(categories).map(([key, Categor], catI) => {
                       return (
                         <>
                           <FormLabel className="checkRadioLabel" component="legend">
@@ -1069,7 +905,8 @@ const Checks = (props) => {
                             />
                           </ListItem>
                         </span> */}
-                          {value.map((value, index) => {
+                          {Categor.map((value, index) => {
+                            console.log(value,'value')
                             return (
                               <>
                                 <Grid container item xs={12}>
