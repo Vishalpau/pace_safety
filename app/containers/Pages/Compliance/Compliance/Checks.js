@@ -427,6 +427,7 @@ const Checks = (props) => {
 
           if (filteredObj[0].id) {
             const putApiData = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData);
+            const result = putApiData.data.data.results;
             temp.forEach(a => {
               if (a.questionId === questionId) {
                 a.id = result.id;
@@ -689,9 +690,7 @@ const Checks = (props) => {
 
   const classes = useStyles();
 
-  const handleChangeData = (value, field, index, id, type = '', va) => {
-    console.log(va);
-    console.log(id, 'indeex')
+  const handleChangeData = (value, field, index, id, type = '') => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -702,7 +701,7 @@ const Checks = (props) => {
               starvar += "*"
             value = starvar
             console.log(value, 'Star')
-            setValueStar(value);
+            // setValueStar(value);
           }
           else if (type === '%') {
             value = value + "%"
@@ -1002,11 +1001,9 @@ const Checks = (props) => {
                                               {value.scoreType === "Stars" &&
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
-                                                    name="simple-controlled"
+                                                    name={`simple-controlled ${value.id}`}
                                                     defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     onChange={(event, newValue) => {
-                                                      console.log(value.id, 'sfsdhfksdhk');
-                                                      console.log(value.scoreType, 'skfhdskhfkds');
                                                       if (newValue !== null) {
                                                         // console.log(id, 'idsds');
                                                         // console.log(newValue);
@@ -1016,7 +1013,6 @@ const Checks = (props) => {
                                                           index,
                                                           value.id,
                                                           value.scoreType,
-                                                          value
                                                         )
                                                         setValueStar(newValue);
                                                       }
@@ -1438,7 +1434,7 @@ const Checks = (props) => {
                                               {value.scoreType === "Stars" &&
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
-                                                    name="simple-controlled"
+                                                    name={`simple-controlled ${value.id}`}
                                                     defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue != null) {
