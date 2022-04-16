@@ -389,8 +389,7 @@ const Checks = (props) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    console.log(stateToggle);
+  const updateAccordian = async () => {
     if (!stateToggle) {
       const fieldCheck = []
       const filteredObj = checkData.filter(a => {
@@ -399,7 +398,7 @@ const Checks = (props) => {
         }
       })
 
-      console.log(filteredObj, 'filteredObj');
+      // console.log(filteredObj, 'filteredObj');
 
       const temp = [...checkData]
 
@@ -413,14 +412,8 @@ const Checks = (props) => {
         })
         const { responseType, scoreType } = fieldCheck[0];
         const { criticality, auditStatus, defaultResponse, id } = filteredObj[0];
-        // console.log(responseType, 'response Type');
-        // console.log(criticality, 'criticality');
-        // console.log(auditStatus, 'audit status');
 
-        // if (filteredObj[0].defaultResponse !== '' && filteredObj[0].findings !== "" && filteredObj[0].score !== 0) {
         if (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== "")) {
-          // console.log(filteredObj)
-          console.log(filteredObj[0], 'filteredObject');
           const formData = new FormData;
           Object.keys(filteredObj[0]).forEach(key => {
             console.log(key);
@@ -433,24 +426,43 @@ const Checks = (props) => {
           })
 
           if (filteredObj[0].id) {
-            api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData)
+            const putApiData = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData);
+            temp.forEach(a => {
+              if (a.questionId === questionId) {
+                a.id = result.id;
+              }
+              if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+                a.check = true;
+              }
+              else {
+                a.check = false;
+              }
+            })
+            
           }
           else {
-            api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
+            const postApiData = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
+            const result = postApiData.data.data.results;
+            temp.forEach(a => {
+              if (a.questionId === questionId) {
+                a.id = result.id;
+              }
+              if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+                a.check = true;
+              }
+              else {
+                a.check = false;
+              }
+            })
           }
-
-          temp.forEach(a => {
-            if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
-              a.check = true;
-            }
-            else {
-              a.check = false;
-            }
-          })
           setCheckData(temp)
         }
       }
     }
+  }
+
+  useEffect(() => {
+    updateAccordian();
   }, [stateToggle])
 
 
@@ -1009,15 +1021,15 @@ const Checks = (props) => {
                                                         setValueStar(newValue);
                                                       }
                                                     }}
-                                                    // onChange={(e) =>
-                                                    //   handleChangeData(
-                                                    //     e.target.value,
-                                                    //     "findings",
-                                                    //     index,
-                                                    //     value.id,
-                                                    //     value.scoreType
-                                                    //   )
-                                                    // }
+                                                  // onChange={(e) =>
+                                                  //   handleChangeData(
+                                                  //     e.target.value,
+                                                  //     "findings",
+                                                  //     index,
+                                                  //     value.id,
+                                                  //     value.scoreType
+                                                  //   )
+                                                  // }
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
