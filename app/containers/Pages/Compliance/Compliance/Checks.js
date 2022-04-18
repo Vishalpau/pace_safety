@@ -367,6 +367,7 @@ const Checks = (props) => {
 
   const radioDecide = ["Yes", "No", "NA"];
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
+    console.log(valueId);
     console.log(panel);
     if (isExpanded) {
       setStateToggle(true);
@@ -388,66 +389,82 @@ const Checks = (props) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    console.log(stateToggle);
+  const updateAccordian = async () => {
     if (!stateToggle) {
-      const fieldCheck= []
-    const filteredObj = checkData.filter(a => {
-      if (a.questionId === questionId) {
-        return a
-      }
-    })
-
-    console.log(filteredObj, 'filteredObj');
-
-    const temp = [...checkData]
-
-    if (filteredObj.length > 0) {
-      Object.entries(categories).forEach(([key, value]) => {
-        value.filter(a => {
-          if (a.id === filteredObj[0].questionId) {
-            fieldCheck.push(a);
-          }
-        })
+      const fieldCheck = []
+      const filteredObj = checkData.filter(a => {
+        if (a.questionId === questionId) {
+          return a
+        }
       })
-      const { responseType, scoreType } = fieldCheck[0];
-      const { criticality, auditStatus, defaultResponse, id } = filteredObj[0];
-      console.log(responseType, 'response Type');
-      console.log(criticality, 'criticality');
-      console.log(auditStatus, 'audit status');
 
-      // if (filteredObj[0].defaultResponse !== '' && filteredObj[0].findings !== "" && filteredObj[0].score !== 0) {
-      if (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== "")) {
-        console.log(filteredObj)
-        const formData = new FormData;
-        Object.keys(filteredObj[0]).forEach(key => {
-          if (key === "fkAuditId") {
-            formData.append(key, filteredObj[0][key]);
-          }
-          else if (key !== 'check' && key !== 'id') {
-            formData.append(key, filteredObj[0][key]);
-          }
+      // console.log(filteredObj, 'filteredObj');
+
+      const temp = [...checkData]
+
+      if (filteredObj.length > 0) {
+        Object.entries(categories).forEach(([key, value]) => {
+          value.filter(a => {
+            if (a.id === filteredObj[0].questionId) {
+              fieldCheck.push(a);
+            }
+          })
         })
+        const { responseType, scoreType } = fieldCheck[0];
+        const { criticality, auditStatus, defaultResponse, id } = filteredObj[0];
 
-        if (filteredObj[0].id) {
-          api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData)
-        }
-        else {
-          api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
-        }
+        if (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== "")) {
+          const formData = new FormData;
+          Object.keys(filteredObj[0]).forEach(key => {
+            console.log(key);
+            if (key === "fkAuditId") {
+              formData.append(key, filteredObj[0][key]);
+            }
+            else if (key !== 'check' && key !== 'id') {
+              formData.append(key, filteredObj[0][key]);
+            }
+          })
 
-        temp.forEach(a => {
-          if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
-            a.check = true;
+          if (filteredObj[0].id) {
+            const putApiData = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData);
+            const result = putApiData.data.data.results;
+            temp.forEach(a => {
+              if (a.questionId === questionId) {
+                a.id = result.id;
+              }
+              if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+                a.check = true;
+              }
+              else {
+                a.check = false;
+              }
+            })
+            
           }
           else {
-            a.check = false;
+            const postApiData = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
+            const result = postApiData.data.data.results;
+            temp.forEach(a => {
+              if (a.questionId === questionId) {
+                a.id = result.id;
+              }
+              if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+                a.check = true;
+              }
+              else {
+                a.check = false;
+              }
+            })
           }
-        })
-        setCheckData(temp)
+          setCheckData(temp)
+        }
       }
     }
-  }}, [stateToggle])
+  }
+
+  useEffect(() => {
+    updateAccordian();
+  }, [stateToggle])
 
 
   const fkCompanyId =
@@ -535,17 +552,17 @@ const Checks = (props) => {
         }
 
         setForm(result);
-        console.log(tempSubGroup, result.groups, result.subGroups);
+        // console.log(tempSubGroup, result.groups, result.subGroups);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups, result.fkProjectStructureIds);
       })
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    console.log(complianceData, 'line 535');
-  }, [complianceData])
+  // useEffect(() => {
+  //   console.log(complianceData, 'line 535');
+  // }, [complianceData])
 
-  console.log(complianceData.fkProjectStructureIds, 'complianceData')
+  // console.log(complianceData.fkProjectStructureIds, 'complianceData')
 
 
   const fetchCheklist = async (data, groups, subGroups, strId) => {
@@ -621,7 +638,6 @@ const Checks = (props) => {
         if (groups[j]['checkListGroupName'] == tempCheckData[i]['groupName']) {
           tempCheckData[i]['groupId'] = groups[j]['id']
         }
-  
       }
     }
 
@@ -683,8 +699,9 @@ const Checks = (props) => {
             let starvar = ''
             for (let j = 0; j < value; j++) 
               starvar += "*"
-              value = starvar
-              console.log(value, 'Star')
+            value = starvar
+            console.log(value, 'Star')
+            // setValueStar(value);
           }
           else if (type === '%') {
             value = value + "%"
@@ -696,6 +713,7 @@ const Checks = (props) => {
           }
         }
         temp[i][field] = value;
+
       }
     }
     if (field == 'criticality' || field == 'auditStatus') {
@@ -706,7 +724,7 @@ const Checks = (props) => {
 
   const fetchData = async () => {
     const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/auditresponse/`
+      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
     );
     const result = res.data.data.results;
     console.log(result, 'result')
@@ -727,6 +745,7 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
+    console.log(checkData);
   }, [checkData])
 
 
@@ -887,7 +906,8 @@ const Checks = (props) => {
                           </ListItem>
                         </span> */}
                           {Categor.map((value, index) => {
-                            console.log(value,'value')
+                            // console.log(key);
+                            // console.log(value, 'value')
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -896,12 +916,11 @@ const Checks = (props) => {
                                       {value.responseType === "Yes-No-NA" ? (
                                         <Accordion
                                           expanded={
-                                            expandedTableDetail === `panel6 ${index}`
+                                            expandedTableDetail === `panel6 ${value.id}`
                                           }
-                                          onChange={handleTDChange(`panel6 ${index}`, value.id)}
+                                          onChange={handleTDChange(`panel6 ${value.id}`, value.id)}
                                           className="backPaperAccordian"
                                           style={{ border: checkData.find(a => value.id === a.questionId).check === false ? '3px solid red' : checkData.find(a => value.id === a.questionId).check === true && '3px solid green' }}
-
                                         >
                                           <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
@@ -982,20 +1001,29 @@ const Checks = (props) => {
                                               {value.scoreType === "Stars" &&
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
-                                                    name="simple-controlled"
-                                                    defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    name={`simple-controlled ${value.id}`}
+                                                    value={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
-                                                      if (newValue != null) {
+                                                      if (newValue !== null) {
                                                         handleChangeData(
                                                           newValue,
                                                           "score",
                                                           index,
                                                           value.id,
-                                                          value.scoreType
+                                                          value.scoreType,
                                                         )
                                                         setValueStar(newValue);
                                                       }
                                                     }}
+                                                  // onChange={(e) =>
+                                                  //   handleChangeData(
+                                                  //     e.target.value,
+                                                  //     "findings",
+                                                  //     index,
+                                                  //     value.id,
+                                                  //     value.scoreType
+                                                  //   )
+                                                  // }
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1202,7 +1230,7 @@ const Checks = (props) => {
                                                   className="checkRadioLabel"
                                                   component="legend"
                                                 >
-                                                  Attachment{" "}
+                                                  Document{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
                                                   {(value.attachment === "Yes") &&
@@ -1258,9 +1286,9 @@ const Checks = (props) => {
                                           // onChange={handleTDChange("panel4")}
 
                                           expanded={
-                                            expandedTableDetail === `panel6 ${index}`
+                                            expandedTableDetail === `panel6 ${value.id}`
                                           }
-                                          onChange={handleTDChange(`panel6 ${index}`, value.id)}
+                                          onChange={handleTDChange(`panel6 ${value.id}`, value.id)}
 
                                           style={{ border: checkData.find(a => value.id === a.questionId).check === false ? '3px solid red' : checkData.find(a => value.id === a.questionId).check === true && '3px solid green' }}
                                           defaultExpanded
@@ -1401,11 +1429,13 @@ const Checks = (props) => {
                                                   Score
                                                 </FormLabel>
                                               </Grid>
+                                             
                                               {value.scoreType === "Stars" &&
+                                              
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
-                                                    name="simple-controlled"
-                                                    defaultValue={valueStar[index] !== undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
+                                                    name={`simple-controlled ${value.id}`}
+                                                    value={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue != null) {
                                                         handleChangeData(
@@ -1418,6 +1448,15 @@ const Checks = (props) => {
                                                         setValueStar(newValue);
                                                       }
                                                     }}
+                                                    // onChange={(e) =>
+                                                    //   handleChangeData(
+                                                    //     e.target.value,
+                                                    //     "findings",
+                                                    //     index,
+                                                    //     value.id,
+                                                    //     value.scoreType
+                                                    //   )
+                                                    // }
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1544,7 +1583,7 @@ const Checks = (props) => {
                                                     <TableHead>
                                                       <TableRow>
                                                         <TableCell className="tableHeadCellFirst">
-                                                          Action number1
+                                                          Action number
                                                         </TableCell>
                                                         <TableCell className="tableHeadCellSecond">
                                                           Action title
@@ -1623,7 +1662,7 @@ const Checks = (props) => {
                                                   className="checkRadioLabel"
                                                   component="legend"
                                                 >
-                                                  Attachment{" "}
+                                                  Document{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
                                                   {(value.attachment === "Yes") &&

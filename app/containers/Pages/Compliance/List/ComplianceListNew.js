@@ -904,7 +904,7 @@ function ComplianceListNew(props) {
                                         color="textPrimary"
                                         className={classes.listingLabelName}
                                       >
-                                        Category:{" "}
+                                        Group name:{" "}
                                         <span
                                           className={classes.listingLabelValue}
                                         >
@@ -972,7 +972,7 @@ function ComplianceListNew(props) {
                                     className={classes.listingLabelValue}
                                   >
                                     {moment(value["createdAt"]).format(
-                                      "Do MMMM YYYY, h:mm:ss a"
+                                      "Do MMMM YYYY"
                                     )}
                                   </Typography>
                                 </Grid>

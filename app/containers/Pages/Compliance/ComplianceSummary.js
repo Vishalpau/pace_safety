@@ -1168,7 +1168,7 @@ function ComplianceSummary(props) {
                                               {subGrpData.inputLabel}
                                             </FormLabel>
                                             {/* {console.log(quesData,'quesData')} */}
-                                            {quesData.map((value, index) => {
+                                            {quesData.length <=0 ? "No question configured" : quesData.map((value, index) => {
                                               
                                               return subGrpData.id === value.subGroupId ?
                                                 <Accordion
@@ -1258,12 +1258,13 @@ function ComplianceSummary(props) {
                                                           {value.findings ? value.findings : '-'}
                                                         </Typography>
                                                       </Grid>
+                                                      {value.score &&
                                                       <Grid
                                                         item
                                                         md={12}
                                                         sm={12}
                                                         xs={12}
-                                                      >
+                                                       >
                                                         <FormLabel
                                                           component="legend"
                                                           className="checkRadioLabel"
@@ -1288,6 +1289,14 @@ function ComplianceSummary(props) {
                                                           </Typography>
                                                         </Grid>
                                                       </Grid>
+                                                      }
+                                                    
+                                                      <Grid
+                                                          item
+                                                          md={12}
+                                                          sm={12}
+                                                          xs={12}
+                                                        >
                                                       <FormLabel
                                                         component="legend"
                                                         className="checkRadioLabel"
@@ -1363,7 +1372,7 @@ function ComplianceSummary(props) {
                                                               }</>) : ''}
                                                         </>
                                                       ))}
-
+                                                      </Grid>
                                                       {value.attachment &&
                                                         <Grid
                                                           item
@@ -1375,7 +1384,7 @@ function ComplianceSummary(props) {
                                                             component="legend"
                                                             className="checkRadioLabel"
                                                           >
-                                                            Attachments
+                                                            Document
                                                           </FormLabel>
                                                           {/* {value.attachment ? value.attachment.map(att => */}
                                                           <div className="attachFileThumb">

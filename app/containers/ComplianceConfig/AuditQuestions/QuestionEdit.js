@@ -226,9 +226,9 @@ const QuestionEdit = (props) => {
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${project.projectId
       }&projectStructure=${fkProjectStructureIds}`
     );
-    await setAuditData(res.data.data.results[0]);
-    await fetchChecklist(res.data.data.results[0].groupName);
-    await fetchBreakDownData(res.data.data.results[0].fkProjectStructureIds);
+    await setAuditData(res.data.data.results.filter(i => i.id == id)[0]);
+    await fetchChecklist(res.data.data.results.filter(i => i.id == id)[0].groupName);
+    await fetchBreakDownData(res.data.data.results.filter(i => i.id == id)[0].fkProjectStructureIds);
     await setIsLoading(true);
   };
 
@@ -242,6 +242,7 @@ const QuestionEdit = (props) => {
     );
     const result = res.data.data.results;
     // await fetchComplianceData(result);
+    console.log(result,'resultss')
     result.map((option, index) => {
       if (option.checklistGroups === groupName) {
         setCheckData(option.checklistGroups);
@@ -251,14 +252,16 @@ const QuestionEdit = (props) => {
   };
 
   const handleGroup = async (value, gName) => {
-    let temp = { ...auditData };
+    console.log(checkGroups, 'gName')
+    let temp = { ...auditData};
     temp.groupName = gName;
-    temp.subGroupName = "";
-    setCheckData(value);
+    temp.subGroupName = checkGroups[0].checklistGroups.filter(subgrp=> subgrp.checkListGroupName == gName)[0].checkListValues;
+    setCheckData(checkGroups[0].checklistGroups.filter(subgrp=> subgrp.checkListGroupName == gName)[0].checkListValues);
     setAuditData(temp);
   };
 
   const handleSubGroup = async (sgName) => {
+    console.log(sgName)
     let temp = { ...auditData };
     temp.subGroupName = sgName;
     setAuditData(temp);
@@ -640,7 +643,7 @@ const QuestionEdit = (props) => {
                                   control={<Radio />}
                                   onChange={(e) =>
                                     handleGroup(
-                                      option.checklistValues,
+                                      option.checkListGroupName,
                                       option.checkListGroupName
                                     )
                                   }
