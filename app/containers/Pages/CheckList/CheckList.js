@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CheckList() {
-  const [chekListData, setCheckListData] = useState([]);
+  const [checkListData, setCheckListData] = useState([]);
+  const [checkLists, setCheckLists] = useState([]);
   const [searchFilter, setSearchFilter] = useState({
     search: "",
     filter: ""
@@ -72,6 +73,7 @@ function CheckList() {
       }
     });
     setCheckListData(result);
+    setCheckLists(result)
   };
 
   const getModalStyle = () => ({
@@ -112,6 +114,33 @@ function CheckList() {
     }))
   }
 
+  useEffect(() => {
+    const temp = [];
+    checkListData.forEach(value => {
+      if (searchFilter.search) {
+        if (searchFilter.filter) {
+          if (value.checkListLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.status === searchFilter.filter) {
+            temp.push(value)
+          }
+        } else {
+          if (value.checkListLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+            temp.push(value)
+          }
+        }
+      } else {
+        if (searchFilter.filter) {
+          if (searchFilter.filter === value.status) {
+            temp.push(value)
+          }
+        } else {
+          temp.push(value)
+        }
+      }
+    })
+
+    setCheckLists([...temp])
+  }, [searchFilter, checkListData])
+
   const classes = useStyles();
   return (
     <PapperBlock title="Check List" icon="ion-md-list-box" desc="">
@@ -150,95 +179,28 @@ function CheckList() {
             <TableCell className={classes.columunBorder}>Status</TableCell>
             <TableCell className={classes.columunBorder}>Actions</TableCell>
           </TableRow>
-          {chekListData.map((value) => {
-            if (searchFilter.search) {
-              if (searchFilter.filter) {
-                if (value.checkListLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.status === searchFilter.filter) {
-                  return (
-                    <TableRow>
-                      <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
-                      {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
-                      <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                      <TableCell className={classes.tabelBorder}>0</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
-                      <TableCell className={classes.tabelBorder}>
-                        <IconButton size="small" color="primary">
-                          <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                } else {
-                  return <></>
-                }
-              } else {
-                if (value.checkListLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
-                  return (
-                    <TableRow>
-                      <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
-                      {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
-                      <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                      <TableCell className={classes.tabelBorder}>0</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
-                      <TableCell className={classes.tabelBorder}>
-                        <IconButton size="small" color="primary">
-                          <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                } else {
-                  return <></>
-                }
-              }
-            } else {
-              if (searchFilter.filter) {
-                if (searchFilter.filter === value.status) {
-                  return (
-                    <TableRow>
-                      <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
-                      {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
-                      <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                      <TableCell className={classes.tabelBorder}>0</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
-                      <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
-                      <TableCell className={classes.tabelBorder}>
-                        <IconButton size="small" color="primary">
-                          <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  )
-                } else {
-                  return <></>
-                }
-              } else {
-                return (
-                  <TableRow>
-                    <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
-                    {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
-                    <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
-                    <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                    <TableCell className={classes.tabelBorder}>0</TableCell>
-                    <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
-                    <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
-                    <TableCell className={classes.tabelBorder}>
-                      <IconButton size="small" color="primary">
-                        <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                )
-              }
-            }
-          })}
-
-
+          {checkLists.length ?
+            <>
+              {checkLists.map((value) => (
+                <TableRow>
+                  <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
+                  {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
+                  <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
+                  <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
+                  <TableCell className={classes.tabelBorder}>0</TableCell>
+                  <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
+                  <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
+                  <TableCell className={classes.tabelBorder}>
+                    <IconButton size="small" color="primary">
+                      <MoreVertIcon onClick={(e) => handleOpen(value.hasGroup, value.checklistId)} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+            :
+            <p style={{ paddingTop: '15px', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>No data found!</p>
+          }
         </TableBody>
       </Table>
 
