@@ -75,7 +75,8 @@ const styles = theme => ({
   pacelogonBox: {
     height: '2.5rem',
     marginBottom: '16px'
-  }
+  },
+
 });
 
 export default styles;

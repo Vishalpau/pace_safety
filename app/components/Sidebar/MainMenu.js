@@ -161,7 +161,8 @@ function MainMenu(props) {
       }
       setDataMenuInner(dataMenu.filter(data => ud.includes(data.acl)))
       setCompId(JSON.parse(localStorage.getItem('company')).fkCompanyId)
-      setProjectId(JSON.parse(localStorage.getItem('projectName')).projectName.projectId)
+      if (JSON.parse(localStorage.getItem('projectName')))
+        setProjectId(JSON.parse(localStorage.getItem('projectName')).projectName.projectId)
       if (localStorage.getItem('selectBreakDown') !== undefined) {
         setProjectStructId(localStorage.getItem('selectBreakDown'))
       }
@@ -176,9 +177,9 @@ function MainMenu(props) {
 
   const openSSO = () => {
     let constprojectStructId = (localStorage.getItem('selectBreakDown') === undefined) ? '' : localStorage.getItem('selectBreakDown')
-    let href = SSO_URL + "/dashboard?companyId=" + JSON.parse(localStorage.getItem('company')).fkCompanyId 
-                                   + "&projectId=" + JSON.parse(localStorage.getItem('projectName')).projectName.projectId 
-                                   + "&projectStructure=" + constprojectStructId
+    let href = SSO_URL + "/dashboard?companyId=" + JSON.parse(localStorage.getItem('company')).fkCompanyId
+      + "&projectId=" + JSON.parse(localStorage.getItem('projectName')).projectName.projectId
+      + "&projectStructure=" + constprojectStructId
     window.location.href = href
   }
 
