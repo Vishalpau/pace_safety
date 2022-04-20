@@ -398,6 +398,7 @@ function Header(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { fkid } = useParams();
   const dispatch = useDispatch();
+  const [breakDownData, setBreakDownData] = useState(localStorage.getItem("selectBreakDown"));
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
@@ -486,7 +487,6 @@ function Header(props) {
     localStorage.setItem("projectName", JSON.stringify(props.initialValues));
   }
   const projectData = JSON.parse(localStorage.getItem("projectName"));
-  const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -830,12 +830,18 @@ function Header(props) {
 
   const handleProjectBreakdown = (index, phaseIndex, unitIndex, subUnitIndex, depth) => {
     const data = [];
+    const temp = [];
     data.push({
       depth: '1L',
       id: projectListData[index].firstBreakdown[phaseIndex].id,
       label: 'Phase',
       name: projectListData[index].firstBreakdown[phaseIndex].name
     });
+    temp.push({
+      breakdownLabel: 'Phase',
+      breakdownValue: projectListData[index].firstBreakdown,
+      selectValue: ""
+    })
     if (depth === '3L') {
       data.push({
         depth: '2L',
@@ -849,6 +855,16 @@ function Header(props) {
         label: 'Work Area',
         name: thirdBreakdown[subUnitIndex].name
       })
+      temp.push({
+        breakdownLabel: 'Unit',
+        breakdownValue: secondBreakdown,
+        selectValue: ""
+      })
+      temp.push({
+        breakdownLabel: 'Work Area',
+        breakdownValue: thirdBreakdown,
+        selectValue: ""
+      })
     }
     if (depth === '2L') {
       data.push({
@@ -857,7 +873,15 @@ function Header(props) {
         label: 'Unit',
         name: secondBreakdown[unitIndex].name
       });
+      temp.push({
+        breakdownLabel: 'Unit',
+        breakdownValue: secondBreakdown,
+        selectValue: ""
+      })
     }
+    setLabelList(temp)
+    setBreakDownData(data)
+
 
     localStorage.setItem('selectBreakdown', JSON.stringify(data));
     localStorage.setItem('projectName', JSON.stringify(projectListData[index]))
