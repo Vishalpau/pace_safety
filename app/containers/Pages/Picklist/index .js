@@ -266,7 +266,7 @@ function Picklists(props) {
   return (
     <PapperBlock title="Picklists" icon="ion-md-list-box" desc="">
       <Box>
-        <div className={classes.root}>
+        {/* <div className={classes.root}>
           <AppBar position="static" color="transparent">
             <Toolbar>
               <div className={classes.leftSide}>
@@ -287,7 +287,7 @@ function Picklists(props) {
               </div>
             </Toolbar>
           </AppBar>
-        </div>
+        </div> */}
         <div>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={4}>
@@ -308,6 +308,7 @@ function Picklists(props) {
                   <MenuItem value="">None</MenuItem>
                   <MenuItem value={"dropdown"}>Type - dropdown</MenuItem>
                   <MenuItem value={"radiogroup"}>Type - radiogroup</MenuItem>
+                  <MenuItem value={"checkbox"}>Type - checkbox</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -333,7 +334,8 @@ function Picklists(props) {
                   {picklists.map(listItem => (
                     <tr>
                       <td>
-                        <Editor
+                        {listItem.listName}
+                        {/* <Editor
                           type="text"
                           id={listItem.id}
                           value={listItem.listName}
@@ -341,7 +343,7 @@ function Picklists(props) {
                           save={save}
                           isvalidate={isvalidate}
                           edit={listItem.isSystem == 0}
-                        />
+                        /> */}
                       </td>
                       <td>
                         <Editor
@@ -390,7 +392,7 @@ function Picklists(props) {
               }
 
             </tbody>
-            <tfoot id="botton_add_footer">
+            {/* <tfoot id="botton_add_footer">
               <tr>
                 <td>
                   <TextField
@@ -466,7 +468,7 @@ function Picklists(props) {
                   </Button>
                 </td>
               </tr>
-            </tfoot>
+            </tfoot> */}
           </table>
         </div>
       </Box>

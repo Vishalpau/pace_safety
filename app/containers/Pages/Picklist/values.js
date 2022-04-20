@@ -210,19 +210,21 @@ function Pickvalues(props) {
           type="select"
           options={select_type_options}
           id={listItem.id}
-          value={listItem.isSelected ? 1 : 0}
+          value={listItem.isSelected ? "Yes" : "No"}
           column="is_selected"
           save={save}
+          isvalidate={isvalidate}
         />
       </td>
       <td>
-        <Editor
+        {listItem.parentListValue}
+        {/* <Editor
           type="text"
           id={listItem.id}
           value={listItem.parentListValue}
           column="parent"
           save={save}
-        />
+        /> */}
       </td>
       <td>
         <Editor
