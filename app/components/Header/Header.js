@@ -380,6 +380,38 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     right: theme.spacing(2),
     top: theme.spacing(2),
+  }, projectDialog: {
+    minWidth: 600,
+  },
+  projectName: {
+    color: theme.palette.secondary.contrastText,
+    fontWeight: 600,
+  },
+  projectCloseButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  projecDialogHeadTitle: {
+    marginBottom: '0px',
+    '& h6': {
+      color: '#fff',
+      padding: '15px 15px 12px 15px',
+      backgroundColor: '#06425C',
+      borderRadius: '10px',
+      fontFamily: 'Montserrat-Medium !important',
+      fontWeight: 'normal',
+      fontSize: '18px !important',
+      '& svg': {
+        marginRight: '10px',
+      },
+    },
+    '& button': {
+      top: '28px',
+      color: '#ffffff',
+      right: '24px',
+    },
   },
 }));
 
@@ -746,6 +778,10 @@ function Header(props) {
     // setSelectBreakDown([])
     try {
       let labellist = projectData.projectName.breakdown.map(item => { return { breakdownLabel: item.structure[0].name, breakdownValue: [], selectValue: "" } })
+      if (localStorage.getItem('selectBreakdown')) {
+        setBreakDownData(JSON.parse(localStorage.getItem('selectBreakdown')))
+      }
+
       for (var key in projectData.projectName.breakdown) {
         if (key == 0) {
           var config = {
@@ -986,13 +1022,13 @@ function Header(props) {
             </Dialog>
             {/* Project selections */}
             <Dialog
-              className={classes.projectDialog}
+              className={classesm.projectDialog}
               fullScreen
               scroll="paper"
               open={projectOpen}
               onClose={handleProjectClose}
             >
-              <DialogTitle onClose={handleProjectClose} className={classes.projecDialogHeadTitle}>
+              <DialogTitle onClose={handleProjectClose} className={classesm.projecDialogHeadTitle}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
                   <g id="Select-Project-40" transform="translate(-0.985)">
                     <g id="Layer_1_22_" transform="translate(0.985)">
