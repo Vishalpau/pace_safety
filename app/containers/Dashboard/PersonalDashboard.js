@@ -45,6 +45,7 @@ import {
 import styles from "./dashboard-jss";
 import './style.css';
 import Loading from 'dan-components/Loading';
+import paceLogo from 'dan-images/paceLogo.png';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -193,8 +194,8 @@ function PersonalDashboard(props) {
         let data = await api.get(`${SELF_API}${companyId}/`)
           .then(function (res) {
             let rolesApi = res.data.data.results.data.companies[0].subscriptions.filter(sub => sub.appCode == APPCODE)[0].roles[0].aclUrl
-            api.get(`${ACCOUNT_API_URL.slice(0,-1)}${rolesApi}`).then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])));
-            
+            api.get(`${ACCOUNT_API_URL.slice(0, -1)}${rolesApi}`).then(d => localStorage.setItem('app_acl', JSON.stringify(d.data.data.results.permissions[0])));
+
             return res.data.data.results.data.companies[0].subscriptions;
 
           })
@@ -233,7 +234,7 @@ function PersonalDashboard(props) {
         await getModules(apps)
 
       } catch (error) { }
-    } 
+    }
     // getAllPickList()
   }
 
@@ -243,7 +244,7 @@ function PersonalDashboard(props) {
       localStorage.removeItem('lastState')
       history.push(laststate)
     }
-    if(localStorage.getItem('projectName') != null) {
+    if (localStorage.getItem('projectName') != null) {
       setTimeout(() => history.push('app/icare'), 1000)
     }
   }
@@ -504,7 +505,7 @@ function PersonalDashboard(props) {
                   localStorage.setItem("projectName", JSON.stringify(project[0]))
                   dispatch(projectName(project[0]))
                 }
-                
+
                 // fetchPermissionData(); 
                 if (res.status === 200) {
                   getSubscriptions()
@@ -542,180 +543,241 @@ function PersonalDashboard(props) {
   useEffect(() => {
     handelCallBack()
     // redirectionAccount()
-    if(localStorage.getItem('projectName') != null) {
+    if (localStorage.getItem('projectName') != null) {
       setTimeout(() => history.push('app/icare'), 1000)
     }
   }, [props.initialValues.companyListData]);
 
   return (
     <>
-       <>
+      <>
         {/* <PapperBlock title="Home" icon="ion-md-list-box"> */}
-        <CustomPapperBlock title="Home" icon ='customDropdownPageIcon homePageIcon' whiteBg>
+        <CustomPapperBlock title="Home" icon='customDropdownPageIcon homePageIcon' whiteBg>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Paper elevation={1} className="paperSection">
-              {isLoading ?
-                <div className="seven_hexagon_row">
-                  <div className="honeycomb">
-                    <div className="ibws-fix hexagon_row1">
+                {isLoading ?
+                  <div className="seven_hexagon_row">
+                    <div className="honeycomb">
+                      <div className="ibws-fix hexagon_row1">
 
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
-                      <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a
-                            className="hse_health_safety_environment_mgmt_new"
-                            onClick={() => handleClick('HSE')}
-                          >
-                            <p>HSE Management</p>
-                          </a>
+                        <div className={!(codes.includes('HSE')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a
+                              className="hse_health_safety_environment_mgmt_new"
+                              onClick={() => handleClick('HSE')}
+                            >
+                              <p>HSE Management</p>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
+
+                        <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="hse_digital_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
+                              <p>Control Tower</p>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
+
+                        <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a
+                              className="hse_incident_reporting_management"
+                              onClick={() => history.push('/incidents/')}
+                            >
+                              <p>Incident Management</p>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
                         </div>
                       </div>
 
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-
-                      <div className={!(codes.includes('controltower')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="hse_digital_control_tower" onClick={() => history.push('/app/pages/control-tower/controltower-icare')}>
-                            <p>Control Tower</p>
-                          </a>
+                      <div className="ibws-fix hexagon_row2">
+                        <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
+                              <p>Project Information Hub</p>
+                            </a>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-
-                      <div className={!(codes.includes('incidents')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a
-                            className="hse_incident_reporting_management"
-                            onClick={() => history.push('/incidents/')}
-                          >
-                            <p>Incident Management</p>
-                          </a>
-                        </div>
-                      </div>
-
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-                    </div>
-
-                    <div className="ibws-fix hexagon_row2">
-                      <div className={!(codes.includes('ProjectInfo')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="project_information_hub" onClick={() => handleClick('ProjectInfo')}>
-                            <p>Project Information Hub</p>
-                          </a>
-                        </div>
-                      </div>
-
-                      {/* <div className="hexagon hide_responsiv">
+                        {/* <div className="hexagon hide_responsiv">
               <div className="hexagontent hexagon_content_box" />
             </div> */}
-                      <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="hse_compliance_protocols" onClick={() => history.push('/app/pages/compliance')}>
-                            <p>Compliance</p>
-                          </a>
+                        <div className={!(codes.includes('compliances')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"} >
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="hse_compliance_protocols" onClick={() => history.push('/app/pages/compliance')}>
+                              <p>Compliance</p>
+                            </a>
+                          </div>
                         </div>
-                      </div>
 
 
-                      <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="hse_observations" onClick={() => history.push('/app/icare')}>
-                            <p>iCare</p>
-                          </a>
+                        <div className={!(codes.includes('observations')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="hse_observations" onClick={() => history.push('/app/icare')}>
+                              <p>iCare</p>
+                            </a>
+                          </div>
                         </div>
-                      </div>
-                      <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="hse_assessments_development" onClick={() => history.push('/app/pages/assesments/xflha')}>
-                            <p>Assessments</p>
-                          </a>
+                        <div className={!(codes.includes('assessments')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="hse_assessments_development" onClick={() => history.push('/app/pages/assesments/xflha')}>
+                              <p>Assessments</p>
+                            </a>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="hse_action_tracker_new"
-                            onClick={() => handleClick('actions')}
-                          >
-                            <p>Action Tracker</p>
-                          </a>
+                        <div className={!(codes.includes('actions')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="hse_action_tracker_new"
+                              onClick={() => handleClick('actions')}
+                            >
+                              <p>Action Tracker</p>
+                            </a>
+                          </div>
                         </div>
-                      </div>
-                      <div className={!(codes.includes('permits')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a
-                            className="hse_intelligent_permit_management_new"
-                            onClick={() => handleClick('permits')}
-                          >
-                            <p>Permit Management</p>
-                          </a>
+                        <div className={!(codes.includes('permits')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a
+                              className="hse_intelligent_permit_management_new"
+                              onClick={() => handleClick('permits')}
+                            >
+                              <p>Permit Management</p>
+                            </a>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className={!(codes.includes('gis')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
-                        <div className="hexagontent hexagon_content_box">
-                          <a className="hse_safety_plot_manager"
-                            onClick={() => handleClick('gis')}
-                          >
-                            <p>Safety plot manager</p>
-                          </a>
+                        <div className={!(codes.includes('gis')) ? "hexagon hexagon_fullcontnt inactive_hexagon" : "hexagon hexagon_fullcontnt"}>
+                          <div className="hexagontent hexagon_content_box">
+                            <a className="hse_safety_plot_manager"
+                              onClick={() => handleClick('gis')}
+                            >
+                              <p>Safety plot manager</p>
+                            </a>
+                          </div>
                         </div>
+
+
+
+
                       </div>
 
 
 
 
-                    </div>
+                      <div className="ibws-fix hexagon_row1">
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
+                        <div className="hexagon bghide_in_view hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
+                        <div className="hexagon hide_responsiv hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
+                        <div className="hexagon bghide_in_view hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
-                    <div className="ibws-fix hexagon_row1">
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
-                      <div className="hexagon bghide_in_view hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
+                        <div className="hexagon bghide_in_view hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
 
-                      <div className="hexagon hide_responsiv hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-
-                      <div className="hexagon bghide_in_view hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-
-                      <div className="hexagon bghide_in_view hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
-                      </div>
-
-                      <div className="hexagon hide_responsiv">
-                        <div className="hexagontent hexagon_content_box" />
+                        <div className="hexagon hide_responsiv">
+                          <div className="hexagontent hexagon_content_box" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
- :
- <Loading />
-}
+                  :
+                  <Loading />
+                }
                 <Dialog
+                  className={classes.projectDialog}
+                  maxWidth='md'
+                  open={open}
+                  onClose={(event, reason) => {
+                    if (reason !== 'backdropClick') {
+                      handleClose(event, reason);
+                    }
+                  }}
+                >
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      <Grid container spacing={4}>
+                        <Grid item md={12} sm={12}>
+                          {/* className={classNames(classes.groupSection, classes.companySelection)} */}
+                          <Grid item xs={12} sm={12} md={12} align="center">
+                            <img className={classes.pacelogonBox} src={paceLogo} title="Pace OS" alt="Pace OS" />
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={12} align="center" className={classes.loginTopDetailSection}>
+                            <Typography variant="h1" gutterBottom className={classes.selectCompTitle}>Select Comapny</Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={12} className={classes.companyListBox}>
+
+                            {companyListData.length > 0 && (
+                              <Grid container spacing={3}>
+                                {
+                                  companyListData.map((selectValues, key) => (
+                                    <Grid item xs={12} sm={6} md={6} className={classes.companyList}
+                                      key={key}
+                                      onClick={() =>
+                                        handleCompanyName(
+                                          selectValues.companyId,
+                                          key,
+                                          selectValues.companyName
+                                        )
+                                      }>
+                                      <Card className={classes.companyCardBox}>
+                                        <CardMedia className={classes.companyLogo}>
+                                          {selectValues.logo && (
+                                            <img className={classes.companyLogoIcon} src={selectValues.logo} title="Pace OS" alt={selectValues.companyName} />
+                                          )}
+                                        </CardMedia>
+                                        <CardContent>
+                                          <Typography className={classes.companyTag}>
+                                            {selectValues.businessVertical}
+                                          </Typography>
+                                          <Typography className={classes.companyName}>
+                                            Company: <span>{selectValues.companyName}S</span>
+                                          </Typography>
+                                        </CardContent>
+                                      </Card>
+                                    </Grid>
+                                  ))}
+                              </Grid>
+                            )}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </DialogContentText>
+                  </DialogContent>
+                </Dialog>
+                {/* <Dialog
                   className={classes.projectDialog}
                   open={open}
                   onClose={(event, reason) => {
@@ -768,7 +830,7 @@ function PersonalDashboard(props) {
                     </DialogContentText>
                   </DialogContent>
 
-                </Dialog>
+                </Dialog> */}
 
                 {/* Project  */}
                 <Dialog
@@ -855,7 +917,7 @@ function PersonalDashboard(props) {
           </Grid>
         </CustomPapperBlock>
       </>
-       
+
     </>
   );
 }
