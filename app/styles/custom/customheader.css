@@ -1560,8 +1560,8 @@ ul.MuiMenu-list a ul li.userName {
 
 .paddTBRemove .MuiAvatar-root.MuiAvatar-square {
   overflow: visible;
-  height: 80px;
-  width: 120px;
+  height: 112px;
+  width: 80px;
 }
 
 .MuiAvatar-root.MuiAvatar-square.attachFileStyle .MuiAvatar-img {

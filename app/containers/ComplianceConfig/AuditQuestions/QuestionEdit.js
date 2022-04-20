@@ -242,11 +242,13 @@ const QuestionEdit = (props) => {
     );
     const result = res.data.data.results;
     // await fetchComplianceData(result);
-    console.log(result,'resultss')
     result.map((option, index) => {
-      if (option.checklistGroups === groupName) {
-        setCheckData(option.checklistGroups);
-      }
+      option.checklistGroups.map((grp)=> {
+        if (grp.checkListGroupName === groupName) {
+          setCheckData(grp.checkListValues);
+        }
+      })
+      
     });
     await setCheckListGroups(result);
   };
@@ -663,9 +665,7 @@ const QuestionEdit = (props) => {
                               SubGroup name
                             </FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
-                            {console.log(checkData,'oooooo')}
                               {checkData.map((option) =>  (
-                                
                                 <FormControlLabel
                                   value={option.inputLabel}
                                   checked= {
