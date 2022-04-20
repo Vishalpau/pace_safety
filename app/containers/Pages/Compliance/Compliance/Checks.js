@@ -92,6 +92,7 @@ import {
 } from "../../../../utils/constants";
 import CustomPapperBlock from "dan-components/CustomPapperBlock/CustomPapperBlock";
 import { connect } from "react-redux";
+import Attachment from "../../../../containers/Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   // const styles = theme => ({
@@ -682,7 +683,7 @@ const Checks = (props) => {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
-      setErrorBoundary("Please answer all the questions");
+      setErrorBoundary("Please answer all the compliance questions and close the all accordion");
     }
 
   };
@@ -702,6 +703,7 @@ const Checks = (props) => {
           }
           else if (type === '%') {
             value = value + "%"
+            console.log(value,'uuuuuuuu')
           }
           else if (type === '1-10') {
             value = value
@@ -722,7 +724,6 @@ const Checks = (props) => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
     );
     const result = res.data.data.results;
-    console.log(result, 'result')
     await setShowCheckData(result)
     await setCheckData(result);
     return result
@@ -902,7 +903,6 @@ const Checks = (props) => {
                         </span> */}
                           {Categor.map((value, index) => {
                             // console.log(key);
-                            // console.log(value, 'value')
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -1000,7 +1000,7 @@ const Checks = (props) => {
                                                     defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue !== null) {
-                                                        alert(newValue)
+                                                        
                                                         handleChangeData(
                                                           newValue,
                                                           "score",
@@ -1215,13 +1215,14 @@ const Checks = (props) => {
                                                   </TableBody>
                                                 </Table>
                                               </Grid>
+                                              {(value.attachment === "Yes") &&
                                               <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
                                                 xs={12}
                                                 className={classes.formBox}
-                                              >
+                                                >
                                                 <FormLabel
                                                   className="checkRadioLabel"
                                                   component="legend"
@@ -1229,20 +1230,25 @@ const Checks = (props) => {
                                                   Document{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  {(value.attachment === "Yes") &&
+                                                  
                                                     <input
                                                       type="file"
                                                       id="attachment"
                                                       name="attachment"
+                                                      // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
                                                       accept={`.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  }
+                                                  
+                                                  {showCheckData.filter(cd => cd.question == value.question)[0].attachment != null && <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />}
+                                                  {/* {showCheckData.filter(cd => cd.question == value.question).length && 
+                                                    
+                                                     */}
                                                 </Typography>
-                                              </Grid>
-
+                                              </Grid>}
+                                              {(value.evidenceType === "Yes") &&
                                               <Grid
                                                 item
                                                 md={12}
@@ -1257,7 +1263,7 @@ const Checks = (props) => {
                                                   Evidence{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  {(value.evidenceType === "Yes") &&
+                                                  
                                                     <input
                                                       type="file"
                                                       id="evidence"
@@ -1267,9 +1273,11 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  }
+                                                  
                                                 </Typography>
-                                              </Grid>
+                                                
+                                                {showCheckData.filter(cd => cd.question == value.question)[0].attachment != null && <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />}
+                                              </Grid>}
 
 
                                             </Grid>
@@ -1435,7 +1443,7 @@ const Checks = (props) => {
                                                     defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ?  showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue != null) {
-                                                        alert(newValue)
+                                                       
                                                         handleChangeData(
                                                           newValue,
                                                           "score",
@@ -1478,7 +1486,8 @@ const Checks = (props) => {
                                                           e.target.value,
                                                           "score",
                                                           index,
-                                                          value.id
+                                                          value.id,
+                                                          value.scoreType
                                                         )
                                                       }
                                                     >
@@ -1511,7 +1520,8 @@ const Checks = (props) => {
                                                         e.target.value,
                                                         "score",
                                                         index,
-                                                        value.id
+                                                        value.id,
+                                                        value.scoreType
                                                       )
                                                     }
                                                   />
@@ -1649,13 +1659,14 @@ const Checks = (props) => {
                                                   </TableBody>
                                                 </Table>
                                               </Grid>
+                                              {(value.attachment === "Yes") &&
                                               <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
                                                 xs={12}
                                                 className={classes.formBox}
-                                              >
+                                                >
                                                 <FormLabel
                                                   className="checkRadioLabel"
                                                   component="legend"
@@ -1663,27 +1674,29 @@ const Checks = (props) => {
                                                   Document{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  {(value.attachment === "Yes") &&
+
+                                                  {/* {(value.attachment === "Yes") && */}
                                                     <input
                                                       type="file"
                                                       name="attachment"
                                                       id="evidence"
+                                                      // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
                                                       accept={`.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  }
+                                                  {/* } */}
                                                 </Typography>
-                                              </Grid>
-
+                                              </Grid>}
+                                              {(value.evidenceType === "Yes") &&
                                               <Grid
                                                 item
                                                 md={12}
                                                 sm={12}
                                                 xs={12}
                                                 className={classes.formBox}
-                                              >
+                                                >
                                                 <FormLabel
                                                   className="checkRadioLabel"
                                                   component="legend"
@@ -1691,7 +1704,7 @@ const Checks = (props) => {
                                                   Evidence{" "}
                                                 </FormLabel>
                                                 <Typography className="viewLabelValue">
-                                                  {(value.evidenceType === "Yes") &&
+                                                 
                                                     <input
                                                       name="evidence"
                                                       type="file"
@@ -1701,9 +1714,9 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  }
+                                                  
                                                 </Typography>
-                                              </Grid>
+                                              </Grid>}
                                               {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">

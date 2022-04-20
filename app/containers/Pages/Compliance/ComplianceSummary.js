@@ -462,6 +462,7 @@ function ComplianceSummary(props) {
     );
     const result = res.data.data.results;
     setQueData(result)
+    
   };
 
   const handelActionTracker = async () => {
@@ -980,6 +981,7 @@ function ComplianceSummary(props) {
                               xs={12}
                               className="paddTBRemove"
                             >
+                              
                               <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
                                   <Grid item md={12} xs={12}>
@@ -991,6 +993,7 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
+                                        {console.log(quesData,'quesData')}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
