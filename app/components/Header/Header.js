@@ -1,66 +1,78 @@
-import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Chip from "@material-ui/core/Chip";
-import Dialog from "@material-ui/core/Dialog";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import Divider from "@material-ui/core/Divider";
-import Fab from "@material-ui/core/Fab";
-import FormControl from "@material-ui/core/FormControl";
-import Grid from "@material-ui/core/Grid";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import classNames from "classnames";
+import Typography from "@material-ui/core/Typography";
 import Hidden from "@material-ui/core/Hidden";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import UserMenu from "./UserMenu";
+import SearchUi from "../Search/SearchUi";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import Popover from "@material-ui/core/Popover";
+import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import Popover from "@material-ui/core/Popover";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from "@material-ui/icons/Close";
-import EditIcon from "@material-ui/icons/Edit";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import MenuIcon from "@material-ui/icons/Menu";
+import Chip from "@material-ui/core/Chip";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Axios from "axios";
-import classNames from "classnames";
-import PACE_white from 'dan-images/PACE_white.png';
-import ProjectImg from "dan-images/projectImages/projectimg.jpg";
-import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
-// redux
-import { connect, useDispatch } from "react-redux";
-import { useParams } from "react-router";
-import { breakDownDetails, levelBDownDetails, projectName } from "../../redux/actions/initialDetails";
-import "../../styles/custom/customheader.css";
-import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import MuiDialogActions from "@material-ui/core/DialogActions";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+
 import styles from "./header-jss";
-import UserMenu from "./UserMenu";
+import logos from "dan-api/images/logos";
+import ImageIcon from "@material-ui/icons/Image";
 
+import ProjectImg from "dan-images/projectImages/projectimg.jpg";
+import ProjectImgOne from "dan-images/projectImages/projectimgone.jpg";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
+import CardActions from "@material-ui/core/CardActions";
+import Divider from "@material-ui/core/Divider";
+import EditIcon from "@material-ui/icons/Edit";
+import PACE_white from 'dan-images/PACE_white.png';
+import "../../styles/custom/customheader.css";
 
+import Headerbox from "./headerbox";
 
+import { useParams } from "react-router";
+
+// redux
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import { projectName, breakDownDetails, levelBDownDetails, company } from "../../redux/actions/initialDetails";
+import Topbar from "./Topbar";
+
+import { HEADER_AUTH, SSO_URL } from "../../utils/constants";
+import Axios from "axios";
+import api from "../../utils/axios";
 
 // import ProjectImg from '../../containers/Pages/Images/projectimage.jpg';
 
@@ -379,18 +391,19 @@ function Header(props) {
   const [projectListData, setProjectListData] = useState([]);
   const [projectDisable, setProjectDisable] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false)
+  const [currentCompany, setCurrentCompany] = useState({});
+  const [currentProjectId, setCurrentProjectId] = useState(null);
 
   const [breakdown1ListData, setBreakdown1ListData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { fkid } = useParams();
   const dispatch = useDispatch();
+  const [breakDownData, setBreakDownData] = useState(localStorage.getItem("selectBreakDown"));
 
   const [selectBreakDown, setSelectBreakDown] = useState([]);
 
   const [companyOpen, setCompanyOpen] = React.useState(false);
   const [labelList, setLabelList] = useState([])
-  const [currentCompany, setCurrentCompany] = useState({});
-  const [currentProjectId, setCurrentProjectId] = useState(null);
 
   // Initial header style
   let flagDarker = false;
@@ -474,7 +487,6 @@ function Header(props) {
     localStorage.setItem("projectName", JSON.stringify(props.initialValues));
   }
   const projectData = JSON.parse(localStorage.getItem("projectName"));
-  const breakDownData = JSON.parse(localStorage.getItem("selectBreakDown"))
   const setMargin = (sidebarPosition) => {
     if (sidebarPosition === "right-sidebar") {
       return classes.right;
@@ -497,9 +509,35 @@ function Header(props) {
     setAnchorEl(event.currentTarget);
   };
 
+  const fetchPhaseData = async () => {
+    const data = []
+    for (let i = 0; i < projectListData.length; i++) {
+      if (projectListData[i].breakdown && projectListData[i].breakdown.length > 0 && projectListData[i].breakdown[0].structure && projectListData[i].breakdown[0].structure[0].url) {
+        const config = {
+          method: "get",
+          url: `${SSO_URL}/${projectListData[i].breakdown[0].structure[0].url}`,
+          headers: HEADER_AUTH,
+        };
+        const res = await Axios(config);
+        if (res && res.status && res.status === 200) {
+          projectListData[i].firstBreakdown = res.data.data.results
+          data.push(projectListData[i]);
+        } else {
+          projectListData[i].firstBreakdown = []
+          data.push(projectListData[i]);
+        }
+      } else {
+        projectListData[i].firstBreakdown = []
+        data.push(projectListData[i]);
+      }
+    }
+    return data
+  }
 
   //Project selections
-  const handleProjectOpen = () => {
+  const handleProjectOpen = async () => {
+    const data = await fetchPhaseData();
+    setProjectListData([...data])
     if (localStorage.getItem('company')) {
       const currentCompanyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
       JSON.parse(localStorage.getItem('userDetails')).companies.forEach(company => {
@@ -518,6 +556,9 @@ function Header(props) {
     setCompanyOpen(false);
     setProjectOpen(false);
     setCurrentCompany({})
+    setCurrentProjectId(null)
+    setThirdBreakdown(null)
+    setSecondBreakdown(null)
   };
 
   // handle project Name
@@ -692,13 +733,12 @@ function Header(props) {
               }
             })
             .catch(function (error) {
-              console.log(error)
+
             });
         }
       }
     } else {
-      dispatch(levelBDownDetails([
-      ]))
+      // dispatch(levelBDownDetails([]))
     }
   };
 
@@ -724,32 +764,134 @@ function Header(props) {
       }
     } catch { }
   };
-  const [changeClass, setChangeClass] = React.useState(false);
-  const [phaseSelect, setPhaseSelect] = React.useState([]);
-  const [openPhace, setOpenPhace] = React.useState();
+  const fetchIncidentData = async () => {
 
-  const handlePhaseChange = (panel, phases) => (event, isExpanded) => {
-    setChangeClass(isExpanded ? true : false);
-    setPhaseSelect([phases]);
-    // console.log('isExpanded', isExpanded);
-    // console.log('changeClass', changeClass);
-    setOpenPhace(isExpanded ? panel : false);
-  };
+    const res = await Axios.get(`/api/v1/incidents/${fkid}/`);
+    const result = res.data.data.results;
 
-  const [openUnit, setOpenUnit] = React.useState();
-  const handleUnitChange = (panel) => (event, isExpanded) => {
-    setOpenUnit(isExpanded ? panel : false);
-  };
-
+  }
   useEffect(() => {
     fetchCallBack();
+    if (fkid) {
+      fetchIncidentData();
+    }
+
   }, [props.initialValues.projectName]);
 
   useEffect(() => {
     handleProjectList();
   }, [initialValues.projectName]);
 
+
+  const [changeClass, setChangeClass] = React.useState(false);
+  const [phaseSelect, setPhaseSelect] = React.useState([]);
+  const [openPhase, setOpenPhase] = React.useState();
+  const [secondBreakdown, setSecondBreakdown] = React.useState(null);
+  const [thirdBreakdown, setThirdBreakdown] = React.useState(null);
+
+  const handlePhaseChange = (panel, phases, index, id) => async (event, isExpanded) => {
+    if (openPhase !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 1 && projectListData[index].breakdown[1].structure && projectListData[index].breakdown[1].structure[0].url) {
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${projectListData[index].breakdown[1].structure[0].url}${id}`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setSecondBreakdown([...res.data.data.results])
+      }
+    } else {
+      setSecondBreakdown(null)
+    }
+    setChangeClass(isExpanded ? true : false);
+    setPhaseSelect([phases]);
+    // console.log('isExpanded', isExpanded);
+    // console.log('changeClass', changeClass);
+    setOpenPhase(isExpanded ? panel : false);
+  };
+
+  const [openUnit, setOpenUnit] = React.useState();
+  const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
+    if (openUnit !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 2 && projectListData[index].breakdown[2].structure && projectListData[index].breakdown[2].structure[0].url) {
+      const config = {
+        method: "get",
+        url: `${SSO_URL}/${projectListData[index].breakdown[1].structure[0].url}${id}`,
+        headers: HEADER_AUTH,
+      };
+      const res = await Axios(config);
+      if (res && res.status === 200) {
+        setThirdBreakdown([...res.data.data.results])
+      }
+    } else {
+      setThirdBreakdown(null)
+    }
+    setOpenUnit(isExpanded ? panel : false);
+  };
+
+  const handleProjectBreakdown = (index, phaseIndex, unitIndex, subUnitIndex, depth) => {
+    const data = [];
+    const temp = [];
+    data.push({
+      depth: '1L',
+      id: projectListData[index].firstBreakdown[phaseIndex].id,
+      label: 'Phase',
+      name: projectListData[index].firstBreakdown[phaseIndex].name
+    });
+    temp.push({
+      breakdownLabel: 'Phase',
+      breakdownValue: projectListData[index].firstBreakdown,
+      selectValue: ""
+    })
+    if (depth === '3L') {
+      data.push({
+        depth: '2L',
+        id: secondBreakdown[unitIndex].id,
+        unit: 'Unit',
+        name: secondBreakdown[unitIndex].name
+      });
+      data.push({
+        depth: '3L',
+        id: thirdBreakdown[subUnitIndex].id,
+        label: 'Work Area',
+        name: thirdBreakdown[subUnitIndex].name
+      })
+      temp.push({
+        breakdownLabel: 'Unit',
+        breakdownValue: secondBreakdown,
+        selectValue: ""
+      })
+      temp.push({
+        breakdownLabel: 'Work Area',
+        breakdownValue: thirdBreakdown,
+        selectValue: ""
+      })
+    }
+    if (depth === '2L') {
+      data.push({
+        depth: '2L',
+        id: secondBreakdown[unitIndex].id,
+        label: 'Unit',
+        name: secondBreakdown[unitIndex].name
+      });
+      temp.push({
+        breakdownLabel: 'Unit',
+        breakdownValue: secondBreakdown,
+        selectValue: ""
+      })
+    }
+    setLabelList(temp)
+    setBreakDownData(data)
+
+
+    localStorage.setItem('selectBreakdown', JSON.stringify(data));
+    localStorage.setItem('projectName', JSON.stringify(projectListData[index]))
+    dispatch(projectName(projectListData[index]))
+    dispatch(breakDownDetails(data))
+    handleProjectClose()
+  }
+
   const isTablet = useMediaQuery("(min-width:768px)");
+
 
   return (
     <AppBar
@@ -816,7 +958,6 @@ function Header(props) {
                     gutterBottom
                     variant="h5"
                     component="h2"
-                    className={classes.projectSelectionTitle}
                   >
                     Are you sure to switch another project?
                   </Typography>
@@ -864,7 +1005,7 @@ function Header(props) {
                       </g>
                     </g>
                   </g>
-                </svg> Select a project
+                </svg> Switch to a different project
               </DialogTitle>
               {/* <DialogTitle onClose={handleProjectClose}>
                 Select a Project
@@ -876,7 +1017,7 @@ function Header(props) {
                       <List>
                         <ListItem>
                           <ListItemAvatar>
-                            <img src={currentCompany ? currentCompany.logo : ""} alt="company logo" />
+                            <CardMedia src={company.logo} />
                           </ListItemAvatar>
                           <ListItemText
                             primary={currentCompany ? currentCompany.companyName : ""}
@@ -896,7 +1037,7 @@ function Header(props) {
                         >
                           <Card>
                             <CardContent className={classesm.cardActionAreaBox}>
-                              <div className={classesm.cardMediaBox} onClick={() => { handleProjectName(index) }}>
+                              <div className={classesm.cardMediaBox} onClick={() => { (value.breakdown && value.breakdown.length > 0) ? null : handleProjectName(index) }}>
                                 {(currentProjectId && currentProjectId === value.projectId) && (
                                   <span className={classesm.pinBoardIconSection}>
                                     <Tooltip title="Click here to go to pinned area" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
@@ -981,278 +1122,126 @@ function Header(props) {
                                 </span>
                               </div>
                               <div className={changeClass && phaseSelect.includes(`phase${index}`) ? classesm.sectionScrollingMax : classesm.sectionScrolling}>
-                                {/* First phase list */}
-                                <Accordion expanded={openPhace === `panel${index}1`} onChange={handlePhaseChange(`panel${index}1`, `phase${index}`)} defaultExpanded className={classesm.mainProjectMenuList}>
-                                  <AccordionSummary
-                                    aria-controls="panel1bh-content"
-                                    id="panel1bh-header"
-                                  >
-                                    <List className={classesm.listSection}>
-                                      <ListItem button className={classesm.phaseMenuList}>
-                                        <ListItemText primary="Off-Site" />
-                                        {openPhace === `panel${index}1` ? <RemoveIcon /> : <AddIcon />}
-                                      </ListItem>
-                                    </List>
-                                  </AccordionSummary>
-                                  <AccordionDetails className={classesm.subUnitSection}>
-                                    <Accordion expanded={openUnit === `panel${index}12`} onChange={handleUnitChange(`panel${index}12`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}12` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion expanded={openUnit === `panel${index}13`} onChange={handleUnitChange(`panel${index}13`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}13` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
+                                {value.firstBreakdown && (
+                                  <>
+                                    {value.firstBreakdown.map((phase, phaseIndex) => {
+                                      return (
+                                        <Accordion expanded={openPhase === `panel${index}${phaseIndex}`} onChange={handlePhaseChange(`panel${index}${phaseIndex}`, `phase${index}${phaseIndex}`, index, phase.id)} defaultExpanded className={classesm.mainProjectMenuList}>
+                                          <AccordionSummary
+                                            aria-controls="panel1bh-content"
+                                            id="panel1bh-header"
+                                          >
+                                            <List className={classesm.listSection}>
+                                              <ListItem button className={classesm.phaseMenuList} onClick={
+                                                (value.breakdown && !value.breakdown[1]) ? () => handleProjectBreakdown(index, phaseIndex, null, null, '1L') : null
+                                              }>
+                                                <ListItemText primary={phase.name} />
+                                                {value.breakdown && value.breakdown[1] && (
+                                                  <>
+                                                    {openPhase === `panel${index}${phaseIndex}` ? <RemoveIcon /> : <AddIcon />}
+                                                  </>
+                                                )}
+                                              </ListItem>
+                                            </List>
+                                          </AccordionSummary>
 
-                                  </AccordionDetails>
-                                </Accordion>
-                                {/* second phase list */}
-                                <Accordion expanded={openPhace === `panel${index}2`} onChange={handlePhaseChange(`panel${index}2`, `phase${index}`)} defaultExpanded className={classesm.mainProjectMenuList}>
-                                  <AccordionSummary
-                                    //expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1bh-content"
-                                    id="panel1bh-header"
-                                  //className="accordionHeaderSection"
-                                  >
-                                    <List className={classesm.listSection}>
-                                      <ListItem button className={classesm.phaseMenuList}>
-                                        <ListItemText primary="Stage-I" />
-                                        {openPhace === `panel${index}2` ? <RemoveIcon /> : <AddIcon />}
-                                      </ListItem>
-                                    </List>
-                                  </AccordionSummary>
-                                  <AccordionDetails className={classesm.subUnitSection}>
-                                    <Accordion expanded={openUnit === `panel${index}21`} onChange={handleUnitChange(`panel${index}21`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}21` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion expanded={openUnit === `panel${index}22`} onChange={handleUnitChange(`panel${index}22`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}22` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
+                                          <AccordionDetails className={classesm.subUnitSection}>
+                                            {(openPhase === `panel${index}${phaseIndex}` && secondBreakdown && secondBreakdown.length > 0) && (
+                                              <>
+                                                {secondBreakdown.map((unit, unitIndex) => (
 
-                                  </AccordionDetails>
-                                </Accordion>
+                                                  <Accordion expanded={openUnit === `panel${index}${phaseIndex}${unitIndex}`} onChange={handleUnitChange(`panel${index}${phaseIndex}${unitIndex}`, index, unit.id)}>
+                                                    <AccordionSummary
+                                                      aria-controls="panel1bh-content"
+                                                      id="panel1bh-header"
+                                                    >
+                                                      <List className={classesm.listSection}>
+                                                        <ListItem button className={classesm.unitMenuList} onClick={
+                                                          (value.breakdown && !value.breakdown[2]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, null, '2L') : null
+                                                        }>
+                                                          <ListItemText primary={unit.name} />
+                                                          {value.breakdown && value.breakdown[2] && (
+                                                            <>
+                                                              {openUnit === `panel${index}${phaseIndex}${unitIndex}` ? <RemoveIcon /> : <AddIcon />}
+                                                            </>
+                                                          )}
+                                                        </ListItem>
+                                                      </List>
+                                                    </AccordionSummary>
+                                                    {(openUnit === `panel${index}${phaseIndex}${unitIndex}` && thirdBreakdown && thirdBreakdown.length > 0) && (
+                                                      <AccordionDetails className={classesm.subUnitSection}>
+                                                        <List className={classesm.listSection}>
+                                                          {thirdBreakdown.map((subUnit, subUnitIndex) => (
+                                                            <ListItem button className={classesm.workAreaList} onClick={() => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, '3L')}>
+                                                              <ListItemText primary={subUnit.name} />
+                                                            </ListItem>
+                                                          ))}
+                                                        </List>
+                                                      </AccordionDetails>
+                                                    )}
+                                                  </Accordion>
+                                                ))}
+                                              </>
+                                            )}
 
-                                {/* Third phase list */}
-                                <Accordion expanded={openPhace === `panel${index}3`} onChange={handlePhaseChange(`panel${index}3`, `phase${index}`)} defaultExpanded className={classesm.mainProjectMenuList}>
-                                  <AccordionSummary
-                                    //expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1bh-content"
-                                    id="panel1bh-header"
-                                  //className="accordionHeaderSection"
-                                  >
-                                    <List className={classesm.listSection}>
-                                      <ListItem button className={classesm.phaseMenuList}>
-                                        <ListItemText primary="Stage-II" />
-                                        {openPhace === `panel${index}3` ? <RemoveIcon /> : <AddIcon />}
-                                      </ListItem>
-                                    </List>
-                                  </AccordionSummary>
-                                  <AccordionDetails className={classesm.subUnitSection}>
-                                    <Accordion expanded={openUnit === `panel${index}31`} onChange={handleUnitChange(`panel${index}31`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}31` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion expanded={openUnit === `panel${index}32`} onChange={handleUnitChange(`panel${index}32`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}32` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
+                                          </AccordionDetails>
+                                          {/* <AccordionDetails className={classesm.subUnitSection}>
+                                          <Accordion expanded={openUnit === `panel${index}12`} onChange={handleUnitChange(`panel${index}12`)}>
+                                            <AccordionSummary
+                                              aria-controls="panel1bh-content"
+                                              id="panel1bh-header"
+                                            >
+                                              <List className={classesm.listSection}>
+                                                <ListItem button className={classesm.unitMenuList}>
+                                                  <ListItemText primary="Unit-1 (200MW)" />
+                                                  {openUnit === `panel${index}12` ? <RemoveIcon /> : <AddIcon />}
+                                                </ListItem>
+                                              </List>
+                                            </AccordionSummary>
+                                            <AccordionDetails className={classesm.subUnitSection}>
+                                              <List className={classesm.listSection}>
+                                                <ListItem button className={classesm.workAreaList}>
+                                                  <ListItemText primary="Incident details" />
+                                                </ListItem>
+                                                <ListItem button className={classesm.workAreaList}>
+                                                  <ListItemText primary="Incident details" />
+                                                </ListItem>
+                                              </List>
+                                            </AccordionDetails>
+                                          </Accordion>
+                                          <Accordion expanded={openUnit === `panel${index}13`} onChange={handleUnitChange(`panel${index}13`)}>
+                                            <AccordionSummary
+                                              aria-controls="panel1bh-content"
+                                              id="panel1bh-header"
+                                            >
+                                              <List className={classesm.listSection}>
+                                                <ListItem button className={classesm.unitMenuList}>
+                                                  <ListItemText primary="Unit-1 (200MW)" />
+                                                  {openUnit === `panel${index}13` ? <RemoveIcon /> : <AddIcon />}
+                                                </ListItem>
+                                              </List>
+                                            </AccordionSummary>
+                                            <AccordionDetails className={classesm.subUnitSection}>
+                                              <List className={classesm.listSection}>
+                                                <ListItem button className={classesm.workAreaList}>
+                                                  <ListItemText primary="Incident details" />
+                                                </ListItem>
+                                                <ListItem button className={classesm.workAreaList}>
+                                                  <ListItemText primary="Incident details" />
+                                                </ListItem>
+                                                <ListItem button className={classesm.workAreaList}>
+                                                  <ListItemText primary="Incident details" />
+                                                </ListItem>
+                                              </List>
+                                            </AccordionDetails>
+                                          </Accordion>
 
-                                  </AccordionDetails>
-                                </Accordion>
-
-                                {/* Four phase list */}
-                                <Accordion expanded={openPhace === `panel${index}4`} onChange={handlePhaseChange(`panel${index}4`, `phase${index}`)} defaultExpanded className={classesm.mainProjectMenuList}>
-                                  <AccordionSummary
-                                    //expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1bh-content"
-                                    id="panel1bh-header"
-                                  //className="accordionHeaderSection"
-                                  >
-                                    <List className={classesm.listSection}>
-                                      <ListItem button className={classesm.phaseMenuList}>
-                                        <ListItemText primary="Off-Site" />
-                                        {openPhace === `panel${index}4` ? <RemoveIcon /> : <AddIcon />}
-                                      </ListItem>
-                                    </List>
-                                  </AccordionSummary>
-                                  <AccordionDetails className={classesm.subUnitSection}>
-                                    <Accordion expanded={openUnit === `panel${index}41`} onChange={handleUnitChange(`panel${index}41`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}41` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion expanded={openUnit === `panel${index}42`} onChange={handleUnitChange(`panel${index}42`)}>
-                                      <AccordionSummary
-                                        aria-controls="panel1bh-content"
-                                        id="panel1bh-header"
-                                      >
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.unitMenuList}>
-                                            <ListItemText primary="Unit-1 (200MW)" />
-                                            {openUnit === `panel${index}42` ? <RemoveIcon /> : <AddIcon />}
-                                          </ListItem>
-                                        </List>
-                                      </AccordionSummary>
-                                      <AccordionDetails className={classesm.subUnitSection}>
-                                        <List className={classesm.listSection}>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                          <ListItem button className={classesm.workAreaList}>
-                                            <ListItemText primary="Incident details" />
-                                          </ListItem>
-                                        </List>
-                                      </AccordionDetails>
-                                    </Accordion>
-
-                                  </AccordionDetails>
-                                </Accordion>
+                                        </AccordionDetails> */}
+                                        </Accordion>
+                                      )
+                                    })}
+                                  </>
+                                )}
                               </div>
                             </CardContent>
                           </Card>
@@ -1314,7 +1303,6 @@ function Header(props) {
             </Dialog>
           </div>
           <Hidden smDown>
-            {/* <Headerbox filterOpen={isPopUpOpen} handleClick={handleClick} setIsPopUpOpen={setIsPopUpOpen}/> */}
 
             <div>
               <IconButton
