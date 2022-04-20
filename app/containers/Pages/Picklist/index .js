@@ -319,12 +319,12 @@ function Picklists(props) {
           <table id="picklistmanage_table" className="table table-striped table-bordered datatable_section width100">
             <thead>
               <tr>
-                <th>List Key</th>
-                <th>List Label</th>
-                <th>Type</th>
-                <th>Parent</th>
-                <th>System Defined</th>
-                <th>Action</th>
+                <th style={{ wordBreak: "normal" }}>List Key</th>
+                <th style={{ wordBreak: "normal" }}>List Label</th>
+                <th style={{ wordBreak: "normal" }}>Type</th>
+                <th style={{ wordBreak: "normal" }}>Parent</th>
+                <th style={{ wordBreak: "normal" }}>System Defined</th>
+                <th style={{ wordBreak: "normal" }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -333,7 +333,7 @@ function Picklists(props) {
                 <>
                   {picklists.map(listItem => (
                     <tr>
-                      <td>
+                      <td style={{ wordBreak: "normal" }}>
                         {listItem.listName}
                         {/* <Editor
                           type="text"
@@ -345,7 +345,7 @@ function Picklists(props) {
                           edit={listItem.isSystem == 0}
                         /> */}
                       </td>
-                      <td>
+                      <td style={{ wordBreak: "normal" }}>
                         <Editor
                           type="text"
                           id={listItem.id}
@@ -357,7 +357,7 @@ function Picklists(props) {
                         />
                       </td>
 
-                      <td>
+                      <td style={{ wordBreak: "normal" }}>
                         {listItem.listType}
                         {/* <Editor
                         type="select"
@@ -370,13 +370,13 @@ function Picklists(props) {
                         isvalidate={isvalidate}
                       /> */}
                       </td>
-                      <td>
+                      <td style={{ wordBreak: "normal" }}>
                         {listItem.parentList === 0 ? 'Parent' : listItem.parentList}
                       </td>
-                      <td>
-                        {listItem.isSystem == 0 ? 'Yes' : 'No'}
+                      <td style={{ wordBreak: "normal" }}>
+                        {listItem.isSystem == 0 ? 'No' : 'Yes'}
                       </td>
-                      <td>
+                      <td style={{ wordBreak: "normal" }}>
                         <Link
                           to={'/app/pages/picklist/value/' + listItem.id}
                           onClick={redirectto}
@@ -388,7 +388,7 @@ function Picklists(props) {
                   ))}
                 </>
                 :
-                <p style={{ paddingTop: '15px', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>No data found!</p>
+                <>{(searchFilter.search || searchFilter.filter) && (<p style={{ paddingTop: '15px', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>No data found!</p>)}</>
               }
 
             </tbody>
