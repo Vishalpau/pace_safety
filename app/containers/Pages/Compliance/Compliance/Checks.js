@@ -365,7 +365,7 @@ const Checks = (props) => {
   }
 
 
-  const radioDecide = ["Yes", "No", "NA"];
+  const radioDecide = ["Yes", "No", "N/A"];
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
     console.log(valueId);
     console.log(panel);
@@ -690,7 +690,6 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id, type = '') => {
-    console.log(id, 'indeex')
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -700,16 +699,12 @@ const Checks = (props) => {
             for (let j = 0; j < value; j++) 
               starvar += "*"
             value = starvar
-            console.log(value, 'Star')
-            // setValueStar(value);
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value, '%%%')
           }
           else if (type === '1-10') {
             value = value
-            console.log(value, 'counts')
           }
         }
         temp[i][field] = value;
@@ -1002,9 +997,10 @@ const Checks = (props) => {
                                                 <Grid item md={4} sm={4} xs={12}>
                                                   <Rating
                                                     name={`simple-controlled ${value.id}`}
-                                                    value={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
+                                                    defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue !== null) {
+                                                        alert(newValue)
                                                         handleChangeData(
                                                           newValue,
                                                           "score",
@@ -1266,7 +1262,7 @@ const Checks = (props) => {
                                                       type="file"
                                                       id="evidence"
                                                       name="evidence"
-                                                      accept={`.png, .jpg .mp4, .mov, .flv, .avi, .mkv`}
+                                                      accept={`.png, .jpg, .jpeg, .mp4, .mov, .flv, .avi, .mkv`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
@@ -1433,11 +1429,13 @@ const Checks = (props) => {
                                               {value.scoreType === "Stars" &&
                                               
                                                 <Grid item md={4} sm={4} xs={12}>
+                                                  {console.log(valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ?  showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : "")}
                                                   <Rating
                                                     name={`simple-controlled ${value.id}`}
-                                                    value={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
+                                                    defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ?  showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue != null) {
+                                                        alert(newValue)
                                                         handleChangeData(
                                                           newValue,
                                                           "score",

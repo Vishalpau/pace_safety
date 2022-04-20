@@ -627,7 +627,7 @@ const ComplianceDetails = () => {
                                     id="incident-type"
                                     label={data.breakDownLabel}
                                     value={data.selectValue.id || ""}
-                                    disabled={data.breakDownData.length === 0}
+                                    disabled={data.selectValue.id != ''  }
                                     onChange={(e) => {
                                       handleBreakdown(
                                         e,
