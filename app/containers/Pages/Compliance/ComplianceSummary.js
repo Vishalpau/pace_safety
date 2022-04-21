@@ -308,27 +308,25 @@ function ComplianceSummary(props) {
     setMyAudioOpen(false);
   };
 
-  const fetchCheklistData = async () => {
+  const fetchCheklistData = async (id) => {
     const res = await api.get(
       `/api/v1/core/checklists/compliance-groups/${projectId}/`
       // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
-    await fetchComplianceData(result);
+    await fetchComplianceData(result,id);
   };
 
-  const fetchComplianceData = async (data) => {
-    let complianceId = localStorage.getItem("fkComplianceId");
+  const fetchComplianceData = async (data,id) => {
+    // let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
-      .get(`/api/v1/audits/${complianceId}/`)
+      .get(`/api/v1/audits/${id}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result, 'mmmmmmmmmmmmmmmmmmmmmmmmmmm')
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
         let tempSubGroup = [];
-
         for (let j = 0; j < data.length; j++) {
           for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
@@ -336,7 +334,6 @@ function ComplianceSummary(props) {
             }
           }
         }
-
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
             tempGroup[j]["checkListValues"].map((value) => {
@@ -361,6 +358,7 @@ function ComplianceSummary(props) {
       .catch((error) => console.log(error));
   };
 
+  console.log(complianceData.fkProjectStructureIds, 'groupData')
 
   useEffect(() => {
     console.log(Array.isArray(groupData));
@@ -515,7 +513,7 @@ function ComplianceSummary(props) {
   useEffect(() => {
     if (id) {
       auditQueData(id)
-      fetchCheklistData();
+      fetchCheklistData(id);
       handelActionTracker()
       fetchMatrixData()
     }
@@ -992,7 +990,6 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
-                                        {console.log(quesData,'groupData')}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel

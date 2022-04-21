@@ -683,7 +683,7 @@ const Checks = (props) => {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
-      setErrorBoundary("Please answer all the compliance questions and close the all accordion");
+      setErrorBoundary("Please answer all the compliance questions and close all accordions");
     }
 
   };
