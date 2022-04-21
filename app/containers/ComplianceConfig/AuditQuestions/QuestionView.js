@@ -210,6 +210,8 @@ const QuestionView = (props) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+
+
   const fetchAuditDetails = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
@@ -240,7 +242,8 @@ const QuestionView = (props) => {
   };
 
   const handelWorkArea = async (complianceData) => {
-    
+    console.log(complianceData.fkProjectStructureIds, 'groupData')
+
     if(complianceData.fkProjectStructureIds){
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -266,6 +269,7 @@ const QuestionView = (props) => {
         `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
         }/${workAreaId[1]}/`
       );
+      console.log(workArea,'workArea')
       structName.push(workArea.data.data.results[0]["structureName"]);
     }
     setProjectStructName(structName);

@@ -440,7 +440,7 @@ const Checks = (props) => {
                 a.check = false;
               }
             })
-            
+
           }
           else {
             const postApiData = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
@@ -697,13 +697,13 @@ const Checks = (props) => {
         if (field === 'score') {
           if (type === 'Stars') {
             let starvar = ''
-            for (let j = 0; j < value; j++) 
+            for (let j = 0; j < value; j++)
               starvar += "*"
             value = starvar
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value,'uuuuuuuu')
+            console.log(value, 'uuuuuuuu')
           }
           else if (type === '1-10') {
             value = value
@@ -1000,7 +1000,7 @@ const Checks = (props) => {
                                                     defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue !== null) {
-                                                        
+
                                                         handleChangeData(
                                                           newValue,
                                                           "score",
@@ -1216,54 +1216,49 @@ const Checks = (props) => {
                                                 </Table>
                                               </Grid>
                                               {(value.attachment === "Yes") &&
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                                className={classes.formBox}
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  sm={12}
+                                                  xs={12}
+                                                  className={classes.formBox}
                                                 >
-                                                <FormLabel
-                                                  className="checkRadioLabel"
-                                                  component="legend"
-                                                >
-                                                  Document{" "}
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  
+                                                  <FormLabel
+                                                    className="checkRadioLabel"
+                                                    component="legend"
+                                                  >
+                                                    Document{" "}
+                                                  </FormLabel>
+                                                  <Typography className="viewLabelValue">
+
                                                     <input
                                                       type="file"
                                                       id="attachment"
                                                       name="attachment"
                                                       // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
-                                                      accept={`.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf`}
+                                                      accept={`.xls , .xlsx, .ppt, .pptx, .doc, .docx, .text , .pdf`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  
-                                                  {showCheckData.filter(cd => cd.question == value.question)[0].attachment != null && <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />}
-                                                  {/* {showCheckData.filter(cd => cd.question == value.question).length && 
-                                                    
-                                                     */}
-                                                </Typography>
-                                              </Grid>}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+                                                  </Typography>
+                                                </Grid>}
                                               {(value.evidenceType === "Yes") &&
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                                className={classes.formBox}
-                                              >
-                                                <FormLabel
-                                                  className="checkRadioLabel"
-                                                  component="legend"
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  sm={12}
+                                                  xs={12}
+                                                  className={classes.formBox}
                                                 >
-                                                  Evidence{" "}
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                  
+                                                  <FormLabel
+                                                    className="checkRadioLabel"
+                                                    component="legend"
+                                                  >
+                                                    Evidence{" "}
+                                                  </FormLabel>
+                                                  <Typography className="viewLabelValue">
                                                     <input
                                                       type="file"
                                                       id="evidence"
@@ -1273,13 +1268,9 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  
-                                                </Typography>
-                                                
-                                                {showCheckData.filter(cd => cd.question == value.question)[0].attachment != null && <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />}
-                                              </Grid>}
-
-
+                                                  </Typography>
+                                                  {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+                                                </Grid>}
                                             </Grid>
                                           </AccordionDetails>
                                         </Accordion>
@@ -1433,17 +1424,17 @@ const Checks = (props) => {
                                                   Score
                                                 </FormLabel>
                                               </Grid>
-                                             
+
                                               {value.scoreType === "Stars" &&
-                                              
+
                                                 <Grid item md={4} sm={4} xs={12}>
-                                                  {console.log(valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ?  showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : "")}
+                                                  {console.log(valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : "")}
                                                   <Rating
                                                     name={`simple-controlled ${value.id}`}
-                                                    defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ?  showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
+                                                    defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
                                                     onChange={(event, newValue) => {
                                                       if (newValue != null) {
-                                                       
+
                                                         handleChangeData(
                                                           newValue,
                                                           "score",
@@ -1454,15 +1445,15 @@ const Checks = (props) => {
                                                         setValueStar(newValue);
                                                       }
                                                     }}
-                                                    // onChange={(e) =>
-                                                    //   handleChangeData(
-                                                    //     e.target.value,
-                                                    //     "findings",
-                                                    //     index,
-                                                    //     value.id,
-                                                    //     value.scoreType
-                                                    //   )
-                                                    // }
+                                                  // onChange={(e) =>
+                                                  //   handleChangeData(
+                                                  //     e.target.value,
+                                                  //     "findings",
+                                                  //     index,
+                                                  //     value.id,
+                                                  //     value.scoreType
+                                                  //   )
+                                                  // }
                                                   />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
@@ -1660,63 +1651,66 @@ const Checks = (props) => {
                                                 </Table>
                                               </Grid>
                                               {(value.attachment === "Yes") &&
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                                className={classes.formBox}
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  sm={12}
+                                                  xs={12}
+                                                  className={classes.formBox}
                                                 >
-                                                <FormLabel
-                                                  className="checkRadioLabel"
-                                                  component="legend"
-                                                >
-                                                  Document{" "}
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
+                                                  <FormLabel
+                                                    className="checkRadioLabel"
+                                                    component="legend"
+                                                  >
+                                                    Document{" "}
+                                                  </FormLabel>
+                                                  <Typography className="viewLabelValue">
 
-                                                  {/* {(value.attachment === "Yes") && */}
+                                                    {/* {(value.attachment === "Yes") && */}
                                                     <input
                                                       type="file"
                                                       name="attachment"
                                                       id="evidence"
                                                       // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
-                                                      accept={`.xls , .xlsx , .ppt , .pptx, .doc, .docx, .text , .pdf`}
+                                                      accept={`.xls , .xlsx, .ppt, .pptx, .doc, .docx, .text , .pdf`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  {/* } */}
-                                                </Typography>
-                                              </Grid>}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+
+                                                    {/* } */}
+                                                  </Typography>
+                                                </Grid>}
                                               {(value.evidenceType === "Yes") &&
-                                              <Grid
-                                                item
-                                                md={12}
-                                                sm={12}
-                                                xs={12}
-                                                className={classes.formBox}
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  sm={12}
+                                                  xs={12}
+                                                  className={classes.formBox}
                                                 >
-                                                <FormLabel
-                                                  className="checkRadioLabel"
-                                                  component="legend"
-                                                >
-                                                  Evidence{" "}
-                                                </FormLabel>
-                                                <Typography className="viewLabelValue">
-                                                 
+                                                  <FormLabel
+                                                    className="checkRadioLabel"
+                                                    component="legend"
+                                                  >
+                                                    Evidence{" "}
+                                                  </FormLabel>
+                                                  <Typography className="viewLabelValue">
+
                                                     <input
                                                       name="evidence"
                                                       type="file"
                                                       id="attachment"
-                                                      accept={`.png, .jpg .mp4, .mov, .flv, .avi, .mkv`}
+                                                      accept={`.png, .jpg, .jpeg, .mp4, .mov, .flv, .avi, .mkv`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                  
-                                                </Typography>
-                                              </Grid>}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+
+                                                  </Typography>
+                                                </Grid>}
                                               {/* <Grid item md={12} sm={12} xs={12} className={classes.formBox}>
                                                 <FormLabel className="checkRadioLabel" component="legend">Attachment </FormLabel>
                                                 <Typography className="viewLabelValue">

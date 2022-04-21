@@ -361,7 +361,6 @@ function ComplianceSummary(props) {
       .catch((error) => console.log(error));
   };
 
-  console.log(complianceData.fkProjectStructureIds, 'groupData')
 
   useEffect(() => {
     console.log(Array.isArray(groupData));
@@ -993,7 +992,7 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
-                                        {console.log(quesData,'quesData')}
+                                        {console.log(quesData,'groupData')}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
