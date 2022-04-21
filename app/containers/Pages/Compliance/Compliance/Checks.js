@@ -1282,7 +1282,7 @@ const Checks = (props) => {
                                                       }}
                                                     />
                                                   </Typography>
-                                                  {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} /> : ''}
+                                                  {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment} /> : ''}
                                                 </Grid>}
                                             </Grid>
                                           </AccordionDetails>
@@ -1730,7 +1730,7 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} /> : ''}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment} /> : ''}
 
                                                   </Typography>
                                                 </Grid>}

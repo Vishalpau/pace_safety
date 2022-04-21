@@ -219,9 +219,10 @@ const QuestionView = (props) => {
     const res = await api.get(
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=`
     );
-    let result = res.data.data.results[0];
+    let result = res.data.data.results.filter(i => i.id == id)[0];
     await handelWorkArea(result);
     await setAuditDetial(result);
+    
     await setIsLoading(true);
   };
 
@@ -579,6 +580,7 @@ const QuestionView = (props) => {
                         Question
                       </Typography>
                       <Typography className="viewLabelValue">
+                        {console.log(auditDetial,'000')}
                         {auditDetial.question !== ""
                           ? auditDetial.question
                           : "-"}
