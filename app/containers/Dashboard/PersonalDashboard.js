@@ -1089,7 +1089,8 @@ function PersonalDashboard(props) {
     localStorage.setItem('projectName', JSON.stringify(projectListData[index]))
     dispatch(projectName(projectListData[index]))
     dispatch(breakDownDetails(data))
-    handleProjectClose()
+    setProjectOpen(false)
+    redirectionAccount()
   }
 
 

@@ -704,6 +704,7 @@ function Header(props) {
               ...removeSelectBreakDown,
               { depth: item.depth, id: item.id, name: item.name, label: label },
             ]);
+            setBreakDownData([{ depth: item.depth, id: item.id, name: item.name, label: label }])
             dispatch(breakDownDetails([
               ...removeSelectBreakDown,
               { depth: item.depth, id: item.id, name: item.name, label: label },
@@ -732,6 +733,10 @@ function Header(props) {
               ...selectBreakDown,
               { depth: item.depth, id: item.id, name: item.name, label: label },
             ]))
+            setBreakDownData([
+              ...selectBreakDown,
+              { depth: item.depth, id: item.id, name: item.name, label: label }
+            ])
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
