@@ -415,6 +415,8 @@ function ComplianceSummary(props) {
     }
   };
 
+  console.log(complianceData.fkProjectStructureIds)
+
   const fetchNotificationSent = async (notifyTo) => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
