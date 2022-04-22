@@ -219,9 +219,10 @@ const QuestionView = (props) => {
     const res = await api.get(
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${fkProjectId}&projectStructure=`
     );
-    let result = res.data.data.results[0];
+    let result = res.data.data.results.filter(i => i.id == id)[0];
     await handelWorkArea(result);
     await setAuditDetial(result);
+    
     await setIsLoading(true);
   };
 
@@ -256,23 +257,33 @@ const QuestionView = (props) => {
         : null;
     let structName = [];
     let projectStructId = complianceData.fkProjectStructureIds.split(":");
-    for (let key in projectStructId) {
-      let workAreaId = [
-        projectStructId[key].substring(0, 2),
-        projectStructId[key].substring(2),
-      ];
-      const api_work_area = axios.create({
-        baseURL: SSO_URL,
-        headers: HEADER_AUTH,
-      });
-      const workArea = await api_work_area.get(
-        `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
-        }/${workAreaId[1]}/`
-      );
-      console.log(workArea,'workArea')
-      structName.push(workArea.data.data.results[0]["structureName"]);
-    }
-    setProjectStructName(structName);
+    if (!projectStructId.some(projectStructId => ((projectStructId == 'All')))){
+      for (let key in projectStructId) {
+        let workAreaId = [
+          projectStructId[key].substring(0, 2),
+          projectStructId[key].substring(2),
+        ];
+        const api_work_area = axios.create({
+          baseURL: SSO_URL,
+          headers: HEADER_AUTH,
+        });
+        const workArea = await api_work_area.get(
+          `/api/v1/companies/${fkCompanyId}/projects/${projectId}/projectstructure/${workAreaId[0]
+          }/${workAreaId[1]}/`
+        );
+        console.log(structName,'structName')
+        structName.push(workArea.data.data.results[0]["structureName"]);
+      }
+      setProjectStructName(structName);
+      }
+      else{
+        // setFetchSelectBreakDownList
+        
+        let selectValue = {}
+        selectValue.id = 0
+        // let breakDownData = []
+        setProjectStructName(projectStructId.map((d) => d))
+      }
   };
 }
 
@@ -569,6 +580,7 @@ const QuestionView = (props) => {
                         Question
                       </Typography>
                       <Typography className="viewLabelValue">
+                        {console.log(auditDetial,'000')}
                         {auditDetial.question !== ""
                           ? auditDetial.question
                           : "-"}

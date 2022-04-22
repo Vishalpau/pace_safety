@@ -683,7 +683,7 @@ const Checks = (props) => {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
-      setErrorBoundary("Please answer all the compliance questions and close the all accordion");
+      setErrorBoundary("Please answer all the compliance questions and close all accordions");
     }
 
   };
@@ -985,45 +985,52 @@ const Checks = (props) => {
                                                   className="formControl"
                                                 />
                                               </Grid>
-                                              <Grid item md={12} sm={12} xs={12}>
-                                                <FormLabel
-                                                  className="checkRadioLabel marginB5"
-                                                  component="legend"
-                                                >
-                                                  Score
-                                                </FormLabel>
-                                              </Grid>
                                               {value.scoreType === "Stars" &&
-                                                <Grid item md={4} sm={4} xs={12}>
-                                                  <Rating
-                                                    name={`simple-controlled ${value.id}`}
-                                                    defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
-                                                    onChange={(event, newValue) => {
-                                                      if (newValue !== null) {
+                                                <Grid item md={12} sm={12} xs={12}>
+                                                  <FormLabel
+                                                    className="checkRadioLabel marginB5"
+                                                    component="legend"
+                                                  >
+                                                    Score
+                                                  </FormLabel>
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <Rating
+                                                      name={`simple-controlled ${value.id}`}
+                                                      defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
+                                                      onChange={(event, newValue) => {
+                                                        if (newValue !== null) {
 
-                                                        handleChangeData(
-                                                          newValue,
-                                                          "score",
-                                                          index,
-                                                          value.id,
-                                                          value.scoreType,
-                                                        )
-                                                        setValueStar(newValue);
-                                                      }
-                                                    }}
-                                                  // onChange={(e) =>
-                                                  //   handleChangeData(
-                                                  //     e.target.value,
-                                                  //     "findings",
-                                                  //     index,
-                                                  //     value.id,
-                                                  //     value.scoreType
-                                                  //   )
-                                                  // }
-                                                  />
-                                                </Grid>}
+                                                          handleChangeData(
+                                                            newValue,
+                                                            "score",
+                                                            index,
+                                                            value.id,
+                                                            value.scoreType,
+                                                          )
+                                                          setValueStar(newValue);
+                                                        }
+                                                      }}
+                                                    // onChange={(e) =>
+                                                    //   handleChangeData(
+                                                    //     e.target.value,
+                                                    //     "findings",
+                                                    //     index,
+                                                    //     value.id,
+                                                    //     value.scoreType
+                                                    //   )
+                                                    // }
+                                                    />
+                                                  </Grid>
+                                                </Grid>
+                                              }
                                               {value.scoreType === "1-10" &&
                                                 <Grid item md={4} sm={4} xs={12}>
+                                                  <FormLabel
+                                                    className="checkRadioLabel marginB5"
+                                                    component="legend"
+                                                  >
+                                                    Score
+                                                  </FormLabel>
                                                   <FormControl
                                                     variant="outlined"
                                                     className="formControl"
@@ -1064,6 +1071,12 @@ const Checks = (props) => {
                                                 </Grid>}
                                               {value.scoreType === "%" &&
                                                 <Grid item md={4} sm={4} xs={12}>
+                                                  <FormLabel
+                                                    className="checkRadioLabel marginB5"
+                                                    component="legend"
+                                                  >
+                                                    Score
+                                                  </FormLabel>
                                                   <TextField
                                                     label="Percentage"
                                                     name="performancerating"
@@ -1241,7 +1254,7 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} /> : ''}
                                                   </Typography>
                                                 </Grid>}
                                               {(value.evidenceType === "Yes") &&
@@ -1269,7 +1282,7 @@ const Checks = (props) => {
                                                       }}
                                                     />
                                                   </Typography>
-                                                  {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+                                                  {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment} /> : ''}
                                                 </Grid>}
                                             </Grid>
                                           </AccordionDetails>
@@ -1416,48 +1429,52 @@ const Checks = (props) => {
                                                   }
                                                 />
                                               </Grid>
-                                              <Grid item md={12} sm={12} xs={12}>
-                                                <FormLabel
-                                                  className="checkRadioLabel marginB5"
-                                                  component="legend"
-                                                >
-                                                  Score
-                                                </FormLabel>
-                                              </Grid>
-
                                               {value.scoreType === "Stars" &&
+                                                <Grid item md={12} sm={12} xs={12}>
+                                                  <FormLabel
+                                                    className="checkRadioLabel marginB5"
+                                                    component="legend"
+                                                  >
+                                                    Score
+                                                  </FormLabel>
+                                                  <Grid item md={4} sm={4} xs={12}>
+                                                    <Rating
+                                                      name={`simple-controlled ${value.id}`}
+                                                      defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
+                                                      onChange={(event, newValue) => {
+                                                        if (newValue != null) {
 
-                                                <Grid item md={4} sm={4} xs={12}>
-                                                  {console.log(valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : "")}
-                                                  <Rating
-                                                    name={`simple-controlled ${value.id}`}
-                                                    defaultValue={valueStar[index] != undefined ? valueStar[index] : showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score.split('').length : ""}
-                                                    onChange={(event, newValue) => {
-                                                      if (newValue != null) {
+                                                          handleChangeData(
+                                                            newValue,
+                                                            "score",
+                                                            index,
+                                                            value.id,
+                                                            value.scoreType
+                                                          )
+                                                          setValueStar(newValue);
+                                                        }
+                                                      }}
+                                                    // onChange={(e) =>
+                                                    //   handleChangeData(
+                                                    //     e.target.value,
+                                                    //     "findings",
+                                                    //     index,
+                                                    //     value.id,
+                                                    //     value.scoreType
+                                                    //   )
+                                                    // }
+                                                    />
+                                                  </Grid>
 
-                                                        handleChangeData(
-                                                          newValue,
-                                                          "score",
-                                                          index,
-                                                          value.id,
-                                                          value.scoreType
-                                                        )
-                                                        setValueStar(newValue);
-                                                      }
-                                                    }}
-                                                  // onChange={(e) =>
-                                                  //   handleChangeData(
-                                                  //     e.target.value,
-                                                  //     "findings",
-                                                  //     index,
-                                                  //     value.id,
-                                                  //     value.scoreType
-                                                  //   )
-                                                  // }
-                                                  />
                                                 </Grid>}
                                               {value.scoreType === "1-10" &&
                                                 <Grid item md={4} sm={4} xs={12}>
+                                                  <FormLabel
+                                                    className="checkRadioLabel marginB5"
+                                                    component="legend"
+                                                  >
+                                                    Score
+                                                  </FormLabel>
                                                   <FormControl
                                                     variant="outlined"
                                                     className="formControl"
@@ -1498,6 +1515,12 @@ const Checks = (props) => {
 
                                               {value.scoreType === "%" &&
                                                 <Grid item md={4} sm={4} xs={12}>
+                                                  <FormLabel
+                                                    className="checkRadioLabel marginB5"
+                                                    component="legend"
+                                                  >
+                                                    Score
+                                                  </FormLabel>
                                                   <TextField
                                                     label="Percentage"
                                                     name="performancerating"
@@ -1677,7 +1700,7 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} /> : ''}
 
                                                     {/* } */}
                                                   </Typography>
@@ -1707,7 +1730,7 @@ const Checks = (props) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
                                                     />
-                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].attachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].attachment} />: ''}
+                                                    {(showCheckData.filter(cd => cd.question == value.question).length && showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment != null) ? <Attachment value={showCheckData.filter(cd => cd.question == value.question)[0].mediaAttachment} /> : ''}
 
                                                   </Typography>
                                                 </Grid>}
