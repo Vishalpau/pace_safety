@@ -338,7 +338,6 @@ function ComplianceSummary(props) {
             }
           }
         }
-        console.log(tempGroup);
 
         for (let i = 0; i < subGroupIds.length; i++) {
           for (let j = 0; j < tempGroup.length; j++) {
@@ -416,14 +415,15 @@ function ComplianceSummary(props) {
     return fetchProjectId[0].projectName;
   };
 
+
+
   const handleComplianceStatusChange = () => {
+    console.log(complianceData.id,'complianceData')
     if (complianceData.performanceSummary !== null) {
       setCompliance(true);
     } else {
       history.push(
-        `/app/pages/compliance/compliance-details/${localStorage.getItem(
-          "fkComplianceId"
-        )}`
+        `/app/pages/compliance/compliance-details/${complianceData.id}`
       );
     }
   };
@@ -1038,7 +1038,6 @@ function ComplianceSummary(props) {
                                         <Grid container spacing={3}>
                                           {result.subGroups.map(
                                             value => {
-                                              // console.log(value, 'keyyyyyy vaaaaaaaaaluuuuuuue');
                                               return (
                                                 <Grid
                                                   item
@@ -1052,9 +1051,7 @@ function ComplianceSummary(props) {
                                                   >
                                                   </FormLabel>
                                                   <FormGroup>
-                                                    {/* {value['checkListValues'].map((value, i) => { */}
-                                                    {/* // console.log(value, '20000000000000'); */}
-                                                    {/* return ( */}
+                                              
                                                     <FormControlLabel
                                                       //className={classes.labelValue}
                                                       className="checkedUnclick"
