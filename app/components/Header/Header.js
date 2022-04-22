@@ -857,6 +857,7 @@ function Header(props) {
 
   const [openUnit, setOpenUnit] = React.useState();
   const handleUnitChange = (panel, index, id) => async (event, isExpanded) => {
+    console.log(projectListData[index].breakdown[2].structure[0].ur, 'hey')
     if (openUnit !== panel && projectListData[index].breakdown && projectListData[index].breakdown.length > 2 && projectListData[index].breakdown[2].structure && projectListData[index].breakdown[2].structure[0].url) {
       const config = {
         method: "get",
