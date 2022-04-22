@@ -229,7 +229,6 @@ function ComplianceSummary(props) {
   const [result, setResult] = useState({});
 
   useEffect(() => {
-    console.log(result);
   }, [result])
 
   const [expanded, setExpanded] = React.useState("panel1");
@@ -324,8 +323,6 @@ function ComplianceSummary(props) {
   };
 
   const fetchComplianceData = async (data,id) => {
-    // let complianceId = localStorage.getItem("fkComplianceId");
-    // console.log(data); 
     const res = await api
       .get(`/api/v1/audits/${id}/`)
       .then((response) => {
@@ -355,23 +352,18 @@ function ComplianceSummary(props) {
             });
           }
         }
-
-        // console.log(tempGroup, 'tempGroupt');
-        // console.log(tempSubGroup, 'tempSubGroup');
-
         setGroupData(tempGroup);
         setSubGroupData(tempSubGroup);
         setComplianceData(result);
         handelWorkArea(result);
         handleTeamName(result.inspectionTeam);
-        fetchNotificationSent(result.notifyTo);
+        fetchNotificationSent(result.notifyTo, result.fkProjectStructureIds);
         setIsLoading(true);
       })
       .catch((error) => console.log(error));
   };
 
   useEffect(() => {
-    console.log(Array.isArray(groupData));
   }, [groupData])
 
   const handelWorkArea = async (complianceData) => {
@@ -416,7 +408,6 @@ function ComplianceSummary(props) {
 
 
   const handleComplianceStatusChange = () => {
-    console.log(complianceData.id,'complianceData')
     if (complianceData.performanceSummary !== null) {
       setCompliance(true);
     } else {
@@ -426,9 +417,9 @@ function ComplianceSummary(props) {
     }
   };
 
-  console.log(complianceData.fkProjectStructureIds)
 
-  const fetchNotificationSent = async (notifyTo) => {
+  const fetchNotificationSent = async (notifyTo, fkProjectStructure ) => {
+
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
@@ -446,7 +437,7 @@ function ComplianceSummary(props) {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${complianceData.fkProjectStructureIds}`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${fkProjectStructure}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -533,7 +524,6 @@ function ComplianceSummary(props) {
   }, []);
 
   useEffect(() => {
-    console.log(subGroupData, 'subgroupData');
   }, [subGroupData])
 
   return (
