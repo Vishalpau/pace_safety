@@ -695,15 +695,16 @@ function PersonalDashboard(props) {
     setCompanyId(e)
     localStorage.setItem("company", JSON.stringify(companeyDetails));
     let newData = companyListData[key];
-    if (newData.projects.length === 1) {
-      setProjectListData(newData.projects[0]);
-      setOpen(false);
-      let data = newData.projects[0];
-      dispatch(projectName(data));
-      localStorage.setItem("projectName", JSON.stringify(data));
+    // if (newData.projects.length === 1) {
+    //   setProjectListData(newData.projects[0]);
+    //   setOpen(false);
+    //   let data = newData.projects[0];
+    //   dispatch(projectName(data));
+    //   localStorage.setItem("projectName", JSON.stringify(data));
 
 
-    } else if (newData.projects.length > 1) {
+    // }
+    if (newData.projects.length > 0) {
       // setProjectListData(newData.projects);
       handleProjectOpen(newData.projects);
       setOpen(false);
@@ -1274,6 +1275,11 @@ function PersonalDashboard(props) {
                 >
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
+                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <IconButton onClick={() => handleClose()}>
+                          <CloseIcon />
+                        </IconButton>
+                      </div>
                       <Grid container spacing={4}>
                         <Grid item md={12} sm={12}>
                           {/* className={classNames(classes.groupSection, classes.companySelection)} */}
