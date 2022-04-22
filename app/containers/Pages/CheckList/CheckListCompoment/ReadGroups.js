@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate }) => {
+const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate, group }) => {
 
     const handelParentShow = (value) => {
         if (value == 0) {
@@ -51,7 +51,7 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate }) => {
                 <p>{value.checkListGroupName}</p>
             </TableCell>
             <TableCell className={classes.tabelBorder}>
-                <p>{handelParentShow(value.parentGroup)}</p>
+                <p>{group ? group.name : handelParentShow(value.parentGroup)}</p>
             </TableCell>
             <TableCell className={classes.tabelBorder}>
                 <Switch

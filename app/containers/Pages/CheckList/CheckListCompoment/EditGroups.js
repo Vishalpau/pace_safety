@@ -23,8 +23,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setViewUpdate }) => {
+    const [error, setError] = useState(false);
 
-    const [editForm, setEditForm] = useState({})
+    const [editForm, setEditForm] = useState({
+        checkListGroupName: value.checkListGroupName,
+        parentGroup: value.parentGroup
+    })
 
     const handelParentShow = (value) => {
         if (value == 0) {
@@ -50,14 +54,20 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
     }
 
     const handelUpdate = async (checkListId, checkListGroupId) => {
-        editForm["fkCheckListId"] = checkListId
-        editForm["checklistgroupId"] = checkListGroupId
-        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
-        const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
-        if (res.status == 200) {
-            setViewUpdate(!viewUpdate)
+        if (editForm.checkListGroupName.trim()) {
+            editForm["fkCheckListId"] = checkListId
+            editForm["checklistgroupId"] = checkListGroupId
+            editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+            const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
+            if (res.status == 200) {
+                setViewUpdate(!viewUpdate)
+            }
+            setError(false)
+            handelEditClose()
+        } else {
+            setError(true)
         }
-        handelEditClose()
+
     }
 
     const handelDelete = () => {
@@ -72,11 +82,13 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
                     id="filled-basic"
                     label="Sub-group Name"
                     variant="outlined"
-                    defaultValue={value.checkListGroupName}
+                    defaultValue={editForm.checkListGroupName}
                     onChange={async (e) => setEditForm({
                         ...editForm,
                         checkListGroupName: e.target.value
                     })}
+                    error={(error && !editForm.checkListGroupName.trim())}
+                    helperText={(error && !editForm.checkListGroupName.trim()) ? "Sub-group name is required" : ""}
                 />
             </TableCell>
             <TableCell className={classes.tabelBorder}>

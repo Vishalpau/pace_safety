@@ -33,14 +33,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const fkCompanyId =
-JSON.parse(localStorage.getItem("company")) !== null
-  ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-  : null;
+  JSON.parse(localStorage.getItem("company")) !== null
+    ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+    : null;
 
 const project =
-JSON.parse(localStorage.getItem("projectName")) !== null
-  ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
-  : null;
+  JSON.parse(localStorage.getItem("projectName")) !== null
+    ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
+    : null;
 
 function Group() {
   const [form, setForm] = useState(
@@ -64,6 +64,7 @@ function Group() {
   const [editGroupId, setEditGroupId] = useState(null);
   const [showNew, setShowNew] = useState(false);
   const [viewUpdate, setViewUpdate] = useState(false);
+  const [newGroupError, setNewGroupError] = useState(false)
   const handelGroup = async () => {
     const tempGroupName = [];
     const groupID = handelIncidentId();
@@ -73,11 +74,13 @@ function Group() {
     const allGroups = result;
     setGroup(allGroups);
     allGroups.map((value) => {
-      tempGroupName.push(value.checkListGroupName);
+      tempGroupName.push({
+        name: value.checkListGroupName,
+        id: value.checklistgroupId
+      });
     });
     tempGroupName.push('Top');
     // fkProjectId
-    console.log(result);
     setAllGroupName(tempGroupName);
   };
 
@@ -90,36 +93,48 @@ function Group() {
   };
 
   const handelNext = async () => {
-    const { projectId } = JSON.parse(localStorage.getItem('projectName'));
-    form.parentGroup = form.parentGroup == '' ? 0 : form.parentGroup;
-    form.fkProjectId = project;
-    const res = await api.post(`api/v1/core/checklists/${checkListId}/groups/`, form);
-    if (res.status == 201) {
-      setForm({
-        ...form,
-        checkListGroupName: '',
-        fkCheckListId: ''
-      });
-      handelGroup();
-    }
+    // const { projectId } = JSON.parse(localStorage.getItem('projectName'));
+    if (form.checkListGroupName.trim()) {
+      setNewGroupError(false)
+      form.parentGroup = form.parentGroup == '' ? 0 : form.parentGroup;
+      form.fkProjectId = project;
+      const res = await api.post(`api/v1/core/checklists/${checkListId}/groups/`, form);
+      if (res.status == 201) {
+        setForm({
+          ...form,
+          checkListGroupName: '',
+          fkCheckListId: ''
+        });
+        handelGroup();
+      }
 
-    setShowNew(false);
-    setViewUpdate(!viewUpdate);
+      setShowNew(false);
+      setViewUpdate(!viewUpdate);
+    } else {
+      setNewGroupError(true)
+    }
   };
 
   const handelParentValue = (value) => {
-    if (value == 'Top') {
+    setForm({
+      ...form,
+      parentGroup: value,
+    });
+  };
+
+  const handleStatusChange = () => {
+    if (form.status === 'active') {
       setForm({
         ...form,
-        parentGroup: '0',
-      });
+        status: 'inactive'
+      })
     } else {
       setForm({
         ...form,
-        parentGroup: '1',
-      });
+        status: 'active'
+      })
     }
-  };
+  }
 
   const handelParentShow = (value) => {
     if (value == 0) {
@@ -190,7 +205,9 @@ function Group() {
   return (
 
     <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
-      <Button onClick={(e) => setShowNew(true)} variant="contained" color="secondary" style={{ float: 'right' }}>
+      <Button onClick={(e) => {
+        setShowNew(true)
+      }} variant="contained" color="secondary" style={{ float: 'right' }}>
         <AddIcon />
         New
       </Button>
@@ -198,6 +215,63 @@ function Group() {
       <Grid container spacing={12}>
         <Table className={classes.table}>
           <TableBody>
+
+            {showNew && (
+              <TableRow id='botton_add_footer'>
+                <TableCell className={classes.tabelBorder}>
+                  <TextField
+                    id="'add_groupname'"
+                    label="group name"
+                    variant="outlined"
+                    onChange={async (e) => handelCheckList(e)}
+                  />
+                </TableCell>
+
+                <TableCell className={classes.tabelBorder}>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                    label="Group name"
+                  >
+                    <Select
+                      id="Group-name"
+                      className="inputCell"
+                      labelId="Group name"
+                      defaultValue="Top"
+                    >
+                      {allGroupName.map((selectValues) => (
+                        <MenuItem
+                          value={selectValues}
+                          onClick={(e) => handelParentValue(selectValues.id)}
+                        >
+                          {selectValues.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                </TableCell>
+                <TableCell className={classes.tabelBorder}>
+                  <Switch
+                    checked={form.status === 'active' ? true : false}
+                    onChange={() => handleStatusChange()}
+                    name="checkedA"
+                    inputProps={{ 'aria-label': 'secondary checkbox' }}
+                  />
+                </TableCell>
+
+                <TableCell>
+                  <DoneIcon
+                    onClick={(e) => handelNext(e)}
+                  />
+                  <span style={{ marginLeft: '20px' }}>
+                    <DeleteIcon />
+                  </span>
+
+                </TableCell>
+
+              </TableRow>
+            )}
             <TableRow>
               <TableCell className={classes.tabelBorder}>Sub-group Name</TableCell>
               <TableCell className={classes.tabelBorder}>Parent Group</TableCell>
@@ -222,6 +296,7 @@ function Group() {
                       handleEditClick={handleEditClick}
                       viewUpdate={viewUpdate}
                       setViewUpdate={setViewUpdate}
+                      group={allGroupName.filter(item => value.parentGroup == item.id)[0]}
                     />
                   )
                 }
@@ -229,67 +304,11 @@ function Group() {
 
               </>
             ))}
-            {showNew && (
-              <TableRow>
-                <TableCell className={classes.tabelBorder}>
-                  <TextField
-                    id="filled-basic"
-                    label="group name"
-                    variant="outlined"
-                    onChange={async (e) => handelCheckList(e)}
-                  />
-                </TableCell>
-
-                <TableCell className={classes.tabelBorder}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                    label="Group name"
-                  >
-                    <Select
-                      id="Group-name"
-                      className="inputCell"
-                      labelId="Group name"
-                      defaultValue="Top"
-                    >
-                      {allGroupName.map((selectValues) => (
-                        <MenuItem
-                          value={selectValues}
-                          onClick={(e) => handelParentValue(selectValues)}
-                        >
-                          {selectValues}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                </TableCell>
-                <TableCell className={classes.tabelBorder}>
-                  <Switch
-                    checked
-                    // onChange={handleChange}
-                    name="checkedA"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <DoneIcon
-                    onClick={(e) => handelNext(e)}
-                  />
-                  <span style={{ marginLeft: '20px' }}>
-                    <DeleteIcon />
-                  </span>
-
-                </TableCell>
-
-              </TableRow>
-            )}
 
 
           </TableBody>
         </Table>
-
+        {newGroupError && (<p style={{ paddingTop: '14px', color: '#ff0000', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>Please fill all the fields</p>)}
       </Grid>
     </PapperBlock>
 
