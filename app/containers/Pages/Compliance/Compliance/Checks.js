@@ -372,10 +372,6 @@ const Checks = (props) => {
 
   const radioDecide = ["Yes", "No", "N/A"];
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
-    // console.log(event)
-    // console.log(isExpanded);
-    // console.log(valueId);
-    // console.log(panel);
     if (isExpanded) {
       setStateToggle(true);
     }
@@ -397,11 +393,9 @@ const Checks = (props) => {
           a.check = false;
         }
       })
-      console.log('sb equal hai');
     }
 
     if (expandedTableDetail !== `panel6 ${valueId}`) {
-      console.log('kuch bhi equal nhi hai');
 
       const temp = [...checkData]
 
@@ -445,12 +439,7 @@ const Checks = (props) => {
           });
           putApiData.then(result => {
             const apiResult = result.data.data.results;
-            // const obj = {
-            //   ...apiResult,
-            //   check: true
-            // }
             temp[key]['id'] = apiResult.id
-            // temp.splice(key, 1, obj)
           })
           putApiData.catch(err => {
             console.log(err);
@@ -475,14 +464,12 @@ const Checks = (props) => {
         }
       }
     })
-    console.log(temp);  
     setCheckData(temp);
   }
 
   useEffect(() => {
     updateAccordian();
   }, [stateToggle])
-
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -498,23 +485,23 @@ const Checks = (props) => {
   const [statusData, setStatusData] = useState([])
   const [errorBoundary, setErrorBoundary] = useState("");
 
-  const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
-    return (
-      <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
-        <Typography variant="h6">{children}</Typography>
-        {onClose ? (
-          <IconButton
-            aria-label="close"
-            className={classes.closeButton}
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </MuiDialogTitle>
-    );
-  });
+  // const DialogTitle = withStyles(styles)((props) => {
+  //   const { children, classes, onClose, ...other } = props;
+  //   return (
+  //     <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
+  //       <Typography variant="h6">{children}</Typography>
+  //       {onClose ? (
+  //         <IconButton
+  //           aria-label="close"
+  //           className={classes.closeButton}
+  //           onClick={onClose}
+  //         >
+  //           <CloseIcon />
+  //         </IconButton>
+  //       ) : null}
+  //     </MuiDialogTitle>
+  //   );
+  // });
 
   const [valueStar, setValueStar] = React.useState([]);
 
