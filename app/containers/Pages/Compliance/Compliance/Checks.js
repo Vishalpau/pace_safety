@@ -4,7 +4,7 @@ import { PapperBlock } from "dan-components";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Grid, Typography, TextField, Button } from "@material-ui/core";
-import PropTypes from "prop-types";
+import PropTypes, { object } from "prop-types";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -365,108 +365,111 @@ const Checks = (props) => {
     setColorData(result)
   }
 
+  useEffect(() => {
+    console.log(stateToggle);
+  },[stateToggle])
+
 
   const radioDecide = ["Yes", "No", "N/A"];
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
-    console.log(valueId);
-    console.log(panel);
     if (isExpanded) {
       setStateToggle(true);
     }
+
     if (!isExpanded) {
       setQuestionId(valueId);
-      setStateToggle(false);
+      setStateToggle(!stateToggle);
     }
-    // if (!stateToggle) {
-    //   setStateToggle(true)
-    // }
-    // if (stateToggle === true) {
-    //   setStateToggle(false);
-    // }
-    // if (stateToggle === false) {
-    //   setStateToggle(true)
-    // }
+
+    if (expandedTableDetail === `panel6 ${valueId}`) {
+      setQuestionId(valueId);
+      const temp = [...checkData]
+
+      temp.forEach(a => {
+        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+          a.check = true;
+        }
+        else {
+          a.check = false;
+        }
+      })
+    }
+
+    if (expandedTableDetail !== `panel6 ${valueId}`) {
+
+      const temp = [...checkData]
+
+      temp.forEach(a => {
+        if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+          a.check = true;
+        }
+        else {
+          a.check = false;
+        }
+      })
+      setCheckData(temp)
+      setStateToggle(!stateToggle);
+    }
 
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
   const updateAccordian = async () => {
-    if (!stateToggle) {
-      const fieldCheck = []
-      const filteredObj = checkData.filter(a => {
-        if (a.questionId === questionId) {
-          return a
-        }
-      })
+    const temp = [...checkData];
 
-      // console.log(filteredObj, 'filteredObj');
-
-      const temp = [...checkData]
-
-      if (filteredObj.length > 0) {
-        Object.entries(categories).forEach(([key, value]) => {
-          value.filter(a => {
-            if (a.id === filteredObj[0].questionId) {
-              fieldCheck.push(a);
-            }
-          })
+    temp.map((data, key) => {
+      if (data.check) {
+        const formData = new FormData;
+        Object.keys(data).forEach(key => {
+          if (key === "fkAuditId") {
+            formData.append(key, data[key]);
+          }
+          if (key !== 'check' && key !== 'id') {
+            formData.append(key, data[key]);
+          }
         })
-        const { responseType, scoreType } = fieldCheck[0];
-        const { criticality, auditStatus, defaultResponse, id } = filteredObj[0];
 
-        if (responseType === "Yes-No-NA" ? defaultResponse !== "" : (criticality !== "" && auditStatus !== "")) {
-          const formData = new FormData;
-          Object.keys(filteredObj[0]).forEach(key => {
-            console.log(key);
-            if (key === "fkAuditId") {
-              formData.append(key, filteredObj[0][key]);
-            }
-            else if (key !== 'check' && key !== 'id') {
-              formData.append(key, filteredObj[0][key]);
-            }
+        if (data.id) {
+          const putApiData = new Promise((resolve, reject) => {
+            api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${data.id}/`, formData)
+            .then(res => {
+              resolve(res)
+            })
+            .catch(err => reject(false));
+          });
+          putApiData.then(result => {
+            const apiResult = result.data.data.results;
+            temp[key]['id'] = apiResult.id
           })
+          putApiData.catch(err => {
+            console.log(err);
+          })
+        }
 
-          if (filteredObj[0].id) {
-            const putApiData = await api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${filteredObj[0].id}/`, formData);
-            const result = putApiData.data.data.results;
-            temp.forEach(a => {
-              if (a.questionId === questionId) {
-                a.id = result.id;
-              }
-              if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
-                a.check = true;
-              }
-              else {
-                a.check = false;
-              }
+        else {
+          const postApiData = new Promise((resolve, reject) => {
+            api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData)
+            .then(res => {
+              resolve(res)
             })
-
-          }
-          else {
-            const postApiData = await api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData);
-            const result = postApiData.data.data.results;
-            temp.forEach(a => {
-              if (a.questionId === questionId) {
-                a.id = result.id;
-              }
-              if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
-                a.check = true;
-              }
-              else {
-                a.check = false;
-              }
-            })
-          }
-          setCheckData(temp)
+            .catch(err => reject(false));
+          }) 
+          postApiData.then(result => {
+            const apiResult = result.data.data.results;
+            temp[key]['id'] = apiResult.id
+          })
+          postApiData.catch(err => {
+            console.log(err)
+          })
         }
       }
-    }
+    })
+    setCheckData(temp);
   }
 
   useEffect(() => {
     updateAccordian();
   }, [stateToggle])
-
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -482,23 +485,23 @@ const Checks = (props) => {
   const [statusData, setStatusData] = useState([])
   const [errorBoundary, setErrorBoundary] = useState("");
 
-  const DialogTitle = withStyles(styles)((props) => {
-    const { children, classes, onClose, ...other } = props;
-    return (
-      <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
-        <Typography variant="h6">{children}</Typography>
-        {onClose ? (
-          <IconButton
-            aria-label="close"
-            className={classes.closeButton}
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </MuiDialogTitle>
-    );
-  });
+  // const DialogTitle = withStyles(styles)((props) => {
+  //   const { children, classes, onClose, ...other } = props;
+  //   return (
+  //     <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
+  //       <Typography variant="h6">{children}</Typography>
+  //       {onClose ? (
+  //         <IconButton
+  //           aria-label="close"
+  //           className={classes.closeButton}
+  //           onClick={onClose}
+  //         >
+  //           <CloseIcon />
+  //         </IconButton>
+  //       ) : null}
+  //     </MuiDialogTitle>
+  //   );
+  // });
 
   const [valueStar, setValueStar] = React.useState([]);
 
@@ -559,15 +562,7 @@ const Checks = (props) => {
       .catch((error) => console.log(error));
   };
 
-  // useEffect(() => {
-  //   console.log(complianceData, 'line 535');
-  // }, [complianceData])
-
-  // console.log(complianceData.fkProjectStructureIds, 'complianceData')
-
-
   const fetchCheklist = async (data, groups, subGroups, strId) => {
-
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -677,9 +672,13 @@ const Checks = (props) => {
 
   const handelSubmit = async () => {
 
-    const isValid = checkData.every((a) => a.check === true)
+    console.log(checkData);
+    const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
+    // console.log(isValids)
 
-    if (isValid) {
+    // const isValid = checkData.every((a) => a.check === true)
+
+    if (isValids) {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
@@ -691,6 +690,8 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id, type = '') => {
+    console.log(index,id,field,value);
+    console.log('hiii');
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -710,12 +711,14 @@ const Checks = (props) => {
           }
         }
         temp[i][field] = value;
-
       }
     }
     if (field == 'criticality' || field == 'auditStatus') {
       // setTimeout(()=>calculate_rating(index), 5000)
     }
+
+    console.log(temp);
+
     setCheckData(temp);
   };
 
