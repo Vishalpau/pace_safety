@@ -212,48 +212,6 @@ function Option() {
                 <Table className={classes.table}>
 
                     <TableBody>
-                        <TableRow>
-                            <TableCell className={classes.tabelBorder}>
-                                Option Name(Input Label)
-                            </TableCell>
-                            <TableCell className={classes.tabelBorder}>
-                                Input Value
-                            </TableCell>
-                            {Object.keys(group).length > 0 ?
-                                <TableCell className={classes.tabelBorder}>
-                                    Group name
-                                </TableCell>
-                                : null}
-
-                            <TableCell className={classes.tabelBorder}>
-                                Status
-                            </TableCell>
-                            <TableCell className={classes.tabelBorder}>
-                                Action
-                            </TableCell>
-                        </TableRow>
-
-                        {option.map((value, index) => (
-                            <>
-                                {editOptionId == value.id ?
-                                    <EditOnlyOptionRow
-                                        value={value}
-                                        group={group}
-                                        handelEditClose={handelEditClose}
-                                        viewUpdate={viewUpdate}
-                                        setViewUpdate={setViewUpdate}
-                                    />
-                                    :
-                                    <ReadOnlyOptionRow
-                                        value={value}
-                                        group={group}
-                                        handleEditClick={handleEditClick}
-                                        viewUpdate={viewUpdate}
-                                        setViewUpdate={setViewUpdate}
-                                    />
-                                }
-                            </>
-                        ))}
                         {showNew ?
                             <TableRow>
                                 <TableCell className={classes.tabelBorder} >
@@ -329,6 +287,48 @@ function Option() {
                                 </TableCell>
                             </TableRow>
                             : null}
+                        <TableRow>
+                            <TableCell className={classes.tabelBorder}>
+                                Option Name(Input Label)
+                            </TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                Input Value
+                            </TableCell>
+                            {Object.keys(group).length > 0 ?
+                                <TableCell className={classes.tabelBorder}>
+                                    Group name
+                                </TableCell>
+                                : null}
+
+                            <TableCell className={classes.tabelBorder}>
+                                Status
+                            </TableCell>
+                            <TableCell className={classes.tabelBorder}>
+                                Action
+                            </TableCell>
+                        </TableRow>
+
+                        {option.map((value, index) => (
+                            <>
+                                {editOptionId == value.id ?
+                                    <EditOnlyOptionRow
+                                        value={value}
+                                        group={group}
+                                        handelEditClose={handelEditClose}
+                                        viewUpdate={viewUpdate}
+                                        setViewUpdate={setViewUpdate}
+                                    />
+                                    :
+                                    <ReadOnlyOptionRow
+                                        value={value}
+                                        group={group}
+                                        handleEditClick={handleEditClick}
+                                        viewUpdate={viewUpdate}
+                                        setViewUpdate={setViewUpdate}
+                                    />
+                                }
+                            </>
+                        ))}
                     </TableBody>
                 </Table>
                 {newOptionError && (<p style={{ fontSize: '14px', color: "#ff0000" }}>Please fill all the mandatory fields</p>)}
