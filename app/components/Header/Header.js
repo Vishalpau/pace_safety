@@ -1269,7 +1269,7 @@ function Header(props) {
                                                       </List>
                                                     </AccordionSummary>
                                                     {(openUnit === `panel${index}${phaseIndex}${unitIndex}` && thirdBreakdown && thirdBreakdown.length > 0) && (
-                                                      <>
+                                                      <AccordionDetails className={classesm.subUnitSection}>
                                                         {thirdBreakdown.map((subUnit, subUnitIndex) => (
                                                           <Accordion expanded={openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`} onChange={handleSubUnitChange(`panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`, index, subUnit.id)}>
                                                             <AccordionSummary
@@ -1302,7 +1302,7 @@ function Header(props) {
                                                             )}
                                                           </Accordion>
                                                         ))}
-                                                      </>
+                                                      </AccordionDetails>
                                                     )}
                                                   </Accordion>
                                                 ))}

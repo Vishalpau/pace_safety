@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from 'react-router-dom'
 import { PapperBlock } from "dan-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
+import InputLabel from '@material-ui/core/InputLabel';
 import TextField from "@material-ui/core/TextField";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Option() {
+    const history = useHistory()
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -66,6 +69,7 @@ function Option() {
             "fkGroupId": "",
         }
     )
+    const [newOptionError, setNewOptionError] = useState(false)
     const [group, setGroup] = useState([])
     const [option, setOption] = useState([])
     const [checkListId, setCheckListId] = useState("")
@@ -73,6 +77,11 @@ function Option() {
     const [editOptionId, setEditOptionId] = useState(null)
     const [showNew, setShowNew] = useState(false)
     const [viewUpdate, setViewUpdate] = useState(false)
+    const [searchFilter, setSearchFilter] = useState({
+        search: "",
+        filter: ""
+    })
+    const [allOption, setAllOption] = useState([])
 
     const handelGroup = async () => {
         const temp = {}
@@ -89,6 +98,7 @@ function Option() {
             temp[value.checklistgroupId] = value.checkListGroupName
         })
         setGroup(temp)
+        setAllOption(allOptions)
     }
 
     const handelEditClose = () => {
@@ -96,17 +106,21 @@ function Option() {
     }
 
     const handelNext = async (e) => {
-        form["fkCheckListId"] = checkListId
-        form["inputValue"] = form["inputLabel"] !== "" && form["inputLabel"].toLowerCase().replace(" ", "-")
-        // delete form["id"]
-        const res = await api.post(`api/v1/core/checklists/${checkListId}/options/`, form)
-        if (res.status == 201) {
-            handelGroup()
-        }
-        console.log(form)
+        if (form.inputLabel.trim() && form.fkGroupId.trim()) {
+            form["fkCheckListId"] = checkListId
+            form["inputValue"] = form["inputLabel"] !== "" && form["inputLabel"].toLowerCase().replace(" ", "-")
+            // delete form["id"]
+            const res = await api.post(`api/v1/core/checklists/${checkListId}/options/`, form)
+            if (res.status == 201) {
+                handelGroup()
+            }
 
-        setViewUpdate(!viewUpdate)
-        setShowNew(false)
+            setViewUpdate(!viewUpdate)
+            setShowNew(false)
+            setNewOptionError(false)
+        } else {
+            setNewOptionError(true)
+        }
     }
 
     const handleEditClick = (e, option) => {
@@ -120,9 +134,44 @@ function Option() {
         handelGroup()
     }, [viewUpdate])
 
+    const handleSearchFilterChange = (value, key) => {
+        setSearchFilter(data => ({
+            ...data,
+            [key]: value
+        }))
+    }
+
+    useEffect(() => {
+        const temp = [];
+        allOption.forEach(value => {
+            if (searchFilter.search) {
+                if (searchFilter.filter) {
+                    if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.status.toLowerCase() === searchFilter.filter) {
+                        temp.push(value)
+                    }
+                } else {
+                    if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+                        temp.push(value)
+                    }
+                }
+            } else {
+                if (searchFilter.filter) {
+                    if (searchFilter.filter === value.status.toLowerCase()) {
+                        temp.push(value)
+                    }
+                } else {
+                    temp.push(value)
+                }
+            }
+        })
+
+        setOption([...temp])
+    }, [searchFilter, allOption])
+
     return (
 
         <PapperBlock title="Check List Option" icon="ion-md-list-box" desc="">
+            <Button style={{ marginBottom: '16px', marginLeft: "auto", display: 'block', fontSize: '12px', textDecoration: 'underline' }} onClick={() => history.goBack()}>Go back</Button>
             {/* {console.log(form)} */}
             <Button
                 variant="contained"
@@ -133,6 +182,32 @@ function Option() {
                 <AddIcon />
                 New
             </Button>
+            <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} md={4}>
+                    <TextField id="outlined-basic" label="Search Option"
+                        onChange={(e) => handleSearchFilterChange(e.target.value, 'search')}
+                        value={searchFilter.search}
+                        variant="outlined" style={{ width: '100%' }} />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <InputLabel style={{ marginLeft: '20px', marginTop: '-5px' }} id="checklistSearchFilter">Filter</InputLabel>
+                        <Select
+                            style={{ minWidth: '120px' }}
+                            labelId="checklistSearchFilte"
+                            id="demo-simple-select-helper"
+                            onChange={(e) => handleSearchFilterChange(e.target.value, 'filter')}
+                            value={searchFilter.filter}
+                            variant="outlined"
+                            label="Filter"
+                        >
+                            <MenuItem value="">None</MenuItem>
+                            <MenuItem value={"active"}>Status - active</MenuItem>
+                            <MenuItem value={"inactive"}>Status - inactive</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
             <Grid container spacing={12}>
                 <Table className={classes.table}>
 
@@ -149,7 +224,7 @@ function Option() {
                                     Group name
                                 </TableCell>
                                 : null}
-                               
+
                             <TableCell className={classes.tabelBorder}>
                                 Status
                             </TableCell>
@@ -187,6 +262,7 @@ function Option() {
                                         label="Option Name"
                                         variant="outlined"
                                         onChange={async (e) => setForm({ ...form, inputLabel: e.target.value })}
+                                        error={newOptionError && !form.inputLabel.trim()}
                                     />
                                 </TableCell>
 
@@ -195,7 +271,7 @@ function Option() {
                                         id="filled-basic"
                                         label="Option value"
                                         variant="outlined"
-                                        
+
                                     />
                                 </TableCell>
 
@@ -210,6 +286,7 @@ function Option() {
                                                 id="Group-name"
                                                 className="inputCell"
                                                 labelId="Group name"
+                                                error={newOptionError && !form.fkGroupId.trim()}
                                             >
                                                 {Object.entries(group).map(([key, value]) => (
                                                     <MenuItem
@@ -254,7 +331,7 @@ function Option() {
                             : null}
                     </TableBody>
                 </Table>
-
+                {newOptionError && (<p style={{ fontSize: '14px', color: "#ff0000" }}>Please fill all the mandatory fields</p>)}
             </Grid>
         </PapperBlock>
 

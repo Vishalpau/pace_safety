@@ -1287,7 +1287,7 @@ function PersonalDashboard(props) {
                             <img className={classes.pacelogonBox} src={paceLogo} title="Pace OS" alt="Pace OS" />
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} align="center" className={classes.loginTopDetailSection}>
-                            <Typography variant="h1" gutterBottom className={classes.selectCompTitle}>Select Comapny</Typography>
+                            <Typography variant="h1" gutterBottom className={classes.selectCompTitle}>Select Company</Typography>
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} className={classes.companyListBox}>
 
@@ -1315,7 +1315,7 @@ function PersonalDashboard(props) {
                                             {selectValues.businessVertical}
                                           </Typography>
                                           <Typography className={classes.companyName}>
-                                            Company: <span>{selectValues.companyName}S</span>
+                                            Company: <span>{selectValues.companyName}</span>
                                           </Typography>
                                         </CardContent>
                                       </Card>
@@ -1569,7 +1569,7 @@ function PersonalDashboard(props) {
                                                           </List>
                                                         </AccordionSummary>
                                                         {(openUnit === `panel${index}${phaseIndex}${unitIndex}` && thirdBreakdown && thirdBreakdown.length > 0) && (
-                                                          <>
+                                                          <AccordionDetails className={classesm.subUnitSection}>
                                                             {thirdBreakdown.map((subUnit, subUnitIndex) => (
                                                               <Accordion expanded={openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`} onChange={handleSubUnitChange(`panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`, index, subUnit.id)}>
                                                                 <AccordionSummary
@@ -1602,7 +1602,7 @@ function PersonalDashboard(props) {
                                                                 )}
                                                               </Accordion>
                                                             ))}
-                                                          </>
+                                                          </AccordionDetails>
                                                         )}
                                                       </Accordion>
                                                     ))}

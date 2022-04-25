@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { PapperBlock } from 'dan-components';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -10,6 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -58,13 +60,20 @@ function Group() {
 
   const [group, setGroup] = useState([]);
 
+  const history = useHistory();
+
   const [checkListId, setCheckListId] = useState('');
   const [allGroupName, setAllGroupName] = useState([]);
+  const [allGroup, setAllGroup] = useState([]);
   const [projectName, setProjectName] = useState({});
   const [editGroupId, setEditGroupId] = useState(null);
   const [showNew, setShowNew] = useState(false);
   const [viewUpdate, setViewUpdate] = useState(false);
   const [newGroupError, setNewGroupError] = useState(false)
+  const [searchFilter, setSearchFilter] = useState({
+    search: "",
+    filter: ""
+  })
   const handelGroup = async () => {
     const tempGroupName = [];
     const groupID = handelIncidentId();
@@ -73,6 +82,7 @@ function Group() {
     const result = res.data.data.results;
     const allGroups = result;
     setGroup(allGroups);
+    setAllGroup(allGroups)
     allGroups.map((value) => {
       tempGroupName.push({
         name: value.checkListGroupName,
@@ -202,15 +212,76 @@ function Group() {
     handelProjectName();
   }, [viewUpdate]);
 
+  const handleSearchFilterChange = (value, key) => {
+    setSearchFilter(data => ({
+      ...data,
+      [key]: value
+    }))
+  }
+
+  useEffect(() => {
+    const temp = [];
+    allGroup.forEach(value => {
+      if (searchFilter.search) {
+        if (searchFilter.filter) {
+          if (value.checkListGroupName.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.status === searchFilter.filter) {
+            temp.push(value)
+          }
+        } else {
+          if (value.checkListGroupName.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+            temp.push(value)
+          }
+        }
+      } else {
+        if (searchFilter.filter) {
+          if (searchFilter.filter === value.status) {
+            temp.push(value)
+          }
+        } else {
+          temp.push(value)
+        }
+      }
+    })
+
+    setGroup([...temp])
+  }, [searchFilter, allGroup])
+
   return (
 
     <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
+      <Button style={{ marginBottom: '16px', marginLeft: "auto", display: 'block', fontSize: '12px', textDecoration: 'underline' }} onClick={() => history.goBack()}>Go back</Button>
       <Button onClick={(e) => {
         setShowNew(true)
       }} variant="contained" color="secondary" style={{ float: 'right' }}>
         <AddIcon />
         New
       </Button>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField id="outlined-basic" label="Search Group"
+            onChange={(e) => handleSearchFilterChange(e.target.value, 'search')}
+            value={searchFilter.search}
+            variant="outlined" style={{ width: '100%' }} />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel style={{ marginLeft: '20px', marginTop: '-5px' }} id="checklistSearchFilter">Filter</InputLabel>
+            <Select
+              style={{ minWidth: '120px' }}
+              labelId="checklistSearchFilte"
+              id="demo-simple-select-helper"
+              onChange={(e) => handleSearchFilterChange(e.target.value, 'filter')}
+              value={searchFilter.filter}
+              variant="outlined"
+              label="Filter"
+            >
+              <MenuItem value="">None</MenuItem>
+              <MenuItem value={"active"}>Status - active</MenuItem>
+              <MenuItem value={"inactive"}>Status - inactive</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
 
       <Grid container spacing={12}>
         <Table className={classes.table}>

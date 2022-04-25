@@ -43,7 +43,6 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
     }
 
     const handelDelete = async (checkListId, checkListGroupId) => {
-        console.log(checkListId, checkListGroupId,'ooo')
         const res = await api.delete(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`)
         setViewUpdate(!viewUpdate)
     }
@@ -62,7 +61,7 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
                 : null}
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    defaultChecked={value.status == "Active" ? true : false}
+                    defaultChecked={value.status === "Active" ? true : false}
                     onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.id)}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
