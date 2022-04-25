@@ -367,7 +367,7 @@ const Checks = (props) => {
 
   useEffect(() => {
     console.log(stateToggle);
-  },[stateToggle])
+  }, [stateToggle])
 
 
   const radioDecide = ["Yes", "No", "N/A"];
@@ -384,7 +384,6 @@ const Checks = (props) => {
     if (expandedTableDetail === `panel6 ${valueId}`) {
       setQuestionId(valueId);
       const temp = [...checkData]
-
       temp.forEach(a => {
         if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
           a.check = true;
@@ -396,9 +395,7 @@ const Checks = (props) => {
     }
 
     if (expandedTableDetail !== `panel6 ${valueId}`) {
-
       const temp = [...checkData]
-
       temp.forEach(a => {
         if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
           a.check = true;
@@ -410,7 +407,6 @@ const Checks = (props) => {
       setCheckData(temp)
       setStateToggle(!stateToggle);
     }
-
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
@@ -432,10 +428,10 @@ const Checks = (props) => {
         if (data.id) {
           const putApiData = new Promise((resolve, reject) => {
             api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${data.id}/`, formData)
-            .then(res => {
-              resolve(res)
-            })
-            .catch(err => reject(false));
+              .then(res => {
+                resolve(res)
+              })
+              .catch(err => reject(false));
           });
           putApiData.then(result => {
             const apiResult = result.data.data.results;
@@ -449,11 +445,11 @@ const Checks = (props) => {
         else {
           const postApiData = new Promise((resolve, reject) => {
             api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData)
-            .then(res => {
-              resolve(res)
-            })
-            .catch(err => reject(false));
-          }) 
+              .then(res => {
+                resolve(res)
+              })
+              .catch(err => reject(false));
+          })
           postApiData.then(result => {
             const apiResult = result.data.data.results;
             temp[key]['id'] = apiResult.id
@@ -517,17 +513,13 @@ const Checks = (props) => {
     await fetchComplianceData(result);
   };
 
-  useEffect(() => {
-    console.log(categories);
-  }, [categories])
-
   const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result, 'result_result')
+        // console.log(result, 'result_result')
         setComplianceData(result)
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
@@ -690,8 +682,9 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id, type = '') => {
-    console.log(index,id,field,value);
-    console.log('hiii');
+    // console.log(index, id, field, value);
+    // console.log('hiii');
+    console.log(index);
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -704,7 +697,6 @@ const Checks = (props) => {
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value, 'uuuuuuuu')
           }
           else if (type === '1-10') {
             value = value
@@ -743,10 +735,9 @@ const Checks = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(checkData);
-  }, [checkData])
-
+  // useEffect(() => {
+  //   console.log(checkData);
+  // }, [checkData])
 
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
@@ -761,19 +752,22 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
-  useEffect(() => {
-    console.log(statusData, 'statusData');
-  }, [statusData])
+  // useEffect(() => {
+  //   console.log(statusData, 'statusData');
+  // }, [statusData])
 
   const handleCriticality = (option, selectType, index, id) => {
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
-      return;
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
   };
+
+  // useEffect(() => {
+  //   console.log(form);
+  // },[form])
 
   useEffect(() => {
     fetchFectorData();
@@ -883,6 +877,7 @@ const Checks = (props) => {
                   </Grid>
                   <Grid item xs={12}>
                     {Object.entries(categories).map(([key, Categor], catI) => {
+                      // console.log(catI);
                       return (
                         <>
                           <FormLabel className="checkRadioLabel" component="legend">
@@ -1333,14 +1328,14 @@ const Checks = (props) => {
                                                   variant="outlined"
                                                   defaultValue={(showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].criticality : "")}
                                                   className="formControl"
-                                                  onChange={(e) =>
-                                                    handleChangeData(
-                                                      e.target.value,
-                                                      "criticality",
-                                                      catI + '-' + index,
-                                                      value.id
-                                                    )
-                                                  }
+                                                  // onChange={(e) =>
+                                                  //   handleChangeData(
+                                                  //     e.target.value,
+                                                  //     "criticality",
+                                                  //     catI + '-' + index,
+                                                  //     value.id
+                                                  //   )
+                                                  // }
                                                 >
                                                   {criticalityData.map((option) => (
                                                     <MenuItem
@@ -1356,6 +1351,7 @@ const Checks = (props) => {
                                                   ))}
                                                 </TextField>
                                               </Grid>
+                                              {/* {console.log(catI, index)} */}
                                               <Grid item md={4} xs={12}>
                                                 <TextField
                                                   label="Status*"
@@ -1366,14 +1362,14 @@ const Checks = (props) => {
                                                   fullWidth
                                                   variant="outlined"
                                                   className="formControl"
-                                                  onChange={(e) =>
-                                                    handleChangeData(
-                                                      e.target.value,
-                                                      "auditStatus",
-                                                      catI + '-' + index,
-                                                      value.id
-                                                    )
-                                                  }
+                                                  // onChange={(e) =>
+                                                  //   handleChangeData(
+                                                  //     e.target.value,
+                                                  //     "auditStatus",
+                                                  //     catI + '-' + index,
+                                                  //     value.id
+                                                  //   )
+                                                  // }
                                                 >
                                                   {statusData.map((option) => (
                                                     <MenuItem
@@ -1396,7 +1392,9 @@ const Checks = (props) => {
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
-                                                  value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
+                                                  value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] :
+                                                    (showCheckData.filter(cd => cd.question === value.question).length > 0 ?
+                                                      showCheckData.filter(cd => cd.question === value.question)[0].performance : '')}
                                                   // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{
                                                     backgroundColor: ratingColor[catI + '-' + index] ?
