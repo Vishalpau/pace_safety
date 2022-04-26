@@ -170,7 +170,7 @@ function CheckList() {
       <Table className={classes.table}>
         <TableBody>
           <TableRow>
-            <TableCell className={classes.columunBorder} style={{ width: '50px' }}>Sr.</TableCell>
+            <TableCell className={classes.columunBorder} style={{ width: '80px' }}>Sr.</TableCell>
             {/* <TableCell className={classes.columunBorder}>Group Name</TableCell> */}
             <TableCell className={classes.columunBorder}>Input Type</TableCell>
             <TableCell className={classes.columunBorder}>CheckList Name</TableCell>
@@ -183,7 +183,7 @@ function CheckList() {
             <>
               {checkLists.map((value) => (
                 <TableRow>
-                  <TableCell className={classes.tabelBorder} style={{ width: '50px' }}>{value.checklistId}</TableCell>
+                  <TableCell className={classes.tabelBorder} style={{ width: '80px' }}>{value.checklistId}</TableCell>
                   {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
                   <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>

@@ -74,6 +74,10 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
 
     }
 
+    const defaultParent = allGroupName.filter(group => group.id === editForm.parentGroup)[0].name;
+
+    console.log(defaultParent, 'hey')
+
     const classes = useStyles();
     return (
         <TableRow>
@@ -97,21 +101,25 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
                     className={classes.formControl}
                     label="Group name"
                 >
-                    <Select
-                        id="Group-name"
-                        className="inputCell"
-                        labelId="Group name"
-                        defaultValue="Top"
-                    >
-                        {allGroupName.map((selectValues) => (
-                            <MenuItem
-                                value={selectValues}
-                                onClick={(e) => handelParentValue(value.parentGroup)}
-                            >
-                                {selectValues}
-                            </MenuItem>
-                        ))}
-                    </Select>
+
+                    {allGroupName && allGroupName.length > 0 && (
+                        <Select
+                            id="Group-name"
+                            className="inputCell"
+                            labelId="Group name"
+                            // value={value.parentGroup}
+                            defaultValue='Top'
+                        >
+                            {allGroupName.map((selectValues) => (
+                                <MenuItem
+                                    value={selectValues}
+                                    onClick={(e) => handelParentValue(selectValues.id)}
+                                >
+                                    {selectValues.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    )}
                 </FormControl>
 
             </TableCell>

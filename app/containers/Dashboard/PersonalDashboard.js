@@ -1464,7 +1464,7 @@ function PersonalDashboard(props) {
                                           Code: {value.projectCode}
                                         </span>
                                         <span className={classesm.externalLinkSection}>
-                                          <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
+                                          {/* <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                             <IconButton aria-label="delete" className={classesm.margin}>
                                               <svg id="Control-Tower-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                                 <g id="Group_5864" data-name="Group 5864" transform="translate(4.371 0.874)">
@@ -1486,7 +1486,7 @@ function PersonalDashboard(props) {
                                                 <rect id="Rectangle_1908" data-name="Rectangle 1908" width="32" height="32" fill="none" />
                                               </svg>
                                             </IconButton>
-                                          </Tooltip>
+                                          </Tooltip> */}
                                           {/* <Tooltip title="Geo location" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                         <IconButton aria-label="delete" className={classesm.marginR}>
                                           <svg id="GIS-Map-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">

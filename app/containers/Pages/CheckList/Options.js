@@ -176,7 +176,10 @@ function Option() {
             <Button
                 variant="contained"
                 color="secondary"
-                onClick={(e) => setShowNew(true)}
+                onClick={(e) => {
+                    document.getElementById('add_new_option').scrollIntoView();
+                    document.getElementById('new_option_name').focus()
+                }}
                 style={{ float: "right" }}
             >
                 <AddIcon />
@@ -212,81 +215,6 @@ function Option() {
                 <Table className={classes.table}>
 
                     <TableBody>
-                        {showNew ?
-                            <TableRow>
-                                <TableCell className={classes.tabelBorder} >
-                                    <TextField
-                                        id="filled-basic"
-                                        label="Option Name"
-                                        variant="outlined"
-                                        onChange={async (e) => setForm({ ...form, inputLabel: e.target.value })}
-                                        error={newOptionError && !form.inputLabel.trim()}
-                                    />
-                                </TableCell>
-
-                                <TableCell className={classes.tabelBorder} >
-                                    <TextField
-                                        id="filled-basic"
-                                        label="Option value"
-                                        variant="outlined"
-
-                                    />
-                                </TableCell>
-
-                                {Object.keys(group).length > 0 ?
-                                    <TableCell className={classes.tabelBorder} >
-                                        <FormControl
-                                            variant="outlined"
-                                            className={classes.formControl}
-                                            label="Group name"
-                                        >
-                                            <Select
-                                                id="Group-name"
-                                                className="inputCell"
-                                                labelId="Group name"
-                                                error={newOptionError && !form.fkGroupId.trim()}
-                                            >
-                                                {Object.entries(group).map(([key, value]) => (
-                                                    <MenuItem
-                                                        value={key}
-                                                        onClick={async (e) => setForm({ ...form, fkGroupId: key })}
-                                                    >
-                                                        {value}
-                                                    </MenuItem>
-                                                ))}
-
-
-                                            </Select>
-                                        </FormControl>
-                                    </TableCell>
-                                    : null}
-
-
-
-
-                                <TableCell className={classes.tabelBorder}>
-                                    <Switch
-                                        // checked={true}
-                                        onChange={(e) => e.target.checked ?
-                                            setForm({ ...form, status: "Active" }) :
-                                            setForm({ ...form, status: "inactive" }
-                                            )}
-                                        name="checkedA"
-                                        inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                    />
-                                </TableCell>
-
-                                <TableCell>
-                                    <DoneIcon
-                                        onClick={(e) => handelNext(e)}
-                                    />
-                                    <span style={{ marginLeft: "20px" }}>
-                                        <DeleteIcon />
-                                    </span>
-
-                                </TableCell>
-                            </TableRow>
-                            : null}
                         <TableRow>
                             <TableCell className={classes.tabelBorder}>
                                 Option Name(Input Label)
@@ -308,27 +236,106 @@ function Option() {
                             </TableCell>
                         </TableRow>
 
-                        {option.map((value, index) => (
+                        {option.length > 0 ?
                             <>
-                                {editOptionId == value.id ?
-                                    <EditOnlyOptionRow
-                                        value={value}
-                                        group={group}
-                                        handelEditClose={handelEditClose}
-                                        viewUpdate={viewUpdate}
-                                        setViewUpdate={setViewUpdate}
-                                    />
-                                    :
-                                    <ReadOnlyOptionRow
-                                        value={value}
-                                        group={group}
-                                        handleEditClick={handleEditClick}
-                                        viewUpdate={viewUpdate}
-                                        setViewUpdate={setViewUpdate}
-                                    />
-                                }
+                                {option.map((value, index) => (
+                                    <>
+                                        {editOptionId == value.id ?
+                                            <EditOnlyOptionRow
+                                                value={value}
+                                                group={group}
+                                                handelEditClose={handelEditClose}
+                                                viewUpdate={viewUpdate}
+                                                setViewUpdate={setViewUpdate}
+                                            />
+                                            :
+                                            <ReadOnlyOptionRow
+                                                value={value}
+                                                group={group}
+                                                handleEditClick={handleEditClick}
+                                                viewUpdate={viewUpdate}
+                                                setViewUpdate={setViewUpdate}
+                                            />
+                                        }
+                                    </>
+                                ))}
                             </>
-                        ))}
+                            :
+                            <>{(searchFilter.search || searchFilter.filter) && (<p style={{ paddingTop: '15px', paddingLeft: '15px', fontSize: '14px', fontWeight: '700' }}>No data found!</p>)}</>
+                        }
+                        <TableRow id='add_new_option'>
+                            <TableCell className={classes.tabelBorder} >
+                                <TextField
+                                    id="new_option_name"
+                                    label="Option Name"
+                                    variant="outlined"
+                                    onChange={async (e) => setForm({ ...form, inputLabel: e.target.value })}
+                                    error={newOptionError && !form.inputLabel.trim()}
+                                />
+                            </TableCell>
+
+                            <TableCell className={classes.tabelBorder} >
+                                <TextField
+                                    id="filled-basic"
+                                    label="Option value"
+                                    variant="outlined"
+
+                                />
+                            </TableCell>
+
+                            {Object.keys(group).length > 0 ?
+                                <TableCell className={classes.tabelBorder} >
+                                    <FormControl
+                                        variant="outlined"
+                                        className={classes.formControl}
+                                        label="Group name"
+                                    >
+                                        <Select
+                                            id="Group-name"
+                                            className="inputCell"
+                                            labelId="Group name"
+                                            error={newOptionError && !form.fkGroupId.trim()}
+                                        >
+                                            {Object.entries(group).map(([key, value]) => (
+                                                <MenuItem
+                                                    value={key}
+                                                    onClick={async (e) => setForm({ ...form, fkGroupId: key })}
+                                                >
+                                                    {value}
+                                                </MenuItem>
+                                            ))}
+
+
+                                        </Select>
+                                    </FormControl>
+                                </TableCell>
+                                : null}
+
+
+
+
+                            <TableCell className={classes.tabelBorder}>
+                                <Switch
+                                    // checked={true}
+                                    onChange={(e) => e.target.checked ?
+                                        setForm({ ...form, status: "Active" }) :
+                                        setForm({ ...form, status: "inactive" }
+                                        )}
+                                    name="checkedA"
+                                    inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                />
+                            </TableCell>
+
+                            <TableCell>
+                                <DoneIcon
+                                    onClick={(e) => handelNext(e)}
+                                />
+                                <span style={{ marginLeft: "20px" }}>
+                                    <DeleteIcon />
+                                </span>
+
+                            </TableCell>
+                        </TableRow>
                     </TableBody>
                 </Table>
                 {newOptionError && (<p style={{ fontSize: '14px', color: "#ff0000" }}>Please fill all the mandatory fields</p>)}

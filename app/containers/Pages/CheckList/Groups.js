@@ -250,8 +250,9 @@ function Group() {
 
     <PapperBlock title="Groups" icon="ion-md-list-box" desc="">
       <Button style={{ marginBottom: '16px', marginLeft: "auto", display: 'block', fontSize: '12px', textDecoration: 'underline' }} onClick={() => history.goBack()}>Go back</Button>
-      <Button onClick={(e) => {
-        setShowNew(true)
+      <Button onClick={() => {
+        document.getElementById('button_add_footer_group').scrollIntoView()
+        document.getElementById('add_groupname').focus()
       }} variant="contained" color="secondary" style={{ float: 'right' }}>
         <AddIcon />
         New
@@ -286,102 +287,108 @@ function Group() {
       <Grid container spacing={12}>
         <Table className={classes.table}>
           <TableBody>
-
-            {showNew && (
-              <TableRow id='botton_add_footer'>
-                <TableCell className={classes.tabelBorder}>
-                  <TextField
-                    id="'add_groupname'"
-                    label="group name"
-                    variant="outlined"
-                    onChange={async (e) => handelCheckList(e)}
-                  />
-                </TableCell>
-
-                <TableCell className={classes.tabelBorder}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                    label="Group name"
-                  >
-                    <Select
-                      id="Group-name"
-                      className="inputCell"
-                      labelId="Group name"
-                      defaultValue="Top"
-                    >
-                      {allGroupName.map((selectValues) => (
-                        <MenuItem
-                          value={selectValues}
-                          onClick={(e) => handelParentValue(selectValues.id)}
-                        >
-                          {selectValues.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                </TableCell>
-                <TableCell className={classes.tabelBorder}>
-                  <Switch
-                    checked={form.status === 'active' ? true : false}
-                    onChange={() => handleStatusChange()}
-                    name="checkedA"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <DoneIcon
-                    onClick={(e) => handelNext(e)}
-                  />
-                  <span style={{ marginLeft: '20px' }}>
-                    <DeleteIcon />
-                  </span>
-
-                </TableCell>
-
-              </TableRow>
-            )}
             <TableRow>
               <TableCell className={classes.tabelBorder}>Sub-group Name</TableCell>
               <TableCell className={classes.tabelBorder}>Parent Group</TableCell>
               <TableCell className={classes.tabelBorder}>Status</TableCell>
               <TableCell className={classes.tabelBorder}>Action</TableCell>
             </TableRow>
-            {group.map((value, index) => (
+            {group.length > 0 ?
               <>
-                {editGroupId == value.checklistgroupId
-                  ? (
-                    <EditOnlyRow
-                      value={value}
-                      allGroupName={allGroupName}
-                      handelEditClose={handelEditClose}
-                      viewUpdate={viewUpdate}
-                      setViewUpdate={setViewUpdate}
-                    />
-                  )
-                  : (
-                    <ReadOnlyRow
-                      value={value}
-                      handleEditClick={handleEditClick}
-                      viewUpdate={viewUpdate}
-                      setViewUpdate={setViewUpdate}
-                      group={allGroupName.filter(item => value.parentGroup == item.id)[0]}
-                    />
-                  )
-                }
+                {group.map((value, index) => (
+                  <>
+                    {editGroupId == value.checklistgroupId
+                      ? (
+                        <EditOnlyRow
+                          value={value}
+                          allGroupName={allGroupName}
+                          handelEditClose={handelEditClose}
+                          viewUpdate={viewUpdate}
+                          setViewUpdate={setViewUpdate}
+                        />
+                      )
+                      : (
+                        <ReadOnlyRow
+                          value={value}
+                          handleEditClick={handleEditClick}
+                          viewUpdate={viewUpdate}
+                          setViewUpdate={setViewUpdate}
+                          group={allGroupName.filter(item => value.parentGroup == item.id)[0]}
+                        />
+                      )
+                    }
 
 
+                  </>
+                ))}
               </>
-            ))}
+              :
+              <>{(searchFilter.search || searchFilter.filter) && (<p style={{ paddingTop: '15px', paddingLeft: '15px', fontSize: '14px', fontWeight: '700' }}>No data found!</p>)}</>
+            }
+
+            <TableRow id='button_add_footer_group'>
+              <TableCell className={classes.tabelBorder}>
+                <TextField
+                  id="add_groupname"
+                  label="group name"
+                  variant="outlined"
+                  onChange={async (e) => handelCheckList(e)}
+                  error={newGroupError && !form.checkListGroupName}
+                />
+              </TableCell>
+
+              <TableCell className={classes.tabelBorder}>
+                <FormControl
+                  variant="outlined"
+                  className={classes.formControl}
+                  label="Group name"
+                >
+                  <Select
+                    id="Group-name"
+                    className="inputCell"
+                    labelId="Group name"
+                    defaultValue="Top"
+                    error={newGroupError && !form.parentGroup}
+                  >
+                    {allGroupName.map((selectValues) => (
+                      <MenuItem
+                        value={selectValues}
+                        onClick={(e) => handelParentValue(selectValues.id)}
+                      >
+                        {selectValues.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+              </TableCell>
+              <TableCell className={classes.tabelBorder}>
+                <Switch
+                  checked={form.status === 'active' ? true : false}
+                  onChange={() => handleStatusChange()}
+                  name="checkedA"
+                  inputProps={{ 'aria-label': 'secondary checkbox' }}
+                />
+              </TableCell>
+
+              <TableCell>
+                <DoneIcon
+                  onClick={(e) => handelNext(e)}
+                />
+                <span style={{ marginLeft: '20px' }}>
+                  <DeleteIcon />
+                </span>
+
+              </TableCell>
+
+            </TableRow>
 
 
           </TableBody>
         </Table>
-        {newGroupError && (<p style={{ paddingTop: '14px', color: '#ff0000', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>Please fill all the fields</p>)}
+        {newGroupError && (<p style={{ color: '#ff0000', paddingLeft: '15px', textAlign: 'center', fontSize: '14px' }}>Please fill all the fields</p>)}
       </Grid>
-    </PapperBlock>
+    </PapperBlock >
 
   );
 }
