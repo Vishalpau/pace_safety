@@ -187,7 +187,7 @@ function CheckList() {
                   {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
                   <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                  <TableCell className={classes.tabelBorder}>0</TableCell>
+                  <TableCell className={classes.tabelBorder}>{value.checkListSelectType}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
                   <TableCell className={classes.tabelBorder}>

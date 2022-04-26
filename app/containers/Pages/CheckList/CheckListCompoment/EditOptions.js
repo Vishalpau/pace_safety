@@ -27,7 +27,11 @@ const useStyles = makeStyles((theme) => ({
 
 const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewUpdate }) => {
 
-    const [editForm, setEditForm] = useState({})
+    const [error, setError] = useState(false);
+    const [editForm, setEditForm] = useState({
+        inputLabel: value.inputLabel,
+        fkGroupId: value.fkGroupId
+    })
 
     const handleStatusChange = async (e, checkListId, checkListOptionId) => {
         let editStatusForm = {}
@@ -41,14 +45,19 @@ const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewU
     }
 
     const handelUpdate = async (e, checkListId, checkListOptionId) => {
-        editForm["fkCheckListId"] = checkListId
-        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
-        editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
-        const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editForm)
-        if (res.status == 200) {
-            setViewUpdate(!viewUpdate)
+        if (editForm.inputLabel && editForm.fkGroupId) {
+            setError(false)
+            editForm["fkCheckListId"] = checkListId
+            editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+            editForm["updatedBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+            const res = await api.put(`api/v1/core/checklists/${checkListId}/options/${checkListOptionId}/`, editForm)
+            if (res.status == 200) {
+                setViewUpdate(!viewUpdate)
+            }
+            handelEditClose()
+        } else {
+            setError(true)
         }
-        handelEditClose()
     }
 
     const handelDelete = () => {
@@ -61,22 +70,24 @@ const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewU
             <TableCell key={value.isSystem}>
                 <TextField
                     id="filled-basic"
-                    label="group name"
+                    label="Option Name"
                     variant="outlined"
-                    defaultValue={value.inputLabel}
+                    value={editForm.inputLabel}
                     onChange={async (e) => setEditForm({
                         ...editForm,
                         inputLabel: e.target.value
                     })}
+
+                    error={error && !editForm.inputLabel}
                 />
 
             </TableCell>
             <TableCell key={value.isSystem}>
                 <TextField
                     id="filled-basic"
-                    label="group name"
+                    label="Input Value"
                     variant="outlined"
-                    defaultValue={value.inputLabel.toLowerCase().replace(" ", "-")}
+                    defaultValue={value.inputValue.replace(" ", "-")}
                     disabled
                 />
             </TableCell>
@@ -91,7 +102,8 @@ const EditOnlyOptionRow = ({ value, group, handelEditClose, setViewUpdate, viewU
                             id="Group-name"
                             className="inputCell"
                             labelId="Group name"
-                            defaultValue={value.fkGroupId}
+                            value={editForm.fkGroupId}
+                            error={error && !editForm.fkGroupId}
                         >
                             {Object.entries(group).map(([key, value]) => (
                                 <MenuItem

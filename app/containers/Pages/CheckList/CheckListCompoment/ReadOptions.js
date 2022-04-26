@@ -53,7 +53,7 @@ const ReadOnlyOptionRow = ({ value, group, handleEditClick, setViewUpdate, viewU
             <TableCell key={value.isSystem}>
                 {value.inputLabel}
             </TableCell>
-            <TableCell key={value.isSystem}>{value.inputLabel.toLowerCase().replace(" ", "-")}</TableCell>
+            <TableCell key={value.isSystem}>{value.inputValue.replace(" ", "-")}</TableCell>
             {Object.keys(group).length > 0 ?
                 <TableCell key={group[value.fkGroupId]}>
                     <p>{group[value.fkGroupId]}</p>
