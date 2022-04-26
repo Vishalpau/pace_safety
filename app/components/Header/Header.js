@@ -899,7 +899,7 @@ function Header(props) {
       depth: '1L',
       id: projectListData[index].firstBreakdown[phaseIndex].id,
       label: projectListData[index].breakdown[0].structure[0].name,
-      name: projectListData[index].firstBreakdown[phaseIndex].name
+      name: projectListData[index].firstBreakdown[phaseIndex].structureName
     });
     temp.push({
       breakdownLabel: projectListData[index].breakdown[0].structure[0].name,
@@ -912,19 +912,19 @@ function Header(props) {
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         unit: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].name
+        name: secondBreakdown[unitIndex].structureName
       });
       data.push({
         depth: '3L',
         id: thirdBreakdown[subUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].name
+        name: thirdBreakdown[subUnitIndex].structureName
       })
       data.push({
         depth: '4L',
         id: fourthBreakdown[subSubUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: fourthBreakdown[subSubUnitIndex].name
+        name: fourthBreakdown[subSubUnitIndex].structureName
       })
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
@@ -947,13 +947,13 @@ function Header(props) {
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         unit: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].name
+        name: secondBreakdown[unitIndex].structureName
       });
       data.push({
         depth: '3L',
         id: thirdBreakdown[subUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].name
+        name: thirdBreakdown[subUnitIndex].structureName
       })
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
@@ -971,7 +971,7 @@ function Header(props) {
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].name
+        name: secondBreakdown[unitIndex].structureName
       });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
@@ -1167,7 +1167,7 @@ function Header(props) {
                                       Code: {value.projectCode}
                                     </span>
                                     <span className={classesm.externalLinkSection}>
-                                      <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
+                                      {/* <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                         <IconButton aria-label="delete" className={classesm.margin}>
                                           <svg id="Control-Tower-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                             <g id="Group_5864" data-name="Group 5864" transform="translate(4.371 0.874)">
@@ -1189,7 +1189,7 @@ function Header(props) {
                                             <rect id="Rectangle_1908" data-name="Rectangle 1908" width="32" height="32" fill="none" />
                                           </svg>
                                         </IconButton>
-                                      </Tooltip>
+                                      </Tooltip> */}
                                       {/* <Tooltip title="Geo location" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                         <IconButton aria-label="delete" className={classesm.marginR}>
                                           <svg id="GIS-Map-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -1235,7 +1235,7 @@ function Header(props) {
                                               <ListItem button className={classesm.phaseMenuList} onClick={
                                                 (value.breakdown && !value.breakdown[1]) ? () => handleProjectBreakdown(index, phaseIndex, null, null, null, '1L') : null
                                               }>
-                                                <ListItemText primary={phase.name} />
+                                                <ListItemText primary={phase.structureName} />
                                                 {value.breakdown && value.breakdown[1] && (
                                                   <>
                                                     {openPhase === `panel${index}${phaseIndex}` ? <RemoveIcon /> : <AddIcon />}
@@ -1259,7 +1259,7 @@ function Header(props) {
                                                         <ListItem button className={classesm.unitMenuList} onClick={
                                                           (value.breakdown && !value.breakdown[2]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, null, null, '2L') : null
                                                         }>
-                                                          <ListItemText primary={unit.name} />
+                                                          <ListItemText primary={unit.structureName} />
                                                           {value.breakdown && value.breakdown[2] && (
                                                             <>
                                                               {openUnit === `panel${index}${phaseIndex}${unitIndex}` ? <RemoveIcon /> : <AddIcon />}
@@ -1280,7 +1280,7 @@ function Header(props) {
                                                                 <ListItem button className={classesm.unitMenuList} onClick={
                                                                   (value.breakdown && !value.breakdown[3]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, null, '3L') : null
                                                                 }>
-                                                                  <ListItemText primary={subUnit.name} />
+                                                                  <ListItemText primary={subUnit.structureName} />
                                                                   {value.breakdown && value.breakdown[3] && (
                                                                     <>
                                                                       {openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}` ? <RemoveIcon /> : <AddIcon />}
@@ -1294,7 +1294,7 @@ function Header(props) {
                                                                 <List className={classesm.listSection}>
                                                                   {fourthBreakdown.map((subSubUnit, subSubUnitIndex) => (
                                                                     <ListItem button className={classesm.workAreaList} onClick={() => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, subSubUnitIndex, '4L')}>
-                                                                      <ListItemText primary={subSubUnit.name} />
+                                                                      <ListItemText primary={subSubUnit.structureName} />
                                                                     </ListItem>
                                                                   ))}
                                                                 </List>
