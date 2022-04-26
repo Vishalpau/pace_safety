@@ -673,12 +673,12 @@ const Checks = (props) => {
   const handelSubmit = async () => {
 
     console.log(checkData);
-    const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
+    // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
 
-    // const isValid = checkData.every((a) => a.check === true)
+    const isValid = checkData.every((a) => a.check === true)
 
-    if (isValids) {
+    if (isValid) {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
