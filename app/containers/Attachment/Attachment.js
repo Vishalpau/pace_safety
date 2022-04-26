@@ -6,6 +6,10 @@ import excelIcon from 'dan-images/excelIcon.png';
 import wordIcon from 'dan-images/wordIcon.png';
 import pptIcon from 'dan-images/pptIcon.png';
 
+import audioIcon from 'dan-images/audioIcon.png';
+import videoIcon from 'dan-images/videoIcon.png';
+
+
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { deepOrange, green } from "@material-ui/core/colors";
@@ -83,10 +87,29 @@ export const Attachment = ({ value }) => {
 
             </IconButton>
         );
-    } else {
+    } else if (
+        extension.toLowerCase() === "png" ||
+        extension.toLowerCase() === "jpg" ||
+        extension.toLowerCase() === "mp4" ||
+        extension.toLowerCase() === "mp3" ||
+        extension.toLowerCase() === "mov" ||
+        extension.toLowerCase() === "flv" ||
+        extension.toLowerCase() === "avi" ||
+        extension.toLowerCase() === "mkv") {
+        return (
+            <IconButton>
+                <Tooltip title={fileName}>
+                    <Avatar src={videoIcon } size={1} variant="square" onClick={() => setOpen(true)} />
+                </Tooltip>
+                <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
+
+            </IconButton>
+        );
+    }
+    else {
         return (
             <>
-           <IconButton onClick={() => setOpen(true)}>
+                <IconButton onClick={() => setOpen(true)}>
                     <Tooltip title={fileName}>
                         <Avatar
                             alt="image"

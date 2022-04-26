@@ -66,6 +66,7 @@ import moment from "moment";
 import Loader from "../Loader";
 import { handelActionTracker } from "./Compliance/Checks"
 import { connect } from "react-redux";
+import Attachment from "../../../containers/Attachment/Attachment";
 
 // Sidebar Links Helper Function
 // function ListItemLink(props) {
@@ -225,6 +226,9 @@ function ComplianceSummary(props) {
   const [colordata, setColorData] = useState([]);
   const [ratingData, setRatingData] = useState({});
 
+  const [result, setResult] = useState({});
+
+
   const [expanded, setExpanded] = React.useState("panel1");
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -307,28 +311,25 @@ function ComplianceSummary(props) {
     setMyAudioOpen(false);
   };
 
-  const fetchCheklistData = async () => {
+  const fetchCheklistData = async (id) => {
     const res = await api.get(
       `/api/v1/core/checklists/compliance-groups/${projectId}/`
       // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
-    await fetchComplianceData(result);
+    await fetchComplianceData(result,id);
   };
 
-  const fetchComplianceData = async (data) => {
-    console.log(data, 'data')
-    let complianceId = localStorage.getItem("fkComplianceId");
+  const fetchComplianceData = async (data,id) => {
     const res = await api
-      .get(`/api/v1/audits/${complianceId}/`)
+      .get(`/api/v1/audits/${id}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result, 'resultsssssssss')
+        setResult(result);
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
         let tempGroup = [];
         let tempSubGroup = [];
-
         for (let j = 0; j < data.length; j++) {
           for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
@@ -349,43 +350,24 @@ function ComplianceSummary(props) {
             });
           }
         }
-
         setGroupData(tempGroup);
-        setSubGroupData(tempGroup);
+        setSubGroupData(tempSubGroup);
         setComplianceData(result);
         handelWorkArea(result);
         handleTeamName(result.inspectionTeam);
-        fetchNotificationSent(result.notifyTo);
+        fetchNotificationSent(result.notifyTo, result.fkProjectStructureIds);
         setIsLoading(true);
       })
       .catch((error) => console.log(error));
   };
 
-  // const fetchComplianceData = async (data) => {
-  //   let complianceId = localStorage.getItem("fkComplianceId");
-  //   const res = await api
-  //     .get(`/api/v1/audits/${complianceId}/`)
-  //     .then((response) => {
-  //       let result = response.data.data.results
-  //       let groupIds = result.groupIds.split(',')
-  //       let subGroupIds = result.subGroupIds.split(',')
-  //       setGroupId(groupIds)
-  //       setSubGroupId(subGroupIds)
-  //       let tempGroup = []
-  //       let tempSubGroup = []
-  //       for (let i = 0; i < groupIds.length; i++){
+  useEffect(() => {
+  }, [groupData])
 
-  //         for (let j = 0; j < data.length; j++){
-  //           if(data[j]['checklistId'] == groupIds[i]){
-  //             tempGroup.push(data[j])
-  //           }
-  //         }
-  //       }
-  //       setCheckData(tempGroup)
-  //       setForm(result);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
+  useEffect(() => {
+    console.log(quesData, 'questionData');
+  }, [quesData])
+
 
   const handelWorkArea = async (complianceData) => {
     let structName = [];
@@ -426,22 +408,25 @@ function ComplianceSummary(props) {
     return fetchProjectId[0].projectName;
   };
 
+
+
   const handleComplianceStatusChange = () => {
     if (complianceData.performanceSummary !== null) {
       setCompliance(true);
     } else {
       history.push(
-        `/app/pages/compliance/compliance-details/${localStorage.getItem(
-          "fkComplianceId"
-        )}`
+        `/app/pages/compliance/compliance-details/${complianceData.id}`
       );
     }
   };
 
-  const fetchNotificationSent = async (notifyTo) => {
+
+  const fetchNotificationSent = async (notifyTo, fkProjectStructure ) => {
+
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
+    // let projectStr = JSON.parse(localStorage.getItem("commonObject")).audit.projectStruct;
 
     const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
       : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
@@ -455,7 +440,7 @@ function ComplianceSummary(props) {
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${fkProjectStructureIds}`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/compliance/?subentity=compliance&roleType=custom&projectStructure=${fkProjectStructure}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -481,9 +466,8 @@ function ComplianceSummary(props) {
     );
     const result = res.data.data.results;
     setQueData(result)
+
   };
-
-
 
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
@@ -529,7 +513,6 @@ function ComplianceSummary(props) {
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`)
     const result = res.data.data.results
-    console.log(result,'color')
     setColorData(result)
   }
 
@@ -537,11 +520,12 @@ function ComplianceSummary(props) {
   useEffect(() => {
     if (id) {
       auditQueData(id)
-      fetchCheklistData();
+      fetchCheklistData(id);
       handelActionTracker()
       fetchMatrixData()
     }
   }, []);
+
 
   return (
     <CustomPapperBlock
@@ -965,157 +949,9 @@ function ComplianceSummary(props) {
                                       ))
                                       : "-"}
                                   </Grid>
-
-                                  {/* <Grid item md={12} sm={12} xs={12}>
-                                        <Accordion
-                                          expanded={expanded === "panel1"}
-                                          onChange={handleExpand("panel1")}
-                                        >
-                                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                                            <Typography className={classes.heading}>
-                                              Compliance Details
-                                            </Typography>
-                                          </AccordionSummary>
-                                          <AccordionDetails>
-                                            <Grid container item xs={12} spacing={3}>
-                                                <>
-                                                  <Grid item md={12}>
-                                                    <Typography variant="label" gutterBottom className={Fonts.labelName}>
-                                                        Project structure
-                                                    </Typography>
-                                                    <Typography className={Fonts.labelValue}>
-                                                      Project name - Phase Name - Unit Name
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Select the type of compliance check
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      Work area compliance check
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Date of compliance check
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      02-09-2021
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={12} className={classes.viewSectionHeading}>
-                                                    <Typography>
-                                                      Company representative information
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={6} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Client HSE rep
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      NA
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={6} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Client rep number
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      NA
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={12} className={classes.viewSectionHeading}>
-                                                    <Typography>
-                                                      Contractor information
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Contractor name
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      NA
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Contractor rep number
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      NA
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Sub-Contractor name
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      NA
-                                                    </Typography>
-                                                  </Grid>
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Contractor supervisor name
-                                                    </Typography>
-                                                    <Typography variant="body" className={Fonts.labelValue}>
-                                                      NA
-                                                    </Typography>
-                                                  </Grid>
-
-                                                  <Grid item xs={12} md={6}>
-                                                    <Typography
-                                                      variant="label"
-                                                      gutterBottom
-                                                      className={Fonts.labelName}
-                                                    >
-                                                      Inspection team
-                                                    </Typography>
-                                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Inspection team one</Typography>
-                                                    <Typography variant="body" display="block" className={Fonts.labelValue}>Inspection team Two</Typography>
-                                                  </Grid>
-                                                </>
-                                            </Grid>
-                                          </AccordionDetails>
-                                        </Accordion>
-                                      </Grid> */}
                                 </Grid>
                               </Paper>
                             </Grid>
-                            {/* </Grid> */}
-                            {/* </Grid> */}
-
                             <Grid
                               item
                               md={12}
@@ -1150,6 +986,7 @@ function ComplianceSummary(props) {
                               xs={12}
                               className="paddTBRemove"
                             >
+
                               <Paper elevation={1} className="paperSection">
                                 <Grid container spacing={3}>
                                   <Grid item md={12} xs={12}>
@@ -1161,6 +998,7 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
+                                        {/* {console.log(quesData, 'quesData')} */}
                                         <FormGroup>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
@@ -1187,21 +1025,22 @@ function ComplianceSummary(props) {
 
                                       <Grid item md={6} xs={12}>
                                         <Grid container spacing={3}>
-                                          {Object.entries(subGroupData).map(
-                                            ([key, value]) => (
-                                              <Grid
-                                                item
-                                                md={12}
-                                                xs={12}
-                                                className={classes.formBox}
-                                              >
-                                                <FormLabel
-                                                  className="checkRadioLabel"
-                                                  component="legend"
+                                          {result.subGroups.map(
+                                            value => {
+                                              return (
+                                                <Grid
+                                                  item
+                                                  md={12}
+                                                  xs={12}
+                                                  className={classes.formBox}
                                                 >
-                                                </FormLabel>
-                                                <FormGroup>
-                                                  {value['checkListValues'].map((value, i) => (
+                                                  <FormLabel
+                                                    className="checkRadioLabel"
+                                                    component="legend"
+                                                  >
+                                                  </FormLabel>
+                                                  <FormGroup>
+                                              
                                                     <FormControlLabel
                                                       //className={classes.labelValue}
                                                       className="checkedUnclick"
@@ -1223,11 +1062,16 @@ function ComplianceSummary(props) {
                                                       }
                                                       label={value.inputLabel}
                                                     />
-                                                  ))}
-                                                </FormGroup>
-                                              </Grid>
-                                            )
+                                                    {/* )
+                                                    }
+                                                    )} */}
+                                                  </FormGroup>
+                                                </Grid>
+                                              )
+                                            }
                                           )}
+
+
                                         </Grid>
                                       </Grid>
                                     </Grid>
@@ -1328,257 +1172,316 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {groupData.map(val => val.checkListValues.map((subGrpData, index) => {
+                                      {groupData.map(val => {
+                                        // console.log(val);
                                         return (
                                           <>
-                                            <FormLabel
-                                              className="checkRadioLabel"
-                                              component="legend"
-                                            >
-                                              {subGrpData.inputLabel}
-                                            </FormLabel>
-                                            {console.log(quesData,'quesData')}
-                                            {quesData.map((value, index) => {
-                                              return subGrpData.id == value.subGroupId ? <Accordion
-                                                expanded={
-                                                  expandedTableDetail === "panel3"
-                                                }
-                                                onChange={handleTDChange("panel3")}
-                                                defaultExpanded
-                                                className="backPaperAccordian"
-
-                                              >
-
-                                                <AccordionSummary
-                                                  expandIcon={<ExpandMoreIcon />}
-                                                  aria-controls="panel1bh-content"
-                                                  id="panel1bh-header"
-                                                  className="accordionHeaderSection"
-                                                >
-                                                  <List className={classes.heading}>
-                                                    <ListItem
-                                                      className={
-                                                        classes.accordingHeaderContentLeft
-                                                      }
+                                            {val.checkListValues.map(c => {
+                                              return (
+                                                quesData.find(a => a.subGroupId === c.id) !== undefined &&
+                                                  (
+                                                    <FormLabel
+                                                      className="checkRadioLabel"
+                                                      component="legend"
                                                     >
-                                                      <ListItemText primary={value.question} />
-                                                    </ListItem>
-                                                  </List>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                  <Grid container spacing={2}>
-                                                    {value.criticality ?
+                                                      {val.checkListGroupName}
+                                                    </FormLabel>
+                                                  )
+                                              )
+                                            })}
+                                            {/* {quesData.find(a => a.subGroupId === val.checkListValues.map(c => c.id) !== undefined && */}
+
+                                            {/* )}                                           */}
+
+                                            {val.checkListValues.map((subGrpData, index) => {
+                                              // console.log(subGrpData, 'subjiii');
+                                              return (
+                                                quesData.length <= 0 ? <p>No Question Configured</p> :
+                                                  quesData.map((value, index) => {
+                                                    // console.log(value, 'value.subGroupId');
+                                                    return subGrpData.id === value.subGroupId ?
                                                       <>
-                                                        <Grid item md={4} sm={4} xs={12}>
-                                                          <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
-                                                          <Typography className="viewLabelValue">
-                                                            {value.criticality ? value.criticality : '-'}
-                                                          </Typography>
-                                                        </Grid>
-
-                                                        <Grid item md={4} sm={4} xs={12}>
-                                                          <FormLabel component="legend" className="viewLabel">Status</FormLabel>
-                                                          <Typography className="viewLabelValue">
-                                                            {value.auditStatus ? value.auditStatus : '-'}
-                                                          </Typography>
-                                                        </Grid>
-
-                                                        <Grid item md={4} sm={4} xs={12}>
-                                                          
-                                                          <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
-                                                          <Typography style={{ backgroundColor: value.performance ? colordata.filter(i=> i.matrixConstant ==value.performance*5/100 )[0].matrixConstantColor : '#fff' }} className="viewLabelValue">
-                                                            {value.performance ? value.performance : '-'}
-                                          
-                                                          </Typography>
-                                                        </Grid>
-                                                      </>
-                                                      :
-                                                      <Grid
-                                                        item
-                                                        md={12}
-                                                        sm={12}
-                                                        xs={12}
-                                                      >
-                                                        <FormLabel
-                                                          component="legend"
-                                                          className="viewLabel"
+                                                        <Accordion
+                                                          expanded={
+                                                            expandedTableDetail === "panel3"
+                                                          }
+                                                          onChange={handleTDChange("panel3")}
+                                                          defaultExpanded
+                                                          className="backPaperAccordian"
                                                         >
-                                                          Is this control applicable ?
-                                                        </FormLabel>
-                                                        <Typography className="viewLabelValue">
-                                                          {value.defaultResponse ? value.defaultResponse : '-'}
-                                                        </Typography>
-                                                      </Grid>
-                                                    }
-                                                    <Grid
-                                                      item
-                                                      md={12}
-                                                      sm={12}
-                                                      xs={12}
-                                                    >
-                                                      <FormLabel
-                                                        component="legend"
-                                                        className="viewLabel"
-                                                      >
-                                                        Findings
-                                                      </FormLabel>
-                                                      <Typography className="viewLabelValue">
-                                                        {value.findings ? value.findings : '-'}
-                                                      </Typography>
-                                                    </Grid>
-                                                    <Grid
-                                                      item
-                                                      md={12}
-                                                      sm={12}
-                                                      xs={12}
-                                                    >
-                                                      <FormLabel
-                                                        component="legend"
-                                                        className="checkRadioLabel"
-                                                      >
-                                                        Score
-                                                      </FormLabel>
-                                                      <Grid
-                                                        item
-                                                        md={12}
-                                                        sm={12}
-                                                        xs={12}
-                                                      >
-                                                        <FormLabel
-                                                          component="legend"
-                                                          className="viewLabel"
-                                                        >
-                                                          Percentage
-                                                        </FormLabel>
-                                                        <Typography className="viewLabelValue">
-                                                          {value.score ? value.score : '-'}
+                                                          <AccordionSummary
+                                                            expandIcon={<ExpandMoreIcon />}
+                                                            aria-controls="panel1bh-content"
+                                                            id="panel1bh-header"
+                                                            className="accordionHeaderSection"
+                                                          >
+                                                            <List className={classes.heading}>
+                                                              <ListItem
+                                                                className={
+                                                                  classes.accordingHeaderContentLeft
+                                                                }
+                                                              >
+                                                                <ListItemText primary={value.question} />
+                                                              </ListItem>
+                                                            </List>
+                                                          </AccordionSummary>
+                                                          <AccordionDetails>
+                                                            <Grid container spacing={2}>
+                                                              {value.criticality ?
+                                                                <>
+                                                                  <Grid item md={4} sm={4} xs={12}>
+                                                                    <FormLabel component="legend" className="viewLabel">Criticality</FormLabel>
+                                                                    <Typography className="viewLabelValue">
+                                                                      {value.criticality ? value.criticality : '-'}
+                                                                    </Typography>
+                                                                  </Grid>
 
-                                                        </Typography>
-                                                      </Grid>
-                                                    </Grid>
+                                                                  <Grid item md={4} sm={4} xs={12}>
+                                                                    <FormLabel component="legend" className="viewLabel">Status</FormLabel>
+                                                                    <Typography className="viewLabelValue">
+                                                                      {value.auditStatus ? value.auditStatus : '-'}
+                                                                    </Typography>
+                                                                  </Grid>
 
+                                                                  <Grid item md={4} sm={4} xs={12}>
 
+                                                                    <FormLabel component="legend" className="viewLabel">Performance rating</FormLabel>
+                                                                    <Typography style={{ backgroundColor: value.performance && colordata.filter(i => i.matrixConstant == value.performance * 5 / 100).length ? colordata.filter(i => i.matrixConstant == value.performance * 5 / 100)[0].matrixConstantColor : '#fff', border: '1px', width: '50%', height: '80%', textAlign: 'center' }} className="viewLabelValue">
+                                                                      {value.performance ? value.performance : '-'}
 
-                                                    {actionData.map((val) => (
-
-                                                      <>
-                                                        {val.id == value.questionId ? (
-
-                                                          <>
-                                                            {val.action.length > 0 &&
-                                                              <Grid item md={12} xs={12}>
-                                                                <Table
-                                                                  component={Paper}
-                                                                  className="simpleTableSection"
+                                                                    </Typography>
+                                                                  </Grid>
+                                                                </>
+                                                                :
+                                                                <Grid
+                                                                  item
+                                                                  md={12}
+                                                                  sm={12}
+                                                                  xs={12}
                                                                 >
-                                                                  <TableHead>
-                                                                    <TableRow>
-                                                                      <TableCell className="tableHeadCellFirst">
-                                                                        Action number
-                                                                      </TableCell>
-                                                                      <TableCell className="tableHeadCellSecond">
-                                                                        Action title
-                                                                      </TableCell>
-                                                                    </TableRow>
-                                                                  </TableHead>
-                                                                  <TableBody>
-                                                                    {actionData.map((val) => (
-                                                                      <>
-                                                                        {val.id == value.questionId ? (
-                                                                          <>
-                                                                            {val.action.length > 0 &&
+                                                                  <FormLabel
+                                                                    component="legend"
+                                                                    className="viewLabel"
+                                                                  >
+                                                                    Is this control applicable ?
+                                                                  </FormLabel>
+                                                                  <Typography className="viewLabelValue">
+                                                                    {value.defaultResponse ? value.defaultResponse : '-'}
+                                                                  </Typography>
+                                                                </Grid>
+                                                              }
+                                                              <Grid
+                                                                item
+                                                                md={12}
+                                                                sm={12}
+                                                                xs={12}
+                                                              >
+                                                                <FormLabel
+                                                                  component="legend"
+                                                                  className="viewLabel"
+                                                                >
+                                                                  Findings
+                                                                </FormLabel>
+                                                                <Typography className="viewLabelValue">
+                                                                  {value.findings ? value.findings : '-'}
+                                                                </Typography>
+                                                              </Grid>
+                                                              {value.score &&
+                                                                <Grid
+                                                                  item
+                                                                  md={12}
+                                                                  sm={12}
+                                                                  xs={12}
+                                                                >
+                                                                  <FormLabel
+                                                                    component="legend"
+                                                                    className="checkRadioLabel"
+                                                                  >
+                                                                    Score
+                                                                  </FormLabel>
+                                                                  <Grid
+                                                                    item
+                                                                    md={12}
+                                                                    sm={12}
+                                                                    xs={12}
+                                                                  >
+                                                                    <FormLabel
+                                                                      component="legend"
+                                                                      className="viewLabel"
+                                                                    >
 
-                                                                              val.action.map(
+                                                                    </FormLabel>
+                                                                    <Typography className="viewLabelValue">
+                                                                      {value.score ? value.score : '-'}
 
-                                                                                (valueAction) => (
+                                                                    </Typography>
+                                                                  </Grid>
+                                                                </Grid>
+                                                              }
+
+                                                              {actionData.filter(val => val.id == value.questionId)[0] && actionData.filter(val => val.id == value.questionId)[0].action.length ?
+                                                                <Grid
+                                                                  item
+                                                                  md={12}
+                                                                  sm={12}
+                                                                  xs={12}
+                                                                >
+                                                                  <FormLabel
+                                                                    component="legend"
+                                                                    className="checkRadioLabel"
+                                                                  >
+                                                                    Corrective Actions
+                                                                  </FormLabel>
+                                                                  {actionData.map((val) => (
+                                                                    <>
+                                                                      {val.id == value.questionId ? (
+                                                                        <>
+                                                                          {val.action.length > 0 &&
+                                                                            <Grid item md={12} xs={12}>
+                                                                              <Table
+                                                                                component={Paper}
+                                                                                className="simpleTableSection"
+                                                                              >
+                                                                                <TableHead>
                                                                                   <TableRow>
-                                                                                    <TableCell align="left">
-                                                                                      <Link
-                                                                                        className={
-                                                                                          classes.actionLinkAudit
-                                                                                        }
-                                                                                        display="block"
-                                                                                        href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
-                                                                                          localStorage.getItem(
-                                                                                            "BaseUrl"
-                                                                                          )
-                                                                                        )[
-                                                                                          "actionClientID"
-                                                                                        ]
-                                                                                          }&response_type=code&companyId=${JSON.parse(
-                                                                                            localStorage.getItem(
-                                                                                              "company"
-                                                                                            )
-                                                                                          )
-                                                                                            .fkCompanyId
-                                                                                          }&projectId=${JSON.parse(
-                                                                                            localStorage.getItem(
-                                                                                              "projectName"
-                                                                                            )
-                                                                                          )
-                                                                                            .projectName
-                                                                                            .projectId
-                                                                                          }&targetPage=/action/details/&targetId=${valueAction.id
-                                                                                          }`}
-                                                                                        target="_blank"
-                                                                                      >
-                                                                                        {
-                                                                                          valueAction.number
-                                                                                        }
-                                                                                      </Link>
+                                                                                    <TableCell className="tableHeadCellFirst">
+                                                                                      Action number
                                                                                     </TableCell>
-                                                                                    <TableCell>
-                                                                                      {
-                                                                                        valueAction.title
-                                                                                      }
+                                                                                    <TableCell className="tableHeadCellSecond">
+                                                                                      Action title
                                                                                     </TableCell>
                                                                                   </TableRow>
-                                                                                )
-                                                                              )}
-                                                                          </>
-                                                                        ) : null}
-                                                                      </>
-                                                                    ))}
-                                                                  </TableBody>
-                                                                </Table>
-                                                              </Grid>
-                                                            }</>) : null}
-                                                      </>
-                                                    ))}
+                                                                                </TableHead>
+                                                                                <TableBody>
+                                                                                  {actionData.map((val) => (
+                                                                                    <>
+                                                                                      {val.id == value.questionId ? (
+                                                                                        <>
+                                                                                          {val.action.length > 0 &&
+                                                                                            val.action.map(
+                                                                                              (valueAction) => (
+                                                                                                <TableRow>
+                                                                                                  <TableCell align="left">
+                                                                                                    <Link
+                                                                                                      className={classes.actionLinkAudit}
+                                                                                                      display="block"
+                                                                                                      href={`${SSO_URL}/api/v1/user/auth/authorize/?client_id=${JSON.parse(
+                                                                                                        localStorage.getItem(
+                                                                                                          "BaseUrl"))["actionClientID"]
+                                                                                                        }&response_type=code&companyId=${JSON.parse(
+                                                                                                          localStorage.getItem(
+                                                                                                            "company")).fkCompanyId
+                                                                                                        }&projectId=${JSON.parse(
+                                                                                                          localStorage.getItem(
+                                                                                                            "projectName")).projectName.projectId
+                                                                                                        }&targetPage=/action/details/&targetId=${valueAction.id
+                                                                                                        }`}
+                                                                                                      target="_blank"
+                                                                                                    >
+                                                                                                      {
+                                                                                                        valueAction.number
+                                                                                                      }
+                                                                                                    </Link>
+                                                                                                  </TableCell>
+                                                                                                  <TableCell>
+                                                                                                    {
+                                                                                                      valueAction.title
+                                                                                                    }
+                                                                                                  </TableCell>
+                                                                                                </TableRow>
+                                                                                              )
+                                                                                            )}
+                                                                                        </>
+                                                                                      ) : ""}
+                                                                                    </>
+                                                                                  ))}
+                                                                                </TableBody>
+                                                                              </Table>
+                                                                            </Grid>
+                                                                          }</>) : ''}
+                                                                    </>
+                                                                  ))}
+                                                                </Grid>
+                                                                : ''}
 
-                                                    <Grid
-                                                      item
-                                                      md={12}
-                                                      sm={12}
-                                                      xs={12}
-                                                    >
-                                                      <FormLabel
-                                                        component="legend"
-                                                        className="checkRadioLabel"
-                                                      >
-                                                        Attachments
-                                                      </FormLabel>
-                                                      {value.attachment ? value.attachment.map(att =>
-                                                        <div className="attachFileThumb">
-                                                          <img
-                                                            src={att.attachment}
-                                                            className="attachFileStyle"
-                                                            alt="attachment"
-                                                          />
-                                                          <div className="attachContent">
-                                                            {/* <p>construction.jpg</p>
-                                                            <p>125kb</p> */}
-                                                          </div>
-                                                        </div>) : "-"}
-                                                    </Grid>
-                                                  </Grid>
-                                                </AccordionDetails>
-                                              </Accordion>
-                                                : ''
+                                                              {value.attachment &&
+                                                                <Grid
+                                                                  item
+                                                                  md={12}
+                                                                  sm={12}
+                                                                  xs={12}
+                                                                >
+                                                                  <FormLabel
+                                                                    component="legend"
+                                                                    className="checkRadioLabel"
+                                                                  >
+                                                                    Document
+                                                                  </FormLabel>
+                                                                  {/* {value.attachment ? value.attachment.map(att => */}
+                                                                  <div className="attachFileThumb">
+                                                                    <Attachment value={value.attachment} />
+                                                                    {/* <img
+                                                              src={value.attachment}
+                                                              className="attachFileStyle"
+                                                              alt="attachment"
+                                                            /> */}
+                                                                    {/* <div className="attachContent">
+                                                          <p>construction.jpg</p>
+                                                          <p>125kb</p>
+                                                        </div> */}
+                                                                  </div>
+                                                                  {/* ) :
+                                                        "-"
+                                                      } */}
+                                                                </Grid>
+                                                              }
+
+
+                                                              {value.mediaAttachment &&
+                                                                <Grid
+                                                                  item
+                                                                  md={12}
+                                                                  sm={12}
+                                                                  xs={12}
+                                                                >
+                                                                  <FormLabel
+                                                                    component="legend"
+                                                                    className="checkRadioLabel"
+                                                                  >
+                                                                    Evidence
+                                                                  </FormLabel>
+                                                                  {/* {value.attachment ? value.attachment.map(att => */}
+                                                                  <div className="attachFileThumb">
+                                                                    <Attachment value={value.mediaAttachment} />
+                                                                    {/* <img
+                                                              src={value.mediaAttachment}
+                                                              className="attachFileStyle"
+                                                              alt="mediaAttachment"
+                                                            /> */}
+                                                                    <div className="attachContent">
+                                                                      {/* <p>construction.jpg</p>
+                                                          <p>125kb</p> */}
+                                                                    </div>
+                                                                  </div>
+                                                                  {/* ) :
+                                                        "-"
+                                                      } */}
+                                                                </Grid>
+                                                              }
+
+                                                            </Grid>
+                                                          </AccordionDetails>
+                                                        </Accordion>
+                                                      </>
+                                                      : ''
+                                                  })
+                                              )
                                             })}
                                           </>
                                         )
-                                      }))}
+                                      })
+                                      }
+
                                       {/* <span
                                           className={
                                             classes.accordingHeaderContentleft

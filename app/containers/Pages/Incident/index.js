@@ -292,7 +292,7 @@ function BlankPage(props) {
 
   const handlePush = async () => {
     history.push({
-      pathname:INITIAL_NOTIFICATION_FORM_NEW['Incident details'],
+      pathname: INITIAL_NOTIFICATION_FORM_NEW['Incident details'],
       state: 'new incident'
     });
   };
@@ -449,283 +449,283 @@ function BlankPage(props) {
       action="view_incidents"
       html={(
         <PapperBlock title="Incidents" icon="ion-md-list-box" desc="">
-      <div className={classes.root}>
-        <AppBar position="static" color="transparent">
-          <div className={classes.toolbar}>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={4}>
-                <div className={classes.search}>
-                  <Paper variant="outlined" className={classes.searchPaper}>
-                    <div className={classes.searchIcon}>
-                      <SearchIcon />
+          <div className={classes.root}>
+            <AppBar position="static" color="transparent">
+              <div className={classes.toolbar}>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={12} md={4}>
+                    <div className={classes.search}>
+                      <Paper variant="outlined" className={classes.searchPaper}>
+                        <div className={classes.searchIcon}>
+                          <SearchIcon />
+                        </div>
+                        <InputBase
+                          placeholder="Search…"
+                          color="primary"
+                          fullWidth
+                          classes={{
+                            root: classes.inputRoot,
+                            input: classes.inputInput,
+                          }}
+                          onChange={(e) => handleSearchIncident(e.target.value)}
+                        />
+                      </Paper>
                     </div>
-                    <InputBase
-                      placeholder="Search…"
-                      color="primary"
-                      fullWidth
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                      }}
-                      onChange={(e) => handleSearchIncident(e.target.value)}
-                    />
-                  </Paper>
-                </div>
-              </Grid>
+                  </Grid>
 
-              <Grid item xs={5} md={3}>
-                <div className="toggleViewButtons">
-                  <Tooltip title="List View">
-                    <IconButton
-                      href="#table"
-                      className={classes.filterIcon}
-                      onClick={(e) => handelViewTabel(e)}
-                    >
-                      <FormatListBulleted />
-                    </IconButton>
-                  </Tooltip>
+                  <Grid item xs={5} md={3}>
+                    <div className="toggleViewButtons">
+                      <Tooltip title="List View">
+                        <IconButton
+                          href="#table"
+                          className={classes.filterIcon}
+                          onClick={(e) => handelViewTabel(e)}
+                        >
+                          <FormatListBulleted />
+                        </IconButton>
+                      </Tooltip>
 
-                  <Tooltip title="Grid View">
-                    <IconButton
-                      href="#grid"
-                      aria-label="grid"
-                      className={classes.filterIcon}
-                      onClick={(e) => handelView(e)}
-                    >
-                      <ViewAgendaIcon />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              </Grid>
-              <Grid item xs={7} md={5}>
-                <Box display="flex" justifyContent="flex-end">
+                      <Tooltip title="Grid View">
+                        <IconButton
+                          href="#grid"
+                          aria-label="grid"
+                          className={classes.filterIcon}
+                          onClick={(e) => handelView(e)}
+                        >
+                          <ViewAgendaIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  </Grid>
+                  <Grid item xs={7} md={5}>
+                    <Box display="flex" justifyContent="flex-end">
 
-                  {isDesktop ? (
-                    <Tooltip title="New Incident">
-                      <Button
-                        aria-label="New Incident"
-                        onClick={() => handlePush()}
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        startIcon={<AddCircleIcon />}
-                        className={classes.newIncidentButton}
-                        disableElevation
-                        style={{
-                          background: checkACL('safety-incident', 'add_incidents') ? '#06425c' : '#c0c0c0',
-                          cursor: checkACL('safety-incident', 'add_incidents') ? 'pointer' : 'not-allowed'
-                        }}
-                      >
-                        New Incident
-                      </Button>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="New Incident">
-                      <IconButton
-                        onClick={() => handlePush()}
-                        className={classes.newIncidentIconButton}
-                      >
-                        <AddCircleIcon />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </Box>
-              </Grid>
-            </Grid>
+                      {isDesktop ? (
+                        <Tooltip title="New Incident">
+                          <Button
+                            aria-label="New Incident"
+                            onClick={() => handlePush()}
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            startIcon={<AddCircleIcon />}
+                            className={classes.newIncidentButton}
+                            disableElevation
+                            style={{
+                              background: checkACL('safety-incident', 'add_incidents') ? '#06425c' : '#c0c0c0',
+                              cursor: checkACL('safety-incident', 'add_incidents') ? 'pointer' : 'not-allowed'
+                            }}
+                          >
+                            New Incident
+                          </Button>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title="New Incident">
+                          <IconButton
+                            onClick={() => handlePush()}
+                            className={classes.newIncidentIconButton}
+                          >
+                            <AddCircleIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Box>
+                  </Grid>
+                </Grid>
+              </div>
+            </AppBar>
           </div>
-        </AppBar>
-      </div>
 
-      {listToggle == false ? (
-        <>
-          {isLoading == false ?
+          {listToggle == false ? (
             <>
-              <div className="gridView">
-                {Object.entries(incidents)
-                  .filter((searchText) => {
-                    return (
+              {isLoading == false ?
+                <>
+                  <div className="gridView">
+                    {Object.entries(incidents)
+                      .filter((searchText) => {
+                        return (
 
-                      searchText[1]["incidentTitle"]
-                        .toLowerCase()
-                        .includes(searchIncident.toLowerCase()) ||
-                      searchText[1]["incidentNumber"].includes(
-                        searchIncident.toUpperCase()
-                      )
-                    );
-                  })
-                  .map((item, index) => (
-                    <Card variant="outlined" className={Incidents.card} key={index}>
-                      <CardContent>
-                        <Grid container spacing={3}>
-                          <Grid item xs={12}>
-                            <Grid container spacing={3} alignItems="flex-start">
-                              <Grid item xs={12} md={10}>
-                                <Typography variant="h6">
-                                  {item[1]["incidentTitle"]}
-                                </Typography>
-                              </Grid>
+                          searchText[1]["incidentTitle"]
+                            .toLowerCase()
+                            .includes(searchIncident.toLowerCase()) ||
+                          searchText[1]["incidentNumber"].includes(
+                            searchIncident.toUpperCase()
+                          )
+                        );
+                      })
+                      .map((item, index) => (
+                        <Card variant="outlined" className={Incidents.card} key={index}>
+                          <CardContent>
+                            <Grid container spacing={3}>
+                              <Grid item xs={12}>
+                                <Grid container spacing={3} alignItems="flex-start">
+                                  <Grid item xs={12} md={10}>
+                                    <Typography variant="h6">
+                                      {item[1]["incidentTitle"]}
+                                    </Typography>
+                                  </Grid>
 
-                              <Grid
-                                item
-                                xs={12}
-                                md={2}
-                                className={classes.adminLabel}
-                              >
-                                <Box
-                                  display={isDesktop ? "flex" : null}
-                                  justifyContent={isDesktop ? "flex-end" : null}
-                                >
-                                  <Chip
-                                    avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
-                                    label={item[1]["username"] ? item[1]["username"] : "Admin"}
-                                  />
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-
-                          <Grid item xs={12}>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12} md={3}>
-                                <Typography
-                                  display="inline"
-                                  className={Fonts.listingLabelName}
-                                >
-                                  Number:
-                                  <ILink
-                                    onClick={(e) => history.push({
-                                      pathname: `/incident/details/${item[1].id}/`,
-                                      state: 'change_incident'
-                                  })}
-                                    variant="subtitle2"
-                                    className={Fonts.listingLabelValue}
+                                  <Grid
+                                    item
+                                    xs={12}
+                                    md={2}
+                                    className={classes.adminLabel}
                                   >
-                                    {item[1]["incidentNumber"]}
-                                  </ILink>
-                                </Typography>
+                                    <Box
+                                      display={isDesktop ? "flex" : null}
+                                      justifyContent={isDesktop ? "flex-end" : null}
+                                    >
+                                      <Chip
+                                        avatar={<Avatar src={item[1]["avatar"] ? item[1]["avatar"] : "/images/pp_boy.svg"} />}
+                                        label={item[1]["username"] ? item[1]["username"] : "Admin"}
+                                      />
+                                    </Box>
+                                  </Grid>
+                                </Grid>
                               </Grid>
 
-                              <Grid item xs={12} md={3}>
-                                <Chip
-                                  variant="outlined"
-                                  label={item[1].incidentStage}
-                                  color="primary"
-                                  size="small"
-                                />
-                              </Grid>
+                              <Grid item xs={12}>
+                                <Grid container spacing={2}>
+                                  <Grid item xs={12} md={3}>
+                                    <Typography
+                                      display="inline"
+                                      className={Fonts.listingLabelName}
+                                    >
+                                      Number:
+                                      <ILink
+                                        onClick={(e) => history.push({
+                                          pathname: `/incident/details/${item[1].id}/`,
+                                          state: 'change_incident'
+                                        })}
+                                        variant="subtitle2"
+                                        className={Fonts.listingLabelValue}
+                                      >
+                                        {item[1]["incidentNumber"]}
+                                      </ILink>
+                                    </Typography>
+                                  </Grid>
 
-                              <Grid item xs={12} md={3}>
-                                <Typography
-                                  display="inline"
-                                  className={Fonts.listingLabelName}
-                                >
-                                  <Box display="flex" alignItems="center">
-                                    <CalendarTodayIcon fontSize="small" />
-                                    <span className={Incidents.dateValue}>
-                                      {moment(item[1]["incidentOccuredOn"]).format(
+                                  <Grid item xs={12} md={3}>
+                                    <Chip
+                                      variant="outlined"
+                                      label={item[1].incidentStage}
+                                      color="primary"
+                                      size="small"
+                                    />
+                                  </Grid>
+
+                                  <Grid item xs={12} md={3}>
+                                    <Typography
+                                      display="inline"
+                                      className={Fonts.listingLabelName}
+                                    >
+                                      <Box display="flex" alignItems="center">
+                                        <CalendarTodayIcon fontSize="small" />
+                                        <span className={Incidents.dateValue}>
+                                          {moment(item[1]["incidentOccuredOn"]).format(
+                                            "Do MMM YYYY, h:mm a"
+                                          )}
+                                        </span>
+                                      </Box>
+                                    </Typography>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                              {isDesktop && (
+                                <>
+                                  <Grid item xs={12} lg={3}>
+                                    <Typography
+                                      className={Fonts.listingLabelName}
+                                      gutterBottom
+                                    >
+                                      Incident type
+                                    </Typography>
+                                    <Typography className={Fonts.listingLabelValue}>
+                                      {item[1]["incidentType"]}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} lg={3}>
+                                    <Typography
+                                      className={Fonts.listingLabelName}
+                                      gutterBottom
+                                    >
+                                      Incident location
+                                    </Typography>
+                                    <Typography
+                                      variant="body1"
+                                      className={Fonts.listingLabelValue}
+                                    >
+                                      {item[1]["incidentLocation"]}
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={12} lg={3}>
+                                    <Typography
+                                      className={Fonts.listingLabelName}
+                                      gutterBottom
+                                    >
+                                      Reported on
+                                    </Typography>
+
+                                    <Typography
+                                      variant="body1"
+                                      className={Fonts.listingLabelValue}
+                                    >
+                                      {moment(item[1]["incidentReportedOn"]).format(
                                         "Do MMM YYYY, h:mm a"
                                       )}
-                                    </span>
-                                  </Box>
-                                </Typography>
-                              </Grid>
+                                    </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={12} lg={3}>
+                                    <Typography
+                                      className={Fonts.listingLabelName}
+                                      gutterBottom
+                                    >
+                                      Reported by
+                                    </Typography>
+
+                                    <Typography className={Fonts.listingLabelValue}>
+                                      {item[1]["incidentReportedByName"]}
+                                    </Typography>
+                                  </Grid>
+                                </>
+                              )}
                             </Grid>
-                          </Grid>
-                          {isDesktop && (
-                            <>
-                              <Grid item xs={12} lg={3}>
+                          </CardContent>
+                          <Divider />
+                          <CardActions className={Incidents.cardActions}>
+                            <Grid container spacing={2} justifyContent='space-between' alignItems="center">
+                              <Grid item xs={6} md={3}>
                                 <Typography
+                                  variant="body2"
+                                  display="inline"
                                   className={Fonts.listingLabelName}
-                                  gutterBottom
+                                // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
                                 >
-                                  Incident type
-                                </Typography>
-                                <Typography className={Fonts.listingLabelValue}>
-                                  {item[1]["incidentType"]}
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12} lg={3}>
-                                <Typography
-                                  className={Fonts.listingLabelName}
-                                  gutterBottom
-                                >
-                                  Incident location
-                                </Typography>
-                                <Typography
-                                  variant="body1"
-                                  className={Fonts.listingLabelValue}
-                                >
-                                  {item[1]["incidentLocation"]}
-                                </Typography>
-                              </Grid>
-
-                              <Grid item xs={12} lg={3}>
-                                <Typography
-                                  className={Fonts.listingLabelName}
-                                  gutterBottom
-                                >
-                                  Reported on
+                                  <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
                                 </Typography>
 
+                              </Grid>
+
+
+                              <Grid item xs={6} md={3}>
                                 <Typography
-                                  variant="body1"
-                                  className={Fonts.listingLabelValue}
+                                  variant="body2"
+                                  display="inline"
+                                  className={Fonts.listingLabelName}
                                 >
-                                  {moment(item[1]["incidentReportedOn"]).format(
-                                    "Do MMM YYYY, h:mm a"
-                                  )}
+                                  <AttachmentIcon fontSize="small" /> Attachments:
+                                </Typography>
+                                <Typography variant="body2" display="inline">
+                                  {/* <ILink href="#"> */}
+                                  {item[1]["attachmentCount"]}
+                                  {/* </ILink> */}
                                 </Typography>
                               </Grid>
 
-                              <Grid item xs={12} lg={3}>
-                                <Typography
-                                  className={Fonts.listingLabelName}
-                                  gutterBottom
-                                >
-                                  Reported by
-                                </Typography>
-
-                                <Typography className={Fonts.listingLabelValue}>
-                                  {item[1]["incidentReportedByName"]}
-                                </Typography>
-                              </Grid>
-                            </>
-                          )}
-                        </Grid>
-                      </CardContent>
-                      <Divider />
-                      <CardActions className={Incidents.cardActions}>
-                        <Grid container spacing={2} justifyContent='space-between' alignItems="center">
-                          <Grid item xs={6} md={3}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Fonts.listingLabelName}
-                            // onClick={() => history.push(`/app/incidents/comments/${item[1]["id"]}/`)}
-                            >
-                              <MessageIcon fontSize="small" /> Comments:{item[1]["commentsCount"]}
-                            </Typography>
-
-                          </Grid>
-
-
-                          <Grid item xs={6} md={3}>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={Fonts.listingLabelName}
-                            >
-                              <AttachmentIcon fontSize="small" /> Attachments:
-                            </Typography>
-                            <Typography variant="body2" display="inline">
-                              {/* <ILink href="#"> */}
-                              {item[1]["attachmentCount"]}
-                              {/* </ILink> */}
-                            </Typography>
-                          </Grid>
-
-                          <Grid item xs={6} md={3}>
-                            {/* <Button
+                              <Grid item xs={6} md={3}>
+                                {/* <Button
                             // disabled
                             size="small"
                             color="primary"
@@ -734,97 +734,97 @@ function BlankPage(props) {
                           >
                             Print
                           </Button> */}
-                          <div className={classes.floatR}>
-                              <Typography variant="body1" display="inline">
-                                {!checkDeletePermission
-                                  ? (
-                                    <DeleteForeverOutlinedIcon
-                                      className={classes.iconteal}
-                                      style={{
-                                        color: '#c0c0c0',
-                                        cursor: 'not-allowed'
-                                      }}
-                                    />
-                                  )
-                                  : (
-                                    <Link
-                                      href="#"
-                                      className={classes.mLeftR5}
-                                    >
-                                      <DeleteForeverOutlinedIcon
-                                        className={classes.iconteal}
-                                        onClick={(e) => handleDelete(item)}
-                                      />
-                                    </Link>
-                                  )}
-                              </Typography>
-                            </div>
-                          </Grid>
-                        </Grid>
-                      </CardActions>
-                    </Card>
-                  ))}
+                                <div className={classes.floatR}>
+                                  <Typography variant="body1" display="inline">
+                                    {!checkDeletePermission
+                                      ? (
+                                        <DeleteForeverOutlinedIcon
+                                          className={classes.iconteal}
+                                          style={{
+                                            color: '#c0c0c0',
+                                            cursor: 'not-allowed'
+                                          }}
+                                        />
+                                      )
+                                      : (
+                                        <Link
+                                          href="#"
+                                          className={classes.mLeftR5}
+                                        >
+                                          <DeleteForeverOutlinedIcon
+                                            className={classes.iconteal}
+                                            onClick={(e) => handleDelete(item)}
+                                          />
+                                        </Link>
+                                      )}
+                                  </Typography>
+                                </div>
+                              </Grid>
+                            </Grid>
+                          </CardActions>
+                        </Card>
+                      ))}
 
-              </div>
-              {Object.keys(incidents).length === 0 &&
-                <>
-                  <Card variant="outlined">
-                    <CardContent>
-                      <Grid container spacing={3} justify="center">
-                        Sorry, no matching records found
-                      </Grid>
-                    </CardContent>
-                  </Card>
+                  </div>
+                  {Object.keys(incidents).length === 0 &&
+                    <>
+                      <Card variant="outlined">
+                        <CardContent>
+                          <Grid container spacing={3} justify="center">
+                            Sorry, no matching records found
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </>
+                  }
                 </>
+                :
+                <Loader />
               }
             </>
-            :
-            <Loader />
-          }
-        </>
-      ) : (
-        // listview end
-        <>
-          {isLoading == false ?
-            <div className="listView">
-              <MUIDataTable
-                data={Object.entries(incidents).filter((searchText) => {
-                  return (
+          ) : (
+            // listview end
+            <>
+              {isLoading == false ?
+                <div className="listView">
+                  <MUIDataTable
+                    data={Object.entries(incidents).filter((searchText) => {
+                      return (
 
-                    searchText[1]["incidentTitle"]
-                      .toLowerCase()
-                      .includes(searchIncident.toLowerCase()) ||
-                    searchText[1]["incidentNumber"].includes(
-                      searchIncident.toUpperCase()
-                    )
-                  );
-                }).map((item) => [
-                  item[1]["incidentNumber"],
-                  item[1]["incidentReportedByName"],
-                  item[1]["incidentLocation"],
-                  moment(item[1]["incidentReportedOn"]).format(
-                    "Do MMMM YYYY, h:mm:ss a"
-                  ),
-                  item[1]["incidentReportedByName"],
-                  item[1]["id"],
-                ])}
-                columns={columns}
-                options={options}
+                        searchText[1]["incidentTitle"]
+                          .toLowerCase()
+                          .includes(searchIncident.toLowerCase()) ||
+                        searchText[1]["incidentNumber"].includes(
+                          searchIncident.toUpperCase()
+                        )
+                      );
+                    }).map((item) => [
+                      item[1]["incidentNumber"],
+                      item[1]["incidentReportedByName"],
+                      item[1]["incidentLocation"],
+                      moment(item[1]["incidentReportedOn"]).format(
+                        "Do MMMM YYYY, h:mm:ss a"
+                      ),
+                      item[1]["incidentReportedByName"],
+                      item[1]["id"],
+                    ])}
+                    columns={columns}
+                    options={options}
 
 
-              />
-            </div>
-            :
-            <Loader />
-          }
-        </>
-      )}
-      <div className={classes.pagination}>
-        {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
-        <Pagination count={pageCount} page={page} onChange={handleChange} />
-      </div>
-    </PapperBlock>
-       )} />    
+                  />
+                </div>
+                :
+                <Loader />
+              }
+            </>
+          )}
+          <div className={classes.pagination}>
+            {totalData != 0 ? Number.isInteger(pageData) !== true ? totalData < 25 * page ? `${page * 25 - 24} - ${totalData} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : `${page * 25 - 24} - ${25 * page} of ${totalData}` : null}
+            <Pagination count={pageCount} page={page} onChange={handleChange} />
+          </div>
+        </PapperBlock>
+      )} />
   );
 }
 const mapStateToProps = state => {

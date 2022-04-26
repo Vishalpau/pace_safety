@@ -554,7 +554,6 @@ function JhaSummary() {
                         <li>
                           <Button
                             color={approvalsView ? "secondary" : "primary"}
-                            variant="outlined"
                             size="large"
                             variant={handelApprovalTabStatus() ? "contained" : "outlined"}
                             endIcon={
@@ -590,7 +589,7 @@ function JhaSummary() {
                         <li>
                           <Button
                             color={lessonsLearnedView ? "secondary" : "primary"}
-                            variant="outlined"
+                            // variant="outlined"
                             size="large"
                             variant={formStatus.lessionLeranedStatus ? "contained" : "outlined"}
                             endIcon={

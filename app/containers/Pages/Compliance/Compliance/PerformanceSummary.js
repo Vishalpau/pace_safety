@@ -169,6 +169,7 @@ const PerformanceSummary = (props) => {
         console.log(error), setLoading(false);
       });
   };
+
   const fetchNotificationSent = async () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
@@ -192,8 +193,7 @@ const PerformanceSummary = (props) => {
       const res = await api(config);
       if (res.status === 200) {
         const result = res.data.data.results;
-        console.log(result,'result')
-        setNotificationSentValue(result);
+        setNotificationSentValue([result]);
       }
     } catch (error) { }
   };
@@ -295,7 +295,7 @@ const PerformanceSummary = (props) => {
                         Notification
                       </FormLabel>
                       <FormGroup>
-                        {notificationSentValue.map((value) => (
+                        {notificationSentValue.length != 0   ? notificationSentValue[0].map((value) => (
                           <FormControlLabel
                             className="selectLabel"
                             control={
@@ -315,7 +315,7 @@ const PerformanceSummary = (props) => {
                             }
                             label={value.roleName}
                           />
-                        ))}
+                        )): null}
                       </FormGroup>
                     </Grid>
                   </Grid>

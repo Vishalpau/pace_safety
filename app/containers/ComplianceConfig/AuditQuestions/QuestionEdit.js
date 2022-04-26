@@ -226,37 +226,44 @@ const QuestionEdit = (props) => {
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${project.projectId
       }&projectStructure=${fkProjectStructureIds}`
     );
-    await setAuditData(res.data.data.results[0]);
-    await fetchChecklist(res.data.data.results[0].groupName);
-    await fetchBreakDownData(res.data.data.results[0].fkProjectStructureIds);
+    await setAuditData(res.data.data.results.filter(i => i.id == id)[0]);
+    await fetchChecklist(res.data.data.results.filter(i => i.id == id)[0].groupName);
+    await fetchBreakDownData(res.data.data.results.filter(i => i.id == id)[0].fkProjectStructureIds);
     await setIsLoading(true);
   };
 
   const fetchChecklist = async (groupName) => {
     let temp = {};
     const res = await api.get(
-      `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
-      }/compliance/`
+      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
+      // }/compliance/`
+      `/api/v1/core/checklists/compliance-groups/${project.projectId
+      }/`
     );
     const result = res.data.data.results;
     // await fetchComplianceData(result);
     result.map((option, index) => {
-      if (option.checkListLabel === groupName) {
-        setCheckData(option.checklistValues);
-      }
+      option.checklistGroups.map((grp)=> {
+        if (grp.checkListGroupName === groupName) {
+          setCheckData(grp.checkListValues);
+        }
+      })
+      
     });
     await setCheckListGroups(result);
   };
 
   const handleGroup = async (value, gName) => {
-    let temp = { ...auditData };
+    console.log(checkGroups, 'gName')
+    let temp = { ...auditData};
     temp.groupName = gName;
-    temp.subGroupName = "";
-    setCheckData(value);
+    temp.subGroupName = checkGroups[0].checklistGroups.filter(subgrp=> subgrp.checkListGroupName == gName)[0].checkListValues;
+    setCheckData(checkGroups[0].checklistGroups.filter(subgrp=> subgrp.checkListGroupName == gName)[0].checkListValues);
     setAuditData(temp);
   };
 
   const handleSubGroup = async (sgName) => {
+    console.log(sgName)
     let temp = { ...auditData };
     temp.subGroupName = sgName;
     setAuditData(temp);
@@ -294,7 +301,6 @@ const QuestionEdit = (props) => {
   };
 
   const fetchBreakDownData = async (projectBreakdown) => {
-    console.log(projectBreakdown, 'projectBreakdown')
     if (projectBreakdown) {
       const projectData = JSON.parse(localStorage.getItem("projectName"));
       let breakdownLength = projectData.projectName.breakdown.length;
@@ -341,7 +347,7 @@ const QuestionEdit = (props) => {
         } else {
 
           // console.log(breakDown.some(breakDown => ((breakDown == 'All'))))
-          // if (!breakDown.some(breakDown => ((breakDown == 'All')))){
+          if (!breakDown.some(breakDown => ((breakDown == 'All')))){
           var config = {
             method: "get",
             url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -373,7 +379,6 @@ const QuestionEdit = (props) => {
                   ];
                 }
               });
-              console.log(selectBreakDown, 'selectBreakDown')
               setFetchSelectBreakDownList(selectBreakDown);
             })
             .catch((error) => {
@@ -381,12 +386,20 @@ const QuestionEdit = (props) => {
               setIsNext(true);
             });
         }
-        // }else{
-        //   setFetchSelectBreakDownList(breakDown)
-        // }
+        else{
+          // setFetchSelectBreakDownList
+          
+          let selectValue = {}
+          selectValue.id = 0
+          let breakDownData = []
+          setFetchSelectBreakDownList(breakDown.map((d) => {return{breakDownLabel:d, selectValue,breakDownData}}))
+        }}
       }
     }
   };
+
+  useEffect(() => {
+  }, [fetchSelectBreakDownList])
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -473,59 +486,62 @@ const QuestionEdit = (props) => {
 
                   <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
 
-                    <Paper elevation={1} className="paperSection">
-                      <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
-
-                      <Grid container spacing={3}>
-                        {fetchSelectBreakDownList.map((data, key) => (
-                          <Grid item xs={3} md={3} key={key}>
-                            <FormControl
-                              error={error && error[`projectStructure${[key]}`]}
-                              variant="outlined"
-                              required
-                              className={classes.formControl}
-                            >
-                              <InputLabel id="demo-simple-select-label">
-                                {data.breakDownLabel}
-                              </InputLabel>
-                              <Select
-                                labelId="incident-type-label"
-                                id="incident-type"
-                                label={data.breakDownLabel}
-                                value={data.selectValue.id || ""}
-                                disabled={data.breakDownData.length === 0}
-                                onChange={(e) => {
-                                  handleBreakdown(
-                                    e,
-                                    key,
-                                    data.breakDownLabel,
-                                    data.selectValue
-                                  );
-                                }}
+                    {fetchSelectBreakDownList.length > 0 &&
+                      <Paper elevation={1} className="paperSection">
+                        <FormLabel component="legend" className="checkRadioLabel">(If selected all  compliance questions will be available across the projects)</FormLabel>
+                        <Grid container spacing={3}>
+                          {fetchSelectBreakDownList.map((data, key) => (
+                            <Grid item xs={3} md={3} key={key}>
+                              <FormControl
+                                error={error && error[`projectStructure${[key]}`]}
+                                variant="outlined"
+                                required
+                                className={classes.formControl}
                               >
-                                {data.breakDownData.length !== 0
-                                  ? data.breakDownData.map(
-                                    (selectvalues, index) => (
-                                      <MenuItem
-                                        key={index}
-                                        value={selectvalues.id}
-                                      >
-                                        {selectvalues.structureName}
-                                      </MenuItem>
+                                <InputLabel id="demo-simple-select-label">
+                                  {data.breakDownLabel}
+                                </InputLabel>
+                                <Select
+                                  labelId="incident-type-label"
+                                  id="incident-type"
+                                  label={data.breakDownLabel}
+                                  value={data.selectValue.id || ""}
+                                  disabled={true}
+                                  onChange={(e) => {
+                                    handleBreakdown(
+                                      e,
+                                      key,
+                                      data.breakDownLabel,
+                                      data.selectValue
+                                    );
+                                  }}
+                                >
+                                  {data.breakDownData.length !== 0
+                                    ? data.breakDownData.map(
+                                      (selectvalues, index) => (
+                                        <MenuItem
+                                          key={index}
+                                          value={selectvalues.id}
+                                        >
+                                          {selectvalues.structureName}
+                                        </MenuItem>
+                                      )
                                     )
-                                  )
-                                  : null}
-                              </Select>
-                              {error && error[`projectStructure${[key]}`] && (
-                                <FormHelperText>
-                                  {error[`projectStructure${[key]}`]}
-                                </FormHelperText>
-                              )}
-                            </FormControl>
-                          </Grid>
-                        ))}
-                      </Grid>
-                    </Paper>
+                                    : null}
+                                </Select>
+                                {error && error[`projectStructure${[key]}`] && (
+                                  <FormHelperText>
+                                    {error[`projectStructure${[key]}`]}
+                                  </FormHelperText>
+                                )}
+                              </FormControl>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </Paper>
+                    }
+
+
                   </Grid>
 
                   <Grid item md={9} sm={8} xs={8} className="paddTBRemove">
@@ -619,21 +635,21 @@ const QuestionEdit = (props) => {
                               Group name
                             </FormLabel>
                             <RadioGroup aria-label="select-typeof-compliance" name="select-typeof-compliance">
-                              {checkGroups.map((option) => (
+                              {checkGroups[0].checklistGroups.map((option) => (
                                 <FormControlLabel
-                                  value={option.checkListLabel}
+                                  value={option.checkListGroupName}
                                   checked={
-                                    option.checkListLabel === auditData.groupName
+                                    option.checkListGroupName === auditData.groupName
                                   }
                                   className="selectLabel"
                                   control={<Radio />}
                                   onChange={(e) =>
                                     handleGroup(
-                                      option.checklistValues,
-                                      option.checkListLabel
+                                      option.checkListGroupName,
+                                      option.checkListGroupName
                                     )
                                   }
-                                  label={option.checkListLabel}
+                                  label={option.checkListGroupName}
                                 />
                               ))}
                             </RadioGroup>
@@ -649,10 +665,10 @@ const QuestionEdit = (props) => {
                               SubGroup name
                             </FormLabel>
                             <RadioGroup row aria-label="gender" name="gender1">
-                              {checkData.map((option) => (
+                              {checkData.map((option) =>  (
                                 <FormControlLabel
                                   value={option.inputLabel}
-                                  checked={
+                                  checked= {
                                     option.inputLabel === auditData.subGroupName
                                   }
                                   className="selectLabel"

@@ -4,7 +4,7 @@ import {
   gradientBgDark,
 } from "containers/Templates/appStyles-jss";
 const drawerWidth = 0;
-const drawerBigWidth = 290
+const drawerBigWidth = 290;
 
 const styles = (theme) => ({
   appBar: {
@@ -19,8 +19,8 @@ const styles = (theme) => ({
         theme.palette.type === "dark"
           ? theme.palette.primary.contrastText
           : theme.palette.primary.contrastText,
-          backgroundColor: "transparent",
-            boxShadow: "none",
+      backgroundColor: "transparent",
+      boxShadow: "none",
       zIndex: 10,
       left: 10,
     },
@@ -500,7 +500,7 @@ const styles = (theme) => ({
     flex: 1,
     alignItems: "center",
     zIndex: 1,
-    minWidth: 650,
+    //minWidth: 650,
   },
   fadeOut: {},
   invert: {},
@@ -559,7 +559,6 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
   },
-
   searchHeaderMenu: {
     flex: 1,
     flexDirection: "row-reverse",
@@ -571,20 +570,34 @@ const styles = (theme) => ({
     alignItems: "center",
     gap: "8px",
     marginLeft: theme.spacing(4),
+    ['@media (max-width:800px)']: {
+      gap: "0px",
+      display: "none",
+      marginLeft: '0px',
+    }
   },
   projectSelect: {
     minWidth: 150,
   },
   userLogo: {
-    display: 'inline-block',
-    width: 'auto',
-    marginRight: '16px',
-    height: '40px',
+    width: 80,
+    display: "inline-block",
+    marginRight: theme.spacing(2),
+
   },
   userControls: {
     display: "inline-flex",
     alignItems: "center",
     minWidth: 100,
+    ['@media (max-width:800px)']: {
+      minWidth: 60,
+    },
+    '& span li': {
+      display: "none",
+      ['@media (max-width:800px)']: {
+        display: "none",
+      }
+    }
   },
   filterSelect: {
     minWidth: 100,
@@ -610,7 +623,27 @@ const styles = (theme) => ({
   },
   projectDialog: {
     minWidth: 600,
-  }
+  },
+  projecDialogHeadTitle: {
+    marginBottom: '0px',
+    '& h6': {
+      color: '#fff',
+      padding: '15px 15px 12px 15px',
+      backgroundColor: '#06425C',
+      borderRadius: '10px',
+      fontFamily: 'Montserrat-Medium !important',
+      fontWeight: 'normal',
+      fontSize: '18px !important',
+      '& svg': {
+        marginRight: '10px',
+      },
+    },
+    '& button': {
+      top: '28px',
+      color: '#ffffff',
+      right: '24px',
+    },
+  },
 });
 
 export default styles;

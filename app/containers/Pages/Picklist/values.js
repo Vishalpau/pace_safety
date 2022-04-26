@@ -1,8 +1,10 @@
+import { useHistory } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,6 +12,8 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
 import Editor from '../../../components/Editor';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import api from "../../../utils/axios";
 
 
@@ -69,9 +73,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Pickvalues(props) {
+
+  const history = useHistory();
+
   const [pickValues, setPickValues] = useState([]);
+  const [pickValuesData, setPickValuesData] = useState([]);
   const [listname, setlistname] = useState(props.location.pathname.split('/').pop());
   const [listToggle, setListToggle] = useState(false);
+  const [error, setError] = useState(false)
+  const [searchFilter, setSearchFilter] = useState({
+    search: "",
+    filter: ""
+  })
 
   const handelView = (e) => {
     setListToggle(!listToggle);
@@ -80,6 +93,7 @@ function Pickvalues(props) {
   const load = async () => {
     const allPickvalues = await api.get(`api/v1/lists/` + props.location.pathname.split('/').pop() + '/value');
     await setPickValues(allPickvalues.data.data.results);
+    await setPickValuesData(allPickvalues.data.data.results);
     await setForm({
       ...form,
       fkCompanyId: allPickvalues.data.data.results[0].fkCompanyId,
@@ -142,7 +156,7 @@ function Pickvalues(props) {
       val.inputValue = text;
     }
     if (column == 'label') { val.inputLabel = text; }
-    if (column == 'is_selected') { val.isSelected = (text == 'Yes') ? 1 : 0; }
+    if (column == 'is_selected') { val.isSelected = text; }
     if (column == 'parent') { val.parentListValue = text; }
     if (column == 'group_by') { val.groupInputBy = text; }
 
@@ -153,7 +167,10 @@ function Pickvalues(props) {
     const {
       groupInputBy, inputLabel, inputValue, isSelected
     } = form;
-    if (groupInputBy == '' || inputLabel == '' || inputValue == '' || isSelected == '') return false;
+    if (groupInputBy == '' || inputLabel == '' || inputValue == '' || isSelected == '') {
+      setError(true)
+      return false;
+    }
     return true;
   };
 
@@ -210,19 +227,21 @@ function Pickvalues(props) {
           type="select"
           options={select_type_options}
           id={listItem.id}
-          value={listItem.isSelected ? 1 : 0}
+          value={listItem.isSelected ? "Yes" : "No"}
           column="is_selected"
           save={save}
+          isvalidate={isvalidate}
         />
       </td>
       <td>
-        <Editor
+        {listItem.parentListValue}
+        {/* <Editor
           type="text"
           id={listItem.id}
           value={listItem.parentListValue}
           column="parent"
           save={save}
-        />
+        /> */}
       </td>
       <td>
         <Editor
@@ -236,8 +255,42 @@ function Pickvalues(props) {
     </tr>
   ));
 
+  useEffect(() => {
+    const temp = [];
+    pickValuesData.forEach(value => {
+      if (searchFilter.search) {
+        if (searchFilter.filter) {
+          if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.isSelected == searchFilter.filter) {
+            temp.push(value)
+          }
+        } else {
+          if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+            temp.push(value)
+          }
+        }
+      } else {
+        if (searchFilter.filter) {
+          if (searchFilter.filter == value.isSelected) {
+            temp.push(value)
+          }
+        } else {
+          temp.push(value)
+        }
+      }
+    })
+    setPickValues([...temp])
+  }, [searchFilter, pickValuesData])
+
+  const handleSearchFilterChange = (value, key) => {
+    setSearchFilter(data => ({
+      ...data,
+      [key]: value
+    }))
+  }
+
   return (
     <PapperBlock title="Values" icon="ion-md-list-box" desc="">
+      <Button style={{ marginBottom: '16px', marginLeft: "auto", display: 'block', fontSize: '12px', textDecoration: 'underline' }} onClick={() => history.goBack()}>Go back</Button>
 
       <Box>
         <div className={classes.root}>
@@ -264,6 +317,32 @@ function Pickvalues(props) {
           </AppBar>
         </div>
 
+        <div>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField id="outlined-basic" label="Search Picklist" onChange={(e) => handleSearchFilterChange(e.target.value, 'search')} variant="outlined" style={{ width: '100%' }} />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel style={{ marginLeft: '20px', marginTop: '-5px' }} id="checklistSearchFilter">Filter</InputLabel>
+                <Select
+                  style={{ minWidth: '120px' }}
+                  labelId="checklistSearchFilte"
+                  id="demo-simple-select-helper"
+                  onChange={(e) => handleSearchFilterChange(e.target.value, 'filter')}
+                  value={searchFilter.filter}
+                  variant="outlined"
+                  label="Filter"
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value={"1"}>Selected - Yes</MenuItem>
+                  <MenuItem value={"0"}>Selected - No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </div>
+
         <div className="listView">
           <table id="picklistmanage_table" className="table table-striped table-bordered datatable_section width100">
             <thead>
@@ -277,7 +356,7 @@ function Pickvalues(props) {
             </thead>
             <tbody>
 
-              {_pickvalues(pickValues)}
+              {_pickvalues(pickValues).length > 0 ? _pickvalues(pickValues) : <>{(searchFilter.search || searchFilter.filter) && (<p style={{ paddingTop: '15px', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>No data found!</p>)}</>}
 
             </tbody>
             <tfoot id="botton_add_footer">
@@ -364,6 +443,7 @@ function Pickvalues(props) {
               </tr>
             </tfoot>
           </table>
+          {error && (<p style={{ color: "#FF0000", fontSize: "14px" }}>Please fill all the fields</p>)}
         </div>
       </Box>
     </PapperBlock>
