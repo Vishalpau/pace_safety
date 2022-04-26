@@ -27,7 +27,8 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
 
     const [editForm, setEditForm] = useState({
         checkListGroupName: value.checkListGroupName,
-        parentGroup: value.parentGroup
+        parentGroup: value.parentGroup,
+        status: value.status
     })
 
     const handelParentShow = (value) => {
@@ -39,18 +40,25 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
     }
 
     const handelParentValue = (value) => {
-        if (value == "Top") {
+        setEditForm({
+            ...editForm,
+            parentGroup: value
+        })
+
+    }
+
+    const handleStatusChange = () => {
+        if (editForm.status === 'Active') {
             setEditForm({
                 ...editForm,
-                parentGroup: "0",
+                status: 'Inactive'
             })
         } else {
             setEditForm({
                 ...editForm,
-                parentGroup: "1",
+                status: 'Active'
             })
         }
-
     }
 
     const handelUpdate = async (checkListId, checkListGroupId) => {
@@ -73,10 +81,6 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
     const handelDelete = () => {
 
     }
-
-    const defaultParent = allGroupName.filter(group => group.id === editForm.parentGroup)[0].name;
-
-    console.log(defaultParent, 'hey')
 
     const classes = useStyles();
     return (
@@ -107,12 +111,11 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
                             id="Group-name"
                             className="inputCell"
                             labelId="Group name"
-                            // value={value.parentGroup}
-                            defaultValue='Top'
+                            value={editForm.parentGroup}
                         >
                             {allGroupName.map((selectValues) => (
                                 <MenuItem
-                                    value={selectValues}
+                                    value={selectValues.id}
                                     onClick={(e) => handelParentValue(selectValues.id)}
                                 >
                                     {selectValues.name}
@@ -125,8 +128,8 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
             </TableCell>
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    checked={true}
-                    // onChange={handleChange}
+                    checked={(editForm.status || editForm.status == "Active") ? true : false}
+                    onChange={handleStatusChange}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />

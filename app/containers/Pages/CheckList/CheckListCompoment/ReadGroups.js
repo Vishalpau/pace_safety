@@ -147,8 +147,8 @@ const ReadOnlyRow = ({ value, handleEditClick, setViewUpdate, viewUpdate, group 
                 </TableCell>
                 <TableCell className={classes.tabelBorder}>
                     <Switch
-                        defaultChecked={value.status == undefined || value.status == "active" ? true : false}
-                        onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
+                        checked={(value.status && value.status == "active") ? true : false}
+                        // onChange={(e) => handleStatusChange(e, value.fkCheckListId, value.checklistgroupId)}
                         name="checkedA"
                         inputProps={{ 'aria-label': 'secondary checkbox' }}
                     />
