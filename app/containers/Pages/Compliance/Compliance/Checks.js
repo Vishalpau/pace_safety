@@ -769,7 +769,7 @@ const Checks = (props) => {
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
-      return;
+      // return;
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
@@ -1085,7 +1085,7 @@ const Checks = (props) => {
                                                     name="performancerating"
                                                     id="performancerating"
                                                     defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                    // defaultValue="20%"
+                                                    // type="number"
                                                     fullWidth
                                                     variant="outlined"
                                                     className="formControl"
@@ -1530,6 +1530,7 @@ const Checks = (props) => {
                                                     id="performancerating"
                                                     defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     fullWidth
+                                                    // type="number"
                                                     variant="outlined"
                                                     className="formControl"
                                                     onChange={(e) =>
