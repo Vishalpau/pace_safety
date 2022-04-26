@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
@@ -200,6 +201,11 @@ function Pickvalues(props) {
     return true;
   };
 
+  const handleDelete = async (id) => {
+    await api.put('api/v1/lists/' + listname + '/value/' + id, { status: 'Delete' });
+    await load();
+  }
+
   const _pickvalues = list => list.map(listItem => (
     <tr>
       <td>
@@ -251,6 +257,11 @@ function Pickvalues(props) {
           column="group_by"
           save={save}
         />
+      </td>
+      <td>
+        <Button onClick={() => handleDelete(listItem.id)}>
+          <DeleteIcon />
+        </Button>
       </td>
     </tr>
   ));
@@ -352,6 +363,7 @@ function Pickvalues(props) {
                 <th>Is Selected</th>
                 <th>Parent</th>
                 <th>Group</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
