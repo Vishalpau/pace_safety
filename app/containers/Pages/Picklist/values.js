@@ -93,7 +93,7 @@ function Pickvalues(props) {
 
   const load = async () => {
     const allPickvalues = await api.get(`api/v1/lists/` + props.location.pathname.split('/').pop() + '/value');
-    await setPickValues(allPickvalues.data.data.results);
+    // await setPickValues(allPickvalues.data.data.results);
     await setPickValuesData(allPickvalues.data.data.results);
     await setForm({
       ...form,
@@ -269,23 +269,25 @@ function Pickvalues(props) {
   useEffect(() => {
     const temp = [];
     pickValuesData.forEach(value => {
-      if (searchFilter.search) {
-        if (searchFilter.filter) {
-          if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.isSelected == searchFilter.filter) {
-            temp.push(value)
+      if (value.status !== 'Delete') {
+        if (searchFilter.search) {
+          if (searchFilter.filter) {
+            if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.isSelected == searchFilter.filter) {
+              temp.push(value)
+            }
+          } else {
+            if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+              temp.push(value)
+            }
           }
         } else {
-          if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+          if (searchFilter.filter) {
+            if (searchFilter.filter == value.isSelected) {
+              temp.push(value)
+            }
+          } else {
             temp.push(value)
           }
-        }
-      } else {
-        if (searchFilter.filter) {
-          if (searchFilter.filter == value.isSelected) {
-            temp.push(value)
-          }
-        } else {
-          temp.push(value)
         }
       }
     })
