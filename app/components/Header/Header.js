@@ -702,18 +702,18 @@ function Header(props) {
           if (item.id === value) {
             setSelectBreakDown([
               ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label },
+              { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]);
-            setBreakDownData([{ depth: item.depth, id: item.id, name: item.name, label: label }])
+            setBreakDownData([{ depth: item.depth, id: item.id, name: item.structureName, label: label }])
             dispatch(breakDownDetails([
               ...removeSelectBreakDown,
-              { depth: item.depth, id: item.id, name: item.name, label: label },
+              { depth: item.depth, id: item.id, name: item.structureName, label: label },
             ]))
             localStorage.setItem(
               "selectBreakDown",
               JSON.stringify([
                 ...removeSelectBreakDown,
-                { depth: item.depth, id: item.id, name: item.name, label: label },
+                { depth: item.depth, id: item.id, name: item.structureName, label: label },
               ])
             );
             return;
@@ -1494,7 +1494,7 @@ function Header(props) {
                                       key={selectKey}
                                       value={selectValue.id}
                                     >
-                                      {selectValue.name}
+                                      {selectValue.structureName}
                                     </MenuItem>
                                   )
                                 )
