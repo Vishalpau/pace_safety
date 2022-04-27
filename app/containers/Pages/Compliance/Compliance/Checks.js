@@ -509,7 +509,6 @@ const Checks = (props) => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result, 'result_result')
         setComplianceData(result)
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
@@ -538,7 +537,6 @@ const Checks = (props) => {
         }
 
         setForm(result);
-        // console.log(tempSubGroup, result.groups, result.subGroups);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups, result.fkProjectStructureIds);
       })
       .catch((error) => console.log(error));
@@ -580,10 +578,13 @@ const Checks = (props) => {
 
     let fd = await fetchData()
     temp.map((tempvalue, i) => {
+      
       if (tempvalue['message'] === undefined) {
 
         tempvalue.map((value, index) => {
-
+          console.log(value.defaultResponse);
+          console.log(value.criticality);
+          console.log(value.auditStatus);
           tempQuestionId.push({ id: value.id });
 
           tempCheckData.push({
@@ -653,8 +654,6 @@ const Checks = (props) => {
   };
 
   const handelSubmit = async () => {
-
-    console.log(checkData);
     // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
 
@@ -695,9 +694,6 @@ const Checks = (props) => {
     if (field == 'criticality' || field == 'auditStatus') {
       // setTimeout(()=>calculate_rating(index), 5000)
     }
-
-    console.log(temp);
-
     setCheckData(temp);
   };
 
@@ -725,7 +721,6 @@ const Checks = (props) => {
   useEffect(() => {
     console.log(checkData);
   }, [checkData])
-
 
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
@@ -889,7 +884,6 @@ const Checks = (props) => {
                           </ListItem>
                         </span> */}
                           {Categor.map((value, index) => {
-                            // console.log(key);
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -997,15 +991,6 @@ const Checks = (props) => {
                                                           setValueStar(newValue);
                                                         }
                                                       }}
-                                                    // onChange={(e) =>
-                                                    //   handleChangeData(
-                                                    //     e.target.value,
-                                                    //     "findings",
-                                                    //     index,
-                                                    //     value.id,
-                                                    //     value.scoreType
-                                                    //   )
-                                                    // }
                                                     />
                                                   </Grid>
                                                 </Grid>
@@ -1236,7 +1221,7 @@ const Checks = (props) => {
                                                       id="attachment"
                                                       name="attachment"
                                                       // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
-                                                      accept={`.xls , .xlsx, .ppt, .pptx, .doc, .docx, .text , .pdf`}
+                                                      accept={`.xls, xlsx, .ppt, .pptx, .doc, .docx, .text, .pdf`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
