@@ -712,6 +712,7 @@ const Checks = (props) => {
             value = value
           }
         }
+        temp[i]['check'] = false;
         temp[i][field] = value;
       }
     }
@@ -902,6 +903,7 @@ const Checks = (props) => {
                             />
                           </ListItem>
                         </span> */}
+                        
                           {Categor.map((value, index) => {
                             return (
                               <>
