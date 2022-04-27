@@ -654,12 +654,12 @@ const Checks = (props) => {
   };
 
   const handelSubmit = async () => {
-    // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
+    const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
 
-    const isValid = checkData.every((a) => a.check === true)
+    // const isValid = checkData.every((a) => a.check === true)
 
-    if (isValid) {
+    if (isValids) {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
@@ -1359,14 +1359,14 @@ const Checks = (props) => {
                                                 </TextField>
                                               </Grid>
                                               <Grid item md={4} xs={12}>
-
+                                                {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
+                                              {/* {console.log(colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor,'ooooooooooooooooooooo')} */}
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
-                                                  // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{
                                                     backgroundColor: ratingColor[catI + '-' + index] ?
                                                       ratingColor[catI + '-' + index] :
