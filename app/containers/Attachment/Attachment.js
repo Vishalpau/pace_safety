@@ -88,8 +88,6 @@ export const Attachment = ({ value }) => {
             </IconButton>
         );
     } else if (
-        extension.toLowerCase() === "png" ||
-        extension.toLowerCase() === "jpg" ||
         extension.toLowerCase() === "mp4" ||
         extension.toLowerCase() === "mp3" ||
         extension.toLowerCase() === "mov" ||

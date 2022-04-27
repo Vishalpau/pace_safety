@@ -62,7 +62,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
-
+import { CircularProgress } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import DeleteIcon from "@material-ui/icons/Delete";
 import icoExcel from "dan-images/icoExcel.svg";
@@ -295,6 +295,19 @@ const useStyles = makeStyles((theme) => ({
   actionLinkAudit: {
     inlineSize: "max-content",
   },
+  buttonProgress: {
+    // color: "green",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  loadingWrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+    display: "inline-flex",
+  },
 }));
 
 const styles = (theme) => ({
@@ -319,6 +332,7 @@ const Checks = (props) => {
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
   const [questionId, setQuestionId] = useState()
+  const [loading, setLoading] = useState(false);
 
   const [stateToggle, setStateToggle] = useState("")
 
@@ -366,7 +380,7 @@ const Checks = (props) => {
 
   useEffect(() => {
     console.log(stateToggle);
-  },[stateToggle])
+  }, [stateToggle])
 
 
   const radioDecide = ["Yes", "No", "N/A"];
@@ -431,10 +445,10 @@ const Checks = (props) => {
         if (data.id) {
           const putApiData = new Promise((resolve, reject) => {
             api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${data.id}/`, formData)
-            .then(res => {
-              resolve(res)
-            })
-            .catch(err => reject(false));
+              .then(res => {
+                resolve(res)
+              })
+              .catch(err => reject(false));
           });
           putApiData.then(result => {
             const apiResult = result.data.data.results;
@@ -448,11 +462,11 @@ const Checks = (props) => {
         else {
           const postApiData = new Promise((resolve, reject) => {
             api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData)
-            .then(res => {
-              resolve(res)
-            })
-            .catch(err => reject(false));
-          }) 
+              .then(res => {
+                resolve(res)
+              })
+              .catch(err => reject(false));
+          })
           postApiData.then(result => {
             const apiResult = result.data.data.results;
             temp[key]['id'] = apiResult.id
@@ -577,8 +591,8 @@ const Checks = (props) => {
 
     let fd = await fetchData()
     temp.map((tempvalue, i) => {
-        
-      
+
+
       if (tempvalue['message'] === undefined) {
         console.log(tempvalue);
         tempvalue.map((value, index) => {
@@ -586,14 +600,14 @@ const Checks = (props) => {
           let defRes = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].defaultResponse : '';
           let crtic = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '';
           let auditS = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '';
-          
-          console.log(value.defaultResponse?true:false);
+
+          console.log(value.defaultResponse ? true : false);
           console.log(value.defaultResponse, 'defaultRes');
           console.log(value.criticality, 'criticality');
           console.log(value.auditStatus, 'auditStat');
           tempQuestionId.push({ id: value.id });
           tempCheckData.push({
-            check: (defRes || ((crtic && auditS)) ? true : false), 
+            check: (defRes || ((crtic && auditS)) ? true : false),
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
@@ -662,16 +676,14 @@ const Checks = (props) => {
   const handelSubmit = async () => {
     // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
-
     const isValid = checkData.every((a) => a.check === true)
-
     if (isValid) {
+      setLoading(true);
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
       setErrorBoundary("Please answer all the compliance questions and close all accordions");
     }
-
   };
 
   const classes = useStyles();
@@ -756,7 +768,7 @@ const Checks = (props) => {
   };
 
   useEffect(() => {
-   console.log(form,'form')
+    console.log(form, 'form')
   }, [form]);
 
 
@@ -1366,7 +1378,7 @@ const Checks = (props) => {
                                               </Grid>
                                               <Grid item md={4} xs={12}>
                                                 {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
-                                              {/* {console.log(colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor,'ooooooooooooooooooooo')} */}
+                                                {/* {console.log(colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor,'ooooooooooooooooooooo')} */}
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
@@ -1773,15 +1785,24 @@ const Checks = (props) => {
             </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-              <Button
-                size="medium"
-                variant="contained"
-                color="primary"
-                className="spacerRight buttonStyle"
-                onClick={(e) => handelSubmit()}
-              >
-                Next
-              </Button>
+              <div className={classes.loadingWrapper}>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  color="primary"
+                  className="spacerRight buttonStyle"
+                  disabled={loading}
+                  onClick={(e) => handelSubmit()}
+                >
+                  Next
+                </Button>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
               <Button
                 size="medium"
                 variant="contained"
