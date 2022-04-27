@@ -485,24 +485,6 @@ const Checks = (props) => {
   const [statusData, setStatusData] = useState([])
   const [errorBoundary, setErrorBoundary] = useState("");
 
-  // const DialogTitle = withStyles(styles)((props) => {
-  //   const { children, classes, onClose, ...other } = props;
-  //   return (
-  //     <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
-  //       <Typography variant="h6">{children}</Typography>
-  //       {onClose ? (
-  //         <IconButton
-  //           aria-label="close"
-  //           className={classes.closeButton}
-  //           onClick={onClose}
-  //         >
-  //           <CloseIcon />
-  //         </IconButton>
-  //       ) : null}
-  //     </MuiDialogTitle>
-  //   );
-  // });
-
   const [valueStar, setValueStar] = React.useState([]);
 
   const [categories, setCategories] = useState([]);
@@ -527,7 +509,6 @@ const Checks = (props) => {
       .get(`/api/v1/audits/${complianceId}/`)
       .then((response) => {
         let result = response.data.data.results;
-        console.log(result, 'result_result')
         setComplianceData(result)
         let groupIds = result.groupIds.split(",").map(i => i * 1);
         let subGroupIds = result.subGroupIds.split(",").map(i => i * 1);
@@ -556,7 +537,6 @@ const Checks = (props) => {
         }
 
         setForm(result);
-        // console.log(tempSubGroup, result.groups, result.subGroups);
         fetchCheklist(tempSubGroup, result.groups, result.subGroups, result.fkProjectStructureIds);
       })
       .catch((error) => console.log(error));
@@ -598,10 +578,13 @@ const Checks = (props) => {
 
     let fd = await fetchData()
     temp.map((tempvalue, i) => {
+      
       if (tempvalue['message'] === undefined) {
 
         tempvalue.map((value, index) => {
-
+          console.log(value.defaultResponse);
+          console.log(value.criticality);
+          console.log(value.auditStatus);
           tempQuestionId.push({ id: value.id });
 
           tempCheckData.push({
@@ -671,14 +654,12 @@ const Checks = (props) => {
   };
 
   const handelSubmit = async () => {
-
-    console.log(checkData);
-    // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
+    const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
 
-    const isValid = checkData.every((a) => a.check === true)
+    // const isValid = checkData.every((a) => a.check === true)
 
-    if (isValid) {
+    if (isValids) {
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
@@ -690,8 +671,6 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id, type = '') => {
-    console.log(index,id,field,value);
-    console.log('hiii');
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -704,7 +683,6 @@ const Checks = (props) => {
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value, 'uuuuuuuu')
           }
           else if (type === '1-10') {
             value = value
@@ -716,9 +694,6 @@ const Checks = (props) => {
     if (field == 'criticality' || field == 'auditStatus') {
       // setTimeout(()=>calculate_rating(index), 5000)
     }
-
-    console.log(temp);
-
     setCheckData(temp);
   };
 
@@ -747,7 +722,6 @@ const Checks = (props) => {
     console.log(checkData);
   }, [checkData])
 
-
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -774,6 +748,11 @@ const Checks = (props) => {
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
   };
+
+  useEffect(() => {
+   console.log(form,'form')
+  }, [form]);
+
 
   useEffect(() => {
     fetchFectorData();
@@ -905,7 +884,6 @@ const Checks = (props) => {
                           </ListItem>
                         </span> */}
                           {Categor.map((value, index) => {
-                            // console.log(key);
                             return (
                               <>
                                 <Grid container item xs={12}>
@@ -1013,15 +991,6 @@ const Checks = (props) => {
                                                           setValueStar(newValue);
                                                         }
                                                       }}
-                                                    // onChange={(e) =>
-                                                    //   handleChangeData(
-                                                    //     e.target.value,
-                                                    //     "findings",
-                                                    //     index,
-                                                    //     value.id,
-                                                    //     value.scoreType
-                                                    //   )
-                                                    // }
                                                     />
                                                   </Grid>
                                                 </Grid>
@@ -1085,7 +1054,7 @@ const Checks = (props) => {
                                                     name="performancerating"
                                                     id="performancerating"
                                                     defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
-                                                    // defaultValue="20%"
+                                                    // type="number"
                                                     fullWidth
                                                     variant="outlined"
                                                     className="formControl"
@@ -1252,7 +1221,7 @@ const Checks = (props) => {
                                                       id="attachment"
                                                       name="attachment"
                                                       // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].attachment : ""}
-                                                      accept={`.xls , .xlsx, .ppt, .pptx, .doc, .docx, .text , .pdf`}
+                                                      accept={`.xls, xlsx, .ppt, .pptx, .doc, .docx, .text, .pdf`}
                                                       onChange={(e) => {
                                                         handleFileUpload(e, value.id);
                                                       }}
@@ -1390,14 +1359,14 @@ const Checks = (props) => {
                                                 </TextField>
                                               </Grid>
                                               <Grid item md={4} xs={12}>
-
+                                                {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
+                                              {/* {console.log(colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor,'ooooooooooooooooooooo')} */}
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
                                                   name="performancerating"
                                                   id="performancerating"
                                                   value={ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : '')}
-                                                  // defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ""}
                                                   style={{
                                                     backgroundColor: ratingColor[catI + '-' + index] ?
                                                       ratingColor[catI + '-' + index] :
@@ -1530,6 +1499,7 @@ const Checks = (props) => {
                                                     id="performancerating"
                                                     defaultValue={showCheckData.filter(cd => cd.question == value.question).length ? showCheckData.filter(cd => cd.question == value.question)[0].score : ""}
                                                     fullWidth
+                                                    // type="number"
                                                     variant="outlined"
                                                     className="formControl"
                                                     onChange={(e) =>

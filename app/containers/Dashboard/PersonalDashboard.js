@@ -1088,7 +1088,7 @@ function PersonalDashboard(props) {
     }
 
 
-    localStorage.setItem('selectBreakdown', JSON.stringify(data));
+    localStorage.setItem('selectBreakDown', JSON.stringify(data));
     localStorage.setItem('projectName', JSON.stringify(projectListData[index]))
     dispatch(projectName(projectListData[index]))
     dispatch(breakDownDetails(data))

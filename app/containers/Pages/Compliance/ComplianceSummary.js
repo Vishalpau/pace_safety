@@ -362,6 +362,7 @@ function ComplianceSummary(props) {
   };
 
   useEffect(() => {
+    console.log(groupData, 'GROUPTdATA');
   }, [groupData])
 
   useEffect(() => {
@@ -1203,9 +1204,9 @@ function ComplianceSummary(props) {
                                                       <>
                                                         <Accordion
                                                           expanded={
-                                                            expandedTableDetail === "panel3"
+                                                            expandedTableDetail === `panel6 ${value.id}`
                                                           }
-                                                          onChange={handleTDChange("panel3")}
+                                                          onChange={handleTDChange(`panel6 ${value.id}`, value.id)}
                                                           defaultExpanded
                                                           className="backPaperAccordian"
                                                         >
