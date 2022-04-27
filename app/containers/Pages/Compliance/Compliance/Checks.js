@@ -761,7 +761,7 @@ const Checks = (props) => {
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
-      // return;
+      return;
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
