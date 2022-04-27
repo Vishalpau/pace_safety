@@ -786,13 +786,7 @@ function PersonalDashboard(props) {
             response.data.data.results.data.companies = response.data.data.results.data.companies.filter(comp => comp.companyId == comId)
           }
 
-          if (response.data.data.results.data.companies.length > 1) {
-            const companey = JSON.parse(localStorage.getItem("company"));
-            if (companey === null) {
-              setCompanyListData(response.data.data.results.data.companies);
-              setOpen(true);
-            }
-          }
+
           if (response.data.data.results.data.companies.length === 1) {
             let hosting = response.data.data.results.data.companies.filter(company => company.companyId === response.data.data.results.data.companies[0].companyId)[0]
               .subscriptions
@@ -835,6 +829,14 @@ function PersonalDashboard(props) {
                 }
 
                 // setOpen(true);
+              }
+            }
+          } else {
+            if (response.data.data.results.data.companies.length > 1) {
+              const companey = JSON.parse(localStorage.getItem("company"));
+              if (companey === null) {
+                setCompanyListData(response.data.data.results.data.companies);
+                setOpen(true);
               }
             }
           }
@@ -1004,7 +1006,7 @@ function PersonalDashboard(props) {
       depth: '1L',
       id: projectListData[index].firstBreakdown[phaseIndex].id,
       label: projectListData[index].breakdown[0].structure[0].name,
-      name: projectListData[index].firstBreakdown[phaseIndex].name
+      name: projectListData[index].firstBreakdown[phaseIndex].structureName
     });
     temp.push({
       breakdownLabel: projectListData[index].breakdown[0].structure[0].name,
@@ -1017,19 +1019,19 @@ function PersonalDashboard(props) {
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         unit: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].name
+        name: secondBreakdown[unitIndex].structureName
       });
       data.push({
         depth: '3L',
         id: thirdBreakdown[subUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].name
+        name: thirdBreakdown[subUnitIndex].structureName
       })
       data.push({
         depth: '4L',
         id: fourthBreakdown[subSubUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: fourthBreakdown[subSubUnitIndex].name
+        name: fourthBreakdown[subSubUnitIndex].structureName
       })
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
@@ -1052,13 +1054,13 @@ function PersonalDashboard(props) {
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         unit: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].name
-      });
+        name: secondBreakdown[unitIndex].structureName
+      })
       data.push({
         depth: '3L',
         id: thirdBreakdown[subUnitIndex].id,
         label: projectListData[index].breakdown[2].structure[0].name,
-        name: thirdBreakdown[subUnitIndex].name
+        name: thirdBreakdown[subUnitIndex].structureName
       })
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
@@ -1076,7 +1078,7 @@ function PersonalDashboard(props) {
         depth: '2L',
         id: secondBreakdown[unitIndex].id,
         label: projectListData[index].breakdown[1].structure[0].name,
-        name: secondBreakdown[unitIndex].name
+        name: secondBreakdown[unitIndex].structureName
       });
       temp.push({
         breakdownLabel: projectListData[index].breakdown[1].structure[0].name,
@@ -1275,11 +1277,6 @@ function PersonalDashboard(props) {
                 >
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <IconButton onClick={() => handleClose()}>
-                          <CloseIcon />
-                        </IconButton>
-                      </div>
                       <Grid container spacing={4}>
                         <Grid item md={12} sm={12}>
                           {/* className={classNames(classes.groupSection, classes.companySelection)} */}
@@ -1287,7 +1284,7 @@ function PersonalDashboard(props) {
                             <img className={classes.pacelogonBox} src={paceLogo} title="Pace OS" alt="Pace OS" />
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} align="center" className={classes.loginTopDetailSection}>
-                            <Typography variant="h1" gutterBottom className={classes.selectCompTitle}>Select Comapny</Typography>
+                            <Typography variant="h1" gutterBottom className={classes.selectCompTitle}>Select Company</Typography>
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} className={classes.companyListBox}>
 
@@ -1315,7 +1312,7 @@ function PersonalDashboard(props) {
                                             {selectValues.businessVertical}
                                           </Typography>
                                           <Typography className={classes.companyName}>
-                                            Company: <span>{selectValues.companyName}S</span>
+                                            Company: <span>{selectValues.companyName}</span>
                                           </Typography>
                                         </CardContent>
                                       </Card>
@@ -1467,7 +1464,7 @@ function PersonalDashboard(props) {
                                           Code: {value.projectCode}
                                         </span>
                                         <span className={classesm.externalLinkSection}>
-                                          <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
+                                          {/* <Tooltip title="Control tower" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                             <IconButton aria-label="delete" className={classesm.margin}>
                                               <svg id="Control-Tower-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                                 <g id="Group_5864" data-name="Group 5864" transform="translate(4.371 0.874)">
@@ -1489,7 +1486,7 @@ function PersonalDashboard(props) {
                                                 <rect id="Rectangle_1908" data-name="Rectangle 1908" width="32" height="32" fill="none" />
                                               </svg>
                                             </IconButton>
-                                          </Tooltip>
+                                          </Tooltip> */}
                                           {/* <Tooltip title="Geo location" arrow placement="bottom-end" classes={{ tooltip: classesm.customTooltip, arrow: classesm.customArrow }}>
                                         <IconButton aria-label="delete" className={classesm.marginR}>
                                           <svg id="GIS-Map-32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -1535,7 +1532,7 @@ function PersonalDashboard(props) {
                                                   <ListItem button className={classesm.phaseMenuList} onClick={
                                                     (value.breakdown && !value.breakdown[1]) ? () => handleProjectBreakdown(index, phaseIndex, null, null, null, '1L') : null
                                                   }>
-                                                    <ListItemText primary={phase.name} />
+                                                    <ListItemText primary={phase.structureName} />
                                                     {value.breakdown && value.breakdown[1] && (
                                                       <>
                                                         {openPhase === `panel${index}${phaseIndex}` ? <RemoveIcon /> : <AddIcon />}
@@ -1559,7 +1556,7 @@ function PersonalDashboard(props) {
                                                             <ListItem button className={classesm.unitMenuList} onClick={
                                                               (value.breakdown && !value.breakdown[2]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, null, null, '2L') : null
                                                             }>
-                                                              <ListItemText primary={unit.name} />
+                                                              <ListItemText primary={unit.structureName} />
                                                               {value.breakdown && value.breakdown[2] && (
                                                                 <>
                                                                   {openUnit === `panel${index}${phaseIndex}${unitIndex}` ? <RemoveIcon /> : <AddIcon />}
@@ -1569,7 +1566,7 @@ function PersonalDashboard(props) {
                                                           </List>
                                                         </AccordionSummary>
                                                         {(openUnit === `panel${index}${phaseIndex}${unitIndex}` && thirdBreakdown && thirdBreakdown.length > 0) && (
-                                                          <>
+                                                          <AccordionDetails className={classesm.subUnitSection}>
                                                             {thirdBreakdown.map((subUnit, subUnitIndex) => (
                                                               <Accordion expanded={openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`} onChange={handleSubUnitChange(`panel${index}${phaseIndex}${unitIndex}${subUnitIndex}`, index, subUnit.id)}>
                                                                 <AccordionSummary
@@ -1580,7 +1577,7 @@ function PersonalDashboard(props) {
                                                                     <ListItem button className={classesm.unitMenuList} onClick={
                                                                       (value.breakdown && !value.breakdown[3]) ? () => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, null, '3L') : null
                                                                     }>
-                                                                      <ListItemText primary={subUnit.name} />
+                                                                      <ListItemText primary={subUnit.structureName} />
                                                                       {value.breakdown && value.breakdown[3] && (
                                                                         <>
                                                                           {openSubUnit === `panel${index}${phaseIndex}${unitIndex}${subUnitIndex}` ? <RemoveIcon /> : <AddIcon />}
@@ -1594,7 +1591,7 @@ function PersonalDashboard(props) {
                                                                     <List className={classesm.listSection}>
                                                                       {fourthBreakdown.map((subSubUnit, subSubUnitIndex) => (
                                                                         <ListItem button className={classesm.workAreaList} onClick={() => handleProjectBreakdown(index, phaseIndex, unitIndex, subUnitIndex, subSubUnitIndex, '4L')}>
-                                                                          <ListItemText primary={subSubUnit.name} />
+                                                                          <ListItemText primary={subSubUnit.structureName} />
                                                                         </ListItem>
                                                                       ))}
                                                                     </List>
@@ -1602,7 +1599,7 @@ function PersonalDashboard(props) {
                                                                 )}
                                                               </Accordion>
                                                             ))}
-                                                          </>
+                                                          </AccordionDetails>
                                                         )}
                                                       </Accordion>
                                                     ))}

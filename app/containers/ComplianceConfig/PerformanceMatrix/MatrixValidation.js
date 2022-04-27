@@ -9,11 +9,6 @@ export default function MatrixValidation(data) {
         isValid = false
     }
 
-    if (parseInt(data.matrixConstant) < 1 || parseInt(data.matrixConstant) > 5) {
-        error['matrixConstant'] = "Matrix constant value should be between 1 and 5"
-        isValid = false
-    }
-
     if (data.matrixConstantColor == "") {
         error['matrixConstantColor'] = "Please select matrix color"
         isValid = false

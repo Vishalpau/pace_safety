@@ -23,8 +23,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setViewUpdate }) => {
+    const [error, setError] = useState(false);
 
-    const [editForm, setEditForm] = useState({})
+    const [editForm, setEditForm] = useState({
+        checkListGroupName: value.checkListGroupName,
+        parentGroup: value.parentGroup,
+        status: value.status
+    })
 
     const handelParentShow = (value) => {
         if (value == 0) {
@@ -35,29 +40,42 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
     }
 
     const handelParentValue = (value) => {
-        if (value == "Top") {
+        setEditForm({
+            ...editForm,
+            parentGroup: value
+        })
+
+    }
+
+    const handleStatusChange = () => {
+        if (editForm.status === 'Active') {
             setEditForm({
                 ...editForm,
-                parentGroup: "0",
+                status: 'Inactive'
             })
         } else {
             setEditForm({
                 ...editForm,
-                parentGroup: "1",
+                status: 'Active'
             })
         }
-
     }
 
     const handelUpdate = async (checkListId, checkListGroupId) => {
-        editForm["fkCheckListId"] = checkListId
-        editForm["checklistgroupId"] = checkListGroupId
-        editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
-        const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
-        if (res.status == 200) {
-            setViewUpdate(!viewUpdate)
+        if (editForm.checkListGroupName.trim()) {
+            editForm["fkCheckListId"] = checkListId
+            editForm["checklistgroupId"] = checkListGroupId
+            editForm["createdBy"] = JSON.parse(localStorage.getItem("userDetails"))["id"]
+            const res = await api.put(`api/v1/core/checklists/${checkListId}/groups/${checkListGroupId}/`, editForm)
+            if (res.status == 200) {
+                setViewUpdate(!viewUpdate)
+            }
+            setError(false)
+            handelEditClose()
+        } else {
+            setError(true)
         }
-        handelEditClose()
+
     }
 
     const handelDelete = () => {
@@ -72,11 +90,13 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
                     id="filled-basic"
                     label="Sub-group Name"
                     variant="outlined"
-                    defaultValue={value.checkListGroupName}
+                    defaultValue={editForm.checkListGroupName}
                     onChange={async (e) => setEditForm({
                         ...editForm,
                         checkListGroupName: e.target.value
                     })}
+                    error={(error && !editForm.checkListGroupName.trim())}
+                    helperText={(error && !editForm.checkListGroupName.trim()) ? "Sub-group name is required" : ""}
                 />
             </TableCell>
             <TableCell className={classes.tabelBorder}>
@@ -85,28 +105,31 @@ const EditOnlyRow = ({ value, allGroupName, handelEditClose, viewUpdate, setView
                     className={classes.formControl}
                     label="Group name"
                 >
-                    <Select
-                        id="Group-name"
-                        className="inputCell"
-                        labelId="Group name"
-                        defaultValue="Top"
-                    >
-                        {allGroupName.map((selectValues) => (
-                            <MenuItem
-                                value={selectValues}
-                                onClick={(e) => handelParentValue(value.parentGroup)}
-                            >
-                                {selectValues}
-                            </MenuItem>
-                        ))}
-                    </Select>
+
+                    {allGroupName && allGroupName.length > 0 && (
+                        <Select
+                            id="Group-name"
+                            className="inputCell"
+                            labelId="Group name"
+                            value={editForm.parentGroup}
+                        >
+                            {allGroupName.map((selectValues) => (
+                                <MenuItem
+                                    value={selectValues.id}
+                                    onClick={(e) => handelParentValue(selectValues.id)}
+                                >
+                                    {selectValues.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    )}
                 </FormControl>
 
             </TableCell>
             <TableCell className={classes.tabelBorder}>
                 <Switch
-                    checked={true}
-                    // onChange={handleChange}
+                    checked={(editForm.status || editForm.status == "Active") ? true : false}
+                    onChange={handleStatusChange}
                     name="checkedA"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
