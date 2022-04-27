@@ -1197,7 +1197,7 @@ function ComplianceSummary(props) {
                                             {val.checkListValues.map((subGrpData, index) => {
                                               // console.log(subGrpData, 'subjiii');
                                               return (
-                                                quesData.length <= 0 ? <p>No Question Configured</p> :
+                                                quesData.length <= 0 ? <p>No question configured</p> :
                                                   quesData.map((value, index) => {
                                                     // console.log(value, 'value.subGroupId');
                                                     return subGrpData.id === value.subGroupId ?
