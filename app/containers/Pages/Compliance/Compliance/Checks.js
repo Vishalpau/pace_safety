@@ -330,13 +330,23 @@ const Checks = (props) => {
     "panel4"
   );
 
-  const calculate_rating = (index, v, id) => {
+  const [criticalityV, setCriticalityV] = useState({
+    index: '',
+    id: '',
+    optionConstant: '',
+  });
+  
+  const [statusV, setStatusV] = useState({
+    index: '',
+    id: '',
+    optionConstant: '',
+  });
 
-    if (form.menuValue >= 0 && v >= 0) {
-
-      let ratingValue = (form.menuValue * v) / 5 * 100;
+  const calculate_rating = (index, id) => {
+    if (criticalityV.optionConstant >= 0 && statusV.optionConstant >= 0) {
+      let ratingValue = (criticalityV.optionConstant * statusV.optionConstant) / 5 * 100;
       for (var i = 0; i < colordata.length; i++) {
-        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+        if (ratingValue * 5 / 100 === colordata[i].matrixConstant) {
           let clr_op = { ...ratingColor }
           clr_op[index] = colordata[i].matrixConstantColor
           setRatingColor(clr_op)
@@ -760,19 +770,38 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
-  useEffect(() => {
-    console.log(statusData, 'statusData');
-  }, [statusData])
-
   const handleCriticality = (option, selectType, index, id) => {
     if (selectType === "menuItem") {
+      setCriticalityV({
+        index: index,
+        id: id,
+        optionConstant: option.factorConstant,
+      })
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
-      // calculate_rating(index, option.factorConstant)
-      return;
     }
-    setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
-    calculate_rating(index, option.factorConstant, id)
+    else {
+      setStatusV({
+        index: index,
+        id: id,
+        optionConstant: option.factorConstant,
+      })
+      setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
+    }
   };
+
+  useEffect(() => {
+    if (criticalityV) {
+      const { index, id } = criticalityV
+      calculate_rating(index, id)
+    }
+  }, [criticalityV])
+
+  useEffect(() => {
+    if (statusV) {
+      const { index, id } = statusV
+      calculate_rating(index, id)
+    }
+  }, [statusV])
 
   useEffect(() => {
     fetchFectorData();
