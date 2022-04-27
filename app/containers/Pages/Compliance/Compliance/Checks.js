@@ -485,24 +485,6 @@ const Checks = (props) => {
   const [statusData, setStatusData] = useState([])
   const [errorBoundary, setErrorBoundary] = useState("");
 
-  // const DialogTitle = withStyles(styles)((props) => {
-  //   const { children, classes, onClose, ...other } = props;
-  //   return (
-  //     <MuiDialogTitle disableTypography className={classes.rootPop} {...other}>
-  //       <Typography variant="h6">{children}</Typography>
-  //       {onClose ? (
-  //         <IconButton
-  //           aria-label="close"
-  //           className={classes.closeButton}
-  //           onClick={onClose}
-  //         >
-  //           <CloseIcon />
-  //         </IconButton>
-  //       ) : null}
-  //     </MuiDialogTitle>
-  //   );
-  // });
-
   const [valueStar, setValueStar] = React.useState([]);
 
   const [categories, setCategories] = useState([]);
@@ -690,8 +672,6 @@ const Checks = (props) => {
   const classes = useStyles();
 
   const handleChangeData = (value, field, index, id, type = '') => {
-    console.log(index,id,field,value);
-    console.log('hiii');
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
@@ -704,7 +684,6 @@ const Checks = (props) => {
           }
           else if (type === '%') {
             value = value + "%"
-            console.log(value, 'uuuuuuuu')
           }
           else if (type === '1-10') {
             value = value
@@ -769,11 +748,16 @@ const Checks = (props) => {
     if (selectType === "menuItem") {
       setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
       // calculate_rating(index, option.factorConstant)
-      // return;
+      return;
     }
     setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     calculate_rating(index, option.factorConstant, id)
   };
+
+  useEffect(() => {
+   console.log(form,'form')
+  }, [form]);
+
 
   useEffect(() => {
     fetchFectorData();
