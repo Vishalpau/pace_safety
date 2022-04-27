@@ -330,7 +330,6 @@ const Checks = (props) => {
     "panel4"
   );
 
-
   const calculate_rating = (index, v, id) => {
 
     if (form.menuValue >= 0 && v >= 0) {
@@ -596,16 +595,23 @@ const Checks = (props) => {
 
     let fd = await fetchData()
     temp.map((tempvalue, i) => {
+        
       
       if (tempvalue['message'] === undefined) {
-
+        console.log(tempvalue);
         tempvalue.map((value, index) => {
-          console.log(value.defaultResponse);
-          console.log(value.criticality);
-          console.log(value.auditStatus);
-          tempQuestionId.push({ id: value.id });
 
+          let defRes = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].defaultResponse : '';
+          let crtic = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '';
+          let auditS = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '';
+          
+          console.log(value.defaultResponse?true:false);
+          console.log(value.defaultResponse, 'defaultRes');
+          console.log(value.criticality, 'criticality');
+          console.log(value.auditStatus, 'auditStat');
+          tempQuestionId.push({ id: value.id });
           tempCheckData.push({
+            check: (defRes || ((crtic && auditS)) ? true : false), 
             id: fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].id : 0,
             questionId: value.id,
             question: value.question,
