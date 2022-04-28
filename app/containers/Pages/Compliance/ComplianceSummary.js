@@ -317,10 +317,10 @@ function ComplianceSummary(props) {
       // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${projectId}/compliance/`
     );
     const result = res.data.data.results;
-    await fetchComplianceData(result,id);
+    await fetchComplianceData(result, id);
   };
 
-  const fetchComplianceData = async (data,id) => {
+  const fetchComplianceData = async (data, id) => {
     const res = await api
       .get(`/api/v1/audits/${id}/`)
       .then((response) => {
@@ -422,7 +422,7 @@ function ComplianceSummary(props) {
   };
 
 
-  const fetchNotificationSent = async (notifyTo, fkProjectStructure ) => {
+  const fetchNotificationSent = async (notifyTo, fkProjectStructure) => {
 
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
@@ -999,11 +999,9 @@ function ComplianceSummary(props) {
                                         >
                                           Group name
                                         </FormLabel>
-                                        {/* {console.log(quesData, 'quesData')} */}
-                                        <FormGroup>
+                                        <FormGroup className={classes.customCheckBoxList}>
                                           {groupData.map((value, index) => (
                                             <FormControlLabel
-                                              //className={classNames(classes.checkedUnclick, classes.labelValue)}
                                               className="checkRadioLabel checkedUnclick"
                                               control={
                                                 <Checkbox
@@ -1025,7 +1023,9 @@ function ComplianceSummary(props) {
                                       </Grid>
 
                                       <Grid item md={6} xs={12}>
+
                                         <Grid container spacing={3}>
+
                                           {result.subGroups.map(
                                             value => {
                                               return (
@@ -1039,9 +1039,10 @@ function ComplianceSummary(props) {
                                                     className="checkRadioLabel"
                                                     component="legend"
                                                   >
+                                                    {(result.groups.filter(name=> name.id == value.fkGroupId)[0].checkListGroupName)}
                                                   </FormLabel>
                                                   <FormGroup>
-                                              
+
                                                     <FormControlLabel
                                                       //className={classes.labelValue}
                                                       className="checkedUnclick"
@@ -1180,14 +1181,14 @@ function ComplianceSummary(props) {
                                             {val.checkListValues.map(c => {
                                               return (
                                                 quesData.find(a => a.subGroupId === c.id) !== undefined &&
-                                                  (
-                                                    <FormLabel
-                                                      className="checkRadioLabel"
-                                                      component="legend"
-                                                    >
-                                                      {val.checkListGroupName}
-                                                    </FormLabel>
-                                                  )
+                                                (
+                                                  <FormLabel
+                                                    className="checkRadioLabel"
+                                                    component="legend"
+                                                  >
+                                                    {val.checkListGroupName}
+                                                  </FormLabel>
+                                                )
                                               )
                                             })}
                                             {/* {quesData.find(a => a.subGroupId === val.checkListValues.map(c => c.id) !== undefined && */}
