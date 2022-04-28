@@ -332,7 +332,6 @@ const Checks = (props) => {
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
   const [questionId, setQuestionId] = useState()
-  const [loading, setLoading] = useState(false);
 
   const [stateToggle, setStateToggle] = useState("")
 
@@ -377,10 +376,6 @@ const Checks = (props) => {
     const result = res.data.data.results
     setColorData(result)
   }
-
-  useEffect(() => {
-    console.log(stateToggle);
-  }, [stateToggle])
 
 
   const radioDecide = ["Yes", "No", "N/A"];
@@ -451,6 +446,7 @@ const Checks = (props) => {
               .catch(err => reject(false));
           });
           putApiData.then(result => {
+            
             const apiResult = result.data.data.results;
             temp[key]['id'] = apiResult.id
           })
@@ -465,9 +461,10 @@ const Checks = (props) => {
               .then(res => {
                 resolve(res)
               })
-              .catch(err => reject(false));
+              .catch(err =>setLoading(false), reject(false));
           })
           postApiData.then(result => {
+            setLoading(false);
             const apiResult = result.data.data.results;
             temp[key]['id'] = apiResult.id
           })
@@ -678,7 +675,7 @@ const Checks = (props) => {
     // console.log(isValids)
     const isValid = checkData.every((a) => a.check === true)
     if (isValid) {
-      setLoading(true);
+     
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
@@ -1378,7 +1375,6 @@ const Checks = (props) => {
                                               </Grid>
                                               <Grid item md={4} xs={12}>
                                                 {/* {console.log(ratingData[catI + '-' + index] ? ratingData[catI + '-' + index] : (showCheckData.filter(cd => cd.question == value.question).length > 0 ? showCheckData.filter(cd => cd.question == value.question)[0].performance : ''),'pppppppppppp')} */}
-                                                {/* {console.log(colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor,'ooooooooooooooooooooo')} */}
                                                 <TextField
                                                   label="Performance rating %"
                                                   //margin="dense"
@@ -1388,7 +1384,7 @@ const Checks = (props) => {
                                                   style={{
                                                     backgroundColor: ratingColor[catI + '-' + index] ?
                                                       ratingColor[catI + '-' + index] :
-                                                      (showCheckData.filter(cd => cd.question == value.question).length > 0
+                                                      (showCheckData.filter(cd => cd.question == value.question).length > 0 && colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100).length > 0 
                                                         ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor
                                                         : '')
                                                   }}
@@ -1785,24 +1781,16 @@ const Checks = (props) => {
             </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
-              <div className={classes.loadingWrapper}>
                 <Button
                   size="medium"
                   variant="contained"
                   color="primary"
                   className="spacerRight buttonStyle"
-                  disabled={loading}
                   onClick={(e) => handelSubmit()}
                 >
                   Next
                 </Button>
-                {loading && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-              </div>
+              
               <Button
                 size="medium"
                 variant="contained"
