@@ -236,7 +236,7 @@ function Observations(props) {
   };
 
 
-  const fetchInitialiObservation = async () => { 
+  const fetchInitialiObservation = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
       .projectName.projectId;

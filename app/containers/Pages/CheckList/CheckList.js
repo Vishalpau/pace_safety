@@ -170,7 +170,7 @@ function CheckList() {
       <Table className={classes.table}>
         <TableBody>
           <TableRow>
-            <TableCell className={classes.columunBorder}>Sr.</TableCell>
+            <TableCell className={classes.columunBorder} style={{ width: '80px' }}>Sr.</TableCell>
             {/* <TableCell className={classes.columunBorder}>Group Name</TableCell> */}
             <TableCell className={classes.columunBorder}>Input Type</TableCell>
             <TableCell className={classes.columunBorder}>CheckList Name</TableCell>
@@ -183,11 +183,11 @@ function CheckList() {
             <>
               {checkLists.map((value) => (
                 <TableRow>
-                  <TableCell className={classes.tabelBorder}>{value.checklistId}</TableCell>
+                  <TableCell className={classes.tabelBorder} style={{ width: '80px' }}>{value.checklistId}</TableCell>
                   {/* <TableCell className={classes.tabelBorder}>{value.checkListName}</TableCell> */}
                   <TableCell className={classes.tabelBorder}>{value.checkListType}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.checkListLabel}</TableCell>
-                  <TableCell className={classes.tabelBorder}>0</TableCell>
+                  <TableCell className={classes.tabelBorder}>{value.checkListSelectType}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.hasGroup}</TableCell>
                   <TableCell className={classes.tabelBorder}>{value.status}</TableCell>
                   <TableCell className={classes.tabelBorder}>
@@ -199,7 +199,7 @@ function CheckList() {
               ))}
             </>
             :
-            <p style={{ paddingTop: '15px', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>No data found!</p>
+            <>{(searchFilter.search || searchFilter.filter) && (<p style={{ paddingTop: '15px', paddingLeft: '15px', textAlign: 'center', fontSize: '14px', fontWeight: '700' }}>No data found!</p>)}</>
           }
         </TableBody>
       </Table>

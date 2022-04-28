@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { PapperBlock } from 'dan-components';
 import React, { useEffect, useState } from 'react';
@@ -92,7 +93,7 @@ function Pickvalues(props) {
 
   const load = async () => {
     const allPickvalues = await api.get(`api/v1/lists/` + props.location.pathname.split('/').pop() + '/value');
-    await setPickValues(allPickvalues.data.data.results);
+    // await setPickValues(allPickvalues.data.data.results);
     await setPickValuesData(allPickvalues.data.data.results);
     await setForm({
       ...form,
@@ -200,6 +201,11 @@ function Pickvalues(props) {
     return true;
   };
 
+  const handleDelete = async (id) => {
+    await api.put('api/v1/lists/' + listname + '/value/' + id, { status: 'Delete' });
+    await load();
+  }
+
   const _pickvalues = list => list.map(listItem => (
     <tr>
       <td>
@@ -252,29 +258,36 @@ function Pickvalues(props) {
           save={save}
         />
       </td>
+      <td>
+        <Button onClick={() => handleDelete(listItem.id)}>
+          <DeleteIcon />
+        </Button>
+      </td>
     </tr>
   ));
 
   useEffect(() => {
     const temp = [];
     pickValuesData.forEach(value => {
-      if (searchFilter.search) {
-        if (searchFilter.filter) {
-          if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.isSelected == searchFilter.filter) {
-            temp.push(value)
+      if (value.status !== 'Delete') {
+        if (searchFilter.search) {
+          if (searchFilter.filter) {
+            if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1 && value.isSelected == searchFilter.filter) {
+              temp.push(value)
+            }
+          } else {
+            if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+              temp.push(value)
+            }
           }
         } else {
-          if (value.inputLabel.toLowerCase().indexOf(searchFilter.search.toLowerCase()) !== -1) {
+          if (searchFilter.filter) {
+            if (searchFilter.filter == value.isSelected) {
+              temp.push(value)
+            }
+          } else {
             temp.push(value)
           }
-        }
-      } else {
-        if (searchFilter.filter) {
-          if (searchFilter.filter == value.isSelected) {
-            temp.push(value)
-          }
-        } else {
-          temp.push(value)
         }
       }
     })
@@ -352,6 +365,7 @@ function Pickvalues(props) {
                 <th>Is Selected</th>
                 <th>Parent</th>
                 <th>Group</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
