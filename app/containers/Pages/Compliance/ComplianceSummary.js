@@ -527,7 +527,19 @@ function ComplianceSummary(props) {
     }
   }, []);
 
-
+  function groupNamrHandler(val) {
+    
+    if ( val.checkListValues.findIndex(ele => quesData.findIndex(qD => qD.subGroupId === ele.id) !== -1  ) !== -1 ) {
+      return (
+        <FormLabel
+          className="checkRadioLabel"
+          component="legend"
+        >
+          {val.checkListGroupName}
+        </FormLabel>
+      )
+    }
+  }
   return (
     <CustomPapperBlock
       title={`Compliance number: ${complianceData.auditNumber ? complianceData.auditNumber : ""
@@ -1042,36 +1054,36 @@ function ComplianceSummary(props) {
                                                     {value.checkListGroupName}
                                                   </FormLabel>
                                                   <FormGroup>
-                                                    { 
+                                                    {
                                                       result.subGroups.map(subGrp => {
-                                                        if (subGrp.fkGroupId === value.id){
+                                                        if (subGrp.fkGroupId === value.id) {
                                                           return (
                                                             <FormControlLabel
-                                                            //className={classes.labelValue}
-                                                            className="checkedUnclick"
-                                                            control={
-                                                              <Checkbox
-                                                                icon={
-                                                                  <CheckBoxOutlineBlankIcon fontSize="small" />
-                                                                }
-                                                                checkedIcon={
-                                                                  <CheckBoxIcon fontSize="small" />
-                                                                }
-                                                                name="checkedI"
-                                                                onChange={
-                                                                  handleChange
-                                                                }
-                                                                checked={checkedC}
-                                                                value="checkedC"
-                                                              />
-                                                            }
-                                                            label={subGrp.inputLabel}
-                                                          />
+                                                              //className={classes.labelValue}
+                                                              className="checkedUnclick"
+                                                              control={
+                                                                <Checkbox
+                                                                  icon={
+                                                                    <CheckBoxOutlineBlankIcon fontSize="small" />
+                                                                  }
+                                                                  checkedIcon={
+                                                                    <CheckBoxIcon fontSize="small" />
+                                                                  }
+                                                                  name="checkedI"
+                                                                  onChange={
+                                                                    handleChange
+                                                                  }
+                                                                  checked={checkedC}
+                                                                  value="checkedC"
+                                                                />
+                                                              }
+                                                              label={subGrp.inputLabel}
+                                                            />
                                                           )
                                                         }
                                                       })
                                                     }
-                                                 
+
                                                     {/* )
                                                     }
                                                     )} */}
@@ -1182,26 +1194,17 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
+                                      {console.log(groupData,quesData,'groupData')}
+                                     
                                       {groupData.map(val => {
-                                        // console.log(val);
+                                        // console.log(val, 'val');
+                                        // console.log(quesData, 'quesData');
                                         return (
                                           <>
-                                            {val.checkListValues.map(c => {
-                                              return (
-                                                quesData.find(a => a.subGroupId === c.id) !== undefined &&
-                                                (
-                                                  <FormLabel
-                                                    className="checkRadioLabel"
-                                                    component="legend"
-                                                  >
-                                                    {val.checkListGroupName}
-                                                  </FormLabel>
-                                                )
-                                              )
-                                            })}
-                                            {/* {quesData.find(a => a.subGroupId === val.checkListValues.map(c => c.id) !== undefined && */}
-
-                                            {/* )}                                           */}
+                                            {
+                                              groupNamrHandler(val)
+                                            }
+                                          
 
                                             {val.checkListValues.map((subGrpData, index) => {
                                               // console.log(subGrpData, 'subjiii');
@@ -1427,26 +1430,11 @@ function ComplianceSummary(props) {
                                                                   >
                                                                     Document
                                                                   </FormLabel>
-                                                                  {/* {value.attachment ? value.attachment.map(att => */}
                                                                   <div className="attachFileThumb">
                                                                     <Attachment value={value.attachment} />
-                                                                    {/* <img
-                                                              src={value.attachment}
-                                                              className="attachFileStyle"
-                                                              alt="attachment"
-                                                            /> */}
-                                                                    {/* <div className="attachContent">
-                                                          <p>construction.jpg</p>
-                                                          <p>125kb</p>
-                                                        </div> */}
                                                                   </div>
-                                                                  {/* ) :
-                                                        "-"
-                                                      } */}
                                                                 </Grid>
                                                               }
-
-
                                                               {value.mediaAttachment &&
                                                                 <Grid
                                                                   item
@@ -1460,25 +1448,13 @@ function ComplianceSummary(props) {
                                                                   >
                                                                     Evidence
                                                                   </FormLabel>
-                                                                  {/* {value.attachment ? value.attachment.map(att => */}
                                                                   <div className="attachFileThumb">
                                                                     <Attachment value={value.mediaAttachment} />
-                                                                    {/* <img
-                                                              src={value.mediaAttachment}
-                                                              className="attachFileStyle"
-                                                              alt="mediaAttachment"
-                                                            /> */}
                                                                     <div className="attachContent">
-                                                                      {/* <p>construction.jpg</p>
-                                                          <p>125kb</p> */}
                                                                     </div>
                                                                   </div>
-                                                                  {/* ) :
-                                                        "-"
-                                                      } */}
                                                                 </Grid>
                                                               }
-
                                                             </Grid>
                                                           </AccordionDetails>
                                                         </Accordion>

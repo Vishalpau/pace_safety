@@ -34,6 +34,7 @@ import { useHistory, useParams } from 'react-router';
 import { Row, Col } from 'react-grid-system';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { connect } from "react-redux";
 
 import { useDispatch } from 'react-redux';
 import FormSideBar from '../FormSideBar';
@@ -90,7 +91,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const ReportingAndNotification = () => {
+const ReportingAndNotification = (props) => {
   const [error, setError] = useState({});
   const [evidenceError, setEvidenceError] = useState({});
   const [incidentsListData, setIncidentsListdata] = useState([]);
@@ -699,9 +700,18 @@ const ReportingAndNotification = () => {
       const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
       const { projectId } = JSON.parse(localStorage.getItem('projectName'))
         .projectName;
+        const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+      let struct = "";
+      for (const i in selectBreakdown) {
+        struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+      }
+      const fkProjectStructureIds = struct.slice(0, -1);
       const config = {
         method: 'get',
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom&projectStructure=${fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config)
@@ -822,7 +832,7 @@ const ReportingAndNotification = () => {
                         Notification to be sent?
                       </FormLabel>
                       <FormGroup>
-                        {notificationSentValue.map((value, index) => (
+                      {notificationSentValue.length != 0 ? notificationSentValue.map((value) => (
                           <FormControlLabel
                             id={index}
                             key={index}
@@ -834,7 +844,7 @@ const ReportingAndNotification = () => {
                               handelNotifyTo(e, index);
                             }}
                           />
-                        ))}
+                          )) : null}
                       </FormGroup>
                       {error && error.notifyTo && (
                         <FormHelperText>{error.notifyTo}</FormHelperText>
@@ -1164,4 +1174,16 @@ const ReportingAndNotification = () => {
   );
 };
 
-export default ReportingAndNotification;
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  null
+)(ReportingAndNotification);

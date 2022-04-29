@@ -225,7 +225,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AssessmentAndNotification = () => {
+const AssessmentAndNotification = (props) => {
   const dispatch = useDispatch();
   const [form, setForm] = useState([]);
   const history = useHistory();
@@ -266,8 +266,8 @@ const AssessmentAndNotification = () => {
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        // setOpenError(false)
-        return;
+      // setOpenError(false)
+      return;
     }
     setOpen(false);
   };
@@ -439,9 +439,9 @@ const AssessmentAndNotification = () => {
 
   const handleSubmit = async (e) => {
     let userId = JSON.parse(localStorage.getItem('userDetails')) !== null
-    ? JSON.parse(localStorage.getItem('userDetails')).id
-    : null;
-    
+      ? JSON.parse(localStorage.getItem('userDetails')).id
+      : null;
+
     ahaform[
       "workStopCondition"
     ] = additinalJobDetails.workStopCondition.toString();
@@ -450,21 +450,21 @@ const AssessmentAndNotification = () => {
     ahaform["updatedBy"] = userId
     let data = new FormData();
     data.append("fkCompanyId", ahaform.fkCompanyId),
-    data.append("fkProjectId", ahaform.fkProjectId),
-    data.append("fkProjectStructureIds", ahaform.fkProjectStructureIds),
-    data.append("workArea", ahaform.workArea),
-    data.append("location", ahaform.location),
-    data.append("assessmentDate", ahaform.assessmentDate),
-    data.append("permitToPerahaform", ahaform.permitToPerahaform),
-    data.append("permitNumber", ahaform.permitNumber),
-    data.append("ahaNumber", ahaform.ahaNumber);
+      data.append("fkProjectId", ahaform.fkProjectId),
+      data.append("fkProjectStructureIds", ahaform.fkProjectStructureIds),
+      data.append("workArea", ahaform.workArea),
+      data.append("location", ahaform.location),
+      data.append("assessmentDate", ahaform.assessmentDate),
+      data.append("permitToPerahaform", ahaform.permitToPerahaform),
+      data.append("permitNumber", ahaform.permitNumber),
+      data.append("ahaNumber", ahaform.ahaNumber);
     if (
       ahaform.ahaAssessmentAttachment !== null &&
       typeof ahaform.ahaAssessmentAttachment !== "string"
-      ) {
-        data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
-      }
-      data.append("description", ahaform.description),
+    ) {
+      data.append("ahaAssessmentAttachment", ahaform.ahaAssessmentAttachment);
+    }
+    data.append("description", ahaform.description),
       data.append("workStopCondition", ahaform.workStopCondition),
       data.append("department", ahaform.department),
       data.append("additionalRemarks", ahaform.additionalRemarks),
@@ -483,9 +483,9 @@ const AssessmentAndNotification = () => {
       data.append("updatedBy", ahaform.updatedBy),
       data.append("source", ahaform.source),
       data.append("vendor", ahaform.vendor);
-      data.append("vendorReferenceId", ahaform.vendorReferenceId);
-      
-      await setSubmitLoader(true);
+    data.append("vendorReferenceId", ahaform.vendorReferenceId);
+
+    await setSubmitLoader(true);
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/bulkhazards/`,
       form
@@ -560,38 +560,38 @@ const AssessmentAndNotification = () => {
   };
 
   const fileTypeError = 'Only pdf, png, jpeg, jpg, xls, xlsx, doc, word, ppt File is allowed!';
-    const fielSizeError = 'Size less than 25Mb allowed';
-    const handleFile = async (e) => {
-        const acceptFileTypes = [
-            'pdf',
-            'png',
-            'jpeg',
-            'jpg',
-            'xls',
-            'xlsx',
-            'doc',
-            'word',
-            'ppt',
-        ];
-        const file = e.target.files[0].name.split('.');
+  const fielSizeError = 'Size less than 25Mb allowed';
+  const handleFile = async (e) => {
+    const acceptFileTypes = [
+      'pdf',
+      'png',
+      'jpeg',
+      'jpg',
+      'xls',
+      'xlsx',
+      'doc',
+      'word',
+      'ppt',
+    ];
+    const file = e.target.files[0].name.split('.');
 
-        if (
-            acceptFileTypes.includes(file[file.length - 1])
-            && e.target.files[0].size < 25670647
-        ) {
-            const temp = { ...ahaform };
-            const filesAll = e.target.files[0];
-            temp.ahaAssessmentAttachment = filesAll;
-            await setAHAForm(temp);
-        } else {
-            ref.current.value = '';
-            !acceptFileTypes.includes(file[file.length - 1])
-                ? await setMessage(fileTypeError)
-                : await setMessage(`${fielSizeError}`);
-            await setMessageType('error');
-            await setOpen(true);
-        }
-    };
+    if (
+      acceptFileTypes.includes(file[file.length - 1])
+      && e.target.files[0].size < 25670647
+    ) {
+      const temp = { ...ahaform };
+      const filesAll = e.target.files[0];
+      temp.ahaAssessmentAttachment = filesAll;
+      await setAHAForm(temp);
+    } else {
+      ref.current.value = '';
+      !acceptFileTypes.includes(file[file.length - 1])
+        ? await setMessage(fileTypeError)
+        : await setMessage(`${fielSizeError}`);
+      await setMessageType('error');
+      await setOpen(true);
+    }
+  };
 
   // const handleFile = (e) => {
   //   let temp = { ...ahaform };
@@ -627,14 +627,14 @@ const AssessmentAndNotification = () => {
     temp[key][fieldname] = e.target.value;
     const riskSeverity =
       temp[key].riskSeverityValue == undefined ||
-      temp[key].riskSeverityValue == "" ||
-      isNaN(temp[key].riskSeverityValue)
+        temp[key].riskSeverityValue == "" ||
+        isNaN(temp[key].riskSeverityValue)
         ? 1
         : temp[key].riskSeverityValue;
     const riskProbability =
       temp[key].riskProbabilityValue == undefined ||
-      temp[key].riskProbabilityValue == "" ||
-      isNaN(temp[key].riskProbabilityValue)
+        temp[key].riskProbabilityValue == "" ||
+        isNaN(temp[key].riskProbabilityValue)
         ? 1
         : temp[key].riskProbabilityValue;
 
@@ -668,21 +668,30 @@ const AssessmentAndNotification = () => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/aha/?subentity=aha&roleType=custom&projectStructure=${fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
       if (res.status === 200) {
         const result = res.data.data.results;
-        console.log(result,"LLLLLL");
+        console.log(result, "LLLLLL");
         setNotificationSentValue(result);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
-  console.log(form,'form')
+  console.log(form, 'form')
 
   const handelCallBack = async () => {
     await fetchHzardsData();
@@ -1206,7 +1215,7 @@ const AssessmentAndNotification = () => {
                             )}
                           >
                             {ahaform.ahaAssessmentAttachment != "" &&
-                            typeof ahaform.ahaAssessmentAttachment ==
+                              typeof ahaform.ahaAssessmentAttachment ==
                               "string" ? (
                               <Attachment
                                 value={ahaform.ahaAssessmentAttachment}
@@ -1215,16 +1224,16 @@ const AssessmentAndNotification = () => {
                               <p />
                             )}
                           </Typography>
-                          <input type="file" 
-                            ref={ref}                                                      
+                          <input type="file"
+                            ref={ref}
                             accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                             onChange={(e) => handleFile(e)} />
                         </Grid>
                       </Grid>
                       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                          <Alert onClose={handleClose} severity="error">
-                              {message}
-                          </Alert>
+                        <Alert onClose={handleClose} severity="error">
+                          {message}
+                        </Alert>
                       </Snackbar>
                       <Grid item md={12} xs={12}>
                         <TextField
@@ -1294,7 +1303,8 @@ const AssessmentAndNotification = () => {
                               Notifications to be sent to
                             </FormLabel>
                             <FormGroup row>
-                              {notificationSentValue.map((value) => (
+                              {console.log(notificationSentValue, 'notificationSentValue')}
+                              {notificationSentValue.length != 0 ? notificationSentValue.map((value) => (
                                 <FormControlLabel
                                   className={classes.labelValue}
                                   control={
@@ -1318,7 +1328,7 @@ const AssessmentAndNotification = () => {
                                   }
                                   label={value.roleName}
                                 />
-                              ))}
+                              )) : null}
                             </FormGroup>
                           </Grid>
                         </Grid>
@@ -1328,11 +1338,11 @@ const AssessmentAndNotification = () => {
                 ) : null}
 
                 <Grid item md={12} xs={12}>
-               
+
                   <div className={classes.loadingWrapper}>
                     <Button
                       size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
-                      onClick={(e) => handleSubmit()}   
+                      onClick={(e) => handleSubmit()}
                       disabled={submitLoader}
                     >
                       Submit
@@ -1345,7 +1355,7 @@ const AssessmentAndNotification = () => {
                     )}
                   </div>
                   <Button size="medium" variant="contained" color="secondary" className="buttonStyle custmCancelBtn"
-                  onClick={() => handleCancle()}>
+                    onClick={() => handleCancle()}>
                     Cancel
                   </Button>
                 </Grid>
@@ -1368,4 +1378,17 @@ const AssessmentAndNotification = () => {
   );
 };
 
-export default AssessmentAndNotification;
+// export default AssessmentAndNotification;
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  null
+)(AssessmentAndNotification);

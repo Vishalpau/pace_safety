@@ -40,6 +40,7 @@ import { JHA_FORM_COMBINE, SUMMARY_FORM } from '../Utils/constants';
 import Attachment from '../../../Attachment/Attachment';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
 import Snackbar from "@material-ui/core/Snackbar";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -192,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AssessmentAndDocument = () => {
+const AssessmentAndDocument = (props) => {
     const [form, setForm] = useState([]);
     const history = useHistory();
     const [preformace, setPerformance] = useState({});
@@ -306,9 +307,18 @@ const AssessmentAndDocument = () => {
 
         const companyId = JSON.parse(localStorage.getItem('company')).fkCompanyId;
         const { projectId } = JSON.parse(localStorage.getItem('projectName')).projectName;
+        const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+      let struct = "";
+      for (const i in selectBreakdown) {
+        struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+      }
+      const fkProjectStructureIds = struct.slice(0, -1);
         const config = {
             method: 'get',
-            url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom`,
+            url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/jha/?subentity=jha&roleType=custom&projectStructure=${fkProjectStructureIds}`,
             headers: HEADER_AUTH,
         };
         const notify = await api(config);
@@ -834,7 +844,7 @@ const AssessmentAndDocument = () => {
                                                         <FormControl component="fieldset">
                                                             <FormLabel className="checkRadioLabel" component="legend">Notifications to be sent to</FormLabel>
                                                             <FormGroup>
-                                                                {notificationSentValue.map((value) => (
+                                                            {notificationSentValue.length != 0 ? notificationSentValue.map((value) => (
                                                                     <FormControlLabel
                                                                         className="selectLabel"
                                                                         control={<Checkbox name={value.roleName} />}
@@ -842,7 +852,7 @@ const AssessmentAndDocument = () => {
                                                                         checked={formDocument.notifyTo && formDocument.notifyTo !== null && formDocument.notifyTo.includes(value.id.toString())}
                                                                         onChange={async (e) => handelNotifyTo(e, value.id.toString())}
                                                                     />
-                                                                ))}
+                                                                    )) : null}
                                                             </FormGroup>
                                                         </FormControl>
                                                         <Box borderTop={1} marginTop={2} borderColor="grey.300" />
@@ -909,4 +919,16 @@ const AssessmentAndDocument = () => {
     );
 };
 
-export default AssessmentAndDocument;
+
+const mapStateToProps = (state) => {
+    return {
+      projectName: state.getIn(["InitialDetailsReducer"]),
+      todoIncomplete: state,
+    };
+  };
+  
+  
+  export default connect(
+    mapStateToProps,
+    null
+  )(AssessmentAndDocument);
