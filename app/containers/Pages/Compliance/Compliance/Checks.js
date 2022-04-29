@@ -436,6 +436,7 @@ const Checks = (props) => {
     const temp = [...checkData];
 
     temp.map((data, key) => {
+      console.log(key);
       if (data.check) {
         const formData = new FormData;
         Object.keys(data).forEach(key => {
@@ -453,10 +454,8 @@ const Checks = (props) => {
               .then(res => {
                 resolve(res)
               })
-              .catch(err => reject(false));
           });
           putApiData.then(result => {
-            
             const apiResult = result.data.data.results;
             temp[key]['id'] = apiResult.id
           })
@@ -471,15 +470,14 @@ const Checks = (props) => {
               .then(res => {
                 resolve(res)
               })
-              .catch(err =>setLoading(false), reject(false));
           })
           postApiData.then(result => {
-            setLoading(false);
             const apiResult = result.data.data.results;
+            console.log(apiResult.id, 'theeeennnn');
             temp[key]['id'] = apiResult.id
           })
           postApiData.catch(err => {
-            console.log(err)
+            console.log(err, 'eeeeeeeeeeeerrrrrrrrrrrrrrrr');
           })
         }
       }
@@ -716,9 +714,6 @@ const Checks = (props) => {
         temp[i]['check'] = false;
         temp[i][field] = value;
       }
-    }
-    if (field == 'criticality' || field == 'auditStatus') {
-      // setTimeout(()=>calculate_rating(index), 5000)
     }
     setCheckData(temp);
   };
