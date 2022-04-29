@@ -442,7 +442,7 @@ const JobDetails = (props) => {
     }
 
     const handelNavigate = () => {
-        history.push(`${JHA_FORM["Project Area Hazards"]}`)
+        history.push(`${JHA_FORM_COMBINE["Project Area Hazards"]}`)
     }
 
     const handelApiError = () => {
@@ -491,7 +491,7 @@ const JobDetails = (props) => {
         await handelProjectData()
         delete form["jhaAssessmentAttachment"]
         if (form.id != null && form.id != undefined) {
-            const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
+            const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`, form)
             let CreateJhaId = res.data.data.results.id
             newJhaId = CreateJhaId
             handelTeam(CreateJhaId)
@@ -546,7 +546,7 @@ const JobDetails = (props) => {
         const projectId = project.projectName.projectId
         // const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards-ppe-checklist/${projectId}/`)
         const res = await api.get(`/api/v1/core/checklists/jha-safety-hazards/${projectId}/`)
-        console.log(res, 'res')
+        
         const checklistGroups = res.data.data.results[0].checklistGroups
         checklistGroups.map((value) => {
             temp[value["checkListGroupName"]] = []

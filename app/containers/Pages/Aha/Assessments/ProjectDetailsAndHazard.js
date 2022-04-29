@@ -343,7 +343,7 @@ const ProjectDetailsAndHazard = () => {
         form['permitNumber'] = ""
       }
       const res = await api.post("/api/v1/ahas/", form)
-      if (res.status === 201) {
+      if (res.status === 200) {
         let fkAHAId = res.data.data.results.id
         let fkProjectStructureIds = res.data.data.results.fkProjectStructureIds
         localStorage.setItem("fkAHAId", fkAHAId)
@@ -820,7 +820,7 @@ const ProjectDetailsAndHazard = () => {
                               // margin="dense"
                               fullWidth
                               label="Date*"
-                              value={selectedDate}
+                              // value={selectedDate}
                               // onChange={handleDateChange}
                               value={form.assessmentDate ? form.assessmentDate :null}
                               error={error.assessmentDate}
@@ -1102,8 +1102,6 @@ const ProjectDetailsAndHazard = () => {
                 <div className={classes.loadingWrapper}>
                   <Button size="medium" variant="contained" color="primary" className="spacerRight buttonStyle"
                     onClick={(e) => handleSubmit()}
-                    className="spacerRight buttonStyle"
-                    color="primary"
                     style={{ marginLeft: "10px" }}
                     disabled={loading}
                   >
