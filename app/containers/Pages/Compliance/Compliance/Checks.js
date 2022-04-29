@@ -493,10 +493,11 @@ const Checks = (props) => {
     setCheckData(temp);
     const isValid = temp.every((a) => a.check === true)
     if (isValid) {
-      setLoading(false)
+      setLoading(false);
       history.push("/app/pages/compliance/performance-summary");
     }
     else {
+      setLoading(false);
       setErrorBoundary("Please answer all the compliance questions and close all accordions");
     }
 
