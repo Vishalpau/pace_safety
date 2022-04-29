@@ -331,7 +331,8 @@ const Checks = (props) => {
   const [actionData, setActionData] = useState([]);
   const [ratingData, setRatingData] = useState({});
   const [colordata, setColorData] = useState([]);
-  const [questionId, setQuestionId] = useState()
+  const [questionId, setQuestionId] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [stateToggle, setStateToggle] = useState("")
 
@@ -348,7 +349,7 @@ const Checks = (props) => {
     id: '',
     optionConstant: '',
   });
-  
+
   const [statusV, setStatusV] = useState({
     index: '',
     id: '',
@@ -432,11 +433,36 @@ const Checks = (props) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
-  const updateAccordian = async () => {
-    const temp = [...checkData];
+  const postApi = (formData) => {
+    return (
+      new Promise((resolve, reject) => {
+        api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(() => resolve('done'))
+      })
+    )
+  }
 
-    temp.map((data, key) => {
-      console.log(key);
+  const putApiData = (formData, id) => {
+    return (
+      new Promise((resolve, reject) => {
+        api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${id}/`, formData)
+          .then(res => {
+            resolve(res)
+          })
+          .catch(() => resolve('done'))
+      })
+    )
+  }
+
+  const updateAccordian = async () => {
+    setLoading(true)
+    const temp = [...checkData];
+    for (const key in temp) {
+      const data = temp[key]
+      // console.log(key);
       if (data.check) {
         const formData = new FormData;
         Object.keys(data).forEach(key => {
@@ -449,45 +475,36 @@ const Checks = (props) => {
         })
 
         if (data.id) {
-          const putApiData = new Promise((resolve, reject) => {
-            api.put(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/${data.id}/`, formData)
-              .then(res => {
-                resolve(res)
-              })
-          });
-          putApiData.then(result => {
-            const apiResult = result.data.data.results;
-            temp[key]['id'] = apiResult.id
-          })
-          putApiData.catch(err => {
-            console.log(err);
-          })
+          console.log(data.id);
+          const result = await putApiData(formData, data.id);
+          console.log(result);
+          const apiResult = result.data.data.results;
+          temp[key]['id'] = apiResult.id;
         }
 
         else {
-          const postApiData = new Promise((resolve, reject) => {
-            api.post(`/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`, formData)
-              .then(res => {
-                resolve(res)
-              })
-          })
-          postApiData.then(result => {
-            const apiResult = result.data.data.results;
-            console.log(apiResult.id, 'theeeennnn');
-            temp[key]['id'] = apiResult.id
-          })
-          postApiData.catch(err => {
-            console.log(err, 'eeeeeeeeeeeerrrrrrrrrrrrrrrr');
-          })
+          const result = await postApi(formData);
+          const apiResult = result.data.data.results;
+          temp[key]['id'] = apiResult.id;
         }
       }
-    })
+    }
+
     setCheckData(temp);
+    const isValid = temp.every((a) => a.check === true)
+    if (isValid) {
+      setLoading(false)
+      history.push("/app/pages/compliance/performance-summary");
+    }
+    else {
+      setErrorBoundary("Please answer all the compliance questions and close all accordions");
+    }
+
   }
 
-  useEffect(() => {
-    updateAccordian();
-  }, [stateToggle])
+  // useEffect(() => {
+  //   updateAccordian();
+  // }, [stateToggle])
 
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
@@ -597,7 +614,6 @@ const Checks = (props) => {
     let fd = await fetchData()
     temp.map((tempvalue, i) => {
 
-
       if (tempvalue['message'] === undefined) {
         console.log(tempvalue);
         tempvalue.map((value, index) => {
@@ -606,10 +622,6 @@ const Checks = (props) => {
           let crtic = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].criticality : '';
           let auditS = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].auditStatus : '';
 
-          console.log(value.defaultResponse ? true : false);
-          console.log(value.defaultResponse, 'defaultRes');
-          console.log(value.criticality, 'criticality');
-          console.log(value.auditStatus, 'auditStat');
           tempQuestionId.push({ id: value.id });
           tempCheckData.push({
             check: (defRes || ((crtic && auditS)) ? true : false),
@@ -681,14 +693,8 @@ const Checks = (props) => {
   const handelSubmit = async () => {
     // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
-    const isValid = checkData.every((a) => a.check === true)
-    if (isValid) {
-     
-      history.push("/app/pages/compliance/performance-summary");
-    }
-    else {
-      setErrorBoundary("Please answer all the compliance questions and close all accordions");
-    }
+    updateAccordian();
+
   };
 
   const classes = useStyles();
@@ -918,7 +924,7 @@ const Checks = (props) => {
                             />
                           </ListItem>
                         </span> */}
-                        
+
                           {Categor.map((value, index) => {
                             return (
                               <>
@@ -1405,7 +1411,7 @@ const Checks = (props) => {
                                                   style={{
                                                     backgroundColor: ratingColor[catI + '-' + index] ?
                                                       ratingColor[catI + '-' + index] :
-                                                      (showCheckData.filter(cd => cd.question == value.question).length > 0 && colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100).length > 0 
+                                                      (showCheckData.filter(cd => cd.question == value.question).length > 0 && colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100).length > 0
                                                         ? colordata.filter(c => c.matrixConstant == ((showCheckData.filter(cd => cd.question == value.question)[0].performance) * 5) / 100)[0].matrixConstantColor
                                                         : '')
                                                   }}
@@ -1802,16 +1808,24 @@ const Checks = (props) => {
             </Grid>
 
             <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
+              <div className={classes.loadingWrapper}>
                 <Button
                   size="medium"
                   variant="contained"
                   color="primary"
                   className="spacerRight buttonStyle"
+                  disabled={loading}
                   onClick={(e) => handelSubmit()}
                 >
                   Next
                 </Button>
-              
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
               <Button
                 size="medium"
                 variant="contained"
