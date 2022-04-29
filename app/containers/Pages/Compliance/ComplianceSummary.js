@@ -1025,8 +1025,7 @@ function ComplianceSummary(props) {
                                       <Grid item md={6} xs={12}>
 
                                         <Grid container spacing={3}>
-
-                                          {result.subGroups.map(
+                                          {result.groups.map(
                                             value => {
                                               return (
                                                 <Grid
@@ -1039,31 +1038,40 @@ function ComplianceSummary(props) {
                                                     className="checkRadioLabel"
                                                     component="legend"
                                                   >
-                                                    {(result.groups.filter(name=> name.id == value.fkGroupId)[0].checkListGroupName)}
+                                                    {/* {(result.groups.filter(name=> name.id == value.fkGroupId)[0].checkListGroupName)} */}
+                                                    {value.checkListGroupName}
                                                   </FormLabel>
                                                   <FormGroup>
-
-                                                    <FormControlLabel
-                                                      //className={classes.labelValue}
-                                                      className="checkedUnclick"
-                                                      control={
-                                                        <Checkbox
-                                                          icon={
-                                                            <CheckBoxOutlineBlankIcon fontSize="small" />
-                                                          }
-                                                          checkedIcon={
-                                                            <CheckBoxIcon fontSize="small" />
-                                                          }
-                                                          name="checkedI"
-                                                          onChange={
-                                                            handleChange
-                                                          }
-                                                          checked={checkedC}
-                                                          value="checkedC"
-                                                        />
-                                                      }
-                                                      label={value.inputLabel}
-                                                    />
+                                                    { 
+                                                      result.subGroups.map(subGrp => {
+                                                        if (subGrp.fkGroupId === value.id){
+                                                          return (
+                                                            <FormControlLabel
+                                                            //className={classes.labelValue}
+                                                            className="checkedUnclick"
+                                                            control={
+                                                              <Checkbox
+                                                                icon={
+                                                                  <CheckBoxOutlineBlankIcon fontSize="small" />
+                                                                }
+                                                                checkedIcon={
+                                                                  <CheckBoxIcon fontSize="small" />
+                                                                }
+                                                                name="checkedI"
+                                                                onChange={
+                                                                  handleChange
+                                                                }
+                                                                checked={checkedC}
+                                                                value="checkedC"
+                                                              />
+                                                            }
+                                                            label={subGrp.inputLabel}
+                                                          />
+                                                          )
+                                                        }
+                                                      })
+                                                    }
+                                                 
                                                     {/* )
                                                     }
                                                     )} */}
