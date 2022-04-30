@@ -247,6 +247,7 @@ export default function Compliance() {
   };
 
   const handleNewCompliancePush = async () => {
+    localStorage.setItem('compliance-navigation','Add New');
     localStorage.removeItem("fkComplianceId");
     history.push("/app/pages/compliance/compliance-details");
   };

@@ -324,6 +324,7 @@ const styles = (theme) => ({
 });
 
 const Checks = (props) => {
+  const routeNavigation = localStorage.getItem('compliance-navigation')
   const history = useHistory();
   const [form, setForm] = useState({});
   const [checkData, setCheckData] = useState([]);
@@ -344,50 +345,19 @@ const Checks = (props) => {
     "panel4"
   );
 
-  const [criticalityV, setCriticalityV] = useState({
-    index: '',
-    id: '',
-    optionConstant: '',
-  });
+  const [criticalityData, setCriticalityData] = useState([]);
+  const [statusData, setStatusData] = useState([])
+  const [errorBoundary, setErrorBoundary] = useState("");
 
-  const [statusV, setStatusV] = useState({
-    index: '',
-    id: '',
-    optionConstant: '',
-  });
+  const [valueStar, setValueStar] = React.useState([]);
 
-  const calculate_rating = (index, id) => {
-    if (criticalityV.optionConstant >= 0 && statusV.optionConstant >= 0) {
-      let ratingValue = (criticalityV.optionConstant * statusV.optionConstant) / 5 * 100;
-      for (var i = 0; i < colordata.length; i++) {
-        if (ratingValue * 5 / 100 === colordata[i].matrixConstant) {
-          let clr_op = { ...ratingColor }
-          clr_op[index] = colordata[i].matrixConstantColor
-          setRatingColor(clr_op)
-          break; // stop the loop
-        }
-        else {
-          setRatingColor("#FFFFFF")
-        }
-      }
-      let arr_op = { ...ratingData };
-      arr_op[index] = ratingValue
-      setRatingData(arr_op)
-      let temp = [...checkData];
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i]["questionId"] == id) {
-          temp[i]["performance"] = ratingValue;
-        }
-      }
-    }
-  };
+  const [categories, setCategories] = useState([]);
 
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     setColorData(result)
   }
-
 
   const radioDecide = ["Yes", "No", "N/A"];
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
@@ -415,9 +385,7 @@ const Checks = (props) => {
     }
 
     if (expandedTableDetail !== `panel6 ${valueId}`) {
-
       const temp = [...checkData]
-
       temp.forEach(a => {
         if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
           a.check = true;
@@ -426,6 +394,7 @@ const Checks = (props) => {
           a.check = false;
         }
       })
+
       setCheckData(temp)
       setStateToggle(!stateToggle);
     }
@@ -469,15 +438,13 @@ const Checks = (props) => {
           if (key === "fkAuditId") {
             formData.append(key, data[key]);
           }
-          if (key !== 'check' && key !== 'id') {
+          if (key !== 'check' && key !== 'id' && key !== 'criticValue' && key !== 'statValue') {
             formData.append(key, data[key]);
           }
         })
 
         if (data.id) {
-          console.log(data.id);
           const result = await putApiData(formData, data.id);
-          console.log(result);
           const apiResult = result.data.data.results;
           temp[key]['id'] = apiResult.id;
         }
@@ -498,7 +465,7 @@ const Checks = (props) => {
     }
     else {
       setLoading(false);
-      setErrorBoundary("Please answer all the compliance questions and close all accordions");
+      setErrorBoundary(`${routeNavigation === 'Add New' ? "Please answer all the compliance questions and close all accordions" : "Please close all the accordions after updating details when we got checks page for updating"}`);
     }
 
   }
@@ -516,14 +483,6 @@ const Checks = (props) => {
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
-
-  const [criticalityData, setCriticalityData] = useState([]);
-  const [statusData, setStatusData] = useState([])
-  const [errorBoundary, setErrorBoundary] = useState("");
-
-  const [valueStar, setValueStar] = React.useState([]);
-
-  const [categories, setCategories] = useState([]);
 
   const fetchCheklistData = async () => {
     let temp = {};
@@ -695,7 +654,6 @@ const Checks = (props) => {
     // const isValids = checkData.every(a => a.defaultResponse !== "" || a.criticality !== '' || a.auditStatus !== "");
     // console.log(isValids)
     updateAccordian();
-
   };
 
   const classes = useStyles();
@@ -746,9 +704,9 @@ const Checks = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log(checkData);
-  }, [checkData])
+  // useEffect(() => {
+  //   console.log(checkData);
+  // }, [checkData])
 
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
@@ -763,38 +721,52 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
-  const handleCriticality = (option, selectType, index, id) => {
-    if (selectType === "menuItem") {
-      setCriticalityV({
-        index: index,
-        id: id,
-        optionConstant: option.factorConstant,
-      })
-      setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
+  const calculate_rating = (factorConstant, selectType, index, id) => {
+    const temp = [...checkData]
+    const foundObject = temp.find(a => a.questionId === id);
+    if (selectType === 'menuItem') {
+      foundObject.criticValue = factorConstant;
     }
-    else {
-      setStatusV({
-        index: index,
-        id: id,
-        optionConstant: option.factorConstant,
-      })
-      setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
+    else if (selectType === 'statusItem') {
+      foundObject.statValue = factorConstant;
+    }
+    temp.splice(id, 1,)
+
+    if (foundObject.criticValue >= 0 && foundObject.statValue >= 0) {
+      let ratingValue = (foundObject.criticValue * foundObject.statValue) / 5 * 100;
+      for (var i = 0; i < colordata.length; i++) {
+        if (ratingValue * 5 / 100 === colordata[i].matrixConstant) {
+          let clr_op = { ...ratingColor }
+          clr_op[index] = colordata[i].matrixConstantColor
+          setRatingColor(clr_op)
+          break; // stop the loop
+        }
+        else {
+          setRatingColor("#FFFFFF")
+        }
+      }
+      let arr_op = { ...ratingData };
+      arr_op[index] = ratingValue
+      setRatingData(arr_op)
+      let temp = [...checkData];
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i]["questionId"] == id) {
+          temp[i]["performance"] = ratingValue;
+        }
+      }
     }
   };
 
-  useEffect(() => {
-    if (criticalityV) {
-      const { index, id } = criticalityV
-      calculate_rating(index, id)
+  const handleCriticality = (option, selectType, index, id) => {
+    if (selectType === "menuItem") {
+      calculate_rating(option.factorConstant, selectType, index, id);
+      setForm((data) => { return { ...data, critId: option.id, critfactorName: option.factorName, menuValue: option.factorConstant } });
     }
-  }, [criticalityV])
-
-  useEffect(() => {
-    if (statusV) {
-      const { index, id } = statusV
-      calculate_rating(index, id)
+    else {
+      calculate_rating(option.factorConstant, selectType, index, id);
+      setForm((data) => { return { ...data, statusId: option.id, statusfactorName: option.factorName, statusValue: option.factorConstant } });
     }
-  }, [statusV])
+  };
 
   useEffect(() => {
     fetchFectorData();

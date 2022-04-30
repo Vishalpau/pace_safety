@@ -24,6 +24,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Link from "@material-ui/core/Link";
+import { NavLink } from 'react-router-dom';
 
 // Table
 import Table from "@material-ui/core/Table";
@@ -246,12 +247,14 @@ function ComplianceSummary(props) {
     setExpandedTabDetails(isExpanded ? panel : false);
   };
 
-  const handleNewComplianceUpdatePush = async () => {
-    history.push(
-      `/app/pages/compliance/compliance-details/${localStorage.getItem(
-        "fkComplianceId"
-      )}`
-    );
+  const handleNewComplianceUpdatePush = async (e) => {
+    // console.log(e.target.name);
+    localStorage.setItem('compliance-navigation',e.target.name);
+    // history.push(
+    //   `/app/pages/compliance/compliance-details/${localStorage.getItem(
+    //     "fkComplianceId"
+    //   )}`
+    // );
   };
 
   const handleComplianceCommentPush = async () => {
@@ -528,8 +531,8 @@ function ComplianceSummary(props) {
   }, []);
 
   function groupNamrHandler(val) {
-    
-    if ( val.checkListValues.findIndex(ele => quesData.findIndex(qD => qD.subGroupId === ele.id) !== -1  ) !== -1 ) {
+
+    if (val.checkListValues.findIndex(ele => quesData.findIndex(qD => qD.subGroupId === ele.id) !== -1) !== -1) {
       return (
         <FormLabel
           className="checkRadioLabel"
@@ -1194,8 +1197,8 @@ function ComplianceSummary(props) {
                                       xs={12}
                                       className="paddBRemove"
                                     >
-                                      {console.log(groupData,quesData,'groupData')}
-                                     
+                                      {console.log(groupData, quesData, 'groupData')}
+
                                       {groupData.map(val => {
                                         // console.log(val, 'val');
                                         // console.log(quesData, 'quesData');
@@ -1204,7 +1207,7 @@ function ComplianceSummary(props) {
                                             {
                                               groupNamrHandler(val)
                                             }
-                                          
+
 
                                             {val.checkListValues.map((subGrpData, index) => {
                                               // console.log(subGrpData, 'subjiii');
@@ -1705,10 +1708,30 @@ function ComplianceSummary(props) {
                         <Add />
                       )}
                     </ListItemIcon>
-                    <Link
+                    <NavLink
+                      style={{textDecoration: 'none', color: 'white', fontSize: '14px',fontFamily: 'Montserrat-Regular', lineHeight: '18px', margin: '4px 0'}}
+                      onClick={(e) => handleNewComplianceUpdatePush(e)}
+                      to={`/app/pages/compliance/compliance-details/${localStorage.getItem(
+                        "fkComplianceId"
+                      )}`}
+                      variant="subtitle"
+                      name={complianceData.performanceSummary !== null
+                        ? "Update compliance"
+                        : "Add compliance"}
+                    >
+                      {
+                        complianceData.performanceSummary !== null
+                          ? "Update compliance"
+                          : "Add compliance"
+                      }
+                    </NavLink>
+                    {/* <Link
                       onClick={(e) => handleNewComplianceUpdatePush(e)}
                       to="#"
                       variant="subtitle"
+                      children={complianceData.performanceSummary !== null
+                        ? "Update compliance"
+                        : "Add compliance"}
                     >
                       <ListItemText
                         primary={
@@ -1717,7 +1740,7 @@ function ComplianceSummary(props) {
                             : "Add compliance"
                         }
                       />
-                    </Link>
+                    </Link> */}
                   </ListItem>
                 </List>
               </div>
