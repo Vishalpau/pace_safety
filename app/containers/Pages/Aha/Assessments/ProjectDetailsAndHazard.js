@@ -321,7 +321,7 @@ const ProjectDetailsAndHazard = () => {
       structName.push(workArea.data.data.results[0]["structureName"])
     }
     form["workArea"] = structName[structName.length - 1]
-    
+    form["qrCodeUrl"] = undefined
     await setLoading(true);
     if (form.id) {
       delete form["ahaAssessmentAttachment"]
@@ -342,6 +342,7 @@ const ProjectDetailsAndHazard = () => {
         form['typeOfPermit']  = ""
         form['permitNumber'] = ""
       }
+     
       const res = await api.post("/api/v1/ahas/", form)
       if (res.status === 200) {
         let fkAHAId = res.data.data.results.id

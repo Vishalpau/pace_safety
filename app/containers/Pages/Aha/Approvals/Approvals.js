@@ -271,7 +271,7 @@ const Approvals = () => {
       form["ahaStatus"] = "Closed" 
       localStorage.setItem("Approval" , "Done")
     }
-
+    form["qrCodeUrl"] = undefined 
     delete form["ahaAssessmentAttachment"];
     const res = await api.put(
       `/api/v1/ahas/${localStorage.getItem("fkAHAId")}/ `,

@@ -11,6 +11,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from '@material-ui/core/MenuItem';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import AccessTime from '@material-ui/icons/AccessTime';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { makeStyles } from '@material-ui/core/styles';
@@ -490,21 +492,27 @@ const JobDetails = (props) => {
         setSubmitLoaderHazard(true)
         await handelProjectData()
         delete form["jhaAssessmentAttachment"]
+        form["qrCodeUrl"] = undefined
         if (form.id != null && form.id != undefined) {
+            
             const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`, form)
+            
             let CreateJhaId = res.data.data.results.id
             newJhaId = CreateJhaId
             handelTeam(CreateJhaId)
-        } else {
+        } 
+        else {
             const res = await api.post("/api/v1/jhas/", form)
             let CreateJhaId = res.data.data.results.id
-            newJhaId = CreateJhaId
             localStorage.setItem("fkJHAId", CreateJhaId)
+            newJhaId = CreateJhaId
             handelTeam(CreateJhaId)
         }
         await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
+        handelNavigateHazard("next")
         await setSubmitLoader(false)
         await handleSubmitHazard(newJhaId)
+
     }
 
     const classes = useStyles();
@@ -685,16 +693,16 @@ const JobDetails = (props) => {
 
     const handelNavigateHazard = (navigateType) => {
         if (navigateType == "next") {
-            history.push("/app/pages/jha/assessments/Assessment-Document")
+            history.push("/app/pages/jha/assessments/assessment")
         } else if (navigateType == "previous") {
             history.push("/app/pages/Jha/assessments/project-details/")
         }
     }
 
-    const handelApiErrorHazard = () => {
-        setSubmitLoaderHazard(false)
-        history.push("/app/pages/error")
-    }
+    // const handelApiErrorHazard = () => {
+    //     setSubmitLoaderHazard(false)
+    //     history.push("/app/pages/error")
+    // }
 
     const handleSubmitHazard = async (newJhaId) => {
         let hazardNew = []
@@ -715,10 +723,9 @@ const JobDetails = (props) => {
                 }
             })
         })
-        const resUpdate = await api.put(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
-        const resNew = await api.post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
-        handelNavigateHazard("next")
-        setSubmitLoaderHazard(false)
+        const resUpdate = await api.put(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardUpdate)
+        const resNew = await api.post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew)
+    
     }
 
     const [typeOfPremit, setTypeOfPremit] = useState([])

@@ -178,6 +178,7 @@ const LessonsLearned = () => {
       if (form["anyLessonsLearnt"] === "No") {
         form["lessonLearntDetails"] = ""
       }
+      form["qrCodeUrl"] = undefined 
       const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/ `, form)
       localStorage.removeItem('JSAApproval')
       localStorage.removeItem('JSAAssessment')
