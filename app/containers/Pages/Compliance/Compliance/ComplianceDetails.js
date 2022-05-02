@@ -248,6 +248,10 @@ const ComplianceDetails = () => {
     hseRepNumber: "",
   });
 
+  useEffect(() => {
+    console.log(form);
+  }, [form])
+
   const auditType = [
     "Company/Contractor Inspection",
     "Area/Focussed Inspection",
@@ -483,6 +487,7 @@ const ComplianceDetails = () => {
   const pickListValue = async () => {
     let contractorPickList = await pickListValues["2"];
     let subContractorPickList = await pickListValues["3"];
+    console.log(subContractorPickList);
     let temp = [];
     let tempSubContractor = [];
     for (let i = 0; i < contractorPickList.length; i++) {
@@ -490,14 +495,18 @@ const ComplianceDetails = () => {
       contractorValue = contractorPickList[i].value;
       temp.push(contractorValue);
     }
+    console.log(temp);
     contractor.current = temp;
     for (let i = 0; i < subContractorPickList.length; i++) {
       let subContractorValue = "";
       subContractorValue = subContractorPickList[i].value;
       tempSubContractor.push(subContractorValue);
     }
+    console.log(tempSubContractor);
     subContractor.current = tempSubContractor;
   };
+
+  console.log(contractor);
 
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
@@ -553,10 +562,8 @@ const ComplianceDetails = () => {
     const res = await api(config);
     let rep = res.data.data.results.map((value, index) => value.departmentName)
     setDepartments(rep);
-    
   };
-  
-  
+
   useEffect(() => {
     pickListValue();
     getDepartments();
@@ -569,10 +576,10 @@ const ComplianceDetails = () => {
 
   return (
     <Acl
-        module="safety-compliance"
-        action={id ? "change_compliance" : 'add_compliance'}
-        html={(
-          <CustomPapperBlock title="Compliance"
+      module="safety-compliance"
+      action={id ? "change_compliance" : 'add_compliance'}
+      html={(
+        <CustomPapperBlock title="Compliance"
           icon="customDropdownPageIcon compliancePageIcon"
           whiteBg
         >
@@ -627,7 +634,7 @@ const ComplianceDetails = () => {
                                     id="incident-type"
                                     label={data.breakDownLabel}
                                     value={data.selectValue.id || ""}
-                                    disabled={data.selectValue.id != ''  }
+                                    disabled={data.selectValue.id != ''}
                                     onChange={(e) => {
                                       handleBreakdown(
                                         e,
@@ -670,7 +677,7 @@ const ComplianceDetails = () => {
                         </Grid>
                       </Paper>
                     </Grid>
-    
+
                     <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                       <Typography variant="h6" className="sectionHeading">
                         <svg
@@ -734,13 +741,12 @@ const ComplianceDetails = () => {
                                 <FormHelperText>{error["auditType"]}</FormHelperText>
                               )} */}
                               <div style={{ color: "red" }}>{form.auditType ? '' : error.auditType}</div>
-    
                             </FormControl>
                           </Grid>
                         </Grid>
                       </Paper>
                     </Grid>
-    
+
                     <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                       <Typography variant="h6" className="sectionHeading">
                         <svg
@@ -846,7 +852,7 @@ const ComplianceDetails = () => {
                                 />
                               )}
                             /> */}
-                             <TextField
+                            <TextField
                               label="Safety representative name"
                               name="clientrepnu"
                               id="clientRep"
@@ -876,7 +882,7 @@ const ComplianceDetails = () => {
                         </Grid>
                       </Paper>
                     </Grid>
-    
+
                     <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                       <Typography variant="h6" className="sectionHeading">
                         <svg
@@ -921,9 +927,8 @@ const ComplianceDetails = () => {
                               id="clientRep"
                               className="formControl"
                               options={contractor.current}
-                              // className={classes.mT30}
                               getOptionLabel={(option) => option}
-                              value={form.contractor ? form.contractor : ""}
+                              // value={form.contractor ? form.contractor : ""}
                               onSelect={(e) =>
                                 setForm({ ...form, contractor: e.target.value })
                               }
@@ -932,16 +937,12 @@ const ComplianceDetails = () => {
                                   {...params}
                                   label="Contractor name*"
                                   variant="outlined"
-                                // error={error.contractor}
-                                // helperText={
-                                //   error.contractor ? error.contractor : ""
-                                // }
                                 />
                               )}
                             />
                             <div style={{ color: "red" }}>{form.contractor ? '' : error.contractor}</div>
                           </Grid>
-    
+
                           <Grid item md={6} xs={12}>
                             <TextField
                               label="Contractor representative number"
@@ -970,7 +971,7 @@ const ComplianceDetails = () => {
                               options={subContractor.current}
                               // className={classes.mT30}
                               getOptionLabel={(option) => option}
-                              value={form.subContractor ? form.subContractor : ""}
+                              // value={form.subContractor ? form.subContractor : ""}
                               onSelect={(e) =>
                                 setForm({ ...form, subContractor: e.target.value })
                               }
@@ -979,10 +980,10 @@ const ComplianceDetails = () => {
                                   {...params}
                                   label="Sub-Contractor name "
                                   variant="outlined"
-                                  // error={error.subContractor}
-                                  // helperText={
-                                  //   error.subContractor ? error.subContractor : ""
-                                  // }
+                                // error={error.subContractor}
+                                // helperText={
+                                //   error.subContractor ? error.subContractor : ""
+                                // }
                                 />
                               )}
                             />
@@ -1012,7 +1013,7 @@ const ComplianceDetails = () => {
                         </Grid>
                       </Paper>
                     </Grid>
-    
+
                     <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
                       <Typography variant="h6" className="sectionHeading">
                         <svg
@@ -1157,7 +1158,7 @@ const ComplianceDetails = () => {
                       </Paper>
                     </Grid>
                   </Grid>
-    
+
                   <Grid item xs={12} md={3}>
                     <FormSideBar
                       deleteForm={[1, 2, 3]}
@@ -1165,7 +1166,7 @@ const ComplianceDetails = () => {
                       selectedItem="Compliance Details"
                     />
                   </Grid>
-    
+
                   <Grid item md={12} sm={12} xs={12} className="buttonActionArea">
                     <div className={classes.loadingWrapper}>
                       <Button
@@ -1213,7 +1214,7 @@ const ComplianceDetails = () => {
             )}
           </>
         </CustomPapperBlock>
-        )}/>
+      )} />
 
   );
 };
