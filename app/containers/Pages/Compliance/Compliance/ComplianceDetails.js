@@ -928,7 +928,7 @@ const ComplianceDetails = () => {
                               className="formControl"
                               options={contractor.current}
                               getOptionLabel={(option) => option}
-                              // value={form.contractor ? form.contractor : ""}
+                              defaultValue={form.contractor || ''}
                               onSelect={(e) =>
                                 setForm({ ...form, contractor: e.target.value })
                               }
