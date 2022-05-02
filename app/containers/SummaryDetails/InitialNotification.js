@@ -20,6 +20,7 @@ import api from "../../utils/axios";
 import { SSO_URL } from "../../utils/constants";
 import Attachment from "../Attachment/Attachment";
 import Loader from "../Forms/Loader";
+import { connect } from "react-redux";
 
 
 
@@ -68,7 +69,7 @@ const Transition = React.forwardRef((props, ref) => (
   <Slide direction="up" ref={ref} {...props} />
 ));
 
-const IncidentDetailsSummary = () => {
+const IncidentDetailsSummary = (props) => {
   const [incidents, setIncidents] = useState([]);
   const [peopleData, setPeopleData] = useState([]);
   const [propertyData, setPropertyData] = useState([]);
@@ -152,8 +153,16 @@ const IncidentDetailsSummary = () => {
       let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
       let projectId = JSON.parse(localStorage.getItem("projectName"))
         .projectName.projectId;
-
-      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom`)
+        const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+        : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
+      let struct = "";
+      for (const i in selectBreakdown) {
+        struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+      }
+      const fkProjectStructureIds = struct.slice(0, -1);
+      const res = await api.get(`${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/incident/?subentity=incident&roleType=custom&projectStructure=${fkProjectStructureIds}`)
         .then((res) => {
           if (res.status === 200) {
             const result = res.data.data.results;
@@ -947,4 +956,17 @@ const IncidentDetailsSummary = () => {
     </>
   );
 };
-export default IncidentDetailsSummary;
+
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  null
+)(IncidentDetailsSummary);

@@ -466,7 +466,7 @@ const Checks = (props) => {
     }
     else {
       setLoading(false);
-      setErrorBoundary(`${routeNavigation === 'Add New' ? "Please answer all the compliance questions and close all accordions" : "Please close all the accordions after updating details"}`);
+      setErrorBoundary(`${routeNavigation === 'Add New' ? "Please answer all the compliance questions and close all accordions" : "Please close all the accordions after updating the details"}`);
     }
   }
 

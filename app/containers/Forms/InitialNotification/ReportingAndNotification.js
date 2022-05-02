@@ -394,7 +394,7 @@ const ReportingAndNotification = (props) => {
   };
 
   // handle notify to
-  const handelNotifyTo = async (e, index) => {
+  const handelNotifyTo = async (e,value) => {
     if (e.target.checked === true) {
       const temp = [...notifyToList];
 
@@ -832,18 +832,27 @@ const ReportingAndNotification = (props) => {
                         Notification to be sent?
                       </FormLabel>
                       <FormGroup>
+                        {console.log(notificationSentValue,'notificationSentValue')}
                       {notificationSentValue.length != 0 ? notificationSentValue.map((value) => (
                           <FormControlLabel
-                            id={index}
-                            key={index}
+                            // id={index}
+                            // key={index}
                             value={value.id}
-                            control={<Checkbox />}
+                            control={<Checkbox name={value.roleName} />}
                             checked={notifyToList.includes(value.id.toString())}
                             label={value.roleName}
                             onChange={(e) => {
-                              handelNotifyTo(e, index);
+                              handelNotifyTo(e, value.id.toString());
                             }}
                           />
+                      //     <FormControlLabel
+                      //     className="selectLabel"
+                      //     control={<Checkbox name={value.roleName} />}
+                      //     label={value.roleName}
+                      //     checked={notifyToList.notifyTo && notifyToList.notifyTo !== null && notifyToList.notifyTo.includes(value.id.toString())}
+                      //     onChange={async (e) => handelNotifyTo(e, value.id.toString())}
+                      // />
+
                           )) : null}
                       </FormGroup>
                       {error && error.notifyTo && (
