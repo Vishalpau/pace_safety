@@ -376,6 +376,7 @@ const Checks = (props) => {
 
       temp.forEach(a => {
         if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+          setErrorBoundary('');
           a.check = true;
         }
         else {
@@ -388,13 +389,13 @@ const Checks = (props) => {
       const temp = [...checkData]
       temp.forEach(a => {
         if (a.defaultResponse !== "" || (a.criticality !== "" && a.auditStatus !== "")) {
+          setErrorBoundary('');
           a.check = true;
         }
         else {
           a.check = false;
         }
       })
-
       setCheckData(temp)
       setStateToggle(!stateToggle);
     }
@@ -467,7 +468,6 @@ const Checks = (props) => {
       setLoading(false);
       setErrorBoundary(`${routeNavigation === 'Add New' ? "Please answer all the compliance questions and close all accordions" : "Please close all the accordions after updating details"}`);
     }
-
   }
 
   // useEffect(() => {
@@ -575,7 +575,7 @@ const Checks = (props) => {
     temp.map((tempvalue, i) => {
 
       if (tempvalue['message'] === undefined) {
-        console.log(tempvalue);
+        // console.log(tempvalue);
         tempvalue.map((value, index) => {
 
           let defRes = fd.filter(f => f.question == value.question).length ? fd.filter(f => f.question == value.question)[0].defaultResponse : '';
