@@ -136,13 +136,6 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 100px)',
     textAlign: 'right',
   },
-  statusLabel: {
-    fontSize: '14px',
-    fontFamily: 'Montserrat-Regular',
-    '& svg': {
-      color: '#06425C',
-    },
-  },
 }));
 
 function Alert(props) {
@@ -391,12 +384,11 @@ function JhaSummary() {
   let errorCloseOut = "close out"
 
   const handleAssessmentViewChanges = () => {
-    if (formStatus.assessmentStatus !== null) {
-      setAssessmentsView(true);
+    if (formStatus.assessmentStatus) {
       localStorage.removeItem('JSAApproval')
       localStorage.removeItem('JSAlessonsLearned')
       localStorage.setItem("JSAAssessment", "Done")
-      
+      setAssessmentsView(true);
     } else {
       history.push(`/app/pages/jha/assessments/Job-hazards`)
     }
@@ -407,9 +399,8 @@ function JhaSummary() {
   }
 
   const handelApprovalViewChange = (side) => {
-    if (formStatus.assessmentStatus !== null) {
+    if (formStatus.assessmentStatus === true) {
       setAssessmentsView(false);
-
       if (handelApprovalTabStatus() && side === undefined) {
         setApprovalsView(true);
         localStorage.removeItem('JSAAssessment')
@@ -428,7 +419,7 @@ function JhaSummary() {
   }
 
   const handelLessionLearnedChanges = (side) => {
-    if (formStatus.assessmentStatus !== null && formStatus.approvalStatus !== null) {
+    if (formStatus.assessmentStatus === true && formStatus.approvalStatus === true) {
       setAssessmentsView(false);
       setApprovalsView(false);
       setCloseOutView(false);
@@ -546,15 +537,18 @@ function JhaSummary() {
                         <li>
                           <Button
                             color={assessmentsView === true ? "secondary" : "primary"}
-                            size="small"
-                            variant="contained"
+                            size="large"
+                            variant={formStatus.assessmentStatus ? "contained" : "outlined"}
+                            endIcon={
+                              formStatus.assessmentStatus ? <CheckCircle /> : <AccessTime />
+                            }
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("assessment")}
                           >
                             Assessments
                           </Button>
-                          <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                            {formStatus.assessmentStatus !== null ? "Done" : "Pending"}{formStatus.assessmentStatus !== null ? <CheckCircle /> : <AccessTime />}
+                          <Typography variant="caption" display="block">
+                            {formStatus.assessmentStatus ? "Done" : "Pending"}
                           </Typography>
                         </li>
                         <li>
@@ -562,13 +556,16 @@ function JhaSummary() {
                             color={approvalsView ? "secondary" : "primary"}
                             size="large"
                             variant={handelApprovalTabStatus() ? "contained" : "outlined"}
+                            endIcon={
+                              handelApprovalTabStatus() ? <CheckCircle /> : <AccessTime />
+                            }
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("approval")}
                           >
                             Approvals
                           </Button>
-                          <Typography variant="caption" className={classes.statusLabel} display="block">
-                            {handelApprovalTabStatus() ? "Done" : "Pending"}{handelApprovalTabStatus() ? <CheckCircle /> : <AccessTime />}
+                          <Typography variant="caption" display="block">
+                            {handelApprovalTabStatus() ? "Done" : "Pending"}
                           </Typography>
                         </li>
                         {/* <li>
@@ -595,14 +592,16 @@ function JhaSummary() {
                             // variant="outlined"
                             size="large"
                             variant={formStatus.lessionLeranedStatus ? "contained" : "outlined"}
-                      
+                            endIcon={
+                              formStatus.lessionLeranedStatus ? <CheckCircle /> : <AccessTime />
+                            }
                             className={classes.statusButton}
                             onClick={(e) => viewSwitch("lession")}
                           >
                             Lessons Learned
                           </Button>
-                          <Typography variant="caption" className={classes.statusLabel} display="block">
-                            {formStatus.lessionLeranedStatus  ? "Done" : "Pending"}{formStatus.lessionLeranedStatus ? <CheckCircle /> : <AccessTime />}
+                          <Typography variant="caption" display="block">
+                            {formStatus.lessionLeranedStatus ? "Done" : "Pending"}
                           </Typography>
                         </li>
                       </ul>
