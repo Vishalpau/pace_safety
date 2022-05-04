@@ -1315,7 +1315,7 @@ Hazard#
                                             >
                                               <FormControl component="fieldset">
                                                 <FormLabel component="legend" className="checkRadioLabel">Is this hazard present?</FormLabel>
-                                                <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                                                <RadioGroup row aria-label="hazardpresent" name="hazardpresent">
                                                   {radioDecide.map((value) => (
                                                     <FormControlLabel
                                                       value={value}
@@ -1357,7 +1357,7 @@ Hazard#
                                                   >
                                                     <FormControl component="fieldset">
                                                       <FormLabel component="legend" className="checkRadioLabel">Has this control been put in place?</FormLabel>
-                                                      <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                                                      <RadioGroup row aria-label="hazardpresent" name="hazardpresent">
                                                         {radioDecide.map((value) => (
                                                           <FormControlLabel
                                                             value={value}
@@ -1544,7 +1544,6 @@ Job visual confirmation
                                           id="icon-button-file"
                                           name="avatar"
                                           type="file"
-                                          name="file"
                                           accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                                           onChange={(e) => {
                                             handelVisualAttachment(index, e, 'visualConfirmation');
@@ -1576,7 +1575,7 @@ Job visual confirmation
                           >
                             <FormControl component="fieldset">
                               <FormLabel component="legend" className="checkRadioLabel">Is permit to work done?*</FormLabel>
-                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                              <RadioGroup row aria-label="hazardpresent" name="hazardpresent">
                                 {radioDecide.map((value) => (
                                   <FormControlLabel
                                     value={value}
@@ -1655,7 +1654,6 @@ Job visual confirmation
                               id="icon-button-file"
                               name="avatar"
                               type="file"
-                              name="file"
                               accept=".pdf, .png, .jpeg, .jpg,.xls,.xlsx, .doc, .word, .ppt"
                               onChange={(e) => {
                                 handelVisualAttachment(0, e, 'flhaAttachment');
@@ -1725,7 +1723,7 @@ Additional information
                           >
                             <FormControl component="fieldset">
                               <FormLabel component="legend" className="checkRadioLabel">*Is a First Aid/Medical Aid present for your shift?</FormLabel>
-                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                              <RadioGroup row aria-label="hazardpresent"  name="hazardpresent">
                                 {radioDecide.slice(0, 2).map((value) => (
                                   <FormControlLabel
                                     value={value}
@@ -1764,7 +1762,7 @@ Additional information
                           >
                             <FormControl component="fieldset">
                               <FormLabel component="legend" className="checkRadioLabel">*Has the JSA been reviewed?</FormLabel>
-                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                              <RadioGroup row aria-label="hazardpresent"  name="hazardpresent">
                                 {radioDecide.slice(0, 2).map((value) => (
                                   <FormControlLabel
                                     value={value}
@@ -1803,7 +1801,7 @@ Additional information
                           >
                             <FormControl component="fieldset">
                               <FormLabel component="legend" className="checkRadioLabel">*Do you have access to job procedure?</FormLabel>
-                              <RadioGroup row aria-label="hazardpresent" aria-label="hazardpresent" name="hazardpresent">
+                              <RadioGroup row aria-label="hazardpresent" name="hazardpresent">
                                 {radioDecide.slice(0, 2).map((value) => (
                                   <FormControlLabel
                                     value={value}

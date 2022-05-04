@@ -146,7 +146,7 @@ const ObservationInitialNotificationView = () => {
       history.push('/app/error/');
     } else {
       const result = res.data.data.results;
-      console.log(res.data.data.results,'result')
+      console.log(res.data.data.results, 'result')
       setInitialData(result);
       if (result.fkProjectStructureIds != 'Not Mentioned') {
         await handelWorkArea(result);
@@ -330,7 +330,7 @@ const ObservationInitialNotificationView = () => {
                 </g>
               </svg>
               {' '}
-iCare details
+              iCare details
             </Typography>
           </Grid>
 
@@ -339,7 +339,7 @@ iCare details
               <Grid container spacing={3}>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  iCare Type
+                    iCare Type
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.observationType ? initialData.observationType : '-'}
@@ -347,7 +347,7 @@ iCare details
                 </Grid>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  iCare Title
+                    iCare Title
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.observationTitle ? initialData.observationTitle : '-'}
@@ -355,7 +355,7 @@ iCare details
                 </Grid>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  iCare Description
+                    iCare Description
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.observationDetails ? initialData.observationDetails : '-'}
@@ -363,7 +363,7 @@ iCare details
                 </Grid>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Details of immediate actions taken
+                    Details of immediate actions taken
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.actionTaken ? initialData.actionTaken : '-'}
@@ -389,7 +389,7 @@ iCare details
                 </g>
               </svg>
               {' '}
-Observer and reporter details
+              Observer and reporter details
             </Typography>
           </Grid>
 
@@ -400,17 +400,17 @@ Observer and reporter details
 
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Observed By
+                    Observed By
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.reportedByName ? initialData.reportedByName : '-'}
-,
+                    ,
                     {initialData.reportedByBadgeId !== 'null' ? initialData.reportedByBadgeId : '-'}
                   </Typography>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Observer Department
+                    Observer Department
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.reportedByDepartment ? initialData.reportedByDepartment : '-'}
@@ -418,7 +418,7 @@ Observer and reporter details
                 </Grid>
                 <Grid item md={12}>
                   <FormLabel variant="h6" gutterBottom className="viewLabel">
-                  Observed On
+                    Observed On
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {moment(initialData.observedAt).format(
@@ -430,17 +430,17 @@ Observer and reporter details
 
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Foreman details
+                    Foreman details
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.supervisorName ? initialData.supervisorName : '-'}
-,
+                    ,
                     {initialData.supervisorByBadgeId == 'null' || initialData.supervisorByBadgeId == '' ? '-' : initialData.supervisorByBadgeId}
                   </Typography>
                 </Grid>
                 <Grid item md={8} sm={8} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Location
+                    Location
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.location ? initialData.location : '-'}
@@ -448,7 +448,7 @@ Observer and reporter details
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Reported by
+                    Reported by
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {/* {userName} , {userBadgeNo !== null ? userBadgeNo : "-"} */}
@@ -458,7 +458,7 @@ Observer and reporter details
 
                 <Grid item md={4} sm={4} xs={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Reported on
+                    Reported on
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {moment(initialData.createdAt).format(
@@ -486,7 +486,7 @@ Observer and reporter details
                 </g>
                 <path id="enrollment" d="M14.947,31.057a.874.874,0,0,1,0,1.743H1.981A2.008,2.008,0,0,1,0,30.771V2.029A2.008,2.008,0,0,1,1.981,0H25.64a1.96,1.96,0,0,1,1.407.591,2.056,2.056,0,0,1,.585,1.437V16.443a2.91,2.91,0,0,1-.023.382H25.919V2.029a.288.288,0,0,0-.279-.286H1.981a.286.286,0,0,0-.2.083.305.305,0,0,0-.081.2v28.74a.27.27,0,0,0,.083.2.289.289,0,0,0,.2.085Zm9.137.035-4.272,1.495.034-4.871,4.246,3.377Zm-3.039-5.008,4.609-6.406a.411.411,0,0,1,.5-.149l3.775,2.893a.374.374,0,0,1,.039.55l-4.679,6.492ZM7.593,16.774a1.778,1.778,0,0,1-.052-.9c.12-.948.36-1.124,1.215-1.367a8.85,8.85,0,0,0,2.867-.873,2.936,2.936,0,0,0,.193-.382c.1-.227.185-.472.24-.641a8.154,8.154,0,0,1-.631-.921l-.639-1.041a1.941,1.941,0,0,1-.36-.95.777.777,0,0,1,.065-.342.613.613,0,0,1,.219-.267.5.5,0,0,1,.154-.08,17.114,17.114,0,0,1-.031-1.868,2.694,2.694,0,0,1,.078-.424,2.508,2.508,0,0,1,1.079-1.4,3.35,3.35,0,0,1,.9-.411c.2-.059-.175-.723.036-.745A5.144,5.144,0,0,1,16.295,5.79a2.561,2.561,0,0,1,.623,1.6l-.039,1.7h0a.46.46,0,0,1,.326.355,1.481,1.481,0,0,1-.175.892h0v.024l-.73,1.225a6.339,6.339,0,0,1-.891,1.26l.1.144a4.478,4.478,0,0,0,.464.625.043.043,0,0,1,.016.021,10.373,10.373,0,0,0,2.813.892c.782.211,1.069.267,1.243,1.142a1.937,1.937,0,0,1-.023,1.1Zm-.641,9.356a.885.885,0,0,1,0-1.764H18.508l-.016.024h0V24.4h0v.013h0v.408h0v.035h0v.021h0v.211h0v.032H18.38l-.018.013H18.33l-.016.016h-.029l-.016.013h-.016l-.016.016h-.013l-.016.016h0l-.016.016h0l-.016.016h0v.016h0v.029h0v.016h0l-.016.016v.016h-.013v.016h0v.016h0l-.013.016h0v.016h0v.035h0v.035h0l-.013.016v.016h0v.019h0v.019h0v.019h0v.037h0V25.6Zm.331-4.847a.847.847,0,0,1-.777-.421.891.891,0,0,1,0-.9.847.847,0,0,1,.777-.421H19.754a.847.847,0,0,1,.777.421.891.891,0,0,1,0,.9.847.847,0,0,1-.777.421Z" transform="translate(5.333 4.2)" fill="#06425c" />
               </svg>
-iCare classification
+              iCare classification
             </Typography>
           </Grid>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -494,7 +494,7 @@ iCare classification
               <Grid container spacing={3}>
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Classification
+                    Classification
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.observationClassification ? initialData.observationClassification : '-'}
@@ -510,7 +510,7 @@ iCare classification
         </Grid> */}
                 <Grid item md={6}>
                   <FormLabel component="legend" className="viewLabel">
-                  Stop Work
+                    Stop Work
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.stopWork ? initialData.stopWork : '-'}
@@ -518,7 +518,7 @@ iCare classification
                 </Grid>
                 <Grid item md={6}>
                   <FormLabel component="legend" className="viewLabel">
-                  Near Miss
+                    Near Miss
                   </FormLabel>
                   <Typography className="viewLabelValue">
                     {initialData.nearMiss ? initialData.nearMiss : '-'}
@@ -545,16 +545,16 @@ iCare classification
           </Grid> */}
                 <Grid item md={12}>
                   <FormLabel component="legend" className="viewLabel">
-                  Categories
+                    Categories
                   </FormLabel>
                   {/* {tagsData.} */}
                   {tagsData.length > 0
-                  && (
-                    <Typography className="viewLabelValue">
-                      {tagsData.map(tag => tag.observationTag).join(', ')}
+                    && (
+                      <Typography className="viewLabelValue">
+                        {tagsData.map(tag => tag.observationTag).join(', ')}
 
-                    </Typography>
-                  )
+                      </Typography>
+                    )
                   }
                   {tagsData.length == 0 && '-'}
                 </Grid>
@@ -567,7 +567,7 @@ iCare classification
                 <path id="Path_2530" data-name="Path 2530" d="M16.815,3.254a.668.668,0,0,1-.217-.033.651.651,0,0,1-.65-.65V1.292h-6.3V2.571a.647.647,0,0,1-.583.64.732.732,0,0,1-.228.033H6.46V5.892H18.892V3.242h-2.1l.023.013ZM5.846,19.2a1.279,1.279,0,1,1-1.279,1.279A1.28,1.28,0,0,1,5.846,19.2ZM4.367,16.042a.575.575,0,0,1,.957-.64l.315.466,1.246-1.515a.576.576,0,1,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.113Zm0-4.431a.575.575,0,0,1,.957-.64l.315.466L6.885,9.919a.576.576,0,0,1,.89.732l-1.724,2.1a.673.673,0,0,1-.138.13.574.574,0,0,1-.8-.159l-.747-1.11ZM17.705,31.268a.671.671,0,0,1-.435.171.348.348,0,0,1-.1-.01H1.438a1.438,1.438,0,0,1-1.016-.422A1.422,1.422,0,0,1,0,29.989V5.079A1.441,1.441,0,0,1,1.438,3.641H5.181V2.932a.956.956,0,0,1,.287-.686.968.968,0,0,1,.686-.287H8.369V1.072A1.053,1.053,0,0,1,8.689.32,1.053,1.053,0,0,1,9.441,0h6.747a1.053,1.053,0,0,1,.752.32,1.058,1.058,0,0,1,.32.752v.89h2a1.011,1.011,0,0,1,.686.287.986.986,0,0,1,.287.686v.709h3.743a1.441,1.441,0,0,1,1.438,1.438V23.05a.656.656,0,0,1-.194.65l-7.433,7.522a.223.223,0,0,1-.056.046h-.023ZM16.62,30.137c0-8.6-1.085-7.581,7.476-7.581V5.079a.121.121,0,0,0-.046-.1.143.143,0,0,0-.1-.046H20.2v1.3a.956.956,0,0,1-.287.686.968.968,0,0,1-.686.287H6.141a.986.986,0,0,1-.686-.287c-.023-.023-.033-.046-.056-.069a.994.994,0,0,1-.228-.617V4.93H1.428a.121.121,0,0,0-.1.046.171.171,0,0,0-.046.1v24.91a.107.107,0,0,0,.046.1.143.143,0,0,0,.1.046H16.62Zm-6.071-9.208a.65.65,0,0,1,0-1.3h6.174a.65.65,0,0,1,0,1.3Zm0-9.282a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Zm0,4.641a.65.65,0,1,1,0-1.3h9.508a.65.65,0,1,1,0,1.3Z" fill="#06425c" />
               </svg>
               {' '}
-Confirmation and notification
+              Confirmation and notification
             </Typography>
           </Grid>
 
@@ -624,7 +624,7 @@ Confirmation and notification
                 <path id="Path_5091" data-name="Path 5091" d="M18.5,16H7A4,4,0,0,1,7,8H19.5a2.5,2.5,0,0,1,0,5H9a1,1,0,0,1,0-2h9.5V9.5H9a2.5,2.5,0,0,0,0,5H19.5a4,4,0,0,0,0-8H7a5.5,5.5,0,0,0,0,11H18.5Z" fill="#06425c" />
               </svg>
               {' '}
-Attachment
+              Attachment
             </Typography>
           </Grid>
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -638,10 +638,10 @@ Attachment
                     <Typography className="viewLabelValue">
 
                       {initialData.attachment
-                      === null ? null : typeof initialData.attachment
-                        === 'string' ? (
-                            <Attachment value={initialData.attachment} />
-                          ) : null}
+                        === null ? null : typeof initialData.attachment
+                          === 'string' ? (
+                        <Attachment value={initialData.attachment} />
+                      ) : null}
                     </Typography>
                   ) : ('-')}
                 </Grid>
@@ -651,35 +651,35 @@ Attachment
 
 
           {initialData.assigneeName && (
-          <>
-            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-              <Typography variant="h6" className="sectionHeading">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30.217" height="24.92" viewBox="0 0 37.217 27.92">
-                  <path id="project-management" d="M27.194,13.612a.624.624,0,0,0-.3.082.285.285,0,0,0-.094.106.424.424,0,0,0-.03.17,1.515,1.515,0,0,0,.3.739h0l.636,1.012a5.453,5.453,0,0,0,.854,1.124,1.745,1.745,0,0,0,1.212.488,1.781,1.781,0,0,0,1.288-.512,5.583,5.583,0,0,0,.882-1.212l.715-1.178a1.148,1.148,0,0,0,.151-.627c-.018-.073-.1-.106-.23-.115h-.245a1.075,1.075,0,0,1-.194,0l.245-1.085c-1.818.3-3.181-1.063-5.1-.27l.133,1.3a1.039,1.039,0,0,1-.218,0Zm-4.847,8.407c.17-2.187-.261-2.218,1.575-2.905a17.629,17.629,0,0,0,2.924-1.3l1.572,4.208Zm14.845,0c-.167-2.187.261-2.218-1.572-2.905a17.772,17.772,0,0,1-2.927-1.3L31.12,22.019Zm-6.968-2.293h.218a.364.364,0,0,0,.361-.361v-.582a.361.361,0,0,0-.361-.361h-1.3a.361.361,0,0,0-.361.361v.585a.364.364,0,0,0,.361.361h.23l-.424,2.293h1.7l-.409-2.293Zm-20.153.13.248.245a.17.17,0,0,1,0,.236l-.2.2a1.351,1.351,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.167.167,0,0,1-.167.167h-.282a1.382,1.382,0,0,1-.145.318l.182.185a.17.17,0,0,1,0,.236l-.248.245a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.264a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167V22.44a1.339,1.339,0,0,1-.321-.145l-.182.182a.164.164,0,0,1-.236,0l-.245-.245a.164.164,0,0,1,0-.236l.2-.2a1.233,1.233,0,0,1-.121-.33H7.4a.164.164,0,0,1-.167-.167v-.354a.167.167,0,0,1,.167-.167h.282a1.212,1.212,0,0,1,.145-.3l-.182-.182a.164.164,0,0,1,0-.236l.245-.248a.17.17,0,0,1,.236,0l.2.2a1.351,1.351,0,0,1,.33-.124v-.258a.167.167,0,0,1,.167-.167h.348a.167.167,0,0,1,.167.167v.282a1.212,1.212,0,0,1,.318.145l.182-.182a.164.164,0,0,1,.236,0Zm-1.124.606a.688.688,0,1,1-.688.688A.688.688,0,0,1,8.947,20.462Zm4.193-4.756a.657.657,0,0,1-.585-.7.642.642,0,0,1,.585-.7h7.48a.66.66,0,0,1,.588.7.645.645,0,0,1-.588.7Zm0,6.147a.66.66,0,0,1-.585-.7.645.645,0,0,1,.585-.706h5.1a.66.66,0,0,1,.585.706.642.642,0,0,1-.585.7ZM8.929,10.491a.4.4,0,0,1-.539-.07l-.045-.048L7.593,9.6a.427.427,0,0,1,.07-.606.5.5,0,0,1,.657-.021l.4.418,1.315-1.054a.409.409,0,0,1,.585.145.47.47,0,0,1-.03.648l-1.642,1.36ZM13.1,9.885c-.327,0-.545-.33-.545-.706s.218-.7.545-.7h8.565a.657.657,0,0,1,.585.7.645.645,0,0,1-.585.706Zm-8.64-6.28H30.181a.724.724,0,0,1,.721.721V6.411H29.566V4.784H4.463V20.234h0a.436.436,0,0,1-.373.433c-3.923.609-4.108,5.253-.118,5.92H29.566V24.636H30.9V27.2a.721.721,0,0,1-.212.509h0a.727.727,0,0,1-.509.212H3.942a4.59,4.59,0,0,1-3.187-1.73,5.155,5.155,0,0,1-.773-3.269V6.059C-.018,3.187-.045.073,3.972,0h.048a.442.442,0,0,1,.442.442ZM1.028,20.974a3.391,3.391,0,0,1,2.405-1.251V.909c-2.745.27-2.424,2.808-2.424,5.165v14.9ZM10.071,13.7l.248.248a.17.17,0,0,1,0,.236l-.2.2a1.4,1.4,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.17.17,0,0,1-.167.17h-.282a1.445,1.445,0,0,1-.145.3l.182.182a.17.17,0,0,1,0,.236l-.248.248a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.258a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167v-.282a1.466,1.466,0,0,1-.321-.145l-.182.182a.17.17,0,0,1-.236,0l-.245-.248a.164.164,0,0,1,0-.236l.2-.2a1.269,1.269,0,0,1-.121-.33H7.4a.167.167,0,0,1-.167-.167V14.8a.164.164,0,0,1,.167-.167h.282a1.188,1.188,0,0,1,.145-.321l-.182-.182a.164.164,0,0,1,0-.236l.245-.245a.164.164,0,0,1,.236,0l.2.2a1.233,1.233,0,0,1,.33-.121v-.258a.167.167,0,0,1,.167-.17h.348a.17.17,0,0,1,.167.17v.279a1.445,1.445,0,0,1,.318.145l.182-.182a.17.17,0,0,1,.236,0Zm-1.124.624a.688.688,0,1,1-.688.685A.688.688,0,0,1,8.947,14.327Zm23.873-.951a.46.46,0,0,1,.333.348,1.412,1.412,0,0,1-.173.869h0a.064.064,0,0,1,0,.018l-.724,1.194a5.959,5.959,0,0,1-.939,1.275,2.139,2.139,0,0,1-1.536.606,2.072,2.072,0,0,1-1.46-.585,5.614,5.614,0,0,1-.909-1.194L26.776,14.9a1.818,1.818,0,0,1-.361-.924.724.724,0,0,1,.061-.33.63.63,0,0,1,.218-.254.821.821,0,0,1,.155-.079,16.419,16.419,0,0,1-.03-1.818,2.527,2.527,0,0,1,.079-.412c.957-3.169,5.8-2.9,5.962.654l-.039,1.648Z" transform="translate(0.025)" fill="#06425c" />
-                </svg>
-                {' '}
-Accountability
-              </Typography>
-            </Grid>
-            <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
-              <Paper elevation={1} className="paperSection">
-                <Grid container spacing={3}>
-                  <Grid item xs={6}>
-                    <FormLabel component="legend" className="viewLabel">Assign to</FormLabel>
-                    <Typography className="viewLabelValue">
-                      {initialData.assigneeName ? initialData.assigneeName : '-'}
-                    </Typography>
+            <>
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Typography variant="h6" className="sectionHeading">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30.217" height="24.92" viewBox="0 0 37.217 27.92">
+                    <path id="project-management" d="M27.194,13.612a.624.624,0,0,0-.3.082.285.285,0,0,0-.094.106.424.424,0,0,0-.03.17,1.515,1.515,0,0,0,.3.739h0l.636,1.012a5.453,5.453,0,0,0,.854,1.124,1.745,1.745,0,0,0,1.212.488,1.781,1.781,0,0,0,1.288-.512,5.583,5.583,0,0,0,.882-1.212l.715-1.178a1.148,1.148,0,0,0,.151-.627c-.018-.073-.1-.106-.23-.115h-.245a1.075,1.075,0,0,1-.194,0l.245-1.085c-1.818.3-3.181-1.063-5.1-.27l.133,1.3a1.039,1.039,0,0,1-.218,0Zm-4.847,8.407c.17-2.187-.261-2.218,1.575-2.905a17.629,17.629,0,0,0,2.924-1.3l1.572,4.208Zm14.845,0c-.167-2.187.261-2.218-1.572-2.905a17.772,17.772,0,0,1-2.927-1.3L31.12,22.019Zm-6.968-2.293h.218a.364.364,0,0,0,.361-.361v-.582a.361.361,0,0,0-.361-.361h-1.3a.361.361,0,0,0-.361.361v.585a.364.364,0,0,0,.361.361h.23l-.424,2.293h1.7l-.409-2.293Zm-20.153.13.248.245a.17.17,0,0,1,0,.236l-.2.2a1.351,1.351,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.167.167,0,0,1-.167.167h-.282a1.382,1.382,0,0,1-.145.318l.182.185a.17.17,0,0,1,0,.236l-.248.245a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.264a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167V22.44a1.339,1.339,0,0,1-.321-.145l-.182.182a.164.164,0,0,1-.236,0l-.245-.245a.164.164,0,0,1,0-.236l.2-.2a1.233,1.233,0,0,1-.121-.33H7.4a.164.164,0,0,1-.167-.167v-.354a.167.167,0,0,1,.167-.167h.282a1.212,1.212,0,0,1,.145-.3l-.182-.182a.164.164,0,0,1,0-.236l.245-.248a.17.17,0,0,1,.236,0l.2.2a1.351,1.351,0,0,1,.33-.124v-.258a.167.167,0,0,1,.167-.167h.348a.167.167,0,0,1,.167.167v.282a1.212,1.212,0,0,1,.318.145l.182-.182a.164.164,0,0,1,.236,0Zm-1.124.606a.688.688,0,1,1-.688.688A.688.688,0,0,1,8.947,20.462Zm4.193-4.756a.657.657,0,0,1-.585-.7.642.642,0,0,1,.585-.7h7.48a.66.66,0,0,1,.588.7.645.645,0,0,1-.588.7Zm0,6.147a.66.66,0,0,1-.585-.7.645.645,0,0,1,.585-.706h5.1a.66.66,0,0,1,.585.706.642.642,0,0,1-.585.7ZM8.929,10.491a.4.4,0,0,1-.539-.07l-.045-.048L7.593,9.6a.427.427,0,0,1,.07-.606.5.5,0,0,1,.657-.021l.4.418,1.315-1.054a.409.409,0,0,1,.585.145.47.47,0,0,1-.03.648l-1.642,1.36ZM13.1,9.885c-.327,0-.545-.33-.545-.706s.218-.7.545-.7h8.565a.657.657,0,0,1,.585.7.645.645,0,0,1-.585.706Zm-8.64-6.28H30.181a.724.724,0,0,1,.721.721V6.411H29.566V4.784H4.463V20.234h0a.436.436,0,0,1-.373.433c-3.923.609-4.108,5.253-.118,5.92H29.566V24.636H30.9V27.2a.721.721,0,0,1-.212.509h0a.727.727,0,0,1-.509.212H3.942a4.59,4.59,0,0,1-3.187-1.73,5.155,5.155,0,0,1-.773-3.269V6.059C-.018,3.187-.045.073,3.972,0h.048a.442.442,0,0,1,.442.442ZM1.028,20.974a3.391,3.391,0,0,1,2.405-1.251V.909c-2.745.27-2.424,2.808-2.424,5.165v14.9ZM10.071,13.7l.248.248a.17.17,0,0,1,0,.236l-.2.2a1.4,1.4,0,0,1,.124.33H10.5a.167.167,0,0,1,.167.167v.348a.17.17,0,0,1-.167.17h-.282a1.445,1.445,0,0,1-.145.3l.182.182a.17.17,0,0,1,0,.236l-.248.248a.167.167,0,0,1-.233,0l-.2-.2a1.351,1.351,0,0,1-.33.124v.258a.167.167,0,0,1-.167.167H8.729a.167.167,0,0,1-.167-.167v-.282a1.466,1.466,0,0,1-.321-.145l-.182.182a.17.17,0,0,1-.236,0l-.245-.248a.164.164,0,0,1,0-.236l.2-.2a1.269,1.269,0,0,1-.121-.33H7.4a.167.167,0,0,1-.167-.167V14.8a.164.164,0,0,1,.167-.167h.282a1.188,1.188,0,0,1,.145-.321l-.182-.182a.164.164,0,0,1,0-.236l.245-.245a.164.164,0,0,1,.236,0l.2.2a1.233,1.233,0,0,1,.33-.121v-.258a.167.167,0,0,1,.167-.17h.348a.17.17,0,0,1,.167.17v.279a1.445,1.445,0,0,1,.318.145l.182-.182a.17.17,0,0,1,.236,0Zm-1.124.624a.688.688,0,1,1-.688.685A.688.688,0,0,1,8.947,14.327Zm23.873-.951a.46.46,0,0,1,.333.348,1.412,1.412,0,0,1-.173.869h0a.064.064,0,0,1,0,.018l-.724,1.194a5.959,5.959,0,0,1-.939,1.275,2.139,2.139,0,0,1-1.536.606,2.072,2.072,0,0,1-1.46-.585,5.614,5.614,0,0,1-.909-1.194L26.776,14.9a1.818,1.818,0,0,1-.361-.924.724.724,0,0,1,.061-.33.63.63,0,0,1,.218-.254.821.821,0,0,1,.155-.079,16.419,16.419,0,0,1-.03-1.818,2.527,2.527,0,0,1,.079-.412c.957-3.169,5.8-2.9,5.962.654l-.039,1.648Z" transform="translate(0.025)" fill="#06425c" />
+                  </svg>
+                  {' '}
+                  Accountability
+                </Typography>
+              </Grid>
+              <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
+                <Paper elevation={1} className="paperSection">
+                  <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                      <FormLabel component="legend" className="viewLabel">Assign to</FormLabel>
+                      <Typography className="viewLabelValue">
+                        {initialData.assigneeName ? initialData.assigneeName : '-'}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <FormLabel component="legend" className="viewLabel">Department</FormLabel>
+                      <Typography className="viewLabelValue">
+                        {initialData.departmentName ? initialData.departmentName : '-'}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <FormLabel component="legend" className="viewLabel">Department</FormLabel>
-                    <Typography className="viewLabelValue">
-                      {initialData.departmentName ? initialData.departmentName : '-'}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-          </>
+                </Paper>
+              </Grid>
+            </>
           )}
 
           <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -688,7 +688,7 @@ Accountability
                 <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c" />
               </svg>
               {' '}
-Project information
+              Project information
             </Typography>
           </Grid>
 
@@ -755,7 +755,7 @@ Project information
                       href={`${documentUrl}`}
                       target="_blank"
                     >
-                    View Attachment 111111
+                      View Attachment 111111
                     </Button>
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -766,7 +766,7 @@ Project information
                       className={classes.modalButton}
                       onClick={(e) => download(documentUrl)}
                     >
-                    Download Attachment
+                      Download Attachment
                     </Button>
                   </Grid>
                 </Grid>

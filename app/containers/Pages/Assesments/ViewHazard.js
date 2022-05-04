@@ -25,6 +25,7 @@ import Attachment from '../../../containers/Attachment/Attachment';
 import classNames from 'classnames';
 import { HEADER_AUTH, SSO_URL } from '../../../utils/constants';
 import api from '../../../utils/axios';
+import { connect } from "react-redux";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -327,19 +328,19 @@ const FlhaDetails = (props) => {
 
   const [open, setOpen] = useState(false);
   const handleRiskChange = (rating) => {
-    console.log(rating,'rating')
+    console.log(rating, 'rating')
     let colorRating = ''
-   if (rating === "1 Trivial" || rating === "2 Trivial" || rating === "3 Trivial" || rating === "4 Trivial") {
+    if (rating === "1 Trivial" || rating === "2 Trivial" || rating === "3 Trivial" || rating === "4 Trivial") {
       colorRating = '#009933'
     } else if (rating === "5 Tolerable" || rating === "6 Tolerable" || rating === "7 Tolerable" || rating === "8 Tolerable") {
       colorRating = '#8da225'
 
     } else if (rating === "9 Moderate" || rating === "10 Moderate" || rating === "11 Moderate" || rating === "12 Moderate" ||
-    rating === "13 Moderate" || rating === "14 Moderate" || rating === "15 Moderate" || rating === "16 Moderate") {
+      rating === "13 Moderate" || rating === "14 Moderate" || rating === "15 Moderate" || rating === "16 Moderate") {
       colorRating = '#FFBF00'
 
     } else if (rating === "17 Substantial" || rating === "18 Substantial" || rating === "19 Substantial" || rating === "20 Substantial"
-    || rating === "21 Substantial" || rating === "22 Substantial" || rating === "23 Substantial" || rating === "24 Substantial") {
+      || rating === "21 Substantial" || rating === "22 Substantial" || rating === "23 Substantial" || rating === "24 Substantial") {
       colorRating = '#990000'
     }
     else {
@@ -363,10 +364,19 @@ const FlhaDetails = (props) => {
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
     try {
       var config = {
         method: "get",
-        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+        url: `${SSO_URL}/api/v1/companies/${companyId}/projects/${projectId}/notificationroles/flha/?subentity=flha&roleType=custom&projectStructure=${fkProjectStructureIds}`,
         headers: HEADER_AUTH,
       };
       const res = await api(config);
@@ -816,4 +826,17 @@ const FlhaDetails = (props) => {
   );
 };
 
-export default FlhaDetails;
+
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  null
+)(FlhaDetails);
+

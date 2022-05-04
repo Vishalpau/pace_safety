@@ -618,7 +618,9 @@ function AhaSummary(props) {
                           <li>
                             <Button
                               color={assessments === true ? "secondary" : "primary"}
-                              variant="contained"
+                              // variant="contained"
+                              variant={ahaData.notifyTo != 'null' ? "contained" : "outlined"}
+
                               size="small"
                               className={classes.statusButton}
                               onClick={(e) =>
@@ -627,8 +629,9 @@ function AhaSummary(props) {
                             >
                               Assessments
                             </Button>
+                            {console.log(ahaData,'ahaData.notifyTo')}
                             <Typography className={classes.statusLabel} variant="caption" display="block" align="center">
-                              {ahaData.notifyTo !== null ? "Done" : "Pending"}{ahaData.notifyTo !== null ? <CheckCircle /> : <AccessTime />}
+                              {ahaData.notifyTo != 'null' ? "Done" : "Pending"}{ahaData.notifyTo != 'null' ? <CheckCircle /> : <AccessTime />}
                             </Typography>
                           </li>
                           <li>
