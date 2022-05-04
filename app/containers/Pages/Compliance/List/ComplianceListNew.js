@@ -494,11 +494,6 @@ function ComplianceListNew(props) {
     console.log(attachOpen);
   }, [attachOpen])
 
-  // const handleVisibilityComments = () => {
-  //   setCommentsOpen(true);
-  //   setHiddenn(!hiddenn);
-  // };
-
   //image download attachment section
 
   //   Data for the table view
@@ -761,15 +756,21 @@ function ComplianceListNew(props) {
 
   const AllCardData = ({ value, index }) => {
 
+
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
-    const [openAttachment, setopenAttachment] = React.useState(false);
+    // const [openAttachment, setopenAttachment] = React.useState(false);
 
     function handleVisibility() {
       setShowGrid(true);
       setHidden(!hidden);
+    };
+
+    function handleVisibilityComments() {
+      setCommentsOpen(true);
+      setHiddenn(!hiddenn);
     };
 
     function handleAttachClose() {
@@ -799,6 +800,7 @@ function ComplianceListNew(props) {
     function handleCommentsClick() {
       setCommentsOpen(!open);
     };
+
 
     // function handleClickOpenAttachment() {
     //   setopenAttachment(true);
