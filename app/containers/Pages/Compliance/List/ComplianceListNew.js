@@ -474,11 +474,8 @@ function ComplianceListNew(props) {
   // };
 
   //view comments
-  const [commentsOpen, setCommentsOpen] = useState(false);
-  const [hiddenn, setHiddenn] = useState(false);
   const [allComplianceData, setAllComplianceData] = useState([]);
   const [attachOpen, setAttachOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pageCount, setPageCount] = useState(0);
   const [pageData, setPageData] = useState(0);
@@ -486,49 +483,22 @@ function ComplianceListNew(props) {
   const [page, setPage] = useState(1);
   const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
-  const handleVisibility = () => {
-    setAttachOpen(true);
-    setHidden(!hidden);
-  };
+  const [attachmentId, setAttachmentId] = useState()
 
-  const handleVisibilityComments = () => {
-    setCommentsOpen(true);
-    setHiddenn(!hiddenn);
-  };
-  const handleCommentsClick = () => {
-    setCommentsOpen(!open);
-  };
-  const handleCommentsOpen = () => {
-    if (!hiddenn) {
-      setCommentsOpen(true);
-    }
-  };
-  const handleCommentsClose = () => {
-    setCommentsOpen(false);
-  };
+  useEffect(() => {
+    console.log(allComplianceData);
+  }, [allComplianceData])
 
-  const handleAttachClose = () => {
-    setAttachOpen(false);
-  };
-  const handleAttachClick = () => {
-    setAttachOpen(!open);
-  };
-  const handleAttachOpen = () => {
-    if (!hidden) {
-      setAttachOpen(true);
-    }
-  };
+  useEffect(() => {
+    console.log(attachOpen);
+  }, [attachOpen])
+
+  // const handleVisibilityComments = () => {
+  //   setCommentsOpen(true);
+  //   setHiddenn(!hiddenn);
+  // };
 
   //image download attachment section
-  const [openAttachment, setopenAttachment] = React.useState(false);
-
-  const handleClickOpenAttachment = () => {
-    setopenAttachment(true);
-  };
-
-  const handleCloseAttachment = () => {
-    setopenAttachment(false);
-  };
 
   //   Data for the table view
   const columns = [
@@ -608,9 +578,9 @@ function ComplianceListNew(props) {
     history.push(`/app/pages/compliance/compliance-summary/${id}`);
   };
 
-  const handleNewCompliancePush = async () => {
-    history.push("/app/pages/compliance/compliance");
-  };
+  // const handleNewCompliancePush = async () => {
+  //   history.push("/app/pages/compliance/compliance");
+  // };
 
   const [myUserPOpen, setMyUserPOpen] = React.useState(false);
 
@@ -636,8 +606,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     let struct = "";
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
@@ -650,8 +620,7 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -662,8 +631,7 @@ function ComplianceListNew(props) {
         await setPageCount(pageCount);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}`
         );
 
@@ -677,10 +645,8 @@ function ComplianceListNew(props) {
     } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}`
         );
         const result = res.data.data.results.results;
@@ -691,10 +657,8 @@ function ComplianceListNew(props) {
         await setPageCount(pageCount);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&auditType=${props.type
           }&projectStructureIds=${fkProjectStructureIds}`
         );
 
@@ -719,8 +683,8 @@ function ComplianceListNew(props) {
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
         : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
-        ? JSON.parse(localStorage.getItem("selectBreakDown"))
-        : null;
+          ? JSON.parse(localStorage.getItem("selectBreakDown"))
+          : null;
     const createdBy =
       JSON.parse(localStorage.getItem("userDetails")) !== null
         ? JSON.parse(localStorage.getItem("userDetails")).id
@@ -734,39 +698,33 @@ function ComplianceListNew(props) {
     if (props.type === "Categories" || props.type === "All") {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
+          `api/v1/audits/?search=${props.search
           }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       }
 
-    }else{
+    } else {
       if (props.compliance === "My Inspections") {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&createdBy=${createdBy}&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
         await setPage(value);
       } else {
         const res = await api.get(
-          `api/v1/audits/?search=${
-            props.search
-          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${
-            props.type
+          `api/v1/audits/?search=${props.search
+          }&companyId=${fkCompanyId}&projectId=${fkProjectId}&projectStructureIds=${fkProjectStructureIds}&auditType=${props.type
           }&page=${value}`
         );
         await setAllComplianceData(res.data.data.results.results);
@@ -800,6 +758,482 @@ function ComplianceListNew(props) {
     props.type,
   ]);
 
+  const AllCardData = ({ value, index }) => {
+
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [showGrid, setShowGrid] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    const [hiddenn, setHiddenn] = useState(false);
+    const [openAttachment, setopenAttachment] = React.useState(false);   
+
+    function handleVisibility() {
+      setShowGrid(true);
+      setHidden(!hidden);
+    };
+
+    function handleAttachClose() {
+      setShowGrid(false);
+    };
+
+    function handleAttachClick() {
+      setShowGrid(!open);
+    };
+
+    function handleAttachOpen() {
+      if (!hidden) {
+        setShowGrid(true);
+      }
+    };
+
+    function handleCommentsOpen() {
+      if (!hiddenn) {
+        setCommentsOpen(true);
+      }
+    };
+
+    function handleCommentsClose() {
+      setCommentsOpen(false);
+    };
+
+    function handleCommentsClick() {
+      setCommentsOpen(!open);
+    };
+
+    function handleClickOpenAttachment(){
+      setopenAttachment(true);
+    };
+  
+    function handleCloseAttachment(){
+      setopenAttachment(false);
+    };
+
+    console.log(showGrid);
+
+    return (
+      <>
+        <Card variant="outlined" className={classes.card}>
+          <CardContent>
+            <Grid
+              container
+              spacing={3}
+              className={classes.cardContentSection}
+            >
+              <Grid
+                item
+                md={2}
+                sm={4}
+                xs={12}
+                className={classes.userPictureBox}
+              >
+                <Button
+                  className={classes.floatR}
+                  onClick={(e) => handleMyUserPClickOpen(e)}
+                >
+                  <img
+                    src={
+                      value["avatar"] !== null
+                        ? value["avatar"]
+                        : paceLogoSymbol
+                    }
+                    className={classes.userImage}
+                  />{" "}
+                  {value["username"]}
+                </Button>
+              </Grid>
+              <Link
+                onClick={() => handleSummaryPush(value["id"])}
+                className={classes.cardLinkAction}
+              >
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    spacing={3}
+                    alignItems="flex-start"
+                  >
+                    <Grid
+                      item
+                      sm={12}
+                      xs={12}
+                      className={classes.listHeadColor}
+                    >
+                      <Grid
+                        container
+                        spacing={3}
+                        alignItems="flex-start"
+                      >
+                        <Grid item md={10} sm={12} xs={12}>
+                          <Typography
+                            className={classes.title}
+                            variant="h6"
+                          >
+                            {value["auditType"] !== null
+                              ? value["auditType"]
+                              : "-"}
+                          </Typography>
+                          <Typography
+                            className={classes.listingLabelName}
+                            display="inline"
+                          >
+                            Number:{" "}
+                            <span>
+                              <Link
+                                onClick={() => handleSummaryPush()}
+                                //href="/app/pages/actions/actionsummary"
+                                variant="h6"
+                                className={classes.mLeftfont}
+                              >
+                                <span
+                                  className={
+                                    classes.listingLabelValue
+                                  }
+                                >
+                                  {value["auditNumber"] !== null
+                                    ? value["auditNumber"]
+                                    : "-"}
+                                </span>
+                              </Link>
+                            </span>
+                          </Typography>
+                          <span
+                            item
+                            xs={1}
+                            className={classes.sepHeightOne}
+                          />
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Group name:{" "}
+                            <span
+                              className={classes.listingLabelValue}
+                            >
+                              {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListGroupName).join(', ') : "-"}
+                            </span>
+                          </Typography>
+                          {/* <span
+                            item
+                            xs={1}
+                            className={classes.sepHeightOne}
+                          />
+                          <Typography
+                            variant="body1"
+                            gutterBottom
+                            display="inline"
+                            color="textPrimary"
+                            className={classes.listingLabelName}
+                          >
+                            Status:{" "}
+                            <span className="listingLabelValue statusColor_complete">
+                              Assigned
+                            </span>
+                          </Typography> */}
+                        </Grid>
+
+                        {/* <Grid item md={2} sm={4} xs={12}>
+                    <Button  className={classes.floatR} onClick={(e) => handleNewCompliancePush(e)} >
+                      <img src={paceLogoSymbol} className={classes.userImage} /> Admin
+                    </Button>
+                  </Grid> */}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item sm={12} xs={12}>
+                  <Grid container spacing={3}>
+                    {/* <Grid item sm={3} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Location:
+                      </Typography>
+                      <Typography
+                        className={classes.listingLabelValue}
+                      >
+                        data not available in api
+                      </Typography>
+                    </Grid> */}
+
+                    <Grid item sm={3} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Audited on:
+                      </Typography>
+
+                      <Typography
+                        className={classes.listingLabelValue}
+                      >
+                        {moment(value["createdAt"]).format(
+                          "Do MMMM YYYY"
+                        )}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item sm={3} xs={12}>
+                      <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        gutterBottom
+                        className={classes.listingLabelName}
+                      >
+                        Audited by:
+                      </Typography>
+
+                      <Typography
+                        className={classes.listingLabelValue}
+                      >
+                        {value["createdByName"] !== null
+                          ? value["createdByName"]
+                          : "-"}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Link>
+            </Grid>
+          </CardContent>
+          <Divider />
+          <CardActions
+            className={classNames(
+              Incidents.cardActions,
+              classes.cardActionBottomBox
+            )}
+          >
+            <Grid
+              container
+              spacing={2}
+              justify="flex-end"
+              alignItems="left"
+              className={classes.cardBottomSection}
+            >
+              <Grid item xs={12} sm={6} md={5}>
+                <Typography
+                  variant="body1"
+                  display="inline"
+                  color="textPrimary"
+                >
+                  <AttachmentIcon className={classes.mright5} />
+                  Attachments:
+                </Typography>
+                <Typography variant="body2" display="inline">
+                  <span>
+                    <Link
+                      // href="#"
+                      onClick={handleVisibility}
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={classes.mLeftR5}
+                    >
+                      {`${value['avatar'] === '' ? '0' : '1'}`}
+                    </Link>
+                  </span>
+                </Typography>
+                {/* <span
+                  item
+                  xs={1}
+                  className={classes.sepHeightTen}
+                />
+                <Typography
+                  variant="body1"
+                  display="inline"
+                  color="textPrimary"
+                  className={classes.mLeft}
+                >
+                  <InsertCommentOutlinedIcon
+                    className={classes.mright5}
+                  />
+                  <Link
+                    href="#"
+                    onClick={handleVisibilityComments}
+                    aria-haspopup="true"
+                  >
+                    Comments:
+                  </Link>
+                </Typography>
+                <Typography
+                  variant="body2"
+                  display="inline"
+                  className={classes.mLeft}
+                >
+                  <span>
+                    <Link
+                      href="#"
+                      color="secondary"
+                      aria-haspopup="true"
+                      className={classes.mLeft}
+                    >
+                      3
+                    </Link>
+                  </span>
+                </Typography> */}
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={7}
+                className={classes.textRight}
+              >
+                {/* <Typography variant="body1" display="inline">
+                <IconButton>
+                  <PrintOutlinedIcon className={classes.iconteal} />
+                </IconButton>{" "}
+                <Link
+                  href="/app/pages/general-observation-prints"
+                  className={classes.mLeftR5}
+                />
+              </Typography> */}
+                {/* <span item xs={1} className={classes.sepHeightTen}></span>
+          <Typography variant="body2" display="inline">
+          <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
+          </Typography> */}
+                {/* <span item xs={1} className={classes.sepHeightTen} />
+              <Typography variant="body1" display="inline">
+                <Link href="#" className={classes.mLeftR5}>
+                  <IconButton>
+                    <StarsIcon className={classes.iconteal} />
+                  </IconButton>
+                </Link>
+              </Typography> */}
+                <span
+                  item
+                  xs={1}
+                  className={classes.sepHeightTen}
+                />
+
+                <Typography variant="body1" display="inline">
+                  <Link href="#" className={classes.mLeftR5}>
+                    {!checkDeletePermission
+                      ? (
+                        <DeleteForeverOutlinedIcon
+                          className={classes.iconteal}
+                          style={{
+                            color: '#c0c0c0',
+                            cursor: 'not-allowed'
+                          }}
+                        />
+                      )
+                      : (
+                        <Link
+                          href="#"
+                          className={classes.mLeftR5}
+                        >
+                          <DeleteForeverOutlinedIcon
+                            className={classes.iconteal}
+                            onClick={() => handleDelete(value)}
+                          />
+                        </Link>
+                      )}
+                    {/* <IconButton onClick={() => handleDelete(value)}>
+                      <DeleteForeverOutlinedIcon
+                        className={classes.iconteal}
+                      />
+                    </IconButton> */}
+                  </Link>
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardActions>
+        </Card>
+        <Grid
+          item
+          md={12}
+          sm={12}
+          xs={12}
+          hidden={!hidden}
+          onBlur={handleAttachClose}
+          onClick={handleAttachClick}
+          onClose={handleAttachClose}
+          onFocus={handleAttachOpen}
+          onMouseEnter={handleAttachOpen}
+          onMouseLeave={handleAttachClose}
+          open={showGrid}
+          className="paddTBRemove attactmentShowSection"
+        >
+          <Paper elevation={1} className="cardSectionBottom">
+            <Grid container spacing={3}>
+              <Grid item md={12} sm={12} xs={12}>
+                <List>
+                  <ListItem>
+                    <img
+                      src={projectpj}
+                      onClick={handleClickOpenAttachment}
+                      className="hoverIcon"
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <img
+                      src={projectpj}
+                      onClick={handleClickOpenAttachment}
+                      className="hoverIcon"
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <div>
+          <Dialog
+            open={openAttachment}
+            onClose={handleCloseAttachment}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            classNames={classes.viewAttachmentDialog}
+          >
+            <DialogTitle id="alert-dialog-title">
+              Viw Attachment
+            </DialogTitle>
+            <DialogContent classNames={classes.imageSectionHeight}>
+              <Grid
+                container
+                spacing={3}
+                classNames={classes.viewImageSection}
+              >
+                <Grid
+                  item
+                  md={12}
+                  sm={12}
+                  xs={12}
+                  classNames={classes.mb10}
+                >
+                  <ul classNames={classes.viewImageSection}>
+                    <li className={classes.viewattch1}>
+                      View Attachment
+                    </li>
+                    <li className={classes.viewattch2}>
+                      Download Attachment
+                    </li>
+                  </ul>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleCloseAttachment}
+                color="primary"
+                autoFocus
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <Box>
@@ -808,343 +1242,7 @@ function ComplianceListNew(props) {
             <div className="gridView">
               {isLoading ? (
                 allComplianceData.length > 0 ? (
-                  allComplianceData.map((value, index) => (
-                    <Card variant="outlined" className={classes.card}>
-                      <CardContent>
-                        <Grid
-                          container
-                          spacing={3}
-                          className={classes.cardContentSection}
-                        >
-                          <Grid
-                            item
-                            md={2}
-                            sm={4}
-                            xs={12}
-                            className={classes.userPictureBox}
-                          >
-                            <Button
-                              className={classes.floatR}
-                              onClick={(e) => handleMyUserPClickOpen(e)}
-                            >
-                              <img
-                                src={
-                                  value["avatar"] !== null
-                                    ? value["avatar"]
-                                    : paceLogoSymbol
-                                }
-                                className={classes.userImage}
-                              />{" "}
-                              {value["username"]}
-                            </Button>
-                          </Grid>
-                          <Link
-                            onClick={() => handleSummaryPush(value["id"])}
-                            className={classes.cardLinkAction}
-                          >
-                            <Grid item xs={12}>
-                              <Grid
-                                container
-                                spacing={3}
-                                alignItems="flex-start"
-                              >
-                                <Grid
-                                  item
-                                  sm={12}
-                                  xs={12}
-                                  className={classes.listHeadColor}
-                                >
-                                  <Grid
-                                    container
-                                    spacing={3}
-                                    alignItems="flex-start"
-                                  >
-                                    <Grid item md={10} sm={12} xs={12}>
-                                      <Typography
-                                        className={classes.title}
-                                        variant="h6"
-                                      >
-                                        {value["auditType"] !== null
-                                          ? value["auditType"]
-                                          : "-"}
-                                      </Typography>
-                                      <Typography
-                                        className={classes.listingLabelName}
-                                        display="inline"
-                                      >
-                                        Number:{" "}
-                                        <span>
-                                          <Link
-                                            onClick={() => handleSummaryPush()}
-                                            //href="/app/pages/actions/actionsummary"
-                                            variant="h6"
-                                            className={classes.mLeftfont}
-                                          >
-                                            <span
-                                              className={
-                                                classes.listingLabelValue
-                                              }
-                                            >
-                                              {value["auditNumber"] !== null
-                                                ? value["auditNumber"]
-                                                : "-"}
-                                            </span>
-                                          </Link>
-                                        </span>
-                                      </Typography>
-                                      <span
-                                        item
-                                        xs={1}
-                                        className={classes.sepHeightOne}
-                                      />
-                                      <Typography
-                                        variant="body1"
-                                        gutterBottom
-                                        display="inline"
-                                        color="textPrimary"
-                                        className={classes.listingLabelName}
-                                      >
-                                        Group name:{" "}
-                                        <span
-                                          className={classes.listingLabelValue}
-                                        >
-                                          {value['groups'].length > 0 ? value['groups'].map((data) => data.checkListGroupName).join(', ') :"-"}
-                                        </span>
-                                      </Typography>
-                                      {/* <span
-                                        item
-                                        xs={1}
-                                        className={classes.sepHeightOne}
-                                      />
-                                      <Typography
-                                        variant="body1"
-                                        gutterBottom
-                                        display="inline"
-                                        color="textPrimary"
-                                        className={classes.listingLabelName}
-                                      >
-                                        Status:{" "}
-                                        <span className="listingLabelValue statusColor_complete">
-                                          Assigned
-                                        </span>
-                                      </Typography> */}
-                                    </Grid>
-
-                                    {/* <Grid item md={2} sm={4} xs={12}>
-                                <Button  className={classes.floatR} onClick={(e) => handleNewCompliancePush(e)} >
-                                  <img src={paceLogoSymbol} className={classes.userImage} /> Admin
-                                </Button>
-                              </Grid> */}
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-
-                            <Grid item sm={12} xs={12}>
-                              <Grid container spacing={3}>
-                                {/* <Grid item sm={3} xs={12}>
-                                  <Typography
-                                    variant="body1"
-                                    color="textPrimary"
-                                    gutterBottom
-                                    className={classes.listingLabelName}
-                                  >
-                                    Location:
-                                  </Typography>
-                                  <Typography
-                                    className={classes.listingLabelValue}
-                                  >
-                                    data not available in api
-                                  </Typography>
-                                </Grid> */}
-
-                                <Grid item sm={3} xs={12}>
-                                  <Typography
-                                    variant="body1"
-                                    color="textPrimary"
-                                    gutterBottom
-                                    className={classes.listingLabelName}
-                                  >
-                                    Audited on:
-                                  </Typography>
-
-                                  <Typography
-                                    className={classes.listingLabelValue}
-                                  >
-                                    {moment(value["createdAt"]).format(
-                                      "Do MMMM YYYY"
-                                    )}
-                                  </Typography>
-                                </Grid>
-
-                                <Grid item sm={3} xs={12}>
-                                  <Typography
-                                    variant="body1"
-                                    color="textPrimary"
-                                    gutterBottom
-                                    className={classes.listingLabelName}
-                                  >
-                                    Audited by:
-                                  </Typography>
-
-                                  <Typography
-                                    className={classes.listingLabelValue}
-                                  >
-                                    {value["createdByName"] !== null
-                                      ? value["createdByName"]
-                                      : "-"}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Link>
-                        </Grid>
-                      </CardContent>
-                      <Divider />
-                      <CardActions
-                        className={classNames(
-                          Incidents.cardActions,
-                          classes.cardActionBottomBox
-                        )}
-                      >
-                        <Grid
-                          container
-                          spacing={2}
-                          justify="flex-end"
-                          alignItems="left"
-                          className={classes.cardBottomSection}
-                        >
-                          <Grid item xs={12} sm={6} md={5}>
-                             <Typography
-                              variant="body1"
-                              display="inline"
-                              color="textPrimary"
-                            >
-                              <AttachmentIcon className={classes.mright5} />
-                              Attachments:
-                            </Typography>
-                            {/*<Typography variant="body2" display="inline">
-                              <span>
-                                <Link
-                                  href="#"
-                                  onClick={handleVisibility}
-                                  color="secondary"
-                                  aria-haspopup="true"
-                                  className={classes.mLeftR5}
-                                >
-                                  3
-                                </Link>
-                              </span>
-                            </Typography>
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightTen}
-                            />
-                            <Typography
-                              variant="body1"
-                              display="inline"
-                              color="textPrimary"
-                              className={classes.mLeft}
-                            >
-                              <InsertCommentOutlinedIcon
-                                className={classes.mright5}
-                              />
-                              <Link
-                                href="#"
-                                onClick={handleVisibilityComments}
-                                aria-haspopup="true"
-                              >
-                                Comments:
-                              </Link>
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              display="inline"
-                              className={classes.mLeft}
-                            >
-                              <span>
-                                <Link
-                                  href="#"
-                                  color="secondary"
-                                  aria-haspopup="true"
-                                  className={classes.mLeft}
-                                >
-                                  3
-                                </Link>
-                              </span>
-                            </Typography> */}
-                          </Grid>
-
-                          <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={7}
-                            className={classes.textRight}
-                          >
-                            {/* <Typography variant="body1" display="inline">
-                            <IconButton>
-                              <PrintOutlinedIcon className={classes.iconteal} />
-                            </IconButton>{" "}
-                            <Link
-                              href="/app/pages/general-observation-prints"
-                              className={classes.mLeftR5}
-                            />
-                          </Typography> */}
-                            {/* <span item xs={1} className={classes.sepHeightTen}></span>
-                      <Typography variant="body2" display="inline">
-                      <Share className={classes.iconColor} /> <Link href="#" className={classes.mLeftR5}>Share</Link>
-                      </Typography> */}
-                            {/* <span item xs={1} className={classes.sepHeightTen} />
-                          <Typography variant="body1" display="inline">
-                            <Link href="#" className={classes.mLeftR5}>
-                              <IconButton>
-                                <StarsIcon className={classes.iconteal} />
-                              </IconButton>
-                            </Link>
-                          </Typography> */}
-                            <span
-                              item
-                              xs={1}
-                              className={classes.sepHeightTen}
-                            />
-                            
-                            <Typography variant="body1" display="inline">
-                              <Link href="#" className={classes.mLeftR5}>
-                                {!checkDeletePermission
-                                  ? (
-                                    <DeleteForeverOutlinedIcon
-                                      className={classes.iconteal}
-                                      style={{
-                                        color: '#c0c0c0',
-                                        cursor: 'not-allowed'
-                                      }}
-                                    />
-                                  )
-                                  : (
-                                    <Link
-                                      href="#"
-                                      className={classes.mLeftR5}
-                                    >
-                                      <DeleteForeverOutlinedIcon
-                                        className={classes.iconteal}
-                                        onClick={() => handleDelete(value)}
-                                      />
-                                    </Link>
-                                  )}
-                                {/* <IconButton onClick={() => handleDelete(value)}>
-                                  <DeleteForeverOutlinedIcon
-                                    className={classes.iconteal}
-                                  />
-                                </IconButton> */}
-                              </Link>
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardActions>
-                    </Card>
-                  ))
+                  allComplianceData.map((value, index) => <AllCardData value={value} />)
                 ) : (
                   <Typography
                     className={classes.sorryTitle}
@@ -1159,12 +1257,12 @@ function ComplianceListNew(props) {
                 <Loader />
               )}
 
-              <Grid
+              {/* <Grid
                 item
                 md={12}
                 sm={12}
                 xs={12}
-                hidden={!hidden}
+                // hidden={!hidden}
                 onBlur={handleAttachClose}
                 onClick={handleAttachClick}
                 onClose={handleAttachClose}
@@ -1231,8 +1329,8 @@ function ComplianceListNew(props) {
                     </Grid>
                   </Grid>
                 </Paper>
-              </Grid>
-              <div>
+              </Grid> */}
+              {/* <div>
                 <Grid
                   item
                   md={12}
@@ -1300,53 +1398,8 @@ function ComplianceListNew(props) {
                     </Grid>
                   </Paper>
                 </Grid>
-              </div>
-              <div>
-                <Dialog
-                  open={openAttachment}
-                  onClose={handleCloseAttachment}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                  classNames={classes.viewAttachmentDialog}
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    Viw Attachment
-                  </DialogTitle>
-                  <DialogContent classNames={classes.imageSectionHeight}>
-                    <Grid
-                      container
-                      spacing={3}
-                      classNames={classes.viewImageSection}
-                    >
-                      <Grid
-                        item
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        classNames={classes.mb10}
-                      >
-                        <ul classNames={classes.viewImageSection}>
-                          <li className={classes.viewattch1}>
-                            View Attachment
-                          </li>
-                          <li className={classes.viewattch2}>
-                            Download Attachment
-                          </li>
-                        </ul>
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      onClick={handleCloseAttachment}
-                      color="primary"
-                      autoFocus
-                    >
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
+              </div> */}
+
               <div>
                 <Dialog
                   open={myUserPOpen}
