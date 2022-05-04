@@ -54,6 +54,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import Loader from "../../Loader";
 import moment from "moment";
 import { checkACL } from "../../../../utils/helper";
+import Attachment from "../../../../containers/Attachment/Attachment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -764,7 +765,7 @@ function ComplianceListNew(props) {
     const [showGrid, setShowGrid] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [hiddenn, setHiddenn] = useState(false);
-    const [openAttachment, setopenAttachment] = React.useState(false);   
+    const [openAttachment, setopenAttachment] = React.useState(false);
 
     function handleVisibility() {
       setShowGrid(true);
@@ -799,15 +800,15 @@ function ComplianceListNew(props) {
       setCommentsOpen(!open);
     };
 
-    function handleClickOpenAttachment(){
-      setopenAttachment(true);
-    };
-  
-    function handleCloseAttachment(){
-      setopenAttachment(false);
-    };
+    // function handleClickOpenAttachment() {
+    //   setopenAttachment(true);
+    // };
 
-    console.log(showGrid);
+    // function handleCloseAttachment() {
+    //   setopenAttachment(false);
+    // };
+
+    // console.log(showGrid);
 
     return (
       <>
@@ -1166,25 +1167,23 @@ function ComplianceListNew(props) {
               <Grid item md={12} sm={12} xs={12}>
                 <List>
                   <ListItem>
-                    <img
-                      src={projectpj}
-                      onClick={handleClickOpenAttachment}
-                      className="hoverIcon"
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <img
-                      src={projectpj}
-                      onClick={handleClickOpenAttachment}
-                      className="hoverIcon"
-                    />
+                    <Grid
+                      item
+                      md={12}
+                      sm={12}
+                      xs={12}
+                    >
+                      <div className="attachFileThumb">
+                        <Attachment src={value.avatar} value={value.avatar} />
+                      </div>
+                    </Grid>
                   </ListItem>
                 </List>
               </Grid>
             </Grid>
           </Paper>
         </Grid>
-        <div>
+        {/* <div>
           <Dialog
             open={openAttachment}
             onClose={handleCloseAttachment}
@@ -1229,7 +1228,7 @@ function ComplianceListNew(props) {
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
+        </div> */}
       </>
     )
   }

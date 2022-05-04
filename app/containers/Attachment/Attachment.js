@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: deepOrange[500],
     },
 }));
-export const Attachment = ({ value }) => {
+export const Attachment = ({ value, src }) => {
     const [open, setOpen] = useState(false)
     const classes = useStyles();
     const fileNameArray = value.split("/");
@@ -47,7 +47,11 @@ export const Attachment = ({ value }) => {
         return (
             <IconButton>
                 <Tooltip title={fileName}>
+                    {src ? 
+                    <Avatar src={src} size={1} variant="square" onClick={() => setOpen(true)} />
+                    :
                     <Avatar src={pdfIcon} size={1} variant="square" onClick={() => setOpen(true)} />
+                    }
                 </Tooltip>
                 <AlertMessage documentUrl={value} open={open} setOpen={setOpen} />
             </IconButton>
