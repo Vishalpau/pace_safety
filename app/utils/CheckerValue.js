@@ -83,6 +83,7 @@ export const handelActionData = async (incidentId, apiData, type = "all") => {
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
             : null;
 
+    // Infininte Api
     const actionSelect = await apiAction.get(`api/v1/core/companies/select/${fkCompanyId}/`)
 
     if (actionSelect.status === 200) {
@@ -171,8 +172,8 @@ export const handelActionDataAssessment = async (incidentId, apiData, type = "al
     }
 }
 
-export const handelDateTime = (value, showTime=true) => {
-    if(value== null){
+export const handelDateTime = (value, showTime = true) => {
+    if (value == null) {
         return
     }
     let observedDateAndTime = value.split("T")
@@ -185,7 +186,7 @@ export const handelDateTime = (value, showTime=true) => {
     timeString = h + timeString.substr(2, 3) + ampm;
 
     return showTime ? `${observedDate} ${timeString}` : observedDate
-    
+
 }
 
 export const handelValueToLabel = (value) => {
@@ -297,20 +298,20 @@ export const fetchDepartmentName = async () => {
 
 export const OtherNA = (type) => {
     let data = [];
-    if(type=="Other"){
+    if (type == "Other") {
         let temp = {}
         data.push(temp.label = "Other");
         data.push(temp.value = "Other");
-       
-    }else if(type=="NA"){
+
+    } else if (type == "NA") {
         let temp = {}
         data.push(temp.label = "NA");
         data.push(temp.value = "NA");
-    }else{
-        let temp = {label: "Other", value: "Other"}
-        let temp1 = {label: "NA", value: "NA"}
+    } else {
+        let temp = { label: "Other", value: "Other" }
+        let temp1 = { label: "NA", value: "NA" }
         data = [temp, temp1]
-        
+
     }
     return data
 

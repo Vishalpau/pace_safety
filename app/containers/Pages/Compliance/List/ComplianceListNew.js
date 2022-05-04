@@ -1015,7 +1015,7 @@ function ComplianceListNew(props) {
                           className={classes.cardBottomSection}
                         >
                           <Grid item xs={12} sm={6} md={5}>
-                            {/* <Typography
+                             <Typography
                               variant="body1"
                               display="inline"
                               color="textPrimary"
@@ -1023,7 +1023,7 @@ function ComplianceListNew(props) {
                               <AttachmentIcon className={classes.mright5} />
                               Attachments:
                             </Typography>
-                            <Typography variant="body2" display="inline">
+                            {/*<Typography variant="body2" display="inline">
                               <span>
                                 <Link
                                   href="#"
