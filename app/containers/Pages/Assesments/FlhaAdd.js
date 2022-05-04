@@ -57,6 +57,7 @@ import { getPicklistvalues, handelNotifyToValues } from '../../../utils/helper';
 import ProjectStructureInit from '../../ProjectStructureId/ProjectStructureId';
 import validate from '../../Validator/jobFormValidation';
 import Acl from '../../../components/Error/acl';
+import { connect } from "react-redux";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -740,11 +741,11 @@ const FlhaDetails = (props) => {
     temp.jobTitle = '';
     temp.jobDetails = '';
     temp.hazards = '',
-    temp.riskSeverity = '',
-    temp.riskProbability = '',
-    temp.hazardStatus = '',
-    temp.controlStatus = '',
-    temp.control = '';
+      temp.riskSeverity = '',
+      temp.riskProbability = '',
+      temp.hazardStatus = '',
+      temp.controlStatus = '',
+      temp.control = '';
     setJobForm(temp);
     setTaskForm([]);
     setHazardForm(temp);
@@ -785,11 +786,11 @@ const FlhaDetails = (props) => {
       temp.jobTitle = '';
       temp.jobDetails = '';
       temp.hazards = '',
-      temp.riskSeverity = '',
-      temp.riskProbability = '',
-      temp.hazardStatus = '',
-      temp.controlStatus = '',
-      temp.control = '';
+        temp.riskSeverity = '',
+        temp.riskProbability = '',
+        temp.hazardStatus = '',
+        temp.controlStatus = '',
+        temp.control = '';
       setJobForm(temp);
       setTaskForm([]);
       setHazardForm(temp);
@@ -899,9 +900,18 @@ const FlhaDetails = (props) => {
 
   const handelNotifyToValues = async () => {
     const allRoles = {};
+    const selectBreakdown = props.projectName.breakDown.length > 0 ? props.projectName.breakDown
+      : JSON.parse(localStorage.getItem("selectBreakDown")) !== null
+        ? JSON.parse(localStorage.getItem("selectBreakDown"))
+        : null;
+    let struct = "";
+    for (const i in selectBreakdown) {
+      struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
+    }
+    const fkProjectStructureIds = struct.slice(0, -1);
     const config = {
       method: 'get',
-      url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/projects/${fkProjectId}/notificationroles/flha/?subentity=flha&roleType=custom`,
+      url: `${SSO_URL}/api/v1/companies/${fkCompanyId}/projects/${fkProjectId}/notificationroles/flha/?subentity=flha&roleType=custom&projectStructure=${fkProjectStructureIds}`,
       headers: HEADER_AUTH,
     };
     const notify = await api(config);
@@ -949,7 +959,7 @@ const FlhaDetails = (props) => {
                     <path id="generate-report" d="M28.937,25.517l.833.836a.557.557,0,0,1,0,.795l-.669.672a4.534,4.534,0,0,1,.416,1.112h.88a.563.563,0,0,1,.563.563v1.173a.566.566,0,0,1-.563.566h-.947a4.517,4.517,0,0,1-.49,1.076l.613.613a.566.566,0,0,1,0,.8l-.83.848a.566.566,0,0,1-.8,0l-.669-.669a4.658,4.658,0,0,1-1.126.416v.88a.566.566,0,0,1-.563.563H24.415a.566.566,0,0,1-.566-.563v-.947a4.494,4.494,0,0,1-1.079-.493l-.613.616a.566.566,0,0,1-.8,0l-.827-.848a.56.56,0,0,1,0-.795l.669-.672a4.658,4.658,0,0,1-.416-1.112H19.9a.566.566,0,0,1-.546-.563V29.21a.569.569,0,0,1,.563-.566h.933a4.526,4.526,0,0,1,.493-1.073l-.616-.613a.566.566,0,0,1,0-.8l.836-.833a.56.56,0,0,1,.795,0l.672.669a4.643,4.643,0,0,1,1.112-.416V24.7a.566.566,0,0,1,.563-.563h1.173a.566.566,0,0,1,.563.563v.947a4.4,4.4,0,0,1,1.076.493l.619-.622A.569.569,0,0,1,28.937,25.517Zm-11.263,8.8a.88.88,0,0,1,0,1.736H2.021A2.021,2.021,0,0,1,0,34.023V2.009A2,2,0,0,1,2.018,0H26.843a2.024,2.024,0,0,1,2.021,2.021V20.065a.88.88,0,0,1-1.742,0V2.021h0a.285.285,0,0,0-.282-.285H2.021a.276.276,0,0,0-.293.293V34.023h0a.285.285,0,0,0,.285.282H17.674ZM5.573,30.11V28.157h8.456V30.1H5.576Zm16.22-12.583V19.32H19.247V17.528ZM17.237,15.95v3.37H14.689V15.95Zm-4.555-4.828v8.213H10.134V11.122ZM8.124,7.746V19.32H5.573V7.746ZM20.238,8.6l3.845.015a3.854,3.854,0,0,1-1.147,2.725,3.974,3.974,0,0,1-.56.458Zm-.393-.763-.194-4.109a.15.15,0,0,1,.141-.155h.153a4.271,4.271,0,0,1,4.309,3.96.153.153,0,0,1-.138.158l-4.106.293a.144.144,0,0,1-.155-.135h0Zm.243-3.974.191,3.669,3.449-.311a3.426,3.426,0,0,0-1.173-2.305,3.268,3.268,0,0,0-2.44-1.05Zm-.7,4.558,2.053,3.57a4.121,4.121,0,1,1-2.651-7.646l.587,4.077ZM5.573,24.881V22.922H17.557v1.945Zm19.572,2.751a2.314,2.314,0,1,1-2.314,2.314,2.314,2.314,0,0,1,2.314-2.314Z" transform="translate(0 0)" fill="#06425c" />
                   </svg>
                   {' '}
-Project information
+                  Project information
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -957,7 +967,7 @@ Project information
                   <Grid container spacing={3}>
                     <Grid item md={12} sm={12} xs={12}>
                       <Typography gutterBottom className="labelName">
-                    Project name
+                        Project name
                       </Typography>
                       <Typography className="labelValue">
                         {JSON.parse(localStorage.getItem('projectName')).projectName.projectName}
@@ -987,7 +997,7 @@ Project information
                     </g>
                   </svg>
                   {' '}
-Job information
+                  Job information
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1071,7 +1081,7 @@ Job information
                                       className={classes.button}
                                       onClick={() => handleClear()}
                                     >
-                                New job
+                                      New job
                                     </Button>
                                   </Grid>
                                 )
@@ -1143,7 +1153,7 @@ Job information
                         </g>
                       </svg>
                       {' '}
-Preventive controls
+                      Preventive controls
                     </Typography>
                   </Grid>
                   <Grid item md={12} sm={12} xs={12} className="sectionSubHeading paddBRemove">
@@ -1160,7 +1170,7 @@ Preventive controls
                           </g>
                         </svg>
                         {' '}
-Critical tasks
+                        Critical tasks
                       </Typography>
                     </div>
                   </Grid>
@@ -1178,10 +1188,10 @@ Critical tasks
                           >
                             <Typography className={classes.heading}>
                               {' '}
-                          Task#
+                              Task#
                               {(taskIndex + 1)}
                               {' '}
--
+                              -
                               {' '}
                               {taskForm[taskIndex].taskIdentification}
                             </Typography>
@@ -1216,10 +1226,10 @@ Critical tasks
                                   className="accordionSubHeaderSection"
                                 >
                                   <Typography className={classes.heading}>
-                                Hazard#
+                                    Hazard#
                                     {indexHazard + 1}
                                     {' '}
--
+                                    -
                                     {' '}
                                     {taskForm[taskIndex].hazards[indexHazard].hazard}
                                   </Typography>
@@ -1241,7 +1251,7 @@ Critical tasks
                                         {(taskForm[taskIndex].hazards[indexHazard].hazard) && indexHazard === 0 && isSelectedJob
                                           ? (
                                             <TextField
-                                            // disabled={true}
+                                              // disabled={true}
                                               variant="outlined"
                                               rows="1"
                                               id="taskIdentification"
@@ -1254,7 +1264,7 @@ Critical tasks
                                           : (
                                             <>
                                               <InputLabel id="demo-simple-select-label">
-                                          Hazards
+                                                Hazards
                                                 {' '}
                                               </InputLabel>
                                               <Select
@@ -1282,7 +1292,7 @@ Critical tasks
                                       <div className={classes.spacer} id="myCode">
                                         <FormControl component="fieldset">
                                           <FormLabel component="legend" className="checkRadioLabel">
-                                        Is this hazard present?
+                                            Is this hazard present?
                                           </FormLabel>
                                           <RadioGroup className={classes.radioInline} aria-label="hazardStatus" name="hazardStatus" value={item.hazardStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'hazardStatus')}>
                                             <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled={disableForm} />
@@ -1314,7 +1324,7 @@ Critical tasks
                                         <Grid item sm={12} xs={12}>
                                           <FormControl component="fieldset">
                                             <FormLabel component="legend" className="checkRadioLabel">
-                                        Has this control been put in place?
+                                              Has this control been put in place?
                                             </FormLabel>
                                             <RadioGroup className={classes.radioInline} aria-label="controlStatus" name="controlStatus" value={item.controlStatus} onChange={(e) => handleHazardForm(e, indexHazard, taskIndex, 'controlStatus')}>
                                               <FormControlLabel value="Yes" control={<Radio />} label="Yes" disabled={disableForm} />
@@ -1337,7 +1347,7 @@ Critical tasks
                                             className="formControl"
                                           >
                                             <InputLabel id="demo-simple-select-label">
-                                        Risk severity
+                                              Risk severity
 
                                             </InputLabel>
                                             <Select
@@ -1365,7 +1375,7 @@ Critical tasks
                                             className="formControl"
                                           >
                                             <InputLabel id="demo-simple-select-label">
-                                        Risk probability
+                                              Risk probability
                                             </InputLabel>
                                             <Select
                                               labelId="incident-type-label"
@@ -1404,7 +1414,7 @@ Critical tasks
                                 className={classes.button}
                                 onClick={(e) => handleNewHazard(e, taskIndex)}
                               >
-                            Add new hazard
+                                Add new hazard
                               </Button>
                             </Grid>
                           </AccordionDetails>
@@ -1420,7 +1430,7 @@ Critical tasks
                         // className={classes.button}
                         onClick={(e) => addTask()}
                       >
-                    Add new task
+                        Add new task
                       </Button>
                     </Grid>
                   </Grid>
@@ -1483,7 +1493,7 @@ Critical tasks
                     <path id="eye-scanning" d="M16.061,7.49a5.244,5.244,0,1,1-5.244,5.244A5.244,5.244,0,0,1,16.061,7.49ZM5.839,23.862a.8.8,0,1,1,0,1.606H1.026a.8.8,0,0,1-.8-.8v-4.74A.8.8,0,0,1,1.6,19.36l.018.021a.8.8,0,0,1,.23.546v3.936ZM5.839,0a.812.812,0,0,1,.569.235l.018.021a.8.8,0,0,1-.588,1.35h-4V5.542a.8.8,0,0,1-1.606,0V.8A.785.785,0,0,1,1.026,0ZM26.282,1.606a.8.8,0,1,1,0-1.606h4.811a.8.8,0,0,1,.8.8V5.542a.8.8,0,0,1-1.606,0V1.606Zm0,23.862a.8.8,0,1,1,0-1.606h4.009V19.926a.8.8,0,0,1,1.6,0v4.74a.8.8,0,0,1-.8.8ZM.276,12.076a24.718,24.718,0,0,1,2.39-2.515,19.572,19.572,0,0,1,12.773-5.32,20.461,20.461,0,0,1,13.5,5.038,28.335,28.335,0,0,1,2.935,2.8.93.93,0,0,1,.06,1.178,19.112,19.112,0,0,1-3.674,3.917,18.783,18.783,0,0,1-11.7,4.051A20.631,20.631,0,0,1,4.6,17.424,21.475,21.475,0,0,1,.216,13.285a.927.927,0,0,1,.06-1.209Zm3.641-1.144a22.577,22.577,0,0,0-1.75,1.781,19.519,19.519,0,0,0,3.5,3.194,18.8,18.8,0,0,0,10.888,3.471A16.944,16.944,0,0,0,27.1,15.722a17.174,17.174,0,0,0,2.873-2.938,26.2,26.2,0,0,0-2.215-2.076A18.7,18.7,0,0,0,15.463,6.093,17.66,17.66,0,0,0,3.9,10.932Zm12.157-.115a1.917,1.917,0,1,1-1.357.561,1.92,1.92,0,0,1,1.357-.561Z" transform="translate(3.979 8.401)" fill="#06425c" />
                   </svg>
                   {' '}
-Job visual confirmation
+                  Job visual confirmation
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1644,7 +1654,7 @@ Job visual confirmation
                     </g>
                   </svg>
                   {' '}
-Notification block
+                  Notification block
                 </Typography>
               </Grid>
 
@@ -1681,7 +1691,7 @@ Notification block
                     <path id="reminder" d="M11.552,19.5a.8.8,0,0,1,0-1.592h2.787a10.146,10.146,0,0,0-.459,1.033c-.071.183-.134.368-.194.57ZM25.573,32.761a2.8,2.8,0,0,1-2.755,2.288,2.852,2.852,0,0,1-.97-.165,2.721,2.721,0,0,1-.856-.493,2.881,2.881,0,0,1-.633-.733,2.767,2.767,0,0,1-.328-.913.3.3,0,0,1,.242-.348h5.011a.285.285,0,0,1,.285.285.359.359,0,0,1,0,.08ZM24.384,16.5a5.859,5.859,0,0,1,.707.231,6.846,6.846,0,0,1,.973.479l.037.023a6.626,6.626,0,0,1,.827.6,6.275,6.275,0,0,1,.739.747h0a6.175,6.175,0,0,1,.6.873,6.651,6.651,0,0,1,.459.967h0a6.041,6.041,0,0,1,.285,1.061,6.238,6.238,0,0,1,.1,1.115v2.353h0a8.472,8.472,0,0,0,.063,1,8.315,8.315,0,0,0,.18.961h0a4.98,4.98,0,0,0,.314.881,5.445,5.445,0,0,0,.493.856h0a4.977,4.977,0,0,0,.719.8,8.324,8.324,0,0,0,1.033.8.491.491,0,0,1-.285.9H13.936a.491.491,0,0,1-.493-.491.5.5,0,0,1,.248-.442,8.311,8.311,0,0,0,1.027-.8,4.849,4.849,0,0,0,.713-.807l.02-.026a6.038,6.038,0,0,0,.473-.827,5.172,5.172,0,0,0,.319-.881s0,0,0-.017a7.159,7.159,0,0,0,.168-.918,8.411,8.411,0,0,0,.06-1.015V22.607a6.415,6.415,0,0,1,.1-1.118,5.915,5.915,0,0,1,.285-1.064,6.652,6.652,0,0,1,.465-.975,6.31,6.31,0,0,1,.613-.879h0a6.5,6.5,0,0,1,.75-.759,6.326,6.326,0,0,1,1.854-1.1,6.092,6.092,0,0,1,.724-.222,1.446,1.446,0,0,1,.436-.719,1.583,1.583,0,0,1,1.135-.365,1.629,1.629,0,0,1,1.124.371,1.515,1.515,0,0,1,.436.719Zm.262,1.512a5.285,5.285,0,0,0-.793-.242.465.465,0,0,1-.405-.408.682.682,0,0,0-.177-.431.7.7,0,0,0-.454-.137.636.636,0,0,0-.439.12.662.662,0,0,0-.174.434h0a.465.465,0,0,1-.379.408A4.889,4.889,0,0,0,20.97,18a4.969,4.969,0,0,0-.784.379,5.028,5.028,0,0,0-.7.508,5.365,5.365,0,0,0-.608.613h0a5.456,5.456,0,0,0-.493.713A5.8,5.8,0,0,0,18,21a4.809,4.809,0,0,0-.237.856,5.1,5.1,0,0,0-.077.9V24.98a8.991,8.991,0,0,1-.066,1.083,8.132,8.132,0,0,1-.191,1.007v.023a5.759,5.759,0,0,1-.365,1,6.806,6.806,0,0,1-.525.916l-.017.029a5.813,5.813,0,0,1-.81.913h14.2a5.679,5.679,0,0,1-.813-.916h0a6.344,6.344,0,0,1-.553-.953,5.667,5.667,0,0,1-.377-.984h0a8.729,8.729,0,0,1-.191-1.035,9.7,9.7,0,0,1-.066-1.067h0v-2.23a4.96,4.96,0,0,0-.08-.9A4.706,4.706,0,0,0,27.6,21h0a5.419,5.419,0,0,0-.371-.79,5.133,5.133,0,0,0-.491-.707h0a5.066,5.066,0,0,0-.6-.61,5.362,5.362,0,0,0-.67-.488l-.031-.02A6.05,6.05,0,0,0,24.655,18Zm-19.869.7a.588.588,0,0,1,.975-.653l.319.479L7.342,17a.588.588,0,1,1,.907.744L6.492,19.878a.548.548,0,0,1-.14.128.59.59,0,0,1-.816-.16l-.759-1.141Zm0-5.59a.588.588,0,1,1,.975-.653l.319.476,1.269-1.537a.588.588,0,0,1,.907.744L6.492,14.29a.57.57,0,0,1-.14.131.588.588,0,0,1-.816-.16L4.777,13.12Zm0-5.593a.588.588,0,1,1,.975-.653l.319.473L7.342,5.807a.589.589,0,1,1,.907.753L6.492,8.7a.616.616,0,0,1-.14.131.59.59,0,0,1-.816-.163L4.777,7.524Zm6.774.134a.8.8,0,1,1,0-1.592h8.48a.8.8,0,0,1,0,1.592ZM1.845,0H24.529a1.84,1.84,0,0,1,1.845,1.843v11.6l-.134-.06a8.754,8.754,0,0,0-1.064-.348h0a2.3,2.3,0,0,0-.385-.77V1.851a.258.258,0,0,0-.262-.262H1.845a.262.262,0,0,0-.26.262v22.8a.262.262,0,0,0,.26.262H13.283v.8c0,.262,0,.519-.023.77H1.851a1.834,1.834,0,0,1-1.309-.533A1.814,1.814,0,0,1,0,24.649V1.845A1.84,1.84,0,0,1,1.845,0Zm9.7,13.583a.8.8,0,1,1,0-1.589H19.37a.793.793,0,0,1,.716,1.141c-.228.066-.454.143-.676.225-.18.068-.357.143-.533.222Z" transform="translate(5.345 2.951)" fill="#06425c" />
                   </svg>
                   {' '}
-Additional information
+                  Additional information
                 </Typography>
               </Grid>
               <Grid item md={12} sm={12} xs={12} className="paddTBRemove">
@@ -1883,7 +1893,7 @@ Additional information
                     onClick={(e) => handleJobFormSubmit()}
                     disabled={loading}
                   >
-                Submit
+                    Submit
                   </Button>
                   {loading && (
                     <CircularProgress
@@ -1901,7 +1911,7 @@ Additional information
                     history.push('/app/pages/assesments/xflha');
                   }}
                 >
-              Cancel
+                  Cancel
                 </Button>
               </Grid>
             </Grid>
@@ -1912,4 +1922,15 @@ Additional information
   );
 };
 
-export default FlhaDetails;
+const mapStateToProps = (state) => {
+  return {
+    projectName: state.getIn(["InitialDetailsReducer"]),
+    todoIncomplete: state,
+  };
+};
+
+
+export default connect(
+  mapStateToProps,
+  null
+)(FlhaDetails);
