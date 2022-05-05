@@ -412,7 +412,7 @@ const ProjectDetailsAndHazard = () => {
       temp.map((ahaValue, index) => {
         if (ahaValue['fkChecklistId'] === checkListID) {
           temp.splice(index, 1);
-          fetchOption.splice(index, 1);
+          // fetchOption.splice(index, 1);
         }
       })
     }
