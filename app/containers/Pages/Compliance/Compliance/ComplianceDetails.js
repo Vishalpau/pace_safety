@@ -228,6 +228,7 @@ const ComplianceDetails = () => {
   }
   const fkProjectStructureIds = struct.slice(0, -1);
 
+  //form data to fill compliance details
   const [form, setForm] = useState({
     fkCompanyId: parseInt(fkCompanyId),
     fkProjectId: parseInt(project.projectId),
@@ -258,25 +259,26 @@ const ComplianceDetails = () => {
     "General Inspection",
   ];
 
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
+  // const [state, setState] = React.useState({
+  //   checkedA: true,
+  //   checkedB: true,
+  //   checkedF: true,
+  //   checkedG: true,
+  // });
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+  // const handleChange = (event) => {
+  //   setState({ ...state, [event.target.name]: event.target.checked });
+  // };
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  // const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path} -{file.size} bytes
-    </li>
-  ));
+  // const files = acceptedFiles.map((file) => (
+  //   <li key={file.path}>
+  //     {file.path} -{file.size} bytes
+  //   </li>
+  // ));
 
+  //add a new team member
   const handelTeam = (e) => {
     if (Object.keys(team).length < 100) {
       let newData = team.filter((item, key) => key !== undefined);
@@ -287,6 +289,7 @@ const ComplianceDetails = () => {
     }
   };
 
+  //method to add a new team member
   const handelTeamName = (e, index) => {
     const temp = [...team];
     const value = e.target.value;
@@ -294,6 +297,7 @@ const ComplianceDetails = () => {
     setTeam(temp);
   };
 
+  //remove team member
   const handelRemove = async (e, index) => {
     if (team.length > 1) {
       let temp = team;
@@ -302,8 +306,9 @@ const ComplianceDetails = () => {
     }
   };
 
-  const clientRep = ["Operation", "Functional", "Foundation", "Production"];
+  // const clientRep = ["Operation", "Functional", "Foundation", "Production"];
 
+  //method to redirect to new page
   const handelNext = async () => {
     const { error, isValid } = ComplianceValidation(form, selectDepthAndId);
     await setError(error);
@@ -349,7 +354,8 @@ const ComplianceDetails = () => {
         .catch((error) => {
           console.log(error), setLoading(false), setSaveLoading(true);
         });
-    } else {
+    } 
+    else {
       const res = await api
         .post("/api/v1/audits/", form)
         .then((response) => {
@@ -379,6 +385,7 @@ const ComplianceDetails = () => {
       .catch((error) => console.log(error));
   };
 
+  // method to fetch team member
   const fetchTeamMembers = async (names) => {
     let teamName = names.split(",");
     let temp = [];
@@ -394,6 +401,7 @@ const ComplianceDetails = () => {
     await setTeam(temp);
   };
 
+  //initially call the api for getting the data
   const fetchBreakDownData = async (projectBreakdown) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
     let breakdownLength = projectData.projectName.breakdown.length;
@@ -402,6 +410,7 @@ const ComplianceDetails = () => {
     const breakDown = projectBreakdown.split(":");
     setSelectDepthAndId(breakDown);
     for (var key in breakDown) {
+      //if depth value is 1L then call this api
       if (breakDown[key].slice(0, 2) === "1L") {
         var config = {
           method: "get",
@@ -409,7 +418,6 @@ const ComplianceDetails = () => {
             }`,
           headers: HEADER_AUTH,
         };
-
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
@@ -433,12 +441,14 @@ const ComplianceDetails = () => {
                 ];
               }
             });
+            //setting the data on breakdown list
             setFetchSelectBreakDownList(selectBreakDown);
           })
           .catch((error) => {
             setIsNext(true);
           });
-      } else {
+      } 
+      else {
         var config = {
           method: "get",
           url: `${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
@@ -449,7 +459,6 @@ const ComplianceDetails = () => {
         await api(config)
           .then(async (response) => {
             const result = response.data.data.results;
-
             const res = result.map((item, index) => {
               if (parseInt(breakDown[key].slice(2)) == item.id) {
                 selectBreakDown = [
@@ -470,6 +479,7 @@ const ComplianceDetails = () => {
                 ];
               }
             });
+            //setting the data on breakdown list
             setFetchSelectBreakDownList(selectBreakDown);
           })
           .catch((error) => {
@@ -487,7 +497,6 @@ const ComplianceDetails = () => {
   const pickListValue = async () => {
     let contractorPickList = await pickListValues["2"];
     let subContractorPickList = await pickListValues["3"];
-    console.log(subContractorPickList);
     let temp = [];
     let tempSubContractor = [];
     for (let i = 0; i < contractorPickList.length; i++) {
@@ -495,24 +504,19 @@ const ComplianceDetails = () => {
       contractorValue = contractorPickList[i].value;
       temp.push(contractorValue);
     }
-    console.log(temp);
     contractor.current = temp;
     for (let i = 0; i < subContractorPickList.length; i++) {
       let subContractorValue = "";
       subContractorValue = subContractorPickList[i].value;
       tempSubContractor.push(subContractorValue);
     }
-    console.log(tempSubContractor);
     subContractor.current = tempSubContractor;
   };
 
-  console.log(contractor);
-
+  //method to dynamically call an api when we select a value on dropdown
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem('projectName'));
-
     const value = e.target.value;
-
     const temp = [...fetchSelectBreakDownList]
     temp[index]["selectValue"].id = value
     // let removeTemp = temp.slice(0, index)
@@ -526,22 +530,19 @@ const ComplianceDetails = () => {
     let dataDepthAndId = tempDepthAndId.filter(filterItem => filterItem.slice(0, 2) !== `${index + 1}L`)
     let sliceData = dataDepthAndId.slice(0, index)
     let newdataDepthAndId = [...sliceData, `${index + 1}L${value}`]
+
+    //when we select any dropdown so it would select on this state
     setSelectDepthAndId(newdataDepthAndId)
 
     // await setFetchSelectBreakDownList(removeTemp)
     if (projectData.projectName.breakdown.length !== index + 1) {
       for (var key in projectData.projectName.breakdown) {
         if (key == index + 1) {
-
-
           await api.get(`${SSO_URL}/${projectData.projectName.breakdown[key].structure[0].url
             }${value}`)
             .then(function (response) {
               if (response.status === 200) {
-
                 temp[key].breakDownData = response.data.data.results
-
-                //  temp[key].select=e.
                 setBreakdown1ListData(temp)
               }
             })

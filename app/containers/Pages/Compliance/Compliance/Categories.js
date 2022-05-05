@@ -144,7 +144,7 @@ const Categories = () => {
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
   const [form, setForm] = useState({});
-  const [checkListGroupsData, setCheckListGroupsData] = useState([]);
+  // const [checkListGroupsData, setCheckListGroupsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [groupId, setGroupId] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -166,19 +166,19 @@ const Categories = () => {
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
+  // const [state, setState] = React.useState({
+  //   checkedA: true,
+  //   checkedB: true,
+  //   checkedF: true,
+  //   checkedG: true,
+  // });
 
-  const workArea = [
-    { title: "Operation" },
-    { title: "Functional" },
-    { title: "Foundation" },
-    { title: "Production" },
-  ];
+  // const workArea = [
+  //   { title: "Operation" },
+  //   { title: "Functional" },
+  //   { title: "Foundation" },
+  //   { title: "Production" },
+  // ];
 
   // console.log(checkData,'checkData')
   const handelSubmit = async () => {
@@ -203,6 +203,7 @@ const Categories = () => {
   };
 
   const classes = useStyles();
+
   const fetchCheklist = async () => {
     let temp = {};
     const res = await api.get(
@@ -218,6 +219,7 @@ const Categories = () => {
     console.log(checkGroups, 'checkGroups');
   }, [checkGroups])
 
+  //method to initially get the data
   const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -230,7 +232,6 @@ const Categories = () => {
         setSubGroupId(subGroupIds);
         setComplianceData(result)
         let tempGroup = [];
-
         for (let j = 0; j < data.length; j++) {
           for (let i = 0; i < data[j]['checklistGroups'].length; i++) {
             if (groupIds.includes(data[j]['checklistGroups'][i]["checklistgroupId"])) {
@@ -238,13 +239,13 @@ const Categories = () => {
             }
           }
         }
-
         setCheckData(tempGroup);
         setForm(result);
       })
       .catch((error) => console.log(error));
   };
 
+  // method to add a group when we click on group check
   const handlePhysicalHazards = async (e, value, index) => {
     let tempSubgroupId = [...subGroupId];
     let tempGroupId = [...groupId];
@@ -289,6 +290,7 @@ const Categories = () => {
   //   console.log(temp);
   // },[checkData])
 
+  //method to handle groups i.e to add or remove the groups
   const handleGroups = async (e, value, index, checkListId) => {
     let temp = [...subGroupId];
     if (e.target.checked == false) {
@@ -300,10 +302,10 @@ const Categories = () => {
     } else if (e.target.checked) {
       temp.push(value);
     }
-    console.log(temp);
     setSubGroupId(temp);
   };
 
+  //select a group specific to the group that is selected
   const handelSelectOption = (key) => {
     for (let i = 0; i <= groupId.length; i++) {
       if (groupId[i] != undefined && groupId[i] == key["checklistgroupId"]) {
@@ -312,6 +314,7 @@ const Categories = () => {
     }
   };
 
+  //select a subgroup specific to the subGroup that is selected
   const handelSelectOptionSubGroup = (id) => {
     // console.log(id);
     for (let i = 0; i <= subGroupId.length; i++) {
@@ -323,7 +326,6 @@ const Categories = () => {
 
   useEffect(() => {
     fetchCheklist();
-
   }, []);
   return (
     <CustomPapperBlock

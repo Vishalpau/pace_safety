@@ -229,11 +229,11 @@ function ComplianceSummary(props) {
 
   const [result, setResult] = useState({});
 
-
   const [expanded, setExpanded] = React.useState("panel1");
-  const handleExpand = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+
+  // const handleExpand = (panel) => (event, isExpanded) => {
+  //   setExpanded(isExpanded ? panel : false);
+  // };
 
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel3"
@@ -243,9 +243,10 @@ function ComplianceSummary(props) {
   };
 
   const [expandedTabDetails, setExpandedTabDetails] = React.useState("panel6");
-  const handleTBChange = (panel) => (event, isExpanded) => {
-    setExpandedTabDetails(isExpanded ? panel : false);
-  };
+
+  // const handleTBChange = (panel) => (event, isExpanded) => {
+  //   setExpandedTabDetails(isExpanded ? panel : false);
+  // };
 
   const handleNewComplianceUpdatePush = async (e) => {
     // console.log(e.target.name);
@@ -257,13 +258,13 @@ function ComplianceSummary(props) {
     // );
   };
 
-  const handleComplianceCommentPush = async () => {
-    history.push("/app/pages/compliance-comment");
-  };
+  // const handleComplianceCommentPush = async () => {
+  //   history.push("/app/pages/compliance-comment");
+  // };
 
-  const handleComplianceActivityPush = async () => {
-    history.push("/app/pages/compliance-activity");
-  };
+  // const handleComplianceActivityPush = async () => {
+  //   history.push("/app/pages/compliance-activity");
+  // };
 
   const [inputState, setInputState] = useState({
     checkedA: true,
@@ -296,9 +297,9 @@ function ComplianceSummary(props) {
       : null;
 
 
-  const handleMyVideoClickOpen = () => {
-    setMyVideoOpen(true);
-  };
+  // const handleMyVideoClickOpen = () => {
+  //   setMyVideoOpen(true);
+  // };
 
   const handleMyVideoClose = () => {
     setMyVideoOpen(false);
@@ -306,14 +307,15 @@ function ComplianceSummary(props) {
 
   const [myAudioOpen, setMyAudioOpen] = React.useState(false);
 
-  const handleMyAudioClickOpen = () => {
-    setMyAudioOpen(true);
-  };
+  // const handleMyAudioClickOpen = () => {
+  //   setMyAudioOpen(true);
+  // };
 
   const handleMyAudioClose = () => {
     setMyAudioOpen(false);
   };
 
+  //fetch checklist data
   const fetchCheklistData = async (id) => {
     const res = await api.get(
       `/api/v1/core/checklists/compliance-groups/${projectId}/`
@@ -323,6 +325,7 @@ function ComplianceSummary(props) {
     await fetchComplianceData(result, id);
   };
 
+  // method to fetch compliance data
   const fetchComplianceData = async (data, id) => {
     const res = await api
       .get(`/api/v1/audits/${id}/`)
@@ -398,6 +401,7 @@ function ComplianceSummary(props) {
     let data = teamName.split(",");
     setTeam(data);
   };
+
   const handleProjectName = (projectId) => {
     const userName =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -412,8 +416,6 @@ function ComplianceSummary(props) {
     return fetchProjectId[0].projectName;
   };
 
-
-
   const handleComplianceStatusChange = () => {
     if (complianceData.performanceSummary !== null) {
       setCompliance(true);
@@ -426,7 +428,6 @@ function ComplianceSummary(props) {
 
 
   const fetchNotificationSent = async (notifyTo, fkProjectStructure) => {
-
     let companyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     let projectId = JSON.parse(localStorage.getItem("projectName")).projectName
       .projectId;
@@ -484,35 +485,33 @@ function ComplianceSummary(props) {
     } setTimeout(() => handelActionTracker(), 1000)
   };
 
-  const calculate_rating = (index, v, id) => {
-
-    if (form.menuValue >= 0 && v >= 0) {
-
-      let ratingValue = (form.menuValue * v) / 5 * 100;
-      for (var i = 0; i < colordata.length; i++) {
-        if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
-          let clr_op = { ...ratingColor }
-          clr_op[index] = colordata[i].matrixConstantColor
-          setRatingColor(clr_op)
-          // console.log(ratingValue, 'ratingValue')
-          // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
-          break; // stop the loop
-        }
-        else {
-          setRatingColor("#FFFFFF")
-        }
-      }
-      let arr_op = { ...ratingData };
-      arr_op[index] = ratingValue
-      setRatingData(arr_op)
-      let temp = [...checkData];
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i]["questionId"] == id) {
-          temp[i]["performance"] = ratingValue;
-        }
-      }
-    }
-  };
+  // const calculate_rating = (index, v, id) => {
+  //   if (form.menuValue >= 0 && v >= 0) {
+  //     let ratingValue = (form.menuValue * v) / 5 * 100;
+  //     for (var i = 0; i < colordata.length; i++) {
+  //       if (ratingValue * 5 / 100 == colordata[i].matrixConstant) {
+  //         let clr_op = { ...ratingColor }
+  //         clr_op[index] = colordata[i].matrixConstantColor
+  //         setRatingColor(clr_op)
+  //         // console.log(ratingValue, 'ratingValue')
+  //         // console.log(colordata[i].matrixConstantColor, 'colordata[i].matrixConstantColor')
+  //         break; // stop the loop
+  //       }
+  //       else {
+  //         setRatingColor("#FFFFFF")
+  //       }
+  //     }
+  //     let arr_op = { ...ratingData };
+  //     arr_op[index] = ratingValue
+  //     setRatingData(arr_op)
+  //     let temp = [...checkData];
+  //     for (let i = 0; i < temp.length; i++) {
+  //       if (temp[i]["questionId"] == id) {
+  //         temp[i]["performance"] = ratingValue;
+  //       }
+  //     }
+  //   }
+  // };
 
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${projectId}&projectStructure=`)
@@ -531,7 +530,6 @@ function ComplianceSummary(props) {
   }, []);
 
   function groupNamrHandler(val) {
-
     if (val.checkListValues.findIndex(ele => quesData.findIndex(qD => qD.subGroupId === ele.id) !== -1) !== -1) {
       return (
         <FormLabel
