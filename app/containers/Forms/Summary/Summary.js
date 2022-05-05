@@ -530,6 +530,7 @@ const Summary = (props) => {
     setActivityHistory(false);
     setIsComments(true);
   };
+  
   const fetchPermissionData = async () => {
     const { fkCompanyId } = JSON.parse(localStorage.getItem('company'));
     const res = await api.get(`${SELF_API}${fkCompanyId}/`);

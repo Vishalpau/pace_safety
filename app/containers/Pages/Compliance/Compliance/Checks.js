@@ -353,6 +353,7 @@ const Checks = (props) => {
 
   const [categories, setCategories] = useState([]);
 
+  //fetch matrix color and color data
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -360,6 +361,8 @@ const Checks = (props) => {
   }
 
   const radioDecide = ["Yes", "No", "N/A"];
+
+  //method when we change the accordian and change the state
   const handleTDChange = (panel, valueId) => (event, isExpanded) => {
     if (isExpanded) {
       setStateToggle(true);
@@ -403,6 +406,7 @@ const Checks = (props) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
+  //post the project if the id is not present
   const postApi = (formData) => {
     return (
       new Promise((resolve, reject) => {
@@ -415,6 +419,7 @@ const Checks = (props) => {
     )
   }
 
+  //put the project if the id is present
   const putApiData = (formData, id) => {
     return (
       new Promise((resolve, reject) => {
@@ -427,6 +432,7 @@ const Checks = (props) => {
     )
   }
 
+  // method to call when we click on submit
   const updateAccordian = async () => {
     setLoading(true)
     const temp = [...checkData];
@@ -484,20 +490,23 @@ const Checks = (props) => {
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
+  //fetch initial data and sending the data to fetchComplianceData method
   const fetchCheklistData = async () => {
     let temp = {};
     const res = await api.get(
       `/api/v1/core/checklists/compliance-groups/${project}/`
       // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project}/compliance/`
     );
+    console.log(res.data.data.results);
     const result = res.data.data.results;
     await fetchComplianceData(result);
   };
 
-  useEffect(() => {
-    console.log(categories);
-  }, [categories])
+  // useEffect(() => {
+  //   console.log(categories);
+  // }, [categories])
 
+  //method to set the group and subgroups and then sending the data to fetchChecklist data
   const fetchComplianceData = async (data) => {
     let complianceId = localStorage.getItem("fkComplianceId");
     const res = await api
@@ -537,6 +546,19 @@ const Checks = (props) => {
       .catch((error) => console.log(error));
   };
 
+  const fetchData = async () => {
+    const res = await api.get(
+      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
+    );
+    const result = res.data.data.results;
+    console.log(result);
+    await setShowCheckData(result)
+    await setCheckData(result);
+    return result
+  };
+
+
+  //method to get the data according to groupName and subGroupName
   const fetchCheklist = async (data, groups, subGroups, strId) => {
     const userId =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -571,7 +593,10 @@ const Checks = (props) => {
     }
     let tempQuestionId = [];
 
+    //here we are getting the data
     let fd = await fetchData()
+
+    //here we are making a separate array according to the key
     temp.map((tempvalue, i) => {
 
       if (tempvalue['message'] === undefined) {
@@ -631,6 +656,7 @@ const Checks = (props) => {
     await handelActionTracker();
   };
 
+  // method for uploading a file
   const handleFileUpload = (event, questionId) => {
     let temp = [...checkData];
     const name = event.target.name;
@@ -658,10 +684,12 @@ const Checks = (props) => {
 
   const classes = useStyles();
 
+  //method to set the data when we change the data on accordian
   const handleChangeData = (value, field, index, id, type = '') => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
+        //when we handle percentage value
         if (field === 'score') {
           if (type === 'Stars') {
             let starvar = ''
@@ -683,16 +711,6 @@ const Checks = (props) => {
     setCheckData(temp);
   };
 
-  const fetchData = async () => {
-    const res = await api.get(
-      `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
-    );
-    const result = res.data.data.results;
-    await setShowCheckData(result)
-    await setCheckData(result);
-    return result
-  };
-
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
@@ -708,6 +726,7 @@ const Checks = (props) => {
   //   console.log(checkData);
   // }, [checkData])
 
+  //fetch factor data
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
@@ -721,6 +740,7 @@ const Checks = (props) => {
     setStatusData(factorStatus)
   }
 
+  //method to calculate the percentage
   const calculate_rating = (factorConstant, selectType, index, id) => {
     const temp = [...checkData]
     const foundObject = temp.find(a => a.questionId === id);
@@ -757,6 +777,7 @@ const Checks = (props) => {
     }
   };
 
+  //method when we change the criticality on accordian
   const handleCriticality = (option, selectType, index, id) => {
     if (selectType === "menuItem") {
       calculate_rating(option.factorConstant, selectType, index, id);
@@ -1771,7 +1792,7 @@ const Checks = (props) => {
                               })
                               :
                               <p>No Questions present</p>
-                            }
+                          }
                         </>
                       )
                     })
