@@ -172,6 +172,7 @@ const QuestionEdit = (props) => {
   const classes = useStyles();
   const { id } = useParams("");
   const history = useHistory();
+  // states
   const [auditData, setAuditData] = useState({});
   const [checkGroups, setCheckListGroups] = useState([]);
   const [checkData, setCheckData] = useState([]);
@@ -181,6 +182,7 @@ const QuestionEdit = (props) => {
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
+  // get ids from localstorage
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -210,6 +212,7 @@ const QuestionEdit = (props) => {
     checkedG: true,
   });
 
+  // type of response
   const responseType = ["Yes-No-NA", "Criticality Matrix"];
   const scoreType = ["Stars", "1-10", "%"];
   const geoLocation = ["Yes", "No"];
@@ -220,7 +223,7 @@ const QuestionEdit = (props) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-
+// get question configured
   const fetchAuditData = async (id) => {
     const res = await api.get(
       `/api/v1/configaudits/auditquestions/${id}/?company=${fkCompanyId}&project=${project.projectId
@@ -232,29 +235,26 @@ const QuestionEdit = (props) => {
     await setIsLoading(true);
   };
 
+  // getting group and subgroups
   const fetchChecklist = async (groupName) => {
     let temp = {};
     const res = await api.get(
-      // `/api/v1/core/checklists/companies/${fkCompanyId}/projects/${project.projectId
-      // }/compliance/`
       `/api/v1/core/checklists/compliance-groups/${project.projectId
       }/`
     );
     const result = res.data.data.results;
-    // await fetchComplianceData(result);
     result.map((option, index) => {
       option.checklistGroups.map((grp)=> {
         if (grp.checkListGroupName === groupName) {
           setCheckData(grp.checkListValues);
         }
       })
-      
     });
     await setCheckListGroups(result);
   };
 
+  // check on groups
   const handleGroup = async (value, gName) => {
-    console.log(checkGroups, 'gName')
     let temp = { ...auditData};
     temp.groupName = gName;
     temp.subGroupName = checkGroups[0].checklistGroups.filter(subgrp=> subgrp.checkListGroupName == gName)[0].checkListValues;
@@ -262,6 +262,7 @@ const QuestionEdit = (props) => {
     setAuditData(temp);
   };
 
+  //check and set subgroups
   const handleSubGroup = async (sgName) => {
     console.log(sgName)
     let temp = { ...auditData };
@@ -269,12 +270,15 @@ const QuestionEdit = (props) => {
     setAuditData(temp);
   };
 
+
+  // for all filed values
   const handleAllFieldsData = (value, fields) => {
     let temp = { ...auditData };
     temp[fields] = value;
     setAuditData(temp);
   };
 
+  //for modifying the preconfig data or questions
   const handleUpdate = async () => {
     const { error, isValid } = QuestionEditValidation(
       auditData,
@@ -300,6 +304,7 @@ const QuestionEdit = (props) => {
       });
   };
 
+  // for projectStr  value 
   const fetchBreakDownData = async (projectBreakdown) => {
     if (projectBreakdown) {
       const projectData = JSON.parse(localStorage.getItem("projectName"));
@@ -346,7 +351,7 @@ const QuestionEdit = (props) => {
             });
         } else {
 
-          // console.log(breakDown.some(breakDown => ((breakDown == 'All'))))
+          // for we get set All projectstr breakDown 
           if (!breakDown.some(breakDown => ((breakDown == 'All')))){
           var config = {
             method: "get",
@@ -387,8 +392,7 @@ const QuestionEdit = (props) => {
             });
         }
         else{
-          // setFetchSelectBreakDownList
-          
+          // create All string value of projectStr label name          
           let selectValue = {}
           selectValue.id = 0
           let breakDownData = []
@@ -401,11 +405,10 @@ const QuestionEdit = (props) => {
   useEffect(() => {
   }, [fetchSelectBreakDownList])
 
+  // change projectStr data on drop down of projectStr
   const handleBreakdown = async (e, index, label, selectvalue) => {
     const projectData = JSON.parse(localStorage.getItem("projectName"));
-
     const value = e.target.value;
-
     const temp = [...fetchSelectBreakDownList];
     temp[index]["selectValue"].id = value;
     for (var i in temp) {
@@ -441,6 +444,8 @@ const QuestionEdit = (props) => {
       }
     }
   };
+
+  // call of useEffect
   useEffect(() => {
     fetchAuditData(id);
     fetchChecklist();

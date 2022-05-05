@@ -25,18 +25,23 @@ const PerformanceFactorEdit = () => {
     const classes = useStyles();
     const history = useHistory();
     const [fectorData, setFectorData] = React.useState(history.location.state)
+    // get ids from localstorage
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
             : null;
+
     const userId =
         JSON.parse(localStorage.getItem("userDetails")) !== null
             ? JSON.parse(localStorage.getItem("userDetails")).id
             : null;
+
     const project =
         JSON.parse(localStorage.getItem("projectName")) !== null
             ? JSON.parse(localStorage.getItem("projectName")).projectName
             : null;
+
+    // for status change 
     const handleStatusChange = (e) => {
         let temp = { ...fectorData }
         if (e.target.checked === true) {
@@ -47,6 +52,7 @@ const PerformanceFactorEdit = () => {
         setFectorData(temp)
     }
 
+    // for update the data
     const handleUpdate = async () => {
         const res = await api.put(`/api/v1/configaudits/factors/${fectorData.id}/?company=${fectorData.fkCompanyId}&project=${fectorData.fkProjectId}&projectStructure=`, fectorData).then(res => { localStorage.setItem("configTab", 1), history.goBack() }).catch(err => console.log(err))
     }

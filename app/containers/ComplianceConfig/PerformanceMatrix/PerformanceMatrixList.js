@@ -175,9 +175,7 @@ function PerformanceMatrixList() {
   const [page, setPage] = useState(1)
   const [filter, setFilter] = useState("");
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
+ // for delete alert msg box
   const handleClickDeleteAlert = (e, columnValue) => {
     let data = {}
     for (let i = 0; i < allMatrixData.length; i++) {
@@ -191,6 +189,8 @@ function PerformanceMatrixList() {
   const handleClose = () => {
     setOpen(false);
   };
+
+    // for close alert box of delete
   const handleCloseDeleteAlert = () => {
     setDeleteQ(false);
   };
@@ -240,9 +240,6 @@ function PerformanceMatrixList() {
             <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handlePerformanceMatrixEditPush(e, tableMeta)}>
               <EditIcon />
             </IconButton>
-            {/* <IconButton size="small" color="primary" className='tableActionIcons' onClick={handleClickOpen}>
-                <MoreVertIcon />
-            </IconButton> */}
             <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handleClickDeleteAlert(e, tableMeta)}>
               <DeleteIcon />
             </IconButton>
@@ -253,13 +250,6 @@ function PerformanceMatrixList() {
 
   ];
 
-  const data = [
-    ['1234', 'Matrix', '#FFFFFF', 'Active'],
-    ['2314', 'Matrix', '#FFFFFF', 'Inactive'],
-    ['1243', 'Matrix', '#FFFFFF', 'Active'],
-    ['2134', 'Matrix', '#FFFFFF', 'Active'],
-    ['1232', 'Matrix', '#FFFFFF', 'Inactive'],
-  ];
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -281,6 +271,7 @@ function PerformanceMatrixList() {
 
   const history = useHistory();
 
+  // get id from local storage
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -291,21 +282,17 @@ function PerformanceMatrixList() {
       ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
       : null;
 
+  // push for new matrix
   const handleNewPerformanceMatrixAddPush = async () => {
     history.push(
       '/app/compliance-config/performance-matrix/add'
     );
   };
 
-  //   const handleBulkUploadPush = async () => {
-  //     history.push(
-  //       '/app/compliance-config/bulk-upload'
-  //     );
-  //   };
-
   const [allMatrixData, setAllMatrixData] = useState([])
   const [matrixIdData, setMatrixIdData] = useState({})
 
+  // for edit the matrix data
   const handlePerformanceMatrixEditPush = async (e, columnValue) => {
     let data = {}
     for (let i = 0; i < allMatrixData.length; i++) {
@@ -315,24 +302,16 @@ function PerformanceMatrixList() {
     }
     history.push({ pathname: `/app/compliance-config/performance-matrix/edit/`, state: data }
     );
-    // history.push(
-    //   '/app/compliance-config/performance-matrix/edit'
-    // );
   };
-
-  // const handlePerformanceMatrixViewPush = async () => {
-  //   history.push(
-  //     '/app/compliance-config/performance-matrix/view'
-  //   );
-  // };
 
   const [matrixData, setMatrixData] = useState([])
 
-
+  // get all the exist data
   const fetchMatrixData = async () => {
     const res = await api.get(`/api/v1/configaudits/matrix/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     setAllMatrixData(result)
+    // for pagination
     await setTotalData(res.data.data.metadata.count)
     await setPageData(res.data.data.metadata.count / 25)
     let pageCount = Math.ceil(res.data.data.metadata.count / 25)
@@ -352,6 +331,7 @@ function PerformanceMatrixList() {
     await setIsLoading(true)
   }
 
+  // for change form data
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -388,6 +368,7 @@ function PerformanceMatrixList() {
     await setPage(value)
   };
 
+  // for delete the data 
   const handleDelete = async () => {
     let res = await api.delete(`/api/v1/configaudits/matrix/${matrixIdData.id}/?company=${matrixIdData.fkCompanyId}&project=${matrixIdData.fkProjectId}`).then(res => { fetchMatrixData(), setDeleteQ(false) }).catch(error => console.log(error))
   }
@@ -396,6 +377,7 @@ function PerformanceMatrixList() {
     fetchMatrixData()
   }, [])
 
+  // for filter the data
   const handleFilter = (value) => {
     setFilter(value);
     let temp = []

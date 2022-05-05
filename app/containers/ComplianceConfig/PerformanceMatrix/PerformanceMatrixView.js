@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// for view
 const PerformanceMatrixView = () => {
     const classes = useStyles();
     const history = useHistory();

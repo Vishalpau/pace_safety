@@ -280,11 +280,13 @@ function ComplianceQuestionsList(props) {
     history.push('/app/compliance-config/new')
   }
 
+  // fetch the questions to listing view
   const fetchAuditData = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId =
       props.projectName.projectId ||
       JSON.parse(localStorage.getItem("projectName")).projectName.projectId;
+      // get projectStrId from localstorage
     const selectBreakdown =
       props.projectName.breakDown.length > 0
         ? props.projectName.breakDown
@@ -307,6 +309,7 @@ function ComplianceQuestionsList(props) {
     await setAuditData(result)
   }
 
+  //delete from list and send delete status in put api
   const handleDelete = async () => {
     auditId['status'] = 'Delete'
     const res = await api.put(`/api/v1/configaudits/auditquestions/${auditId.id}/?company=${auditId.fkCompanyId}&project=${auditId.fkProjectId}&projectStructure=${auditId.fkProjectStructureIds}`,auditId).then(response => {fetchAuditData() }).catch(error => {console.log(error)});
@@ -316,15 +319,6 @@ function ComplianceQuestionsList(props) {
     fetchAuditData()
   },[props.projectName.breakDown])
 
-    // useEffect(() => {
-    //   fetchAllComplianceData();
-    // }, [
-    //   props.projectName.breakDown,
-    //   props.compliance,
-    //   props.search,
-    //   props.status,
-    //   props.type,
-    // ]);
 
     const handleView = () => {
       setListQuestion(false);

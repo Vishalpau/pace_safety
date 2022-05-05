@@ -1,5 +1,6 @@
 import React from 'react'
 
+// for form validation msg
 export default function FectorValidation(data) {
     console.log(data)
     let error = {}

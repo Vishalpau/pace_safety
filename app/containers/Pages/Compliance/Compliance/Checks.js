@@ -1770,7 +1770,7 @@ const Checks = (props) => {
                                 )
                               })
                               :
-                              <p>No Questions present</p>
+                              <p>No questions configured</p>
                             }
                         </>
                       )

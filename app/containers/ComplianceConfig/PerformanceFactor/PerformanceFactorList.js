@@ -176,9 +176,7 @@ function PerformanceFactorList() {
   const [isLoading, setIsLoading] = useState(false)
   const [filter, setFilter] = useState("");
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
+  // for delete alert msg box
   const handleClickDeleteAlert = (e, columnValue) => {
     let data = {}
     for (let i = 0; i < allFectorData.length; i++) {
@@ -192,6 +190,8 @@ function PerformanceFactorList() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  // for close alert box of delete
   const handleCloseDeleteAlert = () => {
     setDeleteQ(false);
   };
@@ -226,13 +226,6 @@ function PerformanceFactorList() {
       name: 'Status',
       options: {
         filter: false,
-        // customBodyRender: (value) => (
-        //     <>
-        //         <span className='tableActionIcons'>
-        //             <VisibilityIcon />
-        //         </span>
-        //     </>
-        // )
       }
     },
     {
@@ -244,9 +237,6 @@ function PerformanceFactorList() {
             <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handlePerformanceFactorEditPush(e, tableMeta)}>
               <EditIcon />
             </IconButton>
-            {/* <IconButton size="small" color="primary" className='tableActionIcons' onClick={handleClickOpen}>
-                <MoreVertIcon />
-            </IconButton> */}
             <IconButton size="small" color="primary" className='tableActionIcons' onClick={(e) => handleClickDeleteAlert(e, tableMeta)}>
               <DeleteIcon />
             </IconButton>
@@ -257,13 +247,6 @@ function PerformanceFactorList() {
 
   ];
 
-  const data = [
-    ['Criticality', 'High', '2', 'Active'],
-    ['Status', 'High', '2', 'Inactive'],
-    ['Criticality', 'High', '2', 'Active'],
-    ['Status', 'High', '2', 'Active'],
-    ['Status', 'High', '2', 'Inactive'],
-  ];
   const options = {
     filterType: 'dropdown',
     responsive: 'vertical',
@@ -285,18 +268,15 @@ function PerformanceFactorList() {
 
   const history = useHistory();
 
+  // for new  Performance factor 
   const handleNewPerformanceFactorAddPush = async () => {
     history.push(
       '/app/compliance-config/performance-factor/add'
     );
   };
 
-  //   const handleBulkUploadPush = async () => {
-  //     history.push(
-  //       '/app/compliance-config/bulk-upload'
-  //     );
-  //   };
 
+  // for exist Performance factor
   const handlePerformanceFactorEditPush = async (e, columnValue) => {
     const columnData = { id: columnValue.rowData[0], factorType: columnValue.rowData[1], factorName: columnValue.rowData[2], factorConstant: columnValue.rowData[3], status: columnValue.rowData[4] }
     console.log(columnValue.rowData)
@@ -323,10 +303,12 @@ function PerformanceFactorList() {
   const [fectorData, setFectorData] = React.useState([])
   const [allFectorData, setAllFectorData] = React.useState([])
 
+  // for get data into list view
   const fetchFectorData = async () => {
     let res = await api.get(`/api/v1/configaudits/factors/?company=${fkCompanyId}&project=${project}&projectStructure=`)
     const result = res.data.data.results
     await setTotalData(res.data.data.metadata.count)
+    // for pagination count per page
     await setPageData(res.data.data.metadata.count / 25)
     let pageCount = Math.ceil(res.data.data.metadata.count / 25)
     await setPageCount(pageCount)
@@ -343,13 +325,14 @@ function PerformanceFactorList() {
     }
     await setFectorData(temp)
     await setIsLoading(true)
-    // console.log(res,"::::::::::::::::::::::::::::")
   }
 
+  // for delete
   const handleDelete = async () => {
     let res = await api.delete(`/api/v1/configaudits/factors/${factorIdData.id}/?company=${factorIdData.fkCompanyId}&project=${factorIdData.fkProjectId}`).then(res => { fetchFectorData(), setDeleteQ(false) }).catch(error => console.log(error))
   }
 
+  // for chnage the pagination and data
   const handleChange = async (event, value) => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = props.projectName.projectId || JSON.parse(localStorage.getItem("projectName"))
@@ -362,7 +345,6 @@ function PerformanceFactorList() {
       ? JSON.parse(localStorage.getItem('userDetails')).id
       : null;
     let struct = "";
-
     for (const i in selectBreakdown) {
       struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
     }
@@ -390,6 +372,7 @@ function PerformanceFactorList() {
     fetchFectorData();
   }, [])
 
+  // for filter the data
   const handleFilter = (value) => {
     setFilter(value);
     let temp = []

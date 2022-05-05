@@ -149,15 +149,7 @@ const useStyles = makeStyles((theme) => ({
       cursor: "pointer",
     },
   },
-  // customCheckBoxList: {
-  //   display: 'block',
-  //   '& .MuiFormControlLabel-root': {
-  //     width: '30%',
-  //     [theme.breakpoints.down("xs")]: {
-  //       width: '48%',
-  //     },
-  //   },
-  // },
+
   createHazardbox: {
     paddingTop: "0rem !important",
     paddingBottom: "0rem !important",
@@ -197,25 +189,6 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  // accordingHeaderContentleft: {
-  //     display: 'inline-block',
-  //     float: 'left',
-  //     '& li': {
-  //         paddingTop: '0rem',
-  //         paddingBottom: '0rem',
-  //         paddingLeft: '0rem',
-  //         '& span': {
-  //             display: 'inline-block',
-  //         },
-  //         '& p': {
-  //             display: 'inline-block',
-  //             fontSize: '1rem !important',
-  //             fontWeight: '500 !important',
-  //             color: '#063d55',
-  //             paddingLeft: '5px',
-  //         },
-  //     },
-  // },
   accordingHeaderContent: {
     display: "inline-block",
     color: "#000",
@@ -275,63 +248,53 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   ratioColororange: {
-    //backgroundColor: 'orange',
     padding: "16px!important",
     height: "70%",
     marginTop: "7px",
     borderRadius: "5px",
-    //color: '#ffffff'
   },
 }));
 
-// const styles = (theme) => ({
-// rootPop: {
-//     margin: 0,
-//     padding: theme.spacing(2),
-// },
-// closeButton: {
-//     position: 'absolute',
-//     right: theme.spacing(1),
-//     top: theme.spacing(1),
-//     color: theme.palette.grey[500],
-// },
-// });
 
 const Questions = () => {
   const history = useHistory();
-  console.log(history,'history')
   const [expandedTableDetail, setExpandedTableDetail] = React.useState(
     "panel1"
   );
+
+  // for expand the ques accordian
   const handleTDChange = (panel) => (event, isExpanded) => {
     setExpandedTableDetail(isExpanded ? panel : false);
   };
 
+   // get ids from localstorage
   const project =
-      JSON.parse(localStorage.getItem("projectName")) !== null
-        ? JSON.parse(localStorage.getItem("projectName")).projectName
-        : null;
+    JSON.parse(localStorage.getItem("projectName")) !== null
+      ? JSON.parse(localStorage.getItem("projectName")).projectName
+      : null;
 
-        const fkCompanyId =
-        JSON.parse(localStorage.getItem("company")) !== null
-        ? JSON.parse(localStorage.getItem("company")).fkCompanyId
-        : null;
+  const fkCompanyId =
+    JSON.parse(localStorage.getItem("company")) !== null
+      ? JSON.parse(localStorage.getItem("company")).fkCompanyId
+      : null;
 
+  
   const [isLoading, setIsLoading] = useState(false)
+  // type of response
   const responseType = ["Yes-No-NA", "Criticality Matrix"];
   const scoreType = ["Stars", "1-10", "%"];
   const geoLocation = ["Yes", "No"];
   const evidenceType = ["Yes", "No"];
   const attachment = ["Yes", "No"];
 
-  const [questionMoreCatgry, setQuestionMoreCatgry] = useState([{}]);
-  // const [questionMore, setQuestionMore] = useState([{}]);
+  // use states
   const [checkData, setCheckData] = useState([]);
   const [que, setQue] = useState([]);
   const [sub, setSub] = useState([]);
   const [projectStructName, setProjectStructName] = useState([]);
   const [selectDepthAndId, setSelectDepthAndId] = useState([]);
 
+  // constant form values
   const handleMoreQuestionCatgry = (index, groupName, subGroupName) => {
     let temp = [...checkData];
     temp[index]["question"].push({
@@ -352,6 +315,7 @@ const Questions = () => {
     setCheckData(temp);
   };
 
+  // for ques close
   const handleCloseCatgry = (indexOne, key) => {
     let temp = [...checkData];
     temp[key]["question"].splice(indexOne, 1);
@@ -361,9 +325,9 @@ const Questions = () => {
 
   const classes = useStyles();
 
+  // get all the response types
   const fetchChecks = () => {
     let data = JSON.parse(localStorage.getItem("auditChecks"));
-    console.log(data, 'data')
     let temp = [...data];
     for (let i = 0; i < temp.length; i++) {
       temp[i]["question"] = [
@@ -394,19 +358,17 @@ const Questions = () => {
     setCheckData(temp);
   };
 
+  // save create questions & bulk questions
   const handleSave = async () => {
-
     const { error, isValid } = QuestionValidation(checkData);
     setCheckData(error);
     if (!isValid) {
       return "data not valid";
     }
     let data = [];
-    console.log(error,'eoorr')
     error.map((value, index) =>
-      value.question.map((item, key) => data.push({...item, fkProjectStructureIds:history.location.state.fkProjectStructureIds}))
+      value.question.map((item, key) => data.push({ ...item, fkProjectStructureIds: history.location.state.fkProjectStructureIds }))
     );
-
     const res = await api.post(
       "/api/v1/configaudits/auditquestions/bulk/",
       data
@@ -419,6 +381,7 @@ const Questions = () => {
     })).catch(err => console.log(error))
   };
 
+  // for project name
   const handleProjectName = (projectId) => {
     const userName =
       JSON.parse(localStorage.getItem("userDetails")) !== null
@@ -433,6 +396,7 @@ const Questions = () => {
     return fetchProject[0].projectName;
   };
 
+  // for work area
   const handelWorkArea = async () => {
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -444,10 +408,10 @@ const Questions = () => {
         ? JSON.parse(localStorage.getItem("projectName")).projectName.projectId
         : null;
     let structName = [];
+    // getting projectstr & split the projecstr 
     let projectStructId = history.location.state.fkProjectStructureIds.split(
       ":"
     );
-    console.log(projectStructId,'projectStructId')
     for (let key in projectStructId) {
       let workAreaId = [
         projectStructId[key].substring(0, 2),
@@ -469,24 +433,24 @@ const Questions = () => {
   };
 
 
-
+// for reset data
   const handleReset = () => {
     let temp = [...checkData];
-
     temp.map((value, index) =>
       value.question.map((item, key) => {
         item.question = "",
-        item.attachment = "",
-        item.evidenceType = "",
-        item.geoLocation = "",
-        item.question = "",
-        item.responseType = "",
-        item.scoreType = ""
+          item.attachment = "",
+          item.evidenceType = "",
+          item.geoLocation = "",
+          item.question = "",
+          item.responseType = "",
+          item.scoreType = ""
       },
       )
     )
     setCheckData(temp)
   }
+
 
   useEffect(() => {
     fetchChecks();

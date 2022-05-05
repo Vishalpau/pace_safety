@@ -33,6 +33,7 @@ const PerformanceMatrixEdit = () => {
     const [colorPick, setColorPick] = useState('#06425c');
     const [hidden, setHidden] = useState(false);
 
+    // for change the status
     const handleStatusChange = (e) => {
         let temp = { ...matrixData }
         if (e.target.checked === true) {
@@ -45,6 +46,7 @@ const PerformanceMatrixEdit = () => {
 
 
     const [error, setError] = useState({})
+    // update the data
     const handleUpdate = async () => {
         const { error, isValid } = MatrixValidation(matrixData)
         setError(error)

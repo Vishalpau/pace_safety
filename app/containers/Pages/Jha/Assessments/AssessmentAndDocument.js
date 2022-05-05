@@ -220,7 +220,6 @@ const AssessmentAndDocument = (props) => {
         const jhaId = handelJhaId();
         const res = await api.get(`/api/v1/jhas/${jhaId}/jobhazards/`);
         const apiData = res.data.data.results;
-
         const project = JSON.parse(localStorage.getItem('projectName'));
         const { projectId } = project.projectName;
         const baseUrl = localStorage.getItem('apiBaseUrl');
@@ -243,8 +242,6 @@ const AssessmentAndDocument = (props) => {
             tempPerformance[value.checkListGroupName] = checkList;
             return tempPerformance;
         });
-        console.log(tempPerformance,">>>>>>>>>")
-
         await setPerformance(tempPerformance);
         await setDocument(apiCondition);
         const temp = [];
@@ -424,6 +421,7 @@ const AssessmentAndDocument = (props) => {
     };
 
     useEffect(() => {
+        // handelCheckList();
         handelCallBack();
     }, []);
 

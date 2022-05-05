@@ -28,22 +28,27 @@ const PerformanceFactorAdd = () => {
     const [error, setError] = useState({});
     const [performError, setPerformError] = useState('');
 
+    // get ids from localstorage
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
             : null;
+
     const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
         ? JSON.parse(localStorage.getItem('userDetails')).id
         : null;
+
     const project =
         JSON.parse(localStorage.getItem("projectName")) !== null
             ? JSON.parse(localStorage.getItem("projectName")).projectName
             : null;
+
     const selectBreakdown =
         JSON.parse(localStorage.getItem("selectBreakDown")) !== null
             ? JSON.parse(localStorage.getItem("selectBreakDown"))
             : null;
 
+    // initial form data
     const [fectorForm, setFectorForm] = useState(
         {
             "fkCompanyId": parseInt(fkCompanyId),
@@ -55,7 +60,7 @@ const PerformanceFactorAdd = () => {
             "createdAt": new Date(),
             "createdBy": parseInt(userId),
         })
-
+    // for status change 
     const handleStatusChange = (e) => {
         let temp = { ...fectorForm }
         if (e.target.checked === true) {
@@ -68,7 +73,9 @@ const PerformanceFactorAdd = () => {
     const classes = useStyles();
     const history = useHistory();
 
+    // post the data 
     const handleSave = async () => {
+        // check for validations
         const { error, isValid } = FectorValidation(fectorForm)
         setError(error)
         if (!isValid) {
@@ -78,6 +85,7 @@ const PerformanceFactorAdd = () => {
         const res = await api.post(`/api/v1/configaudits/factors/`, fectorForm).then(res => { localStorage.setItem("configTab", 1), history.goBack() }).catch(err => console.log(error))
         setPerformError('The combination of factor type is already exist in database.')
     }
+
     useEffect(() => {
     }, []);
 

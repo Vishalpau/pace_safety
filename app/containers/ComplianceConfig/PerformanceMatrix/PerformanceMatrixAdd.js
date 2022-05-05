@@ -29,17 +29,21 @@ const PerformanceMatrixAdd = () => {
     const history = useHistory();
 
     const [error, setError] = useState({});
+
     const fkCompanyId =
         JSON.parse(localStorage.getItem("company")) !== null
             ? JSON.parse(localStorage.getItem("company")).fkCompanyId
             : null;
+
     const userId = JSON.parse(localStorage.getItem('userDetails')) !== null
         ? JSON.parse(localStorage.getItem('userDetails')).id
         : null;
+
     const project =
         JSON.parse(localStorage.getItem("projectName")) !== null
             ? JSON.parse(localStorage.getItem("projectName")).projectName
             : null;
+
     const selectBreakdown =
         JSON.parse(localStorage.getItem("selectBreakDown")) !== null
             ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -47,6 +51,7 @@ const PerformanceMatrixAdd = () => {
 
     const [colorPick, setColorPick] = useState('#06425c');
     const [hidden, setHidden] = useState(false);
+    // initial values of form
     const [matrixForm, setMatrixForm] = useState({
         "fkCompanyId": parseInt(fkCompanyId),
         "fkProjectId": parseInt(project.projectId),
@@ -58,6 +63,7 @@ const PerformanceMatrixAdd = () => {
         "createdBy": parseInt(userId),
     })
 
+    // for status change
     const handleStatusChange = (e) => {
         let temp = { ...matrixForm }
         if (e.target.checked === true) {
@@ -68,6 +74,7 @@ const PerformanceMatrixAdd = () => {
         setMatrixForm(temp)
     }
 
+    // save the data 
     const handleSave = async () => {
         const { error, isValid } = MatrixValidation(matrixForm)
         setError(error)

@@ -210,8 +210,7 @@ const QuestionView = (props) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-
-
+  // for question view 
   const fetchAuditDetails = async () => {
     const fkCompanyId = JSON.parse(localStorage.getItem("company")).fkCompanyId;
     const fkProjectId = JSON.parse(localStorage.getItem("projectName"))
@@ -222,10 +221,10 @@ const QuestionView = (props) => {
     let result = res.data.data.results.filter(i => i.id == id)[0];
     await handelWorkArea(result);
     await setAuditDetial(result);
-    
     await setIsLoading(true);
   };
 
+  // for project name view
   const handleProjectName = (projectId) => {
     if (projectId != null) {
       const userName =
@@ -242,9 +241,8 @@ const QuestionView = (props) => {
     }
   };
 
+  // for projectStr view
   const handelWorkArea = async (complianceData) => {
-    console.log(complianceData.fkProjectStructureIds, 'groupData')
-
     if(complianceData.fkProjectStructureIds){
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
@@ -257,6 +255,7 @@ const QuestionView = (props) => {
         : null;
     let structName = [];
     let projectStructId = complianceData.fkProjectStructureIds.split(":");
+    // for we get set All projectstr breakDown 
     if (!projectStructId.some(projectStructId => ((projectStructId == 'All')))){
       for (let key in projectStructId) {
         let workAreaId = [
@@ -277,11 +276,8 @@ const QuestionView = (props) => {
       setProjectStructName(structName);
       }
       else{
-        // setFetchSelectBreakDownList
-        
         let selectValue = {}
         selectValue.id = 0
-        // let breakDownData = []
         setProjectStructName(projectStructId.map((d) => d))
       }
   };

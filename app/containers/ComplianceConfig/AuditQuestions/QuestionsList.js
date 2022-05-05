@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
 
 function QuestionsList(props) {
   const classes = useStyles();
-
+  // use states
   const [open, setOpen] = useState(false);
   const [deleteQ, setDeleteQ] = useState(false);
   const [auditData, setAuditData] = useState([]);
@@ -175,6 +175,8 @@ function QuestionsList(props) {
   const [pageData, setPageData] = useState(0)
   const [totalData, setTotalData] = useState(0);
   const [page , setPage] = useState(1)
+
+  // get ids from localstorage
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -187,6 +189,7 @@ function QuestionsList(props) {
     JSON.parse(localStorage.getItem("projectName")) !== null
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
+  // get projectStr 
   const selectBreakdown =
     JSON.parse(localStorage.getItem("selectBreakDown")) !== null
       ? JSON.parse(localStorage.getItem("selectBreakDown"))
@@ -196,6 +199,8 @@ function QuestionsList(props) {
     struct += `${selectBreakdown[i].depth}${selectBreakdown[i].id}:`;
   }
   const fkProjectStructureIds = struct.slice(0, -1);
+
+  // open to question
   const handleClickOpen = (value) => {
     for (let i = 0; i < auditIdDetails.length; i++) {
       if (auditIdDetails[i].id == value[0]) {
@@ -205,6 +210,8 @@ function QuestionsList(props) {
     setAuditId(value[0]);
     setOpen(true);
   };
+
+  // for delete alert message
   const handleClickDeleteAlert = (value) => {
     for (let i = 0; i < auditIdDetails.length; i++) {
       if (auditIdDetails[i].id == value[0]) {
@@ -214,9 +221,13 @@ function QuestionsList(props) {
     setAuditId(value[0]);
     setDeleteQ(true);
   };
+
+  // for close dialouge box
   const handleClose = () => {
     setOpen(false);
   };
+
+  // for close the delete alert msg box
   const handleCloseDeleteAlert = () => {
     setDeleteQ(false);
   };
@@ -306,30 +317,30 @@ function QuestionsList(props) {
     pagination : false,
   };
 
-  //   const [listQuestion, setListQuestion] = useState(true);
-  //   const [newQuestion, setNewQuestion] = useState(false);
-  //   const [bulkUpload, setBulkUpload] = useState(false);
-  //   const [editQuestion, setEditQuestion] = useState(false);
-  //   const [viewQuestion, setViewQuestion] = useState(false);
   const history = useHistory();
 
+  // for new questions
   const handleNewComplianceConfigQPush = async () => {
     localStorage.removeItem("auditChecks");
     history.push("/app/compliance-config/question-group");
   };
 
+  // for new upload
   const handleBulkUploadPush = async () => {
     history.push("/app/compliance-config/bulk-upload");
   };
 
+  // for question edit
   const handleQuestionEditPush = async () => {
     history.push(`/app/compliance-config/edit/${auditId}`);
   };
 
+  // for view the questions 
   const handleQuestionViewPush = async () => {
     history.push(`/app/compliance-config/view/${auditId}`);
   };
 
+  // for delete the data on list view 
   const handleDelete = async () => {
     data["status"] = "Delete";
     const res = await api

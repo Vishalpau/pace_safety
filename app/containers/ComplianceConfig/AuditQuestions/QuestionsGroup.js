@@ -174,6 +174,8 @@ const QuestionsGroup = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [groupError, setGroupError] = useState(false);
 
+
+  // get ids from localstorage
   const fkCompanyId =
     JSON.parse(localStorage.getItem("company")) !== null
       ? JSON.parse(localStorage.getItem("company")).fkCompanyId
@@ -187,6 +189,7 @@ const QuestionsGroup = (props) => {
       ? JSON.parse(localStorage.getItem("projectName")).projectName
       : null;
 
+  // fetch groups & subgroups
   const fetchChecklist = async () => {
     let temp = {};
     const res = await api.get(
@@ -207,7 +210,6 @@ const QuestionsGroup = (props) => {
       }
       await setCheckData(temp);
     }
-    // await fetchComplianceData(result);
     await setCheckListGroups(result);
     await setIsLoading(true);
   };
@@ -234,32 +236,6 @@ const QuestionsGroup = (props) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  // const workArea = [
-  //   { title: 'Operation' },
-  //   { title: 'Functional' },
-  //   { title: 'Foundation' },
-  //   { title: 'Production' },
-  // ];
-
-  // const DialogTitle = withStyles(styles)((props) => {
-  //   const { children, classes, onClose, ...other } = props;
-  //   return (
-  //     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-  //       <Typography variant="h6">{children}</Typography>
-  //       {onClose ? (
-  //         <IconButton
-  //           aria-label="close"
-  //           className={classes.projectCloseButton}
-  //           onClick={onClose}
-  //         >
-  //           <CloseIcon />
-  //         </IconButton>
-  //       ) : null}
-  //     </MuiDialogTitle>
-  //   );
-  // });
-
-
   const handleNewPickListPush = async () => {
     history.push("/app/pages/checklist/");
   };
@@ -267,22 +243,22 @@ const QuestionsGroup = (props) => {
   const [error, setError] = useState({});
   const [structureId, setStructureId] = useState("");
 
+  // for next functionality to move questions page
   const handleNext = async () => {
     const fkCompanyId =
       JSON.parse(localStorage.getItem("company")) !== null
         ? JSON.parse(localStorage.getItem("company")).fkCompanyId
         : null;
-    // const userId =
-    //   JSON.parse(localStorage.getItem("userDetails")) !== null
-    //     ? JSON.parse(localStorage.getItem("userDetails")).id
-    //     : null;
+
     const project =
       JSON.parse(localStorage.getItem("projectName")) !== null
         ? JSON.parse(localStorage.getItem("projectName")).projectName
         : null;
+
     const fkpsId = selectDepthAndId.join(":");
     const { error, isValid } = QuestionGroupValidation(selectDepthAndId);
     setError(error);
+    // if groups & subgropus present then move to questions page
     if (checkData.length > 0 && subGroupId.length > 0 && Object.keys(error).length === 0) {
       localStorage.setItem("auditChecks", JSON.stringify(subGroupId));
       localStorage.setItem("auditGroups", JSON.stringify(groupId));
@@ -300,11 +276,10 @@ const QuestionsGroup = (props) => {
   };
 
 
-
+// for get the gropus name & subgroups name according to groups
   const handlePhysicalHazards = async (e, value, index) => {
     let tempGroupId = [...groupId];
     let temp = [...checkData];
-
     if (e.target.checked == false) {
       temp.map((data, key) => {
         if (data["checkListGroupName"] == value["checkListGroupName"]) {
@@ -312,13 +287,11 @@ const QuestionsGroup = (props) => {
         }
       });
       tempGroupId.map((data, key) => {
-        
         if (data == value["checkListGroupName"]) {
           tempGroupId.splice(key, 1);
         }
       });
     } else {
-
       tempGroupId.push(value.checkListGroupName);
       temp.push(value);
     }
@@ -326,31 +299,10 @@ const QuestionsGroup = (props) => {
     await setCheckData(temp);
   };
 
-  // const handlePhysicalHazards = async (e, value, index) => {
-  //   let temp = [...checkData];
-  //   let tempsub = [...subGroupId];
-  //   if (e.target.checked == false) {
-  //     temp.map((data, key) => {
-  //       if (data["checklistId"] == value["checklistId"]) {
-  //         temp.splice(key, 1);
-  //       }
-  //     });
 
-  //     let abc = tempsub.filter(
-  //       (data) => data["groupName"] != value["checkListGroupName"]
-  //     );
-  //     tempsub = abc;
-  //   } else {
-  //     temp.push(value);
-  //   }
-  //   await setCheckData(temp);
-  //   await setGroupId(tempsub);
-  // };
-
+  // for store the subgroups value according to groups name
   const handleGroups = async (e, value, index, gName, sGName) => {
-    console.log(gName, sGName)
     let temp = [...subGroupId];
-    console.log(gName)
     if (e.target.checked == false) {
       temp.map((data, key) => {
         if (data.subGroupName === sGName) {
@@ -363,6 +315,7 @@ const QuestionsGroup = (props) => {
     setSubGroupId(temp);
   };
 
+  // for select groups
   const handelSelectOption = (key) => {
     let temp = [...checkData];
     let data = JSON.parse(localStorage.getItem("auditChecks"));
@@ -380,10 +333,7 @@ const QuestionsGroup = (props) => {
     setSelectDepthAndId(newArr);
   }
 
-  // useEffect(() => {
-  //   console.log(levelLenght,'hhiiii');
-  // },[setLevelLenght])
-
+  // for select subgroups
   const handelSelectOptionSubGroup = (key) => {
     let temp = [...checkData];
     let data = JSON.parse(localStorage.getItem("auditChecks"));
@@ -396,58 +346,14 @@ const QuestionsGroup = (props) => {
     }
   };
 
-  // const fetchCallBack = async () => {
-  //   for (var key in projectData.projectName.breakdown) {
-  //     if (key == 0) {
-  //       var config = {
-  //         method: "get",
-  //         url: `${SSO_URL}/${
-  //           projectData.projectName.breakdown[0].structure[0].url
-  //         }`,
-  //         headers: HEADER_AUTH,
-  //       };
-  //       await axios(config)
-  //         .then(async (response) => {
-  //           await setBreakdown1ListData([
-  //             {
-  //               breakdownLabel:
-  //                 projectData.projectName.breakdown[0].structure[0].name,
-  //               breakdownValue: response.data.data.results,
-  //               selectValue: "",
-  //             },
-  //           ]);
-  //         })
-  //         .catch(function(error) {
-  //           console.log(error);
-  //         });
-  //     }
-  //   }
-  // };
-
+  // for get projectstr id & set projectStr
   const setId = (id) => {
-    // console.log(id);
-    //     let temp = [...selectDepthAndId];
-    //     temp.push(id);
-    //     console.log("temp:",temp,"id:",id,"selectDepthAndId",selectDepthAndId)
-    //     // console.log(id, 'sssssssss', selectDepthAndId);
-    //     if(id){
-    // console.log("setting selectdepthandid:",id, temp)
-    // setSelectDepthAndId(temp);
-    // setSelectDepthAndId(
-    //   temp
-    //   )
-    // }
     setSelectDepthAndId(id);
   }
 
   useEffect(() => {
-    // fetchCallBack();
     fetchChecklist();
   }, []);
-
-  // useEffect(() => {
-  //   console.log(selectDepthAndId);
-  // },[selectDepthAndId])
 
   const classes = useStyles();
   return (

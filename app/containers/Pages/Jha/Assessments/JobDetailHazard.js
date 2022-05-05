@@ -34,7 +34,7 @@ import { access_token, ACCOUNT_API_URL, HEADER_AUTH, SSO_URL } from "../../../..
 import FormSideBar from '../../../Forms/FormSideBar';
 import ProjectStructureInit from "../../../ProjectStructureId/ProjectStructureId";
 import { handelJhaId } from "../Utils/checkValue";
-import { JHA_FORM_COMBINE } from "../Utils/constants";
+import { JHA_FORM, JHA_FORM_COMBINE } from "../Utils/constants";
 import JobDetailsValidate from '../Validation/JobDetailsValidate';
 import CustomPapperBlock from 'dan-components/CustomPapperBlock/CustomPapperBlock';
 import jhaLogoSymbol from 'dan-images/jhaLogoSymbol.png';
@@ -444,7 +444,7 @@ const JobDetails = (props) => {
     }
 
     const handelNavigate = () => {
-        history.push(`${JHA_FORM_COMBINE["Project Area Hazards"]}`)
+        history.push(`${JHA_FORM["Assessment"]}`)
     }
 
     const handelApiError = () => {
@@ -472,10 +472,10 @@ const JobDetails = (props) => {
                 if (Teamform[i].teamName !== "") {
                     const res = await api.post(`${apiEndPoint}/`, Teamform[i]).then().catch(() => handelApiError())
                     if (res.status === 200) {
-                        handelNavigate()
+                        // handelNavigate()
                     }
                 } else {
-                    handelNavigate()
+                    // handelNavigate()
                 }
             }
         }
@@ -494,9 +494,8 @@ const JobDetails = (props) => {
         delete form["jhaAssessmentAttachment"]
         form["qrCodeUrl"] = undefined
         if (form.id != null && form.id != undefined) {
-            
             const res = await api.put(`/api/v1/jhas/${localStorage.getItem("fkJHAId")}/`, form)
-            
+            console.log(res,'res1')
             let CreateJhaId = res.data.data.results.id
             newJhaId = CreateJhaId
             handelTeam(CreateJhaId)
@@ -509,10 +508,9 @@ const JobDetails = (props) => {
             handelTeam(CreateJhaId)
         }
         await handelCommonObject("commonObject", "jha", "projectStruct", form.fkProjectStructureIds)
-        handelNavigateHazard("next")
         await setSubmitLoader(false)
+        await setSubmitLoaderHazard(false)
         await handleSubmitHazard(newJhaId)
-
     }
 
     const classes = useStyles();
@@ -699,10 +697,10 @@ const JobDetails = (props) => {
         }
     }
 
-    // const handelApiErrorHazard = () => {
-    //     setSubmitLoaderHazard(false)
-    //     history.push("/app/pages/error")
-    // }
+    const handelApiErrorHazard = () => {
+        setSubmitLoaderHazard(false)
+        history.push("/app/pages/error")
+    }
 
     const handleSubmitHazard = async (newJhaId) => {
         let hazardNew = []
@@ -723,9 +721,9 @@ const JobDetails = (props) => {
                 }
             })
         })
-        const resUpdate = await api.put(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardUpdate)
-        const resNew = await api.post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew)
-    
+        const resUpdate = await api.put(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardUpdate).catch(() => handelApiErrorHazard())
+        const resNew = await api.post(`/api/v1/jhas/${newJhaId}/bulkhazards/`, hazardNew).catch(() => handelApiErrorHazard())
+        await handelNavigateHazard("next")
     }
 
     const [typeOfPremit, setTypeOfPremit] = useState([])
