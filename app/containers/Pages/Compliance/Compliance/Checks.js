@@ -684,12 +684,12 @@ const Checks = (props) => {
 
   const classes = useStyles();
 
-  //method to set the data when we change the data on accordian
+  //method to set the data when we change the data on score type
   const handleChangeData = (value, field, index, id, type = '') => {
     let temp = [...checkData];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i]["questionId"] == id) {
-        //when we handle percentage value
+        //when we handle score type value
         if (field === 'score') {
           if (type === 'Stars') {
             let starvar = ''
