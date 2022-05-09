@@ -711,6 +711,7 @@ const Checks = (props) => {
     setCheckData(temp);
   };
 
+  // for get action tracker 
   const handelActionTracker = async () => {
     if (localStorage.getItem("fkComplianceId") != undefined && localStorage.getItem("commonObject") != undefined) {
       let jhaId = localStorage.getItem("fkComplianceId");
