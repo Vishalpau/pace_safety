@@ -482,7 +482,7 @@ function ComplianceSummary(props) {
       ];
       let allAction = await handelActionData(jhaId, apiData);
       setActionData(allAction);
-    } setTimeout(() => handelActionTracker(), 1000)
+    }
   };
 
   // const calculate_rating = (index, v, id) => {
@@ -524,7 +524,7 @@ function ComplianceSummary(props) {
     if (id) {
       auditQueData(id)
       fetchCheklistData(id);
-      handelActionTracker()
+      handelActionTracker();
       fetchMatrixData()
     }
   }, []);
