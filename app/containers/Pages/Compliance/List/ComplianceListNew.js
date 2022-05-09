@@ -951,7 +951,7 @@ function ComplianceListNew(props) {
 
                 <Grid item sm={12} xs={12}>
                   <Grid container spacing={3}>
-                    {/* <Grid item sm={3} xs={12}>
+                    <Grid item sm={3} xs={12}>
                       <Typography
                         variant="body1"
                         color="textPrimary"
@@ -963,9 +963,11 @@ function ComplianceListNew(props) {
                       <Typography
                         className={classes.listingLabelValue}
                       >
-                        data not available in api
+                         {value["area"] !== null
+                              ? value["area"]
+                              : "-"}
                       </Typography>
-                    </Grid> */}
+                    </Grid>
 
                     <Grid item sm={3} xs={12}>
                       <Typography
