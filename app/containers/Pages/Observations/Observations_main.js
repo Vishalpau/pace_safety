@@ -245,7 +245,7 @@ export default function Observations() {
   }, [acls])
 
   return (!showHTML ? '' : <Acl
-    module='safety'
+    module='safety-observations'
     action='view_observations'
     html={
       <div className={classes.root}>
@@ -267,6 +267,11 @@ export default function Observations() {
                 startIcon={<CloudUploadIcon />}
                 style={{ marginLeft: '10px' }}
                 onClick={() => handleBulkUploadfilePush()}
+                style={{
+                  marginLeft: '10px',
+                  background: checkACL('safety-observations', 'add_observations') ? '#06425c' : '#c0c0c0', 
+                  cursor: checkACL('safety-observations', 'add_observations') ? 'pointer' : 'not-allowed'
+                }}
               >
                 Upload
               </Button>
