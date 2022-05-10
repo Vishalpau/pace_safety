@@ -1792,7 +1792,7 @@ const Checks = (props) => {
                                 )
                               })
                               :
-                              <p>No questions configured</p>
+                              <p>No questions configured for this Group/Sub-group</p>
                             }
                         </>
                       )

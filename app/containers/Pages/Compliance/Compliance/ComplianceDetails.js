@@ -354,7 +354,7 @@ const ComplianceDetails = () => {
         .catch((error) => {
           console.log(error), setLoading(false), setSaveLoading(true);
         });
-    } 
+    }
     else {
       const res = await api
         .post("/api/v1/audits/", form)
@@ -370,6 +370,11 @@ const ComplianceDetails = () => {
         });
     }
   };
+
+  useEffect(() => {
+    console.log(error);
+  },[error])
+
   const classes = useStyles();
 
   const fetchComplianceData = async () => {
@@ -447,7 +452,7 @@ const ComplianceDetails = () => {
           .catch((error) => {
             setIsNext(true);
           });
-      } 
+      }
       else {
         var config = {
           method: "get",
@@ -930,9 +935,18 @@ const ComplianceDetails = () => {
                               options={contractor.current}
                               getOptionLabel={(option) => option}
                               defaultValue={form.contractor || ''}
-                              onSelect={(e) =>
-                                setForm({ ...form, contractor: e.target.value })
-                              }
+                              // onSelect={(e) =>
+                              //   setForm({ ...form, contractor: e.target.value })
+                              // }
+                              onChange={(event, newValue) => {
+                                if (newValue === null) {
+                                  newValue = ""
+                                }
+                                setForm({
+                                  ...form,
+                                  contractor: newValue
+                                })
+                              }}
                               renderInput={(params) => (
                                 <TextField
                                   {...params}
@@ -941,7 +955,7 @@ const ComplianceDetails = () => {
                                 />
                               )}
                             />
-                            <div style={{ color: "red" }}>{form.contractor ? '' : error.contractor}</div>
+                            <div style={{ color: "red" }}>{(form.contractor === null || form.contractor === "") && error.contractor}</div>
                           </Grid>
 
                           <Grid item md={6} xs={12}>
