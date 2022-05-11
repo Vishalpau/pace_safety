@@ -34,6 +34,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
+import FormLabel from '@material-ui/core/FormLabel';
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -446,22 +447,45 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ComplianceListNew(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [allComplianceData, setAllComplianceData] = useState([]);
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageCount, setPageCount] = useState(0);
+  const [pageData, setPageData] = useState(0);
+  const [totalData, setTotalData] = useState(0);
+  const [page, setPage] = useState(1);
+  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
+  const [deleteValue, setDeleteValue] = useState("")
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const [deleteQ, setDeleteQ] = useState(false);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const [attachmentId, setAttachmentId] = useState()
+
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   const handleChangeOne = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [incidents] = useState([]);
+  const handleClickDeleteAlert = (value) => {
+    setDeleteQ(true);
+    setDeleteValue(value);
+    // handleDelete(value);
+  };
+
+  const handleCloseDeleteAlert = () => {
+    setDeleteQ(false);
+    setDeleteValue("");
+  };
+
   // const [listToggle, setListToggle] = useState(false);
 
   // const handelView = (e) => {
@@ -471,31 +495,21 @@ function ComplianceListNew(props) {
   //   setListToggle(true);
   // };
 
-  const [value, setValue] = React.useState(2);
+  // const [value, setValue] = React.useState(2);
 
   // const handleChange = (event, newValue) => {
   //   setValue(newValue);
   // };
 
   //view comments
-  const [allComplianceData, setAllComplianceData] = useState([]);
-  const [attachOpen, setAttachOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [pageCount, setPageCount] = useState(0);
-  const [pageData, setPageData] = useState(0);
-  const [totalData, setTotalData] = useState(0);
-  const [page, setPage] = useState(1);
-  const [checkDeletePermission, setCheckDeletePermission] = useState(false);
 
-  // const [attachmentId, setAttachmentId] = useState()
+  // useEffect(() => {
+  //   console.log(allComplianceData);
+  // }, [allComplianceData])
 
-  useEffect(() => {
-    console.log(allComplianceData);
-  }, [allComplianceData])
-
-  useEffect(() => {
-    console.log(attachOpen);
-  }, [attachOpen])
+  // useEffect(() => {
+  //   console.log(attachOpen);
+  // }, [attachOpen])
 
   //   Data for the table view
   const columns = [
@@ -734,15 +748,17 @@ function ComplianceListNew(props) {
   };
 
   //method to delete a compliance
-  const handleDelete = async (item) => {
-    let temp = { ...item };
+  const handleDelete = async () => {
+    let temp = {...deleteValue}
+    // let temp = { ...item };
     temp.status = "Delete";
-    let id = item.id;
+    let id = deleteValue.id;
     setIsLoading(false);
     const res = await api
       .put(`api/v1/audits/${id}/`, temp)
       .then((response) => {
         fetchAllComplianceData();
+        handleCloseDeleteAlert()
         // setIsLoading(true);
       })
       .catch((error) => console.log(error));
@@ -1138,7 +1154,8 @@ function ComplianceListNew(props) {
                         >
                           <DeleteForeverOutlinedIcon
                             className={classes.iconteal}
-                            onClick={() => handleDelete(value)}
+                            // onClick={() => handleDelete(value)}
+                            onClick={() => handleClickDeleteAlert(value)}
                           />
                         </Link>
                       )}
@@ -1568,12 +1585,39 @@ function ComplianceListNew(props) {
                 </div>
               </div>
             </div>
-            {/* <div className="paginationSection">
-              <Pagination count={10} />
-            </div> */}
           </div>
         </Grid>
       </Box>
+      <Dialog
+        open={deleteQ}
+        onClose={handleCloseDeleteAlert}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Grid container spacing={3}>
+              <Grid
+                item
+                md={12}
+                xs={12}
+              >
+                <FormControl component="fieldset">
+                  <FormLabel component="legend" className="checkRadioLabel">Are you sure you want to delete this question?</FormLabel>
+                </FormControl>
+              </Grid>
+              <Grid item md={12} sm={12} xs={12} className={classes.popUpButton}>
+                <Button color="primary" variant="contained" className="spacerRight buttonStyle" onClick={() => handleDelete()}>
+                  Yes
+                </Button>
+                <Button color="secondary" variant="contained" className="buttonStyle custmCancelBtn" onClick={() => handleCloseDeleteAlert()}>
+                  No
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
