@@ -360,6 +360,14 @@ const Checks = (props) => {
     setColorData(result)
   }
 
+  useEffect(() => {
+    console.log(criticalityData);
+  }, [criticalityData])
+
+  useEffect(() => {
+    console.log(statusData, 'hiiiiiiii');
+  }, [statusData])
+
   const radioDecide = ["Yes", "No", "N/A"];
 
   //method when we change the accordian and change the state
@@ -551,7 +559,6 @@ const Checks = (props) => {
       `/api/v1/audits/${localStorage.getItem("fkComplianceId")}/response/`
     );
     const result = res.data.data.results;
-    console.log(result);
     await setShowCheckData(result)
     await setCheckData(result);
     return result
@@ -734,6 +741,7 @@ const Checks = (props) => {
     const factorCriticality = result.filter(item =>
       item.factorType === "Criticality"
     )
+    console.log(result, 'factorDataResult');
     setCriticalityData(factorCriticality)
     const factorStatus = result.filter(item =>
       item.factorType === "Status"
@@ -1350,18 +1358,22 @@ const Checks = (props) => {
                                                         )
                                                       }
                                                     >
-                                                      {criticalityData.map((option) => (
-                                                        <MenuItem
-                                                          key={option.id}
-                                                          value={option.factorName || ""}
-                                                          id={option.id}
-                                                          onClick={(e) => {
-                                                            handleCriticality(option, "menuItem", catI + '-' + index, value.id);
-                                                          }}
-                                                        >
-                                                          {option.factorName}
-                                                        </MenuItem>
-                                                      ))}
+                                                      {criticalityData.map((option) => {
+                                                        if (option.status === "Active") {
+                                                          return (
+                                                            <MenuItem
+                                                              key={option.id}
+                                                              value={option.factorName || ""}
+                                                              id={option.id}
+                                                              onClick={(e) => {
+                                                                handleCriticality(option, "menuItem", catI + '-' + index, value.id);
+                                                              }}
+                                                            >
+                                                              {option.factorName}
+                                                            </MenuItem>
+                                                          )
+                                                        }
+                                                      })}
                                                     </TextField>
                                                   </Grid>
                                                   <Grid item md={4} xs={12}>
@@ -1383,18 +1395,22 @@ const Checks = (props) => {
                                                         )
                                                       }
                                                     >
-                                                      {statusData.map((option) => (
-                                                        <MenuItem
-                                                          key={option.id}
-                                                          value={option.factorName || ""}
-                                                          id={option.id}
-                                                          onClick={(e) => {
-                                                            handleCriticality(option, "statusItem", catI + '-' + index, value.id);
-                                                          }}
-                                                        >
-                                                          {option.factorName}
-                                                        </MenuItem>
-                                                      ))}
+                                                      {statusData.map((option) => {
+                                                        if (option.status === 'Active') {
+                                                          return (
+                                                            <MenuItem
+                                                              key={option.id}
+                                                              value={option.factorName || ""}
+                                                              id={option.id}
+                                                              onClick={(e) => {
+                                                                handleCriticality(option, "statusItem", catI + '-' + index, value.id);
+                                                              }}
+                                                            >
+                                                              {option.factorName}
+                                                            </MenuItem>
+                                                          )
+                                                        }
+                                                      })}
                                                     </TextField>
                                                   </Grid>
                                                   <Grid item md={4} xs={12}>
